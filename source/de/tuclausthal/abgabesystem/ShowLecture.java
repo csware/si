@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.abgabesystem.persistence.dao.GroupDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
+import de.tuclausthal.abgabesystem.persistence.dao.impl.GroupDAO;
 import de.tuclausthal.abgabesystem.persistence.dao.impl.LectureDAO;
 import de.tuclausthal.abgabesystem.persistence.dao.impl.ParticipationDAO;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Group;
@@ -25,6 +27,8 @@ public class ShowLecture extends HttpServlet {
 		mainbetternamereq.login();
 
 		PrintWriter out = response.getWriter();
+
+		GroupDAOIf groupDAO = new GroupDAO();
 
 		Lecture lecture = new LectureDAO().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
@@ -75,37 +79,54 @@ public class ShowLecture extends HttpServlet {
 			boolean isAdvisor = (participation.getRoleType().compareTo(ParticipationRole.TUTOR) == 0);
 			if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
 				out.println("<h3>Ohne Gruppe</h3>");
-				listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), out, isAdvisor);
+				listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor);
+				if (participation.getRoleType() == ParticipationRole.ADVISOR) {
+					out.println("<p><div class=mid><a href=\"" + response.encodeURL("/ba/servlets/AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a></div>");
+				}
 			}
 			for (Group group : lecture.getGroups()) {
 				out.println("<h3>Gruppe: " + Util.mknohtml(group.getName()) + "</h3>");
-				listMembers(group.getMembers().iterator(), out, isAdvisor);
+				if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
+					out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/EditGroup?groupid=" + group.getGid()) + "\">Teilnehmer zuordnen</a></div>");
+				}
+				listMembers(group.getMembers().iterator(), response, isAdvisor);
 			}
 		}
 
 		mainbetternamereq.template().printTemplateFooter();
 	}
 
-	public void listMembers(Iterator<Participation> participationIterator, PrintWriter out, boolean isAdvisor) {
-		out.println("<table align=center border=1>");
-		out.println("<tr>");
-		out.println("<th>Teilnehmer</th>");
-		out.println("<th>Rolle</th>");
-		out.println("</tr>");
-		while (participationIterator.hasNext()) {
-			Participation thisParticipation = participationIterator.next();
+	public void listMembers(Iterator<Participation> participationIterator, HttpServletResponse response, boolean isAdvisor) throws IOException {
+		if (participationIterator.hasNext()) {
+			PrintWriter out = response.getWriter();
+			out.println("<table align=center border=1>");
 			out.println("<tr>");
-			out.println("<td><a href=\"mailto:" + Util.mknohtml(thisParticipation.getUser().getEmail()) + "\">" + Util.mknohtml(thisParticipation.getUser().getFullName()) + "</a></td>");
-			if (thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL)==0) {
-				out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()) + "</td>");
-			} else if (thisParticipation.getRoleType().compareTo(ParticipationRole.TUTOR)==0) {
-				out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()) + "</td>");
-			} else {
-				out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()) + "</td>");
-			}
+			out.println("<th>Teilnehmer</th>");
+			out.println("<th>Rolle</th>");
 			out.println("</tr>");
+			while (participationIterator.hasNext()) {
+				Participation thisParticipation = participationIterator.next();
+				out.println("<tr>");
+				out.println("<td><a href=\"mailto:" + Util.mknohtml(thisParticipation.getUser().getEmail()) + "\">" + Util.mknohtml(thisParticipation.getUser().getFullName()) + "</a></td>");
+				if (thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
+					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
+					if (isAdvisor) {
+						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&participationid=" + thisParticipation.getId()) + "&type=tutor\">+</a>)");
+					}
+					out.println("</td>");
+				} else if (thisParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) == 0) {
+					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
+					if (isAdvisor) {
+						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&participationid=" + thisParticipation.getId()) + "&type=normal\">-</a>)");
+					}
+					out.println("</td>");
+				} else {
+					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()) + "</td>");
+				}
+				out.println("</tr>");
+			}
+			out.println("</table><p>");
 		}
-		out.println("</table>");
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

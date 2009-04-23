@@ -142,7 +142,7 @@ public class TaskManager extends HttpServlet {
 			}
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
 			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()));
-			out.close();
+			return;
 		} else if (request.getParameter("action") != null && request.getParameter("action").equals("deleteTask")) {
 			TaskDAOIf taskDAO = new TaskDAO();
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));

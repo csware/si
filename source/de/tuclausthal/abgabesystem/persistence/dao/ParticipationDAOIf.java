@@ -11,10 +11,15 @@ public interface ParticipationDAOIf {
 	public Participation createParticipation(User user, Lecture lecture, ParticipationRole type);
 
 	public Participation getParticipation(User user, Lecture lecture);
+
+	public Participation getParticipation(int participationid);
 	
+
 	public List<Participation> getParticipationsWithoutGroup(Lecture lecture);
 
 	public void deleteParticipation(Participation participation);
+	
+	public void saveParticipation(Participation participation);
 
 	public void deleteParticipation(User user, Lecture lecture);
 }

@@ -29,6 +29,7 @@ public class Template {
 			if (user.isSuperUser()) {
 				out.println(" - <a href=\"" + MainBetterNameHereRequired.getServletResponse().encodeURL("/ba/servlets/AdminMenue") + "\">Admin-Menü</a>");
 			}
+			out.println(" - <a href=\"" + MainBetterNameHereRequired.getServletResponse().encodeURL("/ba/servlets/Logout") + "\">LogOut</a>");
 		} else {
 			out.println("not logged in");
 		}

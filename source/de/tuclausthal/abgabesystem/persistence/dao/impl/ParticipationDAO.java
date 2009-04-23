@@ -66,4 +66,17 @@ public class ParticipationDAO implements ParticipationDAOIf {
 	public List<Participation> getParticipationsWithoutGroup(Lecture lecture) {
 		return (List<Participation>) MainBetterNameHereRequired.getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.isNull("group")).list();
 	}
+
+	@Override
+	public Participation getParticipation(int participationid) {
+		return (Participation) MainBetterNameHereRequired.getSession().get(Participation.class, participationid);
+	}
+
+	@Override
+	public void saveParticipation(Participation participation) {
+		Session session = MainBetterNameHereRequired.getSession();
+		Transaction tx = session.beginTransaction();
+		session.save(participation);
+		tx.commit();
+	}
 }

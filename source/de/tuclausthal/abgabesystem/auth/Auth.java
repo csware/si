@@ -33,7 +33,7 @@ public class Auth {
 				if (login.redirectAfterLogin() == true) {
 					// TODO: is this safe?
 					HttpServletResponse response= MainBetterNameHereRequired.getServletResponse();
-					response.sendRedirect(response.encodeRedirectURL(MainBetterNameHereRequired.getServletRequest().getRequestURL().toString()));
+					response.sendRedirect(response.encodeRedirectURL(MainBetterNameHereRequired.getServletRequest().getRequestURL().toString()+"?"+MainBetterNameHereRequired.getServletRequest().getQueryString()));
 				}
 				return;
 			}
