@@ -3,6 +3,7 @@ package de.tuclausthal.abgabesystem.auth;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.impl.UserDAO;
 import de.tuclausthal.abgabesystem.persistence.datamodel.User;
 
@@ -26,7 +27,7 @@ public class SessionAdapter {
 
 	public User getUser() {
 		if (session.getAttribute("userID") != null) {
-			return new UserDAO().getUser((Integer) session.getAttribute("userID"));
+			return DAOFactory.UserDAOIf().getUser((Integer) session.getAttribute("userID"));
 		} else {
 			return null;
 		}

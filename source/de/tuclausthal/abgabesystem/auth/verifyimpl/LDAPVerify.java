@@ -9,7 +9,8 @@ import javax.naming.ldap.LdapContext;
 
 import de.tuclausthal.abgabesystem.auth.LoginData;
 import de.tuclausthal.abgabesystem.auth.VerifyIf;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.UserDAO;
+import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
+import de.tuclausthal.abgabesystem.persistence.dao.UserDAOIf;
 import de.tuclausthal.abgabesystem.persistence.datamodel.User;
 
 public class LDAPVerify implements VerifyIf {
@@ -41,7 +42,7 @@ public class LDAPVerify implements VerifyIf {
 			// wenn gefunden, dann lokalen user suchen bzw. erstellen
 
 			//System.out.println(ctx.getAttributes("uid=" + username).get("tucmatrikelNr"));
-			UserDAO userdao = new UserDAO();
+			UserDAOIf userdao = DAOFactory.UserDAOIf();
 			user = userdao.getUser((String) ctx.getAttributes("uid=" + username).get("uid").get());
 			System.out.println(ctx.getAttributes("uid=" + username).get("tucmatrikelNro"));
 			if (user == null) {

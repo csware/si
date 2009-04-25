@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.GroupDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.impl.GroupDAO;
@@ -27,9 +28,7 @@ public class ShowLecture extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		GroupDAOIf groupDAO = new GroupDAO();
-
-		Lecture lecture = new LectureDAO().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+		Lecture lecture = DAOFactory.LectureDAOIf().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			mainbetternamereq.template().printTemplateHeader("Veranstaltung nicht gefunden");
 			out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/Overview") + "\">zur Übersicht</a></div>");
@@ -37,7 +36,7 @@ public class ShowLecture extends HttpServlet {
 			return;
 		}
 
-		ParticipationDAOIf participationDAO = new ParticipationDAO();
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
 		Participation participation = participationDAO.getParticipation(mainbetternamereq.getUser(), lecture);
 		if (participation == null) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");

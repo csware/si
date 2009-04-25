@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.GroupDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.impl.GroupDAO;
@@ -24,7 +25,7 @@ public class EditGroup extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		GroupDAOIf groupDAO = new GroupDAO();
+		GroupDAOIf groupDAO = DAOFactory.GroupDAOIf();
 		Group group = groupDAO.getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
 		if (group == null) {
 			mainbetternamereq.template().printTemplateHeader("Gruppe nicht gefunden");
@@ -34,7 +35,7 @@ public class EditGroup extends HttpServlet {
 		}
 
 		// check Lecture Participation
-		ParticipationDAOIf participationDAO = new ParticipationDAO();
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
 		Participation participation = participationDAO.getParticipation(mainbetternamereq.getUser(), group.getLecture());
 		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");

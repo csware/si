@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.GroupDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.TaskDAOIf;
@@ -31,7 +32,7 @@ public class AddGroup extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		Lecture lecture = new LectureDAO().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+		Lecture lecture = DAOFactory.LectureDAOIf().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			mainbetternamereq.template().printTemplateHeader("Veranstaltung nicht gefunden");
 			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
@@ -39,7 +40,7 @@ public class AddGroup extends HttpServlet {
 			return;
 		}
 
-		ParticipationDAOIf participationDAO = new ParticipationDAO();
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
 		Participation participation = participationDAO.getParticipation(mainbetternamereq.getUser(), lecture);
 		if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
 			mainbetternamereq.template().printTemplateHeader("insufficient rights");
@@ -48,7 +49,7 @@ public class AddGroup extends HttpServlet {
 		}
 
 		if (request.getParameter("action") != null && request.getParameter("action").equals("saveNewGroup") && request.getParameter("name") != null) {
-			GroupDAOIf groupDAO = new GroupDAO();
+			GroupDAOIf groupDAO = DAOFactory.GroupDAOIf();
 			Group group = groupDAO.createGroup(lecture, request.getParameter("name"));
 			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/EditGroup?groupid=" + group.getGid()));
 			return;

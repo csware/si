@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.PointsDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.SubmissionDAOIf;
@@ -29,7 +30,7 @@ public class ShowSubmission extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		SubmissionDAOIf submissionDAO = new SubmissionDAO();
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
 			mainbetternamereq.template().printTemplateHeader("Abgabe nicht gefunden");
@@ -41,7 +42,7 @@ public class ShowSubmission extends HttpServlet {
 		Task task = submission.getTask();
 
 		// check Lecture Participation
-		ParticipationDAOIf participationDAO = new ParticipationDAO();
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
 		Participation participation = participationDAO.getParticipation(mainbetternamereq.getUser(), submission.getTask().getLecture());
 		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");
@@ -54,7 +55,7 @@ public class ShowSubmission extends HttpServlet {
 		mainbetternamereq.template().printTemplateHeader("Abgabe von \"" + Util.mknohtml(submission.getSubmitter().getUser().getFullName()) + "\"");
 
 		if (request.getParameter("points") != null) {
-			PointsDAOIf pointsDAO = new PointsDAO();
+			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf();
 			pointsDAO.createPoints(Util.parseInteger(request.getParameter("points"), 0), submission, participation);
 			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowSubmission?sid=" + submission.getSubmissionid()));
 			return;

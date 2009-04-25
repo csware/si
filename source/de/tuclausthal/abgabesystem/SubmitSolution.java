@@ -25,6 +25,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.TaskDAOIf;
@@ -43,7 +44,7 @@ public class SubmitSolution extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		TaskDAOIf taskDAO = new TaskDAO();
+		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			mainbetternamereq.template().printTemplateHeader("Aufgabe nicht gefunden");
@@ -53,7 +54,7 @@ public class SubmitSolution extends HttpServlet {
 		}
 
 		// check Lecture Participation
-		ParticipationDAOIf participationDAO = new ParticipationDAO();
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
 		Participation participation = participationDAO.getParticipation(mainbetternamereq.getUser(), task.getLecture());
 		if (participation == null) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");
@@ -82,7 +83,7 @@ public class SubmitSolution extends HttpServlet {
 		if (task.getDeadline().before(new Date())) {
 			out.println("Keine Abgabe mehr möglich");
 		} else {
-			SubmissionDAOIf submissionDAO = new SubmissionDAO();
+			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
 			Submission submission = submissionDAO.getSubmission(task, mainbetternamereq.getUser());
 			if (submission != null) {
 				out.println("Infos zu meiner bisherigen Abgabe");
@@ -101,7 +102,7 @@ public class SubmitSolution extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		TaskDAOIf taskDAO = new TaskDAO();
+		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			mainbetternamereq.template().printTemplateHeader("Aufgabe nicht gefunden");
@@ -111,7 +112,7 @@ public class SubmitSolution extends HttpServlet {
 		}
 
 		// check Lecture Participation
-		ParticipationDAOIf participationDAO = new ParticipationDAO();
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
 		Participation participation = participationDAO.getParticipation(mainbetternamereq.getUser(), task.getLecture());
 		if (participation == null) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");
@@ -163,7 +164,7 @@ public class SubmitSolution extends HttpServlet {
 				return;
 			}
 
-			SubmissionDAOIf submissionDAO = new SubmissionDAO();
+			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
 			Submission submission = submissionDAO.createSubmission(task, participation);
 
 			File path = new File("c:/abgabesystem/" + task.getLecture().getId() + "/" + task.getTaskid() + "/" + submission.getSubmissionid() + "/");

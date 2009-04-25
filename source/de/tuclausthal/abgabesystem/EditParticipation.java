@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.GroupDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.UserDAOIf;
@@ -28,7 +29,7 @@ public class EditParticipation extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		ParticipationDAOIf participationDAO = new ParticipationDAO();
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
 		Participation participation = participationDAO.getParticipation(Util.parseInteger(request.getParameter("participationid"), 0));
 		if (participation == null) {
 			mainbetternamereq.template().printTemplateHeader("Teilnahme nicht gefunden");

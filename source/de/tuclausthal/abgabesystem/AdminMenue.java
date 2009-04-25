@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.UserDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.impl.LectureDAO;
@@ -56,17 +57,17 @@ public class AdminMenue extends HttpServlet {
 			File path = new File("c:/abgabesystem/");
 			// list lectures
 			for (File lectures : path.listFiles()) {
-				if (new LectureDAO().getLecture(Util.parseInteger(lectures.getName(), 0)) == null) {
+				if (DAOFactory.LectureDAOIf().getLecture(Util.parseInteger(lectures.getName(), 0)) == null) {
 					Util.recursiveDelete(lectures);
 				} else {
 					// list all tasks
 					for (File tasks : lectures.listFiles()) {
-						if (new TaskDAO().getTask(Util.parseInteger(tasks.getName(), 0)) == null) {
+						if (DAOFactory.TaskDAOIf().getTask(Util.parseInteger(tasks.getName(), 0)) == null) {
 							Util.recursiveDelete(tasks);
 						} else {
 							// list all submissions
 							for (File submissions : tasks.listFiles()) {
-								if (new SubmissionDAO().getSubmission(Util.parseInteger(submissions.getName(), 0)) == null) {
+								if (DAOFactory.SubmissionDAOIf().getSubmission(Util.parseInteger(submissions.getName(), 0)) == null) {
 									Util.recursiveDelete(submissions);
 								}
 							}
@@ -77,12 +78,12 @@ public class AdminMenue extends HttpServlet {
 			response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?"));
 			return;
 		} else if (request.getParameter("action") != null && request.getParameter("action").equals("saveLecture") && request.getParameter("name") != null && !request.getParameter("name").trim().isEmpty()) {
-			Lecture newLecture = new LectureDAO().newLecture(request.getParameter("name").trim());
+			Lecture newLecture = DAOFactory.LectureDAOIf().newLecture(request.getParameter("name").trim());
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
 			response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?action=showLecture&lecture=" + newLecture.getId()));
 			return;
 		} else if (request.getParameter("action") != null && request.getParameter("action").equals("showLecture") && request.getParameter("lecture") != null) {
-			Lecture lecture = new LectureDAO().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+			Lecture lecture = DAOFactory.LectureDAOIf().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 			if (lecture == null) {
 				mainbetternamereq.template().printTemplateHeader("Veranstaltung nicht gefunden");
 				out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
@@ -139,15 +140,15 @@ public class AdminMenue extends HttpServlet {
 				out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 			}
 		} else if (request.getParameter("action") != null && (request.getParameter("action").equals("addUser") || request.getParameter("action").equals("removeUser")) && request.getParameter("lecture") != null && request.getParameter("userid") != null) {
-			Lecture lecture = new LectureDAO().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
-			UserDAOIf userDAO = new UserDAO();
+			Lecture lecture = DAOFactory.LectureDAOIf().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+			UserDAOIf userDAO = DAOFactory.UserDAOIf();
 			User user = userDAO.getUser(Util.parseInteger(request.getParameter("userid"), 0));
 			if (lecture == null || user == null) {
 				mainbetternamereq.template().printTemplateHeader("Veranstaltung oder Benutzer nicht gefunden");
 				out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 			} else {
 				// request.getParameter("type") != null
-				ParticipationDAOIf participationDAO = new ParticipationDAO();
+				ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
 				if (request.getParameter("action").equals("addUser")) {
 					if (request.getParameter("type").equals("advisor")) {
 						participationDAO.createParticipation(user, lecture, ParticipationRole.ADVISOR);
@@ -163,7 +164,7 @@ public class AdminMenue extends HttpServlet {
 		} else { // list all lectures
 			mainbetternamereq.template().printTemplateHeader("Admin-Menü");
 
-			Iterator<Lecture> lectureIterator = new LectureDAO().getLectures().iterator();
+			Iterator<Lecture> lectureIterator = DAOFactory.LectureDAOIf().getLectures().iterator();
 			if (lectureIterator.hasNext()) {
 				out.println("<table align=center border=1>");
 				out.println("<tr>");

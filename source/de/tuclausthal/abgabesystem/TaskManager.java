@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.TaskDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.impl.LectureDAO;
@@ -27,7 +28,7 @@ public class TaskManager extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		Lecture lecture = new LectureDAO().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+		Lecture lecture = DAOFactory.LectureDAOIf().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			mainbetternamereq.template().printTemplateHeader("Veranstaltung nicht gefunden");
 			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
@@ -35,7 +36,7 @@ public class TaskManager extends HttpServlet {
 			return;
 		}
 
-		ParticipationDAOIf participationDAO = new ParticipationDAO();
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
 		Participation participation = participationDAO.getParticipation(mainbetternamereq.getUser(), lecture);
 		if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
 			mainbetternamereq.template().printTemplateHeader("insufficient rights");
@@ -47,7 +48,7 @@ public class TaskManager extends HttpServlet {
 			boolean editTask = request.getParameter("action").equals("editTask");
 			Task task;
 			if (editTask == true) {
-				TaskDAOIf taskDAO = new TaskDAO();
+				TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
 				task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 				if (task == null) {
 					mainbetternamereq.template().printTemplateHeader("Aufgabe nicht gefunden");
@@ -106,7 +107,7 @@ public class TaskManager extends HttpServlet {
 			out.println("</form>");
 		} else if (request.getParameter("action") != null && (request.getParameter("action").equals("saveNewTask") || request.getParameter("action").equals("saveTask"))) {
 			SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-			TaskDAOIf taskDAO = new TaskDAO();
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
 			Task task;
 			if (request.getParameter("action").equals("saveTask")) {
 				task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
@@ -143,7 +144,7 @@ public class TaskManager extends HttpServlet {
 			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()));
 			return;
 		} else if (request.getParameter("action") != null && request.getParameter("action").equals("deleteTask")) {
-			TaskDAOIf taskDAO = new TaskDAO();
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 			if (task == null) {
 				mainbetternamereq.template().printTemplateHeader("Aufgabe nicht gefunden");

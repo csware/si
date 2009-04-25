@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.TaskDAOIf;
@@ -29,7 +30,7 @@ public class ShowTask extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		TaskDAOIf taskDAO = new TaskDAO();
+		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			mainbetternamereq.template().printTemplateHeader("Aufgabe nicht gefunden");
@@ -39,7 +40,7 @@ public class ShowTask extends HttpServlet {
 		}
 
 		// check Lecture Participation
-		ParticipationDAOIf participationDAO = new ParticipationDAO();
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
 		Participation participation = participationDAO.getParticipation(mainbetternamereq.getUser(), task.getLecture());
 		if (participation == null) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");
@@ -119,7 +120,7 @@ public class ShowTask extends HttpServlet {
 				out.println("</table>");
 			}
 		} else {
-			SubmissionDAOIf submissionDAO = new SubmissionDAO();
+			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
 			Submission submission = submissionDAO.getSubmission(task, mainbetternamereq.getUser());
 			if (submission != null) {
 				out.println("<h2>Informationen zu meiner Abgabe:</h2>");
