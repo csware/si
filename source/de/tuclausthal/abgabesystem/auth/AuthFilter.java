@@ -17,10 +17,13 @@ import de.tuclausthal.abgabesystem.auth.verifyimpl.FakeVerify;
 import de.tuclausthal.abgabesystem.persistence.datamodel.User;
 
 public class AuthFilter implements Filter {
+
+	private LoginIf login;
+	private VerifyIf verify;
+
 	@Override
 	public void destroy() {
 	// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -29,14 +32,11 @@ public class AuthFilter implements Filter {
 		if (sa.getUser() != null) {
 			request.setAttribute("user", sa.getUser());
 		} else {
-			LoginIf login = new Form();
-			// optimize, make context sensitive
 			LoginData logindata = login.get_login_info((HttpServletRequest) request);
 			if (logindata == null) {
 				login.fail_nodata((HttpServletRequest) request, (HttpServletResponse) response);
 				return;
 			} else {
-				VerifyIf verify = new FakeVerify();
 				User user = verify.check_credentials(logindata);
 				if (user == null) {
 					login.fail_nodata("Username or password wrong.", (HttpServletRequest) request, (HttpServletResponse) response);
@@ -57,6 +57,7 @@ public class AuthFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-	// TODO Auto-generated method stub
+		login = new Form();
+		verify = new FakeVerify();
 	}
 }
