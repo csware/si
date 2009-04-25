@@ -12,9 +12,8 @@ public class Logout extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		MainBetterNameHereRequired.getServletRequest().removeAttribute("user");
+		request.removeAttribute("user");
 		request.getSession().invalidate();
-		MainBetterNameHereRequired mainbetternamereq = new MainBetterNameHereRequired(request, response);
 		MainBetterNameHereRequired.template().printTemplateHeader("Logged out");
 		PrintWriter out = response.getWriter();
 		out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/Overview") + "\">zur Übersicht</a></div>");
