@@ -1,5 +1,6 @@
 package de.tuclausthal.abgabesystem;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
@@ -13,6 +14,8 @@ import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.UserDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.impl.LectureDAO;
 import de.tuclausthal.abgabesystem.persistence.dao.impl.ParticipationDAO;
+import de.tuclausthal.abgabesystem.persistence.dao.impl.SubmissionDAO;
+import de.tuclausthal.abgabesystem.persistence.dao.impl.TaskDAO;
 import de.tuclausthal.abgabesystem.persistence.dao.impl.UserDAO;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Lecture;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
@@ -50,6 +53,30 @@ public class AdminMenue extends HttpServlet {
 			out.println("</tr>");
 			out.println("</table>");
 			out.println("</form>");
+		} else if (request.getParameter("action") != null && request.getParameter("action").equals("cleanup")) {
+			File path = new File("c:/abgabesystem/");
+			// list lectures
+			for (File lectures : path.listFiles()) {
+				if (new LectureDAO().getLecture(Util.parseInteger(lectures.getName(), 0)) == null) {
+					Util.recursiveDelete(lectures);
+				} else {
+					// list all tasks
+					for (File tasks : lectures.listFiles()) {
+						if (new TaskDAO().getTask(Util.parseInteger(tasks.getName(), 0)) == null) {
+							Util.recursiveDelete(tasks);
+						} else {
+							// list all submissions
+							for (File submissions : tasks.listFiles()) {
+								if (new SubmissionDAO().getSubmission(Util.parseInteger(submissions.getName(), 0)) == null) {
+									Util.recursiveDelete(submissions);
+								}
+							}
+						}
+					}
+				}
+			}
+			response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?"));
+			return;
 		} else if (request.getParameter("action") != null && request.getParameter("action").equals("saveLecture") && request.getParameter("name") != null && !request.getParameter("name").trim().isEmpty()) {
 			Lecture newLecture = new LectureDAO().newLecture(request.getParameter("name").trim());
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
@@ -132,7 +159,7 @@ public class AdminMenue extends HttpServlet {
 					participationDAO.createParticipation(user, lecture, ParticipationRole.NORMAL);
 				}
 				response.sendRedirect(response.encodeURL(request.getRequestURL() + "?action=showLecture&lecture=" + lecture.getId()));
-				out.close();
+				return;
 			}
 		} else { // list all lectures
 			mainbetternamereq.template().printTemplateHeader("Admin-Menü");
@@ -154,6 +181,7 @@ public class AdminMenue extends HttpServlet {
 				out.println("</table><p>");
 			}
 			out.println("<div class=mid><a href=\"" + response.encodeURL("?action=newLecture") + "\">Neue Veranstaltung</a></div>");
+			out.println("<p><div class=mid><a href=\"" + response.encodeURL("?action=cleanup") + "\">Verzeichnis Cleanup</a></div>");
 		}
 
 		mainbetternamereq.template().printTemplateFooter();

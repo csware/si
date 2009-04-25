@@ -1,5 +1,6 @@
 package de.tuclausthal.abgabesystem.util;
 
+import java.io.File;
 import java.util.Date;
 
 /**
@@ -52,6 +53,15 @@ public final class Util {
 		} catch (NumberFormatException e) {
 			return defaultValue;
 		}
+	}
+
+	public static void recursiveDelete(File toDelete) {
+		if (toDelete.isDirectory()) {
+			for (File subFile : toDelete.listFiles()) {
+				recursiveDelete(subFile);
+			}
+		}
+		toDelete.delete();
 	}
 
 	public static int getCurrentSemester() {
