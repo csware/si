@@ -23,7 +23,6 @@ public class SubscribeToLecture extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		MainBetterNameHereRequired mainbetternamereq = new MainBetterNameHereRequired(request, response);
-		mainbetternamereq.login();
 
 		PrintWriter out = response.getWriter();
 

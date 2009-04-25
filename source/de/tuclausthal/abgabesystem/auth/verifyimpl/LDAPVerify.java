@@ -14,16 +14,6 @@ import de.tuclausthal.abgabesystem.persistence.datamodel.User;
 
 public class LDAPVerify implements VerifyIf {
 	@Override
-	public boolean can_change_password() {
-		return false;
-	}
-
-	@Override
-	public boolean can_create_user() {
-		return false;
-	}
-
-	@Override
 	public User check_credentials(LoginData logindata) {
 		User user = null;
 		String username = logindata.getUsername();

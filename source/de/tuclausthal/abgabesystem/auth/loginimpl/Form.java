@@ -22,14 +22,13 @@ public class Form implements LoginIf {
 	}
 
 	@Override
-	public void fail_nodata() {
-		fail_nodata("");
+	public void fail_nodata(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		fail_nodata("", request, response);
 	}
 
 	@Override
-	public void fail_nodata(String error) {
+	public void fail_nodata(String error, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// TODO: Template!?, bzw. MainBetterNameHereRequired
-		HttpServletResponse response = MainBetterNameHereRequired.getServletResponse();
 		response.setContentType("text/html");
 		try {
 			MainBetterNameHereRequired.template().printTemplateHeader("Login required");
@@ -55,8 +54,7 @@ public class Form implements LoginIf {
 	}
 
 	@Override
-	public LoginData get_login_info() {
-		HttpServletRequest request = MainBetterNameHereRequired.getServletRequest();
+	public LoginData get_login_info(HttpServletRequest request) {
 		if (request.getParameter("username") != null && !request.getParameter("username").isEmpty() && request.getParameter("password") != null && !request.getParameter("password").isEmpty()) {
 			return new LoginData(request.getParameter("username"), request.getParameter("password"));
 		} else {

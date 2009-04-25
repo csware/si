@@ -7,16 +7,6 @@ import de.tuclausthal.abgabesystem.persistence.datamodel.User;
 
 public class FakeVerify implements VerifyIf {
 	@Override
-	public boolean can_change_password() {
-		return false;
-	}
-
-	@Override
-	public boolean can_create_user() {
-		return false;
-	}
-
-	@Override
 	public User check_credentials(LoginData logindata) {
 		UserDAO userdao = new UserDAO();
 		User user = userdao.getUser("sstri");

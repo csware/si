@@ -40,7 +40,6 @@ import de.tuclausthal.abgabesystem.util.Util;
 public class SubmitSolution extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		MainBetterNameHereRequired mainbetternamereq = new MainBetterNameHereRequired(request, response);
-		mainbetternamereq.login();
 
 		PrintWriter out = response.getWriter();
 
@@ -99,7 +98,6 @@ public class SubmitSolution extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		MainBetterNameHereRequired mainbetternamereq = new MainBetterNameHereRequired(request, response);
-		mainbetternamereq.login();
 
 		PrintWriter out = response.getWriter();
 
