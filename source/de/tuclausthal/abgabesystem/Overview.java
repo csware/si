@@ -24,7 +24,7 @@ public class Overview extends HttpServlet {
 		User user = (User) request.getAttribute("user");
 
 		if (user.getLectureParticipant().size() > 0) {
-			out.println("<table align=center border=1>");
+			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>Veranstaltung</th>");
 			out.println("<th>Semester</th>");

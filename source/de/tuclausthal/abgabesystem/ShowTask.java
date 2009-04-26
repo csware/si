@@ -59,9 +59,9 @@ public class ShowTask extends HttpServlet {
 
 		mainbetternamereq.template().printTemplateHeader("Aufgabe \"" + Util.mknohtml(task.getTitle()) + "\"");
 
-		out.println("<table align=center border=1>");
+		out.println("<table class=border>");
 		out.println("<tr>");
-		out.println("<th valign=top>Beschreibung:</th>");
+		out.println("<th>Beschreibung:</th>");
 		// HTML must be possible here
 		out.println("<td>" + task.getDescription() + "&nbsp;</td>");
 		out.println("</tr>");
@@ -90,7 +90,7 @@ public class ShowTask extends HttpServlet {
 			if (task.getSubmissions().size() > 0) {
 				out.println("<p><h2>Abgaben</h2><p>");
 				// TODO: nach Gruppen sortiert
-				out.println("<table align=center border=1>");
+				out.println("<table class=border>");
 				out.println("<tr>");
 				out.println("<th>Benutzer</th>");
 				if (task.getTest() != null) {
@@ -124,7 +124,7 @@ public class ShowTask extends HttpServlet {
 			Submission submission = submissionDAO.getSubmission(task, mainbetternamereq.getUser());
 			if (submission != null) {
 				out.println("<h2>Informationen zu meiner Abgabe:</h2>");
-				out.println("<table border=1 align=center>");
+				out.println("<table class=border>");
 				out.println("<tr>");
 				out.println("<td>Kompiliert:</td>");
 				out.println("<td>" + submission.getCompiles() + "</td>");

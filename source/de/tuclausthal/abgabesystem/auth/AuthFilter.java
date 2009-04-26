@@ -28,6 +28,8 @@ public class AuthFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		// HACK here
+		new MainBetterNameHereRequired((HttpServletRequest) request, (HttpServletResponse) response);
 		SessionAdapter sa = new SessionAdapter((HttpServletRequest) request);
 		if (sa.getUser() != null) {
 			request.setAttribute("user", sa.getUser());

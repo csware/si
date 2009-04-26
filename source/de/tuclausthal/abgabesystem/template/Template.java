@@ -16,7 +16,7 @@ public class Template {
 		out.println("<title>" + title + "</title>");
 		out.println("<link rel=StyleSheet type=\"text/css\" href=\"/ba/formate.css\">");
 		out.println("</head>");
-		out.println("<body><hr><h1>" + title + "</h1><hr><p>");
+		out.println("<body><img src=\"/ba/logo.gif\" alt=\"TU Clausthal\" height=\"64\" width=\"367\"><p><h1>" + title + "</h1><p>");
 	}
 
 	public void printTemplateFooter() throws IOException {

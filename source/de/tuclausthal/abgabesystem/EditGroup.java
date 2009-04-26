@@ -62,7 +62,7 @@ public class EditGroup extends HttpServlet {
 		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
 		out.println("<input type=hidden name=action value=assignGroup>");
 		out.println("<input type=hidden name=groupid value=" + group.getGid() + ">");
-		out.println("<table align=center border=1>");
+		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Gruppe:</th>");
 		out.println("<td><input type=text name=title value=\"" + Util.mknohtml(group.getName()) + "\"></td>");
@@ -78,7 +78,7 @@ public class EditGroup extends HttpServlet {
 		out.println("</select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 align=center><input type=submit value=zuordnen> <a href=\"" + response.encodeURL("/ba/servlets/ShowLecture?lecture=" + group.getLecture().getId()));
+		out.println("<td colspan=2 class=mid><input type=submit value=zuordnen> <a href=\"" + response.encodeURL("/ba/servlets/ShowLecture?lecture=" + group.getLecture().getId()));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");

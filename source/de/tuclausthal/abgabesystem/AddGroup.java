@@ -57,13 +57,13 @@ public class AddGroup extends HttpServlet {
 			out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
 			out.println("<input type=hidden name=action value=saveNewGroup>");
 			out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
-			out.println("<table align=center border=1>");
+			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>Name:</th>");
 			out.println("<td><input type=text name=name></td>");
 			out.println("</tr>");
 			out.println("<tr>");
-			out.println("<td colspan=2 align=center><input type=submit value=speichern> <a href=\"");
+			out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
 			out.println(response.encodeURL("/ba/servlets/ShowLecture?lecture=" + lecture.getId()));
 			out.println("\">Abbrechen</a></td>");
 			out.println("</tr>");

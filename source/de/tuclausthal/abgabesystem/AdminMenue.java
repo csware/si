@@ -39,7 +39,7 @@ public class AdminMenue extends HttpServlet {
 			mainbetternamereq.template().printTemplateHeader("neue Veranstaltung");
 
 			out.println("<form action=\"" + response.encodeURL("?action=saveLecture") + "\" method=post>");
-			out.println("<table align=center border=1>");
+			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>Name der Veranstaltung:</th>");
 			out.println("<td><input type=text name=name></td>");
@@ -49,7 +49,7 @@ public class AdminMenue extends HttpServlet {
 			out.println("<td>aktuelles Semester</td>");
 			out.println("</tr>");
 			out.println("<tr>");
-			out.println("<td colspan=2 align=center><input type=submit value=anlegen> <a href=\"" + response.encodeURL("?") + "\">Abbrechen</a></td>");
+			out.println("<td colspan=2 class=mid><input type=submit value=anlegen> <a href=\"" + response.encodeURL("?") + "\">Abbrechen</a></td>");
 			out.println("</tr>");
 			out.println("</table>");
 			out.println("</form>");
@@ -92,7 +92,7 @@ public class AdminMenue extends HttpServlet {
 
 				out.println("<h2>Betreuer</h2>");
 				Iterator<Participation> advisorIterator = lecture.getParticipants().iterator();
-				out.println("<table align=center border=1>");
+				out.println("<table class=border>");
 				out.println("<tr>");
 				out.println("<th>Benutzer</th>");
 				out.println("<th>Entfernen</th>");
@@ -116,7 +116,7 @@ public class AdminMenue extends HttpServlet {
 
 				out.println("<h2>Tutoren</h2>");
 				Iterator<Participation> tutorIterator = lecture.getParticipants().iterator();
-				out.println("<table align=center border=1>");
+				out.println("<table class=border>");
 				out.println("<tr>");
 				out.println("<th>Benutzer</th>");
 				out.println("<th>Entfernen</th>");
@@ -166,7 +166,7 @@ public class AdminMenue extends HttpServlet {
 
 			Iterator<Lecture> lectureIterator = DAOFactory.LectureDAOIf().getLectures().iterator();
 			if (lectureIterator.hasNext()) {
-				out.println("<table align=center border=1>");
+				out.println("<table class=border>");
 				out.println("<tr>");
 				out.println("<th>Veranstaltung</th>");
 				out.println("<th>Semester</th>");

@@ -62,7 +62,7 @@ public class ShowSubmission extends HttpServlet {
 		}
 
 		out.println("<h2>Bewertung:</h2>");
-		out.println("<table border=1 align=center>");
+		out.println("<table class=border>");
 		if (submission.getPoints() != null) {
 			out.println("<tr>");
 			out.println("<td>");

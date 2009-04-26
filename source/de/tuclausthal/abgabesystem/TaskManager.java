@@ -73,7 +73,7 @@ public class TaskManager extends HttpServlet {
 				out.println("<input type=hidden name=action value=saveNewTask>");
 			}
 			out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
-			out.println("<table align=center border=1>");
+			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>Titel:</th>");
 			out.println("<td><input type=text name=title value=\"" + Util.mknohtml(task.getTitle()) + "\"></td>");
@@ -95,7 +95,7 @@ public class TaskManager extends HttpServlet {
 			out.println("<td><input type=text name=maxpoints value=\"" + task.getMaxPoints() + "\"> <b>TODO: bereits vergebene Pkts. prüfen!</b></td>");
 			out.println("</tr>");
 			out.println("<tr>");
-			out.println("<td colspan=2 align=center><input type=submit value=speichern> <a href=\"");
+			out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
 			if (editTask) {
 				out.println(response.encodeURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()));
 			} else {

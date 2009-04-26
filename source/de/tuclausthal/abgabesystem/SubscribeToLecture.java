@@ -54,7 +54,7 @@ public class SubscribeToLecture extends HttpServlet {
 
 			Iterator<Lecture> lectureIterator = lectureDAO.getCurrentLucturesWithoutUser((User) request.getAttribute("user")).iterator();
 			if (lectureIterator.hasNext()) {
-				out.println("<table align=center border=1>");
+				out.println("<table class=border>");
 				out.println("<tr>");
 				out.println("<th>Veranstaltung</th>");
 				out.println("<th>Semester</th>");

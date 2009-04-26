@@ -51,7 +51,7 @@ public class ShowLecture extends HttpServlet {
 
 		Iterator<Task> taskIterator = lecture.getTasks().iterator();
 		if (taskIterator.hasNext()) {
-			out.println("<table align=center border=1>");
+			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>Aufgabe</th>");
 			out.println("<th>Max. Punkte</th>");
@@ -97,7 +97,7 @@ public class ShowLecture extends HttpServlet {
 	public void listMembers(Iterator<Participation> participationIterator, HttpServletResponse response, boolean isAdvisor) throws IOException {
 		if (participationIterator.hasNext()) {
 			PrintWriter out = response.getWriter();
-			out.println("<table align=center border=1>");
+			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>Teilnehmer</th>");
 			out.println("<th>Rolle</th>");
