@@ -2,18 +2,16 @@ package de.tuclausthal.abgabesystem.persistence.datamodel;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
 public class TestResult implements Serializable {
 	public Boolean passedTest = false;
-	public String testOutput;
+	public String testOutput = "not tested";
 
 	/**
 	 * @return the passedTest
 	 */
-	@Column(nullable = false)
 	public Boolean getPassedTest() {
 		return passedTest;
 	}
@@ -28,7 +26,6 @@ public class TestResult implements Serializable {
 	/**
 	 * @return the testOutput
 	 */
-	@Column(nullable = false)
 	public String getTestOutput() {
 		return testOutput;
 	}

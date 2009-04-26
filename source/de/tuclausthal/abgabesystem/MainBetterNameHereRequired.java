@@ -41,9 +41,8 @@ public class MainBetterNameHereRequired {
 
 	private HttpServletResponse servletResponse;
 	private static final SessionFactory sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();;
-	// set up db connection
-	private static Session session = sessionFactory.openSession();;
 
+	private static Session session = sessionFactory.openSession();
 	
 	/**
 	 * Gibt eine Hibernation-Datenbank-Sitzung zurück

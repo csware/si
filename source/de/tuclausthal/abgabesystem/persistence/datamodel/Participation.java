@@ -1,6 +1,7 @@
 package de.tuclausthal.abgabesystem.persistence.datamodel;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
@@ -20,6 +22,7 @@ public class Participation implements Serializable {
 	private Group group;
 	private Lecture lecture;
 	private String Role = "normal";
+	private Set<Submission> submissions;
 
 	/**
 	 * @return the user
@@ -109,5 +112,20 @@ public class Participation implements Serializable {
 	@Transient
 	public void setRoleType(ParticipationRole type) {
 		setRole(type.toString());
+	}
+
+	/**
+	 * @return the submissions
+	 */
+	@OneToMany(mappedBy="submitter")
+	public Set<Submission> getSubmissions() {
+		return submissions;
+	}
+
+	/**
+	 * @param submissions the submissions to set
+	 */
+	public void setSubmissions(Set<Submission> submissions) {
+		this.submissions = submissions;
 	}
 }

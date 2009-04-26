@@ -15,9 +15,6 @@ import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.PointsDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.SubmissionDAOIf;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.ParticipationDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.PointsDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.SubmissionDAO;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Submission;
@@ -73,7 +70,8 @@ public class ShowSubmission extends HttpServlet {
 		}
 		out.println("<tr>");
 		out.println("<td>");
-		out.println("<form method=post>");
+		out.println("<form action=\"?\" method=post>");
+		out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
 		out.println("<input type=text name=points> (max. " + task.getMaxPoints() + ")");
 		out.println(" <input type=submit>");
 		out.println("</form>");

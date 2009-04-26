@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.LectureDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.LectureDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.ParticipationDAO;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Lecture;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;

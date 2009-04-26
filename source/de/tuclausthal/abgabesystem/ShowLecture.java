@@ -10,15 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
-import de.tuclausthal.abgabesystem.persistence.dao.GroupDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.GroupDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.LectureDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.ParticipationDAO;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Group;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Lecture;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.abgabesystem.persistence.datamodel.Submission;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Task;
 import de.tuclausthal.abgabesystem.util.Util;
 
@@ -68,7 +65,7 @@ public class ShowLecture extends HttpServlet {
 			out.println("<div class=mid>keine Aufgaben gefunden.</div>");
 		}
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
-			out.println("<p><div class=mid><a href=\"" + response.encodeURL("/ba/servlets/TaskManager?lecture=" + lecture.getId() + "&action=newTask") + "\">Neue Aufgabe</a></div>");
+			out.println("<p><div class=mid><a href=\"" + response.encodeURL("/ba/servlets/TaskManager?lecture=" + lecture.getId() + "&amp;action=newTask") + "\">Neue Aufgabe</a></div>");
 		}
 
 		if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
@@ -101,6 +98,7 @@ public class ShowLecture extends HttpServlet {
 			out.println("<tr>");
 			out.println("<th>Teilnehmer</th>");
 			out.println("<th>Rolle</th>");
+			out.println("<th>Punkte</th>");
 			out.println("</tr>");
 			while (participationIterator.hasNext()) {
 				Participation thisParticipation = participationIterator.next();
@@ -109,22 +107,34 @@ public class ShowLecture extends HttpServlet {
 				if (thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
 					if (isAdvisor) {
-						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&participationid=" + thisParticipation.getId()) + "&type=tutor\">+</a>)");
+						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&amp;participationid=" + thisParticipation.getId()) + "&type=tutor\">+</a>)");
 					}
 					out.println("</td>");
 				} else if (thisParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) == 0) {
 					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
 					if (isAdvisor) {
-						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&participationid=" + thisParticipation.getId()) + "&type=normal\">-</a>)");
+						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&amp;participationid=" + thisParticipation.getId()) + "&type=normal\">-</a>)");
 					}
 					out.println("</td>");
 				} else {
 					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()) + "</td>");
 				}
+				out.println("<td>" + getAllPoints(thisParticipation) + "</td>");
+
 				out.println("</tr>");
 			}
 			out.println("</table><p>");
 		}
+	}
+
+	public int getAllPoints(Participation participation) {
+		int points = 0;
+		for (Submission submission : participation.getSubmissions()) {
+			if (submission.getPoints() != null) {
+				points += submission.getPoints().getPoints();
+			}
+		}
+		return points;
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

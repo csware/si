@@ -1,5 +1,6 @@
 package de.tuclausthal.abgabesystem.persistence.dao.impl;
 
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -17,6 +18,10 @@ public class PointsDAO implements PointsDAOIf {
 		Session session = MainBetterNameHereRequired.getSession();
 		Transaction tx = session.beginTransaction();
 		//MainBetterNameHereRequired.getSession().get(User.class, uid, LockMode.UPGRADE);
+		session.lock(submission.getTask(), LockMode.UPGRADE);
+		if (issuedPoints > submission.getTask().getMaxPoints()) {
+			issuedPoints = submission.getTask().getMaxPoints();
+		}
 		Points points = new Points();
 		points.setPoints(issuedPoints);
 		points.setIssuedBy(participation);
@@ -25,5 +30,4 @@ public class PointsDAO implements PointsDAOIf {
 		tx.commit();
 		return points;
 	}
-
 }

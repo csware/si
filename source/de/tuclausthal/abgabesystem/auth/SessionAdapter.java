@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.UserDAO;
 import de.tuclausthal.abgabesystem.persistence.datamodel.User;
 
 /**

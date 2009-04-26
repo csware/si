@@ -1,5 +1,7 @@
 package de.tuclausthal.abgabesystem.persistence.datamodel;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,12 +10,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "submissions")
-public class Submission {
+@Table(name = "submissions", uniqueConstraints = { @UniqueConstraint(columnNames = { "submitter", "taskid" }) })
+public class Submission implements Serializable {
 	private int submissionid;
-	private Boolean compiles;
+	private Boolean compiles = false;
 	private String stderr;
 	private Task task;
 	private Participation submitter;

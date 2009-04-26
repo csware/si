@@ -31,7 +31,7 @@ public class Form implements LoginIf {
 		// TODO: Template!?, bzw. MainBetterNameHereRequired
 		response.setContentType("text/html");
 		try {
-			MainBetterNameHereRequired.template().printTemplateHeader("Login required");
+			MainBetterNameHereRequired.template().printTemplateHeader("Login erforderlich");
 			PrintWriter out = response.getWriter();
 			if (!error.isEmpty()) {
 				out.println("<div class=\"red,mid\">" + error + "</div>");
@@ -39,12 +39,28 @@ public class Form implements LoginIf {
 			out.print("<form action=\"");
 			//out.print(response.encodeURL(MainBetterNameHereRequired.getServletRequest().getRequestURL().toString()));
 			out.println("\" method=POST>");
-			out.println("Benutzername: <input type=text size=20 name=username>");
-			out.println("<br>");
-			out.println("Passwort: ");
+			out.println("<table>");
+			out.println("<tr>");
+			out.println("<th>");
+			out.println("Benutzername:");
+			out.println("</td>");
+			out.println("<td>");
+			out.println("<input type=text size=20 name=username>");
+			out.println("</td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<th>");
+			out.println("Passwort:");
+			out.println("</td>");
+			out.println("<td>");
 			out.println("<input type=password size=20 name=password>");
-			out.println("<br>");
+			out.println("</td>");
+			out.println("<tr>");
+			out.println("<td colspan=2 class=mid>");
 			out.println("<input type=submit>");
+			out.println("</td>");
+			out.println("</tr>");
+			out.println("</table>");
 			out.println("</form>");
 			MainBetterNameHereRequired.template().printTemplateFooter();
 			out.close();

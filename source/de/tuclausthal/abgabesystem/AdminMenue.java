@@ -13,11 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.UserDAOIf;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.LectureDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.ParticipationDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.SubmissionDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.TaskDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.UserDAO;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Lecture;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
@@ -103,7 +98,7 @@ public class AdminMenue extends HttpServlet {
 						User user = participation.getUser();
 						out.println("<tr>");
 						out.println("<td>" + user.getFullName() + "</td>");
-						out.println("<td><a href=\"" + response.encodeURL("?action=removeUser&lecture=" + lecture.getId() + "&userid=" + user.getUid()) + "\">degradieren</a></td>");
+						out.println("<td><a href=\"" + response.encodeURL("?action=removeUser&amp;lecture=" + lecture.getId() + "&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
 						out.println("</tr>");
 					}
 				}
@@ -127,7 +122,7 @@ public class AdminMenue extends HttpServlet {
 						User user = participation.getUser();
 						out.println("<tr>");
 						out.println("<td>" + user.getFullName() + "</td>");
-						out.println("<td><a href=\"" + response.encodeURL("?action=removeUser&lecture=" + lecture.getId() + "&userid=" + user.getUid()) + "\">degradieren</a></td>");
+						out.println("<td><a href=\"" + response.encodeURL("?action=removeUser&amp;lecture=" + lecture.getId() + "&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
 						out.println("</tr>");
 					}
 				}
@@ -158,7 +153,7 @@ public class AdminMenue extends HttpServlet {
 				} else { // dregregate user
 					participationDAO.createParticipation(user, lecture, ParticipationRole.NORMAL);
 				}
-				response.sendRedirect(response.encodeURL(request.getRequestURL() + "?action=showLecture&lecture=" + lecture.getId()));
+				response.sendRedirect(response.encodeURL(request.getRequestURL() + "?action=showLecture&amp;lecture=" + lecture.getId()));
 				return;
 			}
 		} else { // list all lectures
@@ -174,7 +169,7 @@ public class AdminMenue extends HttpServlet {
 				while (lectureIterator.hasNext()) {
 					Lecture lecture = lectureIterator.next();
 					out.println("<tr>");
-					out.println("<td><a href=\"" + response.encodeURL(request.getRequestURL() + "?action=showLecture&lecture=" + lecture.getId()) + "\">" + Util.mknohtml(lecture.getName()) + "</a></td>");
+					out.println("<td><a href=\"" + response.encodeURL(request.getRequestURL() + "?action=showLecture&amp;lecture=" + lecture.getId()) + "\">" + Util.mknohtml(lecture.getName()) + "</a></td>");
 					out.println("<td>" + lecture.getReadableSemester() + "</td>");
 					out.println("</tr>");
 				}
@@ -188,12 +183,12 @@ public class AdminMenue extends HttpServlet {
 	}
 
 	public void printAddUserForm(PrintWriter out, Lecture lecture, String type) {
-		out.println("<form>");
+		Iterator<Participation> iterator = lecture.getParticipants().iterator();
+		out.println("<form action=\"?\">");
 		out.println("<input type=hidden name=action value=addUser>");
 		out.println("<input type=hidden name=type value=" + type + ">");
 		out.println("<input type=hidden name=lecture value=" + lecture.getId() + ">");
 		out.println("<select name=userid>");
-		Iterator<Participation> iterator = lecture.getParticipants().iterator();
 		while (iterator.hasNext()) {
 			Participation participation = iterator.next();
 			if (participation.getRoleType() == ParticipationRole.NORMAL) {
@@ -201,8 +196,8 @@ public class AdminMenue extends HttpServlet {
 				out.println("<option value=" + user.getUid() + ">" + user.getFullName());
 			}
 		}
-		out.println("</select name=userid>");
-		out.println("<input type=submit value=hinzufügen>");
+		out.println("</select>");
+		out.println("<input type=submit value=\"hinzufügen\">");
 		out.println("</form>");
 	}
 

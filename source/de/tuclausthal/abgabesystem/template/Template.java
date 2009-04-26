@@ -11,6 +11,7 @@ public class Template {
 		MainBetterNameHereRequired.getServletResponse().setContentType("text/html");
 		MainBetterNameHereRequired.getServletResponse().setCharacterEncoding("UTF-8");
 		PrintWriter out = MainBetterNameHereRequired.getServletResponse().getWriter();
+		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Strict//EN\">");
 		out.println("<html>");
 		out.println("<head>");
 		out.println("<title>" + title + "</title>");

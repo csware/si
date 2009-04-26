@@ -13,9 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.TaskDAOIf;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.LectureDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.ParticipationDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.TaskDAO;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Lecture;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
@@ -80,7 +77,7 @@ public class TaskManager extends HttpServlet {
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<th valign=top>Beschreibung:</th>");
-			out.println("<td><textarea wrap=physical cols=60 rows=10 name=description>" + Util.mknohtml(task.getDescription()) + "</textarea></td>");
+			out.println("<td><textarea cols=60 rows=10 name=description>" + Util.mknohtml(task.getDescription()) + "</textarea></td>");
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<th>Startdatum:</th>");

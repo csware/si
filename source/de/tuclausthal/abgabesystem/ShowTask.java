@@ -15,9 +15,6 @@ import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.TaskDAOIf;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.ParticipationDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.SubmissionDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.TaskDAO;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Submission;
@@ -84,7 +81,7 @@ public class ShowTask extends HttpServlet {
 		out.println("</table>");
 
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
-			out.println("<p><div class=mid><a href=\"" + response.encodeURL("/ba/servlets/TaskManager?lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask") + "\">Aufgabe bearbeiten</a></div>");
+			out.println("<p><div class=mid><a href=\"" + response.encodeURL("/ba/servlets/TaskManager?lecture=" + task.getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=editTask") + "\">Aufgabe bearbeiten</a></div>");
 		}
 		if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 			if (task.getSubmissions().size() > 0) {
@@ -123,14 +120,14 @@ public class ShowTask extends HttpServlet {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
 			Submission submission = submissionDAO.getSubmission(task, mainbetternamereq.getUser());
 			if (submission != null) {
-				out.println("<h2>Informationen zu meiner Abgabe:</h2>");
+				out.println("<p><h2>Informationen zu meiner Abgabe:</h2>");
 				out.println("<table class=border>");
 				out.println("<tr>");
-				out.println("<td>Kompiliert:</td>");
+				out.println("<th>Kompiliert:</td>");
 				out.println("<td>" + submission.getCompiles() + "</td>");
 				out.println("</tr>");
 				out.println("<tr>");
-				out.println("<td>Besteht aus:</td>");
+				out.println("<th>Besteht aus:</td>");
 				out.println("<td>");
 				File path = new File("c:/abgabesystem/" + task.getLecture().getId() + "/" + task.getTaskid() + "/" + submission.getSubmissionid() + "/");
 				for (File file : path.listFiles()) {
@@ -142,7 +139,7 @@ public class ShowTask extends HttpServlet {
 				out.println("</tr>");
 				if (submission.getPoints() != null) {
 					out.println("<tr>");
-					out.println("<td>Bewertung:</td>");
+					out.println("<th>Bewertung:</td>");
 					out.println("<td>");
 					out.println(submission.getPoints().getPoints() + " von " + task.getMaxPoints());
 					out.println("</td>");

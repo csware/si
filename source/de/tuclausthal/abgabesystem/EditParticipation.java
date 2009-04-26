@@ -9,18 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
-import de.tuclausthal.abgabesystem.persistence.dao.GroupDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
-import de.tuclausthal.abgabesystem.persistence.dao.UserDAOIf;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.GroupDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.LectureDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.ParticipationDAO;
-import de.tuclausthal.abgabesystem.persistence.dao.impl.UserDAO;
-import de.tuclausthal.abgabesystem.persistence.datamodel.Group;
-import de.tuclausthal.abgabesystem.persistence.datamodel.Lecture;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
-import de.tuclausthal.abgabesystem.persistence.datamodel.User;
 import de.tuclausthal.abgabesystem.util.Util;
 
 public class EditParticipation extends HttpServlet {

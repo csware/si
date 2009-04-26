@@ -7,7 +7,6 @@ import de.tuclausthal.abgabesystem.MainBetterNameHereRequired;
 import de.tuclausthal.abgabesystem.persistence.dao.GroupDAOIf;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Group;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Lecture;
-import de.tuclausthal.abgabesystem.util.Util;
 
 public class GroupDAO implements GroupDAOIf {
 
