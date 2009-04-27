@@ -11,6 +11,10 @@ import de.tuclausthal.abgabesystem.MainBetterNameHereRequired;
 import de.tuclausthal.abgabesystem.persistence.dao.UserDAOIf;
 import de.tuclausthal.abgabesystem.persistence.datamodel.User;
 
+/**
+ * Data Access Object implementation for the UserDAOIf
+ * @author Sven Strickroth
+ */
 public class UserDAO implements UserDAOIf {
 	@Override
 	public User getUser(int uid) {

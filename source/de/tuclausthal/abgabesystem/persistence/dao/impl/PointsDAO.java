@@ -10,8 +10,11 @@ import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Points;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Submission;
 
+/**
+ * Data Access Object implementation for the PointsDAOIf
+ * @author Sven Strickroth
+ */
 public class PointsDAO implements PointsDAOIf {
-
 	@Override
 	public Points createPoints(int issuedPoints, Submission submission, Participation participation) {
 		// Hibernate exception abfangen

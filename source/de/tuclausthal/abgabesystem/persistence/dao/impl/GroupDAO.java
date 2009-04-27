@@ -8,8 +8,11 @@ import de.tuclausthal.abgabesystem.persistence.dao.GroupDAOIf;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Group;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Lecture;
 
+/**
+ * Data Access Object implementation for the GroupDAOIf
+ * @author Sven Strickroth
+ */
 public class GroupDAO implements GroupDAOIf {
-
 	@Override
 	public Group createGroup(Lecture lecture, String name) {
 		Session session = MainBetterNameHereRequired.getSession();
@@ -35,5 +38,4 @@ public class GroupDAO implements GroupDAOIf {
 	public Group getGroup(int groupid) {
 		return (Group) MainBetterNameHereRequired.getSession().get(Group.class, groupid);
 	}
-
 }

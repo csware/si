@@ -10,6 +10,10 @@ import de.tuclausthal.abgabesystem.persistence.datamodel.RegExpTest;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Task;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Test;
 
+/**
+ * Data Access Object implementation for the TestDAOIf
+ * @author Sven Strickroth
+ */
 public class TestDAO implements TestDAOIf {
 	@Override
 	public JUnitTest createJUnitTest(Task task) {

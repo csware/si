@@ -8,8 +8,11 @@ import de.tuclausthal.abgabesystem.persistence.dao.TestResultDAOIf;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Submission;
 import de.tuclausthal.abgabesystem.persistence.datamodel.TestResult;
 
+/**
+ * Data Access Object implementation for the TestResultDAOIf
+ * @author Sven Strickroth
+ */
 public class TestResultDAO implements TestResultDAOIf {
-
 	@Override
 	public TestResult createTestResult(Submission submission) {
 		// Hibernate exception abfangen
@@ -29,5 +32,4 @@ public class TestResultDAO implements TestResultDAOIf {
 		session.update(testResult);
 		tx.commit();
 	}
-
 }

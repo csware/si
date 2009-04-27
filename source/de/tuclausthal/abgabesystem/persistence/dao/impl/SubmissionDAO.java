@@ -11,8 +11,11 @@ import de.tuclausthal.abgabesystem.persistence.datamodel.Submission;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Task;
 import de.tuclausthal.abgabesystem.persistence.datamodel.User;
 
+/**
+ * Data Access Object implementation for the SubmissionDAOIf
+ * @author Sven Strickroth
+ */
 public class SubmissionDAO implements SubmissionDAOIf {
-
 	@Override
 	public Submission getSubmission(int submissionid) {
 		return (Submission) MainBetterNameHereRequired.getSession().get(Submission.class, submissionid);

@@ -10,23 +10,17 @@ import de.tuclausthal.abgabesystem.persistence.dao.TaskDAOIf;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Lecture;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Task;
 
+/**
+ * Data Access Object implementation for the TaskDAOIf
+ * @author Sven Strickroth
+ */
 public class TaskDAO implements TaskDAOIf {
-
 	@Override
 	public Task getTask(int taskid) {
 		return (Task) MainBetterNameHereRequired.getSession().get(Task.class, taskid);
 	}
 
 	@Override
-	/**
-	 * @param title
-	 * @param maxPoints
-	 * @param start
-	 * @param deadline
-	 * @param description
-	 * @param submissions
-	 * @param lecture
-	 */
 	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints) {
 		Session session = MainBetterNameHereRequired.getSession();
 		Transaction tx = session.beginTransaction();

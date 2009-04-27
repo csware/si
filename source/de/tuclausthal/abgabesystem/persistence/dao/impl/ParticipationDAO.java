@@ -14,8 +14,11 @@ import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.abgabesystem.persistence.datamodel.User;
 
+/**
+ * Data Access Object implementation for the ParticipationDAOIf
+ * @author Sven Strickroth
+ */
 public class ParticipationDAO implements ParticipationDAOIf {
-
 	@Override
 	public Participation createParticipation(User user, Lecture lecture, ParticipationRole type) {
 		Session session = MainBetterNameHereRequired.getSession();

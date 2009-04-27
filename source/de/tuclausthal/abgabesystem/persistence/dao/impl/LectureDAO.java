@@ -14,8 +14,11 @@ import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.User;
 import de.tuclausthal.abgabesystem.util.Util;
 
+/**
+ * Data Access Object implementation for the LectureDAOIf
+ * @author Sven Strickroth
+ */
 public class LectureDAO implements LectureDAOIf {
-
 	@Override
 	public List<Lecture> getLectures() {
 		return (List<Lecture>) MainBetterNameHereRequired.getSession().createCriteria(Lecture.class).addOrder(Order.desc("semester")).addOrder(Order.asc("name")).list();
@@ -58,5 +61,4 @@ public class LectureDAO implements LectureDAOIf {
 		// Criteria a = session.createCriteria(Lecture.class).createCriteria("participants").add(Restrictions.isNull("lecture")).createCriteria("user", Criteria.FULL_JOIN);
 		return lectures;
 	}
-
 }
