@@ -4,21 +4,8 @@ import javax.persistence.Entity;
 
 @Entity
 public class RegExpTest extends Test {
-	private String commandline;
-
-	/**
-	 * @return the commandline
-	 */
-	public String getCommandline() {
-		return commandline;
-	}
-
-	/**
-	 * @param commandline the commandline to set
-	 */
-	public void setCommandline(String commandline) {
-		this.commandline = commandline;
-	}
+	private String commandLineParameter;
+	private String mainClass;
 
 	/**
 	 * @return the regularExpression
@@ -35,4 +22,32 @@ public class RegExpTest extends Test {
 	}
 
 	private String regularExpression;
+
+	/**
+	 * @return the mainClass
+	 */
+	public String getMainClass() {
+		return mainClass;
+	}
+
+	/**
+	 * @param mainClass the mainClass to set
+	 */
+	public void setMainClass(String mainClass) {
+		this.mainClass = mainClass;
+	}
+
+	/**
+	 * @return the commandLineParameter
+	 */
+	public String getCommandLineParameter() {
+		return commandLineParameter;
+	}
+
+	/**
+	 * @param commandLineParameter the commandLineParameter to set
+	 */
+	public void setCommandLineParameter(String commandLineParameter) {
+		this.commandLineParameter = commandLineParameter;
+	}
 }

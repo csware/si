@@ -27,6 +27,7 @@ public class Task implements Serializable {
 	private int maxPoints = 0;
 	private Date start;
 	private Date deadline;
+	private Date showPoints;
 	private String description = "";
 	private Set<Submission> submissions;
 	private Lecture lecture;
@@ -43,13 +44,14 @@ public class Task implements Serializable {
 	 * @param submissions
 	 * @param lecture
 	 */
-	public Task(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture) {
+	public Task(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints) {
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.start = start;
 		this.deadline = deadline;
 		this.description = description;
 		this.lecture = lecture;
+		this.showPoints = showPoints;
 	}
 
 	/**
@@ -187,5 +189,19 @@ public class Task implements Serializable {
 	 */
 	public void setTest(Test test) {
 		this.test = test;
+	}
+
+	/**
+	 * @return the showPoints
+	 */
+	public Date getShowPoints() {
+		return showPoints;
+	}
+
+	/**
+	 * @param showPoints the showPoints to set
+	 */
+	public void setShowPoints(Date showPoints) {
+		this.showPoints = showPoints;
 	}
 }

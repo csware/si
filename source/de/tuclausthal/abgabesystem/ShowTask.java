@@ -90,10 +90,10 @@ public class ShowTask extends HttpServlet {
 				out.println("<table class=border>");
 				out.println("<tr>");
 				out.println("<th>Benutzer</th>");
+				out.println("<th>Kompiliert</th>");
 				if (task.getTest() != null) {
 					out.println("<th>Test</th>");
 				}
-				out.println("<th>Kompiliert</th>");
 				out.println("<th>Punkte</th>");
 				out.println("</tr>");
 				Iterator<Submission> submissionIterator = task.getSubmissions().iterator();
@@ -106,6 +106,13 @@ public class ShowTask extends HttpServlet {
 						compiles = "<span class=red>nein</span>";
 					}
 					out.println("<td>" + compiles + "</td>");
+					if (task.getTest() != null) {
+						String testOk = "<span class=green>ja</span>";
+						if (submission.getTestResult() == null || submission.getTestResult().getPassedTest() == false) {
+							testOk = "<span class=red>nein</span>";
+						}
+						out.println("<td>" + testOk + "</td>");
+					}
 					if (submission.getPoints() != null) {
 						out.println("<td align=right>" + submission.getPoints().getPoints() + "</td>");
 					} else {
@@ -126,6 +133,7 @@ public class ShowTask extends HttpServlet {
 				out.println("<th>Kompiliert:</td>");
 				out.println("<td>" + submission.getCompiles() + "</td>");
 				out.println("</tr>");
+				// TODO: öffentlicher Test
 				out.println("<tr>");
 				out.println("<th>Besteht aus:</td>");
 				out.println("<td>");
@@ -137,7 +145,7 @@ public class ShowTask extends HttpServlet {
 				}
 				out.println("</td>");
 				out.println("</tr>");
-				if (submission.getPoints() != null) {
+				if (task.getDeadline().after(new Date()) && submission.getPoints() != null) {
 					out.println("<tr>");
 					out.println("<th>Bewertung:</td>");
 					out.println("<td>");

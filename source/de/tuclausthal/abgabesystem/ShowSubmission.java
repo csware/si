@@ -81,6 +81,11 @@ public class ShowSubmission extends HttpServlet {
 
 		out.println("<p>");
 
+		if (submission.getTestResult() != null) {
+			out.println("passed: " + submission.getTestResult().getPassedTest());
+			out.println("<textarea cols=80 rows=15>" + Util.mknohtml(submission.getTestResult().getTestOutput()) + "</textarea>");
+		}
+
 		if (submission.getStderr() != null) {
 			out.println("<h2>STDErr:</h2>");
 			out.println("<textarea cols=80 rows=15>" + Util.mknohtml(submission.getStderr()) + "</textarea>");

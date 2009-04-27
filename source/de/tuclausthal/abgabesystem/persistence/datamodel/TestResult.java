@@ -6,8 +6,8 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class TestResult implements Serializable {
-	public Boolean passedTest = false;
-	public String testOutput = "not tested";
+	private Boolean passedTest = false;
+	private String testOutput = "not tested";
 
 	/**
 	 * @return the passedTest

@@ -1,10 +1,13 @@
 package de.tuclausthal.abgabesystem;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,10 +32,14 @@ import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.TaskDAOIf;
+import de.tuclausthal.abgabesystem.persistence.dao.TestResultDAOIf;
+import de.tuclausthal.abgabesystem.persistence.datamodel.JUnitTest;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.abgabesystem.persistence.datamodel.RegExpTest;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Submission;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Task;
+import de.tuclausthal.abgabesystem.persistence.datamodel.TestResult;
 import de.tuclausthal.abgabesystem.util.Util;
 
 public class SubmitSolution extends HttpServlet {
@@ -212,6 +219,44 @@ public class SubmitSolution extends HttpServlet {
 					} catch (Exception e) {
 						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "System.getProperty(\"java.home\") should point to a jre in a jdk directory");
 						return;
+					}
+
+					// Test exist
+					if (task.getTest() != null) {
+						// check what kind of test it is
+						List<String> params = new LinkedList<String>();
+						params.add("java");
+						//params.add("-Djava.security.manager");
+						//params.add("-Djava.security.policy=myPol.policy");
+						if (task.getTest() instanceof JUnitTest) {
+						} else if (task.getTest() instanceof RegExpTest) {
+							RegExpTest regExpTest = (RegExpTest) task.getTest();
+							params.add(regExpTest.getMainClass());
+							params.addAll(Arrays.asList(regExpTest.getCommandLineParameter().split(" ")));
+						} else {
+							// TODO: throw error!
+						}
+						ProcessBuilder pb = new ProcessBuilder(params);
+						pb.directory(path);
+						Process process = pb.start();
+						CheckThread checkTread = new CheckThread(process);
+						checkTread.run();
+						int exitValue = -1;
+						try {
+							exitValue = process.waitFor();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+						}
+						BufferedReader testErrorInputStream = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+						TestResultDAOIf testResultDAO = DAOFactory.TestResultDAOIf();
+						TestResult testResult = testResultDAO.createTestResult(submission);
+						testResult.setPassedTest((exitValue == 0));
+						String testError = "";
+						String line;
+						while ((line = testErrorInputStream.readLine()) != null) {
+							testError = testError.concat(line + "\n");
+						}
+						testResult.setTestOutput(testError);
 					}
 
 					submissionDAO.saveSubmission(submission);

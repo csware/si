@@ -6,6 +6,7 @@ import de.tuclausthal.abgabesystem.persistence.dao.impl.ParticipationDAO;
 import de.tuclausthal.abgabesystem.persistence.dao.impl.PointsDAO;
 import de.tuclausthal.abgabesystem.persistence.dao.impl.SubmissionDAO;
 import de.tuclausthal.abgabesystem.persistence.dao.impl.TaskDAO;
+import de.tuclausthal.abgabesystem.persistence.dao.impl.TestResultDAO;
 import de.tuclausthal.abgabesystem.persistence.dao.impl.UserDAO;
 
 public class DAOFactory {
@@ -29,5 +30,8 @@ public class DAOFactory {
 	}
 	public static UserDAOIf UserDAOIf() {
 		return new UserDAO();
+	}
+	public static TestResultDAOIf TestResultDAOIf() {
+		return new TestResultDAO();
 	}
 }

@@ -128,6 +128,7 @@ public class TaskManager extends HttpServlet {
 				// TODO: Datum richtig parsen, am besten mit Fkt. da öfters benötigt
 				Date startdate = new Date();
 				Date deadline = new Date();
+				Date showPoints = new Date();
 				try {
 					startdate = format.parse(request.getParameter("startdate"));
 					deadline = format.parse(request.getParameter("deadline"));
@@ -135,7 +136,7 @@ public class TaskManager extends HttpServlet {
 					// ignore
 				}
 				// more checks
-				task = taskDAO.newTask(request.getParameter("title"), Util.parseInteger(request.getParameter("maxpoints"), 0), startdate, deadline, request.getParameter("description"), lecture);
+				task = taskDAO.newTask(request.getParameter("title"), Util.parseInteger(request.getParameter("maxpoints"), 0), startdate, deadline, request.getParameter("description"), lecture, showPoints);
 			}
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
 			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()));

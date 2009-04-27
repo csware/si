@@ -27,10 +27,10 @@ public class TaskDAO implements TaskDAOIf {
 	 * @param submissions
 	 * @param lecture
 	 */
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture) {
+	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints) {
 		Session session = MainBetterNameHereRequired.getSession();
 		Transaction tx = session.beginTransaction();
-		Task task = new Task(title, maxPoints, start, deadline, description, lecture);
+		Task task = new Task(title, maxPoints, start, deadline, description, lecture, showPoints);
 		session.save(task);
 		tx.commit();
 		return task;
