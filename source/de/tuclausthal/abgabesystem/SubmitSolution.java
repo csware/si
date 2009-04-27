@@ -221,7 +221,7 @@ public class SubmitSolution extends HttpServlet {
 						return;
 					}
 
-					// Test exist
+					// Test exists
 					if (task.getTest() != null) {
 						// check what kind of test it is
 						List<String> params = new LinkedList<String>();

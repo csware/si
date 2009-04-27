@@ -84,7 +84,7 @@ public class ShowTask extends HttpServlet {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("/ba/servlets/TaskManager?lecture=" + task.getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=editTask") + "\">Aufgabe bearbeiten</a></div>");
 		}
 		if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
-			if (task.getSubmissions().size() > 0) {
+			if (task.getSubmissions() != null && task.getSubmissions().size() > 0) {
 				out.println("<p><h2>Abgaben</h2><p>");
 				// TODO: nach Gruppen sortiert
 				out.println("<table class=border>");
@@ -130,12 +130,12 @@ public class ShowTask extends HttpServlet {
 				out.println("<p><h2>Informationen zu meiner Abgabe:</h2>");
 				out.println("<table class=border>");
 				out.println("<tr>");
-				out.println("<th>Kompiliert:</td>");
+				out.println("<th>Kompiliert:</th>");
 				out.println("<td>" + submission.getCompiles() + "</td>");
 				out.println("</tr>");
 				// TODO: öffentlicher Test
 				out.println("<tr>");
-				out.println("<th>Besteht aus:</td>");
+				out.println("<th>Besteht aus:</th>");
 				out.println("<td>");
 				File path = new File("c:/abgabesystem/" + task.getLecture().getId() + "/" + task.getTaskid() + "/" + submission.getSubmissionid() + "/");
 				for (File file : path.listFiles()) {

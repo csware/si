@@ -44,7 +44,6 @@ public class TestDAO implements TestDAOIf {
 		Session session = MainBetterNameHereRequired.getSession();
 		Transaction tx = session.beginTransaction();
 		session.update(test);
-		session.delete(test);
 		tx.commit();
 	}
 

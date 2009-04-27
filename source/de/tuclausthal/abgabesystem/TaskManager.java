@@ -102,6 +102,14 @@ public class TaskManager extends HttpServlet {
 			out.println("</tr>");
 			out.println("</table>");
 			out.println("</form>");
+			if (editTask) {
+				if (task.getTest() == null) {
+					out.println("<p class=mid><a href=\"" + response.encodeURL("/ba/servlets/TestManager?action=newTest&amp;taskid=" + task.getTaskid()) + "\">Test hinzufügen</a></p>");
+				} else {
+					//out.println("<p class=mid><a href=\"" + response.encodeURL("?") + "\">Test bearbeiten</a></p>");
+					out.println("<p class=mid><a href=\"" + response.encodeURL("/ba/servlets/TestManager?action=deleteTest&amp;taskid=" + task.getTaskid()) + "\">Test löschen</a></p>");
+				}
+			}
 		} else if (request.getParameter("action") != null && (request.getParameter("action").equals("saveNewTask") || request.getParameter("action").equals("saveTask"))) {
 			SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
@@ -147,6 +155,8 @@ public class TaskManager extends HttpServlet {
 			if (task == null) {
 				mainbetternamereq.template().printTemplateHeader("Aufgabe nicht gefunden");
 				out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
+			} else {
+				taskDAO.deleteTask(task);
 			}
 			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowLecture?lecture=" + lecture.getId()));
 			return;

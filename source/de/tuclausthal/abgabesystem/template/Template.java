@@ -6,7 +6,16 @@ import java.io.PrintWriter;
 import de.tuclausthal.abgabesystem.MainBetterNameHereRequired;
 import de.tuclausthal.abgabesystem.persistence.datamodel.User;
 
+/**
+ * An easy template
+ * @author Sven Strickroth
+ */
 public class Template {
+	/**
+	 * print a HTML page heading
+	 * @param title
+	 * @throws IOException
+	 */
 	public void printTemplateHeader(String title) throws IOException {
 		MainBetterNameHereRequired.getServletResponse().setContentType("text/html");
 		MainBetterNameHereRequired.getServletResponse().setCharacterEncoding("UTF-8");
@@ -20,6 +29,10 @@ public class Template {
 		out.println("<body><img src=\"/ba/logo.gif\" alt=\"TU Clausthal\" height=\"64\" width=\"367\"><p><h1>" + title + "</h1><p>");
 	}
 
+	/**
+	 * print a HTML page footer
+	 * @throws IOException
+	 */
 	public void printTemplateFooter() throws IOException {
 		PrintWriter out = MainBetterNameHereRequired.getServletResponse().getWriter();
 		out.println("<p><hr>");

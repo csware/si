@@ -4,12 +4,10 @@ import java.io.File;
 import java.util.Date;
 
 /**
- * 
- *
+ * Utility-class with various helpers
  * @author Sven Strickroth
  */
 public final class Util {
-
 	public static String mknohtml(String message) {
 		if (message == null) {
 			return (null);

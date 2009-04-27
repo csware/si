@@ -3,6 +3,7 @@ package de.tuclausthal.abgabesystem.persistence.datamodel;
 import java.io.Serializable;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Lob;
 
 @Embeddable
 public class TestResult implements Serializable {
@@ -26,6 +27,7 @@ public class TestResult implements Serializable {
 	/**
 	 * @return the testOutput
 	 */
+	@Lob
 	public String getTestOutput() {
 		return testOutput;
 	}

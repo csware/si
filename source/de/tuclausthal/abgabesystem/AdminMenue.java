@@ -57,7 +57,7 @@ public class AdminMenue extends HttpServlet {
 				} else {
 					// list all tasks
 					for (File tasks : lectures.listFiles()) {
-						if (DAOFactory.TaskDAOIf().getTask(Util.parseInteger(tasks.getName(), 0)) == null) {
+						if (!tasks.getName().equals("junittest.jar") && DAOFactory.TaskDAOIf().getTask(Util.parseInteger(tasks.getName(), 0)) == null) {
 							Util.recursiveDelete(tasks);
 						} else {
 							// list all submissions
