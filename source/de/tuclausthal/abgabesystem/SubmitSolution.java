@@ -92,7 +92,7 @@ public class SubmitSolution extends HttpServlet {
 			if (submission != null) {
 				out.println("Infos zu meiner bisherigen Abgabe");
 			}
-			out.println("<FORM ENCTYPE=\"multipart/form-data\" method=POST>");
+			out.println("<FORM ENCTYPE=\"multipart/form-data\" method=POST action=\"?taskid=" + task.getTaskid() + "\">");
 			out.println("<INPUT TYPE=file NAME=file>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
 			out.println("</FORM>");
@@ -229,6 +229,11 @@ public class SubmitSolution extends HttpServlet {
 						//params.add("-Djava.security.manager");
 						//params.add("-Djava.security.policy=myPol.policy");
 						if (task.getTest() instanceof JUnitTest) {
+							// TODO: only win atm
+							params.add("-cp");
+							params.add("..\\junittest.jar;c:\\junit.jar;.");
+							params.add("junit.textui.TestRunner");
+							params.add("AllTests");
 						} else if (task.getTest() instanceof RegExpTest) {
 							RegExpTest regExpTest = (RegExpTest) task.getTest();
 							params.add(regExpTest.getMainClass());
@@ -247,7 +252,7 @@ public class SubmitSolution extends HttpServlet {
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 						}
-						BufferedReader testErrorInputStream = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+						BufferedReader testErrorInputStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
 						TestResultDAOIf testResultDAO = DAOFactory.TestResultDAOIf();
 						TestResult testResult = testResultDAO.createTestResult(submission);
 						testResult.setPassedTest((exitValue == 0));
@@ -255,6 +260,16 @@ public class SubmitSolution extends HttpServlet {
 						String line;
 						while ((line = testErrorInputStream.readLine()) != null) {
 							testError = testError.concat(line + "\n");
+						}
+						if (task.getTest() instanceof RegExpTest) {
+							System.out.println(((RegExpTest) task.getTest()).getRegularExpression());
+							System.out.println(testError);
+							Pattern testPattern = Pattern.compile(((RegExpTest) task.getTest()).getRegularExpression());
+							Matcher testMatcher = testPattern.matcher(testError.trim());
+							if (!testMatcher.matches()) {
+								testError = "regexp doesn't match. Output follows:\n" + testError;
+								testResult.setPassedTest(false);
+							}
 						}
 						testResult.setTestOutput(testError);
 					}
