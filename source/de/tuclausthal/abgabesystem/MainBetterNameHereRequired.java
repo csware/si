@@ -18,6 +18,8 @@ import de.tuclausthal.abgabesystem.template.Template;
  */
 public class MainBetterNameHereRequired {
 	private static ThreadLocal<MainBetterNameHereRequired> instance = new ThreadLocal<MainBetterNameHereRequired>();
+	private static final ThreadLocal<Session> session = new ThreadLocal();
+	private static final SessionFactory sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
 
 	/**
 	 * @return the servletRequest
@@ -40,16 +42,18 @@ public class MainBetterNameHereRequired {
 	private HttpServletRequest servletRequest;
 
 	private HttpServletResponse servletResponse;
-	private static final SessionFactory sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();;
 
-	private static Session session = sessionFactory.openSession();
-	
 	/**
 	 * Gibt eine Hibernation-Datenbank-Sitzung zurück
 	 * @return
 	 * @throws HibernateException
 	 */
 	public static Session getSession() throws HibernateException {
+		Session session = MainBetterNameHereRequired.session.get();
+		if (session == null) {
+			session = sessionFactory.openSession();
+			MainBetterNameHereRequired.session.set(session);
+		}
 		return session;
 	}
 
