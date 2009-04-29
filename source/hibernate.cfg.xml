@@ -9,6 +9,18 @@
 	<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
 	<property name="dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
 	<property name="connection.password"></property>
+
+        <!-- Disable second-level cache. -->
+        <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+        <property name="cache.use_query_cache">false</property>
+        <property name="cache.use_minimal_puts">false</property>
+        <property name="max_fetch_depth">3</property>
+
+        <!-- Use the C3P0 connection pool. -->
+        <property name="c3p0.min_size">3</property>
+        <property name="c3p0.max_size">5</property>
+        <property name="c3p0.timeout">1800</property>
+
  <property name="transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
     <!--  thread is the short name for
       org.hibernate.context.ThreadLocalSessionContext
