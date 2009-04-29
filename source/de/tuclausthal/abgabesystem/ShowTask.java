@@ -134,6 +134,12 @@ public class ShowTask extends HttpServlet {
 				out.println("<td>" + submission.getCompiles() + "</td>");
 				out.println("</tr>");
 				// TODO: öffentlicher Test
+				if (task.getTest() != null && task.getTest().getVisibleToStudents() == true && submission.getTestResult() != null) {
+					out.println("<tr>");
+					out.println("<th>Test:</th>");
+					out.println("<td>" + submission.getTestResult().getPassedTest() + "</td>");
+					out.println("</tr>");
+				}
 				out.println("<tr>");
 				out.println("<th>Besteht aus:</th>");
 				out.println("<td>");

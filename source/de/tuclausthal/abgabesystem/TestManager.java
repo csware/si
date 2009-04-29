@@ -75,6 +75,10 @@ public class TestManager extends HttpServlet {
 			out.println("<td><input type=text name=regexp></td>");
 			out.println("</tr>");
 			out.println("<tr>");
+			out.println("<th>Sichtbar für Studenten:</th>");
+			out.println("<td><input type=checkbox name=visibletostudents></td>");
+			out.println("</tr>");
+			out.println("<tr>");
 			out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
 			out.println(response.encodeURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()));
 			out.println("\">Abbrechen</a></td>");
@@ -85,8 +89,12 @@ public class TestManager extends HttpServlet {
 			out.println("<form ENCTYPE=\"multipart/form-data\" action=\"" + response.encodeURL("?taskid=" + task.getTaskid() + "&amp;action=saveNewTest&type=junit") + "\" method=post>");
 			out.println("<table class=border>");
 			out.println("<tr>");
+			out.println("<th>Sichtbar für Studenten:</th>");
+			out.println("<td><input type=checkbox name=visibletostudents></td>");
+			out.println("</tr>");
+			out.println("<tr>");
 			out.println("<th>JUnit-Testcase:</th>");
-			out.println("<td><INPUT TYPE=file NAME=testcase> (Doc. required here)</td>");
+			out.println("<td><INPUT TYPE=file NAME=testcase> (Main Testclass: AllTests)</td>");
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
@@ -124,6 +132,7 @@ public class TestManager extends HttpServlet {
 				if (path.exists() == false) {
 					path.mkdirs();
 				}
+				boolean isVisible = false;
 				// Process the uploaded items
 				Iterator<FileItem> iter = items.iterator();
 				while (iter.hasNext()) {
@@ -142,11 +151,14 @@ public class TestManager extends HttpServlet {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+					} else if (item.getName().equals("visibletostudents")) {
+						isVisible = true;
 					}
 				}
 
 				TestDAOIf testDAO = DAOFactory.TestDAOIf();
 				JUnitTest test = testDAO.createJUnitTest(task);
+				test.setVisibleToStudents(isVisible);
 				testDAO.saveTest(test);
 				// Race cond?
 				task.setTest(test);
@@ -170,6 +182,7 @@ public class TestManager extends HttpServlet {
 			test.setMainClass(request.getParameter("mainclass"));
 			test.setCommandLineParameter(request.getParameter("parameter"));
 			test.setRegularExpression(request.getParameter("regexp"));
+			test.setVisibleToStudents(request.getParameter("visibletostudents")!=null);
 			testDAO.saveTest(test);
 			// Race cond?
 			task.setTest(test);

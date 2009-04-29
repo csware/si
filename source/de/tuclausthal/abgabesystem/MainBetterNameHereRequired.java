@@ -18,7 +18,7 @@ import de.tuclausthal.abgabesystem.template.Template;
  */
 public class MainBetterNameHereRequired {
 	private static ThreadLocal<MainBetterNameHereRequired> instance = new ThreadLocal<MainBetterNameHereRequired>();
-	private static final ThreadLocal<Session> session = new ThreadLocal();
+	private static final ThreadLocal<Session> session = new ThreadLocal<Session>();
 	private static final SessionFactory sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
 
 	/**
