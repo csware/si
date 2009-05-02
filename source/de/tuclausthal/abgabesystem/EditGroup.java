@@ -43,7 +43,17 @@ public class EditGroup extends HttpServlet {
 			return;
 		}
 
-		if (request.getParameterValues("members") != null && request.getParameterValues("members").length > 0) {
+		if ("removeFromGroup".equals(request.getParameter("action")) && request.getParameter("participationid") != null) {
+			Participation memberParticipation = participationDAO.getParticipation(Util.parseInteger(request.getParameter("participationid"), 0));
+			if (memberParticipation != null) {
+				memberParticipation.setGroup(null);
+				participationDAO.saveParticipation(memberParticipation);
+			}
+			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowLecture?lecture=" + group.getLecture().getId()));
+			return;
+		} else if (request.getParameterValues("members") != null && request.getParameterValues("members").length > 0) {
+			group.setName(request.getParameter("title"));
+			groupDAO.saveGroup(group);
 			for (String newMember : request.getParameterValues("members")) {
 				Participation memberParticipation = participationDAO.getParticipation(Util.parseInteger(newMember, 0));
 				if (memberParticipation != null) {

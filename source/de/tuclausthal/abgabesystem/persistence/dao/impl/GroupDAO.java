@@ -38,4 +38,12 @@ public class GroupDAO implements GroupDAOIf {
 	public Group getGroup(int groupid) {
 		return (Group) MainBetterNameHereRequired.getSession().get(Group.class, groupid);
 	}
+
+	@Override
+	public void saveGroup(Group group) {
+		Session session = MainBetterNameHereRequired.getSession();
+		Transaction tx = session.beginTransaction();
+		session.update(group);
+		tx.commit();
+	}
 }

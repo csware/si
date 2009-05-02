@@ -71,18 +71,18 @@ public class ShowLecture extends HttpServlet {
 		if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 			out.println("<p>");
 			out.println("<h2>Teilnehmer</h2>");
-			boolean isAdvisor = (participation.getRoleType().compareTo(ParticipationRole.TUTOR) == 0);
+			boolean isAdvisor = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0);
 			if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
 				out.println("<h3>Ohne Gruppe</h3>");
 				listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor);
 				if (participation.getRoleType() == ParticipationRole.ADVISOR) {
-					out.println("<p><div class=mid><a href=\"" + response.encodeURL("/ba/servlets/AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a></div>");
+					out.println("<p class=mid><a href=\"" + response.encodeURL("/ba/servlets/AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a></p>");
 				}
 			}
 			for (Group group : lecture.getGroups()) {
 				out.println("<h3>Gruppe: " + Util.mknohtml(group.getName()) + "</h3>");
 				if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
-					out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/EditGroup?groupid=" + group.getGid()) + "\">Teilnehmer zuordnen</a></div>");
+					out.println("<p class=mid><a href=\"" + response.encodeURL("/ba/servlets/EditGroup?groupid=" + group.getGid()) + "\">Teilnehmer zuordnen</a></p>");
 				}
 				listMembers(group.getMembers().iterator(), response, isAdvisor);
 			}
@@ -107,19 +107,27 @@ public class ShowLecture extends HttpServlet {
 				if (thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
 					if (isAdvisor) {
-						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&amp;participationid=" + thisParticipation.getId()) + "&type=tutor\">+</a>)");
+						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;type=tutor\">+</a>)");
+						if (thisParticipation.getGroup() != null) {
+							out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditGroup?groupid=" + thisParticipation.getGroup().getGid() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;action=removeFromGroup\">--</a>)");
+						}
 					}
-					out.println("</td>");
 				} else if (thisParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) == 0) {
 					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
 					if (isAdvisor) {
-						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&amp;participationid=" + thisParticipation.getId()) + "&type=normal\">-</a>)");
+						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;type=normal\">-</a>)");
 					}
-					out.println("</td>");
+					if (thisParticipation.getGroup() != null) {
+						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditGroup?groupid=" + thisParticipation.getGroup().getGid() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;action=removeFromGroup\">--</a>)");
+					}
 				} else {
-					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()) + "</td>");
+					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
+					if (isAdvisor && thisParticipation.getGroup() != null) {
+						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditGroup?groupid=" + thisParticipation.getGroup().getGid() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;action=removeFromGroup\">--</a>)");
+					}
 				}
-				out.println("<td>" + getAllPoints(thisParticipation) + "</td>");
+				out.println("</td>");
+				out.println("<td class=points>" + getAllPoints(thisParticipation) + "</td>");
 
 				out.println("</tr>");
 			}

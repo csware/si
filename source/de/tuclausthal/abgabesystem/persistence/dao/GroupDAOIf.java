@@ -28,4 +28,10 @@ public interface GroupDAOIf {
 	 * @param group the group to delete
 	 */
 	public void deleteGroup(Group group);
+
+	/**
+	 * Updates a group and store it in the DB
+	 * @param group
+	 */
+	public void saveGroup(Group group);
 }
