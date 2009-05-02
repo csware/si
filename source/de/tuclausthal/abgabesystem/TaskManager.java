@@ -59,6 +59,7 @@ public class TaskManager extends HttpServlet {
 				task = new Task();
 				task.setStart(new Date());
 				task.setDeadline(new Date(new Date().getTime() + 3600 * 24 * 7 * 1000));
+				task.setShowPoints(task.getDeadline());
 				mainbetternamereq.template().printTemplateHeader("neue Aufgabe");
 			}
 
@@ -86,6 +87,10 @@ public class TaskManager extends HttpServlet {
 			out.println("<tr>");
 			out.println("<th>Enddatum:</th>");
 			out.println("<td><input type=text name=deadline value=\"" + Util.mknohtml(task.getDeadline().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<th>Punktedatum:</th>");
+			out.println("<td><input type=text name=pointsdate value=\"" + Util.mknohtml(task.getShowPoints().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<th>Max. Punkte:</th>");
@@ -126,8 +131,10 @@ public class TaskManager extends HttpServlet {
 				task.setTitle(request.getParameter("title"));
 				task.setDescription(request.getParameter("description"));
 				try {
+					// TODO: Datum richtig parsen, am besten mit Fkt. da öfters benötigt
 					task.setStart(format.parse(request.getParameter("startdate")));
 					task.setDeadline(format.parse(request.getParameter("deadline")));
+					task.setShowPoints(format.parse(request.getParameter("pointsdate")));
 				} catch (Exception e) {
 					// ignore
 				}
@@ -140,6 +147,7 @@ public class TaskManager extends HttpServlet {
 				try {
 					startdate = format.parse(request.getParameter("startdate"));
 					deadline = format.parse(request.getParameter("deadline"));
+					showPoints = format.parse(request.getParameter("pointsdate"));
 				} catch (Exception e) {
 					// ignore
 				}

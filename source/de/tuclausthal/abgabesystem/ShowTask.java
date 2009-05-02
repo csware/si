@@ -151,9 +151,9 @@ public class ShowTask extends HttpServlet {
 				}
 				out.println("</td>");
 				out.println("</tr>");
-				if (task.getDeadline().after(new Date()) && submission.getPoints() != null) {
+				if (task.getShowPoints().after(new Date()) && submission.getPoints() != null) {
 					out.println("<tr>");
-					out.println("<th>Bewertung:</td>");
+					out.println("<th>Bewertung:</th>");
 					out.println("<td>");
 					out.println(submission.getPoints().getPoints() + " von " + task.getMaxPoints());
 					out.println("</td>");
