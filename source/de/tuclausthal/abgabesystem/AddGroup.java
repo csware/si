@@ -45,6 +45,7 @@ public class AddGroup extends HttpServlet {
 			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/EditGroup?groupid=" + group.getGid()));
 			return;
 		} else {
+			mainbetternamereq.template().printTemplateHeader("Gruppe erstellen");
 			out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
 			out.println("<input type=hidden name=action value=saveNewGroup>");
 			out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
