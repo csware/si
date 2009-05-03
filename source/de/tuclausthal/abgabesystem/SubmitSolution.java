@@ -7,6 +7,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
@@ -20,7 +21,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
+import javax.tools.JavaCompiler.CompilationTask;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -207,14 +211,27 @@ public class SubmitSolution extends HttpServlet {
 					try {
 						ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
 
-						List<String> javaFiles = new LinkedList<String>();
+						List<File> javaFiles = new LinkedList<File>();
 						for (File javaFile : path.getAbsoluteFile().listFiles()) {
 							if (javaFile.getName().endsWith(".java")) {
-								javaFiles.add(javaFile.getAbsolutePath());
+								javaFiles.add(javaFile);
 							}
 						}
-						int a = jc.run(null, null, errorOutputStream, javaFiles.toArray(new String[] {}));
-						submission.setCompiles(a == 0);
+						//int a = jc.run(null, null, errorOutputStream, javaFiles.toArray(new String[] {}));
+
+						JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+						StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
+
+						// prepare the source file(s) to compile
+						Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(javaFiles);
+						CompilationTask ctask = compiler.getTask(null, fileManager, null, null, null, compilationUnits);
+						boolean a = ctask.call();
+						try {
+							fileManager.close();
+						} catch (IOException e) {
+						}
+
+						submission.setCompiles(a);
 						submission.setStderr(errorOutputStream.toString());
 					} catch (Exception e) {
 						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "System.getProperty(\"java.home\") should point to a jre in a jdk directory");
