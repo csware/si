@@ -146,7 +146,8 @@ public class ShowTask extends HttpServlet {
 				File path = new File("c:/abgabesystem/" + task.getLecture().getId() + "/" + task.getTaskid() + "/" + submission.getSubmissionid() + "/");
 				for (File file : path.listFiles()) {
 					if (file.getName().endsWith(".java")) {
-						out.println(file.getName() + "<br>");
+						// TODO: recompile and recheck
+						out.println(file.getName() + " (<a href=\"" + response.encodeURL("/ba/servlets/DeleteFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)<br>");
 					}
 				}
 				out.println("</td>");

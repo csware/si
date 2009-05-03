@@ -87,27 +87,19 @@ public class ShowSubmission extends HttpServlet {
 			out.println("<p><textarea cols=80 rows=15>" + Util.mknohtml(submission.getTestResult().getTestOutput()) + "</textarea></div>");
 		}
 
-		if (submission.getStderr() != null) {
+		if (submission.getStderr() != null && !submission.getStderr().isEmpty()) {
 			out.println("<h2>STDErr:</h2>");
-			out.println("<textarea cols=80 rows=15>" + Util.mknohtml(submission.getStderr()) + "</textarea>");
+			out.println("<p class=mid><textarea cols=80 rows=15>" + Util.mknohtml(submission.getStderr()) + "</textarea></p>");
 		}
 		out.println("<h2>Dateien:</h2>");
+		out.println("<div class=mid>");
 		File path = new File("c:/abgabesystem/" + task.getLecture().getId() + "/" + task.getTaskid() + "/" + submission.getSubmissionid() + "/");
 		for (File file : path.listFiles()) {
 			if (file.getName().endsWith(".java")) {
-				out.println(file.getName() + "<br>");
-				String code = "";
-				BufferedReader freader = new BufferedReader(new FileReader(file));
-				String line;
-				while ((line = freader.readLine()) != null) {
-					code = code.concat(line + "\n");
-				}
-				// Renderer renderer = XhtmlRendererFactory.getRenderer(XhtmlRendererFactory.JAVA);
-				// code = renderer.highlight(file.getName(), code, "utf8", true);
-				out.println("<textarea cols=80 rows=15>" + Util.mknohtml(code) + "</textarea><p>");
-				freader.close();
+				out.println("<iframe width=800 height=250 src=\"" + response.encodeURL("/ba/servlets/ShowFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\"></iframe><p>");
 			}
 		}
+		out.println("</div>");
 		mainbetternamereq.template().printTemplateFooter();
 	}
 

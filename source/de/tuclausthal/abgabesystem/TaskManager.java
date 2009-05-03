@@ -77,7 +77,7 @@ public class TaskManager extends HttpServlet {
 			out.println("<td><input type=text name=title value=\"" + Util.mknohtml(task.getTitle()) + "\"></td>");
 			out.println("</tr>");
 			out.println("<tr>");
-			out.println("<th valign=top>Beschreibung:</th>");
+			out.println("<th>Beschreibung:</th>");
 			out.println("<td><textarea cols=60 rows=10 name=description>" + Util.mknohtml(task.getDescription()) + "</textarea></td>");
 			out.println("</tr>");
 			out.println("<tr>");
