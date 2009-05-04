@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.UserDAOIf;
+import de.tuclausthal.abgabesystem.persistence.dao.impl.UserDAO;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Lecture;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
@@ -134,6 +135,54 @@ public class AdminMenue extends HttpServlet {
 				out.println("</table><p>");
 				out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 			}
+
+		} else if (request.getParameter("action") != null && request.getParameter("action").equals("showAdminUsers")) {
+			mainbetternamereq.template().printTemplateHeader("Super User");
+
+			UserDAOIf userDAO = DAOFactory.UserDAOIf();
+
+			Iterator<User> userIterator = userDAO.getSuperUsers().iterator();
+			out.println("<table class=border>");
+			out.println("<tr>");
+			out.println("<th>Benutzer</th>");
+			out.println("<th>Entfernen</th>");
+			out.println("</tr>");
+			while (userIterator.hasNext()) {
+				User user = userIterator.next();
+				out.println("<tr>");
+				out.println("<td>" + user.getFullName() + "</td>");
+				out.println("<td><a href=\"" + response.encodeURL("?action=removeSuperUser&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
+				out.println("</tr>");
+			}
+			out.println("<tr>");
+			out.println("<td colspan=2>");
+			userIterator = userDAO.getUsers().iterator();
+			out.println("<form action=\"?\">");
+			out.println("<input type=hidden name=action value=addSuperUser>");
+			out.println("<select name=userid>");
+			while (userIterator.hasNext()) {
+				User user = userIterator.next();
+				if (!user.isSuperUser()) {
+					out.println("<option value=" + user.getUid() + ">" + user.getFullName());
+				}
+			}
+			out.println("</select>");
+			out.println("<input type=submit value=\"hinzufügen\">");
+			out.println("</form>");
+			out.println("</td>");
+			out.println("</tr>");
+			out.println("</table><p>");
+
+			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
+		} else if (("addSuperUser".equals(request.getParameter("action")) || "removeSuperUser".equals(request.getParameter("action"))) && request.getParameter("userid") != null) {
+			UserDAOIf userDAO = DAOFactory.UserDAOIf();
+			User user = userDAO.getUser(Util.parseInteger(request.getParameter("userid"), 0));
+			if (user != null) {
+				user.setSuperUser("addSuperUser".equals(request.getParameter("action")));
+				userDAO.saveUser(user);
+			}
+			response.sendRedirect(response.encodeURL(request.getRequestURL() + "?action=showAdminUsers"));
+			return;
 		} else if (request.getParameter("action") != null && (request.getParameter("action").equals("addUser") || request.getParameter("action").equals("removeUser")) && request.getParameter("lecture") != null && request.getParameter("userid") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 			UserDAOIf userDAO = DAOFactory.UserDAOIf();
@@ -173,10 +222,11 @@ public class AdminMenue extends HttpServlet {
 					out.println("<td>" + lecture.getReadableSemester() + "</td>");
 					out.println("</tr>");
 				}
-				out.println("</table><p>");
+				out.println("</table>");
 			}
-			out.println("<div class=mid><a href=\"" + response.encodeURL("?action=newLecture") + "\">Neue Veranstaltung</a></div>");
-			out.println("<p><div class=mid><a href=\"" + response.encodeURL("?action=cleanup") + "\">Verzeichnis Cleanup</a></div>");
+			out.println("<p class=mid><a href=\"" + response.encodeURL("?action=newLecture") + "\">Neue Veranstaltung</a></p>");
+			out.println("<p class=mid><a href=\"" + response.encodeURL("?action=showAdminUsers") + "\">Super User anzeigen</a></p>");
+			out.println("<p class=mid><a href=\"" + response.encodeURL("?action=cleanup") + "\">Verzeichnis Cleanup</a></p>");
 		}
 
 		mainbetternamereq.template().printTemplateFooter();

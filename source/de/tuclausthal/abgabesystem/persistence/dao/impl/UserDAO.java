@@ -44,4 +44,17 @@ public class UserDAO implements UserDAOIf {
 	public List<User> getUsers() {
 		return (List<User>) MainBetterNameHereRequired.getSession().createCriteria(User.class).addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 	}
+
+	@Override
+	public List<User> getSuperUsers() {
+		return (List<User>) MainBetterNameHereRequired.getSession().createCriteria(User.class).add(Restrictions.eq("superUser", true)).addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+	}
+
+	@Override
+	public void saveUser(User user) {
+		Session session = MainBetterNameHereRequired.getSession();
+		Transaction tx = session.beginTransaction();
+		session.save(user);
+		tx.commit();
+	}
 }

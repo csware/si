@@ -35,4 +35,16 @@ public interface UserDAOIf {
 	 * @return list of users
 	 */
 	public List<User> getUsers();
+
+	/**
+	 * Get all admin-users from the DB
+	 * @return list of admin-users
+	 */
+	public List<User> getSuperUsers();
+
+	/**
+	 * Update/save the user <i>user</i>
+	 * @param user the user to update
+	 */
+	public void saveUser(User user);
 }
