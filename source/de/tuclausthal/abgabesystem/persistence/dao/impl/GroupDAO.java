@@ -7,6 +7,7 @@ import de.tuclausthal.abgabesystem.MainBetterNameHereRequired;
 import de.tuclausthal.abgabesystem.persistence.dao.GroupDAOIf;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Group;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Lecture;
+import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 
 /**
  * Data Access Object implementation for the GroupDAOIf
@@ -29,6 +30,10 @@ public class GroupDAO implements GroupDAOIf {
 	public void deleteGroup(Group group) {
 		Session session = MainBetterNameHereRequired.getSession();
 		Transaction tx = session.beginTransaction();
+		for (Participation participation: group.getMembers()) {
+			participation.setGroup(null);
+			session.update(participation);
+		}
 		session.update(group);
 		session.delete(group);
 		tx.commit();
