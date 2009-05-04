@@ -1,17 +1,11 @@
 package de.tuclausthal.abgabesystem;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,11 +14,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
-import javax.tools.JavaCompiler.CompilationTask;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -36,14 +25,11 @@ import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.TaskDAOIf;
-import de.tuclausthal.abgabesystem.persistence.dao.TestResultDAOIf;
-import de.tuclausthal.abgabesystem.persistence.datamodel.JUnitTest;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
-import de.tuclausthal.abgabesystem.persistence.datamodel.RegExpTest;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Submission;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Task;
-import de.tuclausthal.abgabesystem.persistence.datamodel.TestResult;
+import de.tuclausthal.abgabesystem.util.CheckSubmission;
 import de.tuclausthal.abgabesystem.util.Util;
 
 public class SubmitSolution extends HttpServlet {
@@ -201,97 +187,9 @@ public class SubmitSolution extends HttpServlet {
 						e.printStackTrace();
 					}
 
-					// compile test
-					// http://forums.java.net/jive/message.jspa?messageID=325269
-					JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
-					/*StandardJavaFileManager sjfm = jc.getStandardFileManager(null, null, null);
-					Iterable codeObjecten = sjfm.getJavaFileObjects(uploadedFile);
-					jc.getTask(null, sjfm, null, null, null, codeObjecten).call();
-					sjfm.close();*/
-					try {
-						ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
+					CheckSubmission checkSubmission = new CheckSubmission(submission);
+					checkSubmission.check(response);
 
-						List<File> javaFiles = new LinkedList<File>();
-						for (File javaFile : path.getAbsoluteFile().listFiles()) {
-							if (javaFile.getName().endsWith(".java")) {
-								javaFiles.add(javaFile);
-							}
-						}
-						//int a = jc.run(null, null, errorOutputStream, javaFiles.toArray(new String[] {}));
-
-						JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-						StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null);
-
-						// prepare the source file(s) to compile
-						Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(javaFiles);
-						CompilationTask ctask = compiler.getTask(null, fileManager, null, null, null, compilationUnits);
-						boolean a = ctask.call();
-						try {
-							fileManager.close();
-						} catch (IOException e) {
-						}
-
-						submission.setCompiles(a);
-						submission.setStderr(errorOutputStream.toString());
-					} catch (Exception e) {
-						response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "System.getProperty(\"java.home\") should point to a jre in a jdk directory");
-						return;
-					}
-
-					// Test exists
-					if (task.getTest() != null) {
-						// check what kind of test it is
-						List<String> params = new LinkedList<String>();
-						params.add("java");
-						//params.add("-Djava.security.manager");
-						//params.add("-Djava.security.policy=myPol.policy");
-						if (task.getTest() instanceof JUnitTest) {
-							// TODO: only win atm
-							params.add("-cp");
-							params.add("..\\junittest.jar;c:\\junit.jar;.");
-							params.add("junit.textui.TestRunner");
-							params.add("AllTests");
-						} else if (task.getTest() instanceof RegExpTest) {
-							RegExpTest regExpTest = (RegExpTest) task.getTest();
-							params.add(regExpTest.getMainClass());
-							params.addAll(Arrays.asList(regExpTest.getCommandLineParameter().split(" ")));
-						} else {
-							// TODO: throw error!
-						}
-						ProcessBuilder pb = new ProcessBuilder(params);
-						pb.directory(path);
-						Process process = pb.start();
-						CheckThread checkTread = new CheckThread(process);
-						checkTread.run();
-						int exitValue = -1;
-						try {
-							exitValue = process.waitFor();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-						}
-						BufferedReader testErrorInputStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
-						TestResultDAOIf testResultDAO = DAOFactory.TestResultDAOIf();
-						TestResult testResult = testResultDAO.createTestResult(submission);
-						testResult.setPassedTest((exitValue == 0));
-						String testError = "";
-						String line;
-						while ((line = testErrorInputStream.readLine()) != null) {
-							testError = testError.concat(line + "\n");
-						}
-						if (task.getTest() instanceof RegExpTest) {
-							System.out.println(((RegExpTest) task.getTest()).getRegularExpression());
-							System.out.println(testError);
-							Pattern testPattern = Pattern.compile(((RegExpTest) task.getTest()).getRegularExpression());
-							Matcher testMatcher = testPattern.matcher(testError.trim());
-							if (!testMatcher.matches()) {
-								testError = "regexp doesn't match. Output follows:\n" + testError;
-								testResult.setPassedTest(false);
-							}
-						}
-						testResult.setTestOutput(testError);
-					}
-
-					submissionDAO.saveSubmission(submission);
 					response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()));
 					out.close();
 				}

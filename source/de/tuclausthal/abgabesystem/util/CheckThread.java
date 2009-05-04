@@ -1,4 +1,4 @@
-package de.tuclausthal.abgabesystem;
+package de.tuclausthal.abgabesystem.util;
 
 public class CheckThread extends Thread {
 	private Process process;

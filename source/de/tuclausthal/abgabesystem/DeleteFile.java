@@ -17,6 +17,7 @@ import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Submission;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Task;
+import de.tuclausthal.abgabesystem.util.CheckSubmission;
 import de.tuclausthal.abgabesystem.util.Util;
 
 public class DeleteFile extends HttpServlet {
@@ -35,7 +36,6 @@ public class DeleteFile extends HttpServlet {
 		}
 
 		Task task = submission.getTask();
-
 
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
@@ -66,6 +66,10 @@ public class DeleteFile extends HttpServlet {
 		for (File file : path.listFiles()) {
 			if (file.getName().equals(request.getPathInfo().substring(1))) {
 				file.delete();
+
+				CheckSubmission checkSubmission = new CheckSubmission(submission);
+				checkSubmission.check(response);
+
 				response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()));
 				return;
 			}
