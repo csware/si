@@ -71,4 +71,12 @@ public final class Util {
 			return date.getYear() * 10 + 19000;
 		}
 	}
+
+	public static String boolToHTML(boolean bool) {
+		if (bool) {
+			return "<span class=green>ja</span>";
+		} else {
+			return "<span class=red>nein</span>";
+		}
+	}
 }

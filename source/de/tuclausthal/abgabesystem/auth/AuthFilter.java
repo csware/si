@@ -55,6 +55,7 @@ public class AuthFilter implements Filter {
 			}
 		}
 		chain.doFilter(request, response);
+		// TODO: document here
 		MainBetterNameHereRequired.getSession().clear();
 	}
 

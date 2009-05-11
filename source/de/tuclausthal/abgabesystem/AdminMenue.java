@@ -49,7 +49,7 @@ public class AdminMenue extends HttpServlet {
 			out.println("</table>");
 			out.println("</form>");
 		} else if (request.getParameter("action") != null && request.getParameter("action").equals("cleanup")) {
-			File path = new File("c:/abgabesystem/");
+			File path = new ContextAdapter(getServletContext()).getDataPath();
 			// list lectures
 			for (File lectures : path.listFiles()) {
 				if (DAOFactory.LectureDAOIf().getLecture(Util.parseInteger(lectures.getName(), 0)) == null) {
@@ -59,6 +59,7 @@ public class AdminMenue extends HttpServlet {
 					for (File tasks : lectures.listFiles()) {
 						if (!tasks.getName().equals("junittest.jar") && DAOFactory.TaskDAOIf().getTask(Util.parseInteger(tasks.getName(), 0)) == null) {
 							Util.recursiveDelete(tasks);
+							// TODO: check for junittest.jar
 						} else {
 							// list all submissions
 							for (File submissions : tasks.listFiles()) {

@@ -38,18 +38,19 @@ public class EditGroup extends HttpServlet {
 		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");
 			out.println("<div class=mid>Sie sind kein Teilnehmer dieser Veranstaltung.</div>");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/Overview") + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
 			mainbetternamereq.template().printTemplateFooter();
 			return;
 		}
 
 		if ("removeFromGroup".equals(request.getParameter("action")) && request.getParameter("participationid") != null) {
+			// TODO: nicht sich selbst, wenn kein Advisor
 			Participation memberParticipation = participationDAO.getParticipation(Util.parseInteger(request.getParameter("participationid"), 0));
 			if (memberParticipation != null) {
 				memberParticipation.setGroup(null);
 				participationDAO.saveParticipation(memberParticipation);
 			}
-			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowLecture?lecture=" + group.getLecture().getId()));
+			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId()));
 			return;
 		} else if (request.getParameterValues("members") != null && request.getParameterValues("members").length > 0) {
 			group.setName(request.getParameter("title"));
@@ -61,7 +62,7 @@ public class EditGroup extends HttpServlet {
 					participationDAO.saveParticipation(memberParticipation);
 				}
 			}
-			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowLecture?lecture=" + group.getLecture().getId()));
+			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId()));
 			return;
 		}
 
@@ -86,7 +87,7 @@ public class EditGroup extends HttpServlet {
 		out.println("</select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=zuordnen> <a href=\"" + response.encodeURL("/ba/servlets/ShowLecture?lecture=" + group.getLecture().getId()));
+		out.println("<td colspan=2 class=mid><input type=submit value=zuordnen> <a href=\"" + response.encodeURL("ShowLecture?lecture=" + group.getLecture().getId()));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");

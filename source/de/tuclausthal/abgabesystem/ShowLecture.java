@@ -2,6 +2,7 @@ package de.tuclausthal.abgabesystem;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.Iterator;
 
 import javax.servlet.ServletException;
@@ -28,7 +29,7 @@ public class ShowLecture extends HttpServlet {
 		Lecture lecture = DAOFactory.LectureDAOIf().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			mainbetternamereq.template().printTemplateHeader("Veranstaltung nicht gefunden");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/Overview") + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
 			mainbetternamereq.template().printTemplateFooter();
 			return;
 		}
@@ -38,7 +39,7 @@ public class ShowLecture extends HttpServlet {
 		if (participation == null) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");
 			out.println("<div class=mid>Sie sind kein Teilnehmer dieser Veranstaltung.</div>");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/Overview") + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
 			mainbetternamereq.template().printTemplateFooter();
 			return;
 		}
@@ -46,26 +47,40 @@ public class ShowLecture extends HttpServlet {
 		// list all tasks for a lecture
 		mainbetternamereq.template().printTemplateHeader("Aufgaben der Veranstaltung \"" + Util.mknohtml(lecture.getName()) + "\"");
 
+		// todo: wenn keine abrufbaren tasks da sind, nichts anzeigen
 		Iterator<Task> taskIterator = lecture.getTasks().iterator();
 		if (taskIterator.hasNext()) {
 			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>Aufgabe</th>");
 			out.println("<th>Max. Punkte</th>");
+			if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
+				out.println("<th>Meine Punkte</th>");
+			}
 			out.println("</tr>");
 			while (taskIterator.hasNext()) {
 				Task task = taskIterator.next();
-				out.println("<tr>");
-				out.println("<td><a href=\"" + response.encodeURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
-				out.println("<td>" + task.getMaxPoints() + "</td>");
-				out.println("</tr>");
+				if (task.getStart().before(new Date()) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+					out.println("<tr>");
+					out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
+					out.println("<td class=points>" + task.getMaxPoints() + "</td>");
+					if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
+						Submission submission = DAOFactory.SubmissionDAOIf().getSubmission(task, mainbetternamereq.getUser());
+						if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().after(new Date())) {
+							out.println("<td class=points>" + submission.getPoints().getPoints() + "</td>");
+						} else {
+							out.println("<td class=points>n/a</td>");
+						}
+					}
+					out.println("</tr>");
+				}
 			}
 			out.println("</table>");
 		} else {
 			out.println("<div class=mid>keine Aufgaben gefunden.</div>");
 		}
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
-			out.println("<p><div class=mid><a href=\"" + response.encodeURL("/ba/servlets/TaskManager?lecture=" + lecture.getId() + "&amp;action=newTask") + "\">Neue Aufgabe</a></div>");
+			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + lecture.getId() + "&amp;action=newTask") + "\">Neue Aufgabe</a></div>");
 		}
 
 		if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
@@ -76,13 +91,13 @@ public class ShowLecture extends HttpServlet {
 				out.println("<h3>Ohne Gruppe</h3>");
 				listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor);
 				if (participation.getRoleType() == ParticipationRole.ADVISOR) {
-					out.println("<p class=mid><a href=\"" + response.encodeURL("/ba/servlets/AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a></p>");
+					out.println("<p class=mid><a href=\"" + response.encodeURL("AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a></p>");
 				}
 			}
 			for (Group group : lecture.getGroups()) {
 				out.println("<h3>Gruppe: " + Util.mknohtml(group.getName()) + "</h3>");
 				if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
-					out.println("<p class=mid><a href=\"" + response.encodeURL("/ba/servlets/EditGroup?groupid=" + group.getGid()) + "\">Teilnehmer zuordnen</a></p>");
+					out.println("<p class=mid><a href=\"" + response.encodeURL("EditGroup?groupid=" + group.getGid()) + "\">Teilnehmer zuordnen</a></p>");
 				}
 				listMembers(group.getMembers().iterator(), response, isAdvisor);
 			}
@@ -94,6 +109,8 @@ public class ShowLecture extends HttpServlet {
 	public void listMembers(Iterator<Participation> participationIterator, HttpServletResponse response, boolean isAdvisor) throws IOException {
 		if (participationIterator.hasNext()) {
 			PrintWriter out = response.getWriter();
+			int sumOfPoints = 0;
+			int usersCount = 0;
 			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>Teilnehmer</th>");
@@ -107,28 +124,40 @@ public class ShowLecture extends HttpServlet {
 				if (thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
 					if (isAdvisor) {
-						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;type=tutor\">+</a>)");
-						if (thisParticipation.getGroup() != null) {
-							out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditGroup?groupid=" + thisParticipation.getGroup().getGid() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;action=removeFromGroup\">--</a>)");
-						}
+						out.println(" (<a href=\"" + response.encodeURL("EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;type=tutor\">+</a>)");
+					}
+					if (thisParticipation.getGroup() != null) {
+						out.println(" (<a href=\"" + response.encodeURL("EditGroup?groupid=" + thisParticipation.getGroup().getGid() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;action=removeFromGroup\">--</a>)");
 					}
 				} else if (thisParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) == 0) {
 					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
 					if (isAdvisor) {
-						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;type=normal\">-</a>)");
+						out.println(" (<a href=\"" + response.encodeURL("EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;type=normal\">-</a>)");
 					}
-					if (thisParticipation.getGroup() != null) {
-						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditGroup?groupid=" + thisParticipation.getGroup().getGid() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;action=removeFromGroup\">--</a>)");
+					if (thisParticipation.getGroup() != null && thisParticipation.getUser() != MainBetterNameHereRequired.getUser()) {
+						out.println(" (<a href=\"" + response.encodeURL("EditGroup?groupid=" + thisParticipation.getGroup().getGid() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;action=removeFromGroup\">--</a>)");
 					}
 				} else {
 					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
 					if (isAdvisor && thisParticipation.getGroup() != null) {
-						out.println(" (<a href=\"" + response.encodeURL("/ba/servlets/EditGroup?groupid=" + thisParticipation.getGroup().getGid() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;action=removeFromGroup\">--</a>)");
+						out.println(" (<a href=\"" + response.encodeURL("EditGroup?groupid=" + thisParticipation.getGroup().getGid() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;action=removeFromGroup\">--</a>)");
 					}
 				}
 				out.println("</td>");
-				out.println("<td class=points>" + getAllPoints(thisParticipation) + "</td>");
+				int points = getAllPoints(thisParticipation);
+				// only count real users. Tutoren and advisors do not have submissions
+				if (thisParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+					usersCount++;
+					sumOfPoints += points;
+				}
+				out.println("<td class=points>" + points + "</td>");
 
+				out.println("</tr>");
+			}
+			if (sumOfPoints > 0) {
+				out.println("<tr>");
+				out.println("<td colspan=2>Durchschnittspunkte:</td>");
+				out.println("<td class=points>" + Float.valueOf(sumOfPoints / (float) usersCount).intValue() + "</td>");
 				out.println("</tr>");
 			}
 			out.println("</table><p>");

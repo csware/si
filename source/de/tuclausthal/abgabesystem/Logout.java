@@ -16,7 +16,7 @@ public class Logout extends HttpServlet {
 		request.getSession().invalidate();
 		MainBetterNameHereRequired.template().printTemplateHeader("Logged out");
 		PrintWriter out = response.getWriter();
-		out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/Overview") + "\">zur Übersicht</a></div>");
+		out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
 		MainBetterNameHereRequired.template().printTemplateFooter();
 	}
 

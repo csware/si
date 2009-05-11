@@ -6,12 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public interface LoginIf {
-	public abstract boolean canLogout();
-
-	public abstract boolean canLogin();
-
-	public abstract boolean user_can_create_account();
-
 	public abstract boolean requires_verification();
 
 	public abstract LoginData get_login_info(HttpServletRequest request);

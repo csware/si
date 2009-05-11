@@ -3,6 +3,8 @@ package de.tuclausthal.abgabesystem;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
+import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,6 +17,7 @@ import de.tuclausthal.abgabesystem.persistence.dao.PointsDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.abgabesystem.persistence.datamodel.Similarity;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Submission;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Task;
 import de.tuclausthal.abgabesystem.util.Util;
@@ -42,51 +45,75 @@ public class ShowSubmission extends HttpServlet {
 		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");
 			out.println("<div class=mid>Sie sind kein Tutor dieser Veranstaltung.</div>");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()) + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">zur Übersicht</a></div>");
 			mainbetternamereq.template().printTemplateFooter();
 			return;
 		}
 
 		mainbetternamereq.template().printTemplateHeader("Abgabe von \"" + Util.mknohtml(submission.getSubmitter().getUser().getFullName()) + "\"");
 
-		if (request.getParameter("points") != null) {
-			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf();
-			pointsDAO.createPoints(Util.parseInteger(request.getParameter("points"), 0), submission, participation);
-			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowSubmission?sid=" + submission.getSubmissionid()));
-			return;
+		if (submission.getSubmitter().getGroup() != null) {
+			out.println("<h2>Gruppe: " + submission.getSubmitter().getGroup().getName() + "</h2>");
 		}
 
-		out.println("<h2>Bewertung:</h2>");
-		out.println("<table class=border>");
-		if (submission.getPoints() != null) {
+		if (task.getDeadline().before(new Date())) {
+			if (request.getParameter("points") != null) {
+				PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf();
+				pointsDAO.createPoints(Util.parseInteger(request.getParameter("points"), 0), submission, participation);
+				response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));
+				return;
+			}
+
+			out.println("<h2>Bewertung:</h2>");
+			out.println("<table class=border>");
+			if (submission.getPoints() != null) {
+				out.println("<tr>");
+				out.println("<td>");
+				out.println(submission.getPoints().getPoints() + "/" + task.getMaxPoints() + " Punkte vergeben ");
+				out.println(" von " + submission.getPoints().getIssuedBy().getUser().getFullName());
+				out.println("</td>");
+				out.println("</tr>");
+			}
 			out.println("<tr>");
 			out.println("<td>");
-			out.println(submission.getPoints().getPoints() + "/" + task.getMaxPoints() + " Punkte vergeben ");
-			out.println(" von " + submission.getPoints().getIssuedBy().getUser().getFullName());
+			out.println("<form action=\"?\" method=post>");
+			out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
+			out.println("<input type=text name=points> (max. " + task.getMaxPoints() + ")");
+			out.println(" <input type=submit>");
+			out.println("</form>");
 			out.println("</td>");
 			out.println("</tr>");
-		}
-		out.println("<tr>");
-		out.println("<td>");
-		out.println("<form action=\"?\" method=post>");
-		out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
-		out.println("<input type=text name=points> (max. " + task.getMaxPoints() + ")");
-		out.println(" <input type=submit>");
-		out.println("</form>");
-		out.println("</td>");
-		out.println("</tr>");
-		out.println("</table>");
+			out.println("</table>");
 
-		out.println("<p>");
+			out.println("<p>");
+		}
+
+		if (submission.getSimilarSubmissions().size() > 0) {
+			out.println("<h2>Ähnliche Abgaben:</h2>");
+			out.println("<table class=border>");
+			out.println("<tr>");
+			out.println("<th>Student</th>");
+			out.println("<th>Ähnlichkeit</th>");
+			out.println("</tr>");
+			Iterator<Similarity> similarityIterator = submission.getSimilarSubmissions().iterator();
+			while (similarityIterator.hasNext()) {
+				Similarity similarity = similarityIterator.next();
+				out.println("<tr>");
+				out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + similarity.getSubmissionTwo().getSubmissionid()) + "\">" + Util.mknohtml(similarity.getSubmissionTwo().getSubmitter().getUser().getFullName()) + "</a></td>");
+				out.println("<td class=points>" + similarity.getPercentage() + "</td>");
+				out.println("</tr>");
+			}
+			out.println("</table><p>");
+		}
 
 		if (task.getTest() != null && submission.getTestResult() != null) {
 			out.println("<h2>Test:</h2>");
-			out.println("<div class=mid>Erfolgreich: " + submission.getTestResult().getPassedTest());
+			out.println("<div class=mid>Erfolgreich: " + Util.boolToHTML(submission.getTestResult().getPassedTest()));
 			out.println("<p><textarea cols=80 rows=15>" + Util.mknohtml(submission.getTestResult().getTestOutput()) + "</textarea></div>");
 		}
 
 		if (submission.getStderr() != null && !submission.getStderr().isEmpty()) {
-			out.println("<h2>STDErr:</h2>");
+			out.println("<h2>Standard-Error Ausgabe:</h2>");
 			out.println("<p class=mid><textarea cols=80 rows=15>" + Util.mknohtml(submission.getStderr()) + "</textarea></p>");
 		}
 		out.println("<h2>Dateien:</h2>");
@@ -94,7 +121,7 @@ public class ShowSubmission extends HttpServlet {
 		File path = new File("c:/abgabesystem/" + task.getLecture().getId() + "/" + task.getTaskid() + "/" + submission.getSubmissionid() + "/");
 		for (File file : path.listFiles()) {
 			if (file.getName().endsWith(".java")) {
-				out.println("<iframe width=800 height=250 src=\"" + response.encodeURL("/ba/servlets/ShowFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\"></iframe><p>");
+				out.println("<iframe width=800 height=250 src=\"" + response.encodeURL("ShowFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\"></iframe><p>");
 			}
 		}
 		out.println("</div>");

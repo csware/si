@@ -26,18 +26,21 @@ import de.tuclausthal.abgabesystem.persistence.datamodel.TestResult;
 
 public class CheckSubmission {
 	private Submission submission;
+	private SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
+	private Task task;
+	private File path;
 
-	public CheckSubmission(Submission submission) {
+	public CheckSubmission(Submission submission, File basePath) {
 		this.submission = submission;
-	}
+		task = submission.getTask();
 
-	public void check(HttpServletResponse response) throws IOException {
-		Task task = submission.getTask();
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
-		File path = new File("c:/abgabesystem/" + task.getLecture().getId() + "/" + task.getTaskid() + "/" + submission.getSubmissionid() + "/");
+		path = new File(basePath.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 		if (path.exists() == false) {
 			path.mkdirs();
 		}
+	}
+
+	public void compileTest(HttpServletResponse response) throws IOException {
 		// compile test
 		// http://forums.java.net/jive/message.jspa?messageID=325269
 		JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
@@ -54,16 +57,20 @@ public class CheckSubmission {
 					javaFiles.add(javaFile.getAbsolutePath());
 				}
 			}
-			int a = jc.run(null, null, errorOutputStream, javaFiles.toArray(new String[] {}));
-			submission.setCompiles(a == 0);
-			submission.setStderr(errorOutputStream.toString());
+			int compiles = jc.run(null, null, errorOutputStream, javaFiles.toArray(new String[] {}));
+			submission.setCompiles(compiles == 0);
+			submission.setStderr(errorOutputStream.toString().replace(path.getAbsolutePath() + System.getProperty("file.separator"), ""));
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "System.getProperty(\"java.home\") should point to a jre in a jdk directory");
-			return;
+			return; // TODO: fix this here
 		}
+		submissionDAO.saveSubmission(submission);
+	}
 
+	public void checkTest(HttpServletResponse response) throws IOException {
 		// Test exists
-		if (task.getTest() != null) {
+		if (submission.getCompiles() == true && task.getTest() != null) {
 			// check what kind of test it is
 			List<String> params = new LinkedList<String>();
 			params.add("java");
@@ -79,7 +86,9 @@ public class CheckSubmission {
 			} else if (task.getTest() instanceof RegExpTest) {
 				RegExpTest regExpTest = (RegExpTest) task.getTest();
 				params.add(regExpTest.getMainClass());
-				params.addAll(Arrays.asList(regExpTest.getCommandLineParameter().split(" ")));
+				if (regExpTest.getCommandLineParameter() != null && !regExpTest.getCommandLineParameter().isEmpty()) {
+					params.addAll(Arrays.asList(regExpTest.getCommandLineParameter().split(" ")));
+				}
 			} else {
 				// TODO: throw error!
 			}
@@ -104,8 +113,6 @@ public class CheckSubmission {
 				testError = testError.concat(line + "\n");
 			}
 			if (task.getTest() instanceof RegExpTest) {
-				System.out.println(((RegExpTest) task.getTest()).getRegularExpression());
-				System.out.println(testError);
 				Pattern testPattern = Pattern.compile(((RegExpTest) task.getTest()).getRegularExpression());
 				Matcher testMatcher = testPattern.matcher(testError.trim());
 				if (!testMatcher.matches()) {

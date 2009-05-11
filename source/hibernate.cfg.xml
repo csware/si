@@ -32,7 +32,7 @@
     <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.User"/>
     <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Student"/>
     <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Task"/>
-    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Parameter"/>
+    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Similarity"/>
     <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Submission"/>
     <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Lecture"/>
     <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Participation"/>

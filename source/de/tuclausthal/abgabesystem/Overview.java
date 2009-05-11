@@ -37,7 +37,7 @@ public class Overview extends HttpServlet {
 			}
 			out.println("</table><p>");
 		}
-		out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/SubscribeToLecture") + "\">In eine Veranstaltung eintragen...</a></div>");
+		out.println("<div class=mid><a href=\"" + response.encodeURL("SubscribeToLecture") + "\">In eine Veranstaltung eintragen...</a></div>");
 
 		MainBetterNameHereRequired.template().printTemplateFooter();
 	}

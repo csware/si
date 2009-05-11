@@ -1,6 +1,7 @@
 package de.tuclausthal.abgabesystem.persistence.datamodel;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,8 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "submissions", uniqueConstraints = { @UniqueConstraint(columnNames = { "submitter", "taskid" }) })
@@ -22,6 +27,7 @@ public class Submission implements Serializable {
 	private Participation submitter;
 	private Points points;
 	private TestResult testResult;
+	private Set<Similarity> similarSubmissions;
 
 	// for Hibernate
 	private Submission() {}
@@ -139,5 +145,21 @@ public class Submission implements Serializable {
 	 */
 	public void setStderr(String stderr) {
 		this.stderr = stderr;
+	}
+
+	/**
+	 * @return the similarSubmissions
+	 */
+	@OneToMany(mappedBy="submissionOne")
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	public Set<Similarity> getSimilarSubmissions() {
+		return similarSubmissions;
+	}
+
+	/**
+	 * @param similarSubmissions the similarSubmissions to set
+	 */
+	public void setSimilarSubmissions(Set<Similarity> similarSubmissions) {
+		this.similarSubmissions = similarSubmissions;
 	}
 }

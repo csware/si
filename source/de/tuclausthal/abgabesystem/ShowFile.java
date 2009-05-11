@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.uwyn.jhighlight.renderer.Renderer;
-import com.uwyn.jhighlight.renderer.XhtmlRenderer;
 import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
 
 import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
@@ -47,14 +46,14 @@ public class ShowFile extends HttpServlet {
 		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");
 			out.println("<div class=mid>Sie sind kein Tutor dieser Veranstaltung.</div>");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()) + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">zur Übersicht</a></div>");
 			mainbetternamereq.template().printTemplateFooter();
 			return;
 		}
 
 		if (request.getPathInfo() == null) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()) + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">zur Übersicht</a></div>");
 			mainbetternamereq.template().printTemplateFooter();
 			return;
 		}
@@ -79,7 +78,7 @@ public class ShowFile extends HttpServlet {
 		}
 
 		mainbetternamereq.template().printTemplateHeader("File not found");
-		out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()) + "\">zur Übersicht</a></div>");
+		out.println("<div class=mid><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">zur Übersicht</a></div>");
 		mainbetternamereq.template().printTemplateFooter();
 		return;
 	}

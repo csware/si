@@ -44,7 +44,7 @@ public class SubscribeToLecture extends HttpServlet {
 				return;
 			} else {
 				participationDAO.createParticipation(mainbetternamereq.getUser(), lecture, ParticipationRole.NORMAL);
-				response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowLecture?lecture=" + lecture.getId()));
+				response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
 				return;
 			}
 		} else {

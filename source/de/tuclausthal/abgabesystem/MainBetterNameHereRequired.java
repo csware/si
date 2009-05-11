@@ -64,7 +64,7 @@ public class MainBetterNameHereRequired {
 		this.servletResponse = servletResponse;
 	}
 
-	public User getUser() {
-		return (User) servletRequest.getAttribute("user");
+	public static User getUser() {
+		return (User) getServletRequest().getAttribute("user");
 	}
 }

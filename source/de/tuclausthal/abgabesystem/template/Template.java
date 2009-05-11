@@ -3,6 +3,9 @@ package de.tuclausthal.abgabesystem.template;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRequestWrapper;
+
 import de.tuclausthal.abgabesystem.MainBetterNameHereRequired;
 import de.tuclausthal.abgabesystem.persistence.datamodel.User;
 
@@ -39,11 +42,11 @@ public class Template {
 		User user = (User) MainBetterNameHereRequired.getServletRequest().getAttribute("user");
 		if (user != null) {
 			out.println("logged in as: " + user.getEmail());
-			out.println(" - <a href=\"" + MainBetterNameHereRequired.getServletResponse().encodeURL("/ba/servlets/Overview") + "\">Übersicht</a>");
+			out.println(" - <a href=\"" + MainBetterNameHereRequired.getServletResponse().encodeURL("Overview") + "\">Übersicht</a>");
 			if (user.isSuperUser()) {
-				out.println(" - <a href=\"" + MainBetterNameHereRequired.getServletResponse().encodeURL("/ba/servlets/AdminMenue") + "\">Admin-Menü</a>");
+				out.println(" - <a href=\"" + MainBetterNameHereRequired.getServletResponse().encodeURL("AdminMenue") + "\">Admin-Menü</a>");
 			}
-			out.println(" - <a href=\"" + MainBetterNameHereRequired.getServletResponse().encodeURL("/ba/servlets/Logout") + "\">LogOut</a>");
+			out.println(" - <a href=\"" + MainBetterNameHereRequired.getServletResponse().encodeURL("Logout") + "\">LogOut</a>");
 		} else {
 			out.println("not logged in");
 		}

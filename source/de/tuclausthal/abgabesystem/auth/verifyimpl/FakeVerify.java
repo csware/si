@@ -10,12 +10,7 @@ public class FakeVerify implements VerifyIf {
 	@Override
 	public User check_credentials(LoginData logindata) {
 		UserDAOIf userdao = DAOFactory.UserDAOIf();
-		User user = userdao.getUser("sstri");
-		if (user == null) {
-			user = userdao.createUser("sstri");
-			user.setFirstName("Sven");
-			user.setLastName("Strickroth");
-		}
+		User user = userdao.getUser(logindata.getUsername());
 		return user;
 	}
 }

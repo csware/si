@@ -27,8 +27,10 @@ import de.tuclausthal.abgabesystem.persistence.datamodel.JUnitTest;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.abgabesystem.persistence.datamodel.RegExpTest;
+import de.tuclausthal.abgabesystem.persistence.datamodel.Submission;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Task;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Test;
+import de.tuclausthal.abgabesystem.util.CheckSubmission;
 import de.tuclausthal.abgabesystem.util.Util;
 
 public class TestManager extends HttpServlet {
@@ -53,6 +55,8 @@ public class TestManager extends HttpServlet {
 			mainbetternamereq.template().printTemplateFooter();
 			return;
 		}
+
+		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
 
 		if ("newTest".equals(request.getParameter("action"))) {
 			mainbetternamereq.template().printTemplateHeader("Test erstellen");
@@ -80,7 +84,7 @@ public class TestManager extends HttpServlet {
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-			out.println(response.encodeURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()));
+			out.println(response.encodeURL("ShowTask?taskid=" + task.getTaskid()));
 			out.println("\">Abbrechen</a></td>");
 			out.println("</tr>");
 			out.println("</table>");
@@ -98,7 +102,7 @@ public class TestManager extends HttpServlet {
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-			out.println(response.encodeURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()));
+			out.println(response.encodeURL("ShowTask?taskid=" + task.getTaskid()));
 			out.println("\">Abbrechen</a></td>");
 			out.println("</tr>");
 			out.println("</table>");
@@ -128,7 +132,7 @@ public class TestManager extends HttpServlet {
 					return;
 				}
 
-				File path = new File("c:/abgabesystem/" + task.getLecture().getId() + "/" + task.getTaskid() + "/");
+				File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
 				if (path.exists() == false) {
 					path.mkdirs();
 				}
@@ -163,7 +167,8 @@ public class TestManager extends HttpServlet {
 				// Race cond?
 				task.setTest(test);
 				taskDAO.saveTask(task);
-				response.sendRedirect(response.encodeRedirectURL("/ba/servlets/TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
+				reTestSubmissions(task, response, contextAdapter.getDataPath());
+				response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 			} else {
 				out.println("fuck111" + isMultipart);
 			}
@@ -182,25 +187,39 @@ public class TestManager extends HttpServlet {
 			test.setMainClass(request.getParameter("mainclass"));
 			test.setCommandLineParameter(request.getParameter("parameter"));
 			test.setRegularExpression(request.getParameter("regexp"));
-			test.setVisibleToStudents(request.getParameter("visibletostudents")!=null);
+			test.setVisibleToStudents(request.getParameter("visibletostudents") != null);
 			testDAO.saveTest(test);
 			// Race cond?
 			task.setTest(test);
 			taskDAO.saveTask(task);
-			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
+			reTestSubmissions(task, response, contextAdapter.getDataPath());
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 		} else if ("deleteTest".equals(request.getParameter("action"))) {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf();
 			Test test = task.getTest();
 			task.setTest(null);
 			taskDAO.saveTask(task);
 			testDAO.deleteTest(test);
-			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 			return;
 		} else {
 			mainbetternamereq.template().printTemplateHeader("Ungültiger Aufruf");
 		}
 
 		mainbetternamereq.template().printTemplateFooter();
+	}
+
+	private void reTestSubmissions(Task task, HttpServletResponse response, File basePath) throws IOException {
+		int submissionCount = task.getSubmissions().size();
+		if (submissionCount > 0) {
+			Iterator<Submission> submissionIterator = task.getSubmissions().iterator();
+			while (submissionIterator.hasNext()) {
+				// TODO: serverpush oder anders
+				Submission submission = submissionIterator.next();
+				CheckSubmission checkSubmission = new CheckSubmission(submission, basePath);
+				checkSubmission.checkTest(response);
+			}
+		}
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

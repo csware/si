@@ -99,20 +99,21 @@ public class TaskManager extends HttpServlet {
 			out.println("<tr>");
 			out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
 			if (editTask) {
-				out.println(response.encodeURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()));
+				out.println(response.encodeURL("ShowTask?taskid=" + task.getTaskid()));
 			} else {
-				out.println(response.encodeURL("/ba/servlets/ShowLecture?lecture=" + lecture.getId()));
+				out.println(response.encodeURL("ShowLecture?lecture=" + lecture.getId()));
 			}
 			out.println("\">Abbrechen</a></td>");
 			out.println("</tr>");
 			out.println("</table>");
 			out.println("</form>");
 			if (editTask) {
+				// TODO: bissl mehr info ;)
 				if (task.getTest() == null) {
-					out.println("<p class=mid><a href=\"" + response.encodeURL("/ba/servlets/TestManager?action=newTest&amp;taskid=" + task.getTaskid()) + "\">Test hinzufügen</a></p>");
+					out.println("<p class=mid><a href=\"" + response.encodeURL("TestManager?action=newTest&amp;taskid=" + task.getTaskid()) + "\">Test hinzufügen</a></p>");
 				} else {
 					//out.println("<p class=mid><a href=\"" + response.encodeURL("?") + "\">Test bearbeiten</a></p>");
-					out.println("<p class=mid><a href=\"" + response.encodeURL("/ba/servlets/TestManager?action=deleteTest&amp;taskid=" + task.getTaskid()) + "\">Test löschen</a></p>");
+					out.println("<p class=mid><a href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;taskid=" + task.getTaskid()) + "\">Test löschen</a></p>");
 				}
 			}
 		} else if (request.getParameter("action") != null && (request.getParameter("action").equals("saveNewTask") || request.getParameter("action").equals("saveTask"))) {
@@ -155,7 +156,7 @@ public class TaskManager extends HttpServlet {
 				task = taskDAO.newTask(request.getParameter("title"), Util.parseInteger(request.getParameter("maxpoints"), 0), startdate, deadline, request.getParameter("description"), lecture, showPoints);
 			}
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
-			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()));
+			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 			return;
 		} else if (request.getParameter("action") != null && request.getParameter("action").equals("deleteTask")) {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
@@ -166,7 +167,7 @@ public class TaskManager extends HttpServlet {
 			} else {
 				taskDAO.deleteTask(task);
 			}
-			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowLecture?lecture=" + lecture.getId()));
+			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
 			return;
 		} else {
 			mainbetternamereq.template().printTemplateHeader("Ungültiger Aufruf");

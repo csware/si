@@ -14,7 +14,6 @@ import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
-import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Submission;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Task;
 import de.tuclausthal.abgabesystem.util.CheckSubmission;
@@ -43,7 +42,7 @@ public class DeleteFile extends HttpServlet {
 		if (participation == null) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");
 			out.println("<div class=mid>Sie sind kein Teilnehmer dieser Veranstaltung.</div>");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/Overview") + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
 			mainbetternamereq.template().printTemplateFooter();
 			return;
 		}
@@ -57,26 +56,30 @@ public class DeleteFile extends HttpServlet {
 
 		if (request.getPathInfo() == null) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()) + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">zur Übersicht</a></div>");
 			mainbetternamereq.template().printTemplateFooter();
 			return;
 		}
 
-		File path = new File("c:/abgabesystem/" + task.getLecture().getId() + "/" + task.getTaskid() + "/" + submission.getSubmissionid() + "/");
+		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 		for (File file : path.listFiles()) {
 			if (file.getName().equals(request.getPathInfo().substring(1))) {
 				file.delete();
 
-				CheckSubmission checkSubmission = new CheckSubmission(submission);
-				checkSubmission.check(response);
+				CheckSubmission checkSubmission = new CheckSubmission(submission, contextAdapter.getDataPath());
+				checkSubmission.compileTest(response);
+				checkSubmission.checkTest(response);
 
-				response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()));
+				response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 				return;
 			}
 		}
 
+		// delete submission w/o file
+
 		mainbetternamereq.template().printTemplateHeader("File not found");
-		out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()) + "\">zur Übersicht</a></div>");
+		out.println("<div class=mid><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">zur Übersicht</a></div>");
 		mainbetternamereq.template().printTemplateFooter();
 		return;
 	}

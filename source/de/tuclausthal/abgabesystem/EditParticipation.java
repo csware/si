@@ -41,7 +41,11 @@ public class EditParticipation extends HttpServlet {
 		} else {
 			participationDAO.createParticipation(participation.getUser(), participation.getLecture(), ParticipationRole.NORMAL);
 		}
-		response.sendRedirect(response.encodeURL(request.getRequestURL() + "?action=showLecture&lecture=" + callerParticipation.getLecture().getId()));
+		if ("admin".equals(request.getParameter("goback"))) {
+			response.sendRedirect(response.encodeURL("AdminMenue?action=showLecture&lecture=" + callerParticipation.getLecture().getId()));
+		} else {
+			response.sendRedirect(response.encodeURL("ShowLecture?action=showLecture&lecture=" + callerParticipation.getLecture().getId()));
+		}
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

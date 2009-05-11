@@ -42,7 +42,7 @@ public class AddGroup extends HttpServlet {
 		if (request.getParameter("action") != null && request.getParameter("action").equals("saveNewGroup") && request.getParameter("name") != null) {
 			GroupDAOIf groupDAO = DAOFactory.GroupDAOIf();
 			Group group = groupDAO.createGroup(lecture, request.getParameter("name"));
-			response.sendRedirect(response.encodeRedirectURL("/ba/servlets/EditGroup?groupid=" + group.getGid()));
+			response.sendRedirect(response.encodeRedirectURL("EditGroup?groupid=" + group.getGid()));
 			return;
 		} else {
 			mainbetternamereq.template().printTemplateHeader("Gruppe erstellen");
@@ -56,7 +56,7 @@ public class AddGroup extends HttpServlet {
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-			out.println(response.encodeURL("/ba/servlets/ShowLecture?lecture=" + lecture.getId()));
+			out.println(response.encodeURL("ShowLecture?lecture=" + lecture.getId()));
 			out.println("\">Abbrechen</a></td>");
 			out.println("</tr>");
 			out.println("</table>");

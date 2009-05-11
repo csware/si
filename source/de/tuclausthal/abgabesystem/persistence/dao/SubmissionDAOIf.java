@@ -1,5 +1,7 @@
 package de.tuclausthal.abgabesystem.persistence.dao;
 
+import java.util.List;
+
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Submission;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Task;
@@ -32,6 +34,8 @@ public interface SubmissionDAOIf {
 	 * @return the (new or updated) submission
 	 */
 	public Submission createSubmission(Task task, Participation submitter);
+
+	public List<Submission> getSubmissionsForTaskOrdered(Task task);
 
 	/**
 	 * Updates/saves a submission in the DB

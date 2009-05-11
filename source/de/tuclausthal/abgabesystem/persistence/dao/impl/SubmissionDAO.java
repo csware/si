@@ -1,7 +1,10 @@
 package de.tuclausthal.abgabesystem.persistence.dao.impl;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.abgabesystem.MainBetterNameHereRequired;
@@ -50,5 +53,10 @@ public class SubmissionDAO implements SubmissionDAOIf {
 		Transaction tx = session.beginTransaction();
 		session.update(submission);
 		tx.commit();
+	}
+
+	@Override
+	public List<Submission> getSubmissionsForTaskOrdered(Task task) {
+		return (List<Submission>) MainBetterNameHereRequired.getSession().createCriteria(Submission.class).add(Restrictions.eq("task", task)).createCriteria("submitter").addOrder(Order.asc("group")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 	}
 }

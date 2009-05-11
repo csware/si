@@ -15,6 +15,7 @@ import de.tuclausthal.abgabesystem.persistence.dao.DAOFactory;
 import de.tuclausthal.abgabesystem.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.abgabesystem.persistence.dao.TaskDAOIf;
+import de.tuclausthal.abgabesystem.persistence.datamodel.Group;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Participation;
 import de.tuclausthal.abgabesystem.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.abgabesystem.persistence.datamodel.Submission;
@@ -31,6 +32,7 @@ public class ShowTask extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			mainbetternamereq.template().printTemplateHeader("Aufgabe nicht gefunden");
+			// TODO backlink
 			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 			mainbetternamereq.template().printTemplateFooter();
 			return;
@@ -42,7 +44,7 @@ public class ShowTask extends HttpServlet {
 		if (participation == null) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");
 			out.println("<div class=mid>Sie sind kein Teilnehmer dieser Veranstaltung.</div>");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/Overview") + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
 			mainbetternamereq.template().printTemplateFooter();
 			return;
 		}
@@ -76,52 +78,79 @@ public class ShowTask extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Max. Punkte:</th>");
-		out.println("<td>" + task.getMaxPoints() + "</td>");
+		out.println("<td class=points>" + task.getMaxPoints() + "</td>");
 		out.println("</tr>");
 		out.println("</table>");
 
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
-			out.println("<p><div class=mid><a href=\"" + response.encodeURL("/ba/servlets/TaskManager?lecture=" + task.getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=editTask") + "\">Aufgabe bearbeiten</a></div>");
+			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + task.getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=editTask") + "\">Aufgabe bearbeiten</a></div>");
 		}
 		if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 			if (task.getSubmissions() != null && task.getSubmissions().size() > 0) {
 				out.println("<p><h2>Abgaben</h2><p>");
-				// TODO: nach Gruppen sortiert
-				out.println("<table class=border>");
-				out.println("<tr>");
-				out.println("<th>Benutzer</th>");
-				out.println("<th>Kompiliert</th>");
-				if (task.getTest() != null) {
-					out.println("<th>Test</th>");
-				}
-				out.println("<th>Punkte</th>");
-				out.println("</tr>");
-				Iterator<Submission> submissionIterator = task.getSubmissions().iterator();
+				Iterator<Submission> submissionIterator = DAOFactory.SubmissionDAOIf().getSubmissionsForTaskOrdered(task).iterator();
+				Group lastGroup = null;
+				boolean first = true;
+				int sumOfSubmissions = 0;
+				int sumOfPoints = 0;
+				int groupSumOfSubmissions = 0;
+				int groupSumOfPoints = 0;
+				// dynamic splitter for groups
 				while (submissionIterator.hasNext()) {
 					Submission submission = submissionIterator.next();
-					out.println("<tr>");
-					out.println("<td><a href=\"" + response.encodeURL("/ba/servlets/ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(submission.getSubmitter().getUser().getFullName()) + "</a></td>");
-					String compiles = "<span class=green>ja</span>";
-					if (submission.getCompiles() == false) {
-						compiles = "<span class=red>nein</span>";
-					}
-					out.println("<td>" + compiles + "</td>");
-					if (task.getTest() != null) {
-						String testOk = "<span class=green>ja</span>";
-						if (submission.getTestResult() == null || submission.getTestResult().getPassedTest() == false) {
-							testOk = "<span class=red>nein</span>";
+					Group group = submission.getSubmitter().getGroup();
+					if (first == true || lastGroup != group) {
+						lastGroup = group;
+						if (first == false) {
+							out.println("<tr>");
+							out.println("<td colspan=" + (task.getTest() != null ? "3" : "2") + ">Durchschnittspunkte:</td>");
+							out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
+							out.println("</tr>");
+							out.println("</table><p>");
+							groupSumOfSubmissions = 0;
+							groupSumOfPoints = 0;
 						}
-						out.println("<td>" + testOk + "</td>");
+						first = false;
+						if (group == null) {
+							out.println("<h3>Ohne Gruppe</h3>");
+						} else {
+							out.println("<h3>Gruppe: " + Util.mknohtml(group.getName()) + "</h3>");
+						}
+						out.println("<table class=border>");
+						out.println("<tr>");
+						out.println("<th>Benutzer</th>");
+						out.println("<th>Kompiliert</th>");
+						if (task.getTest() != null) {
+							out.println("<th>Test</th>");
+						}
+						out.println("<th>Punkte</th>");
+						out.println("</tr>");
+					}
+					out.println("<tr>");
+					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(submission.getSubmitter().getUser().getFullName()) + "</a></td>");
+					out.println("<td>" + Util.boolToHTML(submission.getCompiles()) + "</td>");
+					if (task.getTest() != null) {
+						out.println("<td>" + Util.boolToHTML(!(submission.getTestResult() == null || submission.getTestResult().getPassedTest() == false)) + "</td>");
 					}
 					if (submission.getPoints() != null) {
 						out.println("<td align=right>" + submission.getPoints().getPoints() + "</td>");
+						sumOfPoints += submission.getPoints().getPoints();
+						groupSumOfPoints += submission.getPoints().getPoints();
+						sumOfSubmissions++;
+						groupSumOfSubmissions++;
 					} else {
 						out.println("<td>n/a</td>");
 					}
 					out.println("</tr>");
 				}
-
-				out.println("</table>");
+				if (first == false) {
+					out.println("<tr>");
+					out.println("<td colspan=" + (task.getTest() != null ? "3" : "2") + ">Durchschnittspunkte:</td>");
+					out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
+					out.println("</tr>");
+					out.println("</table><p>");
+					out.println("<h3>Gesamtdurchschnitt: " + Float.valueOf(sumOfPoints / (float) sumOfSubmissions).intValue() + "</h3>");
+				}
 			}
 		} else {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
@@ -131,13 +160,12 @@ public class ShowTask extends HttpServlet {
 				out.println("<table class=border>");
 				out.println("<tr>");
 				out.println("<th>Kompiliert:</th>");
-				out.println("<td>" + submission.getCompiles() + "</td>");
+				out.println("<td>" + Util.boolToHTML(submission.getCompiles()) + "</td>");
 				out.println("</tr>");
-				// TODO: öffentlicher Test
 				if (task.getTest() != null && task.getTest().getVisibleToStudents() == true && submission.getTestResult() != null) {
 					out.println("<tr>");
 					out.println("<th>Test:</th>");
-					out.println("<td>" + submission.getTestResult().getPassedTest() + "</td>");
+					out.println("<td>" + Util.boolToHTML(submission.getTestResult().getPassedTest()) + "</td>");
 					out.println("</tr>");
 				}
 				out.println("<tr>");
@@ -146,8 +174,7 @@ public class ShowTask extends HttpServlet {
 				File path = new File("c:/abgabesystem/" + task.getLecture().getId() + "/" + task.getTaskid() + "/" + submission.getSubmissionid() + "/");
 				for (File file : path.listFiles()) {
 					if (file.getName().endsWith(".java")) {
-						// TODO: recompile and recheck
-						out.println(file.getName() + " (<a href=\"" + response.encodeURL("/ba/servlets/DeleteFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)<br>");
+						out.println(file.getName() + " (<a href=\"" + response.encodeURL("DeleteFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)<br>");
 					}
 				}
 				out.println("</td>");
@@ -166,7 +193,7 @@ public class ShowTask extends HttpServlet {
 			if (task.getDeadline().before(new Date())) {
 				out.println("Keine Abgabe mehr möglich");
 			} else {
-				out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div");
+				out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div");
 			}
 		}
 

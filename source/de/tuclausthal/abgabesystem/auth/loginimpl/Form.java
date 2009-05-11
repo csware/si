@@ -12,16 +12,6 @@ import de.tuclausthal.abgabesystem.auth.LoginIf;
 
 public class Form implements LoginIf {
 	@Override
-	public boolean canLogin() {
-		return true;
-	}
-
-	@Override
-	public boolean canLogout() {
-		return true;
-	}
-
-	@Override
 	public void fail_nodata(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		fail_nodata("", request, response);
 	}
@@ -80,11 +70,6 @@ public class Form implements LoginIf {
 
 	@Override
 	public boolean requires_verification() {
-		return true;
-	}
-
-	@Override
-	public boolean user_can_create_account() {
 		return true;
 	}
 

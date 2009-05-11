@@ -1,7 +1,6 @@
 package de.tuclausthal.abgabesystem;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
@@ -53,7 +52,7 @@ public class SubmitSolution extends HttpServlet {
 		if (participation == null) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");
 			out.println("<div class=mid>Sie sind kein Teilnehmer dieser Veranstaltung.</div>");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/Overview") + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
 			mainbetternamereq.template().printTemplateFooter();
 			return;
 		}
@@ -79,10 +78,8 @@ public class SubmitSolution extends HttpServlet {
 		} else {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
 			Submission submission = submissionDAO.getSubmission(task, mainbetternamereq.getUser());
-			if (submission != null) {
-				out.println("Infos zu meiner bisherigen Abgabe");
-			}
-			out.println("<FORM ENCTYPE=\"multipart/form-data\" method=POST action=\"?taskid=" + task.getTaskid() + "\">");
+			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"?taskid=" + task.getTaskid() + "\">");
+			out.println("<p>Bitte wählen Sie eine .java-Quellcode-Datei aus, die Sie einsenden möchten.</p>");
 			out.println("<INPUT TYPE=file NAME=file>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
 			out.println("</FORM>");
@@ -111,7 +108,7 @@ public class SubmitSolution extends HttpServlet {
 		if (participation == null) {
 			mainbetternamereq.template().printTemplateHeader("Ungültige Anfrage");
 			out.println("<div class=mid>Sie sind kein Teilnehmer dieser Veranstaltung.</div>");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("/ba/servlets/Overview") + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
 			mainbetternamereq.template().printTemplateFooter();
 			return;
 		}
@@ -161,10 +158,9 @@ public class SubmitSolution extends HttpServlet {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
 			Submission submission = submissionDAO.createSubmission(task, participation);
 
-			File path = new File("c:/abgabesystem/" + task.getLecture().getId() + "/" + task.getTaskid() + "/" + submission.getSubmissionid() + "/");
-			if (path.exists() == false) {
-				path.mkdirs();
-			}
+			ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+
+			File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 			// Process the uploaded items
 			Iterator<FileItem> iter = items.iterator();
 			while (iter.hasNext()) {
@@ -187,21 +183,14 @@ public class SubmitSolution extends HttpServlet {
 						e.printStackTrace();
 					}
 
-					CheckSubmission checkSubmission = new CheckSubmission(submission);
-					checkSubmission.check(response);
+					CheckSubmission checkSubmission = new CheckSubmission(submission, contextAdapter.getDataPath());
+					checkSubmission.checkTest(response);
 
-					response.sendRedirect(response.encodeRedirectURL("/ba/servlets/ShowTask?taskid=" + task.getTaskid()));
-					out.close();
+					response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 				}
 			}
 		} else {
 			out.println("fuck111" + isMultipart);
 		}
-	}
-}
-
-class HTMLFilter implements FilenameFilter {
-	public boolean accept(File dir, String name) {
-		return (name.endsWith(".java"));
 	}
 }
