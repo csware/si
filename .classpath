@@ -5,6 +5,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Hibernate"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/MySQL"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Tomcat"/>
-	<classpathentry kind="lib" path="C:/Programme/Java/jdk1.6.0_13/lib/tools.jar" sourcepath="C:/Programme/Java/jdk1.6.0_13/src.zip"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Plaggie"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/SevenZip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -29,18 +29,19 @@
     <property name="current_session_context_class">thread</property>
     <!-- this will show us all sql statements -->
     <property name="hibernate.show_sql">true</property>
-    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.User"/>
-    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Student"/>
-    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Task"/>
-    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Similarity"/>
-    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Submission"/>
-    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Lecture"/>
-    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Participation"/>
-    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Points"/>
-    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Group"/>
-    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.TestResult"/>
-    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.Test"/>
-    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.JUnitTest"/>
-    <mapping class="de.tuclausthal.abgabesystem.persistence.datamodel.RegExpTest"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.User"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Student"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Task"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Similarity"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Submission"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Lecture"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Participation"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Points"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Group"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TestResult"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Test"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest"/>
  </session-factory>
 </hibernate-configuration>

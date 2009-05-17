@@ -1,0 +1,16 @@
+How to setup the submission interface
+
+1. Create a new context (i.e. new folder in C:\Programme\Apache Software Foundation\Tomcat 6.0\webapps, like "ba")
+2. Unpack the web-bin.zip into that directory
+3. Create a path where all submission should be stored (e.g. "c:\abgabesystem")
+4. Unpack the datapath-bin.zip there
+5. Open web.xml in the webapps\[contextname]\WEB-INF-folder
+5a. set the datapath value (context-param)
+5b.If you want to use LDAP or any other login-method, update the filter-init-params of the AuthenticationFilter
+6. Create a new mysql database (like "abgabesystem", and a new user, recommended) and import mysql.sql
+7. Open hibernate.cfg.xml in the webapps\[contextname]\WEB-INF\classes-folder
+7a. Set the connection.username and connection.password (if you use another db, also update the driver_class)
+7b. Update the connection.url, the value after the last slash must be the name of the created database.
+8. Restart tomcat.
+
+Done
