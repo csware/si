@@ -3,9 +3,6 @@ package de.tuclausthal.abgabesystem.template;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequestWrapper;
-
 import de.tuclausthal.abgabesystem.MainBetterNameHereRequired;
 import de.tuclausthal.abgabesystem.persistence.datamodel.User;
 
