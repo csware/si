@@ -64,6 +64,12 @@ public class DeleteFile extends HttpServlet {
 			return;
 		}
 
+		Submission checkSubmission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
+		if (checkSubmission == null || submission.getSubmissionid() != checkSubmission.getSubmissionid()) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
 		if (task.getDeadline().before(new Date())) {
 			request.setAttribute("title", "Abgabe nicht mehr möglich");
 			request.getRequestDispatcher("MessageView").forward(request, response);
