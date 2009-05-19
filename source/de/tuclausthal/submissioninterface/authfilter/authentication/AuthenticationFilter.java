@@ -70,8 +70,12 @@ public class AuthenticationFilter implements Filter {
 					sa.setUser(user);
 					request.setAttribute("user", sa.getUser());
 					if (login.redirectAfterLogin() == true) {
-						// should be save since it's encoded: http://en.wikipedia.org/wiki/HTTP_response_splitting
-						((HttpServletResponse) response).sendRedirect(((HttpServletResponse) response).encodeRedirectURL(((HttpServletRequest) request).getRequestURL().toString() + "?" + ((HttpServletRequest) request).getQueryString()));
+						String queryString = "";
+						if (((HttpServletRequest) request).getQueryString() != null) {
+							queryString = "?" + ((HttpServletRequest) request).getQueryString();
+						}
+						// should be safe since it's encoded: http://en.wikipedia.org/wiki/HTTP_response_splitting
+						((HttpServletResponse) response).sendRedirect(((HttpServletResponse) response).encodeRedirectURL(((HttpServletRequest) request).getRequestURL().toString() + queryString));
 					}
 					return;
 				}
