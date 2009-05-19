@@ -74,8 +74,7 @@ public class AuthenticationFilter implements Filter {
 						if (((HttpServletRequest) request).getQueryString() != null) {
 							queryString = "?" + ((HttpServletRequest) request).getQueryString();
 						}
-						// should be safe since it's encoded: http://en.wikipedia.org/wiki/HTTP_response_splitting
-						((HttpServletResponse) response).sendRedirect(((HttpServletResponse) response).encodeRedirectURL(((HttpServletRequest) request).getRequestURL().toString() + queryString));
+						((HttpServletResponse) response).sendRedirect(((HttpServletResponse) response).encodeRedirectURL(((HttpServletRequest) request).getRequestURL().toString() + queryString).replace("\r", "%0d").replace("\n", "%0a")));
 					}
 					return;
 				}
