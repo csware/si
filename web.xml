@@ -69,6 +69,16 @@
     </filter-mapping>
 
     <servlet>
+        <servlet-name>LocalExecuter</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.executiontask.executer.impl.LocalExecuterStartUp</servlet-class>
+        <load-on-startup />
+        <init-param>
+            <param-name>cores</param-name>
+            <param-value>2</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet>
         <servlet-name>Redirect</servlet-name>
         <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.Redirect</servlet-class>
     </servlet>

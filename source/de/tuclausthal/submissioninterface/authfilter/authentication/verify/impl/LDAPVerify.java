@@ -75,6 +75,7 @@ public class LDAPVerify implements VerifyIf {
 			UserDAOIf userdao = DAOFactory.UserDAOIf();
 			user = userdao.getUser((String) ctx.getAttributes("uid=" + username).get("uid").get());
 
+			// TODO: recheck here!
 			if (user == null) {
 				if (ctx.getAttributes("uid=" + username).get("tucmatrikelNr") != null) {
 					userdao.createUser((String) ctx.getAttributes("uid=" + username).get("uid").get());

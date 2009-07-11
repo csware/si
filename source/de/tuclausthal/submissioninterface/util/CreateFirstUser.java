@@ -18,27 +18,28 @@
 
 package de.tuclausthal.submissioninterface.util;
 
-import java.io.File;
 import java.io.IOException;
 
-import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
+import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 
 /**
- * Plagiarism test runner
+ * Tool for creating a first super user
  * @author Sven Strickroth
  */
-public class DupeCheckRunner {
+public class CreateFirstUser {
 	/**
-	 * @param args the first argument must be to path to the submissions
+	 * @param args loginname, firstname, lastname
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		SimilarityTest similarityTest;
-		while ((similarityTest = DAOFactory.SimilarityTestDAOIf().takeSimilarityTest()) != null) {
-			DupeCheck dupeCheck = similarityTest.getDupeCheck(new File(args[0]));
-			dupeCheck.performDupeCheck(similarityTest);
-		}
+		UserDAOIf userDAOIf = DAOFactory.UserDAOIf();
+		User user = userDAOIf.createUser(args[0]);
+		user.setFirstName(args[1]);
+		user.setLastName(args[2]);
+		user.setSuperUser(true);
+		userDAOIf.saveUser(user);
+		System.out.println("User created.");
 	}
 }

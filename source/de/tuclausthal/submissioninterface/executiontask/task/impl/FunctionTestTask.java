@@ -76,11 +76,16 @@ public class FunctionTestTask extends ExecutionTask {
 					Util.recursiveCopy(path, tempDir);
 
 					// prepare policy file
-					File policyFile = File.createTempFile("special", ".policy", tempDir);
+					File policyFile = File.createTempFile("special", ".policy");
 					BufferedWriter policyFileWriter = new BufferedWriter(new FileWriter(policyFile));
+
+					policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + "junit.jar") + "\" {\n");
+					policyFileWriter.write("	permission java.security.AllPermission;\n");
+					policyFileWriter.write("};\n");
+					policyFileWriter.write("\n");
 					policyFileWriter.write("grant {\n");
 					policyFileWriter.write("	permission java.util.PropertyPermission \"*\", \"read\";\n");
-					policyFileWriter.write("	permission java.io.FilePermission \"file:" + tempDir.getAbsolutePath() + "\", \"read, write, delete\";\n");
+					policyFileWriter.write("	permission java.io.FilePermission \"file:" + mkPath(tempDir.getAbsolutePath()) + "\", \"read, write, delete\";\n");
 					policyFileWriter.write("	permission java.lang.RuntimePermission \"accessDeclaredMembers\";\n");
 					policyFileWriter.write("};\n");
 					policyFileWriter.close();
@@ -93,7 +98,7 @@ public class FunctionTestTask extends ExecutionTask {
 					params.add("-Djava.security.policy=" + policyFile.getAbsolutePath());
 					if (task.getTest() instanceof JUnitTest) {
 						params.add("-cp");
-						params.add(basePath.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "junittest.jar+" + File.pathSeparator + basePath.getAbsolutePath() + System.getProperty("file.separator") + "junit.jar" + File.pathSeparator + tempDir.getAbsolutePath());
+						params.add(basePath.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "junittest.jar" + File.pathSeparator + basePath.getAbsolutePath() + System.getProperty("file.separator") + "junit.jar" + File.pathSeparator + tempDir.getAbsolutePath());
 						params.add("junit.textui.TestRunner");
 						params.add("AllTests");
 					} else if (task.getTest() instanceof RegExpTest) {
@@ -115,16 +120,16 @@ public class FunctionTestTask extends ExecutionTask {
 						exitValue = process.waitFor();
 					} catch (InterruptedException e) {
 					}
-					BufferedReader testErrorInputStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
+					BufferedReader testInputStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
 					TestResultDAOIf testResultDAO = DAOFactory.TestResultDAOIf();
 					TestResult testResult = testResultDAO.createTestResult(submission);
 					testResult.setPassedTest((exitValue == 0));
 					String testError = "";
 					String line;
-					while ((line = testErrorInputStream.readLine()) != null) {
+					while ((line = testInputStream.readLine()) != null) {
 						testError = testError.concat(line + "\n");
 					}
-					testErrorInputStream.close();
+					testInputStream.close();
 					if (task.getTest() instanceof RegExpTest) {
 						Pattern testPattern = Pattern.compile(((RegExpTest) task.getTest()).getRegularExpression());
 						Matcher testMatcher = testPattern.matcher(testError.trim());
@@ -135,7 +140,7 @@ public class FunctionTestTask extends ExecutionTask {
 					}
 					// append STDERR
 					testError = testError.concat("\nSTDERR\n");
-					testErrorInputStream = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+					BufferedReader testErrorInputStream = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 					while ((line = testErrorInputStream.readLine()) != null) {
 						testError = testError.concat(line + "\n");
 					}
@@ -144,11 +149,25 @@ public class FunctionTestTask extends ExecutionTask {
 					testResult.setTestOutput(testError);
 					submissionDAO.saveSubmission(submission);
 					Util.recursiveDelete(tempDir);
+					policyFile.delete();
 				} catch (Exception e) {
 					// Error
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+
+	/**
+	 * Prepares a windows path (windows needs double backslash)
+	 * @param absolutePath the original path
+	 * @return an escaped path
+	 */
+	private String mkPath(String absolutePath) {
+		if (System.getProperty("file.separator").equals("\\")) {
+			return absolutePath.replace("\\", "\\\\");
+		} else {
+			return absolutePath;
 		}
 	}
 }

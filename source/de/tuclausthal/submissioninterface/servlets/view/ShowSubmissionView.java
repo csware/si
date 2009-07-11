@@ -96,7 +96,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<table>");
 			out.println("<tr>");
 			for (SimilarityTest similarityTest : task.getSimularityTests()) {
-				out.println("<th><span title=\"" + similarityTest + "\">Ähnlichkeitstest</span></th>");
+				out.println("<th><span title=\"Ähnlichkeit zu\">" + similarityTest + "</span></th>");
 			}
 			out.println("</tr>");
 			out.println("<tr>");

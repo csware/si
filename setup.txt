@@ -6,11 +6,15 @@ How to setup the submission interface
 4. Unpack the datapath-bin.zip there
 5. Open web.xml in the webapps\[contextname]\WEB-INF-folder
 5a. set the datapath value (context-param)
-5b.If you want to use LDAP or any other login-method, update the filter-init-params of the AuthenticationFilter
+5b. If you want to use LDAP or any other login-method, update the filter-init-params of the AuthenticationFilter
+5c. Set the number of parallell threads (cores) used by LocalExecuter
 6. Create a new mysql database (like "abgabesystem", and a new user, recommended) and import mysql.sql
 7. Open hibernate.cfg.xml in the webapps\[contextname]\WEB-INF\classes-folder
 7a. Set the connection.username and connection.password (if you use another db, also update the driver_class)
 7b. Update the connection.url, the value after the last slash must be the name of the created database.
-8. Restart tomcat.
+8. Execute "util.CreateFirstUser" with parameters loginname, firtsname, lastname for creating a superuser-account.
+9. Make sure the JAVA_HOME environment-variable points to the jre directory in a Java 1.6 JDK directory (required if you want to use the compile-tests)
+10. Insert a scheduler entry for "util.DupeCheckRunner" (with the path to the submissions as the first parameter) whichs runs at certain times (with only one active instance) for automatically start the plagiarism check
+11. Restart tomcat.
 
 Done

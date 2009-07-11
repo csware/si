@@ -109,6 +109,7 @@ public class TestManager extends HttpServlet {
 					path.mkdirs();
 				}
 				boolean isVisible = false;
+				int timeout = 15;
 				// Process the uploaded items
 				Iterator<FileItem> iter = items.iterator();
 				while (iter.hasNext()) {
@@ -128,14 +129,19 @@ public class TestManager extends HttpServlet {
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-					} else if (item.getName().equals("visibletostudents")) {
-						isVisible = true;
+					} else {
+						if ("visibletostudents".equals(item.getFieldName())) {
+							isVisible = true;
+						} else if ("timeout".equals(item.getFieldName())) {
+							timeout = Util.parseInteger(item.getString(), 15);
+						}
 					}
 				}
 
 				TestDAOIf testDAO = DAOFactory.TestDAOIf();
 				JUnitTest test = testDAO.createJUnitTest(task);
 				test.setVisibleToStudents(isVisible);
+				test.setTimeout(timeout);
 				testDAO.saveTest(test);
 				// Race cond?
 				task.setTest(test);

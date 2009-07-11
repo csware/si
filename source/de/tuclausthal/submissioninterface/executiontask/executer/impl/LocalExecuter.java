@@ -23,8 +23,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.http.HttpServlet;
+
 import de.tuclausthal.submissioninterface.executiontask.executer.ExecutionTaskExecuterIf;
 import de.tuclausthal.submissioninterface.executiontask.task.ExecutionTask;
+import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Local threaded ExecutionTaskExecuter implementation
@@ -35,7 +40,8 @@ public class LocalExecuter implements ExecutionTaskExecuterIf, Runnable {
 	private List<Thread> workers = null;
 	private Queue<ExecutionTask> taskQueue = new LinkedList<ExecutionTask>();
 	private Boolean monitor = true;
-	final private static int CORES = 2;
+	static int CORES = 1;
+	static File dataPath;
 
 	private LocalExecuter() {}
 
@@ -71,8 +77,7 @@ public class LocalExecuter implements ExecutionTaskExecuterIf, Runnable {
 		while (!Thread.interrupted()) {
 			ExecutionTask performTask = getHead();
 			if (performTask != null) {
-				// TODO: path! hardcoded here
-				performTask.performTask(new File("c:/abgabesystem/"));
+				performTask.performTask(dataPath);
 			} else {
 				try {
 					synchronized (monitor) {

@@ -100,7 +100,6 @@ public class DeleteFile extends HttpServlet {
 					file.delete();
 				}
 			}
-			// TODO: delete .class files, delete empty Submission!
 
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 				submission.setCompiles(null);
