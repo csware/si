@@ -32,6 +32,7 @@ import de.tuclausthal.submissioninterface.authfilter.authentication.verify.Verif
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * LDAP credential verifyer
@@ -41,11 +42,15 @@ public class LDAPVerify implements VerifyIf {
 	private String providerURL;
 	private String securityAuthentication;
 	private String securityPrincipal;
+	private String userAttribute;
+	private String matrikelNumberAttribute;
 
 	public LDAPVerify(FilterConfig filterConfig) {
 		this.providerURL = filterConfig.getInitParameter("PROVIDER_URL");
 		this.securityAuthentication = filterConfig.getInitParameter("SECURITY_AUTHENTICATION");
 		this.securityPrincipal = filterConfig.getInitParameter("SECURITY_PRINCIPAL");
+		this.userAttribute = filterConfig.getInitParameter("userAttribute");
+		this.matrikelNumberAttribute = filterConfig.getInitParameter("matrikelNumberAttribute");
 	}
 
 	@Override
@@ -71,14 +76,18 @@ public class LDAPVerify implements VerifyIf {
 			// Create initial context
 			LdapContext ctx = new InitialLdapContext(env, null);
 
-			// wenn gefunden, dann lokalen user suchen bzw. erstellen
+			// if ldap user found, search or create local user
 			UserDAOIf userdao = DAOFactory.UserDAOIf();
-			user = userdao.getUser((String) ctx.getAttributes("uid=" + username).get("uid").get());
+			user = userdao.getUser((String) ctx.getAttributes(userAttribute + "=" + username).get(userAttribute).get());
 
-			// TODO: recheck here!
 			if (user == null) {
-				if (ctx.getAttributes("uid=" + username).get("tucmatrikelNr") != null) {
-					userdao.createUser((String) ctx.getAttributes("uid=" + username).get("uid").get());
+				String lastName = (String) ctx.getAttributes(userAttribute + "=" + username).get("sn").get();
+				String firstName = (String) ctx.getAttributes(userAttribute + "=" + username).get("cn").get();
+				firstName = firstName.substring(0, firstName.lastIndexOf(lastName) - 1);
+				if (ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute) != null && Util.isInteger((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get())) {
+					user = userdao.createUser((String) ctx.getAttributes(userAttribute + "=" + username).get(userAttribute).get(), firstName, lastName, Integer.parseInt((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get()));
+				} else {
+					user = userdao.createUser((String) ctx.getAttributes(userAttribute + "=" + username).get(userAttribute).get(), firstName, lastName);
 				}
 			}
 

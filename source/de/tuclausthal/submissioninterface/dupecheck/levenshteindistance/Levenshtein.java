@@ -1,7 +1,42 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Taken for the Apache Commons Lang-project: http://commons.apache.org/lang/
+ */
+
 package de.tuclausthal.submissioninterface.dupecheck.levenshteindistance;
 
 /**
  * Levenshtein distance with various optimizations
+     * <p>Find the Levenshtein distance between two Strings.</p>
+     *
+     * <p>This is the number of changes needed to change one String into
+     * another, where each change is a single character modification (deletion,
+     * insertion or substitution).</p>
+     *
+     * <p>The previous implementation of the Levenshtein distance algorithm
+     * was from <a href="http://www.merriampark.com/ld.htm">http://www.merriampark.com/ld.htm</a></p>
+     *
+     * <p>Chas Emerick has written an implementation in Java, which avoids an OutOfMemoryError
+     * which can occur when my Java implementation is used with very large strings.<br>
+     * This implementation of the Levenshtein distance algorithm
+     * is from <a href="http://www.merriampark.com/ldjava.htm">http://www.merriampark.com/ldjava.htm</a></p>
+      
+     * This implementation has also some optimizations done by Sven Strickroth <email@cs-ware.de>.
+     * Modifications include a trashold when to stop the calculation.
  */
 public class Levenshtein {
 	/**

@@ -8,26 +8,19 @@
       Submission Interface
     </description>
     <display-name>Submission Interface</display-name>
-<!--
-<error-page>
-    <exception-type>java.lang.NullPointerException</exception-type>
-    <location>/servlets/ShowTask?taskid=1</location>
-</error-page>
-//-->
 
-<context-param>
-<param-name>datapath</param-name>
-<param-value>c:\abgabesystem</param-value>
-</context-param>
-<context-param>
-<param-name>servletspath</param-name>
-<param-value>servlets</param-value>
-</context-param>
+    <context-param>
+    <param-name>datapath</param-name>
+    <param-value>c:\abgabesystem</param-value>
+    </context-param>
+    <context-param>
+    <param-name>servletspath</param-name>
+    <param-value>servlets</param-value>
+    </context-param>
 
     <welcome-file-list>
         <welcome-file>servlets/Redirect</welcome-file>
     </welcome-file-list>
-
 
     <filter>
         <filter-name>HibernateFilter</filter-name>
@@ -37,7 +30,6 @@
         <filter-name>HibernateFilter</filter-name>
         <url-pattern>/servlets/*</url-pattern>
     </filter-mapping>
-
     <filter>
         <filter-name>AuthenticationFilter</filter-name>
         <filter-class>de.tuclausthal.submissioninterface.authfilter.authentication.AuthenticationFilter</filter-class>
@@ -60,7 +52,15 @@
         </init-param>
         <init-param>
             <param-name>SECURITY_PRINCIPAL</param-name>
-            <param-value>uid={1},ou=people,dc=tu-clausthal,dc=de</param-value>
+            <param-value>uid={0},ou=people,dc=tu-clausthal,dc=de</param-value>
+        </init-param>
+        <init-param>
+            <param-name>userAttribute</param-name>
+            <param-value>uid</param-value>
+        </init-param>
+        <init-param>
+            <param-name>matrikelNumberAttribute</param-name>
+            <param-value>tucmatrikelNr</param-value>
         </init-param>
     </filter>
     <filter-mapping>
@@ -222,6 +222,7 @@
         <servlet-name>TestManagerAddTestFormView</servlet-name>
         <servlet-class>de.tuclausthal.submissioninterface.servlets.view.TestManagerAddTestFormView</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>AdminMenue</servlet-name>
         <url-pattern>/servlets/AdminMenue</url-pattern>

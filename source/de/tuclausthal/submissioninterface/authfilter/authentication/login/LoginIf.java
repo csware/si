@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 public interface LoginIf {
 	/**
 	 * Returns if (further) verification of the credentials is needed
+	 * if not: the user from LoginData is loaded automatically
 	 * @return whether verification of the gathered credentials is needed
 	 */
 	public abstract boolean requiresVerification();

@@ -35,6 +35,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
@@ -71,7 +72,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			out.println("</tr>");
 			while (taskIterator.hasNext()) {
 				Task task = taskIterator.next();
-				if (task.getStart().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000)) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+				if (task.getStart().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000)) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 					out.println("<tr>");
 					out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
 					out.println("<td class=points>" + task.getMaxPoints() + "</td>");
@@ -114,6 +115,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			int usersCount = 0;
 			out.println("<table class=border>");
 			out.println("<tr>");
+			out.println("<th>MatNo</th>");
 			out.println("<th>Teilnehmer</th>");
 			out.println("<th>Rolle</th>");
 			out.println("<th>Punkte</th>");
@@ -121,7 +123,12 @@ public class ShowLectureTutorView extends HttpServlet {
 			while (participationIterator.hasNext()) {
 				Participation thisParticipation = participationIterator.next();
 				out.println("<tr>");
-				out.println("<td><a href=\"mailto:" + Util.mknohtml(thisParticipation.getUser().getEmail()) + "\">" + Util.mknohtml(thisParticipation.getUser().getFullName()) + "</a></td>");
+				if (thisParticipation.getUser() instanceof Student) {
+					out.println("<td>" + ((Student) thisParticipation.getUser()).getMatrikelno() + "</td>");
+				} else {
+					out.println("<td>n/a</td>");
+				}
+				out.println("<td><a href=\"mailto:" + Util.mknohtml(thisParticipation.getUser().getEmail()) + "@tu-clausthal.de\">" + Util.mknohtml(thisParticipation.getUser().getFullName()) + "</a></td>");
 				if (thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
 					if (isAdvisor) {

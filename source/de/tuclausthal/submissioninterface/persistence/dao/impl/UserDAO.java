@@ -20,12 +20,14 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
@@ -45,15 +47,35 @@ public class UserDAO implements UserDAOIf {
 	}
 
 	@Override
-	public User createUser(String email) {
-		// Hibernate exception abfangen
+	public User createUser(String email, String firstName, String lastName) {
 		Session session = HibernateSessionHelper.getSession();
 		Transaction tx = session.beginTransaction();
-		//MainBetterNameHereRequired.getSession().get(User.class, uid, LockMode.UPGRADE);
-		User user = new User();
-		user.setEmail(email);
-		//user.setMatrikelno(matrikelno);
-		session.save(user);
+		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("email", email)).setLockMode(LockMode.UPGRADE).setMaxResults(1).uniqueResult();
+		if (user == null) {
+			user = new User();
+			user.setFirstName(firstName);
+			user.setLastName(lastName);
+			user.setEmail(email);
+			session.save(user);
+		}
+		tx.commit();
+		return user;
+	}
+
+	@Override
+	public User createUser(String email, String firstName, String lastName, int matrikelno) {
+		Session session = HibernateSessionHelper.getSession();
+		Transaction tx = session.beginTransaction();
+		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("email", email)).setLockMode(LockMode.UPGRADE).setMaxResults(1).uniqueResult();
+		if (user == null) {
+			Student student = new Student();
+			student.setEmail(email);
+			student.setFirstName(firstName);
+			student.setLastName(lastName);
+			student.setMatrikelno(matrikelno);
+			session.save(student);
+			user = student;
+		}
 		tx.commit();
 		return user;
 	}

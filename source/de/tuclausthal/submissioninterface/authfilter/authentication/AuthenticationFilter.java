@@ -32,9 +32,9 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginData;
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginIf;
-import de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Form;
 import de.tuclausthal.submissioninterface.authfilter.authentication.verify.VerifyIf;
-import de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.FakeVerify;
+import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 
 /**
@@ -62,7 +62,13 @@ public class AuthenticationFilter implements Filter {
 				login.failNoData((HttpServletRequest) request, (HttpServletResponse) response);
 				return;
 			} else {
-				User user = verify.checkCredentials(logindata);
+				User user = null;
+				// if login requires no verification we load the user named in logindata
+				if (login.requiresVerification()) {
+					user = verify.checkCredentials(logindata);
+				} else {
+					user = DAOFactory.UserDAOIf().getUser(logindata.getUsername());
+				}
 				if (user == null) {
 					login.failNoData("Username or password wrong.", (HttpServletRequest) request, (HttpServletResponse) response);
 					return;

@@ -35,9 +35,7 @@ public class CreateFirstUser {
 	 */
 	public static void main(String[] args) throws IOException {
 		UserDAOIf userDAOIf = DAOFactory.UserDAOIf();
-		User user = userDAOIf.createUser(args[0]);
-		user.setFirstName(args[1]);
-		user.setLastName(args[2]);
+		User user = userDAOIf.createUser(args[0], args[1], args[2]);
 		user.setSuperUser(true);
 		userDAOIf.saveUser(user);
 		System.out.println("User created.");

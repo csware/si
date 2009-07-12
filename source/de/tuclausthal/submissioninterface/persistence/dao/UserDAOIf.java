@@ -44,10 +44,23 @@ public interface UserDAOIf {
 	/**
 	 * Create and store a new user with the username/email-address email in the DB
 	 * @param email the email-address/username of the new user
+	 * @param firstName
+	 * @param lastName
 	 * @return the new user
 	 */
-	public User createUser(String email);
+	public User createUser(String email, String firstName, String lastName);
 
+	/**
+	 * Create and store a new user with the username/email-address email in the DB
+	 * @param email the email-address/username of the new user
+	 * @param firstName
+	 * @param lastName
+	 * @param matrikelno the matrikelnumber of the new user
+	 * @return the new user
+	 */
+	public User createUser(String email, String firstName, String lastName, int matrikelno);
+
+	
 	/**
 	 * Get all users from the DB
 	 * @return list of users
