@@ -68,7 +68,7 @@ public class ShowTaskStudentView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Enddatum:</th>");
 		out.println("<td>" + Util.mknohtml(task.getDeadline().toLocaleString()));
-		if (task.getDeadline().before(new Date())) {
+		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000))) {
 			out.println(" Keine Abgabe mehr möglich");
 		}
 		out.println("</td>");
@@ -101,14 +101,14 @@ public class ShowTaskStudentView extends HttpServlet {
 			for (File file : path.listFiles()) {
 				if (file.getName().endsWith(".java")) {
 					out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(file.getName()) + "</a>");
-					if (task.getDeadline().after(new Date())) {
+					if (task.getDeadline().after(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000))) {
 						out.println(" (<a href=\"" + response.encodeURL("DeleteFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)<br>");
 					}
 				}
 			}
 			out.println("</td>");
 			out.println("</tr>");
-			if (task.getShowPoints().after(new Date()) && submission.getPoints() != null) {
+			if (task.getShowPoints().after(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000)) && submission.getPoints() != null) {
 				out.println("<tr>");
 				out.println("<th>Bewertung:</th>");
 				out.println("<td>");
@@ -119,7 +119,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("</table>");
 		}
 		out.println("<p>");
-		if (task.getDeadline().before(new Date())) {
+		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000))) {
 			out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
 		} else {
 			out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div");

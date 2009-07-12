@@ -70,7 +70,7 @@ public class DeleteFile extends HttpServlet {
 			return;
 		}
 
-		if (task.getDeadline().before(new Date())) {
+		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000))) {
 			request.setAttribute("title", "Abgabe nicht mehr möglich");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;

@@ -35,6 +35,10 @@ public class DupeCheckRunner {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
+		if (args.length != 1 || !new File(args[0]).isDirectory()) {
+			System.out.println("first parameter must point to the submission directory");
+			System.exit(1);
+		}
 		SimilarityTest similarityTest;
 		while ((similarityTest = DAOFactory.SimilarityTestDAOIf().takeSimilarityTest()) != null) {
 			DupeCheck dupeCheck = similarityTest.getDupeCheck(new File(args[0]));

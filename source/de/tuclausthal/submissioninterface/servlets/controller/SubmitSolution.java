@@ -76,13 +76,13 @@ public class SubmitSolution extends HttpServlet {
 			return;
 		}
 
-		if (task.getStart().after(new Date()) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+		if (task.getStart().after(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000)) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
-		if (task.getDeadline().before(new Date()) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000)) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 			request.setAttribute("title", "Abgabe nicht mehr möglich");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
@@ -118,14 +118,14 @@ public class SubmitSolution extends HttpServlet {
 			return;
 		}
 
-		if (task.getStart().after(new Date()) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+		if (task.getStart().after(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000)) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			template.printTemplateHeader("Aufgabe nicht abrufbar");
 			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 			template.printTemplateFooter();
 			return;
 		}
 
-		if (task.getDeadline().before(new Date()) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000)) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 			template.printTemplateHeader("Abgabe nicht (mehr) möglich");
 			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 			template.printTemplateFooter();

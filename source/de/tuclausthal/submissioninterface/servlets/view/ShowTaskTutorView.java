@@ -69,7 +69,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Enddatum:</th>");
 		out.println("<td>" + Util.mknohtml(task.getDeadline().toLocaleString()));
-		if (task.getDeadline().before(new Date())) {
+		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000))) {
 			out.println(" Keine Abgabe mehr möglich");
 		}
 		out.println("</td>");

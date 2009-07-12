@@ -66,7 +66,7 @@ public class ShowSubmission extends HttpServlet {
 			return;
 		}
 
-		if (task.getDeadline().before(new Date()) && request.getParameter("points") != null) {
+		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000)) && request.getParameter("points") != null) {
 			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf();
 			pointsDAO.createPoints(Util.parseInteger(request.getParameter("points"), 0), submission, participation);
 			response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));

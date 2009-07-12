@@ -70,12 +70,12 @@ public class ShowLectureStudentView extends HttpServlet {
 			out.println("</tr>");
 			while (taskIterator.hasNext()) {
 				Task task = taskIterator.next();
-				if (task.getStart().before(new Date()) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+				if (task.getStart().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000)) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 					out.println("<tr>");
 					out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
 					out.println("<td class=points>" + task.getMaxPoints() + "</td>");
 					Submission submission = DAOFactory.SubmissionDAOIf().getSubmission(task, sessionAdapter.getUser());
-					if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().after(new Date())) {
+					if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().after(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000))) {
 						out.println("<td class=points>" + submission.getPoints().getPoints() + "</td>");
 					} else {
 						out.println("<td class=points>n/a</td>");

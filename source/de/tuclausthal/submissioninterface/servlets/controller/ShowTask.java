@@ -59,7 +59,7 @@ public class ShowTask extends HttpServlet {
 			return;
 		}
 
-		if (task.getStart().after(new Date()) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+		if (task.getStart().after(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000)) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
