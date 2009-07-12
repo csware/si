@@ -54,6 +54,7 @@ public class SimilarityTest implements Serializable {
 	private String basis;
 	private boolean normalizeCapitalization;
 	private String tabsSpacesNewlinesNormalization;
+	private String excludeFiles;
 
 	// for Hibernate
 	private SimilarityTest() {}
@@ -64,14 +65,16 @@ public class SimilarityTest implements Serializable {
 	 * @param basis
 	 * @param normalizeCapitalization
 	 * @param tabsSpacesNewlinesNormalization
+	 * @param excludeFiles comma separated list of files to exclude
 	 */
-	public SimilarityTest(Task task, String type, String basis, boolean normalizeCapitalization, String tabsSpacesNewlinesNormalization, int minimumDifferenceInPercent) {
+	public SimilarityTest(Task task, String type, String basis, boolean normalizeCapitalization, String tabsSpacesNewlinesNormalization, int minimumDifferenceInPercent, String excludeFiles) {
 		this.task = task;
 		this.type = type;
 		this.basis = basis;
 		this.normalizeCapitalization = normalizeCapitalization;
 		this.tabsSpacesNewlinesNormalization = tabsSpacesNewlinesNormalization;
-		this.minimumDifferenceInPercent = minimumDifferenceInPercent;
+		setMinimumDifferenceInPercent(minimumDifferenceInPercent);
+		setExcludeFiles(excludeFiles);
 	}
 
 	/**
@@ -192,7 +195,11 @@ public class SimilarityTest implements Serializable {
 	 * @param minimumDifferenceInPercent the minimumDifferenceInPercent to set
 	 */
 	public void setMinimumDifferenceInPercent(int minimumDifferenceInPercent) {
-		this.minimumDifferenceInPercent = minimumDifferenceInPercent;
+		if (minimumDifferenceInPercent < 0 || minimumDifferenceInPercent > 100) {
+			this.minimumDifferenceInPercent = 50;
+		} else {
+			this.minimumDifferenceInPercent = minimumDifferenceInPercent;
+		}
 	}
 
 	/**
@@ -283,6 +290,37 @@ public class SimilarityTest implements Serializable {
 				string += "ohne Normalisierung";
 			}
 			return string;
+		}
+	}
+
+	/**
+	 * @return the excludeFiles
+	 */
+	public String getExcludeFiles() {
+		return excludeFiles;
+	}
+
+	/**
+	 * @param excludeFiles the excludeFiles to set
+	 */
+	@Column(nullable = false)
+	public void setExcludeFiles(String excludeFiles) {
+		if (excludeFiles != null) {
+			String[] excludedFiles = excludeFiles.split(",");
+			excludeFiles = "";
+			for (String fileName : excludedFiles) {
+				fileName = fileName.trim();
+				if (!fileName.isEmpty()) {
+					if (excludeFiles.isEmpty()) {
+						excludeFiles = fileName;
+					} else {
+						excludeFiles += "," + fileName;
+					}
+				}
+			}
+			this.excludeFiles = excludeFiles;
+		} else {
+			this.excludeFiles = "";
 		}
 	}
 }

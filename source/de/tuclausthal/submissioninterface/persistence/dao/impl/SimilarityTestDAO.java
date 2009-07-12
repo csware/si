@@ -34,10 +34,10 @@ import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 public class SimilarityTestDAO implements SimilarityTestDAOIf {
 
 	@Override
-	public SimilarityTest addSimilarityTest(Task task, String type, String basis, boolean normalizeCapitalization, String tabsSpacesNewlinesNormalization, int minimumDifferenceInPercent) {
+	public SimilarityTest addSimilarityTest(Task task, String type, String basis, boolean normalizeCapitalization, String tabsSpacesNewlinesNormalization, int minimumDifferenceInPercent, String excludeFiles) {
 		Session session = HibernateSessionHelper.getSession();
 		Transaction tx = session.beginTransaction();
-		SimilarityTest similarityTest = new SimilarityTest(task, type, basis, normalizeCapitalization, tabsSpacesNewlinesNormalization, minimumDifferenceInPercent);
+		SimilarityTest similarityTest = new SimilarityTest(task, type, basis, normalizeCapitalization, tabsSpacesNewlinesNormalization, minimumDifferenceInPercent, excludeFiles);
 		session.save(similarityTest);
 		tx.commit();
 		return similarityTest;

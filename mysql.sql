@@ -59,6 +59,7 @@ CREATE TABLE  `similaritytests` (
   `tabsSpacesNewlinesNormalization` varchar(255) NOT NULL,
   `type` varchar(255) NOT NULL,
   `minimumDifferenceInPercent` int(11) NOT NULL,
+  `excludeFiles` text NOT NULL,
   PRIMARY KEY (`similarityTestId`),
   KEY `FK86B2AD1EAE0697EB` (`taskid`),
   CONSTRAINT `FK86B2AD1EAE0697EB` FOREIGN KEY (`taskid`) REFERENCES `tasks` (`taskid`) ON DELETE CASCADE

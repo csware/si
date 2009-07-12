@@ -34,9 +34,10 @@ public interface SimilarityTestDAOIf {
 	 * @param normalizeCapitalization
 	 * @param tabsSpacesNewlinesNormalization
 	 * @param minimumDifferenceInPercent
+	 * @param excludeFiles Comma separated list of filesnames to exclude
 	 * @return the similarity test
 	 */
-	public SimilarityTest addSimilarityTest(Task task, String type, String basis, boolean normalizeCapitalization, String tabsSpacesNewlinesNormalization, int minimumDifferenceInPercent);
+	public SimilarityTest addSimilarityTest(Task task, String type, String basis, boolean normalizeCapitalization, String tabsSpacesNewlinesNormalization, int minimumDifferenceInPercent, String excludeFiles);
 
 	/**
 	 * Retireves a similarity test from the db by a given id.

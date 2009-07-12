@@ -77,15 +77,16 @@ public class PlaggieAdapter extends DupeCheck {
 	@Override
 	public void performDupeCheck(SimilarityTest similarityTest) {
 		SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf();
-		//similarityDAO.resetSimilarityCheck(task);
 		Task task = similarityTest.getTask();
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
+		DAOFactory.SimilarityTestDAOIf().resetSimilarityTest(similarityTest);
 		try {
 			// -- Read the configuration file
 			config = new Configuration(new File(path + System.getProperty("file.separator") + "plaggie.properties"));
 
 			config.htmlReport = false;
 			config.minimumSubmissionSimilarityValue = similarityTest.getMinimumDifferenceInPercent() / 100.0;
+			config.excludeFiles = similarityTest.getExcludeFiles();
 
 			Debug.setEnabled(config.debugMessages);
 

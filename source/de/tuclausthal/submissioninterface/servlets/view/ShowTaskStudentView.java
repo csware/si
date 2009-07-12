@@ -90,7 +90,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("</tr>");
 			if (task.getTest() != null && task.getTest().getVisibleToStudents() == true && submission.getTestResult() != null) {
 				out.println("<tr>");
-				out.println("<th>Test:</th>");
+				out.println("<th>Funktionstest bestanden:</th>");
 				out.println("<td>" + Util.boolToHTML(submission.getTestResult().getPassedTest()) + "</td>");
 				out.println("</tr>");
 			}

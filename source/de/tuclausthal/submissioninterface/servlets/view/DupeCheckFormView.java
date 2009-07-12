@@ -57,6 +57,10 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("<th>Minimale Ähnlichkeit:</th>");
 		out.println("<td><input type=text value=50 name=minsimilarity> %</td>");
 		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Dateien ausschließen:</th>");
+		out.println("<td><input type=text name=excludeFiles> (Dateinamen durch Komma getrennt)</td>");
+		out.println("</tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=starten> <a href=\"");
 		out.println(response.encodeURL("TaskManager?taskid=" + task.getTaskid() + "&amp;action=editTask&amp;lecture=" + task.getLecture().getId()));
 		out.println("\">Abbrechen</a></td>");
@@ -102,6 +106,11 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Minimale Ähnlichkeit:</th>");
 		out.println("<td><input type=text value=50 name=minsimilarity> %</td>");
+		out.println("</tr>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Dateien ausschließen:</th>");
+		out.println("<td><input type=text name=excludeFiles> (Dateinamen durch Komma getrennt)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=starten> <a href=\"");

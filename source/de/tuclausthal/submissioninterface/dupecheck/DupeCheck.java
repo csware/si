@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.dupecheck;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -59,12 +60,14 @@ public abstract class DupeCheck {
 			normalizerCache = new NormalizerCache(similarityTest.getNormalizer());
 			Task task = similarityTest.getTask();
 			List<Submission> submissions = new LinkedList<Submission>(task.getSubmissions());
+			List<String> excludedFileNames = Arrays.asList(similarityTest.getExcludeFiles().split(","));
 			// go through all submission of submission i
 			for (int i = 0; i < submissions.size(); i++) {
 				List<StringBuffer> javaFiles = new LinkedList<StringBuffer>();
 				if (new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(i).getSubmissionid() + System.getProperty("file.separator")).listFiles() != null) {
 					for (File javaFile : new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(i).getSubmissionid() + System.getProperty("file.separator")).listFiles()) {
-						if (javaFile.getName().endsWith(".java")) {
+						// check that the file is a java-file and is not excluded
+						if (javaFile.getName().endsWith(".java") && !excludedFileNames.contains(javaFile.getName())) {
 							// cache the files we use more than once
 							javaFiles.add(normalizerCache.normalize(submissions.get(i), javaFile));
 						}
@@ -76,7 +79,8 @@ public abstract class DupeCheck {
 						// go through all submitted files of submission j
 						if (new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(j).getSubmissionid() + System.getProperty("file.separator")).listFiles() != null) {
 							for (File javaFile : new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(j).getSubmissionid() + System.getProperty("file.separator")).listFiles()) {
-								if (javaFile.getName().endsWith(".java")) {
+								// check that the file is a java-file and is not excluded
+								if (javaFile.getName().endsWith(".java") && !excludedFileNames.contains(javaFile.getName())) {
 									// compare all files, file by file
 									for (StringBuffer fileOne : javaFiles) {
 										StringBuffer fileTwo = normalizerCache.normalize(submissions.get(j), javaFile);

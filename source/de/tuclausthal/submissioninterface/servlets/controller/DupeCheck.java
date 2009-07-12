@@ -69,10 +69,7 @@ public class DupeCheck extends HttpServlet {
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getLecture().getId()));
 		} else if (request.getParameter("type") != null && "savesimilaritytest".equals(request.getParameter("action"))) {
 			int minSimilarity = Util.parseInteger(request.getParameter("minsimilarity"), 50);
-			if (minSimilarity < 0 || minSimilarity > 100) {
-				minSimilarity = 50;
-			}
-			semilarityTestDAO.addSimilarityTest(task, request.getParameter("type"), request.getParameter("normalizer1"), "lc".equals(request.getParameter("normalizer2")), request.getParameter("normalizer3"), minSimilarity);
+			semilarityTestDAO.addSimilarityTest(task, request.getParameter("type"), request.getParameter("normalizer1"), "lc".equals(request.getParameter("normalizer2")), request.getParameter("normalizer3"), minSimilarity, request.getParameter("excludeFiles"));
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getLecture().getId()));
 		} else {
 			request.setAttribute("task", task);
