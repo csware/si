@@ -72,6 +72,10 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<td><textarea cols=60 rows=10 name=description>" + Util.mknohtml(task.getDescription()) + "</textarea></td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Filename Regexp:</th>");
+		out.println("<td><input type=text name=filenameregexp value=\"" + Util.mknohtml(task.getFilenameRegexp())+ "\"> <b>Für Java-Dateien: &quote;[A-Z][A-Za-z0-9_]+\\\\\\.java&quote;, &quote;-&quote; = disabled, bisher nur .txt und .java richtig supported (security)</b></td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");
 		out.println("<td><input type=text name=startdate value=\"" + Util.mknohtml(task.getStart().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 		out.println("</tr>");

@@ -39,10 +39,10 @@ public class TaskDAO implements TaskDAOIf {
 	}
 
 	@Override
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints) {
+	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameregexp, boolean showTextArea) {
 		Session session = HibernateSessionHelper.getSession();
 		Transaction tx = session.beginTransaction();
-		Task task = new Task(title, maxPoints, start, deadline, description, lecture, showPoints);
+		Task task = new Task(title, maxPoints, start, deadline, description, lecture, showPoints, filenameregexp, showTextArea);
 		session.save(task);
 		tx.commit();
 		return task;

@@ -78,6 +78,7 @@ public class ShowFile extends HttpServlet {
 				BufferedReader freader = new BufferedReader(new FileReader(file));
 				String line;
 				String code = "";
+				// TODO: problems with pictures
 				while ((line = freader.readLine()) != null) {
 					code = code + line + "\n";
 				}

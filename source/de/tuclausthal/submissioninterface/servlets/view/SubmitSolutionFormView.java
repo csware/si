@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * View-Servlet for displaying a form for the submission of files
@@ -45,11 +46,21 @@ public class SubmitSolutionFormView extends HttpServlet {
 
 		template.printTemplateHeader("Abgabe starten", task);
 
-		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"?taskid=" + task.getTaskid() + "\">");
-		out.println("<p>Bitte wählen Sie eine .java-Quellcode-Datei aus, die Sie einsenden möchten.</p>");
-		out.println("<INPUT TYPE=file NAME=file>");
-		out.println("<INPUT TYPE=submit VALUE=upload>");
-		out.println("</FORM>");
+		if (!"-".equals(task.getFilenameRegexp())) {
+			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"?taskid=" + task.getTaskid() + "\">");
+			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie einsenden möchten.</p>");
+			out.println("<INPUT TYPE=file NAME=file>");
+			out.println("<INPUT TYPE=submit VALUE=upload>");
+			out.println("</FORM>");
+		}
+
+		if (task.isShowTextArea()) {
+			out.println("<FORM class=mid method=POST action=\"?taskid=" + task.getTaskid() + "\">");
+			out.println("<p>Bitte füllen Sie das Textfeld mit Ihrer Lösung:</p>");
+			out.println("<textarea cols=60 rows=10 name=textsolution>" + Util.mknohtml((String) request.getAttribute("textsolution")) + "</textarea>");
+			out.println("<INPUT TYPE=submit VALUE=upload>");
+			out.println("</FORM>");
+		}
 
 		template.printTemplateFooter();
 	}

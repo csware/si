@@ -67,7 +67,10 @@ public class CompileTestTask extends ExecutionTask {
 						javaFiles.add(javaFile.getAbsolutePath());
 					}
 				}
-				int compiles = jc.run(null, null, errorOutputStream, javaFiles.toArray(new String[] {}));
+				int compiles = 1;
+				if (javaFiles.size() > 0) {
+					compiles = jc.run(null, null, errorOutputStream, javaFiles.toArray(new String[] {}));
+				}
 				submission.setCompiles(compiles == 0);
 				submission.setStderr(errorOutputStream.toString().replace(path.getAbsolutePath() + System.getProperty("file.separator"), ""));
 			} catch (Exception e) {

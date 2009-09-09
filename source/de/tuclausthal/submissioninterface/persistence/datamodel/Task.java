@@ -52,6 +52,8 @@ public class Task implements Serializable {
 	private Lecture lecture;
 	private Test test;
 	private Set<SimilarityTest> simularityTests;
+	private String filenameRegexp = "[A-Z][A-Za-z0-9_]+\\.java";
+	private boolean showTextArea = false;
 
 	public Task() {}
 
@@ -64,7 +66,7 @@ public class Task implements Serializable {
 	 * @param submissions
 	 * @param lecture
 	 */
-	public Task(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints) {
+	public Task(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameRegexp, boolean showTextArea) {
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.start = start;
@@ -72,6 +74,8 @@ public class Task implements Serializable {
 		this.description = description;
 		this.lecture = lecture;
 		this.showPoints = showPoints;
+		this.filenameRegexp = filenameRegexp;
+		this.showTextArea = showTextArea;
 	}
 
 	/**
@@ -240,5 +244,34 @@ public class Task implements Serializable {
 	 */
 	public void setSimularityTests(Set<SimilarityTest> simularityTests) {
 		this.simularityTests = simularityTests;
+	}
+
+	/**
+	 * @return the filenameRegexp
+	 */
+	public String getFilenameRegexp() {
+		return filenameRegexp;
+	}
+
+	/**
+	 * @param filenameRegexp the filenameRegexp to set
+	 */
+	public void setFilenameRegexp(String filenameRegexp) {
+		this.filenameRegexp = filenameRegexp;
+	}
+
+	/**
+	 * @return the showTextArea
+	 */
+	@Column(nullable = false)
+	public boolean isShowTextArea() {
+		return showTextArea;
+	}
+
+	/**
+	 * @param showTextArea the showTextArea to set
+	 */
+	public void setShowTextArea(boolean showTextArea) {
+		this.showTextArea = showTextArea;
 	}
 }

@@ -39,7 +39,7 @@ public interface TaskDAOIf {
 	 * @param showPoints the daten when the issued points will be shown
 	 * @return
 	 */
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints);
+	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameRegexp, boolean showTextArea);
 
 	/**
 	 * Fetch a task based on it's id

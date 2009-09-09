@@ -39,11 +39,22 @@ public class ShowFileView extends HttpServlet {
 		String fileName = (String) request.getAttribute("fileName");
 		String code = (String) request.getAttribute("code");
 
-		response.setContentType("text/html");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter out = response.getWriter();
-
-		Renderer renderer = XhtmlRendererFactory.getRenderer(XhtmlRendererFactory.JAVA);
-		out.write(renderer.highlight(fileName, code, "UTF-8", false));
+		if (fileName.endsWith(".java")) {
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			Renderer renderer = XhtmlRendererFactory.getRenderer(XhtmlRendererFactory.JAVA);
+			out.write(renderer.highlight(fileName, code, "UTF-8", false));
+		} else if (fileName.endsWith(".txt")) {
+			response.setContentType("text/plain");
+			response.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println(code);
+		} else {
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("Anzeige nicht möglich.");
+		}
 	}
 }

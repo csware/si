@@ -69,7 +69,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Enddatum:</th>");
 		out.println("<td>" + Util.mknohtml(task.getDeadline().toLocaleString()));
-		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000))) {
+		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000))) {
 			out.println(" Keine Abgabe mehr möglich");
 		}
 		out.println("</td>");
@@ -117,7 +117,9 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("<table class=border>");
 					out.println("<tr>");
 					out.println("<th>Benutzer</th>");
-					out.println("<th>Kompiliert</th>");
+					if (!"-".equals(task.getFilenameRegexp())) {
+						out.println("<th>Kompiliert</th>");
+					}
 					if (task.getTest() != null) {
 						out.println("<th>Test</th>");
 					}
@@ -129,7 +131,9 @@ public class ShowTaskTutorView extends HttpServlet {
 				}
 				out.println("<tr>");
 				out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(submission.getSubmitter().getUser().getFullName()) + "</a></td>");
-				out.println("<td>" + Util.boolToHTML(submission.getCompiles()) + "</td>");
+				if (!"-".equals(task.getFilenameRegexp())) {
+					out.println("<td>" + Util.boolToHTML(submission.getCompiles()) + "</td>");
+				}
 				if (task.getTest() != null) {
 					out.println("<td>" + Util.boolToHTML(!(submission.getTestResult() == null || submission.getTestResult().getPassedTest() == false)) + "</td>");
 				}
@@ -154,7 +158,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			}
 			if (first == false) {
 				out.println("<tr>");
-				out.println("<td colspan=" + ((task.getTest() != null ? 3 : 2) + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
+				out.println("<td colspan=" + (1 + (!"-".equals(task.getFilenameRegexp()) ? 1 : 0) + (task.getTest() != null ? 1 : 0) + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
 				out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
 				out.println("</tr>");
 				out.println("</table><p>");

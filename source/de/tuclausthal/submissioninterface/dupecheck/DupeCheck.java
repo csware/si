@@ -67,7 +67,7 @@ public abstract class DupeCheck {
 				if (new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(i).getSubmissionid() + System.getProperty("file.separator")).listFiles() != null) {
 					for (File javaFile : new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(i).getSubmissionid() + System.getProperty("file.separator")).listFiles()) {
 						// check that the file is a java-file and is not excluded
-						if (javaFile.getName().endsWith(".java") && !excludedFileNames.contains(javaFile.getName())) {
+						if (!javaFile.getName().endsWith(".class") && !excludedFileNames.contains(javaFile.getName())) {
 							// cache the files we use more than once
 							javaFiles.add(normalizerCache.normalize(submissions.get(i), javaFile));
 						}
@@ -80,7 +80,7 @@ public abstract class DupeCheck {
 						if (new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(j).getSubmissionid() + System.getProperty("file.separator")).listFiles() != null) {
 							for (File javaFile : new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(j).getSubmissionid() + System.getProperty("file.separator")).listFiles()) {
 								// check that the file is a java-file and is not excluded
-								if (javaFile.getName().endsWith(".java") && !excludedFileNames.contains(javaFile.getName())) {
+								if (!javaFile.getName().endsWith(".class") && !excludedFileNames.contains(javaFile.getName())) {
 									// compare all files, file by file
 									for (StringBuffer fileOne : javaFiles) {
 										StringBuffer fileTwo = normalizerCache.normalize(submissions.get(j), javaFile);

@@ -18,7 +18,10 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
@@ -76,16 +79,36 @@ public class SubmitSolution extends HttpServlet {
 			return;
 		}
 
-		if (task.getStart().after(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000)) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+		if (task.getStart().after(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000)) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
-		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000)) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000)) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 			request.setAttribute("title", "Abgabe nicht mehr möglich");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
+		}
+
+		if (task.isShowTextArea()) {
+			String textsolution = "";
+			Submission submission = DAOFactory.SubmissionDAOIf().getSubmission(task, new SessionAdapter(request).getUser());
+			if (submission != null) {
+				ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+				File textSolutionFile = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + "textloesung.txt");
+				if (textSolutionFile.exists()) {
+					BufferedReader bufferedReader = new BufferedReader(new FileReader(textSolutionFile));
+					StringBuffer sb = new StringBuffer();
+					String line;
+					while ((line = bufferedReader.readLine()) != null) {
+						sb.append(line);
+						sb.append(System.getProperty("line.separator"));
+					}
+					textsolution = sb.toString();
+				}
+			}
+			request.setAttribute("textsolution", textsolution);
 		}
 
 		request.setAttribute("task", task);
@@ -118,21 +141,29 @@ public class SubmitSolution extends HttpServlet {
 			return;
 		}
 
-		if (task.getStart().after(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000)) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+		if (task.getStart().after(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000)) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			template.printTemplateHeader("Aufgabe nicht abrufbar");
 			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 			template.printTemplateFooter();
 			return;
 		}
 
-		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000)) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000)) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 			template.printTemplateHeader("Abgabe nicht (mehr) möglich");
 			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 			template.printTemplateFooter();
 			return;
 		}
 
-		//mainbetternamereq.printTemplateHeader("Upload");
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
+		Submission submission = submissionDAO.createSubmission(task, participation);
+
+		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+
+		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
+		if (path.exists() == false) {
+			path.mkdirs();
+		}
 
 		//http://commons.apache.org/fileupload/using.html
 
@@ -140,6 +171,11 @@ public class SubmitSolution extends HttpServlet {
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 
 		if (isMultipart) {
+			if ("-".equals(task.getFilenameRegexp())) {
+				request.setAttribute("title", "Dateiupload für diese Aufgabe deaktiviert.");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
 
 			// Create a factory for disk-based file items
 			FileItemFactory factory = new DiskFileItemFactory();
@@ -160,15 +196,6 @@ public class SubmitSolution extends HttpServlet {
 				return;
 			}
 
-			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
-			Submission submission = submissionDAO.createSubmission(task, participation);
-
-			ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
-
-			File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-			if (path.exists() == false) {
-				path.mkdirs();
-			}
 			// Process the uploaded items
 			Iterator<FileItem> iter = items.iterator();
 			while (iter.hasNext()) {
@@ -176,10 +203,15 @@ public class SubmitSolution extends HttpServlet {
 
 				// Process a file upload
 				if (!item.isFormField()) {
-					Pattern pattern = Pattern.compile("(\\|/)?([A-Z][A-Za-z0-9_]+\\.java)$");
+					Pattern pattern;
+					if (task.getFilenameRegexp() != null && !task.getFilenameRegexp().isEmpty()) {
+						pattern = Pattern.compile("(\\|/)?([a-zA-Z0-9_.-])$");
+					} else {
+						pattern = Pattern.compile("(\\|/)?(" + task.getFilenameRegexp() + ")$");
+					}
 					Matcher m = pattern.matcher(item.getName());
 					if (!m.matches()) {
-						out.println("Filename invalid ;)");
+						out.println("Dateiname ungültig. Nur A-Z, a-z, 0-9, ., - und _ skind erlaubt.");
 						return;
 					}
 					String fileName = m.group(0);
@@ -198,8 +230,21 @@ public class SubmitSolution extends HttpServlet {
 					response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 				}
 			}
+		} else if (request.getParameter("textsolution") != null) {
+			File uploadedFile = new File(path, "textloesung.txt");
+			FileWriter fileWriter = new FileWriter(uploadedFile);
+			fileWriter.write(request.getParameter("textsolution"));
+			fileWriter.flush();
+			fileWriter.close();
+
+			submission.setCompiles(null);
+			submission.setTestResult(null);
+			submissionDAO.saveSubmission(submission);
+			ExecutionTaskExecute.compileTestTask(submission);
+
+			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 		} else {
-			out.println("fuck111" + isMultipart);
+			out.println("Problem: Keine Abgabedaten gefunden.");
 		}
 	}
 }
