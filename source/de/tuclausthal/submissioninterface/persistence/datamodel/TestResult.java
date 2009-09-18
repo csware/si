@@ -20,13 +20,22 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-@Embeddable
+@Entity
+@Table(name = "testresults")
 public class TestResult implements Serializable {
+	private int id;
+	private Test test;
+	private Submission submission;
 	private Boolean passedTest = null;
-	private String testOutput = "not tested";
+	private String testOutput = "no output available yet";
 
 	/**
 	 * @return the passedTest
@@ -55,5 +64,50 @@ public class TestResult implements Serializable {
 	 */
 	public void setTestOutput(String testOutput) {
 		this.testOutput = testOutput;
+	}
+
+	/**
+	 * @return the test
+	 */
+	@ManyToOne
+	public Test getTest() {
+		return test;
+	}
+
+	/**
+	 * @param test the test to set
+	 */
+	public void setTest(Test test) {
+		this.test = test;
+	}
+
+	/**
+	 * @return the submission
+	 */
+	public Submission getSubmission() {
+		return submission;
+	}
+
+	/**
+	 * @param submission the submission to set
+	 */
+	public void setSubmission(Submission submission) {
+		this.submission = submission;
+	}
+
+	/**
+	 * @return the id
+	 */
+	@Id
+	@GeneratedValue
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
 	}
 }

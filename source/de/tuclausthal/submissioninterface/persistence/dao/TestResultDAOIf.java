@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.dao;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 
 /**
@@ -28,10 +29,11 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 public interface TestResultDAOIf {
 	/**
 	 * Creates and stores a TestResult for a submission in the DB
+	 * @param test the test
 	 * @param submission the submission
 	 * @return the created/updated testresult
 	 */
-	public TestResult createTestResult(Submission submission);
+	public TestResult createTestResult(Test test, Submission submission);
 
 	/**
 	 * Update/save a testresult

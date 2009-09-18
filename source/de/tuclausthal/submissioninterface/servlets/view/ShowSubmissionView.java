@@ -120,16 +120,16 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("</table><p>");
 		}
 
-		if (task.getTest() != null && submission.getTestResult() != null) {
+		/*if (task.getTest() != null && submission.getTestResult() != null) {
 			out.println("<h2>Test:</h2>");
 			out.println("<div class=mid>Erfolgreich: " + Util.boolToHTML(submission.getTestResult().getPassedTest()));
 			out.println("<p><textarea cols=80 rows=15>" + Util.mknohtml(submission.getTestResult().getTestOutput()) + "</textarea></div>");
-		}
+		}*/
 
-		if (submission.getStderr() != null && !submission.getStderr().isEmpty()) {
+		/*if (submission.getStderr() != null && !submission.getStderr().isEmpty()) {
 			out.println("<h2>Standard-Error Ausgabe:</h2>");
 			out.println("<p class=mid><textarea cols=80 rows=15>" + Util.mknohtml(submission.getStderr()) + "</textarea></p>");
-		}
+		}*/
 		out.println("<h2>Dateien:</h2>");
 		out.println("<div class=mid>");
 		for (String file : submittedFiles) {

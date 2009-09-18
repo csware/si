@@ -25,7 +25,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -33,26 +33,27 @@ import javax.persistence.Table;
  * @author Sven Strickroth
  */
 @Entity
-@Table(name = "test")
-public class Test implements Serializable {
+@Table(name = "tests")
+public abstract class Test implements Serializable {
 	private int id;
-	private Boolean visibleToStudents = false;
+	private int timesRunnableByStudents = 0;
+	private boolean forTutors = false;
 	private Task task;
-	private int timeout;
+	private int timeout = 5;
 
 	/**
 	 * @return the visibleToStudents
 	 */
 	@Column(nullable = false)
-	public Boolean getVisibleToStudents() {
-		return visibleToStudents;
+	public int getTimesRunnableByStudents() {
+		return timesRunnableByStudents;
 	}
 
 	/**
 	 * @param visibleToStudents the visibleToStudents to set
 	 */
-	public void setVisibleToStudents(Boolean visibleToStudents) {
-		this.visibleToStudents = visibleToStudents;
+	public void setTimesRunnableByStudents(int timesRunnableByStudents) {
+		this.timesRunnableByStudents = timesRunnableByStudents;
 	}
 
 	/**
@@ -74,8 +75,8 @@ public class Test implements Serializable {
 	/**
 	 * @return the task
 	 */
-	@OneToOne
-	@JoinColumn(name = "taskid", nullable = false, unique = true)
+	@ManyToOne
+	@JoinColumn(name = "taskid", nullable = false)
 	public Task getTask() {
 		return task;
 	}
@@ -99,5 +100,20 @@ public class Test implements Serializable {
 	 */
 	public void setTimeout(int timeout) {
 		this.timeout = timeout;
+	}
+
+	/**
+	 * @return the forTutors
+	 */
+	@Column(nullable = false)
+	public boolean isForTutors() {
+		return forTutors;
+	}
+
+	/**
+	 * @param forTutors the forTutors to set
+	 */
+	public void setForTutors(boolean forTutors) {
+		this.forTutors = forTutors;
 	}
 }

@@ -39,9 +39,6 @@ public class TestDAO implements TestDAOIf {
 		Session session = HibernateSessionHelper.getSession();
 		Transaction tx = session.beginTransaction();
 		session.lock(task, LockMode.UPGRADE);
-		if (task.getTest() != null) {
-			deleteTest(task.getTest());
-		}
 		JUnitTest test = new JUnitTest();
 		test.setTask(task);
 		session.save(test);
@@ -77,5 +74,10 @@ public class TestDAO implements TestDAOIf {
 		session.update(test);
 		session.delete(test);
 		tx.commit();
+	}
+
+	@Override
+	public Test getTest(int testId) {
+		return (Test) HibernateSessionHelper.getSession().get(Test.class, testId);
 	}
 }

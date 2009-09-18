@@ -37,7 +37,6 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
-import de.tuclausthal.submissioninterface.executiontask.ExecutionTaskExecute;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
@@ -46,7 +45,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
@@ -83,6 +81,11 @@ public class TestManager extends HttpServlet {
 			// Check that we have a file upload request
 			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 
+			// TODO start transaction here
+			TestDAOIf testDAO = DAOFactory.TestDAOIf();
+			JUnitTest test = testDAO.createJUnitTest(task);
+			testDAO.saveTest(test);
+
 			if (isMultipart) {
 
 				// Create a factory for disk-based file items
@@ -108,7 +111,7 @@ public class TestManager extends HttpServlet {
 				if (path.exists() == false) {
 					path.mkdirs();
 				}
-				boolean isVisible = false;
+				int timesRunnableByStudents = 0;
 				int timeout = 15;
 				// Process the uploaded items
 				Iterator<FileItem> iter = items.iterator();
@@ -123,30 +126,25 @@ public class TestManager extends HttpServlet {
 
 							return;
 						}
-						File uploadedFile = new File(path, "junittest.jar");
+						File uploadedFile = new File(path, "junittest" + test.getId() + ".jar");
 						try {
 							item.write(uploadedFile);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					} else {
-						if ("visibletostudents".equals(item.getFieldName())) {
-							isVisible = true;
+						if ("timesRunnableByStudents".equals(item.getFieldName())) {
+							timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
 						} else if ("timeout".equals(item.getFieldName())) {
 							timeout = Util.parseInteger(item.getString(), 15);
 						}
 					}
 				}
 
-				TestDAOIf testDAO = DAOFactory.TestDAOIf();
-				JUnitTest test = testDAO.createJUnitTest(task);
-				test.setVisibleToStudents(isVisible);
+				test.setTimesRunnableByStudents(timesRunnableByStudents);
 				test.setTimeout(timeout);
+				test.setTask(task);
 				testDAO.saveTest(test);
-				// Race cond?
-				task.setTest(test);
-				taskDAO.saveTask(task);
-				reTestSubmissions(task);
 				response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 			} else {
 				request.setAttribute("title", "Ungültiger Aufruf");
@@ -168,41 +166,22 @@ public class TestManager extends HttpServlet {
 			test.setCommandLineParameter(request.getParameter("parameter"));
 			test.setTimeout(Util.parseInteger(request.getParameter("timeout"), 15));
 			test.setRegularExpression(request.getParameter("regexp"));
-			test.setVisibleToStudents(request.getParameter("visibletostudents") != null);
+			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
+			test.setTask(task);
 			testDAO.saveTest(test);
-			// Race cond? not atm: only one advisor
-			task.setTest(test);
-			taskDAO.saveTask(task);
-			reTestSubmissions(task);
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 		} else if ("deleteTest".equals(request.getParameter("action"))) {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf();
-			Test test = task.getTest();
-			task.setTest(null);
-			taskDAO.saveTask(task);
-			testDAO.deleteTest(test);
+			Test test = testDAO.getTest(Util.parseInteger(request.getParameter("testid"), 0));
+			if (test != null) {
+				testDAO.deleteTest(test);
+			}
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 			return;
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 
-		}
-	}
-
-	/**
-	 * Retests (functiontest) all submission of the given task
-	 * @param task
-	 * @throws IOException
-	 */
-	private void reTestSubmissions(Task task) throws IOException {
-		int submissionCount = task.getSubmissions().size();
-		if (submissionCount > 0) {
-			Iterator<Submission> submissionIterator = task.getSubmissions().iterator();
-			while (submissionIterator.hasNext()) {
-				Submission submission = submissionIterator.next();
-				ExecutionTaskExecute.functionTestTask(submission);
-			}
 		}
 	}
 

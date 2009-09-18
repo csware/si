@@ -50,7 +50,7 @@ public class Task implements Serializable {
 	private String description = "";
 	private Set<Submission> submissions;
 	private Lecture lecture;
-	private Test test;
+	private Set<Test> tests;
 	private Set<SimilarityTest> simularityTests;
 	private String filenameRegexp = "[A-Z][A-Za-z0-9_]+\\.java";
 	private boolean showTextArea = false;
@@ -203,16 +203,16 @@ public class Task implements Serializable {
 	/**
 	 * @return the test
 	 */
-	@OneToOne(mappedBy = "task", cascade = CascadeType.ALL)
-	public Test getTest() {
-		return test;
+	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+	public Set<Test> getTests() {
+		return tests;
 	}
 
 	/**
 	 * @param test the test to set
 	 */
-	public void setTest(Test test) {
-		this.test = test;
+	public void setTests(Set<Test> tests) {
+		this.tests = tests;
 	}
 
 	/**

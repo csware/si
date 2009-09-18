@@ -38,4 +38,11 @@ public class Redirect extends HttpServlet {
 		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
 		response.sendRedirect(request.getContextPath() + "/" + contextAdapter.getServletsPath() + "/Overview");
 	}
+
+	/*
+		@Override
+		public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+			// don't want to have any special post-handling
+			doGet(request, response);
+		}*/
 }

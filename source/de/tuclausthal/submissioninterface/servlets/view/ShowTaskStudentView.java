@@ -84,18 +84,6 @@ public class ShowTaskStudentView extends HttpServlet {
 		if (submission != null) {
 			out.println("<p><h2>Informationen zu meiner Abgabe:</h2>");
 			out.println("<table class=border>");
-			if (!"-".equals(task.getFilenameRegexp())) {
-				out.println("<tr>");
-				out.println("<th>Kompiliert:</th>");
-				out.println("<td>" + Util.boolToHTML(submission.getCompiles()) + "</td>");
-				out.println("</tr>");
-			}
-			if (task.getTest() != null && task.getTest().getVisibleToStudents() == true && submission.getTestResult() != null) {
-				out.println("<tr>");
-				out.println("<th>Funktionstest bestanden:</th>");
-				out.println("<td>" + Util.boolToHTML(submission.getTestResult().getPassedTest()) + "</td>");
-				out.println("</tr>");
-			}
 			out.println("<tr>");
 			out.println("<th>Besteht aus:</th>");
 			out.println("<td>");

@@ -16,22 +16,21 @@
  * along with SubmissionInterface. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tuclausthal.submissioninterface.executiontask;
+package de.tuclausthal.submissioninterface.testframework.executor;
 
-import de.tuclausthal.submissioninterface.executiontask.executer.impl.LocalExecuter;
-import de.tuclausthal.submissioninterface.executiontask.task.impl.CompileTestTask;
-import de.tuclausthal.submissioninterface.executiontask.task.impl.FunctionTestTask;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import java.util.concurrent.Future;
+
+import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
 
 /**
- * ExecutionTask factory/distributor
+ * ExecutionTaskExecuter interface
+ * Class which executes a concrete executiontask
  * @author Sven Strickroth
  */
-public class ExecutionTaskExecute {
-	public static void compileTestTask(Submission submission) {
-		LocalExecuter.getInstance().executeTask(new CompileTestTask(submission));
-	}
-	public static void functionTestTask(Submission submission) {
-		LocalExecuter.getInstance().executeTask(new FunctionTestTask(submission));
-	}
+public interface TestExecutorIf {
+	/**
+	 * Executes the given executionTask
+	 * @param executionTask the executiontask to execute
+	 */
+	public Future<TestExecutorTestResult> executeTask(TestTask executionTask);
 }

@@ -16,7 +16,7 @@
  * along with SubmissionInterface. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tuclausthal.submissioninterface.executiontask.task.impl;
+package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -26,17 +26,18 @@ import java.util.List;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
-import de.tuclausthal.submissioninterface.executiontask.task.ExecutionTask;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
+import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
 
 /**
  * Compiles/Compiletest for a submission
  * @author Sven Strickroth
  */
-public class CompileTestTask extends ExecutionTask {
+public class CompileTestTask extends TestTask {
 	private int submissionid;
 
 	public CompileTestTask(Submission submission) {
@@ -44,7 +45,7 @@ public class CompileTestTask extends ExecutionTask {
 	}
 
 	@Override
-	public void performTask(File basePath) {
+	public void performTask(File basePath, TestExecutorTestResult testResult) {
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
 		Submission submission = submissionDAO.getSubmission(submissionid);
 		if (submission != null) {
@@ -71,16 +72,18 @@ public class CompileTestTask extends ExecutionTask {
 				if (javaFiles.size() > 0) {
 					compiles = jc.run(null, null, errorOutputStream, javaFiles.toArray(new String[] {}));
 				}
-				submission.setCompiles(compiles == 0);
-				submission.setStderr(errorOutputStream.toString().replace(path.getAbsolutePath() + System.getProperty("file.separator"), ""));
+				testResult.setTestPassed(compiles == 0);
+				testResult.setTestOutput(errorOutputStream.toString().replace(path.getAbsolutePath() + System.getProperty("file.separator"), ""));
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.err.println("System.getProperty(\"java.home\") should point to a jre in a jdk directory");
 				return;
 			}
-			submissionDAO.saveSubmission(submission);
-			// perform Functiontest after compiling, so that we don't get problems caused by parallelity
-			new FunctionTestTask(submission).performTask(basePath);
 		}
+	}
+
+	@Override
+	public boolean requiresTempDir() {
+		return false;
 	}
 }

@@ -53,4 +53,6 @@ public interface TestDAOIf {
 	 * @param test the test to remvoe
 	 */
 	public void deleteTest(Test test);
+
+	public Test getTest(int testId);
 }

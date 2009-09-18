@@ -27,15 +27,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
-import de.tuclausthal.submissioninterface.executiontask.ExecutionTaskExecute;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
-import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -65,10 +61,13 @@ public class AdminMenue extends HttpServlet {
 				} else if (lectures.isDirectory()) {
 					// list all tasks
 					for (File tasks : lectures.listFiles()) {
-						if (!tasks.getName().equals("junittest.jar") && DAOFactory.TaskDAOIf().getTask(Util.parseInteger(tasks.getName(), 0)) == null) {
+						if (!tasks.getName().startsWith("junittest") && DAOFactory.TaskDAOIf().getTask(Util.parseInteger(tasks.getName(), 0)) == null) {
 							Util.recursiveDelete(tasks);
-						} else if (tasks.getName().equals("junittest.jar") && DAOFactory.TaskDAOIf().getTask(Util.parseInteger(tasks.getName(), 0)) == null && !(DAOFactory.TaskDAOIf().getTask(Util.parseInteger(tasks.getName(), 0)).getTest() instanceof JUnitTest)) {
-							tasks.delete();
+						} else if (tasks.getName().startsWith("junittest")) {
+							// TODO: 2bd
+							//if (DAOFactory.TaskDAOIf().getTask(Util.parseInteger(tasks.getName(), 0)) == null && !(DAOFactory.TaskDAOIf().getTask(Util.parseInteger(tasks.getName(), 0)).getTest() instanceof JUnitTest)) {
+								tasks.delete();
+							//}
 						} else {
 							// list all submissions
 							for (File submissions : tasks.listFiles()) {
@@ -76,19 +75,6 @@ public class AdminMenue extends HttpServlet {
 									Util.recursiveDelete(submissions);
 								}
 							}
-						}
-					}
-				}
-			}
-			// search for stale tests
-			for (Lecture lecture : DAOFactory.LectureDAOIf().getLectures()) {
-				for (Participation participation : lecture.getParticipants()) {
-					for (Submission submission : participation.getSubmissions()) {
-						if (submission.getCompiles() == null) {
-							ExecutionTaskExecute.compileTestTask(submission);
-						}
-						if (submission.getTestResult() != null && submission.getTestResult().getPassedTest() == null) {
-							ExecutionTaskExecute.functionTestTask(submission);
 						}
 					}
 				}

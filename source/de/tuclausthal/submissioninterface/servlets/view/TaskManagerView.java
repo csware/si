@@ -30,6 +30,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -73,7 +74,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Filename Regexp:</th>");
-		out.println("<td><input type=text name=filenameregexp value=\"" + Util.mknohtml(task.getFilenameRegexp())+ "\"> <b>Für Java-Dateien: &quote;[A-Z][A-Za-z0-9_]+\\\\\\.java&quote;, &quote;-&quote; = disabled, bisher nur .txt und .java richtig supported (security)</b></td>");
+		out.println("<td><input type=text name=filenameregexp value=\"" + Util.mknohtml(task.getFilenameRegexp()) + "\"> <b>Für Java-Dateien: &quote;[A-Z][A-Za-z0-9_]+\\\\\\.java&quote;, &quote;-&quote; = disabled, bisher nur .txt und .java richtig supported (security)</b></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");
@@ -102,6 +103,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
+		// don't show for new tasks
 		if (task.getTaskid() != 0) {
 			out.println("<h2>Ähnlichkeitsprüfungen</h2>");
 			for (SimilarityTest similarityTest : task.getSimularityTests()) {
@@ -109,19 +111,18 @@ public class TaskManagerView extends HttpServlet {
 				out.println("<a href=\"" + response.encodeURL("DupeCheck?action=deleteSimilarityTest&amp;taskid=" + task.getTaskid() + "&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "\">löschen</a><br>");
 			}
 			out.println("<p class=mid><a href=\"" + response.encodeURL("DupeCheck?taskid=" + task.getTaskid()) + "\">Ähnlichkeitsprüfung hinzufügen</a><p>");
-			out.println("<h2>Automatischer Test der Abgaben</h2>");
-			if (task.getTest() == null) {
-				out.println("<p class=mid><a href=\"" + response.encodeURL("TestManager?action=newTest&amp;taskid=" + task.getTaskid()) + "\">Test hinzufügen</a></p>");
-			} else {
-				out.println("<p class=mid>");
-				if (task.getTest() instanceof RegExpTest) {
-					RegExpTest test = (RegExpTest) task.getTest();
-					out.println("RegExp-Test hinterlegt:<br>Prüfpattern: " + Util.mknohtml(test.getRegularExpression()) + "<br>Parameter: " + Util.mknohtml(test.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.mknohtml(test.getMainClass()) + "<br>");
+			out.println("<h2>Funktionstests der Abgaben</h2>");
+			out.println("<p class=mid><a href=\"" + response.encodeURL("TestManager?action=newTest&amp;taskid=" + task.getTaskid()) + "\">Test hinzufügen</a></p>");
+			out.println("<p class=mid>");
+			for (Test test : task.getTests()) {
+				if (test instanceof RegExpTest) {
+					RegExpTest regexptest = (RegExpTest) test;
+					out.println("RegExp-Test hinterlegt:<br>Prüfpattern: " + Util.mknohtml(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.mknohtml(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.mknohtml(regexptest.getMainClass()) + "<br>");
 				} else {
 					out.println("JUnit-Test hinterlegt<br>");
 				}
-				out.println("Sichtbar für Studenten: " + Util.boolToHTML(task.getTest().getVisibleToStudents()) + "<br>");
-				out.println("<a href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;taskid=" + task.getTaskid()) + "\">Test löschen</a></p>");
+				out.println("Ausführbar für Studenten: " + test.getTimesRunnableByStudents() + "<br>");
+				out.println("<a href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">Test löschen</a></p>");
 			}
 		}
 		template.printTemplateFooter();

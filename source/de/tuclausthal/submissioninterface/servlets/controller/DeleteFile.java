@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
-import de.tuclausthal.submissioninterface.executiontask.ExecutionTaskExecute;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
@@ -102,10 +101,7 @@ public class DeleteFile extends HttpServlet {
 			}
 
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
-				submission.setCompiles(null);
-				submission.setTestResult(null);
 				submissionDAO.saveSubmission(submission);
-				ExecutionTaskExecute.compileTestTask(submission);
 			}
 
 			response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/" + contextAdapter.getServletsPath() + "/ShowTask?taskid=" + task.getTaskid()));

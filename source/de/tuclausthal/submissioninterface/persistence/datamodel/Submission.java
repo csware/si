@@ -38,12 +38,10 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "submissions", uniqueConstraints = { @UniqueConstraint(columnNames = { "submitter", "taskid" }) })
 public class Submission implements Serializable {
 	private int submissionid;
-	private Boolean compiles = null;
-	private String stderr;
 	private Task task;
 	private Participation submitter;
 	private Points points;
-	private TestResult testResult;
+	private Set<TestResult> testResults;
 	private Set<Similarity> similarSubmissions;
 
 	// for Hibernate
@@ -61,15 +59,17 @@ public class Submission implements Serializable {
 	/**
 	 * @return the testResult
 	 */
-	public TestResult getTestResult() {
-		return testResult;
+	@OneToMany(mappedBy = "submission")
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	public Set<TestResult> getTestResults() {
+		return testResults;
 	}
 
 	/**
 	 * @param testResult the testResult to set
 	 */
-	public void setTestResult(TestResult testResult) {
-		this.testResult = testResult;
+	public void setTestResults(Set<TestResult> testResults) {
+		this.testResults = testResults;
 	}
 
 	/**
@@ -132,35 +132,6 @@ public class Submission implements Serializable {
 	 */
 	public void setSubmissionid(int submissionid) {
 		this.submissionid = submissionid;
-	}
-
-	/**
-	 * @return the compiles
-	 */
-	public Boolean getCompiles() {
-		return compiles;
-	}
-
-	/**
-	 * @param compiles the compiles to set
-	 */
-	public void setCompiles(Boolean compiles) {
-		this.compiles = compiles;
-	}
-
-	/**
-	 * @return the stderr
-	 */
-	@Lob
-	public String getStderr() {
-		return stderr;
-	}
-
-	/**
-	 * @param stderr the stderr to set
-	 */
-	public void setStderr(String stderr) {
-		this.stderr = stderr;
 	}
 
 	/**

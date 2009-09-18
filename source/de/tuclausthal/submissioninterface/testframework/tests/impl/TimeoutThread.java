@@ -16,19 +16,30 @@
  * along with SubmissionInterface. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tuclausthal.submissioninterface.executiontask.executer;
-
-import de.tuclausthal.submissioninterface.executiontask.task.ExecutionTask;
+package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
 /**
- * ExecutionTaskExecuter interface
- * Class which executes a concrete executiontask
+ * Timeout thread for a process; kills a process after a given timeout
  * @author Sven Strickroth
  */
-public interface ExecutionTaskExecuterIf {
-	/**
-	 * Executes the given executionTask
-	 * @param executionTask the executiontask to execute
-	 */
-	public void executeTask(ExecutionTask executionTask);
+public class TimeoutThread extends Thread {
+	private Process process;
+	private int timeout;
+
+	public TimeoutThread(Process process, int timeout) {
+		this.process = process;
+		this.timeout = timeout;
+	}
+
+	@Override
+	public void run() {
+		try {
+			Thread.sleep(timeout * 1000);
+		} catch (InterruptedException e) {
+			interrupt();
+		}
+		if (!interrupted()) {
+			process.destroy();
+		}
+	}
 }

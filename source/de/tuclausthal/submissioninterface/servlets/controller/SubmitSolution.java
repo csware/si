@@ -42,7 +42,6 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
-import de.tuclausthal.submissioninterface.executiontask.ExecutionTaskExecute;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
@@ -222,11 +221,7 @@ public class SubmitSolution extends HttpServlet {
 						e.printStackTrace();
 					}
 
-					submission.setCompiles(null);
-					submission.setTestResult(null);
 					submissionDAO.saveSubmission(submission);
-					ExecutionTaskExecute.compileTestTask(submission);
-
 					response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 				}
 			}
@@ -237,10 +232,7 @@ public class SubmitSolution extends HttpServlet {
 			fileWriter.flush();
 			fileWriter.close();
 
-			submission.setCompiles(null);
-			submission.setTestResult(null);
 			submissionDAO.saveSubmission(submission);
-			ExecutionTaskExecute.compileTestTask(submission);
 
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 		} else {

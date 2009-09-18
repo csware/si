@@ -16,30 +16,14 @@
  * along with SubmissionInterface. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tuclausthal.submissioninterface.executiontask.task.impl;
+package de.tuclausthal.submissioninterface.persistence.datamodel;
+
+import javax.persistence.Entity;
 
 /**
- * Timeout thread for a process; kills a process after a given timeout
+ * Compile/Syntax test
  * @author Sven Strickroth
  */
-public class TimeoutThread extends Thread {
-	private Process process;
-	private int timeout;
-
-	public TimeoutThread(Process process, int timeout) {
-		this.process = process;
-		this.timeout = timeout;
-	}
-
-	@Override
-	public void run() {
-		try {
-			Thread.sleep(timeout * 1000);
-		} catch (InterruptedException e) {
-			interrupt();
-		}
-		if (!interrupted()) {
-			process.destroy();
-		}
-	}
+@Entity
+public class CompileTest extends Test {
 }

@@ -101,7 +101,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					lastGroup = group;
 					if (first == false) {
 						out.println("<tr>");
-						out.println("<td colspan=" + ((task.getTest() != null ? 3 : 2) + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
+						//out.println("<td colspan=" + ((task.getTest() != null ? 3 : 2) + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
 						out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
 						out.println("</tr>");
 						out.println("</table><p>");
@@ -120,9 +120,9 @@ public class ShowTaskTutorView extends HttpServlet {
 					if (!"-".equals(task.getFilenameRegexp())) {
 						out.println("<th>Kompiliert</th>");
 					}
-					if (task.getTest() != null) {
+					/*if (task.getTest() != null) {
 						out.println("<th>Test</th>");
-					}
+					}*/
 					for (SimilarityTest similarityTest : task.getSimularityTests()) {
 						out.println("<th><span title=\"Max. Ähnlichkeit\">" + similarityTest + "</span></th>");
 					}
@@ -131,12 +131,12 @@ public class ShowTaskTutorView extends HttpServlet {
 				}
 				out.println("<tr>");
 				out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(submission.getSubmitter().getUser().getFullName()) + "</a></td>");
-				if (!"-".equals(task.getFilenameRegexp())) {
+/*				if (!"-".equals(task.getFilenameRegexp())) {
 					out.println("<td>" + Util.boolToHTML(submission.getCompiles()) + "</td>");
-				}
-				if (task.getTest() != null) {
+				}*/
+				/*if (task.getTest() != null) {
 					out.println("<td>" + Util.boolToHTML(!(submission.getTestResult() == null || submission.getTestResult().getPassedTest() == false)) + "</td>");
-				}
+				}*/
 				for (SimilarityTest similarityTest : task.getSimularityTests()) {
 					//TODO: tooltip and who it is
 					String users = "";
@@ -158,7 +158,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			}
 			if (first == false) {
 				out.println("<tr>");
-				out.println("<td colspan=" + (1 + (!"-".equals(task.getFilenameRegexp()) ? 1 : 0) + (task.getTest() != null ? 1 : 0) + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
+				//out.println("<td colspan=" + (1 + (!"-".equals(task.getFilenameRegexp()) ? 1 : 0) + (task.getTest() != null ? 1 : 0) + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
 				out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
 				out.println("</tr>");
 				out.println("</table><p>");
