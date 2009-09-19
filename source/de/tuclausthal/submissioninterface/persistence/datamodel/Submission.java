@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -59,7 +60,7 @@ public class Submission implements Serializable {
 	/**
 	 * @return the testResult
 	 */
-	@OneToMany(mappedBy = "submission")
+	@OneToMany(mappedBy = "submission", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Set<TestResult> getTestResults() {
 		return testResults;
@@ -137,7 +138,7 @@ public class Submission implements Serializable {
 	/**
 	 * @return the similarSubmissions
 	 */
-	@OneToMany(mappedBy = "submissionOne")
+	@OneToMany(mappedBy = "submissionOne", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Set<Similarity> getSimilarSubmissions() {
 		return similarSubmissions;

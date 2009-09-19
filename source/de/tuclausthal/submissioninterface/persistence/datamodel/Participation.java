@@ -23,6 +23,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -134,7 +135,7 @@ public class Participation implements Serializable {
 	/**
 	 * @return the submissions
 	 */
-	@OneToMany(mappedBy = "submitter")
+	@OneToMany(mappedBy = "submitter", fetch = FetchType.LAZY)
 	public Set<Submission> getSubmissions() {
 		return submissions;
 	}

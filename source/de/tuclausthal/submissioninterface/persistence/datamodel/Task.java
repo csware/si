@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -171,7 +172,7 @@ public class Task implements Serializable {
 	/**
 	 * @return the submissions
 	 */
-	@OneToMany(mappedBy = "task")
+	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Set<Submission> getSubmissions() {
 		return submissions;
@@ -203,7 +204,7 @@ public class Task implements Serializable {
 	/**
 	 * @return the test
 	 */
-	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	public Set<Test> getTests() {
 		return tests;
 	}
@@ -232,7 +233,7 @@ public class Task implements Serializable {
 	/**
 	 * @return the simularityTests
 	 */
-	@OneToMany(mappedBy = "task")
+	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OrderBy(clause = "similarityTestId")
 	public Set<SimilarityTest> getSimularityTests() {

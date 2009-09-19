@@ -84,6 +84,7 @@ public class TestResult implements Serializable {
 	/**
 	 * @return the submission
 	 */
+	@ManyToOne
 	public Submission getSubmission() {
 		return submission;
 	}

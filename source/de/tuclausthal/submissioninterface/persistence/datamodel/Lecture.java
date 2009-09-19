@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -122,7 +123,7 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the tasks
 	 */
-	@OneToMany(mappedBy = "lecture")
+	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OrderBy(clause = "taskid")
 	public List<Task> getTasks() {
@@ -139,7 +140,7 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the groups
 	 */
-	@OneToMany(mappedBy = "lecture")
+	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OrderBy(clause = "name")
 	public Set<Group> getGroups() {
