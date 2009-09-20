@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.persistence.dao;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 
@@ -63,4 +64,10 @@ public interface TestDAOIf {
 	public void deleteTest(Test test);
 
 	public Test getTest(int testId);
+
+	/**
+	 * Checks if a test is ready to run
+	 * @return Test or null if none is "queued".
+	 */
+	public Test takeTest();
 }

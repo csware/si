@@ -18,17 +18,22 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
+import java.util.Date;
+
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Data Access Object implementation for the TestDAOIf
@@ -90,6 +95,19 @@ public class TestDAO implements TestDAOIf {
 		CompileTest test = new CompileTest();
 		test.setTask(task);
 		session.save(test);
+		tx.commit();
+		return test;
+	}
+
+	@Override
+	public Test takeTest() {
+		Session session = HibernateSessionHelper.getSession();
+		Transaction tx = session.beginTransaction();
+		Test test = (Test) session.createCriteria(Test.class).add(Restrictions.eq("needsToRun", true)).setLockMode(LockMode.UPGRADE).createCriteria("task").add(Restrictions.le("deadline", Util.correctTimezone(new Date()))).setMaxResults(1).uniqueResult();
+		if (test != null) {
+			test.setNeedsToRun(false);
+			session.save(test);
+		}
 		tx.commit();
 		return test;
 	}

@@ -14,4 +14,8 @@ public class TestExecutor {
 	public static Future<TestExecutorTestResult> executeTask(TestTask executionTask) {
 		return LocalExecutor.getInstance().executeTask(executionTask);
 	}
+
+	public static void shutdown() {
+		LocalExecutor.getInstance().shutdown();
+	}
 }

@@ -52,10 +52,17 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class TestLogicImpl extends TestTask {
 	private int testId;
 	private int submissionid;
+	private boolean saveTestResult = false;
 
 	public TestLogicImpl(Test test, Submission submission) {
 		this.testId = test.getId();
 		this.submissionid = submission.getSubmissionid();
+	}
+
+	public TestLogicImpl(Test test, Submission submission, boolean saveTestResult) {
+		this.testId = test.getId();
+		this.submissionid = submission.getSubmissionid();
+		this.saveTestResult = saveTestResult;
 	}
 
 	@Override
@@ -194,6 +201,9 @@ public class TestLogicImpl extends TestTask {
 				if (tempDir != null) {
 					Util.recursiveDelete(tempDir);
 				}
+			}
+			if (saveTestResult) {
+				DAOFactory.TestResultDAOIf().createTestResult(test, submission, testResult);
 			}
 		}
 	}

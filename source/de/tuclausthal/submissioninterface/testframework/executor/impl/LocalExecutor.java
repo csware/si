@@ -34,8 +34,8 @@ import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
 public class LocalExecutor implements TestExecutorIf {
 	private volatile static LocalExecutor instance = null;
 	private ExecutorService executorService = Executors.newFixedThreadPool(CORES);
-	static int CORES = 1;
-	static File dataPath;
+	public static int CORES = 1;
+	public static File dataPath;
 
 	private LocalExecutor() {}
 
@@ -54,5 +54,9 @@ public class LocalExecutor implements TestExecutorIf {
 	public Future<TestExecutorTestResult> executeTask(TestTask executionTask) {
 		TestExecutorWorker worker = new TestExecutorWorker(dataPath, executionTask);
 		return executorService.submit(worker);
+	}
+
+	public void shutdown() {
+		executorService.shutdown();
 	}
 }

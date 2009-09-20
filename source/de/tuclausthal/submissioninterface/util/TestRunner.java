@@ -24,12 +24,17 @@ import java.io.IOException;
 import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.testframework.TestExecutor;
+import de.tuclausthal.submissioninterface.testframework.executor.impl.LocalExecutor;
+import de.tuclausthal.submissioninterface.testframework.tests.impl.TestLogicImpl;
 
 /**
- * Plagiarism test runner
+ * Test runner
  * @author Sven Strickroth
  */
-public class DupeCheckRunner {
+public class TestRunner {
 	/**
 	 * @param args the first argument must be to path to the submissions
 	 * @throws IOException 
@@ -39,10 +44,21 @@ public class DupeCheckRunner {
 			System.out.println("first parameter must point to the submission directory");
 			System.exit(1);
 		}
+		File dataPath = new File(args[0]);
 		SimilarityTest similarityTest;
 		while ((similarityTest = DAOFactory.SimilarityTestDAOIf().takeSimilarityTest()) != null) {
-			DupeCheck dupeCheck = similarityTest.getDupeCheck(new File(args[0]));
+			DupeCheck dupeCheck = similarityTest.getDupeCheck(dataPath);
 			dupeCheck.performDupeCheck(similarityTest);
 		}
+		LocalExecutor.CORES = 2;
+		LocalExecutor.dataPath = dataPath;
+		LocalExecutor.getInstance();
+		Test test;
+		while ((test = DAOFactory.TestDAOIf().takeTest()) != null) {
+			for (Submission submission : test.getTask().getSubmissions()) {
+				TestExecutor.executeTask(new TestLogicImpl(test, submission, true));
+			}
+		}
+		TestExecutor.shutdown();
 	}
 }

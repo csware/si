@@ -25,6 +25,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.TestResultDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
+import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
@@ -33,14 +34,17 @@ import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
  */
 public class TestResultDAO implements TestResultDAOIf {
 	@Override
-	public TestResult createTestResult(Test test, Submission submission) {
-		// Hibernate exception abfangen
+	public TestResult createTestResult(Test test, Submission submission, TestExecutorTestResult testExecutorTestResult) {
 		Session session = HibernateSessionHelper.getSession();
 		Transaction tx = session.beginTransaction();
 		TestResult testResult = new TestResult();
 		testResult.setSubmission(submission);
 		testResult.setTest(test);
-		session.save(submission);
+		if (testExecutorTestResult != null) {
+			testResult.setPassedTest(testExecutorTestResult.isTestPassed());
+			testResult.setTestOutput(testExecutorTestResult.getTestOutput());
+		}
+		session.save(testResult);
 		tx.commit();
 		return testResult;
 	}

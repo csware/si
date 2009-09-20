@@ -42,6 +42,7 @@ public abstract class Test implements Serializable {
 	private int timeout = 5;
 	private String testTitle = "";
 	private String testDescription = "";
+	private boolean needsToRun = true;
 
 	/**
 	 * @return the visibleToStudents
@@ -145,5 +146,19 @@ public abstract class Test implements Serializable {
 	 */
 	public void setTestDescription(String testDescription) {
 		this.testDescription = testDescription;
+	}
+
+	/**
+	 * @param needsToRun the needsToRun to set
+	 */
+	public void setNeedsToRun(boolean needsToRun) {
+		this.needsToRun = needsToRun;
+	}
+
+	/**
+	 * @return the needsToRun
+	 */
+	public boolean isNeedsToRun() {
+		return needsToRun;
 	}
 }
