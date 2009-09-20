@@ -52,13 +52,16 @@ public class SubmitSolutionFormView extends HttpServlet {
 			out.println("<INPUT TYPE=file NAME=file>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
 			out.println("</FORM>");
+			if (task.isShowTextArea()) {
+				out.println("<p><hr>");
+			}
 		}
 
-		if (task.isShowTextArea()) {
+		if (task.isShowTextArea() || "-".equals(task.getFilenameRegexp())) {
 			out.println("<FORM class=mid method=POST action=\"?taskid=" + task.getTaskid() + "\">");
 			out.println("<p>Bitte füllen Sie das Textfeld mit Ihrer Lösung:</p>");
-			out.println("<textarea cols=60 rows=10 name=textsolution>" + Util.mknohtml((String) request.getAttribute("textsolution")) + "</textarea>");
-			out.println("<INPUT TYPE=submit VALUE=upload>");
+			out.println("<p><textarea cols=60 rows=10 name=textsolution>" + Util.mknohtml((String) request.getAttribute("textsolution")) + "</textarea></p>");
+			out.println("<INPUT TYPE=submit VALUE=speichern>");
 			out.println("</FORM>");
 		}
 

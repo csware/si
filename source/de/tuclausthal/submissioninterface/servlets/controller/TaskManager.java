@@ -77,7 +77,6 @@ public class TaskManager extends HttpServlet {
 				task.setDeadline(new Date(new Date().getTime() + 3600 * 24 * 7 * 1000));
 				task.setShowPoints(task.getDeadline());
 				task.setFilenameRegexp("[A-Z][A-Za-z0-9_]+\\.java");
-				task.setShowTextArea(request.getParameter("showtextarea") != null);
 				task.setLecture(lecture);
 			}
 
@@ -97,6 +96,7 @@ public class TaskManager extends HttpServlet {
 				task.setTitle(request.getParameter("title"));
 				task.setDescription(request.getParameter("description"));
 				task.setFilenameRegexp(request.getParameter("filenameregexp"));
+				task.setShowTextArea(request.getParameter("showtextarea") != null);
 				task.setStart(parseDate(request.getParameter("startdate"), new Date()));
 				task.setDeadline(parseDate(request.getParameter("deadline"), new Date()));
 				if (task.getDeadline().before(task.getStart())) {

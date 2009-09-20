@@ -90,7 +90,7 @@ public class SubmitSolution extends HttpServlet {
 			return;
 		}
 
-		if (task.isShowTextArea()) {
+		if (task.isShowTextArea() || "-".equals(task.getFilenameRegexp())) {
 			String textsolution = "";
 			Submission submission = DAOFactory.SubmissionDAOIf().getSubmission(task, new SessionAdapter(request).getUser());
 			if (submission != null) {
