@@ -30,6 +30,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.SimilarityTestDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
+import de.tuclausthal.submissioninterface.util.Util;
 
 public class SimilarityTestDAO implements SimilarityTestDAOIf {
 
@@ -71,7 +72,7 @@ public class SimilarityTestDAO implements SimilarityTestDAOIf {
 	public SimilarityTest takeSimilarityTest() {
 		Session session = HibernateSessionHelper.getSession();
 		Transaction tx = session.beginTransaction();
-		SimilarityTest similarityTest = (SimilarityTest) session.createCriteria(SimilarityTest.class).add(Restrictions.eq("needsToRun", true)).setLockMode(LockMode.UPGRADE).createCriteria("task").add(Restrictions.le("deadline", new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000))).setMaxResults(1).uniqueResult();
+		SimilarityTest similarityTest = (SimilarityTest) session.createCriteria(SimilarityTest.class).add(Restrictions.eq("needsToRun", true)).setLockMode(LockMode.UPGRADE).createCriteria("task").add(Restrictions.le("deadline", Util.correctTimezone(new Date()))).setMaxResults(1).uniqueResult();
 		if (similarityTest != null) {
 			similarityTest.setNeedsToRun(false);
 			session.save(similarityTest);

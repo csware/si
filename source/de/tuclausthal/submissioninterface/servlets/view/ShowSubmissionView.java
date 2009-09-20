@@ -66,7 +66,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<h2>Gruppe: " + submission.getSubmitter().getGroup().getName() + "</h2>");
 		}
 
-		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000))) {
+		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 			out.println("<h2>Bewertung:</h2>");
 			out.println("<table class=border>");
 			if (submission.getPoints() != null) {

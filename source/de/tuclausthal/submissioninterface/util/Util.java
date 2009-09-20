@@ -235,4 +235,12 @@ public final class Util {
 		}
 		return temp;
 	}
+	/**
+	 * Corrects timezone if needed
+	 * @param date
+	 * @return
+	 */
+	public static Date correctTimezone(Date date) {
+		return new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000);
+	}
 }
