@@ -48,19 +48,19 @@ public class TestCountDAO implements TestCountDAOIf {
 			tx.commit(); // rollback is evil in hibernate! ;)
 			return false;
 		}
-		testCount.setTimesExecuted(testCount.getTimesExecuted()+1);
+		testCount.setTimesExecuted(testCount.getTimesExecuted() + 1);
 		session.saveOrUpdate(testCount);
 		tx.commit();
 		return true;
 	}
 
 	@Override
-	public boolean canSeeResult(Test test, User user) {
+	public int canStillRunXTimes(Test test, User user) {
 		Session session = HibernateSessionHelper.getSession();
 		TestCount testCount = (TestCount) session.createCriteria(TestCount.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("user", user)).setMaxResults(1).uniqueResult();
-		if (testCount != null && testCount.getTimesExecuted() >= test.getTimesRunnableByStudents()) {
-			return false;
+		if (testCount == null) {
+			return test.getTimesRunnableByStudents();
 		}
-		return true;
+		return Math.max(0, testCount.getTimesExecuted() - test.getTimesRunnableByStudents());
 	}
 }

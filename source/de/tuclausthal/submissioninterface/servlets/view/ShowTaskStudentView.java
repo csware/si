@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -109,8 +110,16 @@ public class ShowTaskStudentView extends HttpServlet {
 			}
 			out.println("</table>");
 
+			out.println("<p>");
+			if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
+			} else {
+				out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div");
+			}
+
 			List<Test> tests = DAOFactory.TestDAOIf().getStudentTests(task);
-			if (tests.size() > 0) {
+			TestCountDAOIf testCountDAO = DAOFactory.TestCountDAOIf();
+			if (tests.size() > 0 && task.getDeadline().after(Util.correctTimezone(new Date()))) {
 				out.println("<p><h2>Mögliche Tests:</h2>");
 				out.println("<table class=border>");
 				for (Test test : tests) {
@@ -120,18 +129,16 @@ public class ShowTaskStudentView extends HttpServlet {
 					out.println(test.getTestDescription());
 					out.println("</td>");
 					out.println("<td>");
-					out.println("<a href=\"PerformTest?sid=" + submission.getSubmissionid() + "&amp;testid=" + test.getId() + "\">Test ausführen</a>");
+					if (testCountDAO.canStillRunXTimes(test, participation.getUser()) > 0) {
+						out.println("<a href=\"PerformTest?sid=" + submission.getSubmissionid() + "&amp;testid=" + test.getId() + "\">Test ausführen</a>");
+					} else {
+						out.println("Limit erreicht");
+					}
 					out.println("</td>");
 					out.println("</tr>");
 				}
 				out.println("</table>");
 			}
-		}
-		out.println("<p>");
-		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
-			out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
-		} else {
-			out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div");
 		}
 		template.printTemplateFooter();
 	}

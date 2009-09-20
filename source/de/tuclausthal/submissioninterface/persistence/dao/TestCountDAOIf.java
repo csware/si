@@ -28,5 +28,5 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 public interface TestCountDAOIf {
 	public boolean canSeeResultAndIncrementCounter(Test test, User user);
 
-	public boolean canSeeResult(Test test, User user);
+	public int canStillRunXTimes(Test test, User user);
 }

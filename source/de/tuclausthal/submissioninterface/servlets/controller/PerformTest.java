@@ -87,7 +87,7 @@ public class PerformTest extends HttpServlet {
 			if (request.getParameter("refresh") == null) {
 				// prevent user from redo a test by mistake
 
-				if (!testCountDAO.canSeeResult(test, participation.getUser())) {
+				if (testCountDAO.canStillRunXTimes(test, participation.getUser())==0) {
 					request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
 					request.getRequestDispatcher("MessageView").forward(request, response);
 					return;
