@@ -36,6 +36,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -93,6 +94,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			int sumOfPoints = 0;
 			int groupSumOfSubmissions = 0;
 			int groupSumOfPoints = 0;
+			int testCols = 0;
 			// dynamic splitter for groups
 			while (submissionIterator.hasNext()) {
 				Submission submission = submissionIterator.next();
@@ -101,7 +103,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					lastGroup = group;
 					if (first == false) {
 						out.println("<tr>");
-						//out.println("<td colspan=" + ((task.getTest() != null ? 3 : 2) + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
+						out.println("<td colspan=" + (1 + submission.getTestResults().size() + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
 						out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
 						out.println("</tr>");
 						out.println("</table><p>");
@@ -117,12 +119,10 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("<table class=border>");
 					out.println("<tr>");
 					out.println("<th>Benutzer</th>");
-					if (!"-".equals(task.getFilenameRegexp())) {
-						out.println("<th>Kompiliert</th>");
+					for (TestResult testResult : submission.getTestResults()) {
+						out.println("<th>" + Util.mknohtml(testResult.getTest().getTestTitle()) + "</th>");
 					}
-					/*if (task.getTest() != null) {
-						out.println("<th>Test</th>");
-					}*/
+					testCols = Math.max(testCols,submission.getTestResults().size());
 					for (SimilarityTest similarityTest : task.getSimularityTests()) {
 						out.println("<th><span title=\"Max. Ähnlichkeit\">" + similarityTest + "</span></th>");
 					}
@@ -131,12 +131,9 @@ public class ShowTaskTutorView extends HttpServlet {
 				}
 				out.println("<tr>");
 				out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(submission.getSubmitter().getUser().getFullName()) + "</a></td>");
-/*				if (!"-".equals(task.getFilenameRegexp())) {
-					out.println("<td>" + Util.boolToHTML(submission.getCompiles()) + "</td>");
-				}*/
-				/*if (task.getTest() != null) {
-					out.println("<td>" + Util.boolToHTML(!(submission.getTestResult() == null || submission.getTestResult().getPassedTest() == false)) + "</td>");
-				}*/
+				for (TestResult testResult : submission.getTestResults()) {
+					out.println("<td>" + Util.boolToHTML(testResult.getPassedTest()) + "</td>");
+				}
 				for (SimilarityTest similarityTest : task.getSimularityTests()) {
 					//TODO: tooltip and who it is
 					String users = "";
@@ -158,7 +155,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			}
 			if (first == false) {
 				out.println("<tr>");
-				//out.println("<td colspan=" + (1 + (!"-".equals(task.getFilenameRegexp()) ? 1 : 0) + (task.getTest() != null ? 1 : 0) + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
+				out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
 				out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
 				out.println("</tr>");
 				out.println("</table><p>");
