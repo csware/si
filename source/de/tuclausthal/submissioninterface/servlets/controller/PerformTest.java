@@ -31,12 +31,15 @@ import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.impl.LogDAO;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
 import de.tuclausthal.submissioninterface.testframework.TestExecutor;
+import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.TestLogicImpl;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -88,14 +91,17 @@ public class PerformTest extends HttpServlet {
 			}
 		} else {
 			if (sa.getQueuedTest().isDone()) {
+				TestExecutorTestResult result = null;
 				try {
-					request.setAttribute("testresult", sa.getQueuedTest().get());
+					result = sa.getQueuedTest().get();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (ExecutionException e) {
 					e.printStackTrace();
 				}
 
+				new LogDAO().createLogEntry(LogAction.PERFORMED_TEST, result.isTestPassed(), result.getTestOutput());
+				request.setAttribute("testresult", result);
 				sa.setQueuedTest(null);
 
 				request.getRequestDispatcher("PerformTestResultView").forward(request, response);
