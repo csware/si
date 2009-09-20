@@ -54,7 +54,6 @@ public class ShowLectureStudentView extends HttpServlet {
 		Participation participation = (Participation) request.getAttribute("participation");
 		Lecture lecture = participation.getLecture();
 		SessionAdapter sessionAdapter = new SessionAdapter(request);
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
 
 		// list all tasks for a lecture
 		template.printTemplateHeader(lecture);
@@ -75,7 +74,7 @@ public class ShowLectureStudentView extends HttpServlet {
 					out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
 					out.println("<td class=points>" + task.getMaxPoints() + "</td>");
 					Submission submission = DAOFactory.SubmissionDAOIf().getSubmission(task, sessionAdapter.getUser());
-					if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().after(Util.correctTimezone(new Date()))) {
+					if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().before(Util.correctTimezone(new Date()))) {
 						out.println("<td class=points>" + submission.getPoints().getPoints() + "</td>");
 					} else {
 						out.println("<td class=points>n/a</td>");
