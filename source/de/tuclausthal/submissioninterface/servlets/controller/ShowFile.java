@@ -18,10 +18,13 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -75,18 +78,30 @@ public class ShowFile extends HttpServlet {
 		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 		for (File file : path.listFiles()) {
 			if (file.getName().equals(request.getPathInfo().substring(1))) {
-				BufferedReader freader = new BufferedReader(new FileReader(file));
-				String line;
-				String code = "";
-				// TODO: problems with pictures
-				while ((line = freader.readLine()) != null) {
-					code = code + line + "\n";
-				}
-				freader.close();
+				if (file.getName().endsWith(".txt") || file.getName().endsWith(".java")) {
+					// code for loading/displaying text-files
+					BufferedReader freader = new BufferedReader(new FileReader(file));
+					String line;
+					String code = "";
+					while ((line = freader.readLine()) != null) {
+						code = code + line + "\n";
+					}
+					freader.close();
 
-				request.setAttribute("code", code);
-				request.setAttribute("fileName", Util.mknohtml(file.getName()));
-				request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/ShowFileView").forward(request, response);
+					request.setAttribute("code", code);
+					request.setAttribute("fileName", Util.mknohtml(file.getName()));
+					request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/ShowFileView").forward(request, response);
+				} else {
+					response.setContentType("application/x-download");
+					response.setHeader("Content-Disposition", "attachment; filename=" + file.getName()); // TODO: escape!?, if good regexps for filenames are used, not necessary
+					OutputStream out = response.getOutputStream();
+					byte[] buffer = new byte[8000]; // should be equal to the Tomcat buffersize
+					BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+					int len = 0;
+					while ((len = inputStream.read(buffer)) > 0) {
+						out.write(buffer, 0, len);
+					}
+				}
 				return;
 			}
 		}

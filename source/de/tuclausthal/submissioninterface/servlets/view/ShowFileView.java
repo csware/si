@@ -54,7 +54,7 @@ public class ShowFileView extends HttpServlet {
 			response.setContentType("text/html");
 			response.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
-			out.println("Anzeige nicht möglich.");
+			out.println("Anzeige der Datei nicht möglich.");
 		}
 	}
 }

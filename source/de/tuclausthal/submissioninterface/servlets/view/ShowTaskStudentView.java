@@ -90,13 +90,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			File path = new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 			for (File file : path.listFiles()) {
 				if (!file.getName().endsWith(".class")) {
-					if (file.getName().endsWith(".java")) {
-						out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(file.getName()) + "</a>");
-					} else if (file.getName().endsWith(".txt")) {
-						out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(file.getName()) + "</a>");
-					} else {
-						out.println(Util.mknohtml(file.getName()));
-					}
+					out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(file.getName()) + "</a>");
 					if (task.getDeadline().after(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000))) {
 						out.println(" (<a href=\"" + response.encodeURL("DeleteFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)<br>");
 					}

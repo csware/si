@@ -66,7 +66,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<h2>Gruppe: " + submission.getSubmitter().getGroup().getName() + "</h2>");
 		}
 
-		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60*1000))) {
+		if (task.getDeadline().before(new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60 * 1000))) {
 			out.println("<h2>Bewertung:</h2>");
 			out.println("<table class=border>");
 			if (submission.getPoints() != null) {
@@ -133,7 +133,11 @@ public class ShowSubmissionView extends HttpServlet {
 		out.println("<h2>Dateien:</h2>");
 		out.println("<div class=mid>");
 		for (String file : submittedFiles) {
-			out.println("<iframe width=800 height=250 src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe><p>");
+			if (file.endsWith(".txt") || file.endsWith(".java")) {
+				out.println("<iframe width=800 height=250 src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe><p>");
+			} else {
+				out.println("<a hef=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">Download " + Util.mknohtml(file) + "</a><p>");
+			}
 		}
 		out.println("</div>");
 		template.printTemplateFooter();
