@@ -203,14 +203,16 @@ public class SubmitSolution extends HttpServlet {
 				// Process a file upload
 				if (!item.isFormField()) {
 					Pattern pattern;
-					if (task.getFilenameRegexp() != null && !task.getFilenameRegexp().isEmpty()) {
+					if (task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty()) {
 						pattern = Pattern.compile("(\\|/)?([a-zA-Z0-9_.-])$");
 					} else {
+						System.out.println(task.getFilenameRegexp());
 						pattern = Pattern.compile("(\\|/)?(" + task.getFilenameRegexp() + ")$");
 					}
+					System.out.println(pattern.pattern() + " " + item.getName());
 					Matcher m = pattern.matcher(item.getName());
 					if (!m.matches()) {
-						out.println("Dateiname ungültig. Nur A-Z, a-z, 0-9, ., - und _ skind erlaubt.");
+						out.println("Dateiname ungültig. Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
 						return;
 					}
 					String fileName = m.group(0);
