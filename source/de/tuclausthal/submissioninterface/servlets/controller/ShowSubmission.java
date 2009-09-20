@@ -78,7 +78,7 @@ public class ShowSubmission extends HttpServlet {
 		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 		if (path.listFiles() != null) {
 			for (File file : path.listFiles()) {
-				if (file.isFile() && (file.getName().endsWith(".java") || file.getName().endsWith(".txt"))) {
+				if (file.isFile()) {
 					submittedFiles.add(file.getName());
 				}
 			}
