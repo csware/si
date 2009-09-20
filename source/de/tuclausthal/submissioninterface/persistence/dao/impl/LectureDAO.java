@@ -99,7 +99,7 @@ public class LectureDAO implements LectureDAOIf {
 		if (result == null) {
 			return 0;
 		} else {
-			return (Integer) result;
+			return ((Double) result).intValue();
 		}
 	}
 }
