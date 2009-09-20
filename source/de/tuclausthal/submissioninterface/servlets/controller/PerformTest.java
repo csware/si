@@ -31,6 +31,7 @@ import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LogDAO;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
@@ -77,12 +78,21 @@ public class PerformTest extends HttpServlet {
 
 		SessionAdapter sa = new SessionAdapter(request);
 
+		TestCountDAOIf testCountDAO = DAOFactory.TestCountDAOIf();
+
 		request.setAttribute("task", task);
 		request.setAttribute("test", test);
 
 		if (sa.getQueuedTest() == null) {
 			if (request.getParameter("refresh") == null) {
 				// prevent user from redo a test by mistake
+
+				if (!testCountDAO.canSeeResult(test, participation.getUser())) {
+					request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
+					request.getRequestDispatcher("MessageView").forward(request, response);
+					return;
+				}
+
 				sa.setQueuedTest(TestExecutor.executeTask(new TestLogicImpl(test, submission)));
 				gotoWaitingView(request, response, "sid=" + submission.getSubmissionid() + "&testid=" + test.getId());
 			} else {
@@ -100,9 +110,17 @@ public class PerformTest extends HttpServlet {
 					e.printStackTrace();
 				}
 
+				if (!testCountDAO.canSeeResultAndIncrementCounter(test, participation.getUser())) {
+					sa.setQueuedTest(null);
+					request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
+					request.getRequestDispatcher("MessageView").forward(request, response);
+					return;
+				}
+
+				sa.setQueuedTest(null);
+
 				new LogDAO().createLogEntry(LogAction.PERFORMED_TEST, result.isTestPassed(), result.getTestOutput());
 				request.setAttribute("testresult", result);
-				sa.setQueuedTest(null);
 
 				request.getRequestDispatcher("PerformTestResultView").forward(request, response);
 			} else {

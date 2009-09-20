@@ -26,6 +26,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.impl.SimilarityDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.SimilarityTestDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.SubmissionDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TaskDAO;
+import de.tuclausthal.submissioninterface.persistence.dao.impl.TestCountDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TestDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TestResultDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.UserDAO;
@@ -121,5 +122,9 @@ public class DAOFactory {
 	 */
 	public static SimilarityTestDAOIf SimilarityTestDAOIf() {
 		return new SimilarityTestDAO();
+	}
+
+	public static TestCountDAOIf TestCountDAOIf() {
+		return new TestCountDAO();
 	}
 }
