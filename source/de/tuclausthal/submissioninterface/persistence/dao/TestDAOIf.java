@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -41,6 +42,13 @@ public interface TestDAOIf {
 	 * @return the created test
 	 */
 	public RegExpTest createRegExpTest(Task task);
+
+	/**
+	 * Create and store a compile/syntax to a specific task
+	 * @param task the task to associtate the test to
+	 * @return the created test
+	 */
+	public CompileTest createCompileTest(Task task);
 
 	/**
 	 * Update/save a test

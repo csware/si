@@ -41,6 +41,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
@@ -113,6 +114,9 @@ public class TestManager extends HttpServlet {
 				}
 				int timesRunnableByStudents = 0;
 				int timeout = 15;
+				boolean tutortest = false;
+				String title = "";
+				String description = "";
 				// Process the uploaded items
 				Iterator<FileItem> iter = items.iterator();
 				while (iter.hasNext()) {
@@ -135,6 +139,12 @@ public class TestManager extends HttpServlet {
 					} else {
 						if ("timesRunnableByStudents".equals(item.getFieldName())) {
 							timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
+						} else if ("title".equals(item.getFieldName())) {
+							title = request.getParameter("title");
+						} else if ("description".equals(item.getFieldName())) {
+							description = request.getParameter("description");
+						} else if ("tutortest".equals(item.getFieldName())) {
+							tutortest = true;
 						} else if ("timeout".equals(item.getFieldName())) {
 							timeout = Util.parseInteger(item.getString(), 15);
 						}
@@ -142,8 +152,10 @@ public class TestManager extends HttpServlet {
 				}
 
 				test.setTimesRunnableByStudents(timesRunnableByStudents);
+				test.setForTutors(tutortest);
+				test.setTestTitle(title);
+				test.setTestDescription(description);
 				test.setTimeout(timeout);
-				test.setTask(task);
 				testDAO.saveTest(test);
 				response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 			} else {
@@ -167,7 +179,20 @@ public class TestManager extends HttpServlet {
 			test.setTimeout(Util.parseInteger(request.getParameter("timeout"), 15));
 			test.setRegularExpression(request.getParameter("regexp"));
 			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
-			test.setTask(task);
+			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
+			test.setForTutors(request.getParameter("tutortest") != null);
+			test.setTestTitle(request.getParameter("title"));
+			test.setTestDescription(request.getParameter("description"));
+			testDAO.saveTest(test);
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
+		} else if ("saveNewTest".equals(request.getParameter("action")) && "compile".equals(request.getParameter("type"))) {
+			// store it
+			TestDAOIf testDAO = DAOFactory.TestDAOIf();
+			CompileTest test = testDAO.createCompileTest(task);
+			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
+			test.setForTutors(request.getParameter("tutortest") != null);
+			test.setTestTitle(request.getParameter("title"));
+			test.setTestDescription(request.getParameter("description"));
 			testDAO.saveTest(test);
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 		} else if ("deleteTest".equals(request.getParameter("action"))) {

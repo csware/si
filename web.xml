@@ -69,8 +69,8 @@
     </filter-mapping>
 
     <servlet>
-        <servlet-name>LocalExecuter</servlet-name>
-        <servlet-class>de.tuclausthal.submissioninterface.executiontask.executer.impl.LocalExecuterStartUp</servlet-class>
+        <servlet-name>LocalExecutor</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.testframework.executor.impl.LocalExecutorStartUp</servlet-class>
         <load-on-startup />
         <init-param>
             <param-name>cores</param-name>
@@ -81,6 +81,10 @@
     <servlet>
         <servlet-name>Redirect</servlet-name>
         <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.Redirect</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PerformTest</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.PerformTest</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AdminMenue</servlet-name>
@@ -222,10 +226,22 @@
         <servlet-name>TestManagerAddTestFormView</servlet-name>
         <servlet-class>de.tuclausthal.submissioninterface.servlets.view.TestManagerAddTestFormView</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PerformTestRunningView</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PerformTestRunningView</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PerformTestResultView</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PerformTestResultView</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>AdminMenue</servlet-name>
         <url-pattern>/servlets/AdminMenue</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PerformTest</servlet-name>
+        <url-pattern>/servlets/PerformTest</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LectureManager</servlet-name>
@@ -366,5 +382,13 @@
     <servlet-mapping>
         <servlet-name>Redirect</servlet-name>
         <url-pattern>/servlets/Redirect</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PerformTestRunningView</servlet-name>
+        <url-pattern>/servlets/PerformTestRunningView</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PerformTestResultView</servlet-name>
+        <url-pattern>/servlets/PerformTestResultView</url-pattern>
     </servlet-mapping>
 </web-app>

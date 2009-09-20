@@ -21,13 +21,7 @@ public class TestExecutorWorker implements Callable<TestExecutorTestResult> {
 	@Override
 	public TestExecutorTestResult call() throws Exception {
 		TestExecutorTestResult testResult = new TestExecutorTestResult();
-		if (executionTask.requiresTempDir()) {
-			
-		}
 		executionTask.performTask(dataPath, testResult);
-		if (executionTask.requiresTempDir()) {
-			
-		}
 		return testResult;
 	}
 }

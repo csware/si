@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
@@ -117,17 +119,25 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<p class=mid><a href=\"" + response.encodeURL("DupeCheck?taskid=" + task.getTaskid()) + "\">Ähnlichkeitsprüfung hinzufügen</a><p>");
 			out.println("<h2>Funktionstests der Abgaben</h2>");
 			out.println("<p class=mid><a href=\"" + response.encodeURL("TestManager?action=newTest&amp;taskid=" + task.getTaskid()) + "\">Test hinzufügen</a></p>");
-			out.println("<p class=mid>");
+			out.println("<ul>");
 			for (Test test : task.getTests()) {
+				out.println("<li>&quot;" + Util.mknohtml(test.getTestTitle()) + "&quot;: ");
 				if (test instanceof RegExpTest) {
 					RegExpTest regexptest = (RegExpTest) test;
-					out.println("RegExp-Test hinterlegt:<br>Prüfpattern: " + Util.mknohtml(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.mknohtml(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.mknohtml(regexptest.getMainClass()) + "<br>");
+					out.println("RegExp-Test:<br>Prüfpattern: " + Util.mknohtml(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.mknohtml(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.mknohtml(regexptest.getMainClass()) + "<br>");
+				} else if (test instanceof CompileTest) {
+					out.println("Compile-Test<br>");
+				} else if (test instanceof JUnitTest) {
+					out.println("JUnit-Test<br>");
 				} else {
-					out.println("JUnit-Test hinterlegt<br>");
+					out.println("unknown<br>");
 				}
-				out.println("Ausführbar für Studenten: " + test.getTimesRunnableByStudents() + "<br>");
-				out.println("<a href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">Test löschen</a></p>");
+				out.println("# Ausführbar für Studenten: " + test.getTimesRunnableByStudents() + "<br>");
+				out.println("Tutortest: " + test.isForTutors() + "<br>");
+				out.println("<a href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">Test löschen</a>");
+				out.println("</li>");
 			}
+			out.println("</ul>");
 		}
 		template.printTemplateFooter();
 	}

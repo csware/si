@@ -18,11 +18,14 @@
 
 package de.tuclausthal.submissioninterface.authfilter;
 
+import java.util.concurrent.Future;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 
 /**
  * Adapter for HTTP-session to have a better interface for our stored variables
@@ -56,5 +59,13 @@ public class SessionAdapter {
 		} else {
 			return null;
 		}
+	}
+
+	public Future<TestExecutorTestResult> getQueuedTest() {
+		return (Future<TestExecutorTestResult>) session.getAttribute("queuedTest");
+	}
+
+	public void setQueuedTest(Future<TestExecutorTestResult> futureTestResult) {
+		session.setAttribute("queuedTest", futureTestResult);
 	}
 }

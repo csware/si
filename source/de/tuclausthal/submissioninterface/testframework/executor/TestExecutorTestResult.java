@@ -6,6 +6,7 @@ package de.tuclausthal.submissioninterface.testframework.executor;
 public class TestExecutorTestResult {
 	private boolean testPassed = false;
 	private String testOutput = "";
+	private int testID;
 
 	/**
 	 * @return the testPassed
@@ -33,5 +34,19 @@ public class TestExecutorTestResult {
 	 */
 	public void setTestOutput(String testOutput) {
 		this.testOutput = testOutput;
+	}
+
+	/**
+	 * @return the testID
+	 */
+	public int getTestID() {
+		return testID;
+	}
+
+	/**
+	 * @param testID the testID to set
+	 */
+	public void setTestID(int testID) {
+		this.testID = testID;
 	}
 }

@@ -28,9 +28,6 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
  * @author Sven Strickroth
  */
 public abstract class TestTask implements Serializable {
-
-	abstract public boolean requiresTempDir();
-	
 	/**
 	 * Exetutes/performs the current task actions
 	 * @param basePath the path to the submissions

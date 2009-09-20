@@ -43,5 +43,6 @@
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Test"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest"/>
  </session-factory>
 </hibernate-configuration>

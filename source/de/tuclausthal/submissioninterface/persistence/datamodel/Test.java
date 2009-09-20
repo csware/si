@@ -40,6 +40,8 @@ public abstract class Test implements Serializable {
 	private boolean forTutors = false;
 	private Task task;
 	private int timeout = 5;
+	private String testTitle = "";
+	private String testDescription = "";
 
 	/**
 	 * @return the visibleToStudents
@@ -115,5 +117,33 @@ public abstract class Test implements Serializable {
 	 */
 	public void setForTutors(boolean forTutors) {
 		this.forTutors = forTutors;
+	}
+
+	/**
+	 * @return the testTitle
+	 */
+	public String getTestTitle() {
+		return testTitle;
+	}
+
+	/**
+	 * @param testTitle the testTitle to set
+	 */
+	public void setTestTitle(String testTitle) {
+		this.testTitle = testTitle;
+	}
+
+	/**
+	 * @return the testDescription
+	 */
+	public String getTestDescription() {
+		return testDescription;
+	}
+
+	/**
+	 * @param testDescription the testDescription to set
+	 */
+	public void setTestDescription(String testDescription) {
+		this.testDescription = testDescription;
 	}
 }

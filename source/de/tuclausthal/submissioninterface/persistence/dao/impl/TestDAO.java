@@ -23,6 +23,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -79,5 +80,17 @@ public class TestDAO implements TestDAOIf {
 	@Override
 	public Test getTest(int testId) {
 		return (Test) HibernateSessionHelper.getSession().get(Test.class, testId);
+	}
+
+	@Override
+	public CompileTest createCompileTest(Task task) {
+		Session session = HibernateSessionHelper.getSession();
+		Transaction tx = session.beginTransaction();
+		session.lock(task, LockMode.UPGRADE);
+		CompileTest test = new CompileTest();
+		test.setTask(task);
+		session.save(test);
+		tx.commit();
+		return test;
 	}
 }
