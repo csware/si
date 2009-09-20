@@ -100,7 +100,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			}
 			out.println("</td>");
 			out.println("</tr>");
-			if (task.getShowPoints().after(Util.correctTimezone(new Date())) && submission.getPoints() != null) {
+			if (task.getShowPoints().before(Util.correctTimezone(new Date())) && submission.getPoints() != null) {
 				out.println("<tr>");
 				out.println("<th>Bewertung:</th>");
 				out.println("<td>");
