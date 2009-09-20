@@ -138,10 +138,10 @@ public class ShowSubmissionView extends HttpServlet {
 		out.println("<h2>Dateien:</h2>");
 		out.println("<div class=mid>");
 		for (String file : submittedFiles) {
-			if (file.endsWith(".txt") || file.endsWith(".java") || file.endsWith(".pdf")) {
+			if (file.endsWith(".txt") || file.endsWith(".java") || file.endsWith(".pdf") || file.endsWith(".jpg") || file.endsWith(".png") || file.endsWith(".gif")) {
 				out.println("<iframe width=800 height=250 src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe><p>");
 			} else {
-				out.println("<a hef=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">Download " + Util.mknohtml(file) + "</a><p>");
+				out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">Download " + Util.mknohtml(file) + "</a><p>");
 			}
 		}
 		out.println("</div>");

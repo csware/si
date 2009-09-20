@@ -88,4 +88,10 @@ public class ShowSubmission extends HttpServlet {
 		request.setAttribute("submittedFiles", submittedFiles);
 		request.getRequestDispatcher("ShowSubmissionView").forward(request, response);
 	}
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		// don't want to have any special post-handling
+		doGet(request, response);
+	}
 }

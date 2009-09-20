@@ -94,7 +94,13 @@ public class ShowFile extends HttpServlet {
 				} else {
 					if (file.getName().endsWith(".pdf")) {
 						response.setContentType("application/pdf");
-					} else {
+					} else if (file.getName().endsWith(".jpg")) {
+						response.setContentType("image/jpg");
+					} else if (file.getName().endsWith(".gif")) {
+						response.setContentType("image/gif");
+					} else if (file.getName().endsWith(".png")) {
+						response.setContentType("image/png");
+					} else{
 						response.setContentType("application/x-download");
 						response.setHeader("Content-Disposition", "attachment; filename=" + file.getName()); // TODO: escape!?, if good regexps for filenames are used, not necessary
 					}
