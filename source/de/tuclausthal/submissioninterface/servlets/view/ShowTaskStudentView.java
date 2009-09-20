@@ -91,11 +91,9 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("<td>");
 			File path = new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 			for (File file : path.listFiles()) {
-				if (!file.getName().endsWith(".class")) {
-					out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(file.getName()) + "</a>");
-					if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
-						out.println(" (<a href=\"" + response.encodeURL("DeleteFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)<br>");
-					}
+				out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(file.getName()) + "</a>");
+				if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
+					out.println(" (<a href=\"" + response.encodeURL("DeleteFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)<br>");
 				}
 			}
 			out.println("</td>");

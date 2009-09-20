@@ -91,18 +91,11 @@ public class DeleteFile extends HttpServlet {
 			if (file.getName().equals(request.getPathInfo().substring(1))) {
 				file.delete();
 				found = true;
+				new LogDAO().createLogEntry(LogAction.DELETE_FILE, null, null);
 				break;
 			}
 		}
 		if (found == true) {
-			// delete .class files, might be useless now
-			for (File file : path.listFiles()) {
-				if (file.getName().endsWith(".class")) {
-					file.delete();
-					new LogDAO().createLogEntry(LogAction.DELETE_FILE, null, null);
-				}
-			}
-
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 				submissionDAO.saveSubmission(submission);
 			}
