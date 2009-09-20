@@ -19,17 +19,19 @@
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
@@ -110,5 +112,10 @@ public class TestDAO implements TestDAOIf {
 		}
 		tx.commit();
 		return test;
+	}
+
+	@Override
+	public List<Test> getStudentTests(Task task) {
+		return (List<Test>) HibernateSessionHelper.getSession().createCriteria(Test.class).add(Restrictions.eq("task", task)).add(Restrictions.gt("timesRunnableByStudents", 0)).list();
 	}
 }

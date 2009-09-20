@@ -18,10 +18,11 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao;
 
+import java.util.List;
+
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 
@@ -70,4 +71,6 @@ public interface TestDAOIf {
 	 * @return Test or null if none is "queued".
 	 */
 	public Test takeTest();
+	
+	public List<Test> getStudentTests(Task task);
 }

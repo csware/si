@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -34,6 +35,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
@@ -107,6 +109,24 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("</tr>");
 			}
 			out.println("</table>");
+
+			List<Test> tests = DAOFactory.TestDAOIf().getStudentTests(task);
+			if (tests.size() > 0) {
+				out.println("<p><h2>Mögliche Tests:</h2>");
+				out.println("<table class=border>");
+				for (Test test : tests) {
+					out.println("<tr>");
+					out.println("<th>" + Util.mknohtml(test.getTestTitle()) + "</th>");
+					out.println("<td>");
+					out.println(test.getTestDescription());
+					out.println("</td>");
+					out.println("<td>");
+					out.println("<a href=\"PerformTest?sid=" + submission.getSubmissionid() + "&amp;testid=" + test.getId() + "\">Test ausführen</a>");
+					out.println("</td>");
+					out.println("</tr>");
+				}
+				out.println("</table>");
+			}
 		}
 		out.println("<p>");
 		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {

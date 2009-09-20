@@ -36,6 +36,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -120,16 +121,20 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("</table><p>");
 		}
 
-		/*if (task.getTest() != null && submission.getTestResult() != null) {
-			out.println("<h2>Test:</h2>");
-			out.println("<div class=mid>Erfolgreich: " + Util.boolToHTML(submission.getTestResult().getPassedTest()));
-			out.println("<p><textarea cols=80 rows=15>" + Util.mknohtml(submission.getTestResult().getTestOutput()) + "</textarea></div>");
-		}*/
+		if (submission.getTestResults().size() > 0) {
+			out.println("<h2>Tests:</h2>");
+			out.println("<ul>");
+			for (TestResult testResult : submission.getTestResults()) {
+				out.println("<li>" + testResult.getTest().getTestTitle() + "<br>");
+				out.println("Erfolgreich: " + Util.boolToHTML(testResult.getPassedTest()));
+				if (!testResult.getTestOutput().isEmpty()) {
+					out.println("<br><textarea cols=80 rows=15>" + Util.mknohtml(testResult.getTestOutput()) + "</textarea></div>");
+				}
+				out.println("</li>");
+			}
+			out.println("</ul>");
+		}
 
-		/*if (submission.getStderr() != null && !submission.getStderr().isEmpty()) {
-			out.println("<h2>Standard-Error Ausgabe:</h2>");
-			out.println("<p class=mid><textarea cols=80 rows=15>" + Util.mknohtml(submission.getStderr()) + "</textarea></p>");
-		}*/
 		out.println("<h2>Dateien:</h2>");
 		out.println("<div class=mid>");
 		for (String file : submittedFiles) {
