@@ -92,8 +92,12 @@ public class ShowFile extends HttpServlet {
 					request.setAttribute("fileName", Util.mknohtml(file.getName()));
 					request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/ShowFileView").forward(request, response);
 				} else {
-					response.setContentType("application/x-download");
-					response.setHeader("Content-Disposition", "attachment; filename=" + file.getName()); // TODO: escape!?, if good regexps for filenames are used, not necessary
+					if (file.getName().endsWith(".pdf")) {
+						response.setContentType("application/pdf");
+					} else {
+						response.setContentType("application/x-download");
+						response.setHeader("Content-Disposition", "attachment; filename=" + file.getName()); // TODO: escape!?, if good regexps for filenames are used, not necessary
+					}
 					OutputStream out = response.getOutputStream();
 					byte[] buffer = new byte[8000]; // should be equal to the Tomcat buffersize
 					BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
