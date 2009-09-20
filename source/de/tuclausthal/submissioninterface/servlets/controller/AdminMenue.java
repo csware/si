@@ -123,7 +123,7 @@ public class AdminMenue extends HttpServlet {
 				} else { // dregregate user
 					participationDAO.createParticipation(user, lecture, ParticipationRole.NORMAL);
 				}
-				response.sendRedirect(response.encodeURL(request.getRequestURL() + "?action=showLecture&amp;lecture=" + lecture.getId()));
+				response.sendRedirect(response.encodeURL(request.getRequestURL() + "?action=showLecture&lecture=" + lecture.getId()));
 			}
 		} else { // list all lectures
 			request.setAttribute("lectures", DAOFactory.LectureDAOIf().getLectures());

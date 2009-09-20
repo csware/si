@@ -78,8 +78,14 @@ public class PerformTest extends HttpServlet {
 		request.setAttribute("test", test);
 
 		if (sa.getQueuedTest() == null) {
-			sa.setQueuedTest(TestExecutor.executeTask(new TestLogicImpl(test, submission)));
-			gotoWaitingView(request, response);
+			if (request.getAttribute("refresh") == null) {
+				// prevent user from redo a test by mistake
+				sa.setQueuedTest(TestExecutor.executeTask(new TestLogicImpl(test, submission)));
+				gotoWaitingView(request, response, "sid=" + submission.getSubmissionid() + "&testid=" + test.getId());
+			} else {
+				request.setAttribute("title", "Ungültige Anfrage");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+			}
 		} else {
 			if (sa.getQueuedTest().isDone()) {
 				try {
@@ -94,13 +100,13 @@ public class PerformTest extends HttpServlet {
 
 				request.getRequestDispatcher("PerformTestResultView").forward(request, response);
 			} else {
-				gotoWaitingView(request, response);
+				gotoWaitingView(request, response, "sid=" + submission.getSubmissionid() + "&testid=" + test.getId());
 			}
 		}
 	}
 
-	private void gotoWaitingView(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		request.setAttribute("refreshurl", "");
+	private void gotoWaitingView(HttpServletRequest request, HttpServletResponse response, String url) throws IOException, ServletException {
+		request.setAttribute("refreshurl", response.encodeURL(request.getRequestURL() + "?refresh=true&" + url));
 		request.setAttribute("redirectTime", 5);
 		request.getRequestDispatcher("PerformTestRunningView").forward(request, response);
 	}
