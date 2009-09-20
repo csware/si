@@ -19,6 +19,8 @@
 package de.tuclausthal.submissioninterface.template;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,6 +39,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 public abstract class Template {
 	protected HttpServletResponse servletResponse;
 	protected SessionAdapter sessionAdapter;
+	protected List<String> additionalHTMLHeaders = new LinkedList<String>();
 
 	public Template(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
 		this.servletResponse = servletResponse;
@@ -49,31 +52,31 @@ public abstract class Template {
 	 * @throws IOException
 	 */
 	public void printTemplateHeader(String title) throws IOException {
-		printTemplateHeader(title, "<a href=\""+servletResponse.encodeURL("Overview")+"\">Meine Veranstaltungen</a> &gt; " + title);
+		printTemplateHeader(title, "<a href=\"" + servletResponse.encodeURL("Overview") + "\">Meine Veranstaltungen</a> &gt; " + title);
 	}
 
 	public void printTemplateHeader(Lecture lecture) throws IOException {
-		printTemplateHeader("Veranstaltung \"" + Util.mknohtml(lecture.getName()) + "\"", "<a href=\""+servletResponse.encodeURL("Overview")+"\">Meine Veranstaltungen</a> &gt; Veranstaltung \"" + Util.mknohtml(lecture.getName()) + "\"");
+		printTemplateHeader("Veranstaltung \"" + Util.mknohtml(lecture.getName()) + "\"", "<a href=\"" + servletResponse.encodeURL("Overview") + "\">Meine Veranstaltungen</a> &gt; Veranstaltung \"" + Util.mknohtml(lecture.getName()) + "\"");
 	}
 
 	public void printTemplateHeader(String title, Lecture lecture) throws IOException {
-		printTemplateHeader(title, "<a href=\""+servletResponse.encodeURL("Overview")+"\">Meine Veranstaltungen</a> &gt; <a href=\""+servletResponse.encodeURL("ShowLecture?lecture=" + lecture.getId()) + "\">Veranstaltung \"" + Util.mknohtml(lecture.getName()) + "\"</a> &gt; " + title);
+		printTemplateHeader(title, "<a href=\"" + servletResponse.encodeURL("Overview") + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + servletResponse.encodeURL("ShowLecture?lecture=" + lecture.getId()) + "\">Veranstaltung \"" + Util.mknohtml(lecture.getName()) + "\"</a> &gt; " + title);
 	}
 
 	public void printTemplateHeader(Task task) throws IOException {
-		printTemplateHeader("Aufgabe \"" + Util.mknohtml(task.getTitle()) + "\"", "<a href=\""+servletResponse.encodeURL("Overview")+"\">Meine Veranstaltungen</a> &gt; <a href=\""+servletResponse.encodeURL("ShowLecture?lecture=" + task.getLecture().getId()) + "\">Veranstaltung \"" + Util.mknohtml(task.getLecture().getName()) + "\"</a> &gt; " + "Aufgabe \"" + Util.mknohtml(task.getTitle()) + "\"");
+		printTemplateHeader("Aufgabe \"" + Util.mknohtml(task.getTitle()) + "\"", "<a href=\"" + servletResponse.encodeURL("Overview") + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + servletResponse.encodeURL("ShowLecture?lecture=" + task.getLecture().getId()) + "\">Veranstaltung \"" + Util.mknohtml(task.getLecture().getName()) + "\"</a> &gt; " + "Aufgabe \"" + Util.mknohtml(task.getTitle()) + "\"");
 	}
 
 	public void printTemplateHeader(String title, Task task) throws IOException {
-		printTemplateHeader(title, "<a href=\""+servletResponse.encodeURL("Overview")+"\">Meine Veranstaltungen</a> &gt; <a href=\""+servletResponse.encodeURL("ShowLecture?lecture=" + task.getLecture().getId() )+ "\">Veranstaltung \"" + Util.mknohtml(task.getLecture().getName()) + "\"</a> &gt; <a href=\""+servletResponse.encodeURL("ShowTask?taskid=" + task.getTaskid() )+ "\">Aufgabe \"" + Util.mknohtml(task.getTitle()) + "\"</a> &gt; " + title);
+		printTemplateHeader(title, "<a href=\"" + servletResponse.encodeURL("Overview") + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + servletResponse.encodeURL("ShowLecture?lecture=" + task.getLecture().getId()) + "\">Veranstaltung \"" + Util.mknohtml(task.getLecture().getName()) + "\"</a> &gt; <a href=\"" + servletResponse.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">Aufgabe \"" + Util.mknohtml(task.getTitle()) + "\"</a> &gt; " + title);
 	}
 
 	public void printTemplateHeader(Submission submission) throws IOException {
-		printTemplateHeader("Abgabe von \"" + Util.mknohtml(submission.getSubmitter().getUser().getFullName()) + "\"", "<a href=\""+servletResponse.encodeURL("Overview")+"\">Meine Veranstaltungen</a> &gt; <a href=\""+servletResponse.encodeURL("ShowLecture?lecture=" + submission.getTask().getLecture().getId()) + "\">Veranstaltung \"" + Util.mknohtml(submission.getTask().getLecture().getName()) + "\"</a> &gt; <a href=\""+servletResponse.encodeURL("ShowTask?taskid=" + submission.getTask().getTaskid()) + "\">Aufgabe \"" + Util.mknohtml(submission.getTask().getTitle()) + "\"</a> &gt; Abgabe von \"" + Util.mknohtml(submission.getSubmitter().getUser().getFullName()) + "\"");
+		printTemplateHeader("Abgabe von \"" + Util.mknohtml(submission.getSubmitter().getUser().getFullName()) + "\"", "<a href=\"" + servletResponse.encodeURL("Overview") + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + servletResponse.encodeURL("ShowLecture?lecture=" + submission.getTask().getLecture().getId()) + "\">Veranstaltung \"" + Util.mknohtml(submission.getTask().getLecture().getName()) + "\"</a> &gt; <a href=\"" + servletResponse.encodeURL("ShowTask?taskid=" + submission.getTask().getTaskid()) + "\">Aufgabe \"" + Util.mknohtml(submission.getTask().getTitle()) + "\"</a> &gt; Abgabe von \"" + Util.mknohtml(submission.getSubmitter().getUser().getFullName()) + "\"");
 	}
 
 	public void printTemplateHeader(Group group) throws IOException {
-		printTemplateHeader("Gruppe \"" + Util.mknohtml(group.getName()) + "\"", "<a href=\""+servletResponse.encodeURL("Overview")+"\">Meine Veranstaltungen</a> &gt; <a href=\""+servletResponse.encodeURL("ShowLecture?lecture=" + group.getLecture().getId()) + "\">Veranstaltung \"" + Util.mknohtml(group.getLecture().getName()) + "\"</a> &gt; Gruppe \"" + Util.mknohtml(group.getName()) + "\"");
+		printTemplateHeader("Gruppe \"" + Util.mknohtml(group.getName()) + "\"", "<a href=\"" + servletResponse.encodeURL("Overview") + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + servletResponse.encodeURL("ShowLecture?lecture=" + group.getLecture().getId()) + "\">Veranstaltung \"" + Util.mknohtml(group.getLecture().getName()) + "\"</a> &gt; Gruppe \"" + Util.mknohtml(group.getName()) + "\"");
 	}
 
 	/**
@@ -89,4 +92,8 @@ public abstract class Template {
 	 * @throws IOException
 	 */
 	public abstract void printTemplateFooter() throws IOException;
+
+	public void addHTMLHeader(String header) {
+		additionalHTMLHeaders.add(header);
+	}
 }

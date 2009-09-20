@@ -29,6 +29,9 @@ public class TUCTemplate2 extends Template {
 		out.println("<head>");
 		out.println("<title>" + title + "</title>");
 		out.println("<link rel=StyleSheet type=\"text/css\" href=\"/ba/formate.css\">");
+		for (String header : additionalHTMLHeaders) {
+			out.println(header);
+		}
 		out.println("</head>");
 		out.println("<body><img src=\"/ba/logo.gif\" alt=\"TU Clausthal\" height=\"64\" width=\"367\"><p><h1>" + title + "</h1><p>");
 	}

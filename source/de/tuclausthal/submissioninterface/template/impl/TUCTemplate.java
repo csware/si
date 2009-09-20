@@ -29,6 +29,9 @@ public class TUCTemplate extends Template {
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"/ba/screen.css\" media=\"screen\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"/ba/si.css\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"/ba/print.css\" media=\"print\">");
+		for (String header : additionalHTMLHeaders) {
+			out.println(header);
+		}
 		out.println("<title>" + title + "</title>");
 		out.println("</head>");
 		out.println("<body>");
