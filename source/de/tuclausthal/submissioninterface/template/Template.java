@@ -37,9 +37,11 @@ import de.tuclausthal.submissioninterface.util.Util;
 public abstract class Template {
 	protected HttpServletResponse servletResponse;
 	protected SessionAdapter sessionAdapter;
+	protected String prefix;
 
 	public Template(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
 		this.servletResponse = servletResponse;
+		prefix = servletRequest.getContextPath();
 		sessionAdapter = new SessionAdapter(servletRequest);
 	}
 
