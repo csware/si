@@ -18,18 +18,14 @@
     <param-value>servlets</param-value>
     </context-param>
 
+    <listener>
+        <listener-class>de.tuclausthal.submissioninterface.util.HibernateListener</listener-class>
+    </listener>
+
     <welcome-file-list>
         <welcome-file>servlets/Redirect</welcome-file>
     </welcome-file-list>
 
-    <filter>
-        <filter-name>HibernateFilter</filter-name>
-        <filter-class>de.tuclausthal.submissioninterface.util.HibernateFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>HibernateFilter</filter-name>
-        <url-pattern>/servlets/*</url-pattern>
-    </filter-mapping>
     <filter>
         <filter-name>AuthenticationFilter</filter-name>
         <filter-class>de.tuclausthal.submissioninterface.authfilter.authentication.AuthenticationFilter</filter-class>
