@@ -29,8 +29,22 @@ import org.hibernate.cfg.AnnotationConfiguration;
  *
  */
 public class HibernateSessionHelper {
-	private static final ThreadLocal<Session> session = new ThreadLocal<Session>();
-	private static final SessionFactory sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
+	private static final SessionFactory sessionFactory;
+
+	static {
+		try {
+			// Create the SessionFactory from hibernate.cfg.xml
+			sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
+		} catch (Throwable ex) {
+			// Make sure you log the exception, as it might be swallowed
+			System.err.println("Initial SessionFactory creation failed." + ex);
+			throw new ExceptionInInitializerError(ex);
+		}
+	}
+
+	public static SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
 
 	/**
 	 * Gibt eine Hibernation-Datenbank-Sitzung zurück
@@ -38,11 +52,6 @@ public class HibernateSessionHelper {
 	 * @throws HibernateException
 	 */
 	public static Session getSession() throws HibernateException {
-		Session session = HibernateSessionHelper.session.get();
-		if (session == null) {
-			session = sessionFactory.openSession();
-			HibernateSessionHelper.session.set(session);
-		}
-		return session;
+		return sessionFactory.openSession();
 	}
 }
