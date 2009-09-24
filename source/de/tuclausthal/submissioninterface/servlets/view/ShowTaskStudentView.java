@@ -71,9 +71,6 @@ public class ShowTaskStudentView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Enddatum:</th>");
 		out.println("<td>" + Util.mknohtml(task.getDeadline().toLocaleString()));
-		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
-			out.println(" Keine Abgabe mehr möglich");
-		}
 		out.println("</td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -138,6 +135,13 @@ public class ShowTaskStudentView extends HttpServlet {
 					out.println("</tr>");
 				}
 				out.println("</table>");
+			}
+		} else {
+			out.println("<p>");
+			if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
+			} else {
+				out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div");
 			}
 		}
 		template.printTemplateFooter();
