@@ -81,7 +81,7 @@ public class SubmissionDAO implements SubmissionDAOIf {
 		Transaction tx = session.beginTransaction();
 		session.lock(submission, LockMode.UPGRADE);
 		boolean result = false;
-		if (submissionPath.listFiles().length == 0) {
+		if (submissionPath.listFiles().length == 0 && submissionPath.delete()) {
 			session.delete(submission);
 			result = true;
 		}
