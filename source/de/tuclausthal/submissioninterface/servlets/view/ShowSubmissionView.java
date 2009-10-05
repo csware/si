@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
@@ -39,6 +41,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -52,14 +55,16 @@ public class ShowSubmissionView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
+		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		
 		Submission submission = (Submission) request.getAttribute("submission");
 
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
 		Task task = submission.getTask();
 
 		// check Lecture Participation
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(), submission.getTask().getLecture());
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), submission.getTask().getLecture());
 
 		template.printTemplateHeader(submission);
 
@@ -108,7 +113,7 @@ public class ShowSubmissionView extends HttpServlet {
 				out.println("<th>Student</th>");
 				out.println("<th>Ähnlichkeit</th>");
 				out.println("</tr>");
-				for (Similarity similarity : DAOFactory.SimilarityDAOIf().getUsersWithSimilarity(similarityTest, submission)) {
+				for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(similarityTest, submission)) {
 					out.println("<tr>");
 					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + similarity.getSubmissionTwo().getSubmissionid()) + "\">" + Util.mknohtml(similarity.getSubmissionTwo().getSubmitter().getUser().getFullName()) + "</a></td>");
 					out.println("<td class=points>" + similarity.getPercentage() + "%</td>");

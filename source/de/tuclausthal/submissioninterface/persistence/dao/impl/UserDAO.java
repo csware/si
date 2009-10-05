@@ -29,27 +29,34 @@ import org.hibernate.criterion.Restrictions;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Data Access Object implementation for the UserDAOIf
  * @author Sven Strickroth
  */
-public class UserDAO implements UserDAOIf {
+public class UserDAO extends AbstractDAO implements UserDAOIf {
+
+	public UserDAO(Session session) {
+		super(session);
+	}
+
 	@Override
 	public User getUser(int uid) {
-		return (User) HibernateSessionHelper.getSession().get(User.class, uid);
+		return (User) getSession().get(User.class, uid);
 	}
 
 	@Override
 	public User getUser(String email) {
-		return (User) HibernateSessionHelper.getSession().createCriteria(User.class).add(Restrictions.eq("email", email)).setMaxResults(1).uniqueResult();
+		return (User) getSession().createCriteria(User.class).add(Restrictions.eq("email", email)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public User createUser(String email, String firstName, String lastName) {
-		Session session = HibernateSessionHelper.getSession();
-		Transaction tx = session.beginTransaction();
+		Session session = getSession();
+		Transaction tx = session.getTransaction();
+		if (tx == null) {
+			tx = session.beginTransaction();
+		}
 		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("email", email)).setLockMode(LockMode.UPGRADE).setMaxResults(1).uniqueResult();
 		if (user == null) {
 			user = new User();
@@ -64,7 +71,7 @@ public class UserDAO implements UserDAOIf {
 
 	@Override
 	public User createUser(String email, String firstName, String lastName, int matrikelno) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("email", email)).setLockMode(LockMode.UPGRADE).setMaxResults(1).uniqueResult();
 		if (user == null) {
@@ -82,19 +89,17 @@ public class UserDAO implements UserDAOIf {
 
 	@Override
 	public List<User> getUsers() {
-		return (List<User>) HibernateSessionHelper.getSession().createCriteria(User.class).addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+		return (List<User>) getSession().createCriteria(User.class).addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 	}
 
 	@Override
 	public List<User> getSuperUsers() {
-		return (List<User>) HibernateSessionHelper.getSession().createCriteria(User.class).add(Restrictions.eq("superUser", true)).addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+		return (List<User>) getSession().createCriteria(User.class).add(Restrictions.eq("superUser", true)).addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 	}
 
 	@Override
 	public void saveUser(User user) {
-		Session session = HibernateSessionHelper.getSession();
-		Transaction tx = session.beginTransaction();
+		Session session = getSession();
 		session.save(user);
-		tx.commit();
 	}
 }

@@ -35,6 +35,7 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -49,6 +50,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -58,7 +60,8 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class TestManager extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
+		Session session = HibernateSessionHelper.getSession();
+		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
@@ -66,8 +69,8 @@ public class TestManager extends HttpServlet {
 			return;
 		}
 
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(), task.getLecture());
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), task.getLecture());
 		if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
@@ -83,7 +86,7 @@ public class TestManager extends HttpServlet {
 			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 
 			// TODO start transaction here
-			TestDAOIf testDAO = DAOFactory.TestDAOIf();
+			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			JUnitTest test = testDAO.createJUnitTest(task);
 			testDAO.saveTest(test);
 
@@ -172,7 +175,7 @@ public class TestManager extends HttpServlet {
 				return;
 			}
 			// store it
-			TestDAOIf testDAO = DAOFactory.TestDAOIf();
+			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			RegExpTest test = testDAO.createRegExpTest(task);
 			test.setMainClass(request.getParameter("mainclass"));
 			test.setCommandLineParameter(request.getParameter("parameter"));
@@ -187,7 +190,7 @@ public class TestManager extends HttpServlet {
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "compile".equals(request.getParameter("type"))) {
 			// store it
-			TestDAOIf testDAO = DAOFactory.TestDAOIf();
+			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			CompileTest test = testDAO.createCompileTest(task);
 			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
 			test.setForTutors(request.getParameter("tutortest") != null);
@@ -196,7 +199,7 @@ public class TestManager extends HttpServlet {
 			testDAO.saveTest(test);
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 		} else if ("deleteTest".equals(request.getParameter("action"))) {
-			TestDAOIf testDAO = DAOFactory.TestDAOIf();
+			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			Test test = testDAO.getTest(Util.parseInteger(request.getParameter("testid"), 0));
 			if (test != null) {
 				testDAO.deleteTest(test);

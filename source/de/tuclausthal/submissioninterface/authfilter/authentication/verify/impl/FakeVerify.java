@@ -25,6 +25,7 @@ import de.tuclausthal.submissioninterface.authfilter.authentication.verify.Verif
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Fake verifyer: Accepts all stored users with any password
@@ -35,7 +36,7 @@ public class FakeVerify implements VerifyIf {
 
 	@Override
 	public User checkCredentials(LoginData logindata) {
-		UserDAOIf userdao = DAOFactory.UserDAOIf();
+		UserDAOIf userdao = DAOFactory.UserDAOIf(HibernateSessionHelper.getSessionFactory().openSession());
 		User user = userdao.getUser(logindata.getUsername());
 		return user;
 	}

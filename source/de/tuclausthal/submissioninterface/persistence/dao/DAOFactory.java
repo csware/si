@@ -18,6 +18,8 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.persistence.dao.impl.GroupDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LectureDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.ParticipationDAO;
@@ -40,91 +42,91 @@ public class DAOFactory {
 	 * Returns a GroupDAOIf instance
 	 * @return a GroupDAOIf instance
 	 */
-	public static GroupDAOIf GroupDAOIf() {
-		return new GroupDAO();
+	public static GroupDAOIf GroupDAOIf(Session session) {
+		return new GroupDAO(session);
 	}
 
 	/**
 	 * Returns a LectureDAOIf instance
 	 * @return a LectureDAOIf instance
 	 */
-	public static LectureDAOIf LectureDAOIf() {
-		return new LectureDAO();
+	public static LectureDAOIf LectureDAOIf(Session session) {
+		return new LectureDAO(session);
 	}
 
 	/**
 	 * Returns a ParticipationDAOIf instance
 	 * @return a ParticipationDAOIf instance
 	 */
-	public static ParticipationDAOIf ParticipationDAOIf() {
-		return new ParticipationDAO();
+	public static ParticipationDAOIf ParticipationDAOIf(Session session) {
+		return new ParticipationDAO(session);
 	}
 
 	/**
 	 * Returns a PointsDAOIf instance
 	 * @return a PointsDAOIf instance
 	 */
-	public static PointsDAOIf PointsDAOIf() {
-		return new PointsDAO();
+	public static PointsDAOIf PointsDAOIf(Session session) {
+		return new PointsDAO(session);
 	}
 
 	/**
 	 * Returns a SubmissionDAOIf instance
 	 * @return a SubmissionDAOIf instance
 	 */
-	public static SubmissionDAOIf SubmissionDAOIf() {
-		return new SubmissionDAO();
+	public static SubmissionDAOIf SubmissionDAOIf(Session session) {
+		return new SubmissionDAO(session);
 	}
 
 	/**
 	 * Returns a TaskDAOIf instance
 	 * @return a TaskDAOIf instance
 	 */
-	public static TaskDAOIf TaskDAOIf() {
-		return new TaskDAO();
+	public static TaskDAOIf TaskDAOIf(Session session) {
+		return new TaskDAO(session);
 	}
 
 	/**
 	 * Returns a UserDAOIf instance
 	 * @return a UserDAOIf instance
 	 */
-	public static UserDAOIf UserDAOIf() {
-		return new UserDAO();
+	public static UserDAOIf UserDAOIf(Session session) {
+		return new UserDAO(session);
 	}
 
 	/**
 	 * Returns a TestResultDAOIf instance
 	 * @return a TestResultDAOIf instance
 	 */
-	public static TestResultDAOIf TestResultDAOIf() {
-		return new TestResultDAO();
+	public static TestResultDAOIf TestResultDAOIf(Session session) {
+		return new TestResultDAO(session);
 	}
 
 	/**
 	 * Returns a TestDAOIf instance
 	 * @return a TestDAOIf instance
 	 */
-	public static TestDAOIf TestDAOIf() {
-		return new TestDAO();
+	public static TestDAOIf TestDAOIf(Session session) {
+		return new TestDAO(session);
 	}
 
 	/**
 	 * Returns a SimilarityDAOIf instance
 	 * @return a SimilarityDAO instance
 	 */
-	public static SimilarityDAOIf SimilarityDAOIf() {
-		return new SimilarityDAO();
+	public static SimilarityDAOIf SimilarityDAOIf(Session session) {
+		return new SimilarityDAO(session);
 	}
 
 	/**
 	 * Returns a SimilarityTestDAOIf instance
 	 * @return a SimilarityTestDAOIf instance
 	 */
-	public static SimilarityTestDAOIf SimilarityTestDAOIf() {
-		return new SimilarityTestDAO();
+	public static SimilarityTestDAOIf SimilarityTestDAOIf(Session session) {
+		return new SimilarityTestDAO(session);
 	}
 
-	public static TestCountDAOIf TestCountDAOIf() {
-		return new TestCountDAO();
+	public static TestCountDAOIf TestCountDAOIf(Session session) {
+		return new TestCountDAO(session);
 	}
 }

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.template.Template;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * An template for the TU-Clausthal layout
@@ -37,7 +38,7 @@ public class TUCTemplate extends Template {
 		out.println("<h1><a href=\"http://www.tu-clausthal.de/\"><img src=\"" + prefix + "/tuc2005.gif\" alt=\"TU Clausthal\" border=\"0\" /></a></h1>");
 		out.println("</div>");
 		out.println("<div id=\"menu\">");
-		User user = sessionAdapter.getUser();
+		User user = sessionAdapter.getUser(HibernateSessionHelper.getSession());
 		if (user != null) {
 			out.println("Benutzer: " + user.getEmail());
 			if (user.isSuperUser()) {

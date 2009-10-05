@@ -32,6 +32,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -46,7 +47,7 @@ public class SubscribeToLectureView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		template.printTemplateHeader("Veranstaltungen", "<a href=\"Overview\">Meine Veranstaltungen</a> &gt; Veranstaltungen");
-		Iterator<Lecture> lectureIterator = DAOFactory.LectureDAOIf().getCurrentLecturesWithoutUser((User) request.getAttribute("user")).iterator();
+		Iterator<Lecture> lectureIterator = DAOFactory.LectureDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).getCurrentLecturesWithoutUser((User) request.getAttribute("user")).iterator();
 		if (lectureIterator.hasNext()) {
 			out.println("<table class=border>");
 			out.println("<tr>");

@@ -33,6 +33,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -62,7 +63,7 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Teilnehmer:</th>");
 		out.println("<td><select multiple name=members>");
-		Iterator<Participation> participationIterator = DAOFactory.ParticipationDAOIf().getParticipationsWithoutGroup(group.getLecture()).iterator();
+		Iterator<Participation> participationIterator = DAOFactory.ParticipationDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).getParticipationsWithoutGroup(group.getLecture()).iterator();
 		while (participationIterator.hasNext()) {
 			Participation thisParticipation = participationIterator.next();
 			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0 || thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {

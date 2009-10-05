@@ -29,9 +29,13 @@ import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
  * Data Access Object implementation for the TestDAOIf
  * @author Sven Strickroth
  */
-public class LogDAO {
+public class LogDAO  extends AbstractDAO {
+	public LogDAO(Session session) {
+		super(session);
+	}
+
 	public void createLogEntry(LogAction logAction, Boolean result, String testOutput) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		LogEntry logEntry = new LogEntry(logAction, result, testOutput);
 		session.save(logEntry);

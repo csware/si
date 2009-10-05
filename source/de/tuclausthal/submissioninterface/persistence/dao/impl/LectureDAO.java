@@ -37,15 +37,19 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Data Access Object implementation for the LectureDAOIf
  * @author Sven Strickroth
  */
-public class LectureDAO implements LectureDAOIf {
+public class LectureDAO extends AbstractDAO  implements LectureDAOIf {
+	public LectureDAO(Session session) {
+		super(session);
+	}
+
 	@Override
 	public List<Lecture> getLectures() {
-		return (List<Lecture>) HibernateSessionHelper.getSession().createCriteria(Lecture.class).addOrder(Order.desc("semester")).addOrder(Order.asc("name")).list();
+		return (List<Lecture>) getSession().createCriteria(Lecture.class).addOrder(Order.desc("semester")).addOrder(Order.asc("name")).list();
 	}
 
 	@Override
 	public Lecture newLecture(String name) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		Lecture lecture = new Lecture();
 		lecture.setName(name);
@@ -57,13 +61,13 @@ public class LectureDAO implements LectureDAOIf {
 
 	@Override
 	public Lecture getLecture(int lectureId) {
-		return (Lecture) HibernateSessionHelper.getSession().get(Lecture.class, lectureId);
+		return (Lecture) getSession().get(Lecture.class, lectureId);
 	}
 
 	@Override
 	public List<Lecture> getCurrentLecturesWithoutUser(User user) {
 		// TODO: optimization possible here ;)
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		List<Lecture> lectures = new LinkedList<Lecture>();
 		for (Lecture lecture : (List<Lecture>) session.createCriteria(Lecture.class).addOrder(Order.desc("semester")).addOrder(Order.asc("name")).list()) {
 			boolean found = false;
@@ -83,7 +87,7 @@ public class LectureDAO implements LectureDAOIf {
 
 	@Override
 	public void deleteLecture(Lecture lecture) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		session.update(lecture);
 		session.delete(lecture);
@@ -92,7 +96,7 @@ public class LectureDAO implements LectureDAOIf {
 
 	@Override
 	public int getAveragePoints(Lecture lecture) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Query query = session.createQuery("select avg(submission.points.points) from Submission submission inner join submission.task as task inner join task.lecture as lecture where lecture.id=:LECTURE");
 		query.setEntity("LECTURE", lecture);
 		Object result = query.uniqueResult();

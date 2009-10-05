@@ -27,16 +27,19 @@ import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestCount;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Data Access Object implementation for the TestCountDAOIf
  * @author Sven Strickroth
  */
-public class TestCountDAO implements TestCountDAOIf {
+public class TestCountDAO extends AbstractDAO implements TestCountDAOIf {
+	public TestCountDAO(Session session) {
+		super(session);
+	}
+
 	@Override
 	public boolean canSeeResultAndIncrementCounter(Test test, User user) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		TestCount testCount = (TestCount) session.createCriteria(TestCount.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("user", user)).setLockMode(LockMode.UPGRADE).setMaxResults(1).uniqueResult();
 		if (testCount == null) {
@@ -56,11 +59,11 @@ public class TestCountDAO implements TestCountDAOIf {
 
 	@Override
 	public int canStillRunXTimes(Test test, User user) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		TestCount testCount = (TestCount) session.createCriteria(TestCount.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("user", user)).setMaxResults(1).uniqueResult();
 		if (testCount == null) {
 			return test.getTimesRunnableByStudents();
 		}
-		return Math.max(0, testCount.getTimesExecuted() - test.getTimesRunnableByStudents());
+		return Math.max(0, test.getTimesRunnableByStudents() - testCount.getTimesExecuted());
 	}
 }

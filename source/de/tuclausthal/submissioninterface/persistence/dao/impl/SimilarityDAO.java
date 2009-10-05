@@ -33,11 +33,15 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
-public class SimilarityDAO implements SimilarityDAOIf {
+public class SimilarityDAO  extends AbstractDAO implements SimilarityDAOIf {
+
+	public SimilarityDAO(Session session) {
+		super(session);
+	}
 
 	@Override
 	public void addSimilarityResult(SimilarityTest similarityTest, Submission submissionOne, Submission submissionTwo, int percentage) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		for (Similarity similarity : (List<Similarity>) session.createCriteria(Similarity.class).add(Restrictions.eq("similarityTest", similarityTest)).add(Restrictions.or(Restrictions.and(Restrictions.eq("submissionOne", submissionOne), Restrictions.eq("submissionTwo", submissionTwo)), Restrictions.and(Restrictions.eq("submissionOne", submissionTwo), Restrictions.eq("submissionTwo", submissionOne)))).list()) {
 			session.delete(similarity);
@@ -52,7 +56,7 @@ public class SimilarityDAO implements SimilarityDAOIf {
 
 	@Override
 	public int getMaxSimilarity(SimilarityTest similarityTest, Submission submission) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Query query = session.createQuery("select max(similarity.percentage) from Similarity similarity inner join similarity.similarityTest as similaritytest where similarity.submissionOne=:SUBMISSION and similaritytest.similarityTestId=:SIMID group by similarity.submissionOne");
 		query.setEntity("SIMID", similarityTest);
 		query.setEntity("SUBMISSION", submission);
@@ -70,12 +74,12 @@ public class SimilarityDAO implements SimilarityDAOIf {
 		if (maxSimilarity == 0) {
 			return new LinkedList<Similarity>();
 		} else {
-			return (List<Similarity>) HibernateSessionHelper.getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).add(Restrictions.eq("percentage", maxSimilarity)).list();
+			return (List<Similarity>) getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).add(Restrictions.eq("percentage", maxSimilarity)).list();
 		}
 	}
 
 	@Override
 	public List<Similarity> getUsersWithSimilarity(SimilarityTest similarityTest, Submission submission) {
-		return (List<Similarity>) HibernateSessionHelper.getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).addOrder(Order.desc("percentage")).list();
+		return (List<Similarity>) getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).addOrder(Order.desc("percentage")).list();
 	}
 }

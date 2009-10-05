@@ -24,12 +24,15 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerCache;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.SimilarityDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Plagiarism test
@@ -53,8 +56,9 @@ public abstract class DupeCheck {
 	 * @param similarityTest test to perform
 	 */
 	public void performDupeCheck(SimilarityTest similarityTest) {
-		SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf();
-		DAOFactory.SimilarityTestDAOIf().resetSimilarityTest(similarityTest);
+		Session session = HibernateSessionHelper.getSession();
+		SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf(session);
+		DAOFactory.SimilarityTestDAOIf(session).resetSimilarityTest(similarityTest);
 		NormalizerCache normalizerCache = null;
 		try {
 			normalizerCache = new NormalizerCache(similarityTest.getNormalizer());

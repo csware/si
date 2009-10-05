@@ -18,6 +18,8 @@
 
 package de.tuclausthal.submissioninterface.util;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -52,6 +54,11 @@ public class HibernateSessionHelper {
 	 * @throws HibernateException
 	 */
 	public static Session getSession() throws HibernateException {
+		//HttpServletRequest req
+		/*Session session = (Session)req.getAttribute("session");
+		if (session == null || session.isOpen() == false) {
+			session = sessionFactory.openSession();
+		}*/
 		return sessionFactory.openSession();
 	}
 }

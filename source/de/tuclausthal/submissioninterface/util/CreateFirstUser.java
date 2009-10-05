@@ -34,7 +34,7 @@ public class CreateFirstUser {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		UserDAOIf userDAOIf = DAOFactory.UserDAOIf();
+		UserDAOIf userDAOIf = DAOFactory.UserDAOIf(HibernateSessionHelper.getSessionFactory().openSession());
 		User user = userDAOIf.createUser(args[0], args[1], args[2]);
 		user.setSuperUser(true);
 		userDAOIf.saveUser(user);

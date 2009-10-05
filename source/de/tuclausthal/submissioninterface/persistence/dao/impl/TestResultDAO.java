@@ -32,11 +32,14 @@ import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
  * Data Access Object implementation for the TestResultDAOIf
  * @author Sven Strickroth
  */
-public class TestResultDAO implements TestResultDAOIf {
+public class TestResultDAO extends AbstractDAO  implements TestResultDAOIf {
+	public TestResultDAO(Session session) {
+		super(session);
+	}
+
 	@Override
 	public TestResult createTestResult(Test test, Submission submission, TestExecutorTestResult testExecutorTestResult) {
-		Session session = HibernateSessionHelper.getSession();
-		Transaction tx = session.beginTransaction();
+		Session session = getSession();
 		TestResult testResult = new TestResult();
 		testResult.setSubmission(submission);
 		testResult.setTest(test);
@@ -45,15 +48,12 @@ public class TestResultDAO implements TestResultDAOIf {
 			testResult.setTestOutput(testExecutorTestResult.getTestOutput());
 		}
 		session.save(testResult);
-		tx.commit();
 		return testResult;
 	}
 
 	@Override
 	public void saveTestResult(TestResult testResult) {
-		Session session = HibernateSessionHelper.getSession();
-		Transaction tx = session.beginTransaction();
+		Session session = getSession();
 		session.update(testResult);
-		tx.commit();
 	}
 }

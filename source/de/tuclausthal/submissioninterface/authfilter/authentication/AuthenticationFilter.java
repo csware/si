@@ -29,13 +29,15 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginData;
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginIf;
 import de.tuclausthal.submissioninterface.authfilter.authentication.verify.VerifyIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Authentication filter
@@ -53,9 +55,10 @@ public class AuthenticationFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		Session session = HibernateSessionHelper.getSession();
 		SessionAdapter sa = new SessionAdapter((HttpServletRequest) request);
-		if (sa.getUser() != null) {
-			request.setAttribute("user", sa.getUser());
+		if (sa.getUser(session) != null) {
+			request.setAttribute("user", sa.getUser(session));
 		} else {
 			LoginData logindata = login.getLoginData((HttpServletRequest) request);
 			if (logindata == null) {
@@ -67,7 +70,7 @@ public class AuthenticationFilter implements Filter {
 				if (login.requiresVerification()) {
 					user = verify.checkCredentials(logindata);
 				} else {
-					user = DAOFactory.UserDAOIf().getUser(logindata.getUsername());
+					user = DAOFactory.UserDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).getUser(logindata.getUsername());
 				}
 				if (user == null) {
 					login.failNoData("Username or password wrong.", (HttpServletRequest) request, (HttpServletResponse) response);

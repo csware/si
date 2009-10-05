@@ -26,11 +26,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -45,7 +48,8 @@ public class Overview extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		template.printTemplateHeader("Meine Veranstaltungen", "Meine Veranstaltungen");
 
-		User user = new SessionAdapter(request).getUser();
+		Session session = HibernateSessionHelper.getSession();
+		User user = new SessionAdapter(request).getUser(session);
 
 		if (user.getLectureParticipant().size() > 0) {
 			out.println("<table class=border>");

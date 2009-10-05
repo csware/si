@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -39,6 +41,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -52,6 +55,8 @@ public class ShowTaskTutorView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
+		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		
 		Task task = (Task) request.getAttribute("task");
 		Participation participation = (Participation) request.getAttribute("participation");
 
@@ -87,7 +92,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		}
 		if (task.getSubmissions() != null && task.getSubmissions().size() > 0) {
 			out.println("<p><h2>Abgaben</h2><p>");
-			Iterator<Submission> submissionIterator = DAOFactory.SubmissionDAOIf().getSubmissionsForTaskOrdered(task).iterator();
+			Iterator<Submission> submissionIterator = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task).iterator();
 			Group lastGroup = null;
 			boolean first = true;
 			int sumOfSubmissions = 0;
@@ -137,10 +142,10 @@ public class ShowTaskTutorView extends HttpServlet {
 				for (SimilarityTest similarityTest : task.getSimularityTests()) {
 					//TODO: tooltip and who it is
 					String users = "";
-					for (Similarity similarity : DAOFactory.SimilarityDAOIf().getUsersWithMaxSimilarity(similarityTest, submission)) {
+					for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(similarityTest, submission)) {
 						users += Util.mknohtml(similarity.getSubmissionTwo().getSubmitter().getUser().getFullName()) + "\n";
 					}
-					out.println("<td class=points><span title=\"" + users + "\">" + DAOFactory.SimilarityDAOIf().getMaxSimilarity(similarityTest, submission) + "</span></td>");
+					out.println("<td class=points><span title=\"" + users + "\">" + DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(similarityTest, submission) + "</span></td>");
 				}
 				if (submission.getPoints() != null) {
 					out.println("<td align=right>" + submission.getPoints().getPoints() + "</td>");

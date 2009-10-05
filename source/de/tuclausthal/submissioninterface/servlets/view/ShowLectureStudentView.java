@@ -38,6 +38,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -73,7 +74,7 @@ public class ShowLectureStudentView extends HttpServlet {
 					out.println("<tr>");
 					out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
 					out.println("<td class=points>" + task.getMaxPoints() + "</td>");
-					Submission submission = DAOFactory.SubmissionDAOIf().getSubmission(task, sessionAdapter.getUser());
+					Submission submission = DAOFactory.SubmissionDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).getSubmission(task, sessionAdapter.getUser(HibernateSessionHelper.getSession()));
 					if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().before(Util.correctTimezone(new Date()))) {
 						out.println("<td class=points>" + submission.getPoints().getPoints() + "</td>");
 					} else {

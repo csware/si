@@ -32,15 +32,19 @@ import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
  * Data Access Object implementation for the TaskDAOIf
  * @author Sven Strickroth
  */
-public class TaskDAO implements TaskDAOIf {
+public class TaskDAO  extends AbstractDAO implements TaskDAOIf {
+	public TaskDAO(Session session) {
+		super(session);
+	}
+
 	@Override
 	public Task getTask(int taskid) {
-		return (Task) HibernateSessionHelper.getSession().get(Task.class, taskid);
+		return (Task) getSession().get(Task.class, taskid);
 	}
 
 	@Override
 	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameregexp, boolean showTextArea) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		Task task = new Task(title, maxPoints, start, deadline, description, lecture, showPoints, filenameregexp, showTextArea);
 		session.save(task);
@@ -50,7 +54,7 @@ public class TaskDAO implements TaskDAOIf {
 
 	@Override
 	public void saveTask(Task task) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		session.save(task);
 		tx.commit();
@@ -58,7 +62,7 @@ public class TaskDAO implements TaskDAOIf {
 
 	@Override
 	public void deleteTask(Task task) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		session.update(task);
 		session.delete(task);

@@ -23,9 +23,12 @@ import java.util.concurrent.Future;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Adapter for HTTP-session to have a better interface for our stored variables
@@ -53,9 +56,9 @@ public class SessionAdapter {
 	 * Reads the user from the session
 	 * @return the user or null if no user was stored to the session
 	 */
-	public User getUser() {
+	public User getUser(Session hsession) {
 		if (session.getAttribute("userID") != null) {
-			return DAOFactory.UserDAOIf().getUser((Integer) session.getAttribute("userID"));
+			return DAOFactory.UserDAOIf(hsession).getUser((Integer) session.getAttribute("userID"));
 		} else {
 			return null;
 		}

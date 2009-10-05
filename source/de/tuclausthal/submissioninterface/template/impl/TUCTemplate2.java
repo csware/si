@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.template.Template;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * An template for the TU-Clausthal layout
@@ -37,7 +38,7 @@ public class TUCTemplate2 extends Template {
 	public void printTemplateFooter() throws IOException {
 		PrintWriter out = servletResponse.getWriter();
 		out.println("<p><hr>");
-		User user = sessionAdapter.getUser();
+		User user = sessionAdapter.getUser(HibernateSessionHelper.getSession());
 		if (user != null) {
 			out.println("logged in as: " + user.getEmail());
 			out.println(" - <a href=\"" + servletResponse.encodeURL("Overview") + "\">Übersicht</a>");

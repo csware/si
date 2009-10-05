@@ -25,11 +25,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -40,14 +43,15 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class EditParticipation extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
+		Session session = HibernateSessionHelper.getSession();
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(Util.parseInteger(request.getParameter("participationid"), 0));
 		if (participation == null) {
 			request.setAttribute("title", "Teilnahme nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
-		Participation callerParticipation = participationDAO.getParticipation(new SessionAdapter(request).getUser(), participation.getLecture());
+		Participation callerParticipation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), participation.getLecture());
 		if (callerParticipation == null || callerParticipation.getRoleType() != ParticipationRole.ADVISOR) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;

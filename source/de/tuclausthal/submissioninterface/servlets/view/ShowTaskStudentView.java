@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
@@ -40,6 +42,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -53,6 +56,8 @@ public class ShowTaskStudentView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
+		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		
 		Task task = (Task) request.getAttribute("task");
 		Participation participation = (Participation) request.getAttribute("participation");
 
@@ -79,8 +84,8 @@ public class ShowTaskStudentView extends HttpServlet {
 		out.println("</tr>");
 		out.println("</table>");
 
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
-		Submission submission = submissionDAO.getSubmission(task, new SessionAdapter(request).getUser());
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+		Submission submission = submissionDAO.getSubmission(task, new SessionAdapter(request).getUser(session));
 		if (submission != null) {
 			out.println("<p><h2>Informationen zu meiner Abgabe:</h2>");
 			out.println("<table class=border>");
@@ -114,8 +119,8 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div");
 			}
 
-			List<Test> tests = DAOFactory.TestDAOIf().getStudentTests(task);
-			TestCountDAOIf testCountDAO = DAOFactory.TestCountDAOIf();
+			List<Test> tests = DAOFactory.TestDAOIf(session).getStudentTests(task);
+			TestCountDAOIf testCountDAO = DAOFactory.TestCountDAOIf(session);
 			if (tests.size() > 0 && task.getDeadline().after(Util.correctTimezone(new Date()))) {
 				out.println("<p><h2>Mögliche Tests:</h2>");
 				out.println("<table class=border>");

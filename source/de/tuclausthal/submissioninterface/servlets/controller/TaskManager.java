@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
@@ -36,6 +38,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -45,15 +48,16 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class TaskManager extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Lecture lecture = DAOFactory.LectureDAOIf().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+		Session session = HibernateSessionHelper.getSession();
+		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(), lecture);
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), lecture);
 		if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
@@ -63,7 +67,7 @@ public class TaskManager extends HttpServlet {
 			boolean editTask = request.getParameter("action").equals("editTask");
 			Task task;
 			if (editTask == true) {
-				TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
+				TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 				task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 				if (task == null) {
 					request.setAttribute("title", "Aufgabe nicht gefunden");
@@ -83,7 +87,7 @@ public class TaskManager extends HttpServlet {
 			request.setAttribute("task", task);
 			request.getRequestDispatcher("TaskManagerView").forward(request, response);
 		} else if (request.getParameter("action") != null && (request.getParameter("action").equals("saveNewTask") || request.getParameter("action").equals("saveTask"))) {
-			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 			Task task;
 			if (request.getParameter("action").equals("saveTask")) {
 				task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
@@ -123,7 +127,7 @@ public class TaskManager extends HttpServlet {
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 			return;
 		} else if ("deleteTask".equals(request.getParameter("action"))) {
-			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 			if (task == null) {
 				request.setAttribute("title", "Aufgabe nicht gefunden");

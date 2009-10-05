@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
@@ -41,6 +43,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -52,12 +55,14 @@ public class ShowLectureTutorView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
+		
 		PrintWriter out = response.getWriter();
 
 		Participation participation = (Participation) request.getAttribute("participation");
 		Lecture lecture = participation.getLecture();
 		SessionAdapter sessionAdapter = new SessionAdapter(request);
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
+		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 
 		// list all tasks for a lecture
 		template.printTemplateHeader(lecture);
@@ -92,7 +97,7 @@ public class ShowLectureTutorView extends HttpServlet {
 		boolean isAdvisor = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0);
 		if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
 			out.println("<h3>Ohne Gruppe</h3>");
-			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, sessionAdapter.getUser());
+			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, sessionAdapter.getUser(session));
 			if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 				out.println("<p class=mid><a href=\"" + response.encodeURL("AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a></p>");
 			}
@@ -102,9 +107,9 @@ public class ShowLectureTutorView extends HttpServlet {
 			if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
 				out.println("<p class=mid><a href=\"" + response.encodeURL("EditGroup?groupid=" + group.getGid()) + "\">Teilnehmer zuordnen</a></p>");
 			}
-			listMembers(group.getMembers().iterator(), response, isAdvisor, sessionAdapter.getUser());
+			listMembers(group.getMembers().iterator(), response, isAdvisor, sessionAdapter.getUser(session));
 		}
-		out.println("<h3>Gesamtdurchschnitt: " + DAOFactory.LectureDAOIf().getAveragePoints(lecture) + "</h3>");
+		out.println("<h3>Gesamtdurchschnitt: " + DAOFactory.LectureDAOIf(session).getAveragePoints(lecture) + "</h3>");
 		template.printTemplateFooter();
 	}
 

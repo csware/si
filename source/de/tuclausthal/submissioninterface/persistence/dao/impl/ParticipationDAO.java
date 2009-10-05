@@ -36,10 +36,14 @@ import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
  * Data Access Object implementation for the ParticipationDAOIf
  * @author Sven Strickroth
  */
-public class ParticipationDAO implements ParticipationDAOIf {
+public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf {
+	public ParticipationDAO(Session session) {
+		super(session);
+	}
+
 	@Override
 	public Participation createParticipation(User user, Lecture lecture, ParticipationRole type) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		Participation participation = null;
 
@@ -59,7 +63,7 @@ public class ParticipationDAO implements ParticipationDAOIf {
 
 	@Override
 	public void deleteParticipation(Participation participation) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		session.update(participation);
 		session.delete(participation);
@@ -68,12 +72,12 @@ public class ParticipationDAO implements ParticipationDAOIf {
 
 	@Override
 	public Participation getParticipation(User user, Lecture lecture) {
-		return (Participation) HibernateSessionHelper.getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).uniqueResult();
+		return (Participation) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).uniqueResult();
 	}
 
 	@Override
 	public void deleteParticipation(User user, Lecture lecture) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		Participation participation = (Participation) session.createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).setLockMode(LockMode.UPGRADE).uniqueResult();
 		if (participation != null) {
@@ -84,17 +88,17 @@ public class ParticipationDAO implements ParticipationDAOIf {
 
 	@Override
 	public List<Participation> getParticipationsWithoutGroup(Lecture lecture) {
-		return (List<Participation>) HibernateSessionHelper.getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.isNull("group")).list();
+		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.isNull("group")).list();
 	}
 
 	@Override
 	public Participation getParticipation(int participationid) {
-		return (Participation) HibernateSessionHelper.getSession().get(Participation.class, participationid);
+		return (Participation) getSession().get(Participation.class, participationid);
 	}
 
 	@Override
 	public void saveParticipation(Participation participation) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		session.save(participation);
 		tx.commit();

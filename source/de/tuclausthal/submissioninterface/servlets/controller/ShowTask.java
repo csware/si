@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
@@ -33,6 +35,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -43,7 +46,8 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class ShowTask extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
+		Session session = HibernateSessionHelper.getSession();
+		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
@@ -52,8 +56,8 @@ public class ShowTask extends HttpServlet {
 		}
 
 		// check Lecture Participation
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(), task.getLecture());
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), task.getLecture());
 		if (participation == null) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;

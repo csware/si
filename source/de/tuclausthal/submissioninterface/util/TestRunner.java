@@ -40,13 +40,14 @@ public class TestRunner {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
+		HibernateSessionHelper.getSessionFactory();
 		if (args.length != 1 || !new File(args[0]).isDirectory()) {
 			System.out.println("first parameter must point to the submission directory");
 			System.exit(1);
 		}
 		File dataPath = new File(args[0]);
 		SimilarityTest similarityTest;
-		while ((similarityTest = DAOFactory.SimilarityTestDAOIf().takeSimilarityTest()) != null) {
+		while ((similarityTest = DAOFactory.SimilarityTestDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).takeSimilarityTest()) != null) {
 			DupeCheck dupeCheck = similarityTest.getDupeCheck(dataPath);
 			dupeCheck.performDupeCheck(similarityTest);
 		}
@@ -54,7 +55,7 @@ public class TestRunner {
 		LocalExecutor.dataPath = dataPath;
 		LocalExecutor.getInstance();
 		Test test;
-		while ((test = DAOFactory.TestDAOIf().takeTest()) != null) {
+		while ((test = DAOFactory.TestDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).takeTest()) != null) {
 			for (Submission submission : test.getTask().getSubmissions()) {
 				TestExecutor.executeTask(new TestLogicImpl(test, submission, true));
 			}

@@ -32,11 +32,15 @@ import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
  * Data Access Object implementation for the PointsDAOIf
  * @author Sven Strickroth
  */
-public class PointsDAO implements PointsDAOIf {
+public class PointsDAO  extends AbstractDAO implements PointsDAOIf {
+	public PointsDAO(Session session) {
+		super(session);
+	}
+
 	@Override
 	public Points createPoints(int issuedPoints, Submission submission, Participation participation) {
 		// Hibernate exception abfangen
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		//MainBetterNameHereRequired.getSession().get(User.class, uid, LockMode.UPGRADE);
 		session.lock(submission.getTask(), LockMode.UPGRADE);

@@ -32,26 +32,29 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Data Access Object implementation for the SubmissionDAOIf
  * @author Sven Strickroth
  */
-public class SubmissionDAO implements SubmissionDAOIf {
+public class SubmissionDAO extends AbstractDAO  implements SubmissionDAOIf {
+	public SubmissionDAO(Session session) {
+		super(session);
+	}
+
 	@Override
 	public Submission getSubmission(int submissionid) {
-		return (Submission) HibernateSessionHelper.getSession().get(Submission.class, submissionid);
+		return (Submission) getSession().get(Submission.class, submissionid);
 	}
 
 	@Override
 	public Submission getSubmission(Task task, User user) {
-		return (Submission) HibernateSessionHelper.getSession().createCriteria(Submission.class).add(Restrictions.eq("task", task)).createCriteria("submitter").add(Restrictions.eq("user", user)).uniqueResult();
+		return (Submission) getSession().createCriteria(Submission.class).add(Restrictions.eq("task", task)).createCriteria("submitter").add(Restrictions.eq("user", user)).uniqueResult();
 	}
 
 	@Override
 	public Submission createSubmission(Task task, Participation submitter) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		Submission submission = getSubmission(task, submitter.getUser());
 		if (submission == null) {
@@ -64,7 +67,7 @@ public class SubmissionDAO implements SubmissionDAOIf {
 
 	@Override
 	public void saveSubmission(Submission submission) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		session.saveOrUpdate(submission);
 		tx.commit();
@@ -72,12 +75,12 @@ public class SubmissionDAO implements SubmissionDAOIf {
 
 	@Override
 	public List<Submission> getSubmissionsForTaskOrdered(Task task) {
-		return (List<Submission>) HibernateSessionHelper.getSession().createCriteria(Submission.class).add(Restrictions.eq("task", task)).createCriteria("submitter").addOrder(Order.asc("group")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+		return (List<Submission>) getSession().createCriteria(Submission.class).add(Restrictions.eq("task", task)).createCriteria("submitter").addOrder(Order.asc("group")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 	}
 
 	@Override
 	public boolean deleteIfNoFiles(Submission submission, File submissionPath) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		session.lock(submission, LockMode.UPGRADE);
 		boolean result = false;

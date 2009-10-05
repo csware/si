@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
@@ -39,6 +41,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -48,7 +51,8 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class ShowSubmission extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
+		Session session = HibernateSessionHelper.getSession();
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
@@ -59,15 +63,15 @@ public class ShowSubmission extends HttpServlet {
 		Task task = submission.getTask();
 
 		// check Lecture Participation
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(), submission.getTask().getLecture());
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), submission.getTask().getLecture());
 		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
 
 		if (task.getDeadline().before(Util.correctTimezone(new Date())) && request.getParameter("points") != null) {
-			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf();
+			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf(session);
 			pointsDAO.createPoints(Util.parseInteger(request.getParameter("points"), 0), submission, participation);
 			response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));
 			return;

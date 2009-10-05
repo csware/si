@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
@@ -37,6 +39,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -47,7 +50,8 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class DeleteFile extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
+		Session session = HibernateSessionHelper.getSession();
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
@@ -58,8 +62,8 @@ public class DeleteFile extends HttpServlet {
 		Task task = submission.getTask();
 
 		// check Lecture Participation
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(), task.getLecture());
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), task.getLecture());
 		if (participation == null) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
@@ -91,21 +95,21 @@ public class DeleteFile extends HttpServlet {
 			if (file.getName().equals(request.getPathInfo().substring(1))) {
 				file.delete();
 				found = true;
-				new LogDAO().createLogEntry(LogAction.DELETE_FILE, null, null);
+				new LogDAO(session).createLogEntry(LogAction.DELETE_FILE, null, null);
 				break;
 			}
 		}
 		if (found == true) {
-			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
+			/*if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 				submissionDAO.saveSubmission(submission);
-			}
+			}*/
 
 			response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/" + contextAdapter.getServletsPath() + "/ShowTask?taskid=" + task.getTaskid()));
 			return;
 		}
 
 		request.setAttribute("title", "Datei nicht gefunden");
-		request.getRequestDispatcher("MessageView").forward(request, response);
+		request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 		return;
 	}
 }

@@ -31,42 +31,40 @@ import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
  * Data Access Object implementation for the GroupDAOIf
  * @author Sven Strickroth
  */
-public class GroupDAO implements GroupDAOIf {
+public class GroupDAO extends AbstractDAO implements GroupDAOIf {
+	public GroupDAO(Session session) {
+		super(session);
+	}
+
 	@Override
 	public Group createGroup(Lecture lecture, String name) {
-		Session session = HibernateSessionHelper.getSession();
-		Transaction tx = session.beginTransaction();
+		Session session = getSession();
 		Group group = new Group();
 		group.setName(name);
 		group.setLecture(lecture);
 		session.save(group);
-		tx.commit();
 		return group;
 	}
 
 	@Override
 	public void deleteGroup(Group group) {
-		Session session = HibernateSessionHelper.getSession();
-		Transaction tx = session.beginTransaction();
+		Session session = getSession();
 		for (Participation participation : group.getMembers()) {
 			participation.setGroup(null);
 			session.update(participation);
 		}
 		session.update(group);
 		session.delete(group);
-		tx.commit();
 	}
 
 	@Override
 	public Group getGroup(int groupid) {
-		return (Group) HibernateSessionHelper.getSession().get(Group.class, groupid);
+		return (Group) getSession().get(Group.class, groupid);
 	}
 
 	@Override
 	public void saveGroup(Group group) {
-		Session session = HibernateSessionHelper.getSession();
-		Transaction tx = session.beginTransaction();
+		Session session = getSession();
 		session.update(group);
-		tx.commit();
 	}
 }

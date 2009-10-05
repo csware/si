@@ -32,11 +32,15 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
-public class SimilarityTestDAO implements SimilarityTestDAOIf {
+public class SimilarityTestDAO  extends AbstractDAO implements SimilarityTestDAOIf {
+
+	public SimilarityTestDAO(Session session) {
+		super(session);
+	}
 
 	@Override
 	public SimilarityTest addSimilarityTest(Task task, String type, String basis, boolean normalizeCapitalization, String tabsSpacesNewlinesNormalization, int minimumDifferenceInPercent, String excludeFiles) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		SimilarityTest similarityTest = new SimilarityTest(task, type, basis, normalizeCapitalization, tabsSpacesNewlinesNormalization, minimumDifferenceInPercent, excludeFiles);
 		session.save(similarityTest);
@@ -46,7 +50,7 @@ public class SimilarityTestDAO implements SimilarityTestDAOIf {
 
 	@Override
 	public void deleteSimilarityTest(SimilarityTest similarityTest) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		session.update(similarityTest);
 		session.delete(similarityTest);
@@ -55,7 +59,7 @@ public class SimilarityTestDAO implements SimilarityTestDAOIf {
 
 	@Override
 	public void resetSimilarityTest(SimilarityTest similarityTest) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		Query query = session.createQuery("delete from Similarity similarity where similarity.similarityTest=:SIMTEST");
 		query.setEntity("SIMTEST", similarityTest);
@@ -65,12 +69,12 @@ public class SimilarityTestDAO implements SimilarityTestDAOIf {
 
 	@Override
 	public SimilarityTest getSimilarityTest(int similarityTestId) {
-		return (SimilarityTest) HibernateSessionHelper.getSession().get(SimilarityTest.class, similarityTestId);
+		return (SimilarityTest) getSession().get(SimilarityTest.class, similarityTestId);
 	}
 
 	@Override
 	public SimilarityTest takeSimilarityTest() {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		SimilarityTest similarityTest = (SimilarityTest) session.createCriteria(SimilarityTest.class).add(Restrictions.eq("needsToRun", true)).setLockMode(LockMode.UPGRADE).createCriteria("task").add(Restrictions.le("deadline", Util.correctTimezone(new Date()))).setMaxResults(1).uniqueResult();
 		if (similarityTest != null) {

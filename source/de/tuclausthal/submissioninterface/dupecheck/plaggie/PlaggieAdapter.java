@@ -33,6 +33,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import org.hibernate.Session;
+
 import plag.parser.CachingSimpleSubmissionSimilarityChecker;
 import plag.parser.CodeExcluder;
 import plag.parser.CodeTokenizer;
@@ -59,6 +61,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.SimilarityDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -76,10 +79,11 @@ public class PlaggieAdapter extends DupeCheck {
 
 	@Override
 	public void performDupeCheck(SimilarityTest similarityTest) {
-		SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf();
+		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf(session);
 		Task task = similarityTest.getTask();
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
-		DAOFactory.SimilarityTestDAOIf().resetSimilarityTest(similarityTest);
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+		DAOFactory.SimilarityTestDAOIf(session).resetSimilarityTest(similarityTest);
 		try {
 			// -- Read the configuration file
 			config = new Configuration(new File(path + System.getProperty("file.separator") + "plaggie.properties"));

@@ -40,6 +40,7 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -55,6 +56,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogActi
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -64,7 +66,8 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class SubmitSolution extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
+		Session session = HibernateSessionHelper.getSession();
+		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
@@ -73,8 +76,8 @@ public class SubmitSolution extends HttpServlet {
 		}
 
 		// check Lecture Participation
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(), task.getLecture());
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), task.getLecture());
 		if (participation == null) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
@@ -94,7 +97,7 @@ public class SubmitSolution extends HttpServlet {
 
 		if (task.isShowTextArea() || "-".equals(task.getFilenameRegexp())) {
 			String textsolution = "";
-			Submission submission = DAOFactory.SubmissionDAOIf().getSubmission(task, new SessionAdapter(request).getUser());
+			Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, new SessionAdapter(request).getUser(session));
 			if (submission != null) {
 				ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
 				File textSolutionFile = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + "textloesung.txt");
@@ -118,11 +121,12 @@ public class SubmitSolution extends HttpServlet {
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Session session = HibernateSessionHelper.getSession();
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		PrintWriter out = response.getWriter();
 
-		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf();
+		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			template.printTemplateHeader("Aufgabe nicht gefunden");
@@ -132,8 +136,8 @@ public class SubmitSolution extends HttpServlet {
 		}
 
 		// check Lecture Participation
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(), task.getLecture());
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), task.getLecture());
 		if (participation == null) {
 			template.printTemplateHeader("Ungültige Anfrage");
 			out.println("<div class=mid>Sie sind kein Teilnehmer dieser Veranstaltung.</div>");
@@ -156,7 +160,7 @@ public class SubmitSolution extends HttpServlet {
 			return;
 		}
 
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 		Submission submission = submissionDAO.createSubmission(task, participation);
 
 		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
@@ -226,7 +230,7 @@ public class SubmitSolution extends HttpServlet {
 					}
 
 					submissionDAO.saveSubmission(submission);
-					new LogDAO().createLogEntry(LogAction.UPLOAD, null, null);
+					new LogDAO(session).createLogEntry(LogAction.UPLOAD, null, null);
 					response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 				}
 			}

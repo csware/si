@@ -34,6 +34,10 @@ import java.util.regex.Pattern;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
+import org.hibernate.LockMode;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
@@ -43,6 +47,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -67,9 +72,12 @@ public class TestLogicImpl extends TestTask {
 
 	@Override
 	public void performTask(File basePath, TestExecutorTestResult testResult) {
-		Test test = DAOFactory.TestDAOIf().getTest(testId);
-		Submission submission = DAOFactory.SubmissionDAOIf().getSubmission(submissionid);
+		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		Test test = DAOFactory.TestDAOIf(session).getTest(testId);
+		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(submissionid);
 		if (test != null && submission != null) {
+			Transaction tx = session.beginTransaction();
+			//session.lock(submission, LockMode.UPGRADE);
 			Task task = submission.getTask();
 
 			testResult.setTestID(testId);
@@ -99,7 +107,7 @@ public class TestLogicImpl extends TestTask {
 					ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
 
 					List<String> javaFiles = new LinkedList<String>();
-					for (File javaFile : path.listFiles()) {
+					for (File javaFile : tempDir.listFiles()) {
 						if (javaFile.getName().endsWith(".java")) {
 							javaFiles.add(javaFile.getAbsolutePath());
 						}
@@ -110,12 +118,12 @@ public class TestLogicImpl extends TestTask {
 					}
 					if (test instanceof CompileTest) {
 						testResult.setTestPassed(compiles == 0);
-						testResult.setTestOutput(errorOutputStream.toString().replace(path.getAbsolutePath() + System.getProperty("file.separator"), ""));
+						testResult.setTestOutput(errorOutputStream.toString().replace(tempDir.getAbsolutePath() + System.getProperty("file.separator"), ""));
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.err.println("System.getProperty(\"java.home\") should point to a jre in a jdk directory");
-					return;
+					throw e;
 				}
 
 				if (!(test instanceof CompileTest)) {
@@ -176,12 +184,12 @@ public class TestLogicImpl extends TestTask {
 						Pattern testPattern = Pattern.compile(((RegExpTest) test).getRegularExpression());
 						Matcher testMatcher = testPattern.matcher(testError.trim());
 						if (!testMatcher.matches()) {
-							testError = "regexp doesn't match. Output follows (STDIN first):\n" + testError;
+							testError = "Ausgabe stimmt nicht mit erwarteter Ausgabe überein. Ausgabe folgt (StdIn zuerst):\n" + testError;
 							testResult.setTestPassed(false);
 						}
 					}
 					// append STDERR
-					testError = testError.concat("\nSTDERR\n");
+					testError = testError.concat("\nFehlerausgabe (StdErr)\n");
 					BufferedReader testErrorInputStream = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 					while ((line = testErrorInputStream.readLine()) != null) {
 						testError = testError.concat(line + "\n");
@@ -193,6 +201,7 @@ public class TestLogicImpl extends TestTask {
 			} catch (Exception e) {
 				// Error
 				testResult.setTestOutput(e.getMessage());
+				tx.rollback();
 				e.printStackTrace();
 			} finally {
 				if (policyFile != null) {
@@ -201,9 +210,14 @@ public class TestLogicImpl extends TestTask {
 				if (tempDir != null) {
 					Util.recursiveDelete(tempDir);
 				}
+				
 			}
 			if (saveTestResult) {
-				DAOFactory.TestResultDAOIf().createTestResult(test, submission, testResult);
+				try {
+					DAOFactory.TestResultDAOIf(session).createTestResult(test, submission, testResult);
+				} finally {
+					tx.commit();
+				}
 			}
 		}
 	}

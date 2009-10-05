@@ -25,6 +25,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.GroupDAOIf;
@@ -33,6 +36,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -43,37 +47,42 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class AddGroup extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Lecture lecture = DAOFactory.LectureDAOIf().getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(), lecture);
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), lecture);
 		if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
 
 		if (request.getParameter("action") != null && request.getParameter("action").equals("saveNewGroup") && request.getParameter("name") != null) {
-			GroupDAOIf groupDAO = DAOFactory.GroupDAOIf();
+			GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
+			Transaction tx = session.beginTransaction();
 			Group group = groupDAO.createGroup(lecture, request.getParameter("name"));
+			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("EditGroup?groupid=" + group.getGid()));
 			return;
 		} else if (request.getParameter("action") != null && request.getParameter("action").equals("deleteGroup") && request.getParameter("gid") != null) {
-			GroupDAOIf groupDAO = DAOFactory.GroupDAOIf();
+			GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
 			Group group = groupDAO.getGroup(Util.parseInteger(request.getParameter("gid"), 0));
 			int lectureid = 0;
 			if (group != null) {
 				lectureid = group.getLecture().getId();
+				Transaction tx = session.beginTransaction();
 				groupDAO.deleteGroup(group);
+				tx.commit();
 			}
 			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lectureid));
 			return;
 		} else {
-			request.setAttribute("lecture", DAOFactory.LectureDAOIf().getLecture(Util.parseInteger(request.getParameter("lecture"), 0)));
+			request.setAttribute("lecture", DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0)));
 			request.getRequestDispatcher("AddGroupFormView").forward(request, response);
 		}
 	}

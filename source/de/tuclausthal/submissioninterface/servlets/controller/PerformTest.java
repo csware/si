@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
@@ -42,6 +44,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogActi
 import de.tuclausthal.submissioninterface.testframework.TestExecutor;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.TestLogicImpl;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -51,8 +54,9 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class PerformTest extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Test test = DAOFactory.TestDAOIf().getTest(Util.parseInteger(request.getParameter("testid"), 0));
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf();
+		Session session = HibernateSessionHelper.getSession();
+		Test test = DAOFactory.TestDAOIf(session).getTest(Util.parseInteger(request.getParameter("testid"), 0));
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null || test == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
@@ -63,8 +67,8 @@ public class PerformTest extends HttpServlet {
 		Task task = submission.getTask();
 
 		// check Lecture Participation
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf();
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(), task.getLecture());
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), task.getLecture());
 		if (participation == null || test.getTimesRunnableByStudents() == 0) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
@@ -78,7 +82,7 @@ public class PerformTest extends HttpServlet {
 
 		SessionAdapter sa = new SessionAdapter(request);
 
-		TestCountDAOIf testCountDAO = DAOFactory.TestCountDAOIf();
+		TestCountDAOIf testCountDAO = DAOFactory.TestCountDAOIf(session);
 
 		request.setAttribute("task", task);
 		request.setAttribute("test", test);
@@ -119,7 +123,7 @@ public class PerformTest extends HttpServlet {
 
 				sa.setQueuedTest(null);
 
-				new LogDAO().createLogEntry(LogAction.PERFORMED_TEST, result.isTestPassed(), result.getTestOutput());
+				new LogDAO(session).createLogEntry(LogAction.PERFORMED_TEST, result.isTestPassed(), result.getTestOutput());
 				request.setAttribute("testresult", result);
 
 				request.getRequestDispatcher("PerformTestResultView").forward(request, response);
