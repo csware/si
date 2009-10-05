@@ -100,9 +100,9 @@ public class DeleteFile extends HttpServlet {
 			}
 		}
 		if (found == true) {
-			/*if (!submissionDAO.deleteIfNoFiles(submission, path)) {
+			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 				submissionDAO.saveSubmission(submission);
-			}*/
+			}
 
 			response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/" + contextAdapter.getServletsPath() + "/ShowTask?taskid=" + task.getTaskid()));
 			return;

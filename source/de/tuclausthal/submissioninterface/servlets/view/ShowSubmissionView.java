@@ -133,7 +133,7 @@ public class ShowSubmissionView extends HttpServlet {
 				out.println("<li>" + testResult.getTest().getTestTitle() + "<br>");
 				out.println("Erfolgreich: " + Util.boolToHTML(testResult.getPassedTest()));
 				if (!testResult.getTestOutput().isEmpty()) {
-					out.println("<br><textarea cols=80 rows=15>" + Util.mknohtml(testResult.getTestOutput()) + "</textarea></div>");
+					out.println("<br><textarea cols=80 rows=15>" + Util.mknohtml(testResult.getTestOutput()) + "</textarea>");
 				}
 				out.println("</li>");
 			}
