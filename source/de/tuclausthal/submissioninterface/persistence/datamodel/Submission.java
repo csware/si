@@ -34,6 +34,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.OrderBy;
 
 @Entity
 @Table(name = "submissions", uniqueConstraints = { @UniqueConstraint(columnNames = { "submitter", "taskid" }) })
@@ -62,6 +63,7 @@ public class Submission implements Serializable {
 	 */
 	@OneToMany(mappedBy = "submission", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OrderBy(clause = "id asc")
 	public Set<TestResult> getTestResults() {
 		return testResults;
 	}
