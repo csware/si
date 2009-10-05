@@ -125,7 +125,7 @@ public class Lecture implements Serializable {
 	 */
 	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(clause = "taskid")
+	@OrderBy(clause = "taskid asc")
 	public List<Task> getTasks() {
 		return tasks;
 	}
@@ -142,7 +142,7 @@ public class Lecture implements Serializable {
 	 */
 	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(clause = "name")
+	@OrderBy(clause = "name asc")
 	public Set<Group> getGroups() {
 		return groups;
 	}

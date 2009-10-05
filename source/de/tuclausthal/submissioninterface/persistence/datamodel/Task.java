@@ -32,7 +32,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.OnDelete;
@@ -174,6 +173,7 @@ public class Task implements Serializable {
 	 */
 	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OrderBy(clause = "submissionid asc")
 	public Set<Submission> getSubmissions() {
 		return submissions;
 	}
@@ -205,6 +205,7 @@ public class Task implements Serializable {
 	 * @return the test
 	 */
 	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OrderBy(clause = "id asc")
 	public Set<Test> getTests() {
 		return tests;
 	}
@@ -235,7 +236,7 @@ public class Task implements Serializable {
 	 */
 	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(clause = "similarityTestId")
+	@OrderBy(clause = "similarityTestId asc")
 	public Set<SimilarityTest> getSimularityTests() {
 		return simularityTests;
 	}

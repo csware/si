@@ -29,6 +29,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OrderBy;
+
 @Entity
 @Table(name = "groups")
 public class Group implements Serializable {
@@ -87,6 +89,7 @@ public class Group implements Serializable {
 	 * @return the members
 	 */
 	@ManyToMany(mappedBy = "group")
+	//@OrderBy(clause = "user5_.lastname,user5_.firstname asc")
 	public Set<Participation> getMembers() {
 		return members;
 	}

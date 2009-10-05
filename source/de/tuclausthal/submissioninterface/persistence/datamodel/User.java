@@ -31,6 +31,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.DiscriminatorFormula;
+import org.hibernate.annotations.OrderBy;
 
 @Entity
 @Table(name = "users")
@@ -56,6 +57,7 @@ public class User implements Serializable {
 	 * @return the lectureParticipant
 	 */
 	@OneToMany(mappedBy = "user")
+	@OrderBy(clause = "id asc")
 	public Set<Participation> getLectureParticipant() {
 		return lectureParticipant;
 	}
