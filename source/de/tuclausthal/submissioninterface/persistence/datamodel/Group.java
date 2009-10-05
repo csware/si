@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -29,6 +30,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.OrderBy;
 
 @Entity
@@ -88,8 +90,7 @@ public class Group implements Serializable {
 	/**
 	 * @return the members
 	 */
-	@ManyToMany(mappedBy = "group")
-	//@OrderBy(clause = "user5_.lastname,user5_.firstname asc")
+	@ManyToMany(mappedBy = "group", fetch = FetchType.LAZY)
 	public Set<Participation> getMembers() {
 		return members;
 	}

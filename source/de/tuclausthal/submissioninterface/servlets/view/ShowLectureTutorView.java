@@ -107,7 +107,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
 				out.println("<p class=mid><a href=\"" + response.encodeURL("EditGroup?groupid=" + group.getGid()) + "\">Teilnehmer zuordnen</a></p>");
 			}
-			listMembers(group.getMembers().iterator(), response, isAdvisor, sessionAdapter.getUser(session));
+			listMembers(participationDAO.getParticipationsOfGroup(group).iterator(), response, isAdvisor, sessionAdapter.getUser(session));
 		}
 		out.println("<h3>Gesamtdurchschnitt: " + DAOFactory.LectureDAOIf(session).getAveragePoints(lecture) + "</h3>");
 		template.printTemplateFooter();

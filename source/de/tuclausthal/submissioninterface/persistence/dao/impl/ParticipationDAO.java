@@ -23,14 +23,15 @@ import java.util.List;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Data Access Object implementation for the ParticipationDAOIf
@@ -88,7 +89,12 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 
 	@Override
 	public List<Participation> getParticipationsWithoutGroup(Lecture lecture) {
-		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.isNull("group")).list();
+		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.isNull("group")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+	}
+
+	@Override
+	public List<Participation> getParticipationsOfGroup(Group group) {
+		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("group", group)).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 	}
 
 	@Override

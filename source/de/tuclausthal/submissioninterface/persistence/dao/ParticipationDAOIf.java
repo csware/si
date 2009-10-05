@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.persistence.dao;
 
 import java.util.List;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
@@ -60,6 +61,13 @@ public interface ParticipationDAOIf {
 	 * @return participation list
 	 */
 	public List<Participation> getParticipationsWithoutGroup(Lecture lecture);
+
+	/**
+	 * Returns the participation for a specific group
+	 * @param group the group
+	 * @return participation list
+	 */
+	public List<Participation> getParticipationsOfGroup(Group group);
 
 	/**
 	 * Removes a specific participation
