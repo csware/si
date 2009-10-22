@@ -41,6 +41,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -116,6 +117,7 @@ public class SubmitSolution extends HttpServlet {
 		}
 
 		request.setAttribute("task", task);
+		request.setAttribute("participation", participation);
 		request.getRequestDispatcher("SubmitSolutionFormView").forward(request, response);
 	}
 
@@ -160,25 +162,20 @@ public class SubmitSolution extends HttpServlet {
 			return;
 		}
 
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
-		Submission submission = submissionDAO.createSubmission(task, participation);
-
-		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
-
-		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-		if (path.exists() == false) {
-			path.mkdirs();
-		}
-
 		//http://commons.apache.org/fileupload/using.html
 
 		// Check that we have a file upload request
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 
-		if (isMultipart) {
+		int partnerID = 0;
+		List<FileItem> items = null;
+		if (!isMultipart) {
+			partnerID = Util.parseInteger(request.getParameter("partnerid"), 0);
+		} else {
 			if ("-".equals(task.getFilenameRegexp())) {
-				request.setAttribute("title", "Dateiupload für diese Aufgabe deaktiviert.");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				template.printTemplateHeader("Ungültige Anfrage");
+				out.println("<div class=mid>Dateiupload ist für diese Aufgabe deaktiviert.</div>");
+				template.printTemplateFooter();
 				return;
 			}
 
@@ -193,7 +190,6 @@ public class SubmitSolution extends HttpServlet {
 			ServletFileUpload upload = new ServletFileUpload(factory);
 
 			// Parse the request
-			List<FileItem> items = null;
 			try {
 				items = upload.parseRequest(request);
 			} catch (FileUploadException e) {
@@ -201,6 +197,43 @@ public class SubmitSolution extends HttpServlet {
 				return;
 			}
 
+			// Process the uploaded items
+			Iterator<FileItem> iter = items.iterator();
+			while (iter.hasNext()) {
+				FileItem item = iter.next();
+				if (item.isFormField() && "partnerid".equals(item.getFieldName())) {
+					partnerID = Util.parseInteger(item.getString(), 0);
+				}
+			}
+		}
+
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+
+		Transaction tx = session.beginTransaction();
+		Submission submission = submissionDAO.createSubmission(task, participation);
+
+		if (partnerID > 0) {
+			Participation partnerParticipation = participationDAO.getParticipation(partnerID);
+			if (submission.getSubmitters().size() < 2 && partnerParticipation != null && partnerParticipation.getLecture().getId() == task.getLecture().getId() && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
+				submission.getSubmitters().add(partnerParticipation);
+				session.update(submission);
+			} else {
+				tx.rollback();
+				template.printTemplateHeader("Ungültige Anfrage");
+				out.println("<div class=mid>Der ausgewählte Partner hat bereits eine eigene Abgabe initiiert oder Sie haben bereits einen Partner ausgewählt.</div>");
+				template.printTemplateFooter();
+				return;
+			}
+		}
+
+		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+
+		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
+		if (path.exists() == false) {
+			path.mkdirs();
+		}
+
+		if (isMultipart) {
 			// Process the uploaded items
 			Iterator<FileItem> iter = items.iterator();
 			while (iter.hasNext()) {
@@ -216,7 +249,10 @@ public class SubmitSolution extends HttpServlet {
 					}
 					Matcher m = pattern.matcher(item.getName());
 					if (!m.matches()) {
+						tx.rollback();
+						template.printTemplateHeader("Ungültige Anfrage");
 						out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
+						template.printTemplateFooter();
 						return;
 					}
 					String fileName = m.group(1);
@@ -227,11 +263,15 @@ public class SubmitSolution extends HttpServlet {
 						e.printStackTrace();
 					}
 
-					submissionDAO.saveSubmission(submission);
+					session.update(submission);
+					tx.commit();
 					new LogDAO(session).createLogEntry(LogAction.UPLOAD, null, null);
 					response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
+					return;
 				}
 			}
+			tx.rollback();
+			out.println("Problem: Keine Abgabedaten gefunden.");
 		} else if (request.getParameter("textsolution") != null) {
 			File uploadedFile = new File(path, "textloesung.txt");
 			FileWriter fileWriter = new FileWriter(uploadedFile);
@@ -239,10 +279,12 @@ public class SubmitSolution extends HttpServlet {
 			fileWriter.flush();
 			fileWriter.close();
 
-			submissionDAO.saveSubmission(submission);
+			session.update(submission);
+			tx.commit();
 
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 		} else {
+			tx.rollback();
 			out.println("Problem: Keine Abgabedaten gefunden.");
 		}
 	}

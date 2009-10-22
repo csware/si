@@ -68,8 +68,8 @@ public class ShowSubmissionView extends HttpServlet {
 
 		template.printTemplateHeader(submission);
 
-		if (submission.getSubmitter().getGroup() != null) {
-			out.println("<h2>Gruppe: " + submission.getSubmitter().getGroup().getName() + "</h2>");
+		if (submission.getSubmitters().iterator().next().getGroup() != null) {
+			out.println("<h2>Gruppe: " + submission.getSubmitters().iterator().next().getGroup().getName() + "</h2>");
 		}
 
 		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
@@ -115,7 +115,7 @@ public class ShowSubmissionView extends HttpServlet {
 				out.println("</tr>");
 				for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(similarityTest, submission)) {
 					out.println("<tr>");
-					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + similarity.getSubmissionTwo().getSubmissionid()) + "\">" + Util.mknohtml(similarity.getSubmissionTwo().getSubmitter().getUser().getFullName()) + "</a></td>");
+					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + similarity.getSubmissionTwo().getSubmissionid()) + "\">" + Util.mknohtml(similarity.getSubmissionTwo().getSubmitterNames()) + "</a></td>");
 					out.println("<td class=points>" + similarity.getPercentage() + "%</td>");
 					out.println("</tr>");
 				}

@@ -67,7 +67,7 @@ public class ShowFile extends HttpServlet {
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), submission.getTask().getLecture());
-		if (participation == null || (participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0 && !submission.getSubmitter().equals(participation))) {
+		if (participation == null || (participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0 && !submission.getSubmitters().contains(participation))) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}

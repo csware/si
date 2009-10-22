@@ -49,19 +49,23 @@ public class SubmissionDAO extends AbstractDAO  implements SubmissionDAOIf {
 
 	@Override
 	public Submission getSubmission(Task task, User user) {
-		return (Submission) getSession().createCriteria(Submission.class).add(Restrictions.eq("task", task)).createCriteria("submitter").add(Restrictions.eq("user", user)).uniqueResult();
+		return (Submission) getSession().createCriteria(Submission.class).add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.eq("user", user)).uniqueResult();
 	}
 
 	@Override
+	public Submission getSubmissionLocked(Task task, User user) {
+		return (Submission) getSession().createCriteria(Submission.class).add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.eq("user", user)).setLockMode(LockMode.UPGRADE).uniqueResult();
+	}
+
+	
+	@Override
 	public Submission createSubmission(Task task, Participation submitter) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
-		Submission submission = getSubmission(task, submitter.getUser());
+		Submission submission = getSubmissionLocked(task, submitter.getUser());
 		if (submission == null) {
 			submission = new Submission(task, submitter);
 			session.save(submission);
 		}
-		tx.commit();
 		return submission;
 	}
 
@@ -75,7 +79,7 @@ public class SubmissionDAO extends AbstractDAO  implements SubmissionDAOIf {
 
 	@Override
 	public List<Submission> getSubmissionsForTaskOrdered(Task task) {
-		return (List<Submission>) getSession().createCriteria(Submission.class).add(Restrictions.eq("task", task)).createCriteria("submitter").addOrder(Order.asc("group")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+		return (List<Submission>) getSession().createCriteria(Submission.class).addOrder(Order.asc("submissionid")).add(Restrictions.eq("task", task)).list();
 	}
 
 	@Override

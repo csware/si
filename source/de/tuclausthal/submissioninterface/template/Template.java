@@ -71,7 +71,7 @@ public abstract class Template {
 	}
 
 	public void printTemplateHeader(Submission submission) throws IOException {
-		printTemplateHeader("Abgabe von \"" + Util.mknohtml(submission.getSubmitter().getUser().getFullName()) + "\"", "<a href=\"" + servletResponse.encodeURL("Overview") + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + servletResponse.encodeURL("ShowLecture?lecture=" + submission.getTask().getLecture().getId()) + "\">Veranstaltung \"" + Util.mknohtml(submission.getTask().getLecture().getName()) + "\"</a> &gt; <a href=\"" + servletResponse.encodeURL("ShowTask?taskid=" + submission.getTask().getTaskid()) + "\">Aufgabe \"" + Util.mknohtml(submission.getTask().getTitle()) + "\"</a> &gt; Abgabe von \"" + Util.mknohtml(submission.getSubmitter().getUser().getFullName()) + "\"");
+		printTemplateHeader("Abgabe von \"" + Util.mknohtml(submission.getSubmitterNames()) + "\"", "<a href=\"" + servletResponse.encodeURL("Overview") + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + servletResponse.encodeURL("ShowLecture?lecture=" + submission.getTask().getLecture().getId()) + "\">Veranstaltung \"" + Util.mknohtml(submission.getTask().getLecture().getName()) + "\"</a> &gt; <a href=\"" + servletResponse.encodeURL("ShowTask?taskid=" + submission.getTask().getTaskid()) + "\">Aufgabe \"" + Util.mknohtml(submission.getTask().getTitle()) + "\"</a> &gt; Abgabe von \"" + Util.mknohtml(submission.getSubmitterNames()) + "\"");
 	}
 
 	public void printTemplateHeader(Group group) throws IOException {

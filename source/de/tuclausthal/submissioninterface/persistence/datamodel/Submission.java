@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -26,22 +27,22 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.OrderBy;
 
 @Entity
-@Table(name = "submissions", uniqueConstraints = { @UniqueConstraint(columnNames = { "submitter", "taskid" }) })
+@Table(name = "submissions")
 public class Submission implements Serializable {
 	private int submissionid;
 	private Task task;
-	private Participation submitter;
+	private Set<Participation> submitters = new HashSet<Participation>();
 	private Points points;
 	private Set<TestResult> testResults;
 	private Set<Similarity> similarSubmissions;
@@ -55,7 +56,7 @@ public class Submission implements Serializable {
 	 */
 	public Submission(Task task, Participation submitter) {
 		this.task = task;
-		this.submitter = submitter;
+		this.submitters.add(submitter);
 	}
 
 	/**
@@ -90,19 +91,18 @@ public class Submission implements Serializable {
 	}
 
 	/**
-	 * @return the submitter
+	 * @return the submitters
 	 */
-	@ManyToOne
-	@JoinColumn(name = "submitter", nullable = false)
-	public Participation getSubmitter() {
-		return submitter;
+	@ManyToMany
+	public Set<Participation> getSubmitters() {
+		return submitters;
 	}
 
 	/**
 	 * @param submitter the submitter to set
 	 */
-	public void setSubmitter(Participation submitter) {
-		this.submitter = submitter;
+	public void setSubmitters(Set<Participation> submitters) {
+		this.submitters = submitters;
 	}
 
 	/**
@@ -151,5 +151,14 @@ public class Submission implements Serializable {
 	 */
 	public void setSimilarSubmissions(Set<Similarity> similarSubmissions) {
 		this.similarSubmissions = similarSubmissions;
+	}
+
+	@Transient
+	public String getSubmitterNames() {
+		StringBuffer sb = new StringBuffer();
+		for (Participation submitter : getSubmitters()) {
+			sb.append(", " + submitter.getUser().getFullName());
+		}
+		return sb.substring(2).toString();
 	}
 }

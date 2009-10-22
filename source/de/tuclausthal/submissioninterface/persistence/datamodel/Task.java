@@ -43,6 +43,7 @@ import org.hibernate.annotations.OrderBy;
 public class Task implements Serializable {
 	private int taskid;
 	private String title = "";
+	private int maxSubmitters = 1;
 	private int maxPoints = 0;
 	private Date start;
 	private Date deadline;
@@ -275,5 +276,19 @@ public class Task implements Serializable {
 	 */
 	public void setShowTextArea(boolean showTextArea) {
 		this.showTextArea = showTextArea;
+	}
+
+	/**
+	 * @return the maxUsers
+	 */
+	public int getMaxSubmitters() {
+		return maxSubmitters;
+	}
+
+	/**
+	 * @param maxUsers the maxUsers to set
+	 */
+	public void setMaxSubmitters(int maxSubmitters) {
+		this.maxSubmitters = maxSubmitters;
 	}
 }

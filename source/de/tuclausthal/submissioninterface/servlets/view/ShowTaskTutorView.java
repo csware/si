@@ -103,7 +103,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			// dynamic splitter for groups
 			while (submissionIterator.hasNext()) {
 				Submission submission = submissionIterator.next();
-				Group group = submission.getSubmitter().getGroup();
+				Group group = submission.getSubmitters().iterator().next().getGroup();
 				if (first == true || lastGroup != group) {
 					lastGroup = group;
 					if (first == false) {
@@ -135,7 +135,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("</tr>");
 				}
 				out.println("<tr>");
-				out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(submission.getSubmitter().getUser().getFullName()) + "</a></td>");
+				out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(submission.getSubmitterNames()) + "</a></td>");
 				for (TestResult testResult : submission.getTestResults()) {
 					out.println("<td>" + Util.boolToHTML(testResult.getPassedTest()) + "</td>");
 				}
@@ -143,7 +143,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					//TODO: tooltip and who it is
 					String users = "";
 					for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(similarityTest, submission)) {
-						users += Util.mknohtml(similarity.getSubmissionTwo().getSubmitter().getUser().getFullName()) + "\n";
+						users += Util.mknohtml(similarity.getSubmissionTwo().getSubmitterNames()) + "\n";
 					}
 					out.println("<td class=points><span title=\"" + users + "\">" + DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(similarityTest, submission) + "</span></td>");
 				}

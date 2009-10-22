@@ -57,7 +57,7 @@ public class ShowTaskStudentView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
-		
+
 		Task task = (Task) request.getAttribute("task");
 		Participation participation = (Participation) request.getAttribute("participation");
 
@@ -89,6 +89,14 @@ public class ShowTaskStudentView extends HttpServlet {
 		if (submission != null) {
 			out.println("<p><h2>Informationen zu meiner Abgabe:</h2>");
 			out.println("<table class=border>");
+			if (submission.getSubmitters().size() > 1) {
+				out.println("<tr>");
+				out.println("<th>Bearbeitet von:</th>");
+				out.println("<td>");
+				out.println(submission.getSubmitterNames().replaceAll(", ", "<br>"));
+				out.println("</td>");
+			}
+			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<th>Besteht aus:</th>");
 			out.println("<td>");

@@ -26,9 +26,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
+import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
+import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -43,11 +51,34 @@ public class SubmitSolutionFormView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		Task task = (Task) request.getAttribute("task");
+		Participation participation = (Participation) request.getAttribute("participation");
 
 		template.printTemplateHeader("Abgabe starten", task);
 
+		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+		Submission submission = submissionDAO.getSubmission(task, new SessionAdapter(request).getUser(session));
+
+		StringBuffer setWithUser = new StringBuffer();
+		if (submission == null && participation.getGroup() != null) {
+			setWithUser.append("<p>Haben Sie diese Aufgabe zusammen mit einem Partner gelöst? Dann bitte hier auswählen: <select name=partnerid size=1>");
+			int cnt = 0;
+			setWithUser.append("<option value=0>alleine bearbeitet</option>");
+			for (Participation part : participation.getGroup().getMembers()) {
+				if (part.getId() != participation.getId() && submissionDAO.getSubmission(task, part.getUser()) == null) {
+					cnt++;
+					setWithUser.append("<option value=" + part.getId() + ">" + Util.mknohtml(part.getUser().getFullName()) + "</option>");
+				}
+			}
+			setWithUser.append("</select><p>");
+			if (cnt == 0) {
+				setWithUser = new StringBuffer();
+			}
+		}
+
 		if (!"-".equals(task.getFilenameRegexp())) {
 			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"?taskid=" + task.getTaskid() + "\">");
+			out.println(setWithUser.toString());
 			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie einsenden möchten.</p>");
 			out.println("<INPUT TYPE=file NAME=file>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
@@ -59,6 +90,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 
 		if (task.isShowTextArea() || "-".equals(task.getFilenameRegexp())) {
 			out.println("<FORM class=mid method=POST action=\"?taskid=" + task.getTaskid() + "\">");
+			out.println(setWithUser.toString());
 			out.println("<p>Bitte füllen Sie das Textfeld mit Ihrer Lösung:</p>");
 			out.println("<p><textarea cols=60 rows=10 name=textsolution>" + Util.mknohtml((String) request.getAttribute("textsolution")) + "</textarea></p>");
 			out.println("<INPUT TYPE=submit VALUE=speichern>");
