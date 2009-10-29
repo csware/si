@@ -52,7 +52,7 @@ public class SubscribeToLectureView extends HttpServlet {
 			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>Veranstaltung</th>");
-			out.println("<th>Semester</th>");
+			out.println("<th>Anmelden</th>");
 			out.println("</tr>");
 			while (lectureIterator.hasNext()) {
 				Lecture lecture = lectureIterator.next();
