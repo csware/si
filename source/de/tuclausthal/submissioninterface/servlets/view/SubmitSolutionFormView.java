@@ -72,8 +72,10 @@ public class SubmitSolutionFormView extends HttpServlet {
 			}
 			setWithUser.append("</select><p>");
 			if (cnt == 0) {
-				setWithUser = new StringBuffer();
+				setWithUser = new StringBuffer("<p>Sie können im Moment keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, müssen von Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol></p><hr>");
 			}
+		} else if (submission == null && participation.getGroup() == null) {
+			setWithUser = new StringBuffer("<p>Sie können im Moment keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, müssen von Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol></p><hr>");
 		}
 
 		if (!"-".equals(task.getFilenameRegexp())) {
@@ -95,6 +97,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 			out.println("<p><textarea cols=60 rows=10 name=textsolution>" + Util.mknohtml((String) request.getAttribute("textsolution")) + "</textarea></p>");
 			out.println("<INPUT TYPE=submit VALUE=speichern>");
 			out.println("</FORM>");
+			out.println("<p class=mid><b>Achtung:</b> Bitte beachten Sie, dass Sie nach 5 Minuten Inaktivität automatisch ausgeloggt werden. Kopieren Sie den Text vor dem Absenden sicherheitshalber in die Zwischenablage, wenn Sie nicht sicher sind, ob Sie die Zeit überschritten haben.</p>");
 		}
 
 		template.printTemplateFooter();
