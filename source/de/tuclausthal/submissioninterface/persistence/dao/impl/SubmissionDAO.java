@@ -79,7 +79,7 @@ public class SubmissionDAO extends AbstractDAO  implements SubmissionDAOIf {
 
 	@Override
 	public List<Submission> getSubmissionsForTaskOrdered(Task task) {
-		return (List<Submission>) getSession().createCriteria(Submission.class).addOrder(Order.asc("submissionid")).add(Restrictions.eq("task", task)).list();
+		return (List<Submission>) getSession().createCriteria(Submission.class,"sub").add(Restrictions.eq("task", task)).createCriteria("submitters").addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).list();
 	}
 
 	@Override

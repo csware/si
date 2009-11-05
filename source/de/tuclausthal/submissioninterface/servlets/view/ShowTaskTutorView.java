@@ -56,7 +56,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
-		
+
 		Task task = (Task) request.getAttribute("task");
 		Participation participation = (Participation) request.getAttribute("participation");
 
@@ -100,6 +100,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			int groupSumOfSubmissions = 0;
 			int groupSumOfPoints = 0;
 			int testCols = 0;
+			int lastSID = 0;
 			// dynamic splitter for groups
 			while (submissionIterator.hasNext()) {
 				Submission submission = submissionIterator.next();
@@ -127,36 +128,39 @@ public class ShowTaskTutorView extends HttpServlet {
 					for (TestResult testResult : submission.getTestResults()) {
 						out.println("<th>" + Util.mknohtml(testResult.getTest().getTestTitle()) + "</th>");
 					}
-					testCols = Math.max(testCols,submission.getTestResults().size());
+					testCols = Math.max(testCols, submission.getTestResults().size());
 					for (SimilarityTest similarityTest : task.getSimularityTests()) {
 						out.println("<th><span title=\"Max. Ähnlichkeit\">" + similarityTest + "</span></th>");
 					}
 					out.println("<th>Punkte</th>");
 					out.println("</tr>");
 				}
-				out.println("<tr>");
-				out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(submission.getSubmitterNames()) + "</a></td>");
-				for (TestResult testResult : submission.getTestResults()) {
-					out.println("<td>" + Util.boolToHTML(testResult.getPassedTest()) + "</td>");
-				}
-				for (SimilarityTest similarityTest : task.getSimularityTests()) {
-					//TODO: tooltip and who it is
-					String users = "";
-					for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(similarityTest, submission)) {
-						users += Util.mknohtml(similarity.getSubmissionTwo().getSubmitterNames()) + "\n";
+				if (lastSID != submission.getSubmissionid()) {
+					out.println("<tr>");
+					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(submission.getSubmitterNames()) + "</a></td>");
+					lastSID = submission.getSubmissionid();
+					for (TestResult testResult : submission.getTestResults()) {
+						out.println("<td>" + Util.boolToHTML(testResult.getPassedTest()) + "</td>");
 					}
-					out.println("<td class=points><span title=\"" + users + "\">" + DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(similarityTest, submission) + "</span></td>");
+					for (SimilarityTest similarityTest : task.getSimularityTests()) {
+						//TODO: tooltip and who it is
+						String users = "";
+						for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(similarityTest, submission)) {
+							users += Util.mknohtml(similarity.getSubmissionTwo().getSubmitterNames()) + "\n";
+						}
+						out.println("<td class=points><span title=\"" + users + "\">" + DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(similarityTest, submission) + "</span></td>");
+					}
+					if (submission.getPoints() != null) {
+						out.println("<td align=right>" + submission.getPoints().getPoints() + "</td>");
+						sumOfPoints += submission.getPoints().getPoints();
+						groupSumOfPoints += submission.getPoints().getPoints();
+						sumOfSubmissions++;
+						groupSumOfSubmissions++;
+					} else {
+						out.println("<td>n/a</td>");
+					}
+					out.println("</tr>");
 				}
-				if (submission.getPoints() != null) {
-					out.println("<td align=right>" + submission.getPoints().getPoints() + "</td>");
-					sumOfPoints += submission.getPoints().getPoints();
-					groupSumOfPoints += submission.getPoints().getPoints();
-					sumOfSubmissions++;
-					groupSumOfSubmissions++;
-				} else {
-					out.println("<td>n/a</td>");
-				}
-				out.println("</tr>");
 			}
 			if (first == false) {
 				out.println("<tr>");
