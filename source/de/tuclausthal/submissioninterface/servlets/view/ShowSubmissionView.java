@@ -56,7 +56,7 @@ public class ShowSubmissionView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
-		
+
 		Submission submission = (Submission) request.getAttribute("submission");
 
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
@@ -144,10 +144,10 @@ public class ShowSubmissionView extends HttpServlet {
 		out.println("<div class=mid>");
 		for (String file : submittedFiles) {
 			if (file.endsWith(".txt") || file.endsWith(".java") || file.endsWith(".pdf") || file.endsWith(".jpg") || file.endsWith(".png") || file.endsWith(".gif")) {
-				out.println("<iframe width=800 height=250 src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe><p>");
-			} else {
-				out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">Download " + Util.mknohtml(file) + "</a><p>");
+				out.println("<h3>" + Util.mknohtml(file) + "</h3>");
+				out.println("<iframe width=800 height=600 src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe><br>");
 			}
+			out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">Download " + Util.mknohtml(file) + "</a><p>");
 		}
 		out.println("</div>");
 		template.printTemplateFooter();
