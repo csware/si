@@ -43,7 +43,7 @@ import org.hibernate.annotations.OrderBy;
 public class Task implements Serializable {
 	private int taskid;
 	private String title = "";
-	private int maxSubmitters = 1;
+	private int maxSubmitters = 2;
 	private int maxPoints = 0;
 	private Date start;
 	private Date deadline;
