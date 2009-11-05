@@ -53,10 +53,7 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 	@Override
 	public User createUser(String email, String firstName, String lastName) {
 		Session session = getSession();
-		Transaction tx = session.getTransaction();
-		if (tx == null) {
-			tx = session.beginTransaction();
-		}
+		Transaction tx = session.beginTransaction();
 		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("email", email)).setLockMode(LockMode.UPGRADE).setMaxResults(1).uniqueResult();
 		if (user == null) {
 			user = new User();
