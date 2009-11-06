@@ -44,6 +44,7 @@ public class Form implements LoginIf {
 
 	@Override
 	public void failNoData(String error, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.addHeader("Cache-Control", "no-cache, must-revalidate");
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.printTemplateHeader("Login erforderlich", "Login erforderlich");
 		PrintWriter out = response.getWriter();
