@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 import java.io.Serializable;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.ForeignKey;
@@ -29,6 +30,7 @@ import org.hibernate.annotations.ForeignKey;
 public class Points implements Serializable {
 	private Integer points;
 	private Participation issuedBy;
+	private String comment;
 
 	/**
 	 * @return the points
@@ -58,5 +60,20 @@ public class Points implements Serializable {
 	 */
 	public void setIssuedBy(Participation issuedBy) {
 		this.issuedBy = issuedBy;
+	}
+
+	/**
+	 * @return the comment
+	 */
+	@Lob
+	public String getComment() {
+		return comment;
+	}
+
+	/**
+	 * @param comment the comment to set
+	 */
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }

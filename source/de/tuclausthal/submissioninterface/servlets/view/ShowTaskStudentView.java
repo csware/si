@@ -95,8 +95,8 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<td>");
 				out.println(submission.getSubmitterNames().replaceAll(", ", "<br>"));
 				out.println("</td>");
+				out.println("</tr>");
 			}
-			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<th>Besteht aus:</th>");
 			out.println("<td>");
@@ -117,6 +117,14 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println(submission.getPoints().getPoints() + " von " + task.getMaxPoints());
 				out.println("</td>");
 				out.println("</tr>");
+				if (submission.getPoints().getComment() != null && ! "".equals(submission.getPoints().getComment())) {
+					out.println("<tr>");
+					out.println("<th>Kommentar:</th>");
+					out.println("<td>");
+					out.println(Util.mknohtml(submission.getPoints().getComment()));
+					out.println("</td>");
+					out.println("</tr>");
+				}
 			}
 			out.println("</table>");
 

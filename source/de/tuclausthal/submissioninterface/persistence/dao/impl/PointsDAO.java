@@ -38,7 +38,7 @@ public class PointsDAO  extends AbstractDAO implements PointsDAOIf {
 	}
 
 	@Override
-	public Points createPoints(int issuedPoints, Submission submission, Participation participation) {
+	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String comment) {
 		// Hibernate exception abfangen
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
@@ -51,6 +51,7 @@ public class PointsDAO  extends AbstractDAO implements PointsDAOIf {
 		points.setPoints(issuedPoints);
 		points.setIssuedBy(participation);
 		submission.setPoints(points);
+		points.setComment(comment);
 		session.save(submission);
 		tx.commit();
 		return points;

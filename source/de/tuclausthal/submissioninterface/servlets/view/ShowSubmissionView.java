@@ -78,8 +78,8 @@ public class ShowSubmissionView extends HttpServlet {
 			if (submission.getPoints() != null) {
 				out.println("<tr>");
 				out.println("<td>");
-				out.println(submission.getPoints().getPoints() + "/" + task.getMaxPoints() + " Punkte vergeben ");
-				out.println(" von " + submission.getPoints().getIssuedBy().getUser().getFullName());
+				out.println(submission.getPoints().getPoints() + "<b>/</b>" + task.getMaxPoints() + " <b>Punkte vergeben</b> ");
+				out.println(" <b>von</b> " + submission.getPoints().getIssuedBy().getUser().getFullName() + "<br><b>Kommentar:</b> " + Util.mknohtml(submission.getPoints().getComment()));
 				out.println("</td>");
 				out.println("</tr>");
 			}
@@ -87,7 +87,8 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<td>");
 			out.println("<form action=\"?\" method=post>");
 			out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
-			out.println("<input type=text name=points> (max. " + task.getMaxPoints() + ")");
+			out.println("<b>Punkte:</b> <input type=text name=points> (max. " + task.getMaxPoints() + ")<br>");
+			out.println("<b>Kommentar:</b> <input type=text name=comment><br>");
 			out.println(" <input type=submit>");
 			out.println("</form>");
 			out.println("</td>");
