@@ -53,9 +53,12 @@ public class DeleteFile extends HttpServlet {
 		Session session = HibernateSessionHelper.getSession();
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
+
+		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 			return;
 		}
 
@@ -77,18 +80,17 @@ public class DeleteFile extends HttpServlet {
 
 		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 			request.setAttribute("title", "Abgabe nicht mehr möglich");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 			return;
 		}
 
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 
 			return;
 		}
 
-		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
 		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 		Boolean found = false;
 		for (File file : path.listFiles()) {

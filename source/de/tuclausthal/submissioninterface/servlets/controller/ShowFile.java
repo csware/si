@@ -56,9 +56,12 @@ public class ShowFile extends HttpServlet {
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
+
+		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 			return;
 		}
 
@@ -74,11 +77,10 @@ public class ShowFile extends HttpServlet {
 
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 			return;
 		}
 
-		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
 		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 		for (File file : path.listFiles()) {
 			if (file.getName().equals(request.getPathInfo().substring(1))) {
@@ -104,7 +106,7 @@ public class ShowFile extends HttpServlet {
 						response.setContentType("image/gif");
 					} else if (file.getName().endsWith(".png")) {
 						response.setContentType("image/png");
-					} else{
+					} else {
 						response.setContentType("application/x-download");
 						response.setHeader("Content-Disposition", "attachment; filename=" + file.getName()); // TODO: escape!?, if good regexps for filenames are used, not necessary
 					}
@@ -121,6 +123,6 @@ public class ShowFile extends HttpServlet {
 		}
 
 		request.setAttribute("title", "Datei nicht gefunden");
-		request.getRequestDispatcher("MessageView").forward(request, response);
+		request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 	}
 }
