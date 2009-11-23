@@ -130,7 +130,6 @@ public class TestManager extends HttpServlet {
 						if (!item.getName().endsWith(".jar")) {
 							request.setAttribute("title", "Dateiname ungültig.");
 							request.getRequestDispatcher("MessageView").forward(request, response);
-
 							return;
 						}
 						File uploadedFile = new File(path, "junittest" + test.getId() + ".jar");
@@ -141,11 +140,11 @@ public class TestManager extends HttpServlet {
 						}
 					} else {
 						if ("timesRunnableByStudents".equals(item.getFieldName())) {
-							timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
+							timesRunnableByStudents = Util.parseInteger(item.getString(), 0);
 						} else if ("title".equals(item.getFieldName())) {
-							title = request.getParameter("title");
+							title = item.getString();
 						} else if ("description".equals(item.getFieldName())) {
-							description = request.getParameter("description");
+							description = item.getString();
 						} else if ("tutortest".equals(item.getFieldName())) {
 							tutortest = true;
 						} else if ("timeout".equals(item.getFieldName())) {
