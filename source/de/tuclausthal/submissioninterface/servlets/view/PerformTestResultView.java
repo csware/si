@@ -50,7 +50,7 @@ public class PerformTestResultView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		out.println("<b>Titel:</b> " + Util.mknohtml(test.getTestTitle()) + "<br>");
-		out.println("<b>Beschreibung:</b><br>" + test.getTestDescription() + "<br>");
+		out.println("<b>Beschreibung:</b><br>" + Util.mkTextToHTML(test.getTestDescription()) + "<br>");
 		out.println("<b>Bestanden:</b> " + Util.boolToHTML(testResult.isTestPassed()) + "<br>");
 		if (!testResult.getTestOutput().isEmpty()) {
 			out.println("<b>Ausgabe:</b><br><pre>" + Util.mknohtml(testResult.getTestOutput()) + "</pre>");

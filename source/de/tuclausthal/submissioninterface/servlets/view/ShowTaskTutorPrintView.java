@@ -78,7 +78,7 @@ public class ShowTaskTutorPrintView extends HttpServlet {
 					out.println("<td>" + Util.mknohtml(submission.getSubmitterNames()) + "</td>");
 					lastSID = submission.getSubmissionid();
 					if (submission.getPoints() != null) {
-						out.println("<td>" + Util.mknohtml(submission.getPoints().getComment()) + "</td>");
+						out.println("<td>" + Util.mkTextToHTML(submission.getPoints().getComment()) + "</td>");
 						out.println("<td align=right>" + submission.getPoints().getPoints() + "</td>");
 					} else {
 						out.println("<td></td>");

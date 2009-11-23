@@ -121,7 +121,7 @@ public class ShowTaskStudentView extends HttpServlet {
 					out.println("<tr>");
 					out.println("<th>Kommentar:</th>");
 					out.println("<td>");
-					out.println(Util.mknohtml(submission.getPoints().getComment()));
+					out.println(Util.mkTextToHTML(submission.getPoints().getComment()));
 					out.println("</td>");
 					out.println("</tr>");
 				}
@@ -144,7 +144,7 @@ public class ShowTaskStudentView extends HttpServlet {
 					out.println("<tr>");
 					out.println("<th>" + Util.mknohtml(test.getTestTitle()) + "</th>");
 					out.println("<td>");
-					out.println(test.getTestDescription());
+					out.println(Util.mkTextToHTML(test.getTestDescription()));
 					out.println("</td>");
 					out.println("<td>");
 					if (testCountDAO.canStillRunXTimes(test, participation.getUser()) > 0) {

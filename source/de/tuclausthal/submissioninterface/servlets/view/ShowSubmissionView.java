@@ -75,20 +75,22 @@ public class ShowSubmissionView extends HttpServlet {
 		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 			out.println("<h2>Bewertung:</h2>");
 			out.println("<table class=border>");
+			String oldComment = "";
 			if (submission.getPoints() != null) {
 				out.println("<tr>");
 				out.println("<td>");
 				out.println(submission.getPoints().getPoints() + "<b>/</b>" + task.getMaxPoints() + " <b>Punkte vergeben</b> ");
-				out.println(" <b>von</b> " + submission.getPoints().getIssuedBy().getUser().getFullName() + "<br><b>Kommentar:</b> " + Util.mknohtml(submission.getPoints().getComment()));
+				out.println(" <b>von</b> " + submission.getPoints().getIssuedBy().getUser().getFullName() + "<br><b>Kommentar:</b> " + Util.mkTextToHTML(submission.getPoints().getComment()));
 				out.println("</td>");
 				out.println("</tr>");
+				oldComment = submission.getPoints().getComment();
 			}
 			out.println("<tr>");
 			out.println("<td>");
 			out.println("<form action=\"?\" method=post>");
 			out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
 			out.println("<b>Punkte:</b> <input type=text name=points> (max. " + task.getMaxPoints() + ")<br>");
-			out.println("<b>Kommentar:</b> <input type=text name=comment><br>");
+			out.println("<b>Kommentar:</b> <textarea cols=40 rows=5 name=comment>" + Util.mknohtml(oldComment) + "</textarea><br>");
 			out.println(" <input type=submit>");
 			out.println("</form>");
 			out.println("</td>");

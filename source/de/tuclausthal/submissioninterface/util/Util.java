@@ -64,6 +64,13 @@ public final class Util {
 		return (result.toString());
 	}
 
+	public static String mkTextToHTML(String message) {
+		if (message == null) {
+			return ("");
+		}
+		return mknohtml(message).replace("\n", "<br>");
+	}
+
 	/**
 	 * Escapes command line parameters
 	 * @param message
@@ -235,6 +242,7 @@ public final class Util {
 		}
 		return temp;
 	}
+
 	/**
 	 * Corrects timezone if needed
 	 * @param date
