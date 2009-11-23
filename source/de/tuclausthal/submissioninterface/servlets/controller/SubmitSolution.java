@@ -247,7 +247,13 @@ public class SubmitSolution extends HttpServlet {
 					} else {
 						pattern = Pattern.compile(".*?(?:\\\\|/)?(" + task.getFilenameRegexp() + ")$");
 					}
-					Matcher m = pattern.matcher(item.getName());
+					StringBuffer submittedFileName = new StringBuffer(item.getName());
+					if (submittedFileName.lastIndexOf(".") > 0) {
+						int lastDot = submittedFileName.lastIndexOf(".");
+						submittedFileName.replace(lastDot, submittedFileName.length(), submittedFileName.subSequence(lastDot, submittedFileName.length()).toString().toLowerCase());
+						System.out.println(submittedFileName.toString());
+					}
+					Matcher m = pattern.matcher(submittedFileName);
 					if (!m.matches()) {
 						tx.rollback();
 						template.printTemplateHeader("Ungültige Anfrage");
