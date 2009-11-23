@@ -34,7 +34,6 @@ import java.util.regex.Pattern;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
-import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -133,6 +132,10 @@ public class TestLogicImpl extends TestTask {
 
 					policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + "junit.jar") + "\" {\n");
 					policyFileWriter.write("	permission java.security.AllPermission;\n");
+					policyFileWriter.write("};\n");
+					policyFileWriter.write("\n");
+					policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar") + "\" {\n");
+					policyFileWriter.write("	permission java.lang.RuntimePermission \"setIO\";\n");
 					policyFileWriter.write("};\n");
 					policyFileWriter.write("\n");
 					policyFileWriter.write("grant {\n");
