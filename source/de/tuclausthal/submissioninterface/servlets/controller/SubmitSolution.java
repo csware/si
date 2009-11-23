@@ -251,7 +251,6 @@ public class SubmitSolution extends HttpServlet {
 					if (submittedFileName.lastIndexOf(".") > 0) {
 						int lastDot = submittedFileName.lastIndexOf(".");
 						submittedFileName.replace(lastDot, submittedFileName.length(), submittedFileName.subSequence(lastDot, submittedFileName.length()).toString().toLowerCase());
-						System.out.println(submittedFileName.toString());
 					}
 					Matcher m = pattern.matcher(submittedFileName);
 					if (!m.matches()) {
