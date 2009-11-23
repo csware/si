@@ -30,6 +30,9 @@ import javax.persistence.Table;
 @Table(name = "logs")
 public class LogEntry implements Serializable {
 	private int id;
+	private int userId;
+	private Integer testId;
+	private int taskId;
 	private Date timeStamp = new Date();
 	private int action;
 	private Boolean result;
@@ -37,12 +40,19 @@ public class LogEntry implements Serializable {
 
 	public LogEntry() {}
 
-	public LogEntry(LogAction logAction, Boolean result, String testOutput) {
+	public LogEntry(User user, Test test, Task task, LogAction logAction, Boolean result, String testOutput) {
 		action = logAction.ordinal();
 		if (logAction.compareTo(LogAction.PERFORMED_TEST) == 0) {
 			this.result = result;
 			this.testOutput = testOutput;
 		}
+		this.userId = user.getUid();
+		if (test != null) {
+			this.testId = test.getId();
+		} else {
+			this.testId = null;
+		}
+		this.taskId = task.getTaskid();
 	}
 
 	/**
@@ -119,5 +129,47 @@ public class LogEntry implements Serializable {
 	 */
 	public void setTimeStamp(Date timeStamp) {
 		this.timeStamp = timeStamp;
+	}
+
+	/**
+	 * @return the userId
+	 */
+	public int getUserId() {
+		return userId;
+	}
+
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	/**
+	 * @return the testId
+	 */
+	public Integer getTestId() {
+		return testId;
+	}
+
+	/**
+	 * @param testId the testId to set
+	 */
+	public void setTestId(Integer testId) {
+		this.testId = testId;
+	}
+
+	/**
+	 * @return the taskId
+	 */
+	public int getTaskId() {
+		return taskId;
+	}
+
+	/**
+	 * @param taskId the taskId to set
+	 */
+	public void setTaskId(int taskId) {
+		this.taskId = taskId;
 	}
 }

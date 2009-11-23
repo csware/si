@@ -97,7 +97,7 @@ public class DeleteFile extends HttpServlet {
 			if (file.getName().equals(request.getPathInfo().substring(1))) {
 				file.delete();
 				found = true;
-				new LogDAO(session).createLogEntry(LogAction.DELETE_FILE, null, null);
+				new LogDAO(session).createLogEntry(participation.getUser(), null, submission.getTask(), LogAction.DELETE_FILE, null, null);
 				break;
 			}
 		}

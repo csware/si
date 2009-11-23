@@ -265,7 +265,7 @@ public class SubmitSolution extends HttpServlet {
 
 					session.update(submission);
 					tx.commit();
-					new LogDAO(session).createLogEntry(LogAction.UPLOAD, null, null);
+					new LogDAO(session).createLogEntry(participation.getUser(), null, task, LogAction.UPLOAD, null, null);
 					response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 					return;
 				}

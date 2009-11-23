@@ -22,22 +22,24 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Data Access Object implementation for the TestDAOIf
  * @author Sven Strickroth
  */
-public class LogDAO  extends AbstractDAO {
+public class LogDAO extends AbstractDAO {
 	public LogDAO(Session session) {
 		super(session);
 	}
 
-	public void createLogEntry(LogAction logAction, Boolean result, String testOutput) {
+	public void createLogEntry(User user, Test test, Task task, LogAction logAction, Boolean result, String testOutput) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		LogEntry logEntry = new LogEntry(logAction, result, testOutput);
+		LogEntry logEntry = new LogEntry(user, test, task, logAction, result, testOutput);
 		session.save(logEntry);
 		tx.commit();
 	}
