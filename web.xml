@@ -167,6 +167,10 @@
         <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ShowTaskTutorView</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>ShowTaskTutorPrintView</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ShowTaskTutorPrintView</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>DupeCheckFormView</servlet-name>
         <servlet-class>de.tuclausthal.submissioninterface.servlets.view.DupeCheckFormView</servlet-class>
     </servlet>
@@ -318,6 +322,10 @@
     <servlet-mapping>
         <servlet-name>ShowTaskTutorView</servlet-name>
         <url-pattern>/servlets/ShowTaskTutorView</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowTaskTutorPrintView</servlet-name>
+        <url-pattern>/servlets/ShowTaskTutorPrintView</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DupeCheckFormView</servlet-name>

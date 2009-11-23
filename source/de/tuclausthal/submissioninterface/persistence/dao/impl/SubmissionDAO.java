@@ -28,6 +28,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -94,5 +95,10 @@ public class SubmissionDAO extends AbstractDAO  implements SubmissionDAOIf {
 		}
 		tx.commit();
 		return result;
+	}
+
+	@Override
+	public List<Submission> getSubmissionsForTaskOfGroupOrdered(Task task, Group group) {
+		return (List<Submission>) getSession().createCriteria(Submission.class,"sub").add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.eq("group", group)).addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).list();
 	}
 }

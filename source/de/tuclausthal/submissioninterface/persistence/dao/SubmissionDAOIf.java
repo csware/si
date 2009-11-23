@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.persistence.dao;
 import java.io.File;
 import java.util.List;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -69,6 +70,13 @@ public interface SubmissionDAOIf {
 	 * @return the list of submissions
 	 */
 	public List<Submission> getSubmissionsForTaskOrdered(Task task);
+
+	/**
+	 * Returns the submission of a group orderd by name
+	 * @param group
+	 * @return the list of submissions
+	 */
+	public List<Submission> getSubmissionsForTaskOfGroupOrdered(Task task, Group group);
 
 	/**
 	 * Updates/saves a submission in the DB

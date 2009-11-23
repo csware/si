@@ -32,6 +32,7 @@ import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -72,7 +73,13 @@ public class ShowTask extends HttpServlet {
 		request.setAttribute("participation", participation);
 		request.setAttribute("task", task);
 		if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
-			request.getRequestDispatcher("ShowTaskTutorView").forward(request, response);
+			if ("grouplist".equals(request.getParameter("action"))) {
+				Group group = DAOFactory.GroupDAOIf(session).getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
+				request.setAttribute("group", group);
+				request.getRequestDispatcher("ShowTaskTutorPrintView").forward(request, response);
+			} else {
+				request.getRequestDispatcher("ShowTaskTutorView").forward(request, response);
+			}
 		} else {
 			request.getRequestDispatcher("ShowTaskStudentView").forward(request, response);
 		}
