@@ -76,22 +76,20 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<h2>Bewertung:</h2>");
 			out.println("<table class=border>");
 			String oldComment = "";
+			int points = 0;
+			String pointsGivenBy = "";
 			if (submission.getPoints() != null) {
-				out.println("<tr>");
-				out.println("<td>");
-				out.println(submission.getPoints().getPoints() + "<b>/</b>" + task.getMaxPoints() + " <b>Punkte vergeben</b> ");
-				out.println(" <b>von</b> " + submission.getPoints().getIssuedBy().getUser().getFullName() + "<br><b>Kommentar:</b> " + Util.mkTextToHTML(submission.getPoints().getComment()));
-				out.println("</td>");
-				out.println("</tr>");
 				oldComment = submission.getPoints().getComment();
+				points = submission.getPoints().getPoints();
+				pointsGivenBy = " (bisher " + points + " Punkte  vergeben von: " + submission.getPoints().getIssuedBy().getUser().getFullName() + ")";
 			}
 			out.println("<tr>");
 			out.println("<td>");
 			out.println("<form action=\"?\" method=post>");
 			out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
-			out.println("<b>Punkte:</b> <input type=text name=points> (max. " + task.getMaxPoints() + ")<br>");
-			out.println("<b>Kommentar:</b> <textarea cols=40 rows=5 name=comment>" + Util.mknohtml(oldComment) + "</textarea><br>");
-			out.println(" <input type=submit>");
+			out.println("<b>Punkte:</b> <input type=text name=points size=3 value=\"" + points + "\"> (max. " + task.getMaxPoints() + ")" + pointsGivenBy + "<br>");
+			out.println("<b>Kommentar:</b><br><textarea cols=80 rows=8 name=comment>" + Util.mknohtml(oldComment) + "</textarea><br>");
+			out.println(" <input type=submit value=Speichern>");
 			out.println("</form>");
 			out.println("</td>");
 			out.println("</tr>");
