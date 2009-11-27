@@ -22,7 +22,7 @@ public class TUCTemplate extends Template {
 	@Override
 	public void printTemplateHeader(String title, String breadCrum) throws IOException {
 		servletResponse.setContentType("text/html");
-		servletResponse.setCharacterEncoding("UTF-8");
+		servletResponse.setCharacterEncoding("iso-8859-1");
 		PrintWriter out = servletResponse.getWriter();
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Strict//EN\">");
 		out.println("<html>");

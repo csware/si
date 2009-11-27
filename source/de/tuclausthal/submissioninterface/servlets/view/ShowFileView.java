@@ -41,18 +41,18 @@ public class ShowFileView extends HttpServlet {
 
 		if (fileName.endsWith(".java")) {
 			response.setContentType("text/html");
-			response.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding("iso-8859-1");
 			PrintWriter out = response.getWriter();
 			Renderer renderer = XhtmlRendererFactory.getRenderer(XhtmlRendererFactory.JAVA);
-			out.write(renderer.highlight(fileName, code, "UTF-8", false));
+			out.write(renderer.highlight(fileName, code, "iso-8859-1", false));
 		} else if (fileName.endsWith(".txt")) {
 			response.setContentType("text/plain");
-			response.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding("iso-8859-1");
 			PrintWriter out = response.getWriter();
 			out.println(code);
 		} else {
 			response.setContentType("text/html");
-			response.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding("iso-8859-1");
 			PrintWriter out = response.getWriter();
 			out.println("Anzeige der Datei nicht möglich.");
 		}
