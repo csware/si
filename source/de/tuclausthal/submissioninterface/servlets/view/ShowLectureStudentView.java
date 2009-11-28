@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
@@ -76,7 +75,11 @@ public class ShowLectureStudentView extends HttpServlet {
 					out.println("<td class=points>" + task.getMaxPoints() + "</td>");
 					Submission submission = DAOFactory.SubmissionDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).getSubmission(task, sessionAdapter.getUser(HibernateSessionHelper.getSession()));
 					if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().before(Util.correctTimezone(new Date()))) {
-						out.println("<td class=points>" + submission.getPoints().getPoints() + "</td>");
+						if (submission.getPoints().getPointsOk()) {
+							out.println("<td class=points>" + submission.getPoints().getPoints() + "</td>");
+						} else {
+							out.println("<td class=points>0, nicht vorgestellt</td>");
+						}
 					} else {
 						out.println("<td class=points>n/a</td>");
 					}

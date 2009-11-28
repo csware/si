@@ -152,7 +152,11 @@ public class ShowTaskTutorView extends HttpServlet {
 						out.println("<td class=points><span title=\"" + users + "\">" + DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(similarityTest, submission) + "</span></td>");
 					}
 					if (submission.getPoints() != null) {
-						out.println("<td align=right>" + submission.getPoints().getPoints() + "</td>");
+						if (submission.getPoints().getPointsOk()) {
+							out.println("<td align=right>" + submission.getPoints().getPoints() + "</td>");
+						} else {
+							out.println("<td align=right>(" + submission.getPoints().getPoints() + ")</td>");
+						}
 						sumOfPoints += submission.getPoints().getPoints();
 						groupSumOfPoints += submission.getPoints().getPoints();
 						sumOfSubmissions++;

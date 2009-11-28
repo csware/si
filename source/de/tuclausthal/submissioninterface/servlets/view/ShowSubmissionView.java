@@ -77,10 +77,12 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<table class=border>");
 			String oldComment = "";
 			int points = 0;
+			boolean pointsOk = false;
 			String pointsGivenBy = "";
 			if (submission.getPoints() != null) {
 				oldComment = submission.getPoints().getComment();
 				points = submission.getPoints().getPoints();
+				pointsOk = submission.getPoints().getPointsOk();
 				pointsGivenBy = " (bisher " + points + " Punkte  vergeben von: " + submission.getPoints().getIssuedBy().getUser().getFullName() + ")";
 			}
 			out.println("<tr>");
@@ -89,7 +91,8 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
 			out.println("<b>Punkte:</b> <input type=text name=points size=3 value=\"" + points + "\"> (max. " + task.getMaxPoints() + ")" + pointsGivenBy + "<br>");
 			out.println("<b>Kommentar:</b><br><textarea cols=80 rows=8 name=comment>" + Util.mknohtml(oldComment) + "</textarea><br>");
-			out.println(" <input type=submit value=Speichern>");
+			out.println("<b>Abgenommen:</b> <input type=checkbox name=pointsok " + (pointsOk ? "checked" : "") + "><br>");
+			out.println("<input type=submit value=Speichern>");
 			out.println("</form>");
 			out.println("</td>");
 			out.println("</tr>");

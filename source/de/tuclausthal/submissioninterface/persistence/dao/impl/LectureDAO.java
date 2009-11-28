@@ -30,7 +30,6 @@ import de.tuclausthal.submissioninterface.persistence.dao.LectureDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -97,7 +96,7 @@ public class LectureDAO extends AbstractDAO  implements LectureDAOIf {
 	@Override
 	public int getAveragePoints(Lecture lecture) {
 		Session session = getSession();
-		Query query = session.createQuery("select avg(submission.points.points) from Submission submission inner join submission.task as task inner join task.lecture as lecture where lecture.id=:LECTURE");
+		Query query = session.createQuery("select avg(submission.points.points) from Submission submission inner join submission.task as task inner join task.lecture as lecture where lecture.id=:LECTURE and submission.points.pointsOk=true");
 		query.setEntity("LECTURE", lecture);
 		Object result = query.uniqueResult();
 		if (result == null) {

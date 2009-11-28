@@ -29,6 +29,7 @@ import org.hibernate.annotations.ForeignKey;
 @Embeddable
 public class Points implements Serializable {
 	private Integer points;
+	private Boolean pointsOk;
 	private Participation issuedBy;
 	private String comment;
 
@@ -75,5 +76,19 @@ public class Points implements Serializable {
 	 */
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	/**
+	 * @return the pointsOk
+	 */
+	public Boolean getPointsOk() {
+		return pointsOk;
+	}
+
+	/**
+	 * @param pointsOk the pointsOk to set
+	 */
+	public void setPointsOk(Boolean pointsOk) {
+		this.pointsOk = pointsOk;
 	}
 }

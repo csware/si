@@ -34,5 +34,5 @@ public interface PointsDAOIf {
 	 * @param participation the participation of the issuer
 	 * @return the (new or updated) points instance
 	 */
-	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String comment);
+	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String comment, boolean pointsOk);
 }

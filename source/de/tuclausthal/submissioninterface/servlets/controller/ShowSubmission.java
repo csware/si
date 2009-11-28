@@ -76,7 +76,7 @@ public class ShowSubmission extends HttpServlet {
 			if (request.getParameter("comment") != null) {
 				comment = request.getParameter("comment");
 			}
-			pointsDAO.createPoints(Util.parseInteger(request.getParameter("points"), 0), submission, participation, comment);
+			pointsDAO.createPoints(Util.parseInteger(request.getParameter("points"), 0), submission, participation, comment, request.getParameter("pointsok") != null);
 			response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));
 			return;
 		}

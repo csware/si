@@ -114,10 +114,14 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<tr>");
 				out.println("<th>Bewertung:</th>");
 				out.println("<td>");
-				out.println(submission.getPoints().getPoints() + " von " + task.getMaxPoints());
+				if (submission.getPoints().getPointsOk()) {
+					out.println(submission.getPoints().getPoints() + " von " + task.getMaxPoints());
+				} else {
+					out.println("0 von " + task.getMaxPoints() + ", nicht vorgestellt");
+				}
 				out.println("</td>");
 				out.println("</tr>");
-				if (submission.getPoints().getComment() != null && ! "".equals(submission.getPoints().getComment())) {
+				if (submission.getPoints().getComment() != null && !"".equals(submission.getPoints().getComment())) {
 					out.println("<tr>");
 					out.println("<th>Kommentar:</th>");
 					out.println("<td>");

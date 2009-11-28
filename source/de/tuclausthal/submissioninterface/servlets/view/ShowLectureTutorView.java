@@ -167,9 +167,9 @@ public class ShowLectureTutorView extends HttpServlet {
 
 				out.println("</tr>");
 			}
-			if (sumOfPoints > 0) {
+			if (sumOfPoints > 0 && usersCount > 0) {
 				out.println("<tr>");
-				out.println("<td colspan=2>Durchschnittspunkte:</td>");
+				out.println("<td colspan=3>Durchschnittspunkte:</td>");
 				out.println("<td class=points>" + Float.valueOf(sumOfPoints / (float) usersCount).intValue() + "</td>");
 				out.println("</tr>");
 			}
@@ -180,7 +180,7 @@ public class ShowLectureTutorView extends HttpServlet {
 	public int getAllPoints(Participation participation) {
 		int points = 0;
 		for (Submission submission : participation.getSubmissions()) {
-			if (submission.getPoints() != null) {
+			if (submission.getPoints() != null && submission.getPoints().getPointsOk()) {
 				points += submission.getPoints().getPoints();
 			}
 		}

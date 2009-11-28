@@ -86,8 +86,12 @@ public class ShowLectureTutorFullView extends HttpServlet {
 			for (Task task : taskList) {
 				Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
 				if (submission != null && submission.getPoints() != null) {
-					out.println("<td class=points>" + submission.getPoints().getPoints() + "</td>");
-					points += submission.getPoints().getPoints();
+					if (submission.getPoints().getPointsOk()) {
+						out.println("<td class=points>" + submission.getPoints().getPoints() + "</td>");
+						points += submission.getPoints().getPoints();
+					} else {
+						out.println("<td class=points>(" + submission.getPoints().getPoints() + ")</td>");
+					}
 				} else {
 					out.println("<td>n/a</td>");
 				}

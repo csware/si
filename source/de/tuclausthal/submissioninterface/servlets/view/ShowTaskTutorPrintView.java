@@ -80,11 +80,16 @@ public class ShowTaskTutorPrintView extends HttpServlet {
 					if (submission.getPoints() != null) {
 						out.println("<td>" + Util.mkTextToHTML(submission.getPoints().getComment()) + "</td>");
 						out.println("<td align=right>" + submission.getPoints().getPoints() + "</td>");
+						if (submission.getPoints().getPointsOk()) {
+							out.println("<td>ok</td>");
+						} else {
+							out.println("<td></td>");
+						}
 					} else {
 						out.println("<td></td>");
 						out.println("<td>n/a</td>");
+						out.println("<td></td>");
 					}
-					out.println("<td></td>");
 					out.println("</tr>");
 				}
 			}

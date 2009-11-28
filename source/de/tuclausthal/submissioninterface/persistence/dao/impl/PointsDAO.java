@@ -26,19 +26,18 @@ import de.tuclausthal.submissioninterface.persistence.dao.PointsDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Data Access Object implementation for the PointsDAOIf
  * @author Sven Strickroth
  */
-public class PointsDAO  extends AbstractDAO implements PointsDAOIf {
+public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	public PointsDAO(Session session) {
 		super(session);
 	}
 
 	@Override
-	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String comment) {
+	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String comment, boolean pointsOk) {
 		// Hibernate exception abfangen
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
@@ -49,6 +48,7 @@ public class PointsDAO  extends AbstractDAO implements PointsDAOIf {
 		}
 		Points points = new Points();
 		points.setPoints(issuedPoints);
+		points.setPointsOk(pointsOk);
 		points.setIssuedBy(participation);
 		submission.setPoints(points);
 		points.setComment(comment);
