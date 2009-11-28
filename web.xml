@@ -402,4 +402,12 @@
         <servlet-name>PerformTestResultView</servlet-name>
         <url-pattern>/servlets/PerformTestResultView</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>Nagios</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.view.Nagios</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Nagios</servlet-name>
+        <url-pattern>/Nagios</url-pattern>
+    </servlet-mapping>
 </web-app>
