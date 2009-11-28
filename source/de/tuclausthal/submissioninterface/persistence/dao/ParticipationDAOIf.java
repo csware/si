@@ -62,6 +62,8 @@ public interface ParticipationDAOIf {
 	 */
 	public List<Participation> getParticipationsWithoutGroup(Lecture lecture);
 
+	public List<Participation> getParticipationsOfLectureOrdered(Lecture lecture);
+
 	/**
 	 * Returns the participation for a specific group
 	 * @param group the group

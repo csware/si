@@ -46,7 +46,7 @@ public class ShowLecture extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = HibernateSessionHelper.getSession();
-		
+
 		SessionAdapter sessionAdapter = new SessionAdapter(request);
 
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
@@ -66,6 +66,8 @@ public class ShowLecture extends HttpServlet {
 		request.setAttribute("participation", participation);
 		if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 			request.getRequestDispatcher("ShowLectureStudentView").forward(request, response);
+		} else if ("list".equals(request.getParameter("show"))) {
+			request.getRequestDispatcher("ShowLectureTutorFullView").forward(request, response);
 		} else {
 			request.getRequestDispatcher("ShowLectureTutorView").forward(request, response);
 		}

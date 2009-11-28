@@ -109,4 +109,9 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 		session.save(participation);
 		tx.commit();
 	}
+
+	@Override
+	public List<Participation> getParticipationsOfLectureOrdered(Lecture lecture) {
+		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+	}
 }

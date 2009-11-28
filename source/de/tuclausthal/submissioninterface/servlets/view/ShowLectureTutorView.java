@@ -55,7 +55,6 @@ public class ShowLectureTutorView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		
 		PrintWriter out = response.getWriter();
 
 		Participation participation = (Participation) request.getAttribute("participation");
@@ -110,6 +109,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			listMembers(participationDAO.getParticipationsOfGroup(group).iterator(), response, isAdvisor, sessionAdapter.getUser(session));
 		}
 		out.println("<h3>Gesamtdurchschnitt: " + DAOFactory.LectureDAOIf(session).getAveragePoints(lecture) + "</h3>");
+		out.println("<p><div class=mid><a href=\"ShowLecture?lecture=" + lecture.getId() + "&show=list\">Gesamtliste</a></div>");
 		template.printTemplateFooter();
 	}
 
