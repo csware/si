@@ -103,6 +103,10 @@
         <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.ShowLecture</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>MarkApproved</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.MarkApproved</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ShowTask</servlet-name>
         <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.ShowTask</servlet-class>
     </servlet>
@@ -261,6 +265,10 @@
     <servlet-mapping>
         <servlet-name>ShowLecture</servlet-name>
         <url-pattern>/servlets/ShowLecture</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MarkApproved</servlet-name>
+        <url-pattern>/servlets/MarkApproved</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ShowTask</servlet-name>

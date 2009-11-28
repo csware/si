@@ -38,7 +38,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.User;
  * Data Access Object implementation for the SubmissionDAOIf
  * @author Sven Strickroth
  */
-public class SubmissionDAO extends AbstractDAO  implements SubmissionDAOIf {
+public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 	public SubmissionDAO(Session session) {
 		super(session);
 	}
@@ -46,6 +46,10 @@ public class SubmissionDAO extends AbstractDAO  implements SubmissionDAOIf {
 	@Override
 	public Submission getSubmission(int submissionid) {
 		return (Submission) getSession().get(Submission.class, submissionid);
+	}
+
+	public Submission getSubmissionLocked(int submissionid) {
+		return (Submission) getSession().get(Submission.class, submissionid, LockMode.UPGRADE);
 	}
 
 	@Override
@@ -58,7 +62,6 @@ public class SubmissionDAO extends AbstractDAO  implements SubmissionDAOIf {
 		return (Submission) getSession().createCriteria(Submission.class).add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.eq("user", user)).setLockMode(LockMode.UPGRADE).uniqueResult();
 	}
 
-	
 	@Override
 	public Submission createSubmission(Task task, Participation submitter) {
 		Session session = getSession();
@@ -80,7 +83,7 @@ public class SubmissionDAO extends AbstractDAO  implements SubmissionDAOIf {
 
 	@Override
 	public List<Submission> getSubmissionsForTaskOrdered(Task task) {
-		return (List<Submission>) getSession().createCriteria(Submission.class,"sub").add(Restrictions.eq("task", task)).createCriteria("submitters").addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).list();
+		return (List<Submission>) getSession().createCriteria(Submission.class, "sub").add(Restrictions.eq("task", task)).createCriteria("submitters").addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).list();
 	}
 
 	@Override
@@ -99,6 +102,6 @@ public class SubmissionDAO extends AbstractDAO  implements SubmissionDAOIf {
 
 	@Override
 	public List<Submission> getSubmissionsForTaskOfGroupOrdered(Task task, Group group) {
-		return (List<Submission>) getSession().createCriteria(Submission.class,"sub").add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.eq("group", group)).addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).list();
+		return (List<Submission>) getSession().createCriteria(Submission.class, "sub").add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.eq("group", group)).addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).list();
 	}
 }

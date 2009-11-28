@@ -39,6 +39,8 @@ public interface SubmissionDAOIf {
 	 */
 	public Submission getSubmission(int submissionid);
 
+	public Submission getSubmissionLocked(int submissionid);
+
 	/**
 	 * Fetch a submission based on the task-user-association
 	 * @param task the task to which the submission is associated to
@@ -54,7 +56,6 @@ public interface SubmissionDAOIf {
 	 * @return the submission or null
 	 */
 	public Submission getSubmissionLocked(Task task, User user);
-
 
 	/**
 	 * Create and store a new submission in the DB

@@ -101,6 +101,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			int groupSumOfPoints = 0;
 			int testCols = 0;
 			int lastSID = 0;
+			boolean hasUnapprochedPoints = false;
 			// dynamic splitter for groups
 			while (submissionIterator.hasNext()) {
 				Submission submission = submissionIterator.next();
@@ -111,18 +112,26 @@ public class ShowTaskTutorView extends HttpServlet {
 						out.println("<tr>");
 						out.println("<td colspan=" + (1 + submission.getTestResults().size() + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
 						out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
+						if (hasUnapprochedPoints) {
+							out.println("<td><input type=submit value=Save></td>");
+						} else {
+							out.println("<td></td>");
+						}
 						out.println("</tr>");
 						out.println("</table><p>");
+						out.println("</form>");
 						groupSumOfSubmissions = 0;
 						groupSumOfPoints = 0;
 					}
 					first = false;
+					hasUnapprochedPoints = false;
 					if (group == null) {
 						out.println("<h3>Ohne Gruppe</h3>");
 					} else {
 						out.println("<h3>Gruppe: " + Util.mknohtml(group.getName()) + "</h3>");
 						out.println("<div class=mid><a href=\"ShowTask?taskid=" + task.getTaskid() + "&action=grouplist&groupid=" + group.getGid() + "\" target=\"_blank\">Druckbare Liste</a></div>");
 					}
+					out.println("<form method=post action=\"MarkApproved?taskid=" + task.getTaskid() + "\">");
 					out.println("<table class=border>");
 					out.println("<tr>");
 					out.println("<th>Benutzer</th>");
@@ -134,6 +143,7 @@ public class ShowTaskTutorView extends HttpServlet {
 						out.println("<th><span title=\"Max. Ähnlichkeit\">" + similarityTest + "</span></th>");
 					}
 					out.println("<th>Punkte</th>");
+					out.println("<th>Abnehmen</th>");
 					out.println("</tr>");
 				}
 				if (lastSID != submission.getSubmissionid()) {
@@ -154,8 +164,11 @@ public class ShowTaskTutorView extends HttpServlet {
 					if (submission.getPoints() != null) {
 						if (submission.getPoints().getPointsOk()) {
 							out.println("<td align=right>" + submission.getPoints().getPoints() + "</td>");
+							out.println("<td></td>");
 						} else {
 							out.println("<td align=right>(" + submission.getPoints().getPoints() + ")</td>");
+							out.println("<td><input type=checkbox name=\"sid" + submission.getSubmissionid() + "\"></td>");
+							hasUnapprochedPoints = true;
 						}
 						sumOfPoints += submission.getPoints().getPoints();
 						groupSumOfPoints += submission.getPoints().getPoints();
@@ -163,6 +176,7 @@ public class ShowTaskTutorView extends HttpServlet {
 						groupSumOfSubmissions++;
 					} else {
 						out.println("<td>n/a</td>");
+						out.println("<td></td>");
 					}
 					out.println("</tr>");
 				}
@@ -171,8 +185,14 @@ public class ShowTaskTutorView extends HttpServlet {
 				out.println("<tr>");
 				out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
 				out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
+				if (hasUnapprochedPoints) {
+					out.println("<td><input type=submit value=Save></td>");
+				} else {
+					out.println("<td></td>");
+				}
 				out.println("</tr>");
 				out.println("</table><p>");
+				out.println("</form>");
 				out.println("<h3>Gesamtdurchschnitt: " + Float.valueOf(sumOfPoints / (float) sumOfSubmissions).intValue() + "</h3>");
 			}
 		}

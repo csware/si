@@ -65,7 +65,7 @@ public class LogEntry implements Serializable {
 	}
 
 	public static enum LogAction {
-		UPLOAD, PERFORMED_TEST, DELETE_FILE
+		UPLOAD, PERFORMED_TEST, DELETE_FILE, UPLOAD_TRY
 	}
 
 	/**
