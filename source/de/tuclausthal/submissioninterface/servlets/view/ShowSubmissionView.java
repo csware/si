@@ -154,7 +154,7 @@ public class ShowSubmissionView extends HttpServlet {
 					out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "&comments=off\" target=\"_blank\">" + Util.mknohtml(file) + " ohne Kommentare anzeigen</a><br>");
 				}
 			}
-			out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">Download " + Util.mknohtml(file) + "</a><p>");
+			out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?download=true&sid=" + submission.getSubmissionid()) + "\">Download " + Util.mknohtml(file) + "</a><p>");
 		}
 		out.println("</div>");
 		template.printTemplateFooter();
