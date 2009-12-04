@@ -28,7 +28,7 @@ public class StripCodeNormalizer implements NormalizerIf {
 	@Override
 	public StringBuffer normalize(StringBuffer stringBuffer) {
 		int i = 0;
-		while (i < stringBuffer.length() - 1) {
+		while (i < stringBuffer.length() - 2) {
 			if ("//".equals(stringBuffer.substring(i, i + 2))) {
 				stringBuffer.deleteCharAt(i);
 				stringBuffer.deleteCharAt(i);
@@ -39,10 +39,10 @@ public class StripCodeNormalizer implements NormalizerIf {
 						break;
 					}
 				}
-			} else if ("/*".equals(stringBuffer.substring(i, i + 2))) {
+			} else if (i < stringBuffer.length() - 2 && "/*".equals(stringBuffer.substring(i, i + 2))) {
 				stringBuffer.deleteCharAt(i);
 				stringBuffer.deleteCharAt(i);
-				while (i < stringBuffer.length() - 1) {
+				while (i < stringBuffer.length() - 2) {
 					if ("*/".equals(stringBuffer.substring(i, i + 2))) {
 						stringBuffer.deleteCharAt(i);
 						stringBuffer.deleteCharAt(i);

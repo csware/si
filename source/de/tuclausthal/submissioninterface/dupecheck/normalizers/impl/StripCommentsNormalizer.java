@@ -28,7 +28,7 @@ public class StripCommentsNormalizer implements NormalizerIf {
 	@Override
 	public StringBuffer normalize(StringBuffer stringBuffer) {
 		int i = 0;
-		while (i < stringBuffer.length() - 1) {
+		while (i < stringBuffer.length() - 2) {
 			if ("//".equals(stringBuffer.substring(i, i + 2))) {
 				while (i < stringBuffer.length() - 1) {
 					if (stringBuffer.charAt(i) != '\n') {
@@ -38,9 +38,9 @@ public class StripCommentsNormalizer implements NormalizerIf {
 					}
 				}
 			}
-			if ("/*".equals(stringBuffer.substring(i, i + 2))) {
+			if (i < stringBuffer.length() - 2 && "/*".equals(stringBuffer.substring(i, i + 2))) {
 				while (i < stringBuffer.length() - 1) {
-					if ("*/".equals(stringBuffer.substring(i, i + 2))) {
+					if (i < stringBuffer.length() - 2 && "*/".equals(stringBuffer.substring(i, i + 2))) {
 						stringBuffer.deleteCharAt(i);
 						stringBuffer.deleteCharAt(i);
 						i--;
