@@ -19,20 +19,19 @@
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TestResultDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Data Access Object implementation for the TestResultDAOIf
  * @author Sven Strickroth
  */
-public class TestResultDAO extends AbstractDAO  implements TestResultDAOIf {
+public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 	public TestResultDAO(Session session) {
 		super(session);
 	}
@@ -55,5 +54,10 @@ public class TestResultDAO extends AbstractDAO  implements TestResultDAOIf {
 	public void saveTestResult(TestResult testResult) {
 		Session session = getSession();
 		session.update(testResult);
+	}
+
+	@Override
+	public TestResult getResult(Test test, Submission submission) {
+		return (TestResult) getSession().createCriteria(TestResult.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("submission", submission)).uniqueResult();
 	}
 }

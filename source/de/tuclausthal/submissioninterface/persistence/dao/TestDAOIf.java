@@ -71,6 +71,8 @@ public interface TestDAOIf {
 	 * @return Test or null if none is "queued".
 	 */
 	public Test takeTest();
-	
+
 	public List<Test> getStudentTests(Task task);
+
+	public List<Test> getTutorTests(Task task);
 }

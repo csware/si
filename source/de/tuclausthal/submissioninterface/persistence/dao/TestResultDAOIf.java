@@ -41,4 +41,6 @@ public interface TestResultDAOIf {
 	 * @param testResult the testresult to update
 	 */
 	public void saveTestResult(TestResult testResult);
+
+	public TestResult getResult(Test test, Submission submission);
 }

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.TestResultDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
@@ -38,7 +40,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
@@ -90,6 +92,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + task.getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=editTask") + "\">Aufgabe bearbeiten</a></div>");
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + task.getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deleteTask") + "\">Aufgabe löschen</a></div>");
 		}
+
 		if (task.getSubmissions() != null && task.getSubmissions().size() > 0) {
 			out.println("<p><h2>Abgaben</h2><p>");
 			Iterator<Submission> submissionIterator = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task).iterator();
@@ -101,6 +104,8 @@ public class ShowTaskTutorView extends HttpServlet {
 			int groupSumOfPoints = 0;
 			int testCols = 0;
 			int lastSID = 0;
+			TestResultDAOIf testResultDAO = DAOFactory.TestResultDAOIf(session);
+			List<Test> tests = DAOFactory.TestDAOIf(session).getTutorTests(task);
 			boolean hasUnapprochedPoints = false;
 			// dynamic splitter for groups
 			while (submissionIterator.hasNext()) {
@@ -109,15 +114,17 @@ public class ShowTaskTutorView extends HttpServlet {
 				if (first == true || lastGroup != group) {
 					lastGroup = group;
 					if (first == false) {
-						out.println("<tr>");
-						out.println("<td colspan=" + (1 + submission.getTestResults().size() + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
-						out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
-						if (hasUnapprochedPoints) {
-							out.println("<td><input type=submit value=Save></td>");
-						} else {
-							out.println("<td></td>");
+						if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+							out.println("<tr>");
+							out.println("<td colspan=" + (1 + submission.getTestResults().size() + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
+							out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
+							if (hasUnapprochedPoints) {
+								out.println("<td><input type=submit value=Save></td>");
+							} else {
+								out.println("<td></td>");
+							}
+							out.println("</tr>");
 						}
-						out.println("</tr>");
 						out.println("</table><p>");
 						out.println("</form>");
 						groupSumOfSubmissions = 0;
@@ -135,62 +142,68 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("<table class=border>");
 					out.println("<tr>");
 					out.println("<th>Benutzer</th>");
-					for (TestResult testResult : submission.getTestResults()) {
-						out.println("<th>" + Util.mknohtml(testResult.getTest().getTestTitle()) + "</th>");
+					if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+						for (Test test : tests) {
+							out.println("<th>" + Util.mknohtml(test.getTestTitle()) + "</th>");
+						}
+						testCols = Math.max(testCols, submission.getTestResults().size());
+						for (SimilarityTest similarityTest : task.getSimularityTests()) {
+							out.println("<th><span title=\"Max. Ähnlichkeit\">" + similarityTest + "</span></th>");
+						}
+						out.println("<th>Punkte</th>");
+						out.println("<th>Abnehmen</th>");
 					}
-					testCols = Math.max(testCols, submission.getTestResults().size());
-					for (SimilarityTest similarityTest : task.getSimularityTests()) {
-						out.println("<th><span title=\"Max. Ähnlichkeit\">" + similarityTest + "</span></th>");
-					}
-					out.println("<th>Punkte</th>");
-					out.println("<th>Abnehmen</th>");
 					out.println("</tr>");
 				}
 				if (lastSID != submission.getSubmissionid()) {
 					out.println("<tr>");
 					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(submission.getSubmitterNames()) + "</a></td>");
 					lastSID = submission.getSubmissionid();
-					for (TestResult testResult : submission.getTestResults()) {
-						out.println("<td>" + Util.boolToHTML(testResult.getPassedTest()) + "</td>");
-					}
-					for (SimilarityTest similarityTest : task.getSimularityTests()) {
-						//TODO: tooltip and who it is
-						String users = "";
-						for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(similarityTest, submission)) {
-							users += Util.mknohtml(similarity.getSubmissionTwo().getSubmitterNames()) + "\n";
+					if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+						for (Test test : tests) {
+							out.println("<td>" + Util.boolToHTML(testResultDAO.getResult(test, submission).getPassedTest()) + "</td>");
 						}
-						out.println("<td class=points><span title=\"" + users + "\">" + DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(similarityTest, submission) + "</span></td>");
-					}
-					if (submission.getPoints() != null) {
-						if (submission.getPoints().getPointsOk()) {
-							out.println("<td align=right>" + submission.getPoints().getPoints() + "</td>");
-							out.println("<td></td>");
+						for (SimilarityTest similarityTest : task.getSimularityTests()) {
+							//TODO: tooltip and who it is
+							String users = "";
+							for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(similarityTest, submission)) {
+								users += Util.mknohtml(similarity.getSubmissionTwo().getSubmitterNames()) + "\n";
+							}
+							out.println("<td class=points><span title=\"" + users + "\">" + DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(similarityTest, submission) + "</span></td>");
+						}
+						if (submission.getPoints() != null) {
+							if (submission.getPoints().getPointsOk()) {
+								out.println("<td align=right>" + submission.getPoints().getPoints() + "</td>");
+								out.println("<td></td>");
+							} else {
+								out.println("<td align=right>(" + submission.getPoints().getPoints() + ")</td>");
+								out.println("<td><input type=checkbox name=\"sid" + submission.getSubmissionid() + "\"></td>");
+								hasUnapprochedPoints = true;
+							}
+							sumOfPoints += submission.getPoints().getPoints();
+							groupSumOfPoints += submission.getPoints().getPoints();
+							sumOfSubmissions++;
+							groupSumOfSubmissions++;
 						} else {
-							out.println("<td align=right>(" + submission.getPoints().getPoints() + ")</td>");
-							out.println("<td><input type=checkbox name=\"sid" + submission.getSubmissionid() + "\"></td>");
-							hasUnapprochedPoints = true;
+							out.println("<td>n/a</td>");
+							out.println("<td></td>");
 						}
-						sumOfPoints += submission.getPoints().getPoints();
-						groupSumOfPoints += submission.getPoints().getPoints();
-						sumOfSubmissions++;
-						groupSumOfSubmissions++;
-					} else {
-						out.println("<td>n/a</td>");
-						out.println("<td></td>");
 					}
 					out.println("</tr>");
 				}
 			}
 			if (first == false) {
-				out.println("<tr>");
-				out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
-				out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
-				if (hasUnapprochedPoints) {
-					out.println("<td><input type=submit value=Save></td>");
-				} else {
-					out.println("<td></td>");
+				if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+					out.println("<tr>");
+					out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
+					out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
+					if (hasUnapprochedPoints) {
+						out.println("<td><input type=submit value=Save></td>");
+					} else {
+						out.println("<td></td>");
+					}
+					out.println("</tr>");
 				}
-				out.println("</tr>");
 				out.println("</table><p>");
 				out.println("</form>");
 				out.println("<h3>Gesamtdurchschnitt: " + Float.valueOf(sumOfPoints / (float) sumOfSubmissions).intValue() + "</h3>");
