@@ -18,13 +18,11 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -168,6 +166,8 @@ public class TestLogicImpl extends TestTask {
 					ProcessBuilder pb = new ProcessBuilder(params);
 					pb.directory(tempDir);
 					Process process = pb.start();
+					ReadOutputThread readOutputThread = new ReadOutputThread(process);
+					readOutputThread.start();
 					TimeoutThread checkTread = new TimeoutThread(process, test.getTimeout());
 					checkTread.start();
 					int exitValue = -1;
@@ -176,14 +176,9 @@ public class TestLogicImpl extends TestTask {
 					} catch (InterruptedException e) {
 					}
 					checkTread.interrupt();
-					BufferedReader testInputStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
+					readOutputThread.interrupt();
 					testResult.setTestPassed(exitValue == 0);
-					String testError = "";
-					String line;
-					while ((line = testInputStream.readLine()) != null) {
-						testError = testError.concat(line + "\n");
-					}
-					testInputStream.close();
+					String testError = readOutputThread.getStdOut();
 					if (test instanceof RegExpTest) {
 						Pattern testPattern = Pattern.compile(((RegExpTest) test).getRegularExpression());
 						Matcher testMatcher = testPattern.matcher(testError.trim());
@@ -193,13 +188,9 @@ public class TestLogicImpl extends TestTask {
 						}
 					}
 					// append STDERR
-					testError = testError.concat("\nFehlerausgabe (StdErr)\n");
-					BufferedReader testErrorInputStream = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-					while ((line = testErrorInputStream.readLine()) != null) {
-						testError = testError.concat(line + "\n");
+					if (!readOutputThread.getStdErr().isEmpty()) {
+						testError = testError.concat("\nFehlerausgabe (StdErr)\n" + readOutputThread.getStdErr());
 					}
-					testErrorInputStream.close();
-
 					testResult.setTestOutput(testError);
 				}
 			} catch (Exception e) {
