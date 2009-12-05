@@ -102,7 +102,7 @@ public class TestDAO extends AbstractDAO  implements TestDAOIf {
 	public Test takeTest() {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		Test test = (Test) session.createCriteria(Test.class).add(Restrictions.eq("needsToRun", true)).setLockMode(LockMode.UPGRADE).createCriteria("task").add(Restrictions.le("deadline", Util.correctTimezone(new Date()))).setMaxResults(1).uniqueResult();
+		Test test = (Test) session.createCriteria(Test.class).add(Restrictions.eq("forTutors", true)).add(Restrictions.eq("needsToRun", true)).setLockMode(LockMode.UPGRADE).createCriteria("task").add(Restrictions.le("deadline", Util.correctTimezone(new Date()))).setMaxResults(1).uniqueResult();
 		if (test != null) {
 			test.setNeedsToRun(false);
 			session.save(test);
