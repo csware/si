@@ -175,6 +175,7 @@ public class TestLogicImpl extends TestTask {
 						exitValue = process.waitFor();
 					} catch (InterruptedException e) {
 					}
+					checkTread.interrupt();
 					BufferedReader testInputStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
 					testResult.setTestPassed(exitValue == 0);
 					String testError = "";
