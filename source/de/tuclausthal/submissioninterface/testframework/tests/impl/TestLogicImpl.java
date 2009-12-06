@@ -146,6 +146,7 @@ public class TestLogicImpl extends TestTask {
 					// check what kind of test it is
 					List<String> params = new LinkedList<String>();
 					params.add("java");
+					params.add("-Djava.awt.headless=true");
 					// for security reasons, so that students cannot access the server
 					params.add("-Djava.security.manager");
 					params.add("-Djava.security.policy=" + policyFile.getAbsolutePath());
