@@ -161,7 +161,11 @@ public class ShowTaskTutorView extends HttpServlet {
 					lastSID = submission.getSubmissionid();
 					if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 						for (Test test : tests) {
-							out.println("<td>" + Util.boolToHTML(testResultDAO.getResult(test, submission).getPassedTest()) + "</td>");
+							if (testResultDAO.getResult(test, submission) != null) {
+								out.println("<td>" + Util.boolToHTML(testResultDAO.getResult(test, submission).getPassedTest()) + "</td>");
+							} else {
+								out.println("<td>n/a</td>");
+							}
 						}
 						for (SimilarityTest similarityTest : task.getSimularityTests()) {
 							//TODO: tooltip and who it is
