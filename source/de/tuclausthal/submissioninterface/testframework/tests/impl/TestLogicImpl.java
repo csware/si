@@ -92,8 +92,11 @@ public class TestLogicImpl extends TestTask {
 					throw new IOException("Failed to create tempdir!");
 				}
 
+				File tempPackageDir = new File(tempDir, "grundlagenuebungen"); // HACK
+				tempPackageDir.mkdirs(); // HACK
+
 				// prepare tempdir
-				Util.recursiveCopy(path, tempDir);
+				Util.recursiveCopy(path, tempPackageDir); // HACK
 
 				// TODO: optimize architecture, atm: hopefully it works ;)
 
@@ -104,7 +107,7 @@ public class TestLogicImpl extends TestTask {
 					ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
 
 					List<String> javaFiles = new LinkedList<String>();
-					for (File javaFile : tempDir.listFiles()) {
+					for (File javaFile : tempPackageDir.listFiles()) { // HACK
 						if (javaFile.getName().endsWith(".java")) {
 							javaFiles.add(javaFile.getAbsolutePath());
 						}
@@ -147,6 +150,8 @@ public class TestLogicImpl extends TestTask {
 					List<String> params = new LinkedList<String>();
 					params.add("java");
 					params.add("-Djava.awt.headless=true");
+					// JOptionpane-Hack
+					params.add("-Xbootclasspath/p:" + basePath.getAbsolutePath() + System.getProperty("file.separator") + "joptionpane.jar");
 					// for security reasons, so that students cannot access the server
 					params.add("-Djava.security.manager");
 					params.add("-Djava.security.policy=" + policyFile.getAbsolutePath());
@@ -206,7 +211,7 @@ public class TestLogicImpl extends TestTask {
 				if (tempDir != null) {
 					Util.recursiveDelete(tempDir);
 				}
-				
+
 			}
 			if (saveTestResult) {
 				try {
