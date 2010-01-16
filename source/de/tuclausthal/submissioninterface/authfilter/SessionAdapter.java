@@ -28,7 +28,6 @@ import org.hibernate.Session;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Adapter for HTTP-session to have a better interface for our stored variables
