@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -91,6 +91,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + task.getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=editTask") + "\">Aufgabe bearbeiten</a></div>");
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + task.getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deleteTask") + "\">Aufgabe löschen</a></div>");
+			out.println("<p><div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Aufgabe für Studenten durchführen</a></div>");
 		}
 
 		if (task.getSubmissions() != null && task.getSubmissions().size() > 0) {

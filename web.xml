@@ -195,6 +195,10 @@
         <servlet-class>de.tuclausthal.submissioninterface.servlets.view.SubmitSolutionFormView</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>SubmitSolutionAdvisorFormView</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.view.SubmitSolutionAdvisorFormView</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>SubscribeToLectureView</servlet-name>
         <servlet-class>de.tuclausthal.submissioninterface.servlets.view.SubscribeToLectureView</servlet-class>
     </servlet>
@@ -357,6 +361,10 @@
     <servlet-mapping>
         <servlet-name>SubmitSolutionFormView</servlet-name>
         <url-pattern>/servlets/SubmitSolutionFormView</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SubmitSolutionAdvisorFormView</servlet-name>
+        <url-pattern>/servlets/SubmitSolutionAdvisorFormView</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>SubscribeToLectureView</servlet-name>

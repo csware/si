@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -49,10 +49,12 @@ import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LogDAO;
+import de.tuclausthal.submissioninterface.persistence.dao.impl.UserDAO;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -84,41 +86,46 @@ public class SubmitSolution extends HttpServlet {
 			return;
 		}
 
-		if (task.getStart().after(Util.correctTimezone(new Date())) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+		if (task.getStart().after(Util.correctTimezone(new Date())) && participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
-		if (task.getDeadline().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+		if (task.getDeadline().before(Util.correctTimezone(new Date())) && participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0) {
 			request.setAttribute("title", "Abgabe nicht mehr möglich");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
-		if (task.isShowTextArea() || "-".equals(task.getFilenameRegexp())) {
-			String textsolution = "";
-			Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, new SessionAdapter(request).getUser(session));
-			if (submission != null) {
-				ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
-				File textSolutionFile = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + "textloesung.txt");
-				if (textSolutionFile.exists()) {
-					BufferedReader bufferedReader = new BufferedReader(new FileReader(textSolutionFile));
-					StringBuffer sb = new StringBuffer();
-					String line;
-					while ((line = bufferedReader.readLine()) != null) {
-						sb.append(line);
-						sb.append(System.getProperty("line.separator"));
-					}
-					textsolution = sb.toString();
-				}
-			}
-			request.setAttribute("textsolution", textsolution);
-		}
-
 		request.setAttribute("task", task);
-		request.setAttribute("participation", participation);
-		request.getRequestDispatcher("SubmitSolutionFormView").forward(request, response);
+
+		if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) >= 0) {
+			request.getRequestDispatcher("SubmitSolutionAdvisorFormView").forward(request, response);
+		} else {
+			request.setAttribute("participation", participation);
+
+			if (task.isShowTextArea() || "-".equals(task.getFilenameRegexp())) {
+				String textsolution = "";
+				Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, new SessionAdapter(request).getUser(session));
+				if (submission != null) {
+					ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+					File textSolutionFile = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + "textloesung.txt");
+					if (textSolutionFile.exists()) {
+						BufferedReader bufferedReader = new BufferedReader(new FileReader(textSolutionFile));
+						StringBuffer sb = new StringBuffer();
+						String line;
+						while ((line = bufferedReader.readLine()) != null) {
+							sb.append(line);
+							sb.append(System.getProperty("line.separator"));
+						}
+						textsolution = sb.toString();
+					}
+				}
+				request.setAttribute("textsolution", textsolution);
+			}
+			request.getRequestDispatcher("SubmitSolutionFormView").forward(request, response);
+		}
 	}
 
 	@Override
@@ -139,25 +146,12 @@ public class SubmitSolution extends HttpServlet {
 
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), task.getLecture());
-		if (participation == null) {
+
+		Participation studentParticipation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), task.getLecture());
+		if (studentParticipation == null) {
 			template.printTemplateHeader("Ungültige Anfrage");
 			out.println("<div class=mid>Sie sind kein Teilnehmer dieser Veranstaltung.</div>");
 			out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
-			template.printTemplateFooter();
-			return;
-		}
-
-		if (task.getStart().after(Util.correctTimezone(new Date())) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
-			template.printTemplateHeader("Aufgabe nicht abrufbar");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
-			template.printTemplateFooter();
-			return;
-		}
-
-		if (task.getDeadline().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
-			template.printTemplateHeader("Abgabe nicht (mehr) möglich");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 			template.printTemplateFooter();
 			return;
 		}
@@ -168,6 +162,7 @@ public class SubmitSolution extends HttpServlet {
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 
 		int partnerID = 0;
+		int uploadFor = 0;
 		List<FileItem> items = null;
 		if (!isMultipart) {
 			partnerID = Util.parseInteger(request.getParameter("partnerid"), 0);
@@ -203,14 +198,50 @@ public class SubmitSolution extends HttpServlet {
 				FileItem item = iter.next();
 				if (item.isFormField() && "partnerid".equals(item.getFieldName())) {
 					partnerID = Util.parseInteger(item.getString(), 0);
+				} else if (item.isFormField() && "uploadFor".equals(item.getFieldName())) {
+					uploadFor = Util.parseInteger(item.getString(), 0);
 				}
+			}
+		}
+
+		if (uploadFor > 0) {
+			// Uploader ist wahrscheinlich Betreuer -> keine zeitlichen Prüfungen
+			if (studentParticipation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0) {
+				template.printTemplateHeader("Ungültige Anfrage");
+				out.println("<div class=mid>Sie sind kein Betreuer dieser Veranstaltung.</div>");
+				out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
+				template.printTemplateFooter();
+				return;
+			}
+			studentParticipation = participationDAO.getParticipation(uploadFor);
+			if (studentParticipation == null || studentParticipation.getLecture().getId() != task.getLecture().getId()) {
+				template.printTemplateHeader("Ungültige Anfrage");
+				out.println("<div class=mid>Der gewählte Student ist kein Teilnehmer dieser Veranstaltung.</div>");
+				out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
+				template.printTemplateFooter();
+				return;
+			}
+		} else {
+			// Uploader ist Student, -> harte prüfung
+			if (task.getStart().after(Util.correctTimezone(new Date()))) {
+				template.printTemplateHeader("Aufgabe nicht abrufbar");
+				out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
+				template.printTemplateFooter();
+				return;
+			}
+
+			if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+				template.printTemplateHeader("Abgabe nicht (mehr) möglich");
+				out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
+				template.printTemplateFooter();
+				return;
 			}
 		}
 
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 
 		Transaction tx = session.beginTransaction();
-		Submission submission = submissionDAO.createSubmission(task, participation);
+		Submission submission = submissionDAO.createSubmission(task, studentParticipation);
 
 		if (partnerID > 0) {
 			Participation partnerParticipation = participationDAO.getParticipation(partnerID);
@@ -270,7 +301,7 @@ public class SubmitSolution extends HttpServlet {
 
 					session.update(submission);
 					tx.commit();
-					new LogDAO(session).createLogEntry(participation.getUser(), null, task, LogAction.UPLOAD, null, null);
+					new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, LogAction.UPLOAD, null, null);
 					response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 					return;
 				}

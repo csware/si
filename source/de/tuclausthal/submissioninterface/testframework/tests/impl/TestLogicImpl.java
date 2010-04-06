@@ -92,7 +92,7 @@ public class TestLogicImpl extends TestTask {
 					throw new IOException("Failed to create tempdir!");
 				}
 
-				File tempPackageDir = new File(tempDir, "grundlagenuebungen"); // HACK
+				File tempPackageDir = new File(tempDir, "programmierkurs"); // HACK
 				tempPackageDir.mkdirs(); // HACK
 
 				// prepare tempdir
@@ -138,6 +138,7 @@ public class TestLogicImpl extends TestTask {
 					policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar") + "\" {\n");
 					policyFileWriter.write("	permission java.lang.RuntimePermission \"setIO\";\n");
 					policyFileWriter.write("	permission java.lang.reflect.ReflectPermission \"suppressAccessChecks\";\n");
+					policyFileWriter.write("	permission java.io.FilePermission \"file:" + mkPath(tempDir.getAbsolutePath()) + "\", \"read, write, delete\";\n");
 					policyFileWriter.write("};\n");
 					policyFileWriter.write("\n");
 					policyFileWriter.write("grant {\n");
