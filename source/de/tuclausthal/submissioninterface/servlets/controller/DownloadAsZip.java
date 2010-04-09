@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,13 +18,11 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -34,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
-import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
@@ -51,7 +48,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  *
  */
-public class ShowFile extends HttpServlet {
+public class DownloadAsZip extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
@@ -76,57 +73,42 @@ public class ShowFile extends HttpServlet {
 			return;
 		}
 
-		if (request.getPathInfo() == null) {
-			request.setAttribute("title", "Ungültige Anfrage");
-			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
-			return;
+		response.setContentType("application/zip");
+		response.setHeader("Content-Disposition", "attachment; filename=submission-id" + submission.getSubmissionid() + ".zip");
+
+		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
+		ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
+		//out.setMethod(ZipOutputStream.STORED);
+		System.out.println(path.toString() + " " + path.exists());
+		if (path.exists()) {
+			recursivelyZip(out, path, "");
 		}
+		out.close();
+	}
 
-		File file = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + request.getPathInfo().substring(1));
-		if (file.exists()) {
-			if ((file.getName().toLowerCase().endsWith(".txt") || file.getName().toLowerCase().endsWith(".java")) && !"true".equals(request.getParameter("download"))) {
-				// code for loading/displaying text-files
-				BufferedReader freader = new BufferedReader(new FileReader(file));
-				String line;
-				StringBuffer code = new StringBuffer();
-				while ((line = freader.readLine()) != null) {
-					code.append(line + "\n");
-				}
-				freader.close();
+	private void recursivelyZip(ZipOutputStream out, File path, String relativePath) {
+		for (File file : path.listFiles()) {
+			try {
+				if (file.isFile()) {
+					out.putNextEntry(new ZipEntry(relativePath + file.getName()));
+					int read = 0;
+					byte[] data = new byte[1024];
 
-				if ("off".equals(request.getParameter("comments"))) {
-					StripCommentsNormalizer scn = new StripCommentsNormalizer();
-					code = scn.normalize(code);
-				}
+					FileInputStream in = new FileInputStream(file);
 
-				request.setAttribute("code", code.toString());
-				request.setAttribute("fileName", Util.mknohtml(file.getName()));
-				request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/ShowFileView").forward(request, response);
-			} else {
-				if (file.getName().toLowerCase().endsWith(".pdf")) {
-					response.setContentType("application/pdf");
-				} else if (file.getName().toLowerCase().endsWith(".jpg")) {
-					response.setContentType("image/jpg");
-				} else if (file.getName().toLowerCase().endsWith(".gif")) {
-					response.setContentType("image/gif");
-				} else if (file.getName().toLowerCase().endsWith(".png")) {
-					response.setContentType("image/png");
+					while ((read = in.read(data, 0, 1024)) != -1) {
+						out.write(data, 0, read);
+					}
+					out.closeEntry();
+					in.close();
 				} else {
-					response.setContentType("application/x-download");
-					response.setHeader("Content-Disposition", "attachment; filename=" + file.getName()); // TODO: escape!?, if good regexps for filenames are used, not necessary
+					recursivelyZip(out, file, relativePath + file.getName() + System.getProperty("file.separator"));
 				}
-				OutputStream out = response.getOutputStream();
-				byte[] buffer = new byte[8000]; // should be equal to the Tomcat buffersize
-				BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-				int len = 0;
-				while ((len = inputStream.read(buffer)) > 0) {
-					out.write(buffer, 0, len);
-				}
+			} catch (Exception e) {
+				// ignore ;)
+				System.out.println("Err: " + e.getMessage());
+				e.printStackTrace();
 			}
-			return;
 		}
-
-		request.setAttribute("title", "Datei/Pfad nicht gefunden");
-		request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 	}
 }
