@@ -18,17 +18,22 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -49,12 +54,10 @@ import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LogDAO;
-import de.tuclausthal.submissioninterface.persistence.dao.impl.UserDAO;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -272,34 +275,72 @@ public class SubmitSolution extends HttpServlet {
 
 				// Process a file upload
 				if (!item.isFormField()) {
-					Pattern pattern;
-					if (task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty()) {
-						pattern = Pattern.compile(".*?(?:\\\\|/)?([a-zA-Z0-9_.-]+)$");
-					} else {
-						pattern = Pattern.compile(".*?(?:\\\\|/)?(" + task.getFilenameRegexp() + ")$");
-					}
-					StringBuffer submittedFileName = new StringBuffer(item.getName());
-					if (submittedFileName.lastIndexOf(".") > 0) {
-						int lastDot = submittedFileName.lastIndexOf(".");
-						submittedFileName.replace(lastDot, submittedFileName.length(), submittedFileName.subSequence(lastDot, submittedFileName.length()).toString().toLowerCase());
-					}
-					Matcher m = pattern.matcher(submittedFileName);
-					if (!m.matches()) {
-						tx.rollback();
-						template.printTemplateHeader("Ungültige Anfrage");
-						out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
-						template.printTemplateFooter();
-						return;
-					}
-					String fileName = m.group(1);
-					File uploadedFile = new File(path, fileName);
-					try {
-						item.write(uploadedFile);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
 
+					if (item.getName().toLowerCase().endsWith(".zip") || item.getName().toLowerCase().endsWith(".jar")) {
+						ZipInputStream zipFile;
+						Pattern pattern = Pattern.compile("([\\/a-zA-Z0-9_.-]+)$");
+						try {
+							zipFile = new ZipInputStream(item.getInputStream());
+							ZipEntry entry = null;
+							while ((entry = zipFile.getNextEntry()) != null) {
+								if (entry.getName().contains("..")) {
+									continue;
+								}
+								StringBuffer submittedFileName = new StringBuffer(entry.getName());
+								if (!pattern.matcher(submittedFileName).matches()) {
+									continue;
+								}
+								if (entry.isDirectory() == false && !entry.getName().toLowerCase().endsWith(".class")) {
+									if (submittedFileName.lastIndexOf(".") > 0) {
+										int lastDot = submittedFileName.lastIndexOf(".");
+										submittedFileName.replace(lastDot, submittedFileName.length(), submittedFileName.subSequence(lastDot, submittedFileName.length()).toString().toLowerCase());
+									}
+									copyInputStream(zipFile, new BufferedOutputStream(new FileOutputStream(new File(path, submittedFileName.toString()))));
+								} else {
+									(new File(path, entry.getName())).mkdirs();
+								}
+							}
+							zipFile.close();
+						} catch (IOException e) {
+							Util.recursiveDeleteEmptySubDirectories(path);
+							tx.rollback();
+							e.printStackTrace();
+							template.printTemplateHeader("Ungültige Anfrage");
+							out.println("Problem beim entpacken der .zip-Datei.");
+							template.printTemplateFooter();
+							return;
+						}
+					} else {
+						Pattern pattern;
+						if (task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty()) {
+							pattern = Pattern.compile(".*?(?:\\\\|/)?([a-zA-Z0-9_.-]+)$");
+						} else {
+							pattern = Pattern.compile(".*?(?:\\\\|/)?(" + task.getFilenameRegexp() + ")$");
+						}
+						StringBuffer submittedFileName = new StringBuffer(item.getName());
+						if (submittedFileName.lastIndexOf(".") > 0) {
+							int lastDot = submittedFileName.lastIndexOf(".");
+							submittedFileName.replace(lastDot, submittedFileName.length(), submittedFileName.subSequence(lastDot, submittedFileName.length()).toString().toLowerCase());
+						}
+						Matcher m = pattern.matcher(submittedFileName);
+						if (!m.matches()) {
+							tx.rollback();
+							template.printTemplateHeader("Ungültige Anfrage");
+							out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
+							template.printTemplateFooter();
+							return;
+						}
+						String fileName = m.group(1);
+
+						File uploadedFile = new File(path, fileName);
+						try {
+							item.write(uploadedFile);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
 					session.update(submission);
+					Util.recursiveDeleteEmptyDirectories(path);
 					tx.commit();
 					new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, LogAction.UPLOAD, null, null);
 					response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
@@ -323,5 +364,16 @@ public class SubmitSolution extends HttpServlet {
 			tx.rollback();
 			out.println("Problem: Keine Abgabedaten gefunden.");
 		}
+	}
+
+	public static final void copyInputStream(ZipInputStream in, OutputStream out) throws IOException {
+		byte[] buffer = new byte[1024];
+		int len;
+
+		while ((len = in.read(buffer)) >= 0)
+			out.write(buffer, 0, len);
+
+		in.closeEntry();
+		out.close();
 	}
 }

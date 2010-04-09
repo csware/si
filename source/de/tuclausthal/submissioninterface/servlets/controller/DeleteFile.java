@@ -102,6 +102,7 @@ public class DeleteFile extends HttpServlet {
 			}
 		}
 		if (found == true) {
+			Util.recursiveDeleteEmptySubDirectories(path);
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 				submissionDAO.saveSubmission(submission);
 			}

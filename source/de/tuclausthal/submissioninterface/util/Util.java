@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -141,6 +141,31 @@ public final class Util {
 		}
 	}
 
+	/**
+	 * Recursively delete all contained empty folders
+	 * @param toDelete the path to cleanup of empty directories
+	 */
+	public static void recursiveDeleteEmptySubDirectories(File toDelete) {
+		if (toDelete.isDirectory()) {
+			for (File subFile : toDelete.listFiles()) {
+				recursiveDeleteEmptyDirectories(subFile);
+			}
+		}
+	}
+
+	/**
+	 * Recursively delete empty folders (including the specified one)
+	 * @param toDelete the path to cleanup of empty directories
+	 */
+	public static void recursiveDeleteEmptyDirectories(File toDelete) {
+		if (toDelete.isDirectory()) {
+			for (File subFile : toDelete.listFiles()) {
+				recursiveDeleteEmptyDirectories(subFile);
+			}
+			toDelete.delete();
+		}
+	}
+	
 	/**
 	 * Recursive delete files/folders
 	 * @param toDelete the path to delete

@@ -68,40 +68,30 @@ public abstract class DupeCheck {
 			// go through all submission of submission i
 			for (int i = 0; i < submissions.size(); i++) {
 				List<StringBuffer> javaFiles = new LinkedList<StringBuffer>();
-				if (new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(i).getSubmissionid() + System.getProperty("file.separator")).listFiles() != null) {
-					for (File javaFile : new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(i).getSubmissionid() + System.getProperty("file.separator")).listFiles()) {
-						// check that the file is a java-file and is not excluded
-						if (!excludedFileNames.contains(javaFile.getName())) {
-							// cache the files we use more than once
-							javaFiles.add(normalizerCache.normalize(submissions.get(i), javaFile));
+				for (File javaFile : getRecursivelyAllFiles(new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(i).getSubmissionid() + System.getProperty("file.separator")), excludedFileNames)) {
+					// cache the files we use more than once
+					javaFiles.add(normalizerCache.normalize(submissions.get(i), javaFile));
+				}
+				// the similariy matrix is symmetric, so it's sufficient
+				// to only calculate the upper triangular matrix entries
+				for (int j = i + 1; j < submissions.size(); j++) {
+					int maxSimilarity = 0;
+					// go through all submitted files of submission j
+					for (File javaFile : getRecursivelyAllFiles(new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(j).getSubmissionid() + System.getProperty("file.separator")), excludedFileNames)) {
+						// compare all files, file by file
+						for (StringBuffer fileOne : javaFiles) {
+							StringBuffer fileTwo = normalizerCache.normalize(submissions.get(j), javaFile);
+							maxSimilarity = Math.max(maxSimilarity, calculateSimilarity(fileOne, fileTwo, 100 - similarityTest.getMinimumDifferenceInPercent()));
+							if (maxSimilarity == 100) {
+								break;
+							}
+						}
+						if (maxSimilarity == 100) {
+							break;
 						}
 					}
-					// the similariy matrix is symmetric, so it's sufficient
-					// to only calculate the upper triangular matrix entries
-					for (int j = i + 1; j < submissions.size(); j++) {
-						int maxSimilarity = 0;
-						// go through all submitted files of submission j
-						if (new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(j).getSubmissionid() + System.getProperty("file.separator")).listFiles() != null) {
-							for (File javaFile : new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(j).getSubmissionid() + System.getProperty("file.separator")).listFiles()) {
-								// check that the file is a java-file and is not excluded
-								if (!excludedFileNames.contains(javaFile.getName())) {
-									// compare all files, file by file
-									for (StringBuffer fileOne : javaFiles) {
-										StringBuffer fileTwo = normalizerCache.normalize(submissions.get(j), javaFile);
-										maxSimilarity = Math.max(maxSimilarity, calculateSimilarity(fileOne, fileTwo, 100 - similarityTest.getMinimumDifferenceInPercent()));
-										if (maxSimilarity == 100) {
-											break;
-										}
-									}
-									if (maxSimilarity == 100) {
-										break;
-									}
-								}
-							}
-							if (similarityTest.getMinimumDifferenceInPercent() <= maxSimilarity) {
-								similarityDAO.addSimilarityResult(similarityTest, submissions.get(i), submissions.get(j), maxSimilarity);
-							}
-						}
+					if (similarityTest.getMinimumDifferenceInPercent() <= maxSimilarity) {
+						similarityDAO.addSimilarityResult(similarityTest, submissions.get(i), submissions.get(j), maxSimilarity);
 					}
 				}
 			}
@@ -110,6 +100,27 @@ public abstract class DupeCheck {
 		} finally {
 			if (normalizerCache != null) {
 				normalizerCache.cleanUp();
+			}
+		}
+	}
+
+	final protected List<File> getRecursivelyAllFiles(File path, List<String> excludedFileNames) {
+		List<File> foundFiles = new LinkedList<File>();
+		if (path.exists()) {
+			getRecursivelyAllFiles(path, excludedFileNames, foundFiles);
+		}
+		return foundFiles;
+	}
+
+	private void getRecursivelyAllFiles(File path, List<String> excludedFileNames, List<File> foundFiles) {
+		for (File file : path.listFiles()) {
+			// check that the file is not excluded
+			if (!excludedFileNames.contains(file.getName())) {
+				if (file.isFile()) {
+					foundFiles.add(file);
+				} else {
+					getRecursivelyAllFiles(file, excludedFileNames, foundFiles);
+				}
 			}
 		}
 	}

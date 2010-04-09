@@ -143,6 +143,10 @@
         <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.ShowFile</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>DownloadAsZip</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.DownloadAsZip</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>DeleteFile</servlet-name>
         <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.DeleteFile</servlet-class>
     </servlet>
@@ -305,6 +309,10 @@
     <servlet-mapping>
         <servlet-name>ShowFile</servlet-name>
         <url-pattern>/servlets/ShowFile/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DownloadAsZip</servlet-name>
+        <url-pattern>/servlets/DownloadAsZip</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DeleteFile</servlet-name>

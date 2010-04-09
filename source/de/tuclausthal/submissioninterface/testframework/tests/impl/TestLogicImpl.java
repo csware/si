@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -107,11 +107,8 @@ public class TestLogicImpl extends TestTask {
 					ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
 
 					List<String> javaFiles = new LinkedList<String>();
-					for (File javaFile : tempPackageDir.listFiles()) { // HACK
-						if (javaFile.getName().endsWith(".java")) {
-							javaFiles.add(javaFile.getAbsolutePath());
-						}
-					}
+					getRecursivelyAllJavaFiles(tempPackageDir, javaFiles);
+
 					int compiles = 1;
 					if (javaFiles.size() > 0) {
 						compiles = jc.run(null, null, errorOutputStream, javaFiles.toArray(new String[] {}));
@@ -221,6 +218,18 @@ public class TestLogicImpl extends TestTask {
 				} finally {
 					tx.commit();
 				}
+			}
+		}
+	}
+
+	private void getRecursivelyAllJavaFiles(File path, List<String> javaFiles) {
+		for (File file : path.listFiles()) {
+			if (file.isFile()) {
+				if (file.getName().toLowerCase().endsWith(".java")) {
+					javaFiles.add(file.getAbsolutePath());
+				}
+			} else {
+				getRecursivelyAllJavaFiles(file, javaFiles);
 			}
 		}
 	}

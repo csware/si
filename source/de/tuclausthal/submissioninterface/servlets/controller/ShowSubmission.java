@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -84,17 +84,23 @@ public class ShowSubmission extends HttpServlet {
 		List<String> submittedFiles = new LinkedList<String>();
 		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
 		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-		if (path.listFiles() != null) {
-			for (File file : path.listFiles()) {
-				if (file.isFile()) {
-					submittedFiles.add(file.getName());
-				}
-			}
+		if (path.listFiles() != null && path.exists()) {
+			listFiles(submittedFiles, path, "");
 		}
 
 		request.setAttribute("submission", submission);
 		request.setAttribute("submittedFiles", submittedFiles);
 		request.getRequestDispatcher("ShowSubmissionView").forward(request, response);
+	}
+
+	private void listFiles(List<String> submittedFiles, File path, String relativePath) {
+		for (File file : path.listFiles()) {
+			if (file.isFile()) {
+				submittedFiles.add(relativePath + file.getName());
+			} else {
+				listFiles(submittedFiles, file, relativePath + file.getName() + System.getProperty("file.separator"));
+			}
+		}
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.servlets.view;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
@@ -146,7 +147,9 @@ public class ShowSubmissionView extends HttpServlet {
 
 		out.println("<h2>Dateien:</h2>");
 		out.println("<div class=mid>");
+		out.println("<p><a href=\"DownloadAsZip?sid=" + submission.getSubmissionid() + "\">alles als .zip herunterladen</a></p>");
 		for (String file : submittedFiles) {
+			file = file.replace(System.getProperty("file.separator"), "/");
 			if (file.endsWith(".txt") || file.endsWith(".java") || file.endsWith(".pdf") || file.endsWith(".jpg") || file.endsWith(".png") || file.endsWith(".gif")) {
 				out.println("<h3>" + Util.mknohtml(file) + "</h3>");
 				out.println("<iframe width=800 height=600 src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe><br>");
