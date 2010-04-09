@@ -104,6 +104,11 @@ public class ShowTaskTutorView extends HttpServlet {
 			int groupSumOfSubmissions = 0;
 			int groupSumOfPoints = 0;
 			int testCols = 0;
+			for (Test test : task.getTests()) {
+				if (test.isForTutors()) {
+					testCols++;
+				}
+			}
 			int lastSID = 0;
 			TestResultDAOIf testResultDAO = DAOFactory.TestResultDAOIf(session);
 			List<Test> tests = DAOFactory.TestDAOIf(session).getTutorTests(task);
@@ -117,7 +122,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					if (first == false) {
 						if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 							out.println("<tr>");
-							out.println("<td colspan=" + (1 + submission.getTestResults().size() + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
+							out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
 							out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
 							if (hasUnapprochedPoints) {
 								out.println("<td><input type=submit value=Save></td>");
@@ -147,7 +152,6 @@ public class ShowTaskTutorView extends HttpServlet {
 						for (Test test : tests) {
 							out.println("<th>" + Util.mknohtml(test.getTestTitle()) + "</th>");
 						}
-						testCols = Math.max(testCols, submission.getTestResults().size());
 						for (SimilarityTest similarityTest : task.getSimularityTests()) {
 							out.println("<th><span title=\"Max. Ähnlichkeit\">" + similarityTest + "</span></th>");
 						}
