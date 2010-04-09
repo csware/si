@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -49,7 +50,9 @@ public class SubmitSolutionAdvisorFormView extends HttpServlet {
 		StringBuffer setWithUser = new StringBuffer();
 		setWithUser.append("<p>Abgabe erstellen für: <select name=uploadFor size=1>");
 		for (Participation part : task.getLecture().getParticipants()) {
-			setWithUser.append("<option value=" + part.getId() + ">" + Util.mknohtml(part.getUser().getFullName()) + "</option>");
+			if (part.getRoleType().equals(ParticipationRole.NORMAL)) {
+				setWithUser.append("<option value=" + part.getId() + ">" + Util.mknohtml(part.getUser().getFullName()) + "</option>");
+			}
 		}
 		setWithUser.append("</select><p>");
 
