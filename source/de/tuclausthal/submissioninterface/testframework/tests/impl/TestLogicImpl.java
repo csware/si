@@ -92,11 +92,8 @@ public class TestLogicImpl extends TestTask {
 					throw new IOException("Failed to create tempdir!");
 				}
 
-				File tempPackageDir = new File(tempDir, "programmierkurs"); // HACK
-				tempPackageDir.mkdirs(); // HACK
-
 				// prepare tempdir
-				Util.recursiveCopy(path, tempPackageDir); // HACK
+				Util.recursiveCopy(path, tempDir);
 
 				// TODO: optimize architecture, atm: hopefully it works ;)
 
@@ -107,7 +104,7 @@ public class TestLogicImpl extends TestTask {
 					ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
 
 					List<String> javaFiles = new LinkedList<String>();
-					getRecursivelyAllJavaFiles(tempPackageDir, javaFiles);
+					getRecursivelyAllJavaFiles(tempDir, javaFiles);
 
 					int compiles = 1;
 					if (javaFiles.size() > 0) {

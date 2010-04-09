@@ -165,7 +165,7 @@ public final class Util {
 			toDelete.delete();
 		}
 	}
-	
+
 	/**
 	 * Recursive delete files/folders
 	 * @param toDelete the path to delete

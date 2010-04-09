@@ -49,6 +49,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
+import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerIf;
+import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
@@ -333,10 +335,29 @@ public class SubmitSolution extends HttpServlet {
 						String fileName = m.group(1);
 
 						File uploadedFile = new File(path, fileName);
+						// handle .java-files differently in order to extract package and move it to the correct folder
+						if (fileName.toLowerCase().endsWith(".java")) {
+							uploadedFile = File.createTempFile("upload", null, path);
+						}
 						try {
 							item.write(uploadedFile);
 						} catch (Exception e) {
 							e.printStackTrace();
+						}
+						// extract defined package in java-files
+						if (fileName.toLowerCase().endsWith(".java")) {
+							NormalizerIf stripComments = new StripCommentsNormalizer();
+							StringBuffer javaFileContents = stripComments.normalize(Util.loadFile(uploadedFile));
+							Pattern packagePattern = Pattern.compile(".*package\\s+([a-zA-Z$]([a-zA-Z0-9_$]|\\.[a-zA-Z0-9_$])*)\\s*;.*", Pattern.DOTALL);
+							Matcher packageMatcher = packagePattern.matcher(javaFileContents);
+							if (packageMatcher.matches()) {
+								String packageName = packageMatcher.group(1).replace(".", System.getProperty("file.separator"));
+								File packageDirectory = new File(path, packageName);
+								packageDirectory.mkdirs();
+								uploadedFile.renameTo(new File(packageDirectory, fileName));
+							} else {
+								uploadedFile.renameTo(new File(path, fileName));
+							}
 						}
 					}
 					session.update(submission);

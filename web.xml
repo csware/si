@@ -70,7 +70,7 @@
         <load-on-startup />
         <init-param>
             <param-name>cores</param-name>
-            <param-value>2</param-value>
+            <param-value>4</param-value>
         </init-param>
     </servlet>
 
