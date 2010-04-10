@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -33,6 +33,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Plagiarism test
@@ -61,26 +62,27 @@ public abstract class DupeCheck {
 		DAOFactory.SimilarityTestDAOIf(session).resetSimilarityTest(similarityTest);
 		NormalizerCache normalizerCache = null;
 		try {
-			normalizerCache = new NormalizerCache(similarityTest.getNormalizer());
 			Task task = similarityTest.getTask();
+			File taskPath = new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+			normalizerCache = new NormalizerCache(taskPath, similarityTest.getNormalizer());
 			List<Submission> submissions = new LinkedList<Submission>(task.getSubmissions());
 			List<String> excludedFileNames = Arrays.asList(similarityTest.getExcludeFiles().split(","));
 			// go through all submission of submission i
 			for (int i = 0; i < submissions.size(); i++) {
 				List<StringBuffer> javaFiles = new LinkedList<StringBuffer>();
-				for (File javaFile : getRecursivelyAllFiles(new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(i).getSubmissionid() + System.getProperty("file.separator")), excludedFileNames)) {
+				for (String javaFile : Util.listFilesAsRelativeStringList(new File(taskPath, submissions.get(i).getSubmissionid() + ""), excludedFileNames)) {
 					// cache the files we use more than once
-					javaFiles.add(normalizerCache.normalize(submissions.get(i), javaFile));
+					javaFiles.add(normalizerCache.normalize(submissions.get(i).getSubmissionid() + System.getProperty("file.separator") + javaFile));
 				}
 				// the similariy matrix is symmetric, so it's sufficient
 				// to only calculate the upper triangular matrix entries
 				for (int j = i + 1; j < submissions.size(); j++) {
 					int maxSimilarity = 0;
 					// go through all submitted files of submission j
-					for (File javaFile : getRecursivelyAllFiles(new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submissions.get(j).getSubmissionid() + System.getProperty("file.separator")), excludedFileNames)) {
+					for (String javaFile : Util.listFilesAsRelativeStringList(new File(taskPath, submissions.get(j).getSubmissionid() + ""), excludedFileNames)) {
 						// compare all files, file by file
 						for (StringBuffer fileOne : javaFiles) {
-							StringBuffer fileTwo = normalizerCache.normalize(submissions.get(j), javaFile);
+							StringBuffer fileTwo = normalizerCache.normalize(submissions.get(j).getSubmissionid() + System.getProperty("file.separator") + javaFile);
 							maxSimilarity = Math.max(maxSimilarity, calculateSimilarity(fileOne, fileTwo, 100 - similarityTest.getMinimumDifferenceInPercent()));
 							if (maxSimilarity == 100) {
 								break;
@@ -100,27 +102,6 @@ public abstract class DupeCheck {
 		} finally {
 			if (normalizerCache != null) {
 				normalizerCache.cleanUp();
-			}
-		}
-	}
-
-	final protected List<File> getRecursivelyAllFiles(File path, List<String> excludedFileNames) {
-		List<File> foundFiles = new LinkedList<File>();
-		if (path.exists()) {
-			getRecursivelyAllFiles(path, excludedFileNames, foundFiles);
-		}
-		return foundFiles;
-	}
-
-	private void getRecursivelyAllFiles(File path, List<String> excludedFileNames, List<File> foundFiles) {
-		for (File file : path.listFiles()) {
-			// check that the file is not excluded
-			if (!excludedFileNames.contains(file.getName())) {
-				if (file.isFile()) {
-					foundFiles.add(file);
-				} else {
-					getRecursivelyAllFiles(file, excludedFileNames, foundFiles);
-				}
 			}
 		}
 	}

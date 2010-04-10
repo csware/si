@@ -161,6 +161,27 @@ public final class Util {
 		}
 	}
 
+	public static List<String> listFilesAsRelativeStringList(File path, List<String> excludedFileNames) {
+		List<String> submittedFiles = new LinkedList<String>();
+		if (path.exists() && path.listFiles() != null) {
+			listFilesAsRelativeStringList(submittedFiles, path, "", excludedFileNames);
+		}
+		return submittedFiles;
+	}
+
+	private static void listFilesAsRelativeStringList(List<String> submittedFiles, File path, String relativePath, List<String> excludedFileNames) {
+		for (File file : path.listFiles()) {
+			// check that the file is not excluded
+			if (!excludedFileNames.contains(file.getName())) {
+				if (file.isDirectory()) {
+					listFilesAsRelativeStringList(submittedFiles, file, relativePath + file.getName() + System.getProperty("file.separator"));
+				} else {
+					submittedFiles.add(relativePath + file.getName());
+				}
+			}
+		}
+	}
+
 	/**
 	 * Recursively delete all contained empty folders
 	 * @param toDelete the path to cleanup of empty directories

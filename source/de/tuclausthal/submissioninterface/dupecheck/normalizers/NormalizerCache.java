@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -33,13 +32,15 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class NormalizerCache {
 	private NormalizerIf normalizer;
 	private File cacheDirectoty;
+	private File pathToTask;
 
 	/**
 	 * Creates a new normalizer cache
 	 * @param normalizer the normalizer to cache
 	 * @throws IOException
 	 */
-	public NormalizerCache(NormalizerIf normalizer) throws IOException {
+	public NormalizerCache(File pathToTask, NormalizerIf normalizer) throws IOException {
+		this.pathToTask = pathToTask;
 		this.normalizer = normalizer;
 		cacheDirectoty = Util.createTemporaryDirectory("normalizer.cache", null);
 		if (cacheDirectoty == null) {
@@ -54,13 +55,13 @@ public class NormalizerCache {
 	 * @return the (cached) normalized string
 	 * @throws IOException
 	 */
-	public StringBuffer normalize(Submission submission, File file) throws IOException {
-		File tempFile = new File(cacheDirectoty.getPath() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + file.getName());
+	public StringBuffer normalize(String file) throws IOException {
+		File tempFile = new File(cacheDirectoty.getPath(), file);
 		if (tempFile.exists()) {
 			return Util.loadFile(tempFile);
 		} else {
-			StringBuffer stringBuffer = normalizer.normalize(Util.loadFile(file));
-			new File(cacheDirectoty.getPath() + System.getProperty("file.separator") + submission.getSubmissionid()).mkdir();
+			StringBuffer stringBuffer = normalizer.normalize(Util.loadFile(new File(pathToTask, file)));
+			tempFile.getParentFile().mkdirs();
 			BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile));
 			bw.write(stringBuffer.toString());
 			bw.close();
