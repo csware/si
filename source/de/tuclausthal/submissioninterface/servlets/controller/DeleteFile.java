@@ -87,21 +87,13 @@ public class DeleteFile extends HttpServlet {
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
 			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
-
 			return;
 		}
 
 		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-		Boolean found = false;
-		for (File file : path.listFiles()) {
-			if (file.getName().equals(request.getPathInfo().substring(1))) {
-				file.delete();
-				found = true;
-				new LogDAO(session).createLogEntry(participation.getUser(), null, submission.getTask(), LogAction.DELETE_FILE, null, null);
-				break;
-			}
-		}
-		if (found == true) {
+		File file = new File(path, request.getPathInfo().substring(1));
+		if (file.exists() && file.isFile() && file.delete()) {
+			new LogDAO(session).createLogEntry(participation.getUser(), null, submission.getTask(), LogAction.DELETE_FILE, null, null);
 			Util.recursiveDeleteEmptySubDirectories(path);
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 				submissionDAO.saveSubmission(submission);
