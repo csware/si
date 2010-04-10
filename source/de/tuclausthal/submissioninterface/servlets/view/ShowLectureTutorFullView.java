@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -81,7 +81,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 			} else {
 				out.println("<td>n/a</td>");
 			}
-			out.println("<td>" + lectureParticipation.getUser().getFullName() + "</td>");
+			out.println("<td><a href=\"ShowUser?uid=" + lectureParticipation.getUser().getUid() + "\">" + lectureParticipation.getUser().getFullName() + "</a></td>");
 			int points = 0;
 			for (Task task : taskList) {
 				Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
