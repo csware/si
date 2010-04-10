@@ -85,15 +85,19 @@ public class ShowLectureTutorFullView extends HttpServlet {
 			int points = 0;
 			for (Task task : taskList) {
 				Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
-				if (submission != null && submission.getPoints() != null) {
-					if (submission.getPoints().getPointsOk()) {
-						out.println("<td class=points>" + submission.getPoints().getPoints() + "</td>");
-						points += submission.getPoints().getPoints();
+				if (submission != null) {
+					if (submission.getPoints() != null) {
+						if (submission.getPoints().getPointsOk()) {
+							out.println("<td class=points>" + submission.getPoints().getPoints() + "</td>");
+							points += submission.getPoints().getPoints();
+						} else {
+							out.println("<td class=points>(" + submission.getPoints().getPoints() + ")</td>");
+						}
 					} else {
-						out.println("<td class=points>(" + submission.getPoints().getPoints() + ")</td>");
+						out.println("<td><span title=\"nicht bewertet\">n.b.</span></td>");
 					}
 				} else {
-					out.println("<td>n/a</td>");
+					out.println("<td><span title=\"keine Abgabe vom Studenten\">k.A.</span></td>");
 				}
 			}
 			if (points > 0) {

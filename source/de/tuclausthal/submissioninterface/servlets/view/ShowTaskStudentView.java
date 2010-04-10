@@ -18,7 +18,6 @@
 
 package de.tuclausthal.submissioninterface.servlets.view;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
@@ -31,9 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
-import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
@@ -41,7 +38,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
-import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -60,6 +56,8 @@ public class ShowTaskStudentView extends HttpServlet {
 
 		Task task = (Task) request.getAttribute("task");
 		Participation participation = (Participation) request.getAttribute("participation");
+		Submission submission = (Submission) request.getAttribute("submission");
+		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
 
 		template.printTemplateHeader(task);
 
@@ -84,8 +82,6 @@ public class ShowTaskStudentView extends HttpServlet {
 		out.println("</tr>");
 		out.println("</table>");
 
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
-		Submission submission = submissionDAO.getSubmission(task, new SessionAdapter(request).getUser(session));
 		if (submission != null) {
 			out.println("<p><h2>Informationen zu meiner Abgabe:</h2>");
 			out.println("<table class=border>");
@@ -100,11 +96,10 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("<tr>");
 			out.println("<th>Besteht aus:</th>");
 			out.println("<td>");
-			File path = new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-			for (File file : path.listFiles()) {
-				out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(file.getName()) + "</a>");
+			for (String file : submittedFiles) {
+				out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(file) + "</a>");
 				if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
-					out.println(" (<a href=\"" + response.encodeURL("DeleteFile/" + file.getName() + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)");
+					out.println(" (<a href=\"" + response.encodeURL("DeleteFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)");
 				}
 				out.println("<br>");
 			}
@@ -119,6 +114,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				} else {
 					out.println("0 von " + task.getMaxPoints() + ", nicht vorgestellt");
 				}
+				out.println("<br>Vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getEmail()) + "@tu-clausthal.de\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>");
 				out.println("</td>");
 				out.println("</tr>");
 				if (submission.getPoints().getComment() != null && !"".equals(submission.getPoints().getComment())) {

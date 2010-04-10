@@ -18,7 +18,6 @@
 
 package de.tuclausthal.submissioninterface.servlets.view;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
@@ -31,9 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
-import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
@@ -59,15 +56,14 @@ public class ShowSubmissionView extends HttpServlet {
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
 
 		Submission submission = (Submission) request.getAttribute("submission");
-
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
 		Task task = submission.getTask();
 
-		// check Lecture Participation
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), submission.getTask().getLecture());
-
 		template.printTemplateHeader(submission);
+
+		for (Participation participation : submission.getSubmitters()) {
+			out.println("<a href=\"ShowUser?uid=" + participation.getUser().getUid() + "\">" + Util.mknohtml(participation.getUser().getFullName()) + "</a><br>");
+		}
 
 		if (submission.getSubmitters().iterator().next().getGroup() != null) {
 			out.println("<h2>Gruppe: " + submission.getSubmitters().iterator().next().getGroup().getName() + "</h2>");
@@ -84,7 +80,7 @@ public class ShowSubmissionView extends HttpServlet {
 				oldComment = submission.getPoints().getComment();
 				points = submission.getPoints().getPoints();
 				pointsOk = submission.getPoints().getPointsOk();
-				pointsGivenBy = " (bisher " + points + " Punkte  vergeben von: " + submission.getPoints().getIssuedBy().getUser().getFullName() + ")";
+				pointsGivenBy = " (bisher " + points + " Punkte  vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getEmail()) + "@tu-clausthal.de\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>)";
 			}
 			out.println("<tr>");
 			out.println("<td>");

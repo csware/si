@@ -83,7 +83,7 @@ public class ShowFile extends HttpServlet {
 		}
 
 		File file = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + request.getPathInfo().substring(1));
-		if (file.exists()) {
+		if (file.exists() && file.isFile()) {
 			if ((file.getName().toLowerCase().endsWith(".txt") || file.getName().toLowerCase().endsWith(".java")) && !"true".equals(request.getParameter("download"))) {
 				// code for loading/displaying text-files
 				BufferedReader freader = new BufferedReader(new FileReader(file));

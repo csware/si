@@ -21,8 +21,6 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -81,26 +79,9 @@ public class ShowSubmission extends HttpServlet {
 			return;
 		}
 
-		List<String> submittedFiles = new LinkedList<String>();
-		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
-		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-		if (path.listFiles() != null && path.exists()) {
-			listFiles(submittedFiles, path, "");
-		}
-
 		request.setAttribute("submission", submission);
-		request.setAttribute("submittedFiles", submittedFiles);
+		request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringList(new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"))));
 		request.getRequestDispatcher("ShowSubmissionView").forward(request, response);
-	}
-
-	private void listFiles(List<String> submittedFiles, File path, String relativePath) {
-		for (File file : path.listFiles()) {
-			if (file.isFile()) {
-				submittedFiles.add(relativePath + file.getName());
-			} else {
-				listFiles(submittedFiles, file, relativePath + file.getName() + System.getProperty("file.separator"));
-			}
-		}
 	}
 
 	@Override

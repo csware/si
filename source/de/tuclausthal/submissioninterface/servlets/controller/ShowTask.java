@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
@@ -31,11 +32,14 @@ import org.hibernate.Session;
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -81,6 +85,13 @@ public class ShowTask extends HttpServlet {
 				request.getRequestDispatcher("ShowTaskTutorView").forward(request, response);
 			}
 		} else {
+			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+			Submission submission = submissionDAO.getSubmission(task, new SessionAdapter(request).getUser(session));
+			if (submission != null) {
+				File path = new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
+				request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringList(path));
+			}
+			request.setAttribute("submission", submission);
 			request.getRequestDispatcher("ShowTaskStudentView").forward(request, response);
 		}
 	}
