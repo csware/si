@@ -123,6 +123,14 @@
         <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.ShowSubmission</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>ShowUser</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.ShowUser</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShowUserView</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ShowUserView</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>EditGroup</servlet-name>
         <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.EditGroup</servlet-class>
     </servlet>
@@ -293,6 +301,14 @@
     <servlet-mapping>
         <servlet-name>ShowSubmission</servlet-name>
         <url-pattern>/servlets/ShowSubmission</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowUser</servlet-name>
+        <url-pattern>/servlets/ShowUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowUserView</servlet-name>
+        <url-pattern>/servlets/ShowUserView</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EditGroup</servlet-name>

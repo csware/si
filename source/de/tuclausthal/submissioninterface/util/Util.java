@@ -25,6 +25,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Utility-class with various helpers
@@ -138,6 +140,24 @@ public final class Util {
 			return Integer.parseInt(integerString);
 		} catch (NumberFormatException e) {
 			return defaultValue;
+		}
+	}
+
+	public static List<String> listFilesAsRelativeStringList(File path) {
+		List<String> submittedFiles = new LinkedList<String>();
+		if (path.exists() && path.listFiles() != null) {
+			listFilesAsRelativeStringList(submittedFiles, path, "");
+		}
+		return submittedFiles;
+	}
+
+	private static void listFilesAsRelativeStringList(List<String> submittedFiles, File path, String relativePath) {
+		for (File file : path.listFiles()) {
+			if (file.isDirectory()) {
+				listFilesAsRelativeStringList(submittedFiles, file, relativePath + file.getName() + System.getProperty("file.separator"));
+			} else {
+				submittedFiles.add(relativePath + file.getName());
+			}
 		}
 	}
 
