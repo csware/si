@@ -97,6 +97,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("<th>Besteht aus:</th>");
 			out.println("<td>");
 			for (String file : submittedFiles) {
+				file = file.replace(System.getProperty("file.separator"), "/");
 				out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(file) + "</a>");
 				if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
 					out.println(" (<a href=\"" + response.encodeURL("DeleteFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)");

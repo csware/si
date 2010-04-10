@@ -77,6 +77,8 @@ public class AdminMenue extends HttpServlet {
 							for (File submissions : tasks.listFiles()) {
 								if (DAOFactory.SubmissionDAOIf(session).getSubmission(Util.parseInteger(submissions.getName(), 0)) == null) {
 									Util.recursiveDelete(submissions);
+								} else {
+									Util.recursiveDeleteEmptySubDirectories(submissions);
 								}
 							}
 						}
@@ -103,11 +105,13 @@ public class AdminMenue extends HttpServlet {
 			request.getRequestDispatcher("AdminMenueShowAdminUsersView").forward(request, response);
 		} else if (("addSuperUser".equals(request.getParameter("action")) || "removeSuperUser".equals(request.getParameter("action"))) && request.getParameter("userid") != null) {
 			UserDAOIf userDAO = DAOFactory.UserDAOIf(session);
+			session.beginTransaction();
 			User user = userDAO.getUser(Util.parseInteger(request.getParameter("userid"), 0));
 			if (user != null) {
 				user.setSuperUser("addSuperUser".equals(request.getParameter("action")));
 				userDAO.saveUser(user);
 			}
+			session.getTransaction().commit();
 			response.sendRedirect(response.encodeURL(request.getRequestURL() + "?action=showAdminUsers"));
 		} else if (request.getParameter("action") != null && (request.getParameter("action").equals("addUser") || request.getParameter("action").equals("removeUser")) && request.getParameter("lecture") != null && request.getParameter("userid") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
