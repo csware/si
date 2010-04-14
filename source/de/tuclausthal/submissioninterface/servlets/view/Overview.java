@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -54,14 +54,16 @@ public class Overview extends HttpServlet {
 
 		if (user instanceof Student) {
 			Student student = (Student) user;
-			out.println("<form action=\"AlterUser\" method=post>");
+			if (student.getStudiengang() == null) {
+				out.println("<p><form action=\"AlterUser\" method=post>");
 
-			String studiengang = "";
-			if (student.getStudiengang() != null) {
-				studiengang = Util.mknohtml(student.getStudiengang());
+				String studiengang = "";
+				if (student.getStudiengang() != null) {
+					studiengang = Util.mknohtml(student.getStudiengang());
+				}
+				out.println("Bitte nennen Sie Ihren Studiengang: <input type=text name=studiengang size=40 value=\"" + studiengang + "\"> <input type=submit value=\"speichern...\">");
+				out.println("</form></p>");
 			}
-			out.println("Bitte nennen Sie Ihren Studiengang: <input type=text name=studiengang size=40 value=\"" + studiengang + "\"> <input type=submit value=\"speichern...\">");
-			out.println("</form>");
 		}
 
 		if (user.getLectureParticipant().size() > 0) {
