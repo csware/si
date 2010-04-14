@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -90,7 +90,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 			}
 		}
 
-		if (task.isShowTextArea() || "-".equals(task.getFilenameRegexp())) {
+		if (task.isShowTextArea()) {
 			out.println("<FORM class=mid method=POST action=\"?taskid=" + task.getTaskid() + "\">");
 			out.println(setWithUser.toString());
 			out.println("<p>Bitte füllen Sie das Textfeld mit Ihrer Lösung:</p>");

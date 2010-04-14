@@ -110,7 +110,7 @@ public class SubmitSolution extends HttpServlet {
 		} else {
 			request.setAttribute("participation", participation);
 
-			if (task.isShowTextArea() || "-".equals(task.getFilenameRegexp())) {
+			if (task.isShowTextArea()) {
 				String textsolution = "";
 				Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, new SessionAdapter(request).getUser(session));
 				if (submission != null) {
@@ -369,7 +369,7 @@ public class SubmitSolution extends HttpServlet {
 			}
 			tx.rollback();
 			out.println("Problem: Keine Abgabedaten gefunden.");
-		} else if (request.getParameter("textsolution") != null) {
+		} else if (request.getParameter("textsolution") != null && task.isShowTextArea()) {
 			File uploadedFile = new File(path, "textloesung.txt");
 			FileWriter fileWriter = new FileWriter(uploadedFile);
 			fileWriter.write(request.getParameter("textsolution"));

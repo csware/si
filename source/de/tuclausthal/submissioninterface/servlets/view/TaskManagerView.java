@@ -80,7 +80,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Text-Eingabefeld:</th>");
-		out.println("<td><input type=checkbox name=showtextarea " + (task.isShowTextArea() ? "checked" : "") + "> Regexp = &quot;-&quot; oder zusätzlich</b></td>");
+		out.println("<td><input type=checkbox name=showtextarea " + (task.isShowTextArea() ? "checked" : "") + "></b></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");
@@ -110,7 +110,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</table>");
 		out.println("</form>");
 		// don't show for new tasks
-		if (task.getTaskid() != 0) {
+		if (task.getTaskid() != 0 && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
 			out.println("<h2>Ähnlichkeitsprüfungen</h2>");
 			for (SimilarityTest similarityTest : task.getSimularityTests()) {
 				out.print(similarityTest + ": ");
