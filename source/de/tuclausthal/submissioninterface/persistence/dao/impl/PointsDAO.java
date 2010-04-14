@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,7 +20,6 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import org.hibernate.LockMode;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.persistence.dao.PointsDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -40,7 +39,6 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String comment, boolean pointsOk) {
 		// Hibernate exception abfangen
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		//MainBetterNameHereRequired.getSession().get(User.class, uid, LockMode.UPGRADE);
 		session.lock(submission.getTask(), LockMode.UPGRADE);
 		if (issuedPoints > submission.getTask().getMaxPoints()) {
@@ -53,7 +51,6 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		submission.setPoints(points);
 		points.setComment(comment);
 		session.save(submission);
-		tx.commit();
 		return points;
 	}
 }

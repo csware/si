@@ -107,6 +107,14 @@
         <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.MarkApproved</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>MarkEmptyTask</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.MarkEmptyTask</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MarkEmptyTaskView</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.view.MarkEmptyTaskView</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ShowTask</servlet-name>
         <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.ShowTask</servlet-class>
     </servlet>
@@ -293,6 +301,14 @@
     <servlet-mapping>
         <servlet-name>MarkApproved</servlet-name>
         <url-pattern>/servlets/MarkApproved</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MarkEmptyTask</servlet-name>
+        <url-pattern>/servlets/MarkEmptyTask</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MarkEmptyTaskView</servlet-name>
+        <url-pattern>/servlets/MarkEmptyTaskView</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ShowTask</servlet-name>

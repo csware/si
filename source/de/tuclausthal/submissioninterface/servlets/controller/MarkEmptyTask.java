@@ -18,9 +18,7 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -39,57 +37,67 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * Controller-Servlet for loading and displaying a submission to tutors
+ * Controller-Servlet for displaying a lecture
+ * loads a lecture and differs between the student and tutor view
  * @author Sven Strickroth
+ *
  */
-public class ShowSubmission extends HttpServlet {
+public class MarkEmptyTask extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = HibernateSessionHelper.getSession();
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
-		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
-		if (submission == null) {
-			request.setAttribute("title", "Abgabe nicht gefunden");
+
+		SessionAdapter sessionAdapter = new SessionAdapter(request);
+
+		Task task = DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+		if (task == null) {
+			request.setAttribute("title", "Aufgabe nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
-		Task task = submission.getTask();
-
-		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), submission.getTask().getLecture());
-		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+		Participation participation = participationDAO.getParticipation(sessionAdapter.getUser(session), task.getLecture());
+		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0 || (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
 
-		if (task.getDeadline().before(Util.correctTimezone(new Date())) && request.getParameter("points") != null) {
+		if (Util.isInteger(request.getParameter("pid"))) {
+			Participation studentParticipation = DAOFactory.ParticipationDAOIf(session).getParticipation(Util.parseInteger(request.getParameter("pid"), 0));
+			if (studentParticipation == null || studentParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) != 0) {
+				request.setAttribute("title", "Gewählte Person ist kein normaler Teilnehmer der Vorlesung.");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
+			Transaction tx = session.beginTransaction();
+			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+			Submission submission = submissionDAO.getSubmissionLocked(task, studentParticipation.getUser());
+			if (submission != null) {
+				tx.commit();
+				request.setAttribute("title", "Es existiert bereits eine Bewertung für diesen Studenten: < href=\"ShowSubmission?sid="+submission.getSubmissionid()+"\">zur Bewertung</a>");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
+			submission = submissionDAO.createSubmission(task, studentParticipation);
 			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf(session);
 			String comment = "";
 			if (request.getParameter("comment") != null) {
 				comment = request.getParameter("comment");
 			}
-			Transaction tx = session.beginTransaction();
-			pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, comment, request.getParameter("pointsok") != null);
+			pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, studentParticipation, comment, request.getParameter("pointsok") != null);
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));
+			response.sendRedirect(response.encodeRedirectURL("MarkEmptyTask?taskid=" + submission.getSubmissionid()));
 			return;
+		} else {
+			request.setAttribute("participations", DAOFactory.ParticipationDAOIf(session).getParticipationsWithNoSubmissionToTaskOrdered(task));
 		}
 
-		request.setAttribute("submission", submission);
-		request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringList(new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"))));
-		request.getRequestDispatcher("ShowSubmissionView").forward(request, response);
-	}
-
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// don't want to have any special post-handling
-		doGet(request, response);
+		request.setAttribute("task", task);
+		request.getRequestDispatcher("MarkEmptyTaskView").forward(request, response);
 	}
 }

@@ -92,8 +92,12 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + task.getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=editTask") + "\">Aufgabe bearbeiten</a></div>");
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + task.getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deleteTask") + "\">Aufgabe löschen</a></div>");
 			if (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp())) {
-				out.println("<p><div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe für Studenten durchführen (Achtung wenn Duplikatstest bereits gelaufen ist</a></div>");
+				out.println("<p><div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe für Studenten durchführen</a> (Achtung wenn Duplikatstest bereits gelaufen ist)</div>");
 			}
+		}
+
+		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
+			out.println("<p><div class=mid><a href=\"" + response.encodeURL("MarkEmptyTask?taskid=" + task.getTaskid()) + "\">Punkte vergeben</a></div>");
 		}
 
 		if (task.getSubmissions() != null && task.getSubmissions().size() > 0) {

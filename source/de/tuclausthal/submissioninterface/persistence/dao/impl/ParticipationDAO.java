@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -31,6 +31,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 
 /**
@@ -113,5 +114,10 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 	@Override
 	public List<Participation> getParticipationsOfLectureOrdered(Lecture lecture) {
 		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+	}
+
+	@Override
+	public List<Participation> getParticipationsWithNoSubmissionToTaskOrdered(Task task) {
+		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", task.getLecture())).add(Restrictions.sqlRestriction("this_.id not in (SELECT submitters_id FROM submissions, submissions_participations where submissions.submissionid=submissions_participations.submissions_submissionid and taskid=" + task.getTaskid() + ")")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list(); // HACK
 	}
 }

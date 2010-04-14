@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -24,6 +24,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 
 /**
@@ -63,6 +64,8 @@ public interface ParticipationDAOIf {
 	public List<Participation> getParticipationsWithoutGroup(Lecture lecture);
 
 	public List<Participation> getParticipationsOfLectureOrdered(Lecture lecture);
+
+	public List<Participation> getParticipationsWithNoSubmissionToTaskOrdered(Task task);
 
 	/**
 	 * Returns the participation for a specific group
