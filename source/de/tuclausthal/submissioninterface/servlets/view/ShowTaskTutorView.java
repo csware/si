@@ -84,7 +84,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Max. Punkte:</th>");
-		out.println("<td class=points>" + task.getMaxPoints() + "</td>");
+		out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 		out.println("</tr>");
 		out.println("</table>");
 
@@ -123,7 +123,7 @@ public class ShowTaskTutorView extends HttpServlet {
 						if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 							out.println("<tr>");
 							out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
-							out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
+							out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
 							if (hasUnapprochedPoints) {
 								out.println("<td><input type=submit value=Save></td>");
 							} else {
@@ -182,10 +182,10 @@ public class ShowTaskTutorView extends HttpServlet {
 						}
 						if (submission.getPoints() != null) {
 							if (submission.getPoints().getPointsOk()) {
-								out.println("<td align=right>" + submission.getPoints().getPoints() + "</td>");
+								out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPoints()) + "</td>");
 								out.println("<td></td>");
 							} else {
-								out.println("<td align=right>(" + submission.getPoints().getPoints() + ")</td>");
+								out.println("<td align=right>(" + Util.showPoints(submission.getPoints().getPoints()) + ")</td>");
 								out.println("<td><input type=checkbox name=\"sid" + submission.getSubmissionid() + "\"></td>");
 								hasUnapprochedPoints = true;
 							}
@@ -205,7 +205,7 @@ public class ShowTaskTutorView extends HttpServlet {
 				if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 					out.println("<tr>");
 					out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
-					out.println("<td class=points>" + Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue() + "</td>");
+					out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
 					if (hasUnapprochedPoints) {
 						out.println("<td><input type=submit value=Save></td>");
 					} else {
@@ -215,7 +215,7 @@ public class ShowTaskTutorView extends HttpServlet {
 				}
 				out.println("</table><p>");
 				out.println("</form>");
-				out.println("<h3>Gesamtdurchschnitt: " + Float.valueOf(sumOfPoints / (float) sumOfSubmissions).intValue() + "</h3>");
+				out.println("<h3>Gesamtdurchschnitt: " + Util.showPoints(Float.valueOf(sumOfPoints / (float) sumOfSubmissions).intValue()) + "</h3>");
 			}
 		}
 		template.printTemplateFooter();

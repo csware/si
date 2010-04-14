@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -78,7 +78,7 @@ public class ShowTaskStudentView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Max. Punkte:</th>");
-		out.println("<td class=points>" + task.getMaxPoints() + "</td>");
+		out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 		out.println("</tr>");
 		out.println("</table>");
 
@@ -111,9 +111,9 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<th>Bewertung:</th>");
 				out.println("<td>");
 				if (submission.getPoints().getPointsOk()) {
-					out.println(submission.getPoints().getPoints() + " von " + task.getMaxPoints());
+					out.println(Util.showPoints(submission.getPoints().getPoints()) + " von " + Util.showPoints(task.getMaxPoints()));
 				} else {
-					out.println("0 von " + task.getMaxPoints() + ", nicht vorgestellt");
+					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", nicht vorgestellt");
 				}
 				out.println("<br>Vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getEmail()) + "@tu-clausthal.de\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>");
 				out.println("</td>");

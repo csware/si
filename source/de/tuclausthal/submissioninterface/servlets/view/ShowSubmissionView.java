@@ -80,13 +80,13 @@ public class ShowSubmissionView extends HttpServlet {
 				oldComment = submission.getPoints().getComment();
 				points = submission.getPoints().getPoints();
 				pointsOk = submission.getPoints().getPointsOk();
-				pointsGivenBy = " (bisher " + points + " Punkte  vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getEmail()) + "@tu-clausthal.de\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>)";
+				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte  vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getEmail()) + "@tu-clausthal.de\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>)";
 			}
 			out.println("<tr>");
 			out.println("<td>");
 			out.println("<form action=\"?\" method=post>");
 			out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
-			out.println("<b>Punkte:</b> <input type=text name=points size=3 value=\"" + points + "\"> (max. " + task.getMaxPoints() + ")" + pointsGivenBy + "<br>");
+			out.println("<b>Punkte:</b> <input type=text name=points size=3 value=\"" + Util.showPoints(points) + "\"> (max. " + Util.showPoints(task.getMaxPoints()) + ")" + pointsGivenBy + "<br>");
 			out.println("<b>Kommentar:</b><br><textarea cols=80 rows=8 name=comment>" + Util.mknohtml(oldComment) + "</textarea><br>");
 			out.println("<b>Abgenommen:</b> <input type=checkbox name=pointsok " + (pointsOk ? "checked" : "") + "><br>");
 			out.println("<input type=submit value=Speichern>");

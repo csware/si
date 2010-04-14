@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -316,5 +317,17 @@ public final class Util {
 	 */
 	public static Date correctTimezone(Date date) {
 		return date;
+	}
+
+	public static String showPoints(int maxPoints) {
+		return NumberFormat.getInstance().format(maxPoints / 100.0);
+	}
+
+	public static int convertToPoints(String parameter) {
+		try {
+			return ((Double) (Double.parseDouble(parameter.replace(",", ".")) * 100.0)).intValue();
+		} catch (NumberFormatException e) {
+			return 0;
+		}
 	}
 }

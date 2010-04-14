@@ -71,7 +71,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		out.println("<th>Nachname</th>");
 		out.println("<th>Vorname</th>");
 		for (Task task : taskList) {
-			out.println("<th>" + Util.mknohtml(task.getTitle()) + "<br>Pkts: " + task.getMaxPoints() + "</th>");
+			out.println("<th>" + Util.mknohtml(task.getTitle()) + "<br>Pkts: " + Util.showPoints(task.getMaxPoints()) + "</th>");
 		}
 		out.println("<th>Gesamt</th>");
 		out.println("</tr>");
@@ -93,10 +93,10 @@ public class ShowLectureTutorFullView extends HttpServlet {
 				if (submission != null) {
 					if (submission.getPoints() != null) {
 						if (submission.getPoints().getPointsOk()) {
-							out.println("<td class=points>" + submission.getPoints().getPoints() + "</td>");
+							out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPoints()) + "</td>");
 							points += submission.getPoints().getPoints();
 						} else {
-							out.println("<td class=points>(" + submission.getPoints().getPoints() + ")</td>");
+							out.println("<td class=points>(" + Util.showPoints(submission.getPoints().getPoints()) + ")</td>");
 						}
 					} else {
 						out.println("<td><span title=\"nicht bewertet\">n.b.</span></td>");
@@ -106,7 +106,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 				}
 			}
 			if (points > 0) {
-				out.println("<td class=points>" + points + "</td>");
+				out.println("<td class=points>" + Util.showPoints(points) + "</td>");
 			} else {
 				out.println("<td>n/a</td>");
 			}

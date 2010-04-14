@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -96,7 +96,7 @@ public class TaskManager extends HttpServlet {
 					request.getRequestDispatcher("MessageView").forward(request, response);
 					return;
 				}
-				task.setMaxPoints(Util.parseInteger(request.getParameter("maxpoints"), 0));
+				task.setMaxPoints(Util.convertToPoints(request.getParameter("maxpoints")));
 				task.setTitle(request.getParameter("title"));
 				task.setDescription(request.getParameter("description"));
 				task.setFilenameRegexp(request.getParameter("filenameregexp"));

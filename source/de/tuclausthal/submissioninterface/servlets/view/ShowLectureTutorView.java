@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -79,7 +79,7 @@ public class ShowLectureTutorView extends HttpServlet {
 				if (task.getStart().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 					out.println("<tr>");
 					out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
-					out.println("<td class=points>" + task.getMaxPoints() + "</td>");
+					out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 					out.println("</tr>");
 				}
 			}
@@ -163,14 +163,14 @@ public class ShowLectureTutorView extends HttpServlet {
 					usersCount++;
 					sumOfPoints += points;
 				}
-				out.println("<td class=points>" + points + "</td>");
+				out.println("<td class=points>" + Util.showPoints(points) + "</td>");
 
 				out.println("</tr>");
 			}
 			if (sumOfPoints > 0 && usersCount > 0) {
 				out.println("<tr>");
 				out.println("<td colspan=3>Durchschnittspunkte:</td>");
-				out.println("<td class=points>" + Float.valueOf(sumOfPoints / (float) usersCount).intValue() + "</td>");
+				out.println("<td class=points>" + Util.showPoints(Float.valueOf(sumOfPoints / (float) usersCount).intValue()) + "</td>");
 				out.println("</tr>");
 			}
 			out.println("</table><p>");

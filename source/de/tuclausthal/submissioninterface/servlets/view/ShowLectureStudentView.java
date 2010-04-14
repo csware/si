@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -72,11 +72,11 @@ public class ShowLectureStudentView extends HttpServlet {
 				if (task.getStart().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 					out.println("<tr>");
 					out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
-					out.println("<td class=points>" + task.getMaxPoints() + "</td>");
+					out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 					Submission submission = DAOFactory.SubmissionDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).getSubmission(task, sessionAdapter.getUser(HibernateSessionHelper.getSession()));
 					if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().before(Util.correctTimezone(new Date()))) {
 						if (submission.getPoints().getPointsOk()) {
-							out.println("<td class=points>" + submission.getPoints().getPoints() + "</td>");
+							out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPoints()) + "</td>");
 						} else {
 							out.println("<td class=points>0, nicht vorgestellt</td>");
 						}

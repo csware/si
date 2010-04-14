@@ -90,10 +90,10 @@ public class ShowUserView extends HttpServlet {
 						if (submission != null) {
 							if (submission.getPoints() != null) {
 								if (submission.getPoints().getPointsOk()) {
-									out.println("<td class=points><a href=\"ShowSubmission?sid=" + submission.getSubmissionid() + "\">" + submission.getPoints().getPoints() + "");
+									out.println("<td class=points><a href=\"ShowSubmission?sid=" + submission.getSubmissionid() + "\">" + Util.showPoints(submission.getPoints().getPoints()) + "");
 									points += submission.getPoints().getPoints();
 								} else {
-									out.println("<td class=points><a href=\"ShowSubmission?sid=" + submission.getSubmissionid() + "\">(" + submission.getPoints().getPoints() + ")");
+									out.println("<td class=points><a href=\"ShowSubmission?sid=" + submission.getSubmissionid() + "\">(" + Util.showPoints(submission.getPoints().getPoints()) + ")");
 								}
 							} else {
 								out.println("<td><a href=\"ShowSubmission?sid=" + submission.getSubmissionid() + "\">noch unbewertet");
@@ -106,8 +106,8 @@ public class ShowUserView extends HttpServlet {
 					}
 					out.println("<tr>");
 					out.println("<td>Gesamt:</td>");
-					out.println("<td class=points>" + maxPoints + "</td>");
-					out.println("<td class=points>" + points + "</td>");
+					out.println("<td class=points>" + Util.showPoints(maxPoints) + "</td>");
+					out.println("<td class=points>" + Util.showPoints(points) + "</td>");
 					out.println("</tr>");
 					out.println("</table>");
 				} else {
