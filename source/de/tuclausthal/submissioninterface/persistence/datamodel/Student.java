@@ -25,6 +25,7 @@ import javax.persistence.Entity;
 @DiscriminatorValue("1")
 public class Student extends User {
 	private int matrikelno;
+	private String studiengang;
 
 	/**
 	 * @return the matrikelno
@@ -38,5 +39,19 @@ public class Student extends User {
 	 */
 	public void setMatrikelno(int matrikelno) {
 		this.matrikelno = matrikelno;
+	}
+
+	/**
+	 * @return the studiengang
+	 */
+	public String getStudiengang() {
+		return studiengang;
+	}
+
+	/**
+	 * @param studiengang the studiengang to set
+	 */
+	public void setStudiengang(String studiengang) {
+		this.studiengang = studiengang;
 	}
 }

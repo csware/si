@@ -143,6 +143,10 @@
         <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.AddGroup</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>AlterUser</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.AlterUser</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>EditParticipation</servlet-name>
         <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.EditParticipation</servlet-class>
     </servlet>
@@ -341,6 +345,10 @@
     <servlet-mapping>
         <servlet-name>AddGroup</servlet-name>
         <url-pattern>/servlets/AddGroup</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AlterUser</servlet-name>
+        <url-pattern>/servlets/AlterUser</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DupeCheck</servlet-name>

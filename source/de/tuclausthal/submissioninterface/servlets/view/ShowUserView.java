@@ -63,6 +63,7 @@ public class ShowUserView extends HttpServlet {
 
 		if (user instanceof Student) {
 			out.println("<p>Matrikelnummer: " + ((Student) user).getMatrikelno() + "</p>");
+			out.println("<p>Studiengang: " + ((Student) user).getStudiengang() + "</p>");
 		}
 
 		out.println("<h1>Vorlesungen</h1>");

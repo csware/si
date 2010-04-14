@@ -67,7 +67,9 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>MatrikelNo</th>");
-		out.println("<th>Benutzer</th>");
+		out.println("<th>Studiengang</th>");
+		out.println("<th>Nachname</th>");
+		out.println("<th>Vorname</th>");
 		for (Task task : taskList) {
 			out.println("<th>" + Util.mknohtml(task.getTitle()) + "<br>Pkts: " + task.getMaxPoints() + "</th>");
 		}
@@ -78,10 +80,13 @@ public class ShowLectureTutorFullView extends HttpServlet {
 			out.println("<tr>");
 			if (lectureParticipation.getUser() instanceof Student) {
 				out.println("<td>" + ((Student) lectureParticipation.getUser()).getMatrikelno() + "</td>");
+				out.println("<td>" + ((Student) lectureParticipation.getUser()).getStudiengang() + "</td>");
 			} else {
 				out.println("<td>n/a</td>");
+				out.println("<td>n/a</td>");
 			}
-			out.println("<td><a href=\"ShowUser?uid=" + lectureParticipation.getUser().getUid() + "\">" + lectureParticipation.getUser().getFullName() + "</a></td>");
+			out.println("<td><a href=\"ShowUser?uid=" + lectureParticipation.getUser().getUid() + "\">" + lectureParticipation.getUser().getLastName() + "</a></td>");
+			out.println("<td><a href=\"ShowUser?uid=" + lectureParticipation.getUser().getUid() + "\">" + lectureParticipation.getUser().getFirstName() + "</a></td>");
 			int points = 0;
 			for (Task task : taskList) {
 				Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());

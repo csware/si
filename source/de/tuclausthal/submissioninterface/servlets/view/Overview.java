@@ -30,6 +30,7 @@ import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -50,6 +51,18 @@ public class Overview extends HttpServlet {
 
 		Session session = HibernateSessionHelper.getSession();
 		User user = new SessionAdapter(request).getUser(session);
+
+		if (user instanceof Student) {
+			Student student = (Student) user;
+			out.println("<form action=\"AlterUser\" method=post>");
+
+			String studiengang = "";
+			if (student.getStudiengang() != null) {
+				studiengang = Util.mknohtml(student.getStudiengang());
+			}
+			out.println("Bitte nennen Sie Ihren Studiengang: <input type=text name=studiengang size=40 value=\"" + studiengang + "\"> <input type=submit value=\"speichern...\">");
+			out.println("</form>");
+		}
 
 		if (user.getLectureParticipant().size() > 0) {
 			out.println("<table class=border>");
