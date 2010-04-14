@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -68,6 +68,8 @@ public class ShowLecture extends HttpServlet {
 			request.getRequestDispatcher("ShowLectureStudentView").forward(request, response);
 		} else if ("list".equals(request.getParameter("show"))) {
 			request.getRequestDispatcher("ShowLectureTutorFullView").forward(request, response);
+		} else if ("csv".equals(request.getParameter("show"))) {
+			request.getRequestDispatcher("ShowLectureTutorCSVView").forward(request, response);
 		} else {
 			request.getRequestDispatcher("ShowLectureTutorView").forward(request, response);
 		}

@@ -330,4 +330,11 @@ public final class Util {
 			return 0;
 		}
 	}
+
+	public static String csvQuote(String title) {
+		if (title.contains(";")) {
+			title = "\"" + title + "\""; // .replace("\"", "\"\"")
+		}
+		return title;
+	}
 }

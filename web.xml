@@ -179,6 +179,10 @@
         <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ShowLectureTutorFullView</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>ShowLectureTutorCSVView</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ShowLectureTutorCSVView</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ShowLectureStudentView</servlet-name>
         <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ShowLectureStudentView</servlet-class>
     </servlet>
@@ -365,6 +369,10 @@
     <servlet-mapping>
         <servlet-name>ShowLectureTutorFullView</servlet-name>
         <url-pattern>/servlets/ShowLectureTutorFullView</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowLectureTutorCSVView</servlet-name>
+        <url-pattern>/servlets/ShowLectureTutorCSVView</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ShowTaskStudentView</servlet-name>
