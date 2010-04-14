@@ -25,6 +25,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.LectureDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
@@ -68,7 +69,7 @@ public class LectureDAO extends AbstractDAO  implements LectureDAOIf {
 		// TODO: optimization possible here ;)
 		Session session = getSession();
 		List<Lecture> lectures = new LinkedList<Lecture>();
-		for (Lecture lecture : (List<Lecture>) session.createCriteria(Lecture.class).addOrder(Order.desc("semester")).addOrder(Order.asc("name")).list()) {
+		for (Lecture lecture : (List<Lecture>) session.createCriteria(Lecture.class).add(Restrictions.eq("semester", Util.getCurrentSemester())).addOrder(Order.asc("name")).list()) {
 			boolean found = false;
 			for (Participation participation : lecture.getParticipants()) {
 				if (participation.getUser().getUid() == user.getUid()) {
