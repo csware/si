@@ -277,7 +277,6 @@ public class SubmitSolution extends HttpServlet {
 
 				// Process a file upload
 				if (!item.isFormField()) {
-
 					if (item.getName().toLowerCase().endsWith(".zip") || item.getName().toLowerCase().endsWith(".jar")) {
 						ZipInputStream zipFile;
 						Pattern pattern = Pattern.compile("([\\/a-zA-Z0-9_.-]+)$");
@@ -314,7 +313,7 @@ public class SubmitSolution extends HttpServlet {
 						}
 					} else {
 						Pattern pattern;
-						if (task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty()) {
+						if (task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty() || uploadFor > 0) {
 							pattern = Pattern.compile(".*?(?:\\\\|/)?([a-zA-Z0-9_.-]+)$");
 						} else {
 							pattern = Pattern.compile(".*?(?:\\\\|/)?(" + task.getFilenameRegexp() + ")$");
