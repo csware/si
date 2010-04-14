@@ -325,7 +325,11 @@ public final class Util {
 
 	public static int convertToPoints(String parameter) {
 		try {
-			return ((Double) (Double.parseDouble(parameter.replace(",", ".")) * 100.0)).intValue();
+			int points = ((Double) (Double.parseDouble(parameter.replace(",", ".")) * 100.0)).intValue();
+			if (points < 0) {
+				points = 0;
+			}
+			return points;
 		} catch (NumberFormatException e) {
 			return 0;
 		}
