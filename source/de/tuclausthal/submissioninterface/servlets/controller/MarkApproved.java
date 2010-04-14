@@ -62,7 +62,7 @@ public class MarkApproved extends HttpServlet {
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), task.getLecture());
-		if (participation == null) {
+		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
