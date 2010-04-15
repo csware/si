@@ -55,7 +55,7 @@ public class MarkEmptyTaskView extends HttpServlet {
 		out.println("<b>Student:</b> <select size=1 name=pid>");
 		for (Participation participation : participations) {
 			if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
-				out.println("<option value=" + participation.getId() + "\">" + Util.mknohtml(participation.getUser().getLastName() + ", " + participation.getUser().getFirstName()) + "</option>");
+				out.println("<option value=\"" + participation.getId() + "\">" + Util.mknohtml(participation.getUser().getLastName() + ", " + participation.getUser().getFirstName()) + "</option>");
 			}
 		}
 		out.println("</select><br>");
@@ -66,5 +66,11 @@ public class MarkEmptyTaskView extends HttpServlet {
 		out.println("</form>");
 
 		template.printTemplateFooter();
+	}
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		// don't want to have any special post-handling
+		doGet(request, response);
 	}
 }

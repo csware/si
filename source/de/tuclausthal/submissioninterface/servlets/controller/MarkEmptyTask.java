@@ -79,7 +79,7 @@ public class MarkEmptyTask extends HttpServlet {
 			Submission submission = submissionDAO.getSubmissionLocked(task, studentParticipation.getUser());
 			if (submission != null) {
 				tx.commit();
-				request.setAttribute("title", "Es existiert bereits eine Bewertung für diesen Studenten: < href=\"ShowSubmission?sid="+submission.getSubmissionid()+"\">zur Bewertung</a>");
+				request.setAttribute("title", "Es existiert bereits eine Bewertung für diesen Studenten: < href=\"ShowSubmission?sid=" + submission.getSubmissionid() + "\">zur Bewertung</a>");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 				return;
 			}
@@ -91,7 +91,7 @@ public class MarkEmptyTask extends HttpServlet {
 			}
 			pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, studentParticipation, comment, request.getParameter("pointsok") != null);
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("MarkEmptyTask?taskid=" + submission.getSubmissionid()));
+			response.sendRedirect(response.encodeRedirectURL("MarkEmptyTask?taskid=" + task.getTaskid()));
 			return;
 		} else {
 			request.setAttribute("participations", DAOFactory.ParticipationDAOIf(session).getParticipationsWithNoSubmissionToTaskOrdered(task));
@@ -99,5 +99,11 @@ public class MarkEmptyTask extends HttpServlet {
 
 		request.setAttribute("task", task);
 		request.getRequestDispatcher("MarkEmptyTaskView").forward(request, response);
+	}
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		// don't want to have any special post-handling
+		doGet(request, response);
 	}
 }
