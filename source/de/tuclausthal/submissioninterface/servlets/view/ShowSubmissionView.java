@@ -141,21 +141,23 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("</ul>");
 		}
 
-		out.println("<h2>Dateien:</h2>");
-		out.println("<div class=mid>");
-		out.println("<p><a href=\"DownloadAsZip?sid=" + submission.getSubmissionid() + "\">alles als .zip herunterladen</a></p>");
-		for (String file : submittedFiles) {
-			file = file.replace(System.getProperty("file.separator"), "/");
-			if (file.endsWith(".txt") || file.endsWith(".java") || file.endsWith(".pdf") || file.endsWith(".jpg") || file.endsWith(".png") || file.endsWith(".gif")) {
-				out.println("<h3>" + Util.mknohtml(file) + "</h3>");
-				out.println("<iframe width=800 height=600 src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe><br>");
-				if (file.endsWith(".java")) {
-					out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "&comments=off\" target=\"_blank\">" + Util.mknohtml(file) + " ohne Kommentare anzeigen</a><br>");
+		if (submittedFiles.size() > 0) {
+			out.println("<h2>Dateien:</h2>");
+			out.println("<div class=mid>");
+			out.println("<p><a href=\"DownloadAsZip?sid=" + submission.getSubmissionid() + "\">alles als .zip herunterladen</a></p>");
+			for (String file : submittedFiles) {
+				file = file.replace(System.getProperty("file.separator"), "/");
+				if (file.endsWith(".txt") || file.endsWith(".java") || file.endsWith(".pdf") || file.endsWith(".jpg") || file.endsWith(".png") || file.endsWith(".gif")) {
+					out.println("<h3>" + Util.mknohtml(file) + "</h3>");
+					out.println("<iframe width=800 height=600 src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe><br>");
+					if (file.endsWith(".java")) {
+						out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "&comments=off\" target=\"_blank\">" + Util.mknohtml(file) + " ohne Kommentare anzeigen</a><br>");
+					}
 				}
+				out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?download=true&sid=" + submission.getSubmissionid()) + "\">Download " + Util.mknohtml(file) + "</a><p>");
 			}
-			out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?download=true&sid=" + submission.getSubmissionid()) + "\">Download " + Util.mknohtml(file) + "</a><p>");
+			out.println("</div>");
 		}
-		out.println("</div>");
 		template.printTemplateFooter();
 	}
 }

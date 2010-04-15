@@ -73,17 +73,20 @@ public class DownloadAsZip extends HttpServlet {
 			return;
 		}
 
-		response.setContentType("application/zip");
-		response.setHeader("Content-Disposition", "attachment; filename=submission-id" + submission.getSubmissionid() + ".zip");
-
 		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-		ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
-		//out.setMethod(ZipOutputStream.STORED);
-		System.out.println(path.toString() + " " + path.exists());
+
 		if (path.exists()) {
+			response.setContentType("application/zip");
+			response.setHeader("Content-Disposition", "attachment; filename=submission-id" + submission.getSubmissionid() + ".zip");
+
+			ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
+			//out.setMethod(ZipOutputStream.STORED);
 			recursivelyZip(out, path, "");
+			out.close();
 		}
-		out.close();
+
+		request.setAttribute("title", "No files available to download as zip.");
+		request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 	}
 
 	private void recursivelyZip(ZipOutputStream out, File path, String relativePath) {
