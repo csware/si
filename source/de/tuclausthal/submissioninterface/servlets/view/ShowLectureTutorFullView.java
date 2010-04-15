@@ -60,7 +60,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 
 		// list all tasks for a lecture
-		template.printTemplateHeader(lecture);
+		template.printTemplateHeader("Gesamtübersicht", lecture);
 
 		List<Task> taskList = lecture.getTasks();
 

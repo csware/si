@@ -48,8 +48,7 @@ public class MarkEmptyTaskView extends HttpServlet {
 		List<Participation> participations = (List<Participation>) request.getAttribute("participations");
 		Task task = (Task) request.getAttribute("task");
 
-		// list all tasks for a lecture
-		template.printTemplateHeader(task);
+		template.printTemplateHeader("Punkte vergeben...", task);
 
 		out.println("<form action=\"?taskid=" + task.getTaskid() + "\" method=post>");
 		out.println("<b>Student:</b> <select size=1 name=pid>");
