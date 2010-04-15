@@ -41,7 +41,7 @@ public final class Util {
 	 */
 	public static String mknohtml(String message) {
 		if (message == null) {
-			return (null);
+			return null;
 		}
 		char content[] = new char[message.length()];
 		message.getChars(0, message.length(), content, 0);
@@ -69,7 +69,7 @@ public final class Util {
 
 	public static String mkTextToHTML(String message) {
 		if (message == null) {
-			return ("");
+			return "";
 		}
 		return mknohtml(message).replace("\n", "<br>");
 	}
@@ -81,7 +81,7 @@ public final class Util {
 	 */
 	public static String mksafecmdargs(String message) {
 		if (message == null) {
-			return (null);
+			return null;
 		}
 		char content[] = new char[message.length()];
 		message.getChars(0, message.length(), content, 0);
@@ -336,6 +336,9 @@ public final class Util {
 	}
 
 	public static String csvQuote(String title) {
+		if (title == null) {
+			return null;
+		}
 		if (title.contains(";")) {
 			title = "\"" + title + "\""; // .replace("\"", "\"\"")
 		}
