@@ -63,7 +63,7 @@ public class ShowUserView extends HttpServlet {
 
 		if (user instanceof Student) {
 			out.println("<p>Matrikelnummer: " + ((Student) user).getMatrikelno() + "</p>");
-			out.println("<p>Studiengang: " + ((Student) user).getStudiengang() + "</p>");
+			out.println("<p>Studiengang: " + Util.mknohtml(((Student) user).getStudiengang()) + "</p>");
 		}
 
 		out.println("<h1>Vorlesungen</h1>");
@@ -84,7 +84,7 @@ public class ShowUserView extends HttpServlet {
 						Task task = taskIterator.next();
 						out.println("<tr>");
 						out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
-						out.println("<td class=points>" + task.getMaxPoints() + "</td>");
+						out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 						maxPoints += task.getMaxPoints();
 						Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, user);
 						if (submission != null) {
