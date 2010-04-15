@@ -69,7 +69,7 @@ public class ShowSubmission extends HttpServlet {
 			return;
 		}
 
-		if (task.getDeadline().before(Util.correctTimezone(new Date())) && request.getParameter("points") != null) {
+		if ((task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()))) && request.getParameter("points") != null) {
 			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf(session);
 			String comment = "";
 			if (request.getParameter("comment") != null) {

@@ -69,7 +69,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<h2>Gruppe: " + submission.getSubmitters().iterator().next().getGroup().getName() + "</h2>");
 		}
 
-		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+		if (task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()))) {
 			out.println("<h2>Bewertung:</h2>");
 			out.println("<table class=border>");
 			String oldComment = "";
