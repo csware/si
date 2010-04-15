@@ -80,13 +80,13 @@ public class ShowLectureTutorFullView extends HttpServlet {
 			out.println("<tr>");
 			if (lectureParticipation.getUser() instanceof Student) {
 				out.println("<td>" + ((Student) lectureParticipation.getUser()).getMatrikelno() + "</td>");
-				out.println("<td>" + ((Student) lectureParticipation.getUser()).getStudiengang() + "</td>");
+				out.println("<td>" + Util.mknohtml(((Student) lectureParticipation.getUser()).getStudiengang()) + "</td>");
 			} else {
 				out.println("<td>n/a</td>");
 				out.println("<td>n/a</td>");
 			}
-			out.println("<td><a href=\"ShowUser?uid=" + lectureParticipation.getUser().getUid() + "\">" + lectureParticipation.getUser().getLastName() + "</a></td>");
-			out.println("<td><a href=\"ShowUser?uid=" + lectureParticipation.getUser().getUid() + "\">" + lectureParticipation.getUser().getFirstName() + "</a></td>");
+			out.println("<td><a href=\"ShowUser?uid=" + lectureParticipation.getUser().getUid() + "\">" + Util.mknohtml(lectureParticipation.getUser().getLastName()) + "</a></td>");
+			out.println("<td><a href=\"ShowUser?uid=" + lectureParticipation.getUser().getUid() + "\">" + Util.mknohtml(lectureParticipation.getUser().getFirstName()) + "</a></td>");
 			int points = 0;
 			for (Task task : taskList) {
 				Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());

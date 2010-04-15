@@ -69,7 +69,7 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 		for (Participation lectureParticipation : participationDAO.getParticipationsOfLectureOrdered(lecture)) {
 			if (lectureParticipation.getUser() instanceof Student) {
 				out.print(((Student) lectureParticipation.getUser()).getMatrikelno() + ";");
-				out.print(((Student) lectureParticipation.getUser()).getStudiengang() + ";");
+				out.print(Util.csvQuote(((Student) lectureParticipation.getUser()).getStudiengang()) + ";");
 			} else {
 				out.print("n/a;n/a;");
 			}
