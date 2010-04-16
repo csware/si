@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -51,7 +51,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 		} else {
 			template.printTemplateHeader("Veranstaltung \"" + Util.mknohtml(lecture.getName()) + "\" bearbeiten", "<a href=\"Overview\">Meine Veranstaltungen</a> - <a href=\"AdminMenue\">Admin-Menü</a> &gt; Veranstaltung \"" + Util.mknohtml(lecture.getName()) + "\" bearbeiten");
-			out.println("<p class=mid><a href=\"" + response.encodeURL("?action=deleteLecture&amp;lecture=" + lecture.getId()) + "\">Veranstaltung löschen</a></p>");
+			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("?action=deleteLecture&amp;lecture=" + lecture.getId()) + "\">Veranstaltung löschen</a></p>");
 			out.println("<h2>Betreuer</h2>");
 			Iterator<Participation> advisorIterator = lecture.getParticipants().iterator();
 			out.println("<table class=border>");
@@ -65,7 +65,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 					User user = participation.getUser();
 					out.println("<tr>");
 					out.println("<td>" + user.getFullName() + "</td>");
-					out.println("<td><a href=\"" + response.encodeURL("?action=removeUser&amp;lecture=" + lecture.getId() + "&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
+					out.println("<td><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("?action=removeUser&amp;lecture=" + lecture.getId() + "&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
 					out.println("</tr>");
 				}
 			}
@@ -89,7 +89,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 					User user = participation.getUser();
 					out.println("<tr>");
 					out.println("<td>" + user.getFullName() + "</td>");
-					out.println("<td><a href=\"" + response.encodeURL("?action=removeUser&amp;lecture=" + lecture.getId() + "&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
+					out.println("<td><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("?action=removeUser&amp;lecture=" + lecture.getId() + "&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
 					out.println("</tr>");
 				}
 			}

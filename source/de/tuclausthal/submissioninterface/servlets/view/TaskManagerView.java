@@ -114,7 +114,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<h2>Ähnlichkeitsprüfungen</h2>");
 			for (SimilarityTest similarityTest : task.getSimularityTests()) {
 				out.print(similarityTest + ": ");
-				out.println("<a href=\"" + response.encodeURL("DupeCheck?action=deleteSimilarityTest&amp;taskid=" + task.getTaskid() + "&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "\">löschen</a><br>");
+				out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DupeCheck?action=deleteSimilarityTest&amp;taskid=" + task.getTaskid() + "&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "\">löschen</a><br>");
 			}
 			out.println("<p class=mid><a href=\"" + response.encodeURL("DupeCheck?taskid=" + task.getTaskid()) + "\">Ähnlichkeitsprüfung hinzufügen</a><p>");
 			out.println("<h2>Funktionstests der Abgaben</h2>");
@@ -134,7 +134,7 @@ public class TaskManagerView extends HttpServlet {
 				}
 				out.println("# Ausführbar für Studenten: " + test.getTimesRunnableByStudents() + "<br>");
 				out.println("Tutortest: " + test.isForTutors() + "<br>");
-				out.println("<a href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">Test löschen</a>");
+				out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">Test löschen</a>");
 				out.println("</li>");
 			}
 			out.println("</ul>");

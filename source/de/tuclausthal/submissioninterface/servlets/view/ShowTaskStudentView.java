@@ -100,7 +100,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				file = file.replace(System.getProperty("file.separator"), "/");
 				out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(file) + "</a>");
 				if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
-					out.println(" (<a href=\"" + response.encodeURL("DeleteFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)");
+					out.println(" (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DeleteFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)");
 				}
 				out.println("<br>");
 			}
