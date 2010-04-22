@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
+import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.UserDAO;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -59,7 +60,7 @@ public class ShowUser extends HttpServlet {
 			return;
 		}
 
-		User user = new UserDAO(session).getUser(Util.parseInteger(request.getParameter("uid"), 0));
+		User user = DAOFactory.UserDAOIf(session).getUser(Util.parseInteger(request.getParameter("uid"), 0));
 		if (user == null) {
 			request.setAttribute("title", "Benutzer nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
