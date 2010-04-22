@@ -106,6 +106,7 @@ public class SubmitSolution extends HttpServlet {
 		request.setAttribute("task", task);
 
 		if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) >= 0) {
+			request.setAttribute("participants", DAOFactory.ParticipationDAOIf(session).getParticipationsOfLectureOrdered(task.getLecture()));
 			request.getRequestDispatcher("SubmitSolutionAdvisorFormView").forward(request, response);
 		} else {
 			request.setAttribute("participation", participation);
