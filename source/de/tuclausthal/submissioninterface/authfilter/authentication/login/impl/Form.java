@@ -46,6 +46,7 @@ public class Form implements LoginIf {
 	public void failNoData(String error, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.addHeader("Cache-Control", "no-cache, must-revalidate");
 		Template template = TemplateFactory.getTemplate(request, response);
+		template.addHead("<script type=\"text/javascript\"><!-- document.login.username.focus(); // --></script>");
 		template.printTemplateHeader("Login erforderlich", "Login erforderlich");
 		PrintWriter out = response.getWriter();
 		if (!error.isEmpty()) {
@@ -53,7 +54,7 @@ public class Form implements LoginIf {
 		}
 		out.print("<form action=\"");
 		//out.print(response.encodeURL(MainBetterNameHereRequired.getServletRequest().getRequestURL().toString()));
-		out.println("\" method=POST>");
+		out.println("\" method=POST name=login>");
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>");

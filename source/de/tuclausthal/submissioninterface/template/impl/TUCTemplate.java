@@ -32,6 +32,7 @@ public class TUCTemplate extends Template {
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/print.css\" media=\"print\">");
 		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + prefix + "/scripts.js\"></script>");
 		out.println("<title>" + title + "</title>");
+		getHeads();
 		out.println("</head>");
 		out.println("<body>");
 		out.println("<div id=\"aussen\">");

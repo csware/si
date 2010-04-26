@@ -19,6 +19,8 @@
 package de.tuclausthal.submissioninterface.template;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,6 +40,7 @@ public abstract class Template {
 	protected HttpServletResponse servletResponse;
 	protected SessionAdapter sessionAdapter;
 	protected String prefix;
+	private List<String> headers = new LinkedList<String>();
 
 	public Template(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
 		this.servletResponse = servletResponse;
@@ -76,6 +79,16 @@ public abstract class Template {
 
 	public void printTemplateHeader(Group group) throws IOException {
 		printTemplateHeader("Gruppe \"" + Util.mknohtml(group.getName()) + "\"", "<a href=\"" + servletResponse.encodeURL("Overview") + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + servletResponse.encodeURL("ShowLecture?lecture=" + group.getLecture().getId()) + "\">Veranstaltung \"" + Util.mknohtml(group.getLecture().getName()) + "\"</a> &gt; Gruppe \"" + Util.mknohtml(group.getName()) + "\"");
+	}
+
+	public void addHead(String header) {
+		headers.add(header);
+	}
+
+	protected void getHeads() throws IOException {
+		for (String header : headers) {
+			servletResponse.getWriter().println(header + "\n");
+		}
 	}
 
 	/**
