@@ -173,13 +173,6 @@ public class SubmitSolution extends HttpServlet {
 		if (!isMultipart) {
 			partnerID = Util.parseInteger(request.getParameter("partnerid"), 0);
 		} else {
-			if ("-".equals(task.getFilenameRegexp())) {
-				template.printTemplateHeader("Ungültige Anfrage");
-				out.println("<div class=mid>Dateiupload ist für diese Aufgabe deaktiviert.</div>");
-				template.printTemplateFooter();
-				return;
-			}
-
 			// Create a factory for disk-based file items
 			FileItemFactory factory = new DiskFileItemFactory();
 
@@ -239,6 +232,13 @@ public class SubmitSolution extends HttpServlet {
 			if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 				template.printTemplateHeader("Abgabe nicht (mehr) möglich");
 				out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
+				template.printTemplateFooter();
+				return;
+			}
+
+			if (!isMultipart && "-".equals(task.getFilenameRegexp())) {
+				template.printTemplateHeader("Ungültige Anfrage");
+				out.println("<div class=mid>Dateiupload ist für diese Aufgabe deaktiviert.</div>");
 				template.printTemplateFooter();
 				return;
 			}
