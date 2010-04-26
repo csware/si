@@ -85,11 +85,15 @@ public class MarkEmptyTask extends HttpServlet {
 			}
 			submission = submissionDAO.createSubmission(task, studentParticipation);
 			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf(session);
-			String comment = "";
-			if (request.getParameter("comment") != null) {
-				comment = request.getParameter("comment");
+			String publicComment = "";
+			if (request.getParameter("publiccomment") != null) {
+				publicComment = request.getParameter("publiccomment");
 			}
-			pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, comment, request.getParameter("pointsok") != null);
+			String internalComment = "";
+			if (request.getParameter("internalcomment") != null) {
+				internalComment = request.getParameter("internalcomment");
+			}
+			pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, request.getParameter("pointsok") != null);
 			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("MarkEmptyTask?taskid=" + task.getTaskid()));
 			return;

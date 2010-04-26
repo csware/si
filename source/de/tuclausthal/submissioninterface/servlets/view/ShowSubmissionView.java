@@ -72,12 +72,14 @@ public class ShowSubmissionView extends HttpServlet {
 		if (task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()))) {
 			out.println("<h2>Bewertung:</h2>");
 			out.println("<table class=border>");
-			String oldComment = "";
+			String oldPublicComment = "";
+			String oldInternalComment = "";
 			int points = 0;
 			boolean pointsOk = false;
 			String pointsGivenBy = "";
 			if (submission.getPoints() != null) {
-				oldComment = submission.getPoints().getComment();
+				oldPublicComment = submission.getPoints().getPublicComment();
+				oldInternalComment = submission.getPoints().getInternalComment();
 				points = submission.getPoints().getPoints();
 				pointsOk = submission.getPoints().getPointsOk();
 				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte  vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getEmail()) + "@tu-clausthal.de\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>)";
@@ -87,7 +89,8 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<form action=\"?\" method=post>");
 			out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
 			out.println("<b>Punkte:</b> <input type=text name=points size=3 value=\"" + Util.showPoints(points) + "\"> (max. " + Util.showPoints(task.getMaxPoints()) + ")" + pointsGivenBy + "<br>");
-			out.println("<b>Kommentar:</b><br><textarea cols=80 rows=8 name=comment>" + Util.mknohtml(oldComment) + "</textarea><br>");
+			out.println("<b>Öffentlicher Kommentar:</b><br><textarea cols=80 rows=8 name=publiccomment>" + Util.mknohtml(oldPublicComment) + "</textarea><br>");
+			out.println("<b>Interner Kommentar:</b><br><textarea cols=80 rows=8 name=internalcomment>" + Util.mknohtml(oldInternalComment) + "</textarea><br>");
 			out.println("<b>Abgenommen:</b> <input type=checkbox name=pointsok " + (pointsOk ? "checked" : "") + "><br>");
 			out.println("<input type=submit value=Speichern>");
 			out.println("</form>");

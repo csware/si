@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -31,7 +31,8 @@ public class Points implements Serializable {
 	private Integer points;
 	private Boolean pointsOk;
 	private Participation issuedBy;
-	private String comment;
+	private String publicComment;
+	private String internalComment;
 
 	/**
 	 * @return the points
@@ -67,15 +68,15 @@ public class Points implements Serializable {
 	 * @return the comment
 	 */
 	@Lob
-	public String getComment() {
-		return comment;
+	public String getPublicComment() {
+		return publicComment;
 	}
 
 	/**
 	 * @param comment the comment to set
 	 */
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setPublicComment(String comment) {
+		this.publicComment = comment;
 	}
 
 	/**
@@ -90,5 +91,19 @@ public class Points implements Serializable {
 	 */
 	public void setPointsOk(Boolean pointsOk) {
 		this.pointsOk = pointsOk;
+	}
+
+	/**
+	 * @return the internalComment
+	 */
+	public String getInternalComment() {
+		return internalComment;
+	}
+
+	/**
+	 * @param internalComment the internalComment to set
+	 */
+	public void setInternalComment(String internalComment) {
+		this.internalComment = internalComment;
 	}
 }

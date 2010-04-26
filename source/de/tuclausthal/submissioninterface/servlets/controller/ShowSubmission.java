@@ -71,12 +71,16 @@ public class ShowSubmission extends HttpServlet {
 
 		if ((task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()))) && request.getParameter("points") != null) {
 			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf(session);
-			String comment = "";
-			if (request.getParameter("comment") != null) {
-				comment = request.getParameter("comment");
+			String publicComment = "";
+			if (request.getParameter("publiccomment") != null) {
+				publicComment = request.getParameter("publiccomment");
+			}
+			String internalComment = "";
+			if (request.getParameter("internalcomment") != null) {
+				internalComment = request.getParameter("internalcomment");
 			}
 			Transaction tx = session.beginTransaction();
-			pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, comment, request.getParameter("pointsok") != null);
+			pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, request.getParameter("pointsok") != null);
 			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));
 			return;

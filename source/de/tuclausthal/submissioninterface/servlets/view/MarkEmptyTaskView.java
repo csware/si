@@ -59,7 +59,8 @@ public class MarkEmptyTaskView extends HttpServlet {
 		}
 		out.println("</select><br>");
 		out.println("<b>Punkte:</b> <input type=text name=points size=3 value=\"\"> (max. " + Util.showPoints(task.getMaxPoints()) + ")<br>");
-		out.println("<b>Kommentar:</b><br><textarea cols=80 rows=8 name=comment></textarea><br>");
+		out.println("<b>Öffentlicher Kommentar:</b><br><textarea cols=80 rows=8 name=publiccomment></textarea><br>");
+		out.println("<b>Interner Kommentar:</b><br><textarea cols=80 rows=8 name=internalcomment></textarea><br>");
 		out.println("<b>Abgenommen:</b> <input type=checkbox name=pointsok checked><br>");
 		out.println("<input type=submit value=Speichern>");
 		out.println("</form>");
