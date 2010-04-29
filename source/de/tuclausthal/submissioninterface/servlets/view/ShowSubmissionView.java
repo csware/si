@@ -82,7 +82,7 @@ public class ShowSubmissionView extends HttpServlet {
 				oldInternalComment = submission.getPoints().getInternalComment();
 				points = submission.getPoints().getPoints();
 				pointsOk = submission.getPoints().getPointsOk();
-				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte  vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getEmail()) + "@tu-clausthal.de\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>)";
+				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte  vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getEmail()) + "@tu-clausthal.de\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>, <a href=\"ShowMarkHistory?sid=" + submission.getSubmissionid() + "\">History</a>)";
 			}
 			out.println("<tr>");
 			out.println("<td>");

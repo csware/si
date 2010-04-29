@@ -37,6 +37,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
@@ -85,6 +86,9 @@ public class MarkApproved extends HttpServlet {
 					submission.getPoints().setPointsOk(true);
 					submission.getPoints().setIssuedBy(participation);
 					session.save(submission);
+					// TODO: Attention! Manual update
+					PointHistory ph = new PointHistory(submission, "pointsOk", "false", "true", participation);
+					session.save(ph);
 				}
 			}
 		}

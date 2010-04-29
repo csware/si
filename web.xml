@@ -131,6 +131,14 @@
         <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.ShowSubmission</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>ShowMarkHistory</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.ShowMarkHistory</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShowMarkHistoryView</servlet-name>
+        <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ShowMarkHistoryView</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ShowUser</servlet-name>
         <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.ShowUser</servlet-class>
     </servlet>
@@ -325,6 +333,14 @@
     <servlet-mapping>
         <servlet-name>ShowSubmission</servlet-name>
         <url-pattern>/servlets/ShowSubmission</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowMarkHistory</servlet-name>
+        <url-pattern>/servlets/ShowMarkHistory</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowMarkHistoryView</servlet-name>
+        <url-pattern>/servlets/ShowMarkHistoryView</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ShowUser</servlet-name>

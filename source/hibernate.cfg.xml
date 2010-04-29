@@ -45,5 +45,6 @@
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory"/>
  </session-factory>
 </hibernate-configuration>
