@@ -60,16 +60,16 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 
 		// TODO: Attention: see @MarkApproved.java
 		if (oldPoints != null) {
-			if (oldPoints.getPointsOk() != points.getPointsOk()) {
+			if (!oldPoints.getPointsOk().equals(points.getPointsOk())) {
 				storeInHistory(submission, "pointsOk", oldPoints.getPointsOk() + "", points.getPointsOk() + "", participation);
 			}
-			if (oldPoints.getPoints() != points.getPoints()) {
+			if (!oldPoints.getPoints().equals(points.getPoints())) {
 				storeInHistory(submission, "points", Util.showPoints(oldPoints.getPoints()), Util.showPoints(points.getPoints()), participation);
 			}
-			if (oldPoints.getInternalComment() != null && oldPoints.getInternalComment().equals(points.getInternalComment())) {
+			if (oldPoints.getInternalComment() != null && !oldPoints.getInternalComment().equals(points.getInternalComment())) {
 				storeInHistory(submission, "internalComment", oldPoints.getInternalComment(), points.getInternalComment(), participation);
 			}
-			if (oldPoints.getPublicComment() != null && oldPoints.getPublicComment().equals(points.getPublicComment())) {
+			if (oldPoints.getPublicComment() != null && !oldPoints.getPublicComment().equals(points.getPublicComment())) {
 				storeInHistory(submission, "publicComment", oldPoints.getPublicComment(), points.getPublicComment(), participation);
 			}
 		} else {
@@ -79,10 +79,10 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 			if (points.getPoints() != null) {
 				storeInHistory(submission, "points", "", Util.showPoints(points.getPoints()), participation);
 			}
-			if (points.getInternalComment() != null) {
+			if (points.getInternalComment() != null && !"".equals(points.getInternalComment())) {
 				storeInHistory(submission, "internalComment", "", points.getInternalComment(), participation);
 			}
-			if (points.getPublicComment() != null) {
+			if (points.getPublicComment() != null && !"".equals(points.getPublicComment())) {
 				storeInHistory(submission, "publicComment", "", points.getPublicComment(), participation);
 			}
 		}
