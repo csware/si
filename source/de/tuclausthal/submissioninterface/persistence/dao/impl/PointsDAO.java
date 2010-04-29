@@ -60,17 +60,26 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 
 		// TODO: Attention: see @MarkApproved.java
 		if (oldPoints != null) {
+			boolean changed = false;
 			if (!oldPoints.getPointsOk().equals(points.getPointsOk())) {
 				storeInHistory(submission, "pointsOk", oldPoints.getPointsOk() + "", points.getPointsOk() + "", participation);
+				changed = true;
 			}
 			if (!oldPoints.getPoints().equals(points.getPoints())) {
 				storeInHistory(submission, "points", Util.showPoints(oldPoints.getPoints()), Util.showPoints(points.getPoints()), participation);
+				changed = true;
 			}
 			if (oldPoints.getInternalComment() != null && !oldPoints.getInternalComment().equals(points.getInternalComment())) {
 				storeInHistory(submission, "internalComment", oldPoints.getInternalComment(), points.getInternalComment(), participation);
+				changed = true;
 			}
 			if (oldPoints.getPublicComment() != null && !oldPoints.getPublicComment().equals(points.getPublicComment())) {
 				storeInHistory(submission, "publicComment", oldPoints.getPublicComment(), points.getPublicComment(), participation);
+				changed = true;
+			}
+			if (changed && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid()) {
+				// HACK hardcoded URL
+				//de.tuclausthal.submissioninterface.util.MailSender.SendMail(participation.getUser().getEmail() + "@tu-clausthal.de", "Mark-Change Notification", "Hallo,\n\n" + oldPoints.getIssuedBy().getUser().getFullName() + " hat Deine Bewertung von <https://si.in.tu-clausthal.de/submissionsystem/servlets/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
 			}
 		} else {
 			if (points.getPointsOk() != null) {
