@@ -221,7 +221,9 @@ public class ShowTaskTutorView extends HttpServlet {
 				}
 				out.println("</table><p>");
 				out.println("</form>");
-				out.println("<h3>Gesamtdurchschnitt: " + Util.showPoints(Float.valueOf(sumOfPoints / (float) sumOfSubmissions).intValue()) + "</h3>");
+				if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+					out.println("<h3>Gesamtdurchschnitt: " + Util.showPoints(Float.valueOf(sumOfPoints / (float) sumOfSubmissions).intValue()) + "</h3>");
+				}
 			}
 		}
 		template.printTemplateFooter();
