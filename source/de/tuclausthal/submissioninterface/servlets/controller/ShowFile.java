@@ -53,6 +53,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 public class ShowFile extends HttpServlet {
 	private final static String[] plainTextFiles = new String[] { "xml", "htm", "html", "jsp", "txt", "css", "js", "java", "c", "cpp", "h" };
+	private final static String[] inlineFiles = new String[] { "jpg", "jpeg", "png", "gif", "pdf" };
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -107,7 +108,7 @@ public class ShowFile extends HttpServlet {
 			} else {
 				if (file.getName().toLowerCase().endsWith(".pdf")) {
 					response.setContentType("application/pdf");
-				} else if (file.getName().toLowerCase().endsWith(".jpg")) {
+				} else if (file.getName().toLowerCase().endsWith(".jpg") || file.getName().toLowerCase().endsWith(".jpeg")) {
 					response.setContentType("image/jpg");
 				} else if (file.getName().toLowerCase().endsWith(".gif")) {
 					response.setContentType("image/gif");
@@ -134,6 +135,20 @@ public class ShowFile extends HttpServlet {
 
 	private boolean isPlainTextFile(String lowercaseFilename) {
 		for (String extension : plainTextFiles) {
+			if (lowercaseFilename.endsWith(extension)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isInlineAble(String lowercaseFilename) {
+		for (String extension : plainTextFiles) {
+			if (lowercaseFilename.endsWith(extension)) {
+				return true;
+			}
+		}
+		for (String extension : inlineFiles) {
 			if (lowercaseFilename.endsWith(extension)) {
 				return true;
 			}
