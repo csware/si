@@ -46,7 +46,6 @@ public class Form implements LoginIf {
 	public void failNoData(String error, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.addHeader("Cache-Control", "no-cache, must-revalidate");
 		Template template = TemplateFactory.getTemplate(request, response);
-		template.addHead("<script type=\"text/javascript\"><!-- document.login.username.focus(); // --></script>");
 		template.printTemplateHeader("Login erforderlich", "Login erforderlich");
 		PrintWriter out = response.getWriter();
 		if (!error.isEmpty()) {
@@ -59,7 +58,7 @@ public class Form implements LoginIf {
 		out.println("<tr>");
 		out.println("<th>");
 		out.println("Benutzername:");
-		out.println("</td>");
+		out.println("</th>");
 		out.println("<td>");
 		out.println("<input type=text size=20 name=username>");
 		out.println("</td>");
@@ -67,7 +66,7 @@ public class Form implements LoginIf {
 		out.println("<tr>");
 		out.println("<th>");
 		out.println("Passwort:");
-		out.println("</td>");
+		out.println("</th>");
 		out.println("<td>");
 		out.println("<input type=password size=20 name=password>");
 		out.println("</td>");
@@ -77,6 +76,7 @@ public class Form implements LoginIf {
 		out.println("</td>");
 		out.println("</tr>");
 		out.println("</table>");
+		out.println("<script type=\"text/javascript\"><!--\ndocument.login.username.focus();\n// --></script>");
 		out.println("</form>");
 		template.printTemplateFooter();
 		out.close();
