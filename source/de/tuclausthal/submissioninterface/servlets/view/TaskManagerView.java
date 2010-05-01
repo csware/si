@@ -51,6 +51,21 @@ public class TaskManagerView extends HttpServlet {
 		Task task = (Task) request.getAttribute("task");
 		Lecture lecture = task.getLecture();
 
+		template.addHead("<script type=\"text/javascript\" src=\"" + getServletContext().getContextPath() + "/tiny_mce/tiny_mce.js\"></script>");
+		template.addHead("<script type=\"text/javascript\">\ntinyMCE.init({" +
+							"mode : \"textareas\"," +
+							"theme : \"advanced\"," +
+							"plugins : \"safari,style,table,advimage,iespell,contextmenu,paste,nonbreaking\"," +
+							"theme_advanced_buttons1 : \"newdocument,|,undo,redo,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,fontsizeselect\"," +
+							"theme_advanced_buttons2 : \"paste,pastetext,pasteword,|,bullist,numlist,|,outdent,indent,blockquote,|,link,unlink,anchor,image,cleanup,forecolor,backcolor\"," +
+							"theme_advanced_buttons3 : \"tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,iespell,advhr,|,nonbreaking,blockquote,code\"," +
+							"theme_advanced_toolbar_location : \"top\"," +
+							"theme_advanced_toolbar_align : \"left\"," +
+							"theme_advanced_statusbar_location : \"bottom\"," +
+							"theme_advanced_resizing : true," +
+							"content_css : \"/submissionsystem/si.css\"" +
+							"});\n</script>");
+
 		if (task.getTaskid() != 0) {
 			template.printTemplateHeader("Aufgabe bearbeiten", task);
 		} else {
