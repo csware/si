@@ -12,8 +12,8 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 
 public class MailSender {
-	public static String mailServer = "tu-clausthal.de";
-	public static String from = "\"Submission Interface\" <noreply@esw-heim.tu-clausthal.de>";
+	public static String mailServer = "127.0.0.1";
+	public static String from = "\"Submission Interface\" <noreply@si.in.tu-clausthal.de>";
 	public static String subjectPrefix = "[SubmissionInterface] ";
 
 	public static void SendMail(String to, String subject, String messageText) {
