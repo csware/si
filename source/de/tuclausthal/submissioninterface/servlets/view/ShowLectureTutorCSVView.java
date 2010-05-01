@@ -60,13 +60,14 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 
 		List<Task> taskList = lecture.getTasks();
 
-		out.print("MatrikelNo;Studiengang;Nachname;Vorname;eMail;");
+		out.print("Teilnahme;MatrikelNo;Studiengang;Nachname;Vorname;eMail;");
 		for (Task task : taskList) {
 			out.print(Util.csvQuote(task.getTitle()) + " (Pkts: " + Util.showPoints(task.getMaxPoints()) + ")" + ";");
 		}
 		out.println("Gesamt");
 
 		for (Participation lectureParticipation : participationDAO.getParticipationsOfLectureOrdered(lecture)) {
+			out.print(lectureParticipation.getRoleType().toString() + ";");
 			if (lectureParticipation.getUser() instanceof Student) {
 				out.print(((Student) lectureParticipation.getUser()).getMatrikelno() + ";");
 				out.print(Util.csvQuote(((Student) lectureParticipation.getUser()).getStudiengang()) + ";");
