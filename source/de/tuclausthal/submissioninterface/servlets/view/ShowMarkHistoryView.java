@@ -53,11 +53,11 @@ public class ShowMarkHistoryView extends HttpServlet {
 		out.println("<h1>Aktivitätslog</h1>");
 		out.println("<table class=border>");
 		out.println("<tr>");
-		out.println("<th>Who</th>");
-		out.println("<th>When</th>");
-		out.println("<th>What</th>");
-		out.println("<th>Removed</th>");
-		out.println("<th>Added</th>");
+		out.println("<th>Wer</th>");
+		out.println("<th>Wann</th>");
+		out.println("<th>Feld</th>");
+		out.println("<th>Entfernt</th>");
+		out.println("<th>Hinzugefügt</th>");
 		out.println("</tr>");
 
 		LinkedList<PointHistory> ph = new LinkedList<PointHistory>();
