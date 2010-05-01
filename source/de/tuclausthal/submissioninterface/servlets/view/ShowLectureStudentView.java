@@ -78,7 +78,7 @@ public class ShowLectureStudentView extends HttpServlet {
 						if (submission.getPoints().getPointsOk()) {
 							out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPoints()) + "</td>");
 						} else {
-							out.println("<td class=points>0, nicht vorgestellt</td>");
+							out.println("<td class=points>0, nicht abgenommen</td>");
 						}
 					} else {
 						out.println("<td class=points>n/a</td>");

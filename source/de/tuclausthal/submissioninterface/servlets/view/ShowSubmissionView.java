@@ -150,10 +150,10 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<p><a href=\"DownloadAsZip?sid=" + submission.getSubmissionid() + "\">alles als .zip herunterladen</a></p>");
 			for (String file : submittedFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
-				if (file.endsWith(".txt") || file.endsWith(".java") || file.endsWith(".pdf") || file.endsWith(".jpg") || file.endsWith(".png") || file.endsWith(".gif")) {
+				if (file.toLowerCase().endsWith(".xml") || file.toLowerCase().endsWith(".txt") || file.toLowerCase().endsWith(".java") || file.toLowerCase().endsWith(".pdf") || file.toLowerCase().endsWith(".jpg") || file.toLowerCase().endsWith(".png") || file.toLowerCase().endsWith(".gif")) {
 					out.println("<h3>" + Util.mknohtml(file) + "</h3>");
 					out.println("<iframe width=800 height=600 src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe><br>");
-					if (file.endsWith(".java")) {
+					if (file.toLowerCase().endsWith(".java")) {
 						out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "&comments=off\" target=\"_blank\">" + Util.mknohtml(file) + " ohne Kommentare anzeigen</a><br>");
 					}
 				}

@@ -52,6 +52,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  *
  */
 public class ShowFile extends HttpServlet {
+	private final static String[] plainTextFiles = new String[] { "xml", "htm", "html", "jsp", "txt", "css", "js", "java", "c", "cpp", "h" };
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
@@ -84,7 +86,7 @@ public class ShowFile extends HttpServlet {
 
 		File file = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + request.getPathInfo().substring(1));
 		if (file.exists() && file.isFile()) {
-			if ((file.getName().toLowerCase().endsWith(".txt") || file.getName().toLowerCase().endsWith(".java")) && !"true".equals(request.getParameter("download"))) {
+			if (isPlainTextFile(file.getName().toLowerCase()) && !"true".equals(request.getParameter("download"))) {
 				// code for loading/displaying text-files
 				BufferedReader freader = new BufferedReader(new FileReader(file));
 				String line;
@@ -128,5 +130,14 @@ public class ShowFile extends HttpServlet {
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
 		request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
+	}
+
+	private boolean isPlainTextFile(String lowercaseFilename) {
+		for (String extension : plainTextFiles) {
+			if (lowercaseFilename.endsWith(extension)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

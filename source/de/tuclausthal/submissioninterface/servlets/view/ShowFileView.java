@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -39,22 +39,27 @@ public class ShowFileView extends HttpServlet {
 		String fileName = (String) request.getAttribute("fileName");
 		String code = (String) request.getAttribute("code");
 
-		if (fileName.endsWith(".java")) {
-			response.setContentType("text/html");
-			response.setCharacterEncoding("iso-8859-1");
-			PrintWriter out = response.getWriter();
-			Renderer renderer = XhtmlRendererFactory.getRenderer(XhtmlRendererFactory.JAVA);
-			out.write(renderer.highlight(fileName, code, "iso-8859-1", false));
-		} else if (fileName.endsWith(".txt")) {
+		if (fileName.toLowerCase().endsWith(".java")) {
+			showWithRenderer(response, fileName, code, XhtmlRendererFactory.JAVA);
+		} else if (fileName.toLowerCase().endsWith(".htm") || fileName.toLowerCase().endsWith(".html")) {
+			showWithRenderer(response, fileName, code, XhtmlRendererFactory.HTML);
+		} else if (fileName.toLowerCase().endsWith(".c") || fileName.toLowerCase().endsWith(".cpp")) {
+			showWithRenderer(response, fileName, code, XhtmlRendererFactory.CPP);
+		} else if (fileName.toLowerCase().endsWith("xml")) {
+			showWithRenderer(response, fileName, code, XhtmlRendererFactory.XML);
+		} else {
 			response.setContentType("text/plain");
 			response.setCharacterEncoding("iso-8859-1");
 			PrintWriter out = response.getWriter();
 			out.println(code);
-		} else {
-			response.setContentType("text/html");
-			response.setCharacterEncoding("iso-8859-1");
-			PrintWriter out = response.getWriter();
-			out.println("Anzeige der Datei nicht möglich.");
 		}
+	}
+
+	private void showWithRenderer(HttpServletResponse response, String fileName, String code, String renderertype) throws IOException {
+		response.setContentType("text/html");
+		response.setCharacterEncoding("iso-8859-1");
+		PrintWriter out = response.getWriter();
+		Renderer renderer = XhtmlRendererFactory.getRenderer(renderertype);
+		out.write(renderer.highlight(fileName, code, "iso-8859-1", false));
 	}
 }
