@@ -25,6 +25,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -115,6 +116,7 @@ public class PointHistory implements Serializable {
 	/**
 	 * @return the removed
 	 */
+	@Lob
 	@Column(nullable = false)
 	public String getRemoved() {
 		return removed;
@@ -130,6 +132,7 @@ public class PointHistory implements Serializable {
 	/**
 	 * @return the added
 	 */
+	@Lob
 	@Column(nullable = false)
 	public String getAdded() {
 		return added;

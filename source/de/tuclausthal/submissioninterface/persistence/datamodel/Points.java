@@ -96,6 +96,7 @@ public class Points implements Serializable {
 	/**
 	 * @return the internalComment
 	 */
+	@Lob
 	public String getInternalComment() {
 		return internalComment;
 	}
