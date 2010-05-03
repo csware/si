@@ -1,0 +1,367 @@
+/* General: = Definitionen
+----------------------------------------------- */
+
+body
+{
+	font-size: 100.01%;
+	padding: 0;
+	margin: 0;
+	background: none;
+	color: #000;
+}
+
+
+/* General: = Schriften und Abstaende
+----------------------------------------------- */
+
+p, table, th, td, li, form, input, select
+{
+	font-size: 1em;
+}
+
+pre, tt, code
+{
+	font: 1em Courier, monospace;
+}
+
+h1, h2, h3
+{
+	position: relative;
+}
+
+h1, h2
+{
+        font-family:  Georgia, "New Century Schoolbook", Times, "Times New Roman", serif;
+        font-weight: normal;
+}
+
+
+h1
+{
+	margin-top: 0;
+	font-size: 1.6em;
+	line-height: 1.2em;
+}
+
+h2
+{
+	font-size: 1.4em;
+	line-height: 1.2em;
+	border-bottom: 1px solid #ccc;
+}
+
+h3, h4, h5, h6
+{
+	font: bold 1em Verdana, Lucida, sans-serif;
+}
+
+#einrichtung h2
+{
+	margin: 0;
+	padding: 0;
+	font: bold 1.4em Arial, Helvetica, sans-serif;
+	border:none;
+}
+
+#einrichtung h3
+{
+	margin: 0;
+	padding: 0;
+	font: bold 1.3em Arial, Helvetica, sans-serif;
+}
+
+#einrichtung a
+{
+	color: #000;
+	text-decoration: none;
+}
+
+
+/* General: = Links
+----------------------------------------------- */
+
+a:link, a:visited
+{
+	color: #008c4f;
+	text-decoration: underline;
+}
+
+a:hover
+{
+	color: #8c1c00;
+	text-decoration: underline;
+}
+
+
+/* General: = Container
+----------------------------------------------- */
+#aussen
+{
+	margin: 0;
+	padding: 0;
+	font: 82% Verdana, Lucida, sans-serif;
+}
+
+
+#logo
+{
+	margin: 0;
+	padding: 0;
+}
+
+#menu
+{
+	display: none;
+}
+
+#page
+{
+	margin: 0;
+	padding: 0;
+}
+
+#einrichtung
+{
+	margin: 0;
+	padding: 0 0 20px 78px;
+	border-bottom: 1px solid #666;
+}
+
+#pfad
+{
+	display: none;
+}
+
+#pfad-wide
+{
+	display: none;
+}
+
+
+/* Navigation:
+----------------------------------------------- */
+/* Navigationsbox-Eintraege neu (Listenform)*/
+
+#hauptnavi
+{
+	display: none;
+}
+
+/*Inhalt
+----------------------------------------------- */
+
+#inhalt
+{
+	margin: 0;
+	padding: 20px 0;
+	line-height: 1.3em;
+}
+
+#inhalt-wide
+{
+	margin: 0;
+	padding: 20px 0;
+	line-height: 1.3em;
+}
+
+#inhalt h1 a, #inhalt h2 a
+{
+	text-decoration: none;
+}
+
+#inhalt h1, #inhalt-wide h1
+{
+	margin-bottom: 1.5em;
+}
+
+#spalte1, #spalte1_70
+{
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+#spalte1
+{
+	width: 50%;
+}
+
+#spalte1_70
+{
+	width: 70%;
+}
+
+#spalte1 p, #spalte1_70 p
+{
+	padding: 4px 0;
+}
+
+#spalte1 h3, #spalte1_70 h3
+{
+	padding: 1em 0;
+}
+
+#spalte1 h3.top, #spalte1_70 h3.top
+{
+	margin: 0 0 1em 0;
+}
+
+#spalte1 ul.ohne, #spalte1_70 ul.ohne
+{
+	list-style-type: none;
+}
+
+#spalte1 ul.liste, #spalte1_70 ul.liste
+{
+	margin: 0 0 1em 0;
+	list-style-type: none;
+}
+
+#spalte1 span.datum, #spalte1_70 span.datum
+{
+	display: block;
+	float: right;
+	padding-left: 10px;
+	font-size: 0.85em;
+	text-align: right;
+}
+
+
+/* Spalte 2
+----------------------------------------------------------------*/
+#spalte2, #spalte2_30
+{
+	margin: 0;
+	padding: 0 0 0 20px;
+	overflow: hidden;
+}
+
+#spalte2 p, #spalte2_30 p
+{
+	padding: 0.5em 0 0.5em 0;
+}
+
+#spalte2 h3, #spalte2_30 h3
+{
+	margin: 1.5em 0 0 0;
+	font-size: 0.9em;
+         font-weight: bold;
+	text-transform: uppercase;
+}
+
+#spalte2 h3.top, #spalte2_30 h3.top
+{
+	margin: 0;
+}
+
+#spalte2 ul, #spalte2_30 ul
+{
+	margin: 0 0 1em 0;
+	font-size: 0.85em;
+	line-height: 1.4em;
+	list-style-type: none;
+}
+
+#spalte2_30 dl
+{
+	width: 98%;
+	margin: 0 0 1em 0;
+	padding: 0;
+	border: 1px solid #ccc;
+}
+
+#spalte2_30 dt
+{
+	margin: 0;
+	padding: 4px 10px;
+	background: #ddd;
+	font-weight: bold;
+	font-size: 0.9em;
+	white-space: nowrap;
+	border-bottom: 1px solid #ccc;
+}
+
+#spalte2_30 dd
+{
+	margin: 0px;
+	padding: 4px 10px;
+	font-size: 0.85em;
+}
+
+
+/* Seitenfuss
+----------------------------------------------------------------- */
+#fuss
+{
+	margin: 0;
+	padding: 20px 0 0 0;
+	border-top: 1px solid #666;
+	font-size: 0.85em;
+}
+
+#fuss-wide
+{
+	margin: 0;
+	padding: 20px 0 0 0;
+	border-top: 1px solid #666;
+	font-size: 0.85em;
+}
+
+
+/* Diverse Klassen
+-------------------------------------------------------------- */
+
+.linie-unten
+{
+	border-bottom: 1px dashed #ddd;
+}
+
+.highlight
+{
+	background: #ddd;
+	border: 1px solid #ccc;
+}
+
+
+.gross
+{
+	font-size: 1.4em;
+}
+
+.klein
+{
+	font-size: 0.85em;
+}
+
+.centered
+{
+	text-align: center;
+}
+
+.hide
+{
+	display: none;
+}
+
+.noprint
+{
+	display: none;
+}
+
+.abstand
+{
+	padding-top: 20px;
+}
+
+.codeblock
+{
+	font: 1em Courier, monospace;
+	border: 1px dashed #ccc;
+	padding: 10px;
+	margin: 10px;
+}
+
+.luftig
+{
+	line-height: 1.5em;
+}

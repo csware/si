@@ -1,0 +1,64 @@
+table.border th, table.border td {
+border-collapse:separate;
+border-spacing:2px;
+border-top-style:inset;
+border-right-style:inset;
+border-bottom-style:inset;
+border-left-style:inset;
+border-top-width:1px;
+border-right-width:1px;
+border-bottom-width:1px;
+border-left-width:1px;
+border-color:#008C4F;
+}
+
+th { background-color:#DDDDDD; }
+
+textarea { white-space:nowrap; }
+
+table {
+margin-left: auto; margin-right: auto;
+}
+
+table.border {
+border-collapse:collapse;
+border-spacing:2px;
+border-width:1px;
+border-color:#008C4F;
+border-style:solid;
+}
+
+th,td { vertical-align: top; }
+
+h3,h4,h5 { text-align: center; }
+
+.left { text-align: left; }
+td.points,.right { text-align: right; }
+.jus { text-align: justify; }
+
+.bmid,.b { font-weight: bold; }
+.smallf { font-size: 75% }
+.bigf { font-size: 100%; }
+
+form { padding-bottom: 0px; margin-bottom: 0px; }
+
+.error { color:red; font-weight: bold; margin-left: auto; margin-right: auto; }
+
+.green { color:green; }
+.red { color:red; }
+
+.mid,.bmid,.cdrucken { text-align: center; }
+
+/*
+** taken from Wikimedia
+** keep the whitespace in front of the ^=, hides rule from konqueror
+** this is css3, the validator doesn't like it when validating as css2
+*/
+a.external {
+	background: url(/submissionsystem/external.png) center right no-repeat;
+	padding-right: 13px;
+}
+a[href ^="mailto:"] {
+	background: url(/submissionsystem/mail_icon.gif) center right no-repeat;
+	padding-right: 18px;
+}
