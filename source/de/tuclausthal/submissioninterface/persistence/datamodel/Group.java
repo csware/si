@@ -30,9 +30,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.OrderBy;
-
 @Entity
 @Table(name = "groups")
 public class Group implements Serializable {
@@ -40,6 +37,9 @@ public class Group implements Serializable {
 	private String name;
 	private Lecture lecture;
 	private Set<Participation> members;
+	private boolean allowStudentsToSignup = false;
+	private boolean allowStudentsToQuit = false;
+	private int maxStudents = 20;
 
 	/**
 	 * @return the gid
@@ -100,5 +100,47 @@ public class Group implements Serializable {
 	 */
 	public void setMembers(Set<Participation> members) {
 		this.members = members;
+	}
+
+	/**
+	 * @return the allowStudentsToSignup
+	 */
+	public boolean isAllowStudentsToSignup() {
+		return allowStudentsToSignup;
+	}
+
+	/**
+	 * @param allowStudentsToSignup the allowStudentsToSignup to set
+	 */
+	public void setAllowStudentsToSignup(boolean allowStudentsToSignup) {
+		this.allowStudentsToSignup = allowStudentsToSignup;
+	}
+
+	/**
+	 * @return the allowStudentsToQuit
+	 */
+	public boolean isAllowStudentsToQuit() {
+		return allowStudentsToQuit;
+	}
+
+	/**
+	 * @param allowStudentsToQuit the allowStudentsToQuit to set
+	 */
+	public void setAllowStudentsToQuit(boolean allowStudentsToQuit) {
+		this.allowStudentsToQuit = allowStudentsToQuit;
+	}
+
+	/**
+	 * @return the maxStudents
+	 */
+	public int getMaxStudents() {
+		return maxStudents;
+	}
+
+	/**
+	 * @param maxStudents the maxStudents to set
+	 */
+	public void setMaxStudents(int maxStudents) {
+		this.maxStudents = maxStudents;
 	}
 }

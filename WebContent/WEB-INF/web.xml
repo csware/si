@@ -488,18 +488,21 @@
     <url-pattern>/Nagios</url-pattern>
   </servlet-mapping>
   <servlet>
-    <description></description>
     <display-name>LocalExecutorStartUp</display-name>
     <servlet-name>LocalExecutorStartUp</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.testframework.executor.impl.LocalExecutorStartUp</servlet-class>
     <init-param>
-      <description></description>
       <param-name>cores</param-name>
       <param-value>4</param-value>
     </init-param>
   </servlet>
+  <servlet>
+    <display-name>JoinGroup</display-name>
+    <servlet-name>JoinGroup</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.JoinGroup</servlet-class>
+  </servlet>
   <servlet-mapping>
-    <servlet-name>LocalExecutorStartUp</servlet-name>
-    <url-pattern>/LocalExecutorStartUp</url-pattern>
+    <servlet-name>JoinGroup</servlet-name>
+    <url-pattern>/servlets/JoinGroup</url-pattern>
   </servlet-mapping>
 </web-app>

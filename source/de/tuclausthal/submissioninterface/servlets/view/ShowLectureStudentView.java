@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
@@ -53,10 +55,28 @@ public class ShowLectureStudentView extends HttpServlet {
 
 		Participation participation = (Participation) request.getAttribute("participation");
 		Lecture lecture = participation.getLecture();
+		List<Group> joinAbleGroups = (List<Group>) request.getAttribute("joinAbleGroups");
 		SessionAdapter sessionAdapter = new SessionAdapter(request);
 
 		// list all tasks for a lecture
 		template.printTemplateHeader(lecture);
+
+		out.println("<div class=mid>");
+		if (participation.getGroup() != null) {
+			out.println("Meine Gruppe: " + Util.mknohtml(participation.getGroup().getName()));
+		}
+		if ((participation.getGroup() == null || (participation.getGroup() != null && participation.getGroup().isAllowStudentsToQuit())) && joinAbleGroups != null && joinAbleGroups.size() > 0) {
+			out.println("<form action=\"JoinGroup\">");
+			out.println("<select name=groupid>");
+			for (Group group : joinAbleGroups) {
+				if (participation.getGroup() == null || participation.getGroup().getGid() != group.getGid())
+					out.println("<option value=" + group.getGid() + ">" + Util.mknohtml(group.getName()));
+			}
+			out.println("</select>");
+			out.println("<input type=submit value=\"Gruppe wechseln\">");
+			out.println("</form>");
+		}
+		out.println("</div><p>");
 
 		// todo: wenn keine abrufbaren tasks da sind, nichts anzeigen
 		Iterator<Task> taskIterator = lecture.getTasks().iterator();

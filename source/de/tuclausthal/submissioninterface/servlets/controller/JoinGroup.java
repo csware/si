@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,7 +19,6 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,54 +29,51 @@ import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.GroupDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * Controller-Servlet for displaying a lecture
- * loads a lecture and differs between the student and tutor view
+ * Controller-Servlet for adding and removing members from/to groups
  * @author Sven Strickroth
  *
  */
-public class ShowLecture extends HttpServlet {
+public class JoinGroup extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = HibernateSessionHelper.getSession();
-
-		SessionAdapter sessionAdapter = new SessionAdapter(request);
-
-		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
-		if (lecture == null) {
-			request.setAttribute("title", "Veranstaltung nicht gefunden");
+		GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
+		Group group = groupDAO.getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
+		if (group == null) {
+			request.setAttribute("title", "Gruppe nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
+		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-		Participation participation = participationDAO.getParticipation(sessionAdapter.getUser(session), lecture);
-		if (participation == null) {
+		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), group.getLecture());
+		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.NORMAL) != 0) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
 
-		request.setAttribute("participation", participation);
-		if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
-			List<Group> joinAbleGroups =DAOFactory.GroupDAOIf(session).getJoinAbleGroups(lecture);
-			if (participation.getGroup() == null || participation.getGroup().isAllowStudentsToQuit() && joinAbleGroups!=null && joinAbleGroups.size()>0) {
-				request.setAttribute("joinAbleGroups", joinAbleGroups);
-			}
-			request.getRequestDispatcher("ShowLectureStudentView").forward(request, response);
-		} else if ("list".equals(request.getParameter("show"))) {
-			request.getRequestDispatcher("ShowLectureTutorFullView").forward(request, response);
-		} else if ("csv".equals(request.getParameter("show"))) {
-			request.getRequestDispatcher("ShowLectureTutorCSVView").forward(request, response);
-		} else {
-			request.getRequestDispatcher("ShowLectureTutorView").forward(request, response);
+		// HACK: TODO: check members cnt!
+		if (participation.getGroup() == null || (participation.getGroup().isAllowStudentsToQuit() && group.isAllowStudentsToSignup() && group.getMembers().size() < group.getMaxStudents())) {
+			participation.setGroup(group);
+			participationDAO.saveParticipation(participation);
 		}
+		response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId()));
+		return;
+	}
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		// don't want to have any special post-handling
+		doGet(request, response);
 	}
 }

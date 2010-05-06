@@ -18,7 +18,10 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
+import java.util.List;
+
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.GroupDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
@@ -64,5 +67,10 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 	public void saveGroup(Group group) {
 		Session session = getSession();
 		session.update(group);
+	}
+
+	@Override
+	public List<Group> getJoinAbleGroups(Lecture lecture) {
+		return (List<Group>) getSession().createCriteria(Group.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("allowStudentsToSignup", true)).list();
 	}
 }
