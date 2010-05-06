@@ -151,7 +151,7 @@ public class User implements Serializable {
 		if (getFirstName().isEmpty()) {
 			return getLastName();
 		} else {
-			return getFirstName() + " " + getLastName();
+			return getLastName() + ", " + getFirstName();
 		}
 	}
 }
