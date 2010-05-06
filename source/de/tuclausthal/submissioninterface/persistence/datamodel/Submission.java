@@ -157,7 +157,7 @@ public class Submission implements Serializable {
 	public String getSubmitterNames() {
 		StringBuffer sb = new StringBuffer();
 		for (Participation submitter : getSubmitters()) {
-			sb.append(", " + submitter.getUser().getFullName());
+			sb.append("; " + submitter.getUser().getFullName());
 		}
 		return sb.substring(2).toString();
 	}
