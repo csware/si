@@ -148,7 +148,7 @@ public class ShowTaskStudentView extends HttpServlet {
 					out.println(Util.mkTextToHTML(test.getTestDescription()));
 					out.println("</td>");
 					out.println("<td>");
-					if (testCountDAO.canStillRunXTimes(test, participation.getUser()) > 0) {
+					if (testCountDAO.canStillRunXTimes(test, submission) > 0) {
 						out.println("<a href=\"PerformTest?sid=" + submission.getSubmissionid() + "&amp;testid=" + test.getId() + "\">Test ausführen</a>");
 					} else {
 						out.println("Limit erreicht");

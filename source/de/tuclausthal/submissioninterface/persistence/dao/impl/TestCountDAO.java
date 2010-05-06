@@ -24,9 +24,10 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestCount;
-import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 
 /**
  * Data Access Object implementation for the TestCountDAOIf
@@ -38,32 +39,40 @@ public class TestCountDAO extends AbstractDAO implements TestCountDAOIf {
 	}
 
 	@Override
-	public boolean canSeeResultAndIncrementCounter(Test test, User user) {
+	public boolean canSeeResultAndIncrementCounter(Test test, Submission submission) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		TestCount testCount = (TestCount) session.createCriteria(TestCount.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("user", user)).setLockMode(LockMode.UPGRADE).setMaxResults(1).uniqueResult();
-		if (testCount == null) {
-			testCount = new TestCount();
-			testCount.setUser(user);
-			testCount.setTest(test);
+		for (Participation participation : submission.getSubmitters()) {
+			TestCount testCount = (TestCount) session.createCriteria(TestCount.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("user", participation.getUser())).setLockMode(LockMode.UPGRADE).setMaxResults(1).uniqueResult();
+			if (testCount == null) {
+				testCount = new TestCount();
+				testCount.setUser(participation.getUser());
+				testCount.setTest(test);
+			}
+			if (testCount.getTimesExecuted() >= test.getTimesRunnableByStudents()) {
+				tx.commit(); // rollback is evil in hibernate! ;)
+				return false;
+			}
+			testCount.setTimesExecuted(testCount.getTimesExecuted() + 1);
+			session.saveOrUpdate(testCount);
 		}
-		if (testCount.getTimesExecuted() >= test.getTimesRunnableByStudents()) {
-			tx.commit(); // rollback is evil in hibernate! ;)
-			return false;
-		}
-		testCount.setTimesExecuted(testCount.getTimesExecuted() + 1);
-		session.saveOrUpdate(testCount);
 		tx.commit();
 		return true;
 	}
 
 	@Override
-	public int canStillRunXTimes(Test test, User user) {
+	public int canStillRunXTimes(Test test, Submission submission) {
 		Session session = getSession();
-		TestCount testCount = (TestCount) session.createCriteria(TestCount.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("user", user)).setMaxResults(1).uniqueResult();
-		if (testCount == null) {
+		int maxExecuted = 0;
+		for (Participation participation : submission.getSubmitters()) {
+			TestCount testCount = (TestCount) session.createCriteria(TestCount.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("user", participation.getUser())).setMaxResults(1).uniqueResult();
+			if (testCount != null) {
+				maxExecuted = Math.max(maxExecuted, testCount.getTimesExecuted());
+			}
+		}
+		if (maxExecuted == 0) {
 			return test.getTimesRunnableByStudents();
 		}
-		return Math.max(0, test.getTimesRunnableByStudents() - testCount.getTimesExecuted());
+		return Math.max(0, test.getTimesRunnableByStudents() - maxExecuted);
 	}
 }

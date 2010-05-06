@@ -18,15 +18,15 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
-import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 
 /**
  * Data Access Object Interface for the TestCount-class
  * @author Sven Strickroth
  */
 public interface TestCountDAOIf {
-	public boolean canSeeResultAndIncrementCounter(Test test, User user);
+	public boolean canSeeResultAndIncrementCounter(Test test, Submission submission);
 
-	public int canStillRunXTimes(Test test, User user);
+	public int canStillRunXTimes(Test test, Submission submission);
 }

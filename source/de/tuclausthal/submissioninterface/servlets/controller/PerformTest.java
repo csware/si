@@ -91,7 +91,7 @@ public class PerformTest extends HttpServlet {
 			if (request.getParameter("refresh") == null) {
 				// prevent user from redo a test by mistake
 
-				if (testCountDAO.canStillRunXTimes(test, participation.getUser()) == 0) {
+				if (testCountDAO.canStillRunXTimes(test, submission) == 0) {
 					request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
 					request.getRequestDispatcher("MessageView").forward(request, response);
 					return;
@@ -114,7 +114,7 @@ public class PerformTest extends HttpServlet {
 					e.printStackTrace();
 				}
 
-				if (!testCountDAO.canSeeResultAndIncrementCounter(test, participation.getUser())) {
+				if (!testCountDAO.canSeeResultAndIncrementCounter(test, submission)) {
 					sa.setQueuedTest(null);
 					request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
 					request.getRequestDispatcher("MessageView").forward(request, response);
