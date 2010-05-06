@@ -59,7 +59,7 @@ public class ShowUserView extends HttpServlet {
 
 		template.printTemplateHeader("Benutzer \"" + Util.mknohtml(user.getFullName()) + "\"");
 
-		out.println("<p><a href=\"mailto:" + Util.mknohtml(user.getEmail()) + "@tu-clausthal.de\">" + Util.mknohtml(user.getEmail()) + "@tu-clausthal.de</a></p>");
+		out.println("<p><a href=\"mailto:" + Util.mknohtml(user.getFullEmail()) + "\">" + Util.mknohtml(user.getFullEmail()) + "</a></p>");
 
 		if (user instanceof Student) {
 			out.println("<p>Matrikelnummer: " + ((Student) user).getMatrikelno() + "</p>");

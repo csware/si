@@ -80,7 +80,7 @@ public class ShowMarkHistoryView extends HttpServlet {
 		for (PointHistory entry : ph) {
 			out.println("<tr>");
 			if (isFirst) {
-				out.println("<td valign=top rowspan=" + ph.size() + "><a href=\"mailto:" + Util.mknohtml(entry.getWho().getUser().getEmail()) + "@tu-clausthal.de\">" + Util.mknohtml(entry.getWho().getUser().getFullName()) + "</a></td>");
+				out.println("<td valign=top rowspan=" + ph.size() + "><a href=\"mailto:" + Util.mknohtml(entry.getWho().getUser().getFullEmail()) + "\">" + Util.mknohtml(entry.getWho().getUser().getFullName()) + "</a></td>");
 				out.println("<td valign=top rowspan=" + ph.size() + ">" + Util.mknohtml(entry.getDate().toLocaleString()) + "</td>");
 				isFirst = false;
 			}

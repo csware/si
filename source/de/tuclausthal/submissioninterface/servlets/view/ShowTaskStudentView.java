@@ -115,7 +115,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				} else {
 					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", nicht vorgestellt");
 				}
-				out.println("<br>Vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getEmail()) + "@tu-clausthal.de\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>");
+				out.println("<br>Vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>");
 				out.println("</td>");
 				out.println("</tr>");
 				if (submission.getPoints().getPublicComment() != null && !"".equals(submission.getPoints().getPublicComment())) {

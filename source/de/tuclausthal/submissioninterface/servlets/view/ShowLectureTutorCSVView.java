@@ -76,7 +76,7 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 			}
 			out.print(Util.csvQuote(lectureParticipation.getUser().getLastName()) + ";");
 			out.print(Util.csvQuote(lectureParticipation.getUser().getFirstName()) + ";");
-			out.print(Util.csvQuote(lectureParticipation.getUser().getEmail()) + "@tu-clausthal.de;");
+			out.print(Util.csvQuote(lectureParticipation.getUser().getFullEmail()));
 			int points = 0;
 			for (Task task : taskList) {
 				Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());

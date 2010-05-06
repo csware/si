@@ -26,6 +26,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.util.MailSender;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -79,7 +80,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 			}
 			if (changed && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid()) {
 				// HACK hardcoded URL
-				de.tuclausthal.submissioninterface.util.MailSender.SendMail(participation.getUser().getEmail() + "@tu-clausthal.de", "Mark-Change Notification", "Hallo,\n\n" + oldPoints.getIssuedBy().getUser().getFullName() + " hat Deine Bewertung von <https://si.in.tu-clausthal.de/submissionsystem/servlets/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
+				MailSender.sendMail(participation.getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + oldPoints.getIssuedBy().getUser().getFullName() + " hat Deine Bewertung von <https://si.in.tu-clausthal.de/submissionsystem/servlets/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
 			}
 		} else {
 			if (points.getPointsOk() != null) {

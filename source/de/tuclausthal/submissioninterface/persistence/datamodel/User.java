@@ -53,6 +53,11 @@ public class User implements Serializable {
 		return email;
 	}
 
+	@Transient
+	public String getFullEmail() {
+		return getEmail() + "@tu-clausthal.de";
+	}
+
 	/**
 	 * @return the lectureParticipant
 	 */

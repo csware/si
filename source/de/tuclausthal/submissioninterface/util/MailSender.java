@@ -16,7 +16,7 @@ public class MailSender {
 	public static String from = "\"Submission Interface\" <noreply@si.in.tu-clausthal.de>";
 	public static String subjectPrefix = "[SubmissionInterface] ";
 
-	public static void SendMail(String to, String subject, String messageText) {
+	public static void sendMail(String to, String subject, String messageText) {
 		MimeMessage msg;
 		Properties props = System.getProperties();
 		props.put("mail.smtp.host", mailServer);
