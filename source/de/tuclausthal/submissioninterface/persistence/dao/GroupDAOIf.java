@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -35,7 +35,7 @@ public interface GroupDAOIf {
 	 * @param name the name for the group
 	 * @return the new group
 	 */
-	public Group createGroup(Lecture lecture, String name);
+	public Group createGroup(Lecture lecture, String name, boolean allowStudentsToSignup, boolean allowStudentsToQuit, int maxStudents);
 
 	/**
 	 * Fetch a group by the id

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -51,6 +51,18 @@ public class AddGroupFormView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Name:</th>");
 		out.println("<td><input type=text name=name></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Studenten können sich eintragen:</th>");
+		out.println("<td><input type=checkbox name=allowStudentsToSignup></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Studenten können wechseln:</th>");
+		out.println("<td><input type=checkbox name=allowStudentsToQuit></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Max. Studenten:</th>");
+		out.println("<td><input type=text name=maxStudents></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");

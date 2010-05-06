@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -61,7 +61,19 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("<td><input type=text name=title value=\"" + Util.mknohtml(group.getName()) + "\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Teilnehmer:</th>");
+		out.println("<th>Studenten können sich eintragen:</th>");
+		out.println("<td><input type=checkbox name=allowStudentsToSignup " + (group.isAllowStudentsToSignup() ? "checked" : "") + "></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Studenten können wechseln:</th>");
+		out.println("<td><input type=checkbox name=allowStudentsToQuit " + (group.isAllowStudentsToQuit() ? "checked" : "") + "></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Max. Studenten:</th>");
+		out.println("<td><input type=text name=maxStudents value=\"" + group.getMaxStudents() + "\"></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Teilnehmer hinzufügen:</th>");
 		out.println("<td><select multiple name=members>");
 		Iterator<Participation> participationIterator = DAOFactory.ParticipationDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).getParticipationsWithoutGroup(group.getLecture()).iterator();
 		while (participationIterator.hasNext()) {

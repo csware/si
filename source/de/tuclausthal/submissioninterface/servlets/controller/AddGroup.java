@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -65,7 +65,7 @@ public class AddGroup extends HttpServlet {
 		if (request.getParameter("action") != null && request.getParameter("action").equals("saveNewGroup") && request.getParameter("name") != null) {
 			GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
 			Transaction tx = session.beginTransaction();
-			Group group = groupDAO.createGroup(lecture, request.getParameter("name"));
+			Group group = groupDAO.createGroup(lecture, request.getParameter("name"), request.getParameter("allowStudentsToSignup") != null, request.getParameter("allowStudentsToQuit") != null, Util.parseInteger(request.getParameter("maxStudents"), 0));
 			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("EditGroup?groupid=" + group.getGid()));
 			return;

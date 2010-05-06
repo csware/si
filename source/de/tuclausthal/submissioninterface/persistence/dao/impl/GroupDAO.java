@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -38,11 +38,14 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 	}
 
 	@Override
-	public Group createGroup(Lecture lecture, String name) {
+	public Group createGroup(Lecture lecture, String name, boolean allowStudentsToSignup, boolean allowStudentsToQuit, int maxStudents) {
 		Session session = getSession();
 		Group group = new Group();
 		group.setName(name);
 		group.setLecture(lecture);
+		group.setAllowStudentsToSignup(allowStudentsToSignup);
+		group.setAllowStudentsToQuit(allowStudentsToQuit);
+		group.setMaxStudents(maxStudents);
 		session.save(group);
 		return group;
 	}

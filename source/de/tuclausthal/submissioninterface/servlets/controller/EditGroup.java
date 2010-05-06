@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -72,6 +72,9 @@ public class EditGroup extends HttpServlet {
 			return;
 		} else if (request.getParameterValues("members") != null && request.getParameterValues("members").length > 0) {
 			group.setName(request.getParameter("title"));
+			group.setAllowStudentsToSignup(request.getParameter("allowStudentsToSignup") != null);
+			group.setAllowStudentsToQuit(request.getParameter("allowStudentsToQuit") != null);
+			group.setMaxStudents(Util.parseInteger(request.getParameter("maxStudents"), 0));
 			groupDAO.saveGroup(group);
 			for (String newMember : request.getParameterValues("members")) {
 				Participation memberParticipation = participationDAO.getParticipation(Util.parseInteger(newMember, 0));
