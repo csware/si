@@ -30,12 +30,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.OrderBy;
 
 @Entity
 @Table(name = "submissions")
@@ -64,7 +64,7 @@ public class Submission implements Serializable {
 	 */
 	@OneToMany(mappedBy = "submission", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(clause = "id asc")
+	@OrderBy(value = "id asc")
 	public Set<TestResult> getTestResults() {
 		return testResults;
 	}
@@ -94,6 +94,7 @@ public class Submission implements Serializable {
 	 * @return the submitters
 	 */
 	@ManyToMany
+	@OrderBy(value="user asc")
 	public Set<Participation> getSubmitters() {
 		return submitters;
 	}

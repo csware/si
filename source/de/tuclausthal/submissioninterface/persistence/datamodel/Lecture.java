@@ -93,6 +93,8 @@ public class Lecture implements Serializable {
 	 */
 	@OneToMany(mappedBy = "lecture")
 	@OnDelete(action = OnDeleteAction.CASCADE)
+	// TODO: HACK!
+	@OrderBy(clause = "user3_.lastname,user3_.firstname")
 	public Set<Participation> getParticipants() {
 		return participants;
 	}
