@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -132,6 +132,14 @@ public class AdminMenue extends HttpServlet {
 					participationDAO.createParticipation(user, lecture, ParticipationRole.NORMAL);
 				}
 				response.sendRedirect(response.encodeURL(request.getRequestURL() + "?action=showLecture&lecture=" + lecture.getId()));
+			}
+		} else if ("su".equals(request.getParameter("action")) && request.getParameter("userid") != null) {
+			User user = DAOFactory.UserDAOIf(session).getUser(Util.parseInteger(request.getParameter("userid"), 0));
+			if (user != null) {
+				sa.setUser(user);
+				response.sendRedirect(response.encodeRedirectURL("Overview"));
+			} else {
+				response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?"));
 			}
 		} else { // list all lectures
 			request.setAttribute("lectures", DAOFactory.LectureDAOIf(session).getLectures());
