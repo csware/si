@@ -65,7 +65,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 					User user = participation.getUser();
 					out.println("<tr>");
 					out.println("<td>" + user.getFullName() + "</td>");
-					out.println("<td><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("?action=removeUser&amp;lecture=" + lecture.getId() + "&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
+					out.println("<td><a onclick=\"return confirmLink('Wirklich degradieren?')\" href=\"" + response.encodeURL("?action=removeUser&amp;lecture=" + lecture.getId() + "&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
 					out.println("</tr>");
 				}
 			}

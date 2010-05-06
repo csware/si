@@ -62,7 +62,7 @@ public class Overview extends HttpServlet {
 					studiengang = Util.mknohtml(student.getStudiengang());
 				}
 				out.println("Bitte nennen Sie Ihren Studiengang: <input type=text name=studiengang size=40 value=\"" + studiengang + "\"> <input type=submit value=\"speichern...\">");
-				out.println("</form></p>");
+				out.println("</form></p><br>");
 			}
 		}
 
