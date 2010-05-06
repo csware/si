@@ -71,6 +71,6 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 
 	@Override
 	public List<Group> getJoinAbleGroups(Lecture lecture) {
-		return (List<Group>) getSession().createCriteria(Group.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("allowStudentsToSignup", true)).list();
+		return (List<Group>) getSession().createCriteria(Group.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("allowStudentsToSignup", true)).add(Restrictions.sqlRestriction("(select count(*) from participations where groupid=this_.gid) < this_.maxStudents")).list();
 	}
 }
