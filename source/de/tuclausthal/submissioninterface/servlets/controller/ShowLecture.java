@@ -30,6 +30,7 @@ import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.GroupDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
@@ -67,9 +68,12 @@ public class ShowLecture extends HttpServlet {
 
 		request.setAttribute("participation", participation);
 		if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
-			List<Group> joinAbleGroups =DAOFactory.GroupDAOIf(session).getJoinAbleGroups(lecture);
-			if (participation.getGroup() == null || participation.getGroup().isAllowStudentsToQuit() && joinAbleGroups!=null && joinAbleGroups.size()>0) {
-				request.setAttribute("joinAbleGroups", joinAbleGroups);
+			if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
+				GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
+				List<Group> joinAbleGroups = groupDAO.getJoinAbleGroups(lecture);
+				if (participation.getGroup() == null || participation.getGroup().isAllowStudentsToQuit() && joinAbleGroups != null && joinAbleGroups.size() > 0) {
+					request.setAttribute("joinAbleGroups", joinAbleGroups);
+				}
 			}
 			request.getRequestDispatcher("ShowLectureStudentView").forward(request, response);
 		} else if ("list".equals(request.getParameter("show"))) {
