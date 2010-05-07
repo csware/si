@@ -20,7 +20,6 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -46,13 +45,12 @@ public class SubmitSolutionAdvisorFormView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		Task task = (Task) request.getAttribute("task");
-		List<Participation> participants =(List<Participation>) request.getAttribute("participants");
 
 		template.printTemplateHeader("Abgabe für Studenten starten", task);
 
 		StringBuffer setWithUser = new StringBuffer();
 		setWithUser.append("<p>Abgabe erstellen für: <select name=uploadFor size=1>");
-		for (Participation part : participants) {
+		for (Participation part : task.getLecture().getParticipants()) {
 			if (part.getRoleType().equals(ParticipationRole.NORMAL)) {
 				setWithUser.append("<option value=" + part.getId() + ">" + Util.mknohtml(part.getUser().getFullName()) + "</option>");
 			}

@@ -63,8 +63,6 @@ public interface ParticipationDAOIf {
 	 */
 	public List<Participation> getParticipationsWithoutGroup(Lecture lecture);
 
-	public List<Participation> getParticipationsOfLectureOrdered(Lecture lecture);
-
 	public List<Participation> getParticipationsWithNoSubmissionToTaskOrdered(Task task);
 
 	/**

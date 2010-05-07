@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -50,7 +49,6 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 		Participation participation = (Participation) request.getAttribute("participation");
 		Lecture lecture = participation.getLecture();
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
-		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 
 		response.setContentType("text/csv");
@@ -66,7 +64,7 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 		}
 		out.println("Gesamt");
 
-		for (Participation lectureParticipation : participationDAO.getParticipationsOfLectureOrdered(lecture)) {
+		for (Participation lectureParticipation : lecture.getParticipants()) {
 			out.print(lectureParticipation.getRoleType().toString() + ";");
 			if (lectureParticipation.getUser() instanceof Student) {
 				out.print(((Student) lectureParticipation.getUser()).getMatrikelno() + ";");
