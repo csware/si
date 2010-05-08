@@ -55,9 +55,9 @@ public class AdminMenue extends HttpServlet {
 			return;
 		}
 
-		if (request.getParameter("action") != null && request.getParameter("action").equals("newLecture")) {
+		if ("newLecture".equals(request.getParameter("action"))) {
 			request.getRequestDispatcher("AdminMenueAddLectureView").forward(request, response);
-		} else if (request.getParameter("action") != null && request.getParameter("action").equals("cleanup")) {
+		} else if ("cleanup".equals(request.getParameter("action"))) {
 			File path = new ContextAdapter(getServletContext()).getDataPath();
 			// list lectures
 			for (File lectures : path.listFiles()) {
@@ -87,21 +87,21 @@ public class AdminMenue extends HttpServlet {
 				}
 			}
 			response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?"));
-		} else if (request.getParameter("action") != null && request.getParameter("action").equals("saveLecture") && request.getParameter("name") != null && !request.getParameter("name").trim().isEmpty()) {
+		} else if ("saveLecture".equals(request.getParameter("action")) && request.getParameter("name") != null && !request.getParameter("name").trim().isEmpty()) {
 			Lecture newLecture = DAOFactory.LectureDAOIf(session).newLecture(request.getParameter("name").trim());
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
 			response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?action=showLecture&lecture=" + newLecture.getId()));
-		} else if (request.getParameter("action") != null && request.getParameter("action").equals("deleteLecture") && request.getParameter("lecture") != null) {
+		} else if ("deleteLecture".equals(request.getParameter("action")) && request.getParameter("lecture") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 			if (lecture != null) {
 				DAOFactory.LectureDAOIf(session).deleteLecture(lecture);
 			}
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
 			response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?"));
-		} else if (request.getParameter("action") != null && request.getParameter("action").equals("showLecture") && request.getParameter("lecture") != null) {
+		} else if ("showLecture".equals(request.getParameter("action")) && request.getParameter("lecture") != null) {
 			request.setAttribute("lecture", DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0)));
 			request.getRequestDispatcher("AdminMenueEditLectureView").forward(request, response);
-		} else if (request.getParameter("action") != null && request.getParameter("action").equals("showAdminUsers")) {
+		} else if ("showAdminUsers".equals(request.getParameter("action"))) {
 			request.setAttribute("superusers", DAOFactory.UserDAOIf(session).getSuperUsers());
 			request.getRequestDispatcher("AdminMenueShowAdminUsersView").forward(request, response);
 		} else if (("addSuperUser".equals(request.getParameter("action")) || "removeSuperUser".equals(request.getParameter("action"))) && request.getParameter("userid") != null) {
@@ -114,7 +114,7 @@ public class AdminMenue extends HttpServlet {
 			}
 			session.getTransaction().commit();
 			response.sendRedirect(response.encodeURL(request.getRequestURL() + "?action=showAdminUsers"));
-		} else if (request.getParameter("action") != null && (request.getParameter("action").equals("addUser") || request.getParameter("action").equals("removeUser")) && request.getParameter("lecture") != null && request.getParameter("userid") != null) {
+		} else if (("addUser".equals(request.getParameter("action")) || "removeUser".equals(request.getParameter("action"))) && request.getParameter("lecture") != null && request.getParameter("userid") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 			UserDAOIf userDAO = DAOFactory.UserDAOIf(session);
 			User user = userDAO.getUser(Util.parseInteger(request.getParameter("userid"), 0));
@@ -125,7 +125,7 @@ public class AdminMenue extends HttpServlet {
 				ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 				Transaction tx = session.beginTransaction();
 				if (request.getParameter("action").equals("addUser")) {
-					if (request.getParameter("type").equals("advisor")) {
+					if ("advisor".equals(request.getParameter("type"))) {
 						participationDAO.createParticipation(user, lecture, ParticipationRole.ADVISOR);
 					} else {
 						participationDAO.createParticipation(user, lecture, ParticipationRole.TUTOR);
