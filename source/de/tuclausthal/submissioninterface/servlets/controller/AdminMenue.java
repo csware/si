@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -122,6 +123,7 @@ public class AdminMenue extends HttpServlet {
 			} else {
 				// request.getParameter("type") != null
 				ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+				Transaction tx = session.beginTransaction();
 				if (request.getParameter("action").equals("addUser")) {
 					if (request.getParameter("type").equals("advisor")) {
 						participationDAO.createParticipation(user, lecture, ParticipationRole.ADVISOR);
@@ -131,6 +133,7 @@ public class AdminMenue extends HttpServlet {
 				} else { // dregregate user
 					participationDAO.createParticipation(user, lecture, ParticipationRole.NORMAL);
 				}
+				tx.commit();
 				response.sendRedirect(response.encodeURL(request.getRequestURL() + "?action=showLecture&lecture=" + lecture.getId()));
 			}
 		} else if ("su".equals(request.getParameter("action")) && request.getParameter("userid") != null) {

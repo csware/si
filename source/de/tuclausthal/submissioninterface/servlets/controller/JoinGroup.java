@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -47,27 +48,30 @@ public class JoinGroup extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = HibernateSessionHelper.getSession();
 		GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
-		Group group = groupDAO.getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
+		Transaction tx = session.beginTransaction();
+		Group group = groupDAO.getGroupLocked(Util.parseInteger(request.getParameter("groupid"), 0));
 		if (group == null) {
 			request.setAttribute("title", "Gruppe nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
+			tx.commit();
 			return;
 		}
 
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), group.getLecture());
+		Participation participation = participationDAO.getParticipationLocked(new SessionAdapter(request).getUser(session), group.getLecture());
 		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.NORMAL) != 0) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "operation not allowed");
+			tx.commit();
 			return;
 		}
 
-		// HACK: TODO: check members cnt!
 		if (participation.getGroup() == null || (participation.getGroup().isAllowStudentsToQuit() && group.isAllowStudentsToSignup() && group.getMembers().size() < group.getMaxStudents())) {
 			participation.setGroup(group);
 			participationDAO.saveParticipation(participation);
 		}
 		response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId()));
+		tx.commit();
 		return;
 	}
 

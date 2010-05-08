@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -53,6 +54,7 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 	@Override
 	public void deleteGroup(Group group) {
 		Session session = getSession();
+		session.lock(group, LockMode.UPGRADE);
 		for (Participation participation : group.getMembers()) {
 			participation.setGroup(null);
 			session.update(participation);
@@ -64,6 +66,11 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 	@Override
 	public Group getGroup(int groupid) {
 		return (Group) getSession().get(Group.class, groupid);
+	}
+
+	@Override
+	public Group getGroupLocked(int groupid) {
+		return (Group) getSession().get(Group.class, groupid, LockMode.UPGRADE);
 	}
 
 	@Override

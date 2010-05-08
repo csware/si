@@ -44,6 +44,8 @@ public interface GroupDAOIf {
 	 */
 	public Group getGroup(int groupid);
 
+	public Group getGroupLocked(int groupid);
+
 	/**
 	 * Deletes a group
 	 * @param group the group to delete

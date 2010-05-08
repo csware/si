@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -53,12 +54,19 @@ public class SubscribeToLecture extends HttpServlet {
 			}
 
 			ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-			Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), lecture);
-			if (participation != null || lecture.getSemester() < Util.getCurrentSemester()) {
+			Transaction tx = session.beginTransaction();
+			Participation participation = participationDAO.getParticipationLocked(new SessionAdapter(request).getUser(session), lecture);
+			if (participation != null) {
+				tx.commit();
+				response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
+				return;
+			} else if (lecture.getSemester() < Util.getCurrentSemester()) {
+				tx.commit();
 				((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 				return;
 			} else {
 				participationDAO.createParticipation(new SessionAdapter(request).getUser(session), lecture, ParticipationRole.NORMAL);
+				tx.commit();
 				response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
 				return;
 			}

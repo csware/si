@@ -25,7 +25,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.LockMode;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -63,11 +65,13 @@ public class EditGroup extends HttpServlet {
 		}
 
 		if ("removeFromGroup".equals(request.getParameter("action")) && request.getParameter("participationid") != null) {
-			Participation memberParticipation = participationDAO.getParticipation(Util.parseInteger(request.getParameter("participationid"), 0));
+			Transaction tx = session.beginTransaction();
+			Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(request.getParameter("participationid"), 0));
 			if (memberParticipation != null && (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0 || memberParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0)) {
 				memberParticipation.setGroup(null);
 				participationDAO.saveParticipation(memberParticipation);
 			}
+			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId()));
 			return;
 		} else if ("editGroup".equals(request.getParameter("action"))) {
@@ -79,13 +83,16 @@ public class EditGroup extends HttpServlet {
 				groupDAO.saveGroup(group);
 			}
 			if (request.getParameterValues("members") != null && request.getParameterValues("members").length > 0) {
+				Transaction tx = session.beginTransaction();
+				session.lock(participation, LockMode.UPGRADE);
 				for (String newMember : request.getParameterValues("members")) {
-					Participation memberParticipation = participationDAO.getParticipation(Util.parseInteger(newMember, 0));
+					Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(newMember, 0));
 					if (memberParticipation != null && (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0 || memberParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0)) {
 						memberParticipation.setGroup(group);
 						participationDAO.saveParticipation(memberParticipation);
 					}
 				}
+				tx.commit();
 			}
 			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId()));
 			return;

@@ -49,12 +49,16 @@ public interface ParticipationDAOIf {
 	 */
 	public Participation getParticipation(User user, Lecture lecture);
 
+	public Participation getParticipationLocked(User user, Lecture lecture);
+
 	/**
 	 * Fetch a participation by the participation id
 	 * @param participationid the id
 	 * @return the participation or null
 	 */
 	public Participation getParticipation(int participationid);
+
+	public Participation getParticipationLocked(int participationid);
 
 	/**
 	 * Returns the participation for a lecture which are not associated with a group for a given lecture

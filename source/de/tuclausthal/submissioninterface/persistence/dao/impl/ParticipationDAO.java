@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.hibernate.LockMode;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -46,11 +45,10 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 	@Override
 	public Participation createParticipation(User user, Lecture lecture, ParticipationRole type) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		Participation participation = null;
 
 		// try to load an existing participation and lock it (or lock it in advance, so that nobody can create it in another thread)
-		participation = (Participation) session.createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).setLockMode(LockMode.UPGRADE).uniqueResult();
+		participation = getParticipationLocked(user, lecture);
 		if (participation == null) {
 			participation = new Participation();
 			participation.setUser(user);
@@ -58,7 +56,6 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 		}
 		participation.setRoleType(type);
 		session.saveOrUpdate(participation);
-		tx.commit();
 
 		return participation;
 	}
@@ -66,10 +63,8 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 	@Override
 	public void deleteParticipation(Participation participation) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		session.update(participation);
 		session.delete(participation);
-		tx.commit();
 	}
 
 	@Override
@@ -78,14 +73,17 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 	}
 
 	@Override
+	public Participation getParticipationLocked(User user, Lecture lecture) {
+		return (Participation) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).setLockMode(LockMode.UPGRADE).uniqueResult();
+	}
+
+	@Override
 	public void deleteParticipation(User user, Lecture lecture) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		Participation participation = (Participation) session.createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).setLockMode(LockMode.UPGRADE).uniqueResult();
 		if (participation != null) {
 			session.delete(participation);
 		}
-		tx.commit();
 	}
 
 	@Override
@@ -104,11 +102,14 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 	}
 
 	@Override
+	public Participation getParticipationLocked(int participationid) {
+		return (Participation) getSession().get(Participation.class, participationid, LockMode.UPGRADE);
+	}
+
+	@Override
 	public void saveParticipation(Participation participation) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		session.save(participation);
-		tx.commit();
 	}
 
 	@Override
