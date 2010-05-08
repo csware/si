@@ -289,6 +289,7 @@ public class SubmitSolution extends HttpServlet {
 								}
 								StringBuffer submittedFileName = new StringBuffer(entry.getName());
 								if (!pattern.matcher(submittedFileName).matches()) {
+									System.out.println("Ignored entry: " + submittedFileName);
 									continue;
 								}
 								if (entry.isDirectory() == false && !entry.getName().toLowerCase().endsWith(".class")) {
@@ -296,15 +297,18 @@ public class SubmitSolution extends HttpServlet {
 										int lastDot = submittedFileName.lastIndexOf(".");
 										submittedFileName.replace(lastDot, submittedFileName.length(), submittedFileName.subSequence(lastDot, submittedFileName.length()).toString().toLowerCase());
 									}
-									copyInputStream(zipFile, new BufferedOutputStream(new FileOutputStream(new File(path, submittedFileName.toString()))));
-								} else {
-									(new File(path, entry.getName())).mkdirs();
+									File fileToCreate = new File(path, submittedFileName.toString());
+									if (!fileToCreate.getParentFile().exists()) {
+										fileToCreate.getParentFile().mkdirs();
+									}
+									copyInputStream(zipFile, new BufferedOutputStream(new FileOutputStream(fileToCreate)));
 								}
 							}
 							zipFile.close();
 						} catch (IOException e) {
 							Util.recursiveDeleteEmptySubDirectories(path);
 							tx.rollback();
+							System.out.println(e.getMessage());
 							e.printStackTrace();
 							template.printTemplateHeader("Ungültige Anfrage");
 							out.println("Problem beim entpacken der .zip-Datei.");
