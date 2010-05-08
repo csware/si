@@ -90,7 +90,7 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("</table>");
 		out.println("</form>");
 		if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
-			out.println("<p class=mid><a href=\"" + response.encodeURL("AddGroup?lecture=" + group.getLecture().getId() + "&amp;action=deleteGroup&amp;gid=" + group.getGid()) + "\">Gruppe löschen</a></td>");
+			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("AddGroup?lecture=" + group.getLecture().getId() + "&amp;action=deleteGroup&amp;gid=" + group.getGid()) + "\">Gruppe löschen</a></td>");
 		}
 		template.printTemplateFooter();
 	}
