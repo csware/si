@@ -70,7 +70,7 @@ public class EditGroup extends HttpServlet {
 			}
 			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId()));
 			return;
-		} else if (request.getParameterValues("members") != null && request.getParameterValues("members").length > 0) {
+		} else if ("editGroup".equals(request.getParameter("action"))) {
 			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
 				group.setName(request.getParameter("title"));
 				group.setAllowStudentsToSignup(request.getParameter("allowStudentsToSignup") != null);
@@ -78,11 +78,13 @@ public class EditGroup extends HttpServlet {
 				group.setMaxStudents(Util.parseInteger(request.getParameter("maxStudents"), 0));
 				groupDAO.saveGroup(group);
 			}
-			for (String newMember : request.getParameterValues("members")) {
-				Participation memberParticipation = participationDAO.getParticipation(Util.parseInteger(newMember, 0));
-				if (memberParticipation != null && (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0 || memberParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0)) {
-					memberParticipation.setGroup(group);
-					participationDAO.saveParticipation(memberParticipation);
+			if (request.getParameterValues("members") != null && request.getParameterValues("members").length > 0) {
+				for (String newMember : request.getParameterValues("members")) {
+					Participation memberParticipation = participationDAO.getParticipation(Util.parseInteger(newMember, 0));
+					if (memberParticipation != null && (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0 || memberParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0)) {
+						memberParticipation.setGroup(group);
+						participationDAO.saveParticipation(memberParticipation);
+					}
 				}
 			}
 			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId()));

@@ -53,7 +53,7 @@ public class EditGroupFormView extends HttpServlet {
 		template.printTemplateHeader(group);
 
 		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
-		out.println("<input type=hidden name=action value=assignGroup>");
+		out.println("<input type=hidden name=action value=editGroup>");
 		out.println("<input type=hidden name=groupid value=" + group.getGid() + ">");
 		out.println("<table class=border>");
 		out.println("<tr>");
