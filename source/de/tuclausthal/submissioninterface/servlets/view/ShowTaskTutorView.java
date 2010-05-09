@@ -68,7 +68,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
 		// HTML must be possible here
-		out.println("<td>" + task.getDescription() + "&nbsp;</td>");
+		out.println("<td id=taskdescription>" + task.getDescription() + "</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");

@@ -32,6 +32,9 @@ th,td { vertical-align: top; }
 
 h3,h4,h5 { text-align: center; }
 
+#taskdescription p:first-child {  margin-top: 0px; }
+#taskdescription p:last-child {  margin-bottom: 0px; }
+
 .left { text-align: left; }
 td.points,.right { text-align: right; }
 .jus { text-align: justify; }
