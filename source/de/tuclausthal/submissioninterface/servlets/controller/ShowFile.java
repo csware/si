@@ -52,7 +52,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  *
  */
 public class ShowFile extends HttpServlet {
-	private final static String[] plainTextFiles = new String[] { "xml", "htm", "html", "jsp", "txt", "css", "js", "java", "c", "cpp", "h" };
+	private final static String[] plainTextFiles = new String[] { "xml", "htm", "html", "jsp", "txt", "css", "js", "java", "c", "cpp", "h", "project", "classpath" };
 	private final static String[] inlineFiles = new String[] { "jpg", "jpeg", "png", "gif", "pdf" };
 
 	@Override
@@ -135,7 +135,7 @@ public class ShowFile extends HttpServlet {
 
 	private boolean isPlainTextFile(String lowercaseFilename) {
 		for (String extension : plainTextFiles) {
-			if (lowercaseFilename.endsWith(extension)) {
+			if (lowercaseFilename.endsWith("." + extension)) {
 				return true;
 			}
 		}
@@ -144,12 +144,12 @@ public class ShowFile extends HttpServlet {
 
 	public static boolean isInlineAble(String lowercaseFilename) {
 		for (String extension : plainTextFiles) {
-			if (lowercaseFilename.endsWith(extension)) {
+			if (lowercaseFilename.endsWith("." + extension)) {
 				return true;
 			}
 		}
 		for (String extension : inlineFiles) {
-			if (lowercaseFilename.endsWith(extension)) {
+			if (lowercaseFilename.endsWith("." + extension)) {
 				return true;
 			}
 		}
