@@ -155,12 +155,12 @@ public class ShowSubmissionView extends HttpServlet {
 					out.println("<h3 class=files>" + Util.mknohtml(file) + "</h3>");
 					out.println("<iframe width=800 height=600 src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe><br>");
 					if (file.toLowerCase().endsWith(".java")) {
-						out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "&comments=off\" target=\"_blank\">" + Util.mknohtml(file) + " ohne Kommentare anzeigen</a><br>");
+						out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "&amp;comments=off\" target=\"_blank\">" + Util.mknohtml(file) + " ohne Kommentare anzeigen</a><br>");
 					}
 				} else {
 					out.println("<h3 class=files>" + Util.mknohtml(file) + "</h3>");
 				}
-				out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?download=true&sid=" + submission.getSubmissionid()) + "\">Download " + Util.mknohtml(file) + "</a><p>");
+				out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?download=true&amp;sid=" + submission.getSubmissionid()) + "\">Download " + Util.mknohtml(file) + "</a><p>");
 			}
 			out.println("</div>");
 		}
