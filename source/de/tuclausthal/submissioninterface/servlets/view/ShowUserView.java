@@ -66,9 +66,13 @@ public class ShowUserView extends HttpServlet {
 			out.println("<p>Studiengang: " + Util.mknohtml(((Student) user).getStudiengang()) + "</p>");
 		}
 
-		out.println("<h1>Vorlesungen</h1>");
+		boolean titleShown = false;
 		for (Participation participation : user.getLectureParticipant()) {
 			if (participation.getRoleType() == ParticipationRole.NORMAL && lectures.contains(participation.getLecture())) {
+				if (titleShown == false) {
+					out.println("<h1>Vorlesungen</h1>");
+					titleShown = true;
+				}
 				out.println("<h2><a href=\"" + response.encodeURL("ShowLecture?lecture=" + participation.getLecture().getId()) + "\">" + Util.mknohtml(participation.getLecture().getName()) + "</a></h2>");
 				int points = 0;
 				int maxPoints = 0;
