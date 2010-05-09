@@ -1,31 +1,31 @@
 table.border th, table.border td {
-border-collapse:separate;
-border-spacing:2px;
-border-top-style:inset;
-border-right-style:inset;
-border-bottom-style:inset;
-border-left-style:inset;
-border-top-width:1px;
-border-right-width:1px;
-border-bottom-width:1px;
-border-left-width:1px;
-border-color:#008C4F;
+	border-collapse:separate;
+	border-spacing:2px;
+	border-top-style:inset;
+	border-right-style:inset;
+	border-bottom-style:inset;
+	border-left-style:inset;
+	border-top-width:1px;
+	border-right-width:1px;
+	border-bottom-width:1px;
+	border-left-width:1px;
+	border-color:#008C4F;
 }
 
 th { background-color:#DDDDDD; }
 
 textarea { white-space:nowrap; }
 
-table {
-margin-left: auto; margin-right: auto;
+table,.mid {
+	margin-left: auto; margin-right: auto;
 }
 
 table.border {
-border-collapse:collapse;
-border-spacing:2px;
-border-width:1px;
-border-color:#008C4F;
-border-style:solid;
+	border-collapse:collapse;
+	border-spacing:2px;
+	border-width:1px;
+	border-color:#008C4F;
+	border-style:solid;
 }
 
 th,td { vertical-align: top; }
