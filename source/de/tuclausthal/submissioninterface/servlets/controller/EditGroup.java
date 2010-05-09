@@ -72,29 +72,57 @@ public class EditGroup extends HttpServlet {
 				participationDAO.saveParticipation(memberParticipation);
 			}
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId()));
+			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid()));
 			return;
-		} else if ("editGroup".equals(request.getParameter("action"))) {
+		} else if ("removeTutorFromGroup".equals(request.getParameter("action"))) {
+			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
+				Transaction tx = session.beginTransaction();
+				session.lock(group, LockMode.UPGRADE);
+				Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(request.getParameter("participationid"), 0));
+				if (memberParticipation != null) {
+					group.getTutors().remove(memberParticipation);
+					groupDAO.saveGroup(group);
+				}
+				tx.commit();
+				response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid()));
+				return;
+			} else {
+				((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+				return;
+			}
+		} else if ("editGroup".equals(request.getParameter("action"))) { // add member or edit group
+			Transaction tx = session.beginTransaction();
+			session.lock(group, LockMode.UPGRADE);
+			session.lock(participation, LockMode.UPGRADE);
 			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
 				group.setName(request.getParameter("title"));
 				group.setAllowStudentsToSignup(request.getParameter("allowStudentsToSignup") != null);
 				group.setAllowStudentsToQuit(request.getParameter("allowStudentsToQuit") != null);
 				group.setMaxStudents(Util.parseInteger(request.getParameter("maxStudents"), 0));
 				groupDAO.saveGroup(group);
+
+				// add tutors
+				if (request.getParameterValues("tutors") != null && request.getParameterValues("tutors").length > 0) {
+					for (String newMember : request.getParameterValues("tutors")) {
+						Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(newMember, 0));
+						if (memberParticipation != null && memberParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) == 0) {
+							group.getTutors().add(memberParticipation);
+							groupDAO.saveGroup(group);
+						}
+					}
+				}
 			}
 			if (request.getParameterValues("members") != null && request.getParameterValues("members").length > 0) {
-				Transaction tx = session.beginTransaction();
-				session.lock(participation, LockMode.UPGRADE);
 				for (String newMember : request.getParameterValues("members")) {
 					Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(newMember, 0));
-					if (memberParticipation != null && (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0 || memberParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0)) {
+					if (memberParticipation != null && memberParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 						memberParticipation.setGroup(group);
 						participationDAO.saveParticipation(memberParticipation);
 					}
 				}
-				tx.commit();
 			}
-			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId()));
+			tx.commit();
+			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid()));
 			return;
 		}
 

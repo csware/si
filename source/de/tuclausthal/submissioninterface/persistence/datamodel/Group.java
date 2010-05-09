@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -26,6 +26,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -37,6 +38,7 @@ public class Group implements Serializable {
 	private String name;
 	private Lecture lecture;
 	private Set<Participation> members;
+	private Set<Participation> tutors;
 	private boolean allowStudentsToSignup = false;
 	private boolean allowStudentsToQuit = false;
 	private int maxStudents = 20;
@@ -142,5 +144,21 @@ public class Group implements Serializable {
 	 */
 	public void setMaxStudents(int maxStudents) {
 		this.maxStudents = maxStudents;
+	}
+
+	/**
+	 * @return the tutors
+	 */
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "groups_tutors")
+	public Set<Participation> getTutors() {
+		return tutors;
+	}
+
+	/**
+	 * @param tutors the tutors to set
+	 */
+	public void setTutors(Set<Participation> tutors) {
+		this.tutors = tutors;
 	}
 }

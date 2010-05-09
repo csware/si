@@ -102,9 +102,25 @@ public class ShowLectureTutorView extends HttpServlet {
 			}
 		}
 		for (Group group : lecture.getGroups()) {
-			out.println("<h3>Gruppe: " + Util.mknohtml(group.getName()) + "</h3>");
+			out.println("<h3><a name=\"group" + group.getGid() + "\">Gruppe: " + Util.mknohtml(group.getName()) + "</a></h3>");
 			if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
 				out.println("<p class=mid><a href=\"" + response.encodeURL("EditGroup?groupid=" + group.getGid()) + "\">Teilnehmer zuordnen</a></p>");
+			}
+			if (group.getTutors().size() > 0) {
+				out.println("<table class=border>");
+				out.println("<tr>");
+				out.println("<th>Tutor</th>");
+				out.println("</tr>");
+				for (Participation tutorParticipation : group.getTutors()) {
+					out.println("<tr>");
+					out.println("<td><a href=\"mailto:" + Util.mknohtml(tutorParticipation.getUser().getFullEmail()) + "\">" + Util.mknohtml(tutorParticipation.getUser().getFullName()) + "</a>");
+					if (isAdvisor) {
+						out.println(" <a onclick=\"return confirmLink('Tutor-Gruppen-Zugehöhrigkeit entfernen?')\" href=\"" + response.encodeURL("EditGroup?groupid=" + group.getGid() + "&amp;participationid=" + tutorParticipation.getId()) + "&amp;action=removeTutorFromGroup\"><img src=\"" + getServletContext().getContextPath() + "/log-out.png\"width=16 height=16 border=0 alt=\"Tutor-Gruppen-Zugehöhrigkeit entfernen\" title=\"Tutor-Gruppen-Zugehöhrigkeit entfernen\"></a>");
+					}
+					out.println("</td>");
+					out.println("</tr>");
+				}
+				out.println("</table><p>");
 			}
 			listMembers(participationDAO.getParticipationsOfGroup(group).iterator(), response, isAdvisor, sessionAdapter.getUser(session));
 		}

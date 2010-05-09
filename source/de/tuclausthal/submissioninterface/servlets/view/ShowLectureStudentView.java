@@ -64,6 +64,17 @@ public class ShowLectureStudentView extends HttpServlet {
 		out.println("<div class=mid>");
 		if (participation.getGroup() != null) {
 			out.println("Meine Gruppe: " + Util.mknohtml(participation.getGroup().getName()));
+			if (participation.getGroup().getTutors() != null && participation.getGroup().getTutors().size() > 0) {
+				out.println("<br>Meine Tutoren: ");
+				boolean isFirst = true;
+				for (Participation tutor : participation.getGroup().getTutors()) {
+					if (!isFirst) {
+						out.print(", ");
+					}
+					isFirst = false;
+					out.print("<a href=\"mailto:" + Util.mknohtml(tutor.getUser().getFullEmail()) + "\">" + Util.mknohtml(tutor.getUser().getFullName()) + "</a>");
+				}
+			}
 		}
 		if ((participation.getGroup() == null || (participation.getGroup() != null && participation.getGroup().isAllowStudentsToQuit())) && joinAbleGroups != null && joinAbleGroups.size() > 0) {
 			out.println("<form action=\"JoinGroup\">");

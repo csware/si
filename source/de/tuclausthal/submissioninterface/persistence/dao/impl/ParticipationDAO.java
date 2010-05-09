@@ -116,4 +116,14 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 	public List<Participation> getParticipationsWithNoSubmissionToTaskOrdered(Task task) {
 		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", task.getLecture())).add(Restrictions.sqlRestriction("this_.id not in (SELECT submitters_id FROM submissions, submissions_participations where submissions.submissionid=submissions_participations.submissions_submissionid and taskid=" + task.getTaskid() + ")")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list(); // HACK
 	}
+
+	@Override
+	public List<Participation> getTutorAvailableParticipations(Group group) {
+		Integer[] ids = new Integer[group.getTutors().size()];
+		int i = 0;
+		for (Participation participation : group.getTutors()) {
+			ids[i++] = participation.getId();
+		}
+		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.eq("role", ParticipationRole.TUTOR.toString())).add(Restrictions.not(Restrictions.in("id", ids))).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+	}
 }

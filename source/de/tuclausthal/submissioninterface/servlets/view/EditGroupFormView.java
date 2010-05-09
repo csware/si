@@ -85,6 +85,21 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("</select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
+			out.println("<tr>");
+			out.println("<th>Verantwortliche Tutoren hinzufügen:</th>");
+			out.println("<td><select multiple name=tutors>");
+			participationIterator = DAOFactory.ParticipationDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).getTutorAvailableParticipations(group).iterator();
+			while (participationIterator.hasNext()) {
+				Participation thisParticipation = participationIterator.next();
+				if (!group.getTutors().contains(thisParticipation)) {
+					out.println("<option value=" + thisParticipation.getId() + ">" + Util.mknohtml(thisParticipation.getUser().getFullName()) + "</option>");
+				}
+			}
+			out.println("</select></td>");
+			out.println("</tr>");
+		}
+		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=zuordnen> <a href=\"" + response.encodeURL("ShowLecture?lecture=" + group.getLecture().getId()) + "\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
