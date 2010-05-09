@@ -52,6 +52,8 @@ public class ShowSubmissionView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
+		template.addHead("<script type=\"text/javascript\">function iframeSetup(id) { $(\"#codepreview\" + id).resizable({ helper: 'ui-resizable-helper', minWidth: 800, minHeight: 100, handles: 'se' }); $(\"#codepreview\" + id).mouseenter(function(){ $(\"#menu\" + id).show(); }); $(\"#codepreview\" + id).mouseleave(function(){ $(\"#menu\" + id).hide(); }); }</script>");
+
 		PrintWriter out = response.getWriter();
 
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
@@ -149,20 +151,29 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<h2>Dateien:</h2>");
 			out.println("<div class=mid>");
 			out.println("<p><a href=\"DownloadAsZip?sid=" + submission.getSubmissionid() + "\">alles als .zip herunterladen</a></p>");
+			int id = 0;
+			StringBuffer javaScript = new StringBuffer();
 			for (String file : submittedFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
 				if (ShowFile.isInlineAble(file.toLowerCase())) {
-					out.println("<h3 class=files>" + Util.mknohtml(file) + "</h3>");
-					out.println("<iframe width=800 height=600 src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe><br>");
+					out.println("<h3 class=files>" + Util.mknohtml(file) + " <a id=\"showbtn" + id + "\" style=\"display: none;\" href=\"#\" onclick='$(\"#codepreview" + id + "\").show();$(\"#showbtn" + id + "\").hide();return false;'>(show)</a></h3>");
+					out.println("<div id=\"codepreview" + id + "\" class=\"mid inlinefile\">");
+					out.println("<div id=\"menu" + id + "\" class=\"inlinemenu\"><a href=\"#\" onclick='this.href=document.getElementById(\"iframe" + id + "\").contentWindow.location' target=\"_blank\">(new window)</a>");
 					if (file.toLowerCase().endsWith(".java")) {
-						out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "&amp;comments=off\" target=\"_blank\">" + Util.mknohtml(file) + " ohne Kommentare anzeigen</a><br>");
+						out.println(" <a href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\" onclick='toggleComments(this)' target=\"iframe" + id + "\">(toggle comments)</a>");
 					}
+					out.println(" <a id=\"hidebtn" + id + "\" href=\"#\" onclick='$(\"#codepreview" + id + "\").hide();$(\"#showbtn" + id + "\").show();return false;'>(hide)</a>");
+					out.println("</div>");
+					out.println("<iframe name=\"iframe" + id + "\" id=\"iframe" + id + "\" scrolling=\"yes\" width=\"100%\" height=\"100%\" src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe></div>");
+					javaScript.append("iframeSetup('" + id + "');");
 				} else {
 					out.println("<h3 class=files>" + Util.mknohtml(file) + "</h3>");
 				}
 				out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?download=true&amp;sid=" + submission.getSubmissionid()) + "\">Download " + Util.mknohtml(file) + "</a><p>");
+				id++;
 			}
 			out.println("</div>");
+			out.println("<script type=\"text/javascript\">" + javaScript.toString() + "</script>");
 		}
 		template.printTemplateFooter();
 	}

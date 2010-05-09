@@ -54,6 +54,30 @@ form { padding-bottom: 0px; margin-bottom: 0px; }
 
 .mid,.bmid,.cdrucken { text-align: center; }
 
+.ui-resizable-helper { border: 2px dotted #008C4F; }
+.ui-resizable-se { bottom: 0px; }
+
+.inlinefile {
+	background-color: white;
+	width: 800px;
+	height: 600px
+}
+
+.inlinemenu {
+	display: none;
+	top: 5px;
+	right: 17px;
+	position: absolute;
+	text-size: 70%;
+	text-align: right;
+	background-color: #DDDDDD;
+	border-collapse:collapse;
+	border-spacing:2px;
+	border-width:1px;
+	border-color:#008C4F;
+	border-style:solid;
+}
+
 /*
 ** taken from Wikimedia
 ** keep the whitespace in front of the ^=, hides rule from konqueror
