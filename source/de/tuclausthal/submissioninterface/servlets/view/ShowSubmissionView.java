@@ -83,7 +83,7 @@ public class ShowSubmissionView extends HttpServlet {
 				oldInternalComment = submission.getPoints().getInternalComment();
 				points = submission.getPoints().getPoints();
 				pointsOk = submission.getPoints().getPointsOk();
-				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte  vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullEmail())+"\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>, <a href=\"ShowMarkHistory?sid=" + submission.getSubmissionid() + "\">History</a>)";
+				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte  vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>, <a href=\"ShowMarkHistory?sid=" + submission.getSubmissionid() + "\">History</a>)";
 			}
 			out.println("<tr>");
 			out.println("<td>");
@@ -152,11 +152,13 @@ public class ShowSubmissionView extends HttpServlet {
 			for (String file : submittedFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
 				if (ShowFile.isInlineAble(file.toLowerCase())) {
-					out.println("<h3>" + Util.mknohtml(file) + "</h3>");
+					out.println("<h3 class=files>" + Util.mknohtml(file) + "</h3>");
 					out.println("<iframe width=800 height=600 src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe><br>");
 					if (file.toLowerCase().endsWith(".java")) {
 						out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "&comments=off\" target=\"_blank\">" + Util.mknohtml(file) + " ohne Kommentare anzeigen</a><br>");
 					}
+				} else {
+					out.println("<h3 class=files>" + Util.mknohtml(file) + "</h3>");
 				}
 				out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?download=true&sid=" + submission.getSubmissionid()) + "\">Download " + Util.mknohtml(file) + "</a><p>");
 			}

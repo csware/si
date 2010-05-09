@@ -32,6 +32,8 @@ th,td { vertical-align: top; }
 
 h3,h4,h5 { text-align: center; }
 
+h3.files { margin-bottom: 2px; }
+
 #taskdescription p:first-child {  margin-top: 0px; }
 #taskdescription p:last-child {  margin-bottom: 0px; }
 
