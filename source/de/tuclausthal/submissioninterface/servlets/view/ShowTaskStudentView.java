@@ -55,7 +55,6 @@ public class ShowTaskStudentView extends HttpServlet {
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
 
 		Task task = (Task) request.getAttribute("task");
-		Participation participation = (Participation) request.getAttribute("participation");
 		Submission submission = (Submission) request.getAttribute("submission");
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
 

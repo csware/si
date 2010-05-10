@@ -125,6 +125,7 @@ public class SubmitSolution extends HttpServlet {
 							sb.append(System.getProperty("line.separator"));
 						}
 						textsolution = sb.toString();
+						bufferedReader.close();
 					}
 				}
 				request.setAttribute("textsolution", textsolution);

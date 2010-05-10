@@ -139,7 +139,7 @@ public class PlaggieAdapter extends DupeCheck {
 			try {
 				BufferedReader bin = new BufferedReader(new FileReader(config.blacklistFile));
 				String s;
-				Integer dummy = new Integer(0);
+				Integer dummy = 0;
 				while ((s = bin.readLine()) != null) {
 					blacklist.put(s.toUpperCase(), dummy);
 				}

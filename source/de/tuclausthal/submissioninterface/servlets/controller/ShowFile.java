@@ -127,6 +127,7 @@ public class ShowFile extends HttpServlet {
 				while ((len = inputStream.read(buffer)) > 0) {
 					out.write(buffer, 0, len);
 				}
+				inputStream.close();
 			}
 			return;
 		}
