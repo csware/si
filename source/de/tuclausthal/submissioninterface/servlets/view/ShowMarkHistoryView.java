@@ -85,8 +85,8 @@ public class ShowMarkHistoryView extends HttpServlet {
 				isFirst = false;
 			}
 			out.println("<td valign=top>" + Util.mknohtml(entry.getField()) + "</td>");
-			out.println("<td valign=top>" + Util.mknohtml(entry.getRemoved()).replace("\n", "<br>") + "</td>");
-			out.println("<td valign=top>" + Util.mknohtml(entry.getAdded()).replace("\n", "<br>") + "</td>");
+			out.println("<td valign=top>" + Util.mkTextToHTML(entry.getRemoved()) + "</td>");
+			out.println("<td valign=top>" + Util.mkTextToHTML(entry.getAdded()) + "</td>");
 			out.println("</tr>");
 		}
 		ph.clear();

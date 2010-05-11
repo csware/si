@@ -58,7 +58,7 @@ public class ShowFileView extends HttpServlet {
 			out.println("<html><head><title>" + Util.mknohtml(fileName) + "</title></head><body><h1 style='font-family: sans-serif; font-size: 16pt; font-weight: bold; color: rgb(0,0,0); background: rgb(210,210,210); border: solid 1px black; padding: 5px; text-align: center;'>" + Util.mknohtml(fileName));
 			out.println(" <a href=\"javascript:document.getElementById('code').setAttribute('wrap', 'hard')\">Text umbrechen</a>");
 			out.println("</h1><pre id=code style='font-family: \"Courier New\",Courier,monospace; font-size: 80%'>");
-			out.println(Util.mknohtml(code).replace("\n", "<br>"));
+			out.println(Util.mkTextToHTML(code));
 			out.println("</pre></body></html>");
 		}
 	}
