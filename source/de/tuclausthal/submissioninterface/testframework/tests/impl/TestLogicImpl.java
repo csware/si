@@ -115,6 +115,7 @@ public class TestLogicImpl extends TestTask {
 						testResult.setTestOutput(errorOutputStream.toString().replace(tempDir.getAbsolutePath() + System.getProperty("file.separator"), ""));
 					}
 				} catch (Exception e) {
+					tx.commit(); // we did not do anything, just close the transaction
 					e.printStackTrace();
 					System.err.println("System.getProperty(\"java.home\") should point to a jre in a jdk directory");
 					throw e;
@@ -163,6 +164,7 @@ public class TestLogicImpl extends TestTask {
 							params.addAll(Arrays.asList(Util.mksafecmdargs(regExpTest.getCommandLineParameter()).split(" ")));
 						}
 					} else {
+						tx.commit(); // we did not do anything, just close the transaction
 						throw new RuntimeException("Testtype unknown!");
 					}
 					ProcessBuilder pb = new ProcessBuilder(params);
@@ -198,7 +200,7 @@ public class TestLogicImpl extends TestTask {
 			} catch (Exception e) {
 				// Error
 				testResult.setTestOutput(e.getMessage());
-				tx.rollback();
+				tx.commit(); // we did not do anything, just close the transaction
 				e.printStackTrace();
 			} finally {
 				if (policyFile != null) {

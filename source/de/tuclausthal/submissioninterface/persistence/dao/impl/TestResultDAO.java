@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -39,12 +40,19 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 	@Override
 	public TestResult createTestResult(Test test, Submission submission, TestExecutorTestResult testExecutorTestResult) {
 		Session session = getSession();
-		TestResult testResult = new TestResult();
-		testResult.setSubmission(submission);
-		testResult.setTest(test);
+		TestResult testResult = getResultLocked(test, submission);
+		if (testResult == null) {
+			testResult = new TestResult();
+			testResult.setSubmission(submission);
+			testResult.setTest(test);
+		}
 		if (testExecutorTestResult != null) {
 			testResult.setPassedTest(testExecutorTestResult.isTestPassed());
 			testResult.setTestOutput(testExecutorTestResult.getTestOutput());
+		} else {
+			// TODO: why store empty Result!? we should never get here
+			testResult.setPassedTest(null);
+			testResult.setTestOutput("no output available yet");
 		}
 		session.save(testResult);
 		return testResult;
@@ -59,5 +67,10 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 	@Override
 	public TestResult getResult(Test test, Submission submission) {
 		return (TestResult) getSession().createCriteria(TestResult.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("submission", submission)).uniqueResult();
+	}
+
+	@Override
+	public TestResult getResultLocked(Test test, Submission submission) {
+		return (TestResult) getSession().createCriteria(TestResult.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("submission", submission)).setLockMode(LockMode.UPGRADE).uniqueResult();
 	}
 }

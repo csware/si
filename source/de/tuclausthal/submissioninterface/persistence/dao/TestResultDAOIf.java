@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -43,4 +43,6 @@ public interface TestResultDAOIf {
 	public void saveTestResult(TestResult testResult);
 
 	public TestResult getResult(Test test, Submission submission);
+
+	public TestResult getResultLocked(Test test, Submission submission);
 }
