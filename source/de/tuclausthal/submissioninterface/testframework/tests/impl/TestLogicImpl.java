@@ -213,7 +213,7 @@ public class TestLogicImpl extends TestTask {
 			}
 			if (saveTestResult) {
 				try {
-					DAOFactory.TestResultDAOIf(session).createTestResult(test, submission, testResult);
+					DAOFactory.TestResultDAOIf(session).storeTestResult(test, submission, testResult);
 				} finally {
 					tx.commit();
 				}

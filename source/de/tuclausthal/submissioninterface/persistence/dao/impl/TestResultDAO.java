@@ -38,7 +38,7 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 	}
 
 	@Override
-	public TestResult createTestResult(Test test, Submission submission, TestExecutorTestResult testExecutorTestResult) {
+	public void storeTestResult(Test test, Submission submission, TestExecutorTestResult testExecutorTestResult) {
 		Session session = getSession();
 		TestResult testResult = getResultLocked(test, submission);
 		if (testResult == null) {
@@ -49,13 +49,10 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 		if (testExecutorTestResult != null) {
 			testResult.setPassedTest(testExecutorTestResult.isTestPassed());
 			testResult.setTestOutput(testExecutorTestResult.getTestOutput());
+			session.saveOrUpdate(testResult);
 		} else {
-			// TODO: why store empty Result!? we should never get here
-			testResult.setPassedTest(null);
-			testResult.setTestOutput("no output available yet");
+			session.delete(testResult);
 		}
-		session.save(testResult);
-		return testResult;
 	}
 
 	@Override

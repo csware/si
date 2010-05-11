@@ -32,9 +32,8 @@ public interface TestResultDAOIf {
 	 * Creates and stores a TestResult for a submission in the DB
 	 * @param test the test
 	 * @param submission the submission
-	 * @return the created/updated testresult
 	 */
-	public TestResult createTestResult(Test test, Submission submission, TestExecutorTestResult testExecutorTestResult);
+	public void storeTestResult(Test test, Submission submission, TestExecutorTestResult testExecutorTestResult);
 
 	/**
 	 * Update/save a testresult
