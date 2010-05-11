@@ -219,6 +219,7 @@ public class TestManager extends HttpServlet {
 			Test test = testDAO.getTestLocked(Util.parseInteger(request.getParameter("testid"), 0));
 			if (test != null) {
 				test.setNeedsToRun(true);
+				testDAO.saveTest(test);
 			}
 			session.getTransaction().commit();
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));

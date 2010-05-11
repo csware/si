@@ -95,7 +95,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Text-Eingabefeld:</th>");
-		out.println("<td><input type=checkbox name=showtextarea " + (task.isShowTextArea() ? "checked" : "") + "></b></td>");
+		out.println("<td><input type=checkbox name=showtextarea " + (task.isShowTextArea() ? "checked" : "") + "></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");
@@ -111,7 +111,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Max. Punkte:</th>");
-		out.println("<td><input type=text name=maxpoints value=\"" + Util.showPoints(task.getMaxPoints()) + "\"> <b>TODO: bereits vergebene Pkts. prüfen!</b></td>");
+		out.println("<td><input type=text name=maxpoints value=\"" + Util.showPoints(task.getMaxPoints()) + "\"> <b>bei Änderung bereits vergebene Pkts. prüfen!</b></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
@@ -127,10 +127,18 @@ public class TaskManagerView extends HttpServlet {
 		// don't show for new tasks
 		if (task.getTaskid() != 0 && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
 			out.println("<h2>Ähnlichkeitsprüfungen</h2>");
+			out.println("<ul>");
 			for (SimilarityTest similarityTest : task.getSimularityTests()) {
-				out.print(similarityTest + ": ");
-				out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DupeCheck?action=deleteSimilarityTest&amp;taskid=" + task.getTaskid() + "&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "\">löschen</a><br>");
+				out.print(similarityTest + "<br>");
+				out.print("Status: ");
+				if (similarityTest.isNeedsToRun()) {
+					out.println("in Queue, noch nicht ausgeführt<br>");
+				} else {
+					out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("DupeCheck?action=rerunSimilarityTest&amp;testid=" + similarityTest.getSimilarityTestId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
+				}
+				out.println("<li><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DupeCheck?action=deleteSimilarityTest&amp;taskid=" + task.getTaskid() + "&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "\">löschen</a><br>");
 			}
+			out.println("</ul>");
 			out.println("<p class=mid><a href=\"" + response.encodeURL("DupeCheck?taskid=" + task.getTaskid()) + "\">Ähnlichkeitsprüfung hinzufügen</a><p>");
 			out.println("<h2>Funktionstests der Abgaben</h2>");
 			out.println("<p class=mid><a href=\"" + response.encodeURL("TestManager?action=newTest&amp;taskid=" + task.getTaskid()) + "\">Test hinzufügen</a></p>");
@@ -150,6 +158,7 @@ public class TaskManagerView extends HttpServlet {
 				out.println("# Ausführbar für Studenten: " + test.getTimesRunnableByStudents() + "<br>");
 				out.println("Tutortest: " + test.isForTutors() + "<br>");
 				if (test.isForTutors()) {
+					out.print("Status: ");
 					if (test.isNeedsToRun()) {
 						out.println("in Queue, noch nicht ausgeführt<br>");
 					} else {

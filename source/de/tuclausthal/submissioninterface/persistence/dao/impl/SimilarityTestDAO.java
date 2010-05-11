@@ -84,4 +84,10 @@ public class SimilarityTestDAO  extends AbstractDAO implements SimilarityTestDAO
 		tx.commit();
 		return similarityTest;
 	}
+
+	@Override
+	public void saveSimilarityTest(SimilarityTest similarityTest) {
+		Session session = getSession();
+		session.update(similarityTest);
+	}
 }

@@ -80,6 +80,15 @@ public class DupeCheck extends HttpServlet {
 			semilarityTestDAO.addSimilarityTest(task, request.getParameter("type"), request.getParameter("normalizer1"), "lc".equals(request.getParameter("normalizer2")), request.getParameter("normalizer3"), minSimilarity, request.getParameter("excludeFiles"));
 			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getLecture().getId()));
+		} else if ("rerunSimilarityTest".equals(request.getParameter("action")) && request.getParameter("similaritytestid") != null) {
+			Transaction tx = session.beginTransaction();
+			SimilarityTest similarityTest = semilarityTestDAO.getSimilarityTestLocked(Util.parseInteger(request.getParameter("similaritytestid"), 0));
+			if (similarityTest != null) {
+				similarityTest.setNeedsToRun(true);
+				semilarityTestDAO.saveSimilarityTest(similarityTest);
+			}
+			tx.commit();
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getLecture().getId()));
 		} else {
 			request.setAttribute("task", task);
 			request.getRequestDispatcher("DupeCheckFormView").forward(request, response);
