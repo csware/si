@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 03. Mai 2010 um 23:33
+-- Erstellungszeit: 11. Mai 2010 um 17:15
 -- Server Version: 5.1.41
 -- PHP-Version: 5.3.1
 
@@ -25,11 +25,13 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Tabellenstruktur für Tabelle `groups`
 --
 
-DROP TABLE IF EXISTS `groups`;
 CREATE TABLE IF NOT EXISTS `groups` (
   `gid` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_german2_ci DEFAULT NULL,
   `lectureid` int(11) NOT NULL,
+  `allowStudentsToSignup` bit(1) NOT NULL,
+  `allowStudentsToQuit` bit(1) NOT NULL,
+  `maxStudents` int(11) NOT NULL,
   PRIMARY KEY (`gid`),
   KEY `FKB63DD9D4AF18EDD1` (`lectureid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
@@ -37,13 +39,26 @@ CREATE TABLE IF NOT EXISTS `groups` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `groups_tutors`
+--
+
+CREATE TABLE IF NOT EXISTS `groups_tutors` (
+  `groups_gid` int(11) NOT NULL,
+  `tutors_id` int(11) NOT NULL,
+  PRIMARY KEY (`groups_gid`,`tutors_id`),
+  KEY `FK8EAE7CC8BB3EB910` (`groups_gid`),
+  KEY `FK8EAE7CC842D82B98` (`tutors_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `lectures`
 --
 
-DROP TABLE IF EXISTS `lectures`;
 CREATE TABLE IF NOT EXISTS `lectures` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_german2_ci DEFAULT NULL,
   `semester` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
@@ -54,7 +69,6 @@ CREATE TABLE IF NOT EXISTS `lectures` (
 -- Tabellenstruktur für Tabelle `logs`
 --
 
-DROP TABLE IF EXISTS `logs`;
 CREATE TABLE IF NOT EXISTS `logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `action` int(11) NOT NULL,
@@ -65,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `logs` (
   `testId` int(11) DEFAULT NULL,
   `userId` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7348 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7485 ;
 
 -- --------------------------------------------------------
 
@@ -73,7 +87,6 @@ CREATE TABLE IF NOT EXISTS `logs` (
 -- Tabellenstruktur für Tabelle `participations`
 --
 
-DROP TABLE IF EXISTS `participations`;
 CREATE TABLE IF NOT EXISTS `participations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role` varchar(255) NOT NULL,
@@ -93,19 +106,18 @@ CREATE TABLE IF NOT EXISTS `participations` (
 -- Tabellenstruktur für Tabelle `pointhistory`
 --
 
-DROP TABLE IF EXISTS `pointhistory`;
 CREATE TABLE IF NOT EXISTS `pointhistory` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `added` varchar(255) NOT NULL,
+  `added` longtext NOT NULL,
   `date` datetime NOT NULL,
   `field` varchar(255) NOT NULL,
-  `removed` varchar(255) NOT NULL,
+  `removed` longtext NOT NULL,
   `submission_submissionid` int(11) NOT NULL,
   `who_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK1DB12D04AEB18C37` (`who_id`),
   KEY `FK1DB12D046B74DB4C` (`submission_submissionid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=97 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=458 ;
 
 -- --------------------------------------------------------
 
@@ -113,7 +125,6 @@ CREATE TABLE IF NOT EXISTS `pointhistory` (
 -- Tabellenstruktur für Tabelle `similarities`
 --
 
-DROP TABLE IF EXISTS `similarities`;
 CREATE TABLE IF NOT EXISTS `similarities` (
   `similarityid` int(11) NOT NULL AUTO_INCREMENT,
   `percentage` int(11) NOT NULL,
@@ -124,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `similarities` (
   KEY `FKB31AC117AAD798` (`submissionTwo_submissionid`),
   KEY `FKB31AC193B8B275` (`similarityTest_similarityTestId`),
   KEY `FKB31AC1B470E5BE` (`submissionOne_submissionid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=69075 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=70379 ;
 
 -- --------------------------------------------------------
 
@@ -132,7 +143,6 @@ CREATE TABLE IF NOT EXISTS `similarities` (
 -- Tabellenstruktur für Tabelle `similaritytests`
 --
 
-DROP TABLE IF EXISTS `similaritytests`;
 CREATE TABLE IF NOT EXISTS `similaritytests` (
   `similarityTestId` int(11) NOT NULL AUTO_INCREMENT,
   `basis` varchar(255) NOT NULL,
@@ -145,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `similaritytests` (
   `taskid` int(11) NOT NULL,
   PRIMARY KEY (`similarityTestId`),
   KEY `FK86B2AD1EAE0697EB` (`taskid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=55 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=63 ;
 
 -- --------------------------------------------------------
 
@@ -153,7 +163,6 @@ CREATE TABLE IF NOT EXISTS `similaritytests` (
 -- Tabellenstruktur für Tabelle `submissions`
 --
 
-DROP TABLE IF EXISTS `submissions`;
 CREATE TABLE IF NOT EXISTS `submissions` (
   `submissionid` int(11) NOT NULL AUTO_INCREMENT,
   `points` int(11) DEFAULT NULL,
@@ -165,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   PRIMARY KEY (`submissionid`),
   KEY `FK2912EA7AE0697EB` (`taskid`),
   KEY `issuedby` (`issuedBy_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4297 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4393 ;
 
 -- --------------------------------------------------------
 
@@ -173,7 +182,6 @@ CREATE TABLE IF NOT EXISTS `submissions` (
 -- Tabellenstruktur für Tabelle `submissions_participations`
 --
 
-DROP TABLE IF EXISTS `submissions_participations`;
 CREATE TABLE IF NOT EXISTS `submissions_participations` (
   `submitters_id` int(11) NOT NULL,
   `submissions_submissionid` int(11) NOT NULL,
@@ -188,7 +196,6 @@ CREATE TABLE IF NOT EXISTS `submissions_participations` (
 -- Tabellenstruktur für Tabelle `tasks`
 --
 
-DROP TABLE IF EXISTS `tasks`;
 CREATE TABLE IF NOT EXISTS `tasks` (
   `taskid` int(11) NOT NULL AUTO_INCREMENT,
   `deadline` datetime NOT NULL,
@@ -203,7 +210,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `lectureid` int(11) NOT NULL,
   PRIMARY KEY (`taskid`),
   KEY `FK6907B8EAF18EDD1` (`lectureid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=32 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=34 ;
 
 -- --------------------------------------------------------
 
@@ -211,7 +218,6 @@ CREATE TABLE IF NOT EXISTS `tasks` (
 -- Tabellenstruktur für Tabelle `testresults`
 --
 
-DROP TABLE IF EXISTS `testresults`;
 CREATE TABLE IF NOT EXISTS `testresults` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `passedTest` bit(1) DEFAULT NULL,
@@ -221,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `testresults` (
   PRIMARY KEY (`id`),
   KEY `FKC6CC0F246B74DB4C` (`submission_submissionid`),
   KEY `FKC6CC0F248DBEBD80` (`test_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5745 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6192 ;
 
 -- --------------------------------------------------------
 
@@ -229,7 +235,6 @@ CREATE TABLE IF NOT EXISTS `testresults` (
 -- Tabellenstruktur für Tabelle `tests`
 --
 
-DROP TABLE IF EXISTS `tests`;
 CREATE TABLE IF NOT EXISTS `tests` (
   `DTYPE` varchar(31) NOT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -245,7 +250,7 @@ CREATE TABLE IF NOT EXISTS `tests` (
   `taskid` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK6924E21AE0697EB` (`taskid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=59 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=62 ;
 
 -- --------------------------------------------------------
 
@@ -253,7 +258,6 @@ CREATE TABLE IF NOT EXISTS `tests` (
 -- Tabellenstruktur für Tabelle `testscounts`
 --
 
-DROP TABLE IF EXISTS `testscounts`;
 CREATE TABLE IF NOT EXISTS `testscounts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `timesExecuted` int(11) NOT NULL,
@@ -262,7 +266,7 @@ CREATE TABLE IF NOT EXISTS `testscounts` (
   PRIMARY KEY (`id`),
   KEY `FKF81042A5D2AB5AAD` (`user_uid`),
   KEY `FKF81042A58DBEBD80` (`test_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2741 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2744 ;
 
 -- --------------------------------------------------------
 
@@ -270,12 +274,11 @@ CREATE TABLE IF NOT EXISTS `testscounts` (
 -- Tabellenstruktur für Tabelle `users`
 --
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
-  `firstName` varchar(255) NOT NULL,
-  `lastName` varchar(255) NOT NULL,
+  `firstName` varchar(255) CHARACTER SET latin1 COLLATE latin1_german2_ci NOT NULL,
+  `lastName` varchar(255) CHARACTER SET latin1 COLLATE latin1_german2_ci NOT NULL,
   `superUser` bit(1) NOT NULL,
   `matrikelno` int(11) DEFAULT NULL,
   `studiengang` varchar(255) DEFAULT NULL,
@@ -292,6 +295,13 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 ALTER TABLE `groups`
   ADD CONSTRAINT `FKB63DD9D4AF18EDD1` FOREIGN KEY (`lectureid`) REFERENCES `lectures` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints der Tabelle `groups_tutors`
+--
+ALTER TABLE `groups_tutors`
+  ADD CONSTRAINT `groups_tutors_ibfk_1` FOREIGN KEY (`groups_gid`) REFERENCES `groups` (`gid`) ON DELETE CASCADE,
+  ADD CONSTRAINT `groups_tutors_ibfk_2` FOREIGN KEY (`tutors_id`) REFERENCES `participations` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `participations`
