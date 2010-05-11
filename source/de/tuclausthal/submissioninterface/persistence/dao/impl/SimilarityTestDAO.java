@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -29,7 +29,6 @@ import org.hibernate.criterion.Restrictions;
 import de.tuclausthal.submissioninterface.persistence.dao.SimilarityTestDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 public class SimilarityTestDAO  extends AbstractDAO implements SimilarityTestDAOIf {
@@ -41,20 +40,16 @@ public class SimilarityTestDAO  extends AbstractDAO implements SimilarityTestDAO
 	@Override
 	public SimilarityTest addSimilarityTest(Task task, String type, String basis, boolean normalizeCapitalization, String tabsSpacesNewlinesNormalization, int minimumDifferenceInPercent, String excludeFiles) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		SimilarityTest similarityTest = new SimilarityTest(task, type, basis, normalizeCapitalization, tabsSpacesNewlinesNormalization, minimumDifferenceInPercent, excludeFiles);
 		session.save(similarityTest);
-		tx.commit();
 		return similarityTest;
 	}
 
 	@Override
 	public void deleteSimilarityTest(SimilarityTest similarityTest) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		session.update(similarityTest);
 		session.delete(similarityTest);
-		tx.commit();
 	}
 
 	@Override
@@ -70,6 +65,11 @@ public class SimilarityTestDAO  extends AbstractDAO implements SimilarityTestDAO
 	@Override
 	public SimilarityTest getSimilarityTest(int similarityTestId) {
 		return (SimilarityTest) getSession().get(SimilarityTest.class, similarityTestId);
+	}
+
+	@Override
+	public SimilarityTest getSimilarityTestLocked(int similarityTestId) {
+		return (SimilarityTest) getSession().get(SimilarityTest.class, similarityTestId, LockMode.UPGRADE);
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -66,14 +67,18 @@ public class DupeCheck extends HttpServlet {
 
 		SimilarityTestDAOIf semilarityTestDAO = DAOFactory.SimilarityTestDAOIf(session);
 		if ("deleteSimilarityTest".equals(request.getParameter("action")) && request.getParameter("similaritytestid") != null) {
-			SimilarityTest similarityTest = semilarityTestDAO.getSimilarityTest(Util.parseInteger(request.getParameter("similaritytestid"), 0));
+			Transaction tx = session.beginTransaction();
+			SimilarityTest similarityTest = semilarityTestDAO.getSimilarityTestLocked(Util.parseInteger(request.getParameter("similaritytestid"), 0));
 			if (similarityTest != null) {
 				semilarityTestDAO.deleteSimilarityTest(similarityTest);
 			}
+			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getLecture().getId()));
 		} else if (request.getParameter("type") != null && "savesimilaritytest".equals(request.getParameter("action"))) {
 			int minSimilarity = Util.parseInteger(request.getParameter("minsimilarity"), 50);
+			Transaction tx = session.beginTransaction();
 			semilarityTestDAO.addSimilarityTest(task, request.getParameter("type"), request.getParameter("normalizer1"), "lc".equals(request.getParameter("normalizer2")), request.getParameter("normalizer3"), minSimilarity, request.getParameter("excludeFiles"));
+			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getLecture().getId()));
 		} else {
 			request.setAttribute("task", task);

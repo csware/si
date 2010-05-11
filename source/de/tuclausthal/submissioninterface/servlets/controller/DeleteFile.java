@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -27,7 +27,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.LockMode;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -94,10 +96,14 @@ public class DeleteFile extends HttpServlet {
 		File file = new File(path, request.getPathInfo().substring(1));
 		if (file.exists() && file.isFile() && file.delete()) {
 			new LogDAO(session).createLogEntry(participation.getUser(), null, submission.getTask(), LogAction.DELETE_FILE, null, null);
+			Transaction tx = session.beginTransaction();
+			session.lock(submission, LockMode.UPGRADE);
 			Util.recursiveDeleteEmptySubDirectories(path);
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
+				// TODO: recheck, why do I save it here; suppose to recreate submission if it was lost somehow
 				submissionDAO.saveSubmission(submission);
 			}
+			tx.commit();
 
 			response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/" + contextAdapter.getServletsPath() + "/ShowTask?taskid=" + task.getTaskid()));
 			return;

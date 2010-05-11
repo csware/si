@@ -76,9 +76,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 	@Override
 	public void saveSubmission(Submission submission) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		session.saveOrUpdate(submission);
-		tx.commit();
 	}
 
 	@Override
@@ -89,14 +87,12 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 	@Override
 	public boolean deleteIfNoFiles(Submission submission, File submissionPath) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		session.lock(submission, LockMode.UPGRADE);
 		boolean result = false;
 		if (submissionPath.listFiles().length == 0 && submissionPath.delete()) {
 			session.delete(submission);
 			result = true;
 		}
-		tx.commit();
 		return result;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -46,6 +46,8 @@ public interface SimilarityTestDAOIf {
 	 */
 	public SimilarityTest getSimilarityTest(int similarityTestId);
 
+	public SimilarityTest getSimilarityTestLocked(int similarityTestId);
+
 	/**
 	 * Removes the given similarity test from the db.
 	 * @param similarityTest
@@ -54,12 +56,14 @@ public interface SimilarityTestDAOIf {
 
 	/**
 	 * Rests all results for the given similarity test
+	 * ATTENTION: this method starts it's own transaction!
 	 * @param similarityTest
 	 */
 	public void resetSimilarityTest(SimilarityTest similarityTest);
 
 	/**
 	 * Checks if a similarity test is ready to run
+	 * ATTENTION: this method starts it's own transaction!
 	 * @return SimilarityTest or null if none is "queued".
 	 */
 	public SimilarityTest takeSimilarityTest();
