@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -85,10 +85,9 @@ public class TestManager extends HttpServlet {
 			// Check that we have a file upload request
 			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 
-			// TODO start transaction here
+			session.beginTransaction();
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			JUnitTest test = testDAO.createJUnitTest(task);
-			testDAO.saveTest(test);
 
 			if (isMultipart) {
 
@@ -108,6 +107,7 @@ public class TestManager extends HttpServlet {
 					items = upload.parseRequest(request);
 				} catch (FileUploadException e) {
 					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "filename invalid");
+					session.getTransaction().rollback();
 					return;
 				}
 
@@ -130,6 +130,7 @@ public class TestManager extends HttpServlet {
 						if (!item.getName().endsWith(".jar")) {
 							request.setAttribute("title", "Dateiname ungültig.");
 							request.getRequestDispatcher("MessageView").forward(request, response);
+							session.getTransaction().rollback();
 							return;
 						}
 						File uploadedFile = new File(path, "junittest" + test.getId() + ".jar");
@@ -159,6 +160,7 @@ public class TestManager extends HttpServlet {
 				test.setTestDescription(description);
 				test.setTimeout(timeout);
 				testDAO.saveTest(test);
+				session.getTransaction().commit();
 				response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 			} else {
 				request.setAttribute("title", "Ungültiger Aufruf");
@@ -175,6 +177,7 @@ public class TestManager extends HttpServlet {
 			}
 			// store it
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
+			session.beginTransaction();
 			RegExpTest test = testDAO.createRegExpTest(task);
 			test.setMainClass(request.getParameter("mainclass"));
 			test.setCommandLineParameter(request.getParameter("parameter"));
@@ -186,23 +189,28 @@ public class TestManager extends HttpServlet {
 			test.setTestTitle(request.getParameter("title"));
 			test.setTestDescription(request.getParameter("description"));
 			testDAO.saveTest(test);
+			session.getTransaction().commit();
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "compile".equals(request.getParameter("type"))) {
 			// store it
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
+			session.beginTransaction();
 			CompileTest test = testDAO.createCompileTest(task);
 			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
 			test.setForTutors(request.getParameter("tutortest") != null);
 			test.setTestTitle(request.getParameter("title"));
 			test.setTestDescription(request.getParameter("description"));
 			testDAO.saveTest(test);
+			session.getTransaction().commit();
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 		} else if ("deleteTest".equals(request.getParameter("action"))) {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
-			Test test = testDAO.getTest(Util.parseInteger(request.getParameter("testid"), 0));
+			session.beginTransaction();
+			Test test = testDAO.getTestLocked(Util.parseInteger(request.getParameter("testid"), 0));
 			if (test != null) {
 				testDAO.deleteTest(test);
 			}
+			session.getTransaction().commit();
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 			return;
 		} else {

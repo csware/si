@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -38,7 +38,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Data Access Object implementation for the TestDAOIf
  * @author Sven Strickroth
  */
-public class TestDAO extends AbstractDAO  implements TestDAOIf {
+public class TestDAO extends AbstractDAO implements TestDAOIf {
 	public TestDAO(Session session) {
 		super(session);
 	}
@@ -46,40 +46,32 @@ public class TestDAO extends AbstractDAO  implements TestDAOIf {
 	@Override
 	public JUnitTest createJUnitTest(Task task) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		JUnitTest test = new JUnitTest();
 		test.setTask(task);
 		session.save(test);
-		tx.commit();
 		return test;
 	}
 
 	@Override
 	public RegExpTest createRegExpTest(Task task) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		RegExpTest test = new RegExpTest();
 		test.setTask(task);
 		session.save(test);
-		tx.commit();
 		return test;
 	}
 
 	@Override
 	public void saveTest(Test test) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		session.update(test);
-		tx.commit();
 	}
 
 	@Override
 	public void deleteTest(Test test) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		session.update(test);
 		session.delete(test);
-		tx.commit();
 	}
 
 	@Override
@@ -88,13 +80,16 @@ public class TestDAO extends AbstractDAO  implements TestDAOIf {
 	}
 
 	@Override
+	public Test getTestLocked(int testId) {
+		return (Test) getSession().get(Test.class, testId, LockMode.UPGRADE);
+	}
+
+	@Override
 	public CompileTest createCompileTest(Task task) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		CompileTest test = new CompileTest();
 		test.setTask(task);
 		session.save(test);
-		tx.commit();
 		return test;
 	}
 
@@ -115,7 +110,6 @@ public class TestDAO extends AbstractDAO  implements TestDAOIf {
 	public List<Test> getStudentTests(Task task) {
 		return (List<Test>) getSession().createCriteria(Test.class).add(Restrictions.eq("task", task)).add(Restrictions.gt("timesRunnableByStudents", 0)).list();
 	}
-
 
 	@Override
 	public List<Test> getTutorTests(Task task) {

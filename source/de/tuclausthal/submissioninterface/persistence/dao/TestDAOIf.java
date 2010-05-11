@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -66,8 +66,11 @@ public interface TestDAOIf {
 
 	public Test getTest(int testId);
 
+	public Test getTestLocked(int testId);
+
 	/**
 	 * Checks if a test is ready to run
+	 * ALERT: this method starts it's own transaction!
 	 * @return Test or null if none is "queued".
 	 */
 	public Test takeTest();
