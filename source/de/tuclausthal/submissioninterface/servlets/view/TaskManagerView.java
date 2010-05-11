@@ -149,6 +149,13 @@ public class TaskManagerView extends HttpServlet {
 				}
 				out.println("# Ausführbar für Studenten: " + test.getTimesRunnableByStudents() + "<br>");
 				out.println("Tutortest: " + test.isForTutors() + "<br>");
+				if (test.isForTutors()) {
+					if (test.isNeedsToRun()) {
+						out.println("in Queue, noch nicht ausgeführt<br>");
+					} else {
+						out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("TestManager?action=rerunTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
+					}
+				}
 				out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">Test löschen</a>");
 				out.println("</li>");
 			}

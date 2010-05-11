@@ -213,6 +213,16 @@ public class TestManager extends HttpServlet {
 			session.getTransaction().commit();
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
 			return;
+		} else if ("rerunTest".equals(request.getParameter("action"))) {
+			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
+			session.beginTransaction();
+			Test test = testDAO.getTestLocked(Util.parseInteger(request.getParameter("testid"), 0));
+			if (test != null) {
+				test.setNeedsToRun(true);
+			}
+			session.getTransaction().commit();
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
+			return;
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
 			request.getRequestDispatcher("MessageView").forward(request, response);
