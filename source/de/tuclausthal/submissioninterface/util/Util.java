@@ -41,7 +41,7 @@ public final class Util {
 	 */
 	public static String mknohtml(String message) {
 		if (message == null) {
-			return null;
+			return "";
 		}
 		char content[] = new char[message.length()];
 		message.getChars(0, message.length(), content, 0);
