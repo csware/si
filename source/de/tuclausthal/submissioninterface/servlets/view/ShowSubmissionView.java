@@ -52,7 +52,7 @@ public class ShowSubmissionView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		template.addHead("<script type=\"text/javascript\">function iframeSetup(id) { $(\"#codepreview\" + id).resizable({ helper: 'ui-resizable-helper', minWidth: 800, minHeight: 100, handles: 'se' }); $(\"#codepreview\" + id).mouseenter(function(){ $(\"#menu\" + id).show(); }); $(\"#codepreview\" + id).mouseleave(function(){ $(\"#menu\" + id).hide(); }); }</script>");
+		template.addHead("<script type=\"text/javascript\">function testResultSetup(id) { $(\"#testresult\" + id).resizable({ handles: 'se' }); } function iframeSetup(id) { $(\"#codepreview\" + id).resizable({ helper: 'ui-resizable-helper', minWidth: 800, minHeight: 100, handles: 'se' }); $(\"#codepreview\" + id).mouseenter(function(){ $(\"#menu\" + id).show(); }); $(\"#codepreview\" + id).mouseleave(function(){ $(\"#menu\" + id).hide(); }); }</script>");
 
 		PrintWriter out = response.getWriter();
 
@@ -63,6 +63,7 @@ public class ShowSubmissionView extends HttpServlet {
 		Task task = submission.getTask();
 
 		template.printTemplateHeader(submission);
+		StringBuffer javaScript = new StringBuffer();
 
 		for (Participation participation : submission.getSubmitters()) {
 			out.println("<a href=\"ShowUser?uid=" + participation.getUser().getUid() + "\">" + Util.mknohtml(participation.getUser().getFullName()) + "</a><br>");
@@ -73,8 +74,8 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		if (task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()))) {
-			out.println("<h2>Bewertung:</h2>");
-			out.println("<table class=border>");
+			out.println("<h2>Bewertung: <a href=\"#\" onclick=\"$('#mark').toggle(); return false;\">(+/-)</a></h2>");
+			out.println("<table id=mark class=border>");
 			String oldPublicComment = "";
 			String oldInternalComment = "";
 			int points = 0;
@@ -105,8 +106,8 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		if (submission.getSimilarSubmissions().size() > 0) {
-			out.println("<h2>Ähnliche Abgaben:</h2>");
-			out.println("<table>");
+			out.println("<h2>Ähnliche Abgaben: <a href=\"#\" onclick=\"$('#similarSubmissions').toggle(); return false;\">(+/-)</a></h2>");
+			out.println("<table id=similarSubmissions>");
 			out.println("<tr>");
 			for (SimilarityTest similarityTest : task.getSimularityTests()) {
 				out.println("<th><span title=\"Ähnlichkeit zu\">" + similarityTest + "</span></th>");
@@ -134,13 +135,14 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		if (submission.getTestResults().size() > 0) {
-			out.println("<h2>Tests:</h2>");
-			out.println("<ul>");
+			out.println("<h2>Tests: <a href=\"#\" onclick=\"$('#tests').toggle(); return false;\">(+/-)</a></h2>");
+			out.println("<ul id=tests>");
 			for (TestResult testResult : submission.getTestResults()) {
 				out.println("<li>" + testResult.getTest().getTestTitle() + "<br>");
 				out.println("Erfolgreich: " + Util.boolToHTML(testResult.getPassedTest()));
 				if (!testResult.getTestOutput().isEmpty()) {
-					out.println("<br><textarea cols=80 rows=15>" + Util.mknohtml(testResult.getTestOutput()) + "</textarea>");
+					out.println("<br><textarea id=\"testresult" + testResult.getId() + "\" cols=80 rows=15>" + Util.mknohtml(testResult.getTestOutput()) + "</textarea>");
+					javaScript.append("testResultSetup('" + testResult.getId() + "');");
 				}
 				out.println("</li>");
 			}
@@ -148,11 +150,10 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		if (submittedFiles.size() > 0) {
-			out.println("<h2>Dateien:</h2>");
-			out.println("<div class=mid>");
+			out.println("<h2>Dateien: <a href=\"#\" onclick=\"$('#files').toggle(); return false;\">(+/-)</a></h2>");
+			out.println("<div id=files class=mid>");
 			out.println("<p><a href=\"DownloadAsZip?sid=" + submission.getSubmissionid() + "\">alles als .zip herunterladen</a></p>");
 			int id = 0;
-			StringBuffer javaScript = new StringBuffer();
 			for (String file : submittedFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
 				if (ShowFile.isInlineAble(file.toLowerCase())) {
@@ -173,8 +174,8 @@ public class ShowSubmissionView extends HttpServlet {
 				id++;
 			}
 			out.println("</div>");
-			out.println("<script type=\"text/javascript\">" + javaScript.toString() + "</script>");
 		}
+		out.println("<script type=\"text/javascript\">" + javaScript.toString() + "</script>");
 		template.printTemplateFooter();
 	}
 }
