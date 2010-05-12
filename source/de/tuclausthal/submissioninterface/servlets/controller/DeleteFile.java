@@ -100,7 +100,7 @@ public class DeleteFile extends HttpServlet {
 			session.lock(submission, LockMode.UPGRADE);
 			Util.recursiveDeleteEmptySubDirectories(path);
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
-				// TODO: recheck, why do I save it here; suppose to recreate submission if it was lost somehow
+				submission.setLastModified(new Date());
 				submissionDAO.saveSubmission(submission);
 			}
 			tx.commit();

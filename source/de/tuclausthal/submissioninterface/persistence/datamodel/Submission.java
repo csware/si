@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,9 +19,11 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -46,6 +48,7 @@ public class Submission implements Serializable {
 	private Points points;
 	private Set<TestResult> testResults;
 	private Set<Similarity> similarSubmissions;
+	private Date lastModified = new Date();
 
 	// for Hibernate
 	private Submission() {}
@@ -94,7 +97,7 @@ public class Submission implements Serializable {
 	 * @return the submitters
 	 */
 	@ManyToMany
-	@OrderBy(value="user asc")
+	@OrderBy(value = "user asc")
 	public Set<Participation> getSubmitters() {
 		return submitters;
 	}
@@ -161,5 +164,20 @@ public class Submission implements Serializable {
 			sb.append("; " + submitter.getUser().getFullName());
 		}
 		return sb.substring(2).toString();
+	}
+
+	/**
+	 * @return the lastModified
+	 */
+	@Column(nullable = false)
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	/**
+	 * @param lastModified the lastModified to set
+	 */
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
 	}
 }

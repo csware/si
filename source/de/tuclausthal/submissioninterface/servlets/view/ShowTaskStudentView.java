@@ -32,7 +32,6 @@ import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
@@ -88,7 +87,15 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<tr>");
 				out.println("<th>Bearbeitet von:</th>");
 				out.println("<td>");
-				out.println(submission.getSubmitterNames().replaceAll(", ", "<br>"));
+				out.println(submission.getSubmitterNames().replaceAll("; ", "<br>"));
+				out.println("</td>");
+				out.println("</tr>");
+			}
+			if (submission.getLastModified() != null) { // for historic reasons
+				out.println("<tr>");
+				out.println("<th>Letzte Änderung:</th>");
+				out.println("<td>");
+				out.println(Util.mknohtml(submission.getLastModified().toLocaleString()));
 				out.println("</td>");
 				out.println("</tr>");
 			}
@@ -112,7 +119,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				if (submission.getPoints().getPointsOk()) {
 					out.println(Util.showPoints(submission.getPoints().getPoints()) + " von " + Util.showPoints(task.getMaxPoints()));
 				} else {
-					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", nicht vorgestellt");
+					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", nicht abgenommen");
 				}
 				out.println("<br>Vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>");
 				out.println("</td>");

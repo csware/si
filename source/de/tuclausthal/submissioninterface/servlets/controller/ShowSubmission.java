@@ -73,11 +73,11 @@ public class ShowSubmission extends HttpServlet {
 			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf(session);
 			String publicComment = "";
 			if (request.getParameter("publiccomment") != null) {
-				publicComment = request.getParameter("publiccomment");
+				publicComment = request.getParameter("publiccomment").trim();
 			}
 			String internalComment = "";
 			if (request.getParameter("internalcomment") != null) {
-				internalComment = request.getParameter("internalcomment");
+				internalComment = request.getParameter("internalcomment").trim();
 			}
 			Transaction tx = session.beginTransaction();
 			pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, request.getParameter("pointsok") != null);

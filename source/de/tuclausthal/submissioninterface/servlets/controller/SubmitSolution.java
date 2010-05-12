@@ -364,7 +364,8 @@ public class SubmitSolution extends HttpServlet {
 							}
 						}
 					}
-					session.update(submission);
+					submission.setLastModified(new Date());
+					submissionDAO.saveSubmission(submission);
 					Util.recursiveDeleteEmptyDirectories(path);
 					tx.commit();
 					new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, LogAction.UPLOAD, null, null);
@@ -381,7 +382,8 @@ public class SubmitSolution extends HttpServlet {
 			fileWriter.flush();
 			fileWriter.close();
 
-			session.update(submission);
+			submission.setLastModified(new Date());
+			submissionDAO.saveSubmission(submission);
 			tx.commit();
 
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));

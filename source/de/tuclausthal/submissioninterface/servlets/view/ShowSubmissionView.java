@@ -65,6 +65,10 @@ public class ShowSubmissionView extends HttpServlet {
 		template.printTemplateHeader(submission);
 		StringBuffer javaScript = new StringBuffer();
 
+		if (submission.getLastModified() != null) { // for historic reasons
+			out.println("<p>Letzte Änderung: " + Util.mknohtml(submission.getLastModified().toLocaleString()) + "</p>");
+		}
+
 		for (Participation participation : submission.getSubmitters()) {
 			out.println("<a href=\"ShowUser?uid=" + participation.getUser().getUid() + "\">" + Util.mknohtml(participation.getUser().getFullName()) + "</a><br>");
 		}
