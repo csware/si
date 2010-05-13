@@ -12,6 +12,10 @@
     <param-name>servletspath</param-name>
     <param-value>servlets</param-value>
   </context-param>
+  <context-param>
+    <param-name>adminmail</param-name>
+    <param-value>sstri@tu-clausthal.de</param-value>
+  </context-param>
   <listener>
     <listener-class>de.tuclausthal.submissioninterface.util.HibernateListener</listener-class>
   </listener>
@@ -504,5 +508,19 @@
   <servlet-mapping>
     <servlet-name>JoinGroup</servlet-name>
     <url-pattern>/servlets/JoinGroup</url-pattern>
+  </servlet-mapping>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/Error500</location>
+  </error-page>
+  <servlet>
+    <description></description>
+    <display-name>Error500</display-name>
+    <servlet-name>Error500</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.Error500View</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Error500</servlet-name>
+    <url-pattern>/Error500</url-pattern>
   </servlet-mapping>
 </web-app>

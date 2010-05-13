@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -64,5 +64,13 @@ public class ContextAdapter {
 			throw new RuntimeException("servletspath not specified");
 		}
 		return servletspath;
+	}
+
+	/**
+	 * Returns the path to the servlets
+	 * @return the path
+	 */
+	public String getAdminMail() {
+		return context.getInitParameter("adminmail");
 	}
 }
