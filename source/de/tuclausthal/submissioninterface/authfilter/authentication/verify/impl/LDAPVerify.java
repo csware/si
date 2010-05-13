@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl
 import java.text.MessageFormat;
 import java.util.Hashtable;
 
+import javax.naming.AuthenticationException;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.ldap.InitialLdapContext;
@@ -85,7 +86,7 @@ public class LDAPVerify implements VerifyIf {
 				String lastName = (String) ctx.getAttributes(userAttribute + "=" + username).get("sn").get();
 				String firstName = (String) ctx.getAttributes(userAttribute + "=" + username).get("cn").get();
 				firstName = firstName.substring(0, firstName.lastIndexOf(lastName) - 1);
-				if (ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute) != null && Util.isInteger((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get())) {
+				if (matrikelNumberAttribute != null && ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute) != null && Util.isInteger((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get())) {
 					user = userdao.createUser((String) ctx.getAttributes(userAttribute + "=" + username).get(userAttribute).get(), firstName, lastName, Integer.parseInt((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get()));
 				} else {
 					user = userdao.createUser((String) ctx.getAttributes(userAttribute + "=" + username).get(userAttribute).get(), firstName, lastName);
@@ -94,6 +95,8 @@ public class LDAPVerify implements VerifyIf {
 
 			// Close the context when we're done
 			ctx.close();
+		} catch (AuthenticationException e) {
+			// ignore authentication errors
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
