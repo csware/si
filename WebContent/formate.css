@@ -111,10 +111,10 @@ form { padding-bottom: 0px; margin-bottom: 0px; }
 ** this is css3, the validator doesn't like it when validating as css2
 */
 a.external {
-	background: url(/SubmissionInterface/external.png) center right no-repeat;
+	background: url(external.png) center right no-repeat;
 	padding-right: 13px;
 }
 a[href ^="mailto:"] {
-	background: url(/SubmissionInterface/mail_icon.gif) center right no-repeat;
+	background: url(mail_icon.gif) center right no-repeat;
 	padding-right: 18px;
 }
