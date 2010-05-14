@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
-import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
@@ -97,12 +96,8 @@ public class ShowFile extends HttpServlet {
 				}
 				freader.close();
 
-				if ("off".equals(request.getParameter("comments"))) {
-					StripCommentsNormalizer scn = new StripCommentsNormalizer();
-					code = scn.normalize(code);
-				}
-
-				request.setAttribute("code", code.toString());
+				request.setAttribute("submission", submission);
+				request.setAttribute("code", code);
 				request.setAttribute("fileName", Util.mknohtml(file.getName()));
 				request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/ShowFileView").forward(request, response);
 			} else {
