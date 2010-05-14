@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -110,7 +110,7 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Dateien ausschlieﬂen:</th>");
-		out.println("<td><input type=text name=excludeFiles> (Dateinamen durch Komma getrennt; Bsp: \".classpath,.project,MANIFEST.mf\")</td>");
+		out.println("<td><input type=text name=excludeFiles> (Dateinamen durch Komma getrennt; Bsp: \".classpath,.project,META-INF,.settings\")</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=starten> <a href=\"");
