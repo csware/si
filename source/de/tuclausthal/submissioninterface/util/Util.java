@@ -175,7 +175,7 @@ public final class Util {
 			// check that the file is not excluded
 			if (!excludedFileNames.contains(file.getName())) {
 				if (file.isDirectory()) {
-					listFilesAsRelativeStringList(submittedFiles, file, relativePath + file.getName() + System.getProperty("file.separator"));
+					listFilesAsRelativeStringList(submittedFiles, file, relativePath + file.getName() + System.getProperty("file.separator"), excludedFileNames);
 				} else {
 					submittedFiles.add(relativePath + file.getName());
 				}
