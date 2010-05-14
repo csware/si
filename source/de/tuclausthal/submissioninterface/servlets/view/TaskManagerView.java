@@ -130,6 +130,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<ul>");
 			for (SimilarityTest similarityTest : task.getSimularityTests()) {
 				out.print(similarityTest + "<br>");
+				out.println("Ignored Files: " + Util.mknohtml(similarityTest.getExcludeFiles()) + "<br>");
 				out.print("Status: ");
 				if (similarityTest.isNeedsToRun()) {
 					out.println("in Queue, noch nicht ausgeführt<br>");

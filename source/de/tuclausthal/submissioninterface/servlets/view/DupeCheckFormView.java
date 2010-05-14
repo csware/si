@@ -110,7 +110,7 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Dateien ausschlieﬂen:</th>");
-		out.println("<td><input type=text name=excludeFiles> (Dateinamen durch Komma getrennt)</td>");
+		out.println("<td><input type=text name=excludeFiles> (Dateinamen durch Komma getrennt; Bsp: \".classpath,.project,MANIFEST.mf\")</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=starten> <a href=\"");
