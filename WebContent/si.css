@@ -75,15 +75,9 @@ body.filepreview {
 
 body.filepreview h1 {
 	text-align: center;
-	background-color: #DDDDDD;
-	border-collapse:collapse;
-	border-spacing:2px;
-	border-width:1px;
-	border-color:#008C4F;
-	border-style:solid;
 }
 
-body.filepreview h1, .previewmenubox {
+body.filepreview h1, .previewmenubox, .highlightborder {
 	background-color: #DDDDDD;
 	border-collapse:collapse;
 	border-spacing:2px;
