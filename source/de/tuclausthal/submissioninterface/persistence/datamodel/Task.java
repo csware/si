@@ -300,6 +300,7 @@ public class Task implements Serializable {
 	/**
 	 * @return the featuredFiles
 	 */
+	@Column(nullable = false)
 	public String getFeaturedFiles() {
 		return featuredFiles;
 	}
@@ -314,6 +315,7 @@ public class Task implements Serializable {
 	/**
 	 * @return the tutorsCanUploadFiles
 	 */
+	@Column(nullable = false)
 	public boolean isTutorsCanUploadFiles() {
 		return tutorsCanUploadFiles;
 	}
