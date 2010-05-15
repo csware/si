@@ -38,9 +38,10 @@ public interface TaskDAOIf {
 	 * @param lecture the lecture to which the task should be associated
 	 * @param showPoints the daten when the issued points will be shown
 	 * @param featuredFiles 
+	 * @param tutorsCanUploadFiles 
 	 * @return
 	 */
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles);
+	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles);
 
 	/**
 	 * Fetch a task based on it's id

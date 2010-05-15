@@ -26,13 +26,12 @@ import org.hibernate.Transaction;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Data Access Object implementation for the TaskDAOIf
  * @author Sven Strickroth
  */
-public class TaskDAO  extends AbstractDAO implements TaskDAOIf {
+public class TaskDAO extends AbstractDAO implements TaskDAOIf {
 	public TaskDAO(Session session) {
 		super(session);
 	}
@@ -43,10 +42,10 @@ public class TaskDAO  extends AbstractDAO implements TaskDAOIf {
 	}
 
 	@Override
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameregexp, boolean showTextArea, String featuredFiles) {
+	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameregexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		Task task = new Task(title, maxPoints, start, deadline, description, lecture, showPoints, filenameregexp, showTextArea, featuredFiles);
+		Task task = new Task(title, maxPoints, start, deadline, description, lecture, showPoints, filenameregexp, showTextArea, featuredFiles, tutorsCanUploadFiles);
 		session.save(task);
 		tx.commit();
 		return task;

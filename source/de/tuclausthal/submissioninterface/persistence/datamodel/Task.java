@@ -55,7 +55,8 @@ public class Task implements Serializable {
 	private Set<SimilarityTest> simularityTests;
 	private String filenameRegexp = "[A-Z][A-Za-z0-9_]+\\.java";
 	private boolean showTextArea = false;
-	private String featuredFiles;
+	private String featuredFiles = "";
+	private boolean tutorsCanUploadFiles = false;
 
 	public Task() {}
 
@@ -69,7 +70,7 @@ public class Task implements Serializable {
 	 * @param lecture
 	 * @param featuredFiles 
 	 */
-	public Task(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles) {
+	public Task(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles) {
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.start = start;
@@ -80,6 +81,7 @@ public class Task implements Serializable {
 		this.filenameRegexp = filenameRegexp;
 		this.showTextArea = showTextArea;
 		this.featuredFiles = featuredFiles;
+		this.tutorsCanUploadFiles = tutorsCanUploadFiles;
 	}
 
 	/**
@@ -307,5 +309,19 @@ public class Task implements Serializable {
 	 */
 	public void setFeaturedFiles(String featuredFiles) {
 		this.featuredFiles = featuredFiles;
+	}
+
+	/**
+	 * @return the tutorsCanUploadFiles
+	 */
+	public boolean isTutorsCanUploadFiles() {
+		return tutorsCanUploadFiles;
+	}
+
+	/**
+	 * @param tutorsCanUploadFiles the tutorsCanUploadFiles to set
+	 */
+	public void setTutorsCanUploadFiles(boolean tutorsCanUploadFiles) {
+		this.tutorsCanUploadFiles = tutorsCanUploadFiles;
 	}
 }

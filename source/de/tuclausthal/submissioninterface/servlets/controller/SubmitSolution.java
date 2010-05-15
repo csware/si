@@ -105,7 +105,7 @@ public class SubmitSolution extends HttpServlet {
 
 		request.setAttribute("task", task);
 
-		if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) >= 0) {
+		if (participation.getRoleType() == ParticipationRole.ADVISOR || (task.isTutorsCanUploadFiles() && participation.getRoleType() == ParticipationRole.TUTOR)) {
 			request.getRequestDispatcher("SubmitSolutionAdvisorFormView").forward(request, response);
 		} else {
 			request.setAttribute("participation", participation);
@@ -205,9 +205,9 @@ public class SubmitSolution extends HttpServlet {
 
 		if (uploadFor > 0) {
 			// Uploader ist wahrscheinlich Betreuer -> keine zeitlichen Prüfungen
-			if (studentParticipation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0) {
+			if ((studentParticipation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0 || (task.isTutorsCanUploadFiles() && studentParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) != 0)) && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
 				template.printTemplateHeader("Ungültige Anfrage");
-				out.println("<div class=mid>Sie sind kein Betreuer dieser Veranstaltung.</div>");
+				out.println("<div class=mid>Sie sind nicht berechtigt bei dieser Veranstaltung Dateien für Studenten hochzuladen.</div>");
 				out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
 				template.printTemplateFooter();
 				return;
