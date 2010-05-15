@@ -135,49 +135,53 @@ public class TaskManagerView extends HttpServlet {
 		// don't show for new tasks
 		if (task.getTaskid() != 0 && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
 			out.println("<h2>Ähnlichkeitsprüfungen</h2>");
-			out.println("<ul>");
-			for (SimilarityTest similarityTest : task.getSimularityTests()) {
-				out.print(similarityTest + "<br>");
-				out.println("Ignored Files: " + Util.mknohtml(similarityTest.getExcludeFiles()) + "<br>");
-				out.print("Status: ");
-				if (similarityTest.isNeedsToRun()) {
-					out.println("in Queue, noch nicht ausgeführt<br>");
-				} else {
-					out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("DupeCheck?action=rerunSimilarityTest&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
+			if (task.getSimularityTests().size() > 0) {
+				out.println("<ul>");
+				for (SimilarityTest similarityTest : task.getSimularityTests()) {
+					out.print("<li>" + similarityTest + "<br>");
+					out.println("Ignored Files: " + Util.mknohtml(similarityTest.getExcludeFiles()) + "<br>");
+					out.print("Status: ");
+					if (similarityTest.isNeedsToRun()) {
+						out.println("in Queue, noch nicht ausgeführt<br>");
+					} else {
+						out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("DupeCheck?action=rerunSimilarityTest&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
+					}
+					out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DupeCheck?action=deleteSimilarityTest&amp;taskid=" + task.getTaskid() + "&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "\">löschen</a></li>");
 				}
-				out.println("<li><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DupeCheck?action=deleteSimilarityTest&amp;taskid=" + task.getTaskid() + "&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "\">löschen</a><br>");
+				out.println("</ul>");
 			}
-			out.println("</ul>");
 			out.println("<p class=mid><a href=\"" + response.encodeURL("DupeCheck?taskid=" + task.getTaskid()) + "\">Ähnlichkeitsprüfung hinzufügen</a><p>");
 			out.println("<h2>Funktionstests der Abgaben</h2>");
 			out.println("<p class=mid><a href=\"" + response.encodeURL("TestManager?action=newTest&amp;taskid=" + task.getTaskid()) + "\">Test hinzufügen</a></p>");
-			out.println("<ul>");
-			for (Test test : task.getTests()) {
-				out.println("<li>&quot;" + Util.mknohtml(test.getTestTitle()) + "&quot;: ");
-				if (test instanceof RegExpTest) {
-					RegExpTest regexptest = (RegExpTest) test;
-					out.println("RegExp-Test:<br>Prüfpattern: " + Util.mknohtml(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.mknohtml(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.mknohtml(regexptest.getMainClass()) + "<br>");
-				} else if (test instanceof CompileTest) {
-					out.println("Compile-Test<br>");
-				} else if (test instanceof JUnitTest) {
-					out.println("JUnit-Test<br>");
-				} else {
-					out.println("unknown<br>");
-				}
-				out.println("# Ausführbar für Studenten: " + test.getTimesRunnableByStudents() + "<br>");
-				out.println("Tutortest: " + test.isForTutors() + "<br>");
-				if (test.isForTutors()) {
-					out.print("Status: ");
-					if (test.isNeedsToRun()) {
-						out.println("in Queue, noch nicht ausgeführt<br>");
+			if (task.getTests().size() > 0) {
+				out.println("<ul>");
+				for (Test test : task.getTests()) {
+					out.println("<li>&quot;" + Util.mknohtml(test.getTestTitle()) + "&quot;: ");
+					if (test instanceof RegExpTest) {
+						RegExpTest regexptest = (RegExpTest) test;
+						out.println("RegExp-Test:<br>Prüfpattern: " + Util.mknohtml(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.mknohtml(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.mknohtml(regexptest.getMainClass()) + "<br>");
+					} else if (test instanceof CompileTest) {
+						out.println("Compile-Test<br>");
+					} else if (test instanceof JUnitTest) {
+						out.println("JUnit-Test<br>");
 					} else {
-						out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("TestManager?action=rerunTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
+						out.println("unknown<br>");
 					}
+					out.println("# Ausführbar für Studenten: " + test.getTimesRunnableByStudents() + "<br>");
+					out.println("Tutortest: " + test.isForTutors() + "<br>");
+					if (test.isForTutors()) {
+						out.print("Status: ");
+						if (test.isNeedsToRun()) {
+							out.println("in Queue, noch nicht ausgeführt<br>");
+						} else {
+							out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("TestManager?action=rerunTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
+						}
+					}
+					out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">Test löschen</a>");
+					out.println("</li>");
 				}
-				out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">Test löschen</a>");
-				out.println("</li>");
+				out.println("</ul>");
 			}
-			out.println("</ul>");
 		}
 		template.printTemplateFooter();
 	}
