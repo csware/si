@@ -169,7 +169,6 @@ public class Submission implements Serializable {
 	/**
 	 * @return the lastModified
 	 */
-	@Column(nullable = false)
 	public Date getLastModified() {
 		return lastModified;
 	}
