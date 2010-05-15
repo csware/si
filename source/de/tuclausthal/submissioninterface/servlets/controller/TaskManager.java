@@ -100,6 +100,7 @@ public class TaskManager extends HttpServlet {
 				task.setTitle(request.getParameter("title"));
 				task.setDescription(request.getParameter("description"));
 				task.setFilenameRegexp(request.getParameter("filenameregexp"));
+				task.setFeaturedFiles(request.getParameter("featuredfiles"));
 				task.setShowTextArea(request.getParameter("showtextarea") != null);
 				task.setStart(parseDate(request.getParameter("startdate"), new Date()));
 				task.setDeadline(parseDate(request.getParameter("deadline"), new Date()));
@@ -121,7 +122,7 @@ public class TaskManager extends HttpServlet {
 				if (showPoints.before(deadline)) {
 					showPoints = deadline;
 				}
-				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints")), startdate, deadline, request.getParameter("description"), lecture, showPoints, request.getParameter("filenameregexp"), request.getParameter("showtextarea") != null);
+				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints")), startdate, deadline, request.getParameter("description"), lecture, showPoints, request.getParameter("filenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"));
 			}
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));

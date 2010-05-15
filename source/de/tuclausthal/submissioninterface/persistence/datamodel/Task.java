@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -55,6 +55,7 @@ public class Task implements Serializable {
 	private Set<SimilarityTest> simularityTests;
 	private String filenameRegexp = "[A-Z][A-Za-z0-9_]+\\.java";
 	private boolean showTextArea = false;
+	private String featuredFiles;
 
 	public Task() {}
 
@@ -66,8 +67,9 @@ public class Task implements Serializable {
 	 * @param description
 	 * @param submissions
 	 * @param lecture
+	 * @param featuredFiles 
 	 */
-	public Task(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameRegexp, boolean showTextArea) {
+	public Task(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles) {
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.start = start;
@@ -77,6 +79,7 @@ public class Task implements Serializable {
 		this.showPoints = showPoints;
 		this.filenameRegexp = filenameRegexp;
 		this.showTextArea = showTextArea;
+		this.featuredFiles = featuredFiles;
 	}
 
 	/**
@@ -290,5 +293,19 @@ public class Task implements Serializable {
 	 */
 	public void setMaxSubmitters(int maxSubmitters) {
 		this.maxSubmitters = maxSubmitters;
+	}
+
+	/**
+	 * @return the featuredFiles
+	 */
+	public String getFeaturedFiles() {
+		return featuredFiles;
+	}
+
+	/**
+	 * @param featuredFiles the featuredFiles to set
+	 */
+	public void setFeaturedFiles(String featuredFiles) {
+		this.featuredFiles = featuredFiles;
 	}
 }

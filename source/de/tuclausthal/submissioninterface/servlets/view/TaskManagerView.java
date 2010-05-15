@@ -98,6 +98,10 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<td><input type=checkbox name=showtextarea " + (task.isShowTextArea() ? "checked" : "") + "></td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Dateien bei Tutor aufklappen:</th>");
+		out.println("<td><input type=text name=featuredfiles value=\"" + Util.mknohtml(task.getFeaturedFiles()) + "\"> Sollen alle Dateien zugeklappt sein: \"-\", sonst Komma-separierte Datei-Liste oder leer.</td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");
 		out.println("<td><input type=text name=startdate value=\"" + Util.mknohtml(task.getStart().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 		out.println("</tr>");
