@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 11. Mai 2010 um 17:15
+-- Erstellungszeit: 16. Mai 2010 um 22:01
 -- Server Version: 5.1.41
 -- PHP-Version: 5.3.1
 
@@ -171,6 +171,7 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   `publicComment` longtext,
   `pointsOk` bit(1) DEFAULT NULL,
   `internalComment` longtext,
+  `lastModified` datetime DEFAULT NULL,
   PRIMARY KEY (`submissionid`),
   KEY `FK2912EA7AE0697EB` (`taskid`),
   KEY `issuedby` (`issuedBy_id`)
@@ -208,6 +209,8 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `start` datetime NOT NULL,
   `title` varchar(255) DEFAULT NULL,
   `lectureid` int(11) NOT NULL,
+  `featuredFiles` text NOT NULL,
+  `tutorsCanUploadFiles` bit(1) NOT NULL,
   PRIMARY KEY (`taskid`),
   KEY `FK6907B8EAF18EDD1` (`lectureid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=34 ;
