@@ -91,21 +91,36 @@ public class SubmitSolution extends HttpServlet {
 			return;
 		}
 
-		if (task.getStart().after(Util.correctTimezone(new Date())) && participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0) {
-			request.setAttribute("title", "Abgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
-			return;
+		boolean canUploadForStudents = participation.getRoleType() == ParticipationRole.ADVISOR || (task.isTutorsCanUploadFiles() && participation.getRoleType() == ParticipationRole.TUTOR);
+
+		// if session-user is not a tutor (with rights to upload for students) or advisor: check dates
+		if (!canUploadForStudents) {
+			if (participation.getRoleType() == ParticipationRole.TUTOR) {
+				request.setAttribute("title", "Tutoren können keine eigenen Lösungen einsenden.");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
+			if (task.getStart().after(Util.correctTimezone(new Date()))) {
+				request.setAttribute("title", "Abgabe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
+			if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+				request.setAttribute("title", "Abgabe nicht mehr möglich");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
 		}
 
-		if (task.getDeadline().before(Util.correctTimezone(new Date())) && participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0) {
-			request.setAttribute("title", "Abgabe nicht mehr möglich");
+		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
+			request.setAttribute("title", "Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
 		request.setAttribute("task", task);
 
-		if (participation.getRoleType() == ParticipationRole.ADVISOR || (task.isTutorsCanUploadFiles() && participation.getRoleType() == ParticipationRole.TUTOR)) {
+		if (canUploadForStudents) {
 			request.getRequestDispatcher("SubmitSolutionAdvisorFormView").forward(request, response);
 		} else {
 			request.setAttribute("participation", participation);
@@ -187,7 +202,7 @@ public class SubmitSolution extends HttpServlet {
 			try {
 				items = upload.parseRequest(request);
 			} catch (FileUploadException e) {
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "filename invalid");
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
 				return;
 			}
 
@@ -205,7 +220,8 @@ public class SubmitSolution extends HttpServlet {
 
 		if (uploadFor > 0) {
 			// Uploader ist wahrscheinlich Betreuer -> keine zeitlichen Prüfungen
-			if ((studentParticipation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0 || (task.isTutorsCanUploadFiles() && studentParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) != 0)) && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
+			// check if uploader is allowed to upload for students
+			if (!(studentParticipation.getRoleType() == ParticipationRole.ADVISOR || (task.isTutorsCanUploadFiles() && studentParticipation.getRoleType() == ParticipationRole.TUTOR))) {
 				template.printTemplateHeader("Ungültige Anfrage");
 				out.println("<div class=mid>Sie sind nicht berechtigt bei dieser Veranstaltung Dateien für Studenten hochzuladen.</div>");
 				out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
@@ -220,25 +236,37 @@ public class SubmitSolution extends HttpServlet {
 				template.printTemplateFooter();
 				return;
 			}
+			if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
+				template.printTemplateHeader("Ungültige Anfrage");
+				out.println("<div class=mid>Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.</div>");
+				template.printTemplateFooter();
+				return;
+			}
 		} else {
-			// Uploader ist Student, -> harte prüfung
+			if (studentParticipation.getRoleType() == ParticipationRole.ADVISOR || studentParticipation.getRoleType() == ParticipationRole.TUTOR) {
+				request.setAttribute("title", "Betreuer und Tutoren können keine eigenen Lösungen einsenden.");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
+			// Uploader is Student, -> hard date checks
 			if (task.getStart().after(Util.correctTimezone(new Date()))) {
-				template.printTemplateHeader("Aufgabe nicht abrufbar");
-				out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
-				template.printTemplateFooter();
+				request.setAttribute("title", "Abgabe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
 				return;
 			}
-
 			if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
-				template.printTemplateHeader("Abgabe nicht (mehr) möglich");
-				out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
-				template.printTemplateFooter();
+				request.setAttribute("title", "Abgabe nicht mehr möglich");
+				request.getRequestDispatcher("MessageView").forward(request, response);
 				return;
 			}
-
-			if (!isMultipart && "-".equals(task.getFilenameRegexp())) {
+			if (isMultipart && "-".equals(task.getFilenameRegexp())) {
 				template.printTemplateHeader("Ungültige Anfrage");
 				out.println("<div class=mid>Dateiupload ist für diese Aufgabe deaktiviert.</div>");
+				template.printTemplateFooter();
+				return;
+			} else if (!isMultipart && !task.isShowTextArea()) {
+				template.printTemplateHeader("Ungültige Anfrage");
+				out.println("<div class=mid>Textlösungen sind für diese Aufgabe deaktiviert.</div>");
 				template.printTemplateFooter();
 				return;
 			}
@@ -375,7 +403,7 @@ public class SubmitSolution extends HttpServlet {
 			}
 			tx.rollback();
 			out.println("Problem: Keine Abgabedaten gefunden.");
-		} else if (request.getParameter("textsolution") != null && task.isShowTextArea()) {
+		} else if (request.getParameter("textsolution") != null) {
 			File uploadedFile = new File(path, "textloesung.txt");
 			FileWriter fileWriter = new FileWriter(uploadedFile);
 			fileWriter.write(request.getParameter("textsolution"));
