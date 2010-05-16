@@ -77,7 +77,7 @@ public final class Util {
 	/**
 	 * Escapes command line parameters
 	 * @param message
-	 * @return
+	 * @return escaped string
 	 */
 	public static String mksafecmdargs(String message) {
 		if (message == null) {
@@ -134,7 +134,7 @@ public final class Util {
 	 * Parses a string and returns an integer
 	 * @param integerString the string to parse
 	 * @param defaultValue the default value if the string is not an integer
-	 * @return
+	 * @return parsed integer or defaultValue
 	 */
 	public static int parseInteger(String integerString, int defaultValue) {
 		try {
@@ -247,7 +247,7 @@ public final class Util {
 
 	/**
 	 * Returns the current semester
-	 * @return
+	 * @return the semester encoded as integer
 	 */
 	public static int getCurrentSemester() {
 		Date date = new Date();
@@ -295,7 +295,7 @@ public final class Util {
 	 * Creates a temporaty directory
 	 * @param prefix
 	 * @param suffix
-	 * @return
+	 * @return the temporate directory or null on error
 	 */
 	public static File createTemporaryDirectory(String prefix, String suffix) {
 		File temp;
@@ -313,7 +313,7 @@ public final class Util {
 	/**
 	 * Corrects timezone if needed
 	 * @param date
-	 * @return
+	 * @return a corrected date
 	 */
 	public static Date correctTimezone(Date date) {
 		return date;

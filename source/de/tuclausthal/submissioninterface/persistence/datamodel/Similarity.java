@@ -40,6 +40,7 @@ public class Similarity implements Serializable {
 	private Similarity() {}
 
 	/**
+	 * @param similarityTest 
 	 * @param submissionOne
 	 * @param submissionTwo
 	 * @param percentage

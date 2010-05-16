@@ -53,7 +53,7 @@ public abstract class Test implements Serializable {
 	}
 
 	/**
-	 * @param visibleToStudents the visibleToStudents to set
+	 * @param timesRunnableByStudents 
 	 */
 	public void setTimesRunnableByStudents(int timesRunnableByStudents) {
 		this.timesRunnableByStudents = timesRunnableByStudents;

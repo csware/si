@@ -36,6 +36,7 @@ public class NormalizerCache {
 
 	/**
 	 * Creates a new normalizer cache
+	 * @param pathToTask 
 	 * @param normalizer the normalizer to cache
 	 * @throws IOException
 	 */
@@ -50,7 +51,6 @@ public class NormalizerCache {
 
 	/**
 	 * Normalize and cache the contens of the given file of the given submission
-	 * @param submission
 	 * @param file
 	 * @return the (cached) normalized string
 	 * @throws IOException

@@ -37,9 +37,11 @@ public interface TaskDAOIf {
 	 * @param description the description of the task (HTML possible)
 	 * @param lecture the lecture to which the task should be associated
 	 * @param showPoints the daten when the issued points will be shown
+	 * @param filenameRegexp 
+	 * @param showTextArea 
 	 * @param featuredFiles 
 	 * @param tutorsCanUploadFiles 
-	 * @return
+	 * @return a new Task
 	 */
 	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles);
 

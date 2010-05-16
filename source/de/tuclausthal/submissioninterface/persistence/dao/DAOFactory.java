@@ -40,6 +40,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.impl.UserDAO;
 public class DAOFactory {
 	/**
 	 * Returns a GroupDAOIf instance
+	 * @param session 
 	 * @return a GroupDAOIf instance
 	 */
 	public static GroupDAOIf GroupDAOIf(Session session) {
@@ -48,6 +49,7 @@ public class DAOFactory {
 
 	/**
 	 * Returns a LectureDAOIf instance
+	 * @param session 
 	 * @return a LectureDAOIf instance
 	 */
 	public static LectureDAOIf LectureDAOIf(Session session) {
@@ -56,6 +58,7 @@ public class DAOFactory {
 
 	/**
 	 * Returns a ParticipationDAOIf instance
+	 * @param session 
 	 * @return a ParticipationDAOIf instance
 	 */
 	public static ParticipationDAOIf ParticipationDAOIf(Session session) {
@@ -64,6 +67,7 @@ public class DAOFactory {
 
 	/**
 	 * Returns a PointsDAOIf instance
+	 * @param session 
 	 * @return a PointsDAOIf instance
 	 */
 	public static PointsDAOIf PointsDAOIf(Session session) {
@@ -72,6 +76,7 @@ public class DAOFactory {
 
 	/**
 	 * Returns a SubmissionDAOIf instance
+	 * @param session 
 	 * @return a SubmissionDAOIf instance
 	 */
 	public static SubmissionDAOIf SubmissionDAOIf(Session session) {
@@ -80,6 +85,7 @@ public class DAOFactory {
 
 	/**
 	 * Returns a TaskDAOIf instance
+	 * @param session 
 	 * @return a TaskDAOIf instance
 	 */
 	public static TaskDAOIf TaskDAOIf(Session session) {
@@ -88,6 +94,7 @@ public class DAOFactory {
 
 	/**
 	 * Returns a UserDAOIf instance
+	 * @param session 
 	 * @return a UserDAOIf instance
 	 */
 	public static UserDAOIf UserDAOIf(Session session) {
@@ -96,6 +103,7 @@ public class DAOFactory {
 
 	/**
 	 * Returns a TestResultDAOIf instance
+	 * @param session 
 	 * @return a TestResultDAOIf instance
 	 */
 	public static TestResultDAOIf TestResultDAOIf(Session session) {
@@ -104,6 +112,7 @@ public class DAOFactory {
 
 	/**
 	 * Returns a TestDAOIf instance
+	 * @param session 
 	 * @return a TestDAOIf instance
 	 */
 	public static TestDAOIf TestDAOIf(Session session) {
@@ -112,6 +121,7 @@ public class DAOFactory {
 
 	/**
 	 * Returns a SimilarityDAOIf instance
+	 * @param session 
 	 * @return a SimilarityDAO instance
 	 */
 	public static SimilarityDAOIf SimilarityDAOIf(Session session) {
@@ -120,6 +130,7 @@ public class DAOFactory {
 
 	/**
 	 * Returns a SimilarityTestDAOIf instance
+	 * @param session 
 	 * @return a SimilarityTestDAOIf instance
 	 */
 	public static SimilarityTestDAOIf SimilarityTestDAOIf(Session session) {

@@ -48,7 +48,7 @@ public class HibernateSessionHelper {
 
 	/**
 	 * Gibt eine Hibernation-Datenbank-Sitzung zurück
-	 * @return
+	 * @return Hibernate Session
 	 * @throws HibernateException
 	 */
 	public static Session getSession() throws HibernateException {

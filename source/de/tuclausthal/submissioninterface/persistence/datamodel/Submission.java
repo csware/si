@@ -72,7 +72,7 @@ public class Submission implements Serializable {
 	}
 
 	/**
-	 * @param testResult the testResult to set
+	 * @param testResults 
 	 */
 	public void setTestResults(Set<TestResult> testResults) {
 		this.testResults = testResults;
@@ -102,7 +102,7 @@ public class Submission implements Serializable {
 	}
 
 	/**
-	 * @param submitter the submitter to set
+	 * @param submitters the submitters to set
 	 */
 	public void setSubmitters(Set<Participation> submitters) {
 		this.submitters = submitters;

@@ -31,6 +31,7 @@ public interface TestExecutorIf {
 	/**
 	 * Executes the given executionTask
 	 * @param executionTask the executiontask to execute
+	 * @return a future-reference
 	 */
 	public Future<TestExecutorTestResult> executeTask(TestTask executionTask);
 }

@@ -61,7 +61,7 @@ public interface LoginIf {
 
 	/**
 	 * Returns whether a http redirect is needed after login
-	 * @return
+	 * @return returns true if a redirect is required
 	 */
 	public abstract boolean redirectAfterLogin();
 }

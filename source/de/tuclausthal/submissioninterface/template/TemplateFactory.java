@@ -35,7 +35,7 @@ public class TemplateFactory {
 	 * Returns the a template instance
 	 * @param servletRequest
 	 * @param servletResponse
-	 * @return
+	 * @return a template-object
 	 * @throws IOException
 	 */
 	public static Template getTemplate(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {

@@ -41,7 +41,7 @@ public class LocalExecutor implements TestExecutorIf {
 
 	/**
 	 * Returns the instance (Singleton)
-	 * @return
+	 * @return the executer instance
 	 */
 	public static synchronized LocalExecutor getInstance() {
 		if (instance == null) {

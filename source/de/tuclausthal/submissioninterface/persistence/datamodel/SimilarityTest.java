@@ -65,6 +65,7 @@ public class SimilarityTest implements Serializable {
 	 * @param basis
 	 * @param normalizeCapitalization
 	 * @param tabsSpacesNewlinesNormalization
+	 * @param minimumDifferenceInPercent 
 	 * @param excludeFiles comma separated list of files to exclude
 	 */
 	public SimilarityTest(Task task, String type, String basis, boolean normalizeCapitalization, String tabsSpacesNewlinesNormalization, int minimumDifferenceInPercent, String excludeFiles) {

@@ -53,11 +53,12 @@ public class SessionAdapter {
 
 	/**
 	 * Reads the user from the session
+	 * @param hibernateSession 
 	 * @return the user or null if no user was stored to the session
 	 */
-	public User getUser(Session hsession) {
+	public User getUser(Session hibernateSession) {
 		if (session.getAttribute("userID") != null) {
-			return DAOFactory.UserDAOIf(hsession).getUser((Integer) session.getAttribute("userID"));
+			return DAOFactory.UserDAOIf(hibernateSession).getUser((Integer) session.getAttribute("userID"));
 		} else {
 			return null;
 		}

@@ -66,9 +66,12 @@ public class Task implements Serializable {
 	 * @param start
 	 * @param deadline
 	 * @param description
-	 * @param submissions
 	 * @param lecture
+	 * @param showPoints 
+	 * @param filenameRegexp 
+	 * @param showTextArea 
 	 * @param featuredFiles 
+	 * @param tutorsCanUploadFiles 
 	 */
 	public Task(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles) {
 		this.title = title;
@@ -217,7 +220,7 @@ public class Task implements Serializable {
 	}
 
 	/**
-	 * @param test the test to set
+	 * @param tests 
 	 */
 	public void setTests(Set<Test> tests) {
 		this.tests = tests;
@@ -284,14 +287,14 @@ public class Task implements Serializable {
 	}
 
 	/**
-	 * @return the maxUsers
+	 * @return the maxSubmitters per "group"
 	 */
 	public int getMaxSubmitters() {
 		return maxSubmitters;
 	}
 
 	/**
-	 * @param maxUsers the maxUsers to set
+	 * @param maxSubmitters per "group" 
 	 */
 	public void setMaxSubmitters(int maxSubmitters) {
 		this.maxSubmitters = maxSubmitters;

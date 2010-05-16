@@ -61,7 +61,7 @@ public interface SubmissionDAOIf {
 	 * Create and store a new submission in the DB
 	 * @param task the task to associate the submission to
 	 * @param submitter the participation of the submitter
-	 * @return the (new or updated) submission
+	 * @return the (new or existing) submission
 	 */
 	public Submission createSubmission(Task task, Participation submitter);
 
@@ -73,7 +73,8 @@ public interface SubmissionDAOIf {
 	public List<Submission> getSubmissionsForTaskOrdered(Task task);
 
 	/**
-	 * Returns the submission of a group orderd by name
+	 * Returns the submission of a group for a specific task orderd by name
+	 * @param task 
 	 * @param group
 	 * @return the list of submissions
 	 */

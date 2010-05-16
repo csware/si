@@ -32,6 +32,9 @@ public interface GroupDAOIf {
 	 * Creates a new group for a lecture and store it in the DB
 	 * @param lecture the lecture to which the group is associated to
 	 * @param name the name for the group
+	 * @param allowStudentsToSignup 
+	 * @param allowStudentsToQuit 
+	 * @param maxStudents 
 	 * @return the new group
 	 */
 	public Group createGroup(Lecture lecture, String name, boolean allowStudentsToSignup, boolean allowStudentsToQuit, int maxStudents);
