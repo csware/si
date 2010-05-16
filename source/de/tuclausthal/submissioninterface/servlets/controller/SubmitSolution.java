@@ -244,19 +244,22 @@ public class SubmitSolution extends HttpServlet {
 			}
 		} else {
 			if (studentParticipation.getRoleType() == ParticipationRole.ADVISOR || studentParticipation.getRoleType() == ParticipationRole.TUTOR) {
-				request.setAttribute("title", "Betreuer und Tutoren können keine eigenen Lösungen einsenden.");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				template.printTemplateHeader("Ungültige Anfrage");
+				out.println("<div class=mid>Betreuer und Tutoren können keine eigenen Lösungen einsenden.</div>");
+				template.printTemplateFooter();
 				return;
 			}
 			// Uploader is Student, -> hard date checks
 			if (task.getStart().after(Util.correctTimezone(new Date()))) {
-				request.setAttribute("title", "Abgabe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				template.printTemplateHeader("Ungültige Anfrage");
+				out.println("<div class=mid>Abgabe nicht gefunden.</div>");
+				template.printTemplateFooter();
 				return;
 			}
 			if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
-				request.setAttribute("title", "Abgabe nicht mehr möglich");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				template.printTemplateHeader("Ungültige Anfrage");
+				out.println("<div class=mid>Abgabe nicht mehr möglich.</div>");
+				template.printTemplateFooter();
 				return;
 			}
 			if (isMultipart && "-".equals(task.getFilenameRegexp())) {
