@@ -82,9 +82,9 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 	@Override
 	public List<Group> getJoinAbleGroups(Lecture lecture, Group participationGroup) {
 		if (participationGroup == null) {
-			return getSession().createCriteria(Group.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("allowStudentsToSignup", true)).add(Restrictions.sqlRestriction("(select count(*) from participations where groupid=this_.gid) < this_.maxStudents")).list();
+			return getSession().createCriteria(Group.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("allowStudentsToSignup", true)).add(Restrictions.sqlRestriction("(select count(*) from participations where groupid={alias}.gid) < this_.maxStudents")).list();
 		} else {
-			return getSession().createCriteria(Group.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("allowStudentsToSignup", true)).add(Restrictions.sqlRestriction("(select count(*) from participations where groupid=this_.gid) < this_.maxStudents")).add(Restrictions.not(Restrictions.eq("gid", participationGroup.getGid()))).list();
+			return getSession().createCriteria(Group.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("allowStudentsToSignup", true)).add(Restrictions.sqlRestriction("(select count(*) from participations where groupid={alias}.gid) < this_.maxStudents")).add(Restrictions.not(Restrictions.eq("gid", participationGroup.getGid()))).list();
 		}
 	}
 }

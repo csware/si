@@ -114,7 +114,7 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 
 	@Override
 	public List<Participation> getParticipationsWithNoSubmissionToTaskOrdered(Task task) {
-		return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", task.getLecture())).add(Restrictions.sqlRestriction("this_.id not in (SELECT submitters_id FROM submissions, submissions_participations where submissions.submissionid=submissions_participations.submissions_submissionid and taskid=" + task.getTaskid() + ")")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list(); // HACK
+		return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", task.getLecture())).add(Restrictions.sqlRestriction("{alias}.id not in (SELECT submitters_id FROM submissions, submissions_participations where submissions.submissionid=submissions_participations.submissions_submissionid and taskid=" + task.getTaskid() + ")")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 	}
 
 	@Override

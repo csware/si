@@ -66,23 +66,9 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 
 	@Override
 	public List<Lecture> getCurrentLecturesWithoutUser(User user) {
-		// TODO: optimization possible here ;)
 		Session session = getSession();
-		List<Lecture> lectures = new LinkedList<Lecture>();
-		for (Lecture lecture : (List<Lecture>) session.createCriteria(Lecture.class).add(Restrictions.eq("semester", Util.getCurrentSemester())).addOrder(Order.asc("name")).list()) {
-			boolean found = false;
-			for (Participation participation : lecture.getParticipants()) {
-				if (participation.getUser().getUid() == user.getUid()) {
-					found = true;
-					break;
-				}
-			}
-			if (found == false) {
-				lectures.add(lecture);
-			}
-		}
 		// Criteria a = session.createCriteria(Lecture.class).createCriteria("participants").add(Restrictions.isNull("lecture")).createCriteria("user", Criteria.FULL_JOIN);
-		return lectures;
+		return session.createCriteria(Lecture.class).add(Restrictions.eq("semester", Util.getCurrentSemester())).addOrder(Order.asc("name")).add(Restrictions.sqlRestriction("{alias}.id not in (select lectureid from participations part where part.uid=" + user.getUid() + ")")).list();
 	}
 
 	@Override
