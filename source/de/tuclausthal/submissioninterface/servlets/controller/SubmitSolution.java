@@ -331,8 +331,12 @@ public class SubmitSolution extends HttpServlet {
 							}
 							zipFile.close();
 						} catch (IOException e) {
-							Util.recursiveDeleteEmptySubDirectories(path);
-							tx.rollback();
+							if (!submissionDAO.deleteIfNoFiles(submission, path)) {
+								submission.setLastModified(new Date());
+								submissionDAO.saveSubmission(submission);
+							}
+							System.out.println("SubmitSolutionProblem1");
+							tx.commit();
 							System.out.println(e.getMessage());
 							e.printStackTrace();
 							template.printTemplateHeader("Ungültige Anfrage");
@@ -354,7 +358,12 @@ public class SubmitSolution extends HttpServlet {
 						}
 						Matcher m = pattern.matcher(submittedFileName);
 						if (!m.matches()) {
-							tx.rollback();
+							if (!submissionDAO.deleteIfNoFiles(submission, path)) {
+								submission.setLastModified(new Date());
+								submissionDAO.saveSubmission(submission);
+							}
+							System.out.println("SubmitSolutionProblem2");
+							tx.commit();
 							template.printTemplateHeader("Ungültige Anfrage");
 							out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
 							template.printTemplateFooter();
@@ -388,16 +397,23 @@ public class SubmitSolution extends HttpServlet {
 							}
 						}
 					}
-					submission.setLastModified(new Date());
-					submissionDAO.saveSubmission(submission);
-					Util.recursiveDeleteEmptyDirectories(path);
+					if (!submissionDAO.deleteIfNoFiles(submission, path)) {
+						submission.setLastModified(new Date());
+						submissionDAO.saveSubmission(submission);
+					}
 					tx.commit();
 					new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, LogAction.UPLOAD, null, null);
 					response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 					return;
 				}
 			}
-			tx.rollback();
+			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
+				submission.setLastModified(new Date());
+				submissionDAO.saveSubmission(submission);
+			}
+			System.out.println("SubmitSolutionProblem3");
+			System.out.println("Problem: Keine Abgabedaten gefunden.");
+			tx.commit();
 			out.println("Problem: Keine Abgabedaten gefunden.");
 		} else if (request.getParameter("textsolution") != null) {
 			File uploadedFile = new File(path, "textloesung.txt");
@@ -412,7 +428,12 @@ public class SubmitSolution extends HttpServlet {
 
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 		} else {
-			tx.rollback();
+			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
+				submission.setLastModified(new Date());
+				submissionDAO.saveSubmission(submission);
+			}
+			System.out.println("SubmitSolutionProblem4");
+			tx.commit();
 			out.println("Problem: Keine Abgabedaten gefunden.");
 		}
 	}

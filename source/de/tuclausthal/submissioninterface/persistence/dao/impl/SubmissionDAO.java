@@ -32,6 +32,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Data Access Object implementation for the SubmissionDAOIf
@@ -88,6 +89,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 		Session session = getSession();
 		session.lock(submission, LockMode.UPGRADE);
 		boolean result = false;
+		Util.recursiveDeleteEmptySubDirectories(submissionPath);
 		if (submissionPath.listFiles().length == 0 && submissionPath.delete()) {
 			session.delete(submission);
 			result = true;

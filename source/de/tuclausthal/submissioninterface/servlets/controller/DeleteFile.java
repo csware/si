@@ -98,7 +98,6 @@ public class DeleteFile extends HttpServlet {
 			new LogDAO(session).createLogEntry(participation.getUser(), null, submission.getTask(), LogAction.DELETE_FILE, null, null);
 			Transaction tx = session.beginTransaction();
 			session.lock(submission, LockMode.UPGRADE);
-			Util.recursiveDeleteEmptySubDirectories(path);
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 				submission.setLastModified(new Date());
 				submissionDAO.saveSubmission(submission);
