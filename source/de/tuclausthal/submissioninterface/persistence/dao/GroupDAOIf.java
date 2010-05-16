@@ -22,7 +22,6 @@ import java.util.List;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 
 /**
  * Data Access Object Interface for the Group-class

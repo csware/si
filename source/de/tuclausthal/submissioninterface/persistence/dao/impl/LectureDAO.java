@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -37,14 +37,14 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Data Access Object implementation for the LectureDAOIf
  * @author Sven Strickroth
  */
-public class LectureDAO extends AbstractDAO  implements LectureDAOIf {
+public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 	public LectureDAO(Session session) {
 		super(session);
 	}
 
 	@Override
 	public List<Lecture> getLectures() {
-		return (List<Lecture>) getSession().createCriteria(Lecture.class).addOrder(Order.desc("semester")).addOrder(Order.asc("name")).list();
+		return getSession().createCriteria(Lecture.class).addOrder(Order.desc("semester")).addOrder(Order.asc("name")).list();
 	}
 
 	@Override

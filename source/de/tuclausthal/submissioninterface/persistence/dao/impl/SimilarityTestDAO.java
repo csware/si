@@ -31,7 +31,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.util.Util;
 
-public class SimilarityTestDAO  extends AbstractDAO implements SimilarityTestDAOIf {
+public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOIf {
 
 	public SimilarityTestDAO(Session session) {
 		super(session);

@@ -62,7 +62,7 @@ public class SubscribeToLecture extends HttpServlet {
 				return;
 			} else if (lecture.getSemester() < Util.getCurrentSemester()) {
 				tx.commit();
-				((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+				response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 				return;
 			} else {
 				participationDAO.createParticipation(new SessionAdapter(request).getUser(session), lecture, ParticipationRole.NORMAL);

@@ -421,8 +421,9 @@ public class SubmitSolution extends HttpServlet {
 		byte[] buffer = new byte[1024];
 		int len;
 
-		while ((len = in.read(buffer)) >= 0)
+		while ((len = in.read(buffer)) >= 0) {
 			out.write(buffer, 0, len);
+		}
 
 		in.closeEntry();
 		out.close();

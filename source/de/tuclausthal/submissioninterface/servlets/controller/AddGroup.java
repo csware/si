@@ -58,7 +58,7 @@ public class AddGroup extends HttpServlet {
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), lecture);
 		if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
-			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
 

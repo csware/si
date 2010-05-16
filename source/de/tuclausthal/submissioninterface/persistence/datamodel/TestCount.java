@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,7 +20,6 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -38,6 +37,7 @@ public class TestCount implements Serializable {
 	private Test test;
 	private User user;
 	private int timesExecuted = 0;
+
 	/**
 	 * @return the id
 	 */
@@ -46,12 +46,14 @@ public class TestCount implements Serializable {
 	public int getId() {
 		return id;
 	}
+
 	/**
 	 * @param id the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	/**
 	 * @return the test
 	 */
@@ -59,12 +61,14 @@ public class TestCount implements Serializable {
 	public Test getTest() {
 		return test;
 	}
+
 	/**
 	 * @param test the test to set
 	 */
 	public void setTest(Test test) {
 		this.test = test;
 	}
+
 	/**
 	 * @return the user
 	 */
@@ -72,18 +76,21 @@ public class TestCount implements Serializable {
 	public User getUser() {
 		return user;
 	}
+
 	/**
 	 * @param user the user to set
 	 */
 	public void setUser(User user) {
 		this.user = user;
 	}
+
 	/**
 	 * @return the timesExecuted
 	 */
 	public int getTimesExecuted() {
 		return timesExecuted;
 	}
+
 	/**
 	 * @param timesExecuted the timesExecuted to set
 	 */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -31,9 +31,8 @@ import de.tuclausthal.submissioninterface.persistence.dao.SimilarityDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
-public class SimilarityDAO  extends AbstractDAO implements SimilarityDAOIf {
+public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 
 	public SimilarityDAO(Session session) {
 		super(session);
@@ -74,12 +73,12 @@ public class SimilarityDAO  extends AbstractDAO implements SimilarityDAOIf {
 		if (maxSimilarity == 0) {
 			return new LinkedList<Similarity>();
 		} else {
-			return (List<Similarity>) getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).add(Restrictions.eq("percentage", maxSimilarity)).list();
+			return getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).add(Restrictions.eq("percentage", maxSimilarity)).list();
 		}
 	}
 
 	@Override
 	public List<Similarity> getUsersWithSimilarity(SimilarityTest similarityTest, Submission submission) {
-		return (List<Similarity>) getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).addOrder(Order.desc("percentage")).list();
+		return getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).addOrder(Order.desc("percentage")).list();
 	}
 }

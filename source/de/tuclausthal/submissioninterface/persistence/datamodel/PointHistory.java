@@ -33,12 +33,10 @@ import javax.persistence.Table;
 @Table(name = "pointhistory")
 public class PointHistory implements Serializable {
 	private int id;
-	
 	private Submission submission;
 	private String field;
 	private String removed;
 	private String added;
-	
 	private Participation who;
 	private Date date = new Date();
 
@@ -71,7 +69,7 @@ public class PointHistory implements Serializable {
 	/**
 	 * @return the submission
 	 */
-	@ManyToOne(optional=false)
+	@ManyToOne(optional = false)
 	public Submission getSubmission() {
 		return submission;
 	}
@@ -148,7 +146,7 @@ public class PointHistory implements Serializable {
 	/**
 	 * @return the who
 	 */
-	@ManyToOne(optional=false)
+	@ManyToOne(optional = false)
 	public Participation getWho() {
 		return who;
 	}

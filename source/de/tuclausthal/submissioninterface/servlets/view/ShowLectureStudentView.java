@@ -80,8 +80,9 @@ public class ShowLectureStudentView extends HttpServlet {
 			out.println("<form action=\"JoinGroup\">");
 			out.println("<select name=groupid>");
 			for (Group group : joinAbleGroups) {
-				if (participation.getGroup() == null || participation.getGroup().getGid() != group.getGid())
+				if (participation.getGroup() == null || participation.getGroup().getGid() != group.getGid()) {
 					out.println("<option value=" + group.getGid() + ">" + Util.mknohtml(group.getName()));
+				}
 			}
 			out.println("</select>");
 			out.println("<input type=submit value=\"Gruppe wechseln\">");

@@ -55,7 +55,7 @@ public class ShowUser extends HttpServlet {
 		}
 
 		if (lectures.size() == 0) {
-			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
 

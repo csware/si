@@ -61,7 +61,7 @@ public class JoinGroup extends HttpServlet {
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipationLocked(new SessionAdapter(request).getUser(session), group.getLecture());
 		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.NORMAL) != 0) {
-			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "operation not allowed");
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "operation not allowed");
 			tx.commit();
 			return;
 		}

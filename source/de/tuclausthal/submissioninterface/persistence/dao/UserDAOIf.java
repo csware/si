@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -60,7 +60,6 @@ public interface UserDAOIf {
 	 */
 	public User createUser(String email, String firstName, String lastName, int matrikelno);
 
-	
 	/**
 	 * Get all users from the DB
 	 * @return list of users

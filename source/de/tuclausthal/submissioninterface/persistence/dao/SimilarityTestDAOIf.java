@@ -55,7 +55,7 @@ public interface SimilarityTestDAOIf {
 	public void deleteSimilarityTest(SimilarityTest similarityTest);
 
 	public void saveSimilarityTest(SimilarityTest similarityTest);
-	
+
 	/**
 	 * Rests all results for the given similarity test
 	 * ATTENTION: this method starts it's own transaction!

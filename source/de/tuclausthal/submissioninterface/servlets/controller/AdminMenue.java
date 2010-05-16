@@ -49,9 +49,9 @@ public class AdminMenue extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = HibernateSessionHelper.getSession();
-		SessionAdapter sa = new SessionAdapter((HttpServletRequest) request);
+		SessionAdapter sa = new SessionAdapter(request);
 		if (!sa.getUser(session).isSuperUser()) {
-			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
 

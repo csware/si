@@ -46,8 +46,8 @@ public final class Util {
 		char content[] = new char[message.length()];
 		message.getChars(0, message.length(), content, 0);
 		StringBuffer result = new StringBuffer(content.length + 50);
-		for (int i = 0; i < content.length; i++) {
-			switch (content[i]) {
+		for (char element : content) {
+			switch (element) {
 				case '<':
 					result.append("&lt;");
 					break;
@@ -61,7 +61,7 @@ public final class Util {
 					result.append("&quot;");
 					break;
 				default:
-					result.append(content[i]);
+					result.append(element);
 			}
 		}
 		return (result.toString());
@@ -86,8 +86,8 @@ public final class Util {
 		char content[] = new char[message.length()];
 		message.getChars(0, message.length(), content, 0);
 		StringBuffer result = new StringBuffer(content.length + 50);
-		for (int i = 0; i < content.length; i++) {
-			switch (content[i]) {
+		for (char element : content) {
+			switch (element) {
 				case '<':
 					result.append("\\<");
 					break;
@@ -110,7 +110,7 @@ public final class Util {
 					result.append("\\|");
 					break;
 				default:
-					result.append(content[i]);
+					result.append(element);
 			}
 		}
 		return (result.toString());

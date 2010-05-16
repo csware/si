@@ -108,11 +108,11 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 
 	@Override
 	public List<Test> getStudentTests(Task task) {
-		return (List<Test>) getSession().createCriteria(Test.class).add(Restrictions.eq("task", task)).add(Restrictions.gt("timesRunnableByStudents", 0)).list();
+		return getSession().createCriteria(Test.class).add(Restrictions.eq("task", task)).add(Restrictions.gt("timesRunnableByStudents", 0)).list();
 	}
 
 	@Override
 	public List<Test> getTutorTests(Task task) {
-		return (List<Test>) getSession().createCriteria(Test.class).add(Restrictions.eq("task", task)).add(Restrictions.eq("forTutors", true)).list();
+		return getSession().createCriteria(Test.class).add(Restrictions.eq("task", task)).add(Restrictions.eq("forTutors", true)).list();
 	}
 }

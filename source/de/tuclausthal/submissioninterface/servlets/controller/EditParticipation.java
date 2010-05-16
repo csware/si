@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -54,7 +54,7 @@ public class EditParticipation extends HttpServlet {
 		}
 		Participation callerParticipation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), participation.getLecture());
 		if (callerParticipation == null || callerParticipation.getRoleType() != ParticipationRole.ADVISOR) {
-			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
 

@@ -88,12 +88,12 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 
 	@Override
 	public List<Participation> getParticipationsWithoutGroup(Lecture lecture) {
-		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.isNull("group")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+		return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.isNull("group")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 	}
 
 	@Override
 	public List<Participation> getParticipationsOfGroup(Group group) {
-		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("group", group)).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+		return getSession().createCriteria(Participation.class).add(Restrictions.eq("group", group)).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 
 	@Override
 	public List<Participation> getParticipationsWithNoSubmissionToTaskOrdered(Task task) {
-		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", task.getLecture())).add(Restrictions.sqlRestriction("this_.id not in (SELECT submitters_id FROM submissions, submissions_participations where submissions.submissionid=submissions_participations.submissions_submissionid and taskid=" + task.getTaskid() + ")")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list(); // HACK
+		return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", task.getLecture())).add(Restrictions.sqlRestriction("this_.id not in (SELECT submitters_id FROM submissions, submissions_participations where submissions.submissionid=submissions_participations.submissions_submissionid and taskid=" + task.getTaskid() + ")")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list(); // HACK
 	}
 
 	@Override
@@ -125,9 +125,9 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 			for (Participation participation : group.getTutors()) {
 				ids[i++] = participation.getId();
 			}
-			return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.eq("role", ParticipationRole.TUTOR.toString())).add(Restrictions.not(Restrictions.in("id", ids))).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+			return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.eq("role", ParticipationRole.TUTOR.toString())).add(Restrictions.not(Restrictions.in("id", ids))).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 		} else {
-			return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.eq("role", ParticipationRole.TUTOR.toString())).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+			return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.eq("role", ParticipationRole.TUTOR.toString())).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 		}
 	}
 }

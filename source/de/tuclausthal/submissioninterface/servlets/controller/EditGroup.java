@@ -60,7 +60,7 @@ public class EditGroup extends HttpServlet {
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), group.getLecture());
 		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
-			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
 
@@ -87,7 +87,7 @@ public class EditGroup extends HttpServlet {
 				response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid()));
 				return;
 			} else {
-				((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+				response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 				return;
 			}
 		} else if ("editGroup".equals(request.getParameter("action"))) { // add member or edit group
