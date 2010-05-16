@@ -40,11 +40,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.tomcat.util.http.fileupload.DiskFileUpload;
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.FileUpload;
+import org.apache.tomcat.util.http.fileupload.FileUploadBase;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -180,7 +180,7 @@ public class SubmitSolution extends HttpServlet {
 		//http://commons.apache.org/fileupload/using.html
 
 		// Check that we have a file upload request
-		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+		boolean isMultipart = FileUpload.isMultipartContent(request);
 
 		int partnerID = 0;
 		int uploadFor = 0;
@@ -188,15 +188,8 @@ public class SubmitSolution extends HttpServlet {
 		if (!isMultipart) {
 			partnerID = Util.parseInteger(request.getParameter("partnerid"), 0);
 		} else {
-			// Create a factory for disk-based file items
-			FileItemFactory factory = new DiskFileItemFactory();
-
-			// Set factory constraints
-			//factory.setSizeThreshold(yourMaxMemorySize);
-			//factory.setRepository(yourTempDirectory);
-
 			// Create a new file upload handler
-			ServletFileUpload upload = new ServletFileUpload(factory);
+			FileUploadBase upload = new DiskFileUpload();
 
 			// Parse the request
 			try {

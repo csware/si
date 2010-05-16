@@ -30,11 +30,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.tomcat.util.http.fileupload.DiskFileUpload;
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.FileUpload;
+import org.apache.tomcat.util.http.fileupload.FileUploadBase;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
@@ -83,23 +83,14 @@ public class TestManager extends HttpServlet {
 			request.getRequestDispatcher("TestManagerAddTestFormView").forward(request, response);
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "junit".equals(request.getParameter("type"))) {
 			// Check that we have a file upload request
-			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 
 			session.beginTransaction();
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			JUnitTest test = testDAO.createJUnitTest(task);
 
-			if (isMultipart) {
-
-				// Create a factory for disk-based file items
-				FileItemFactory factory = new DiskFileItemFactory();
-
-				// Set factory constraints
-				//factory.setSizeThreshold(yourMaxMemorySize);
-				//factory.setRepository(yourTempDirectory);
-
+			if (FileUpload.isMultipartContent(request)) {
 				// Create a new file upload handler
-				ServletFileUpload upload = new ServletFileUpload(factory);
+				FileUploadBase upload = new DiskFileUpload();
 
 				// Parse the request
 				List<FileItem> items = null;
