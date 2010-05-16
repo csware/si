@@ -55,7 +55,7 @@ public class Overview extends HttpServlet {
 		if (user instanceof Student) {
 			Student student = (Student) user;
 			if (student.getStudiengang() == null) {
-				out.println("<p><form class=\"highlightborder mid\" action=\"AlterUser\" method=post>");
+				out.println("<p><form class=\"highlightborder mid\" action=\"" + response.encodeURL("AlterUser") + "\" method=post>");
 
 				String studiengang = "";
 				if (student.getStudiengang() != null) {

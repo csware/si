@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -43,7 +43,7 @@ public class AdminMenueOverView extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		PrintWriter out = response.getWriter();
-		template.printTemplateHeader("Admin-Menü", "<a href=\"Overview\">Meine Veranstaltungen</a> - Admin-Menü");
+		template.printTemplateHeader("Admin-Menü", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - Admin-Menü");
 
 		Iterator<Lecture> lectureIterator = ((List<Lecture>) request.getAttribute("lectures")).iterator();
 		if (lectureIterator.hasNext()) {

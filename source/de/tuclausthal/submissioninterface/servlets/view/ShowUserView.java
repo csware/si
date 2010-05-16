@@ -94,13 +94,13 @@ public class ShowUserView extends HttpServlet {
 						if (submission != null) {
 							if (submission.getPoints() != null) {
 								if (submission.getPoints().getPointsOk()) {
-									out.println("<td class=points><a href=\"ShowSubmission?sid=" + submission.getSubmissionid() + "\">" + Util.showPoints(submission.getPoints().getPoints()) + "");
+									out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.showPoints(submission.getPoints().getPoints()) + "");
 									points += submission.getPoints().getPoints();
 								} else {
-									out.println("<td class=points><a href=\"ShowSubmission?sid=" + submission.getSubmissionid() + "\">(" + Util.showPoints(submission.getPoints().getPoints()) + ")");
+									out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(" + Util.showPoints(submission.getPoints().getPoints()) + ")");
 								}
 							} else {
-								out.println("<td><a href=\"ShowSubmission?sid=" + submission.getSubmissionid() + "\">noch unbewertet");
+								out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">noch unbewertet");
 							}
 							out.println("</a></td>");
 						} else {

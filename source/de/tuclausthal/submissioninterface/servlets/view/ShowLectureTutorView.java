@@ -149,7 +149,7 @@ public class ShowLectureTutorView extends HttpServlet {
 				} else {
 					out.println("<td>n/a</td>");
 				}
-				out.println("<td><a href=\"ShowUser?uid=" + thisParticipation.getUser().getUid() + "\">" + Util.mknohtml(thisParticipation.getUser().getFullName()) + "</a></td>");
+				out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + thisParticipation.getUser().getUid()) + "\">" + Util.mknohtml(thisParticipation.getUser().getFullName()) + "</a></td>");
 				if (thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
 					if (isAdvisor) {

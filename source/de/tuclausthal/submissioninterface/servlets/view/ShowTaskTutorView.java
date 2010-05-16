@@ -149,9 +149,9 @@ public class ShowTaskTutorView extends HttpServlet {
 						out.println("<h3>Ohne Gruppe</h3>");
 					} else {
 						out.println("<h3>Gruppe: " + Util.mknohtml(group.getName()) + "</h3>");
-						out.println("<div class=mid><a href=\"ShowTask?taskid=" + task.getTaskid() + "&action=grouplist&groupid=" + group.getGid() + "\" target=\"_blank\">Druckbare Liste</a></div>");
+						out.println("<div class=mid><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid() + "&amp;action=grouplist&amp;groupid=" + group.getGid()) + "\" target=\"_blank\">Druckbare Liste</a></div>");
 					}
-					out.println("<form method=post action=\"MarkApproved?taskid=" + task.getTaskid() + "\">");
+					out.println("<form method=post action=\"" + response.encodeURL("MarkApproved?taskid=" + task.getTaskid()) + "\">");
 					out.println("<table class=border>");
 					out.println("<tr>");
 					out.println("<th>Benutzer</th>");

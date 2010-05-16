@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -46,7 +46,7 @@ public class SubscribeToLectureView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		template.printTemplateHeader("Veranstaltungen", "<a href=\"Overview\">Meine Veranstaltungen</a> &gt; Veranstaltungen");
+		template.printTemplateHeader("Veranstaltungen", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> &gt; Veranstaltungen");
 		Iterator<Lecture> lectureIterator = DAOFactory.LectureDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).getCurrentLecturesWithoutUser((User) request.getAttribute("user")).iterator();
 		if (lectureIterator.hasNext()) {
 			out.println("<table class=border>");

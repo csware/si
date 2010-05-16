@@ -77,7 +77,7 @@ public class ShowLectureStudentView extends HttpServlet {
 			}
 		}
 		if ((participation.getGroup() == null || (participation.getGroup() != null && participation.getGroup().isAllowStudentsToQuit())) && joinAbleGroups != null && joinAbleGroups.size() > 0) {
-			out.println("<form action=\"JoinGroup\">");
+			out.println("<form action=\"" + response.encodeURL("JoinGroup") + "\">");
 			out.println("<select name=groupid>");
 			for (Group group : joinAbleGroups) {
 				if (participation.getGroup() == null || participation.getGroup().getGid() != group.getGid()) {

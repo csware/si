@@ -50,7 +50,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			template.printTemplateHeader("Veranstaltung nicht gefunden");
 			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 		} else {
-			template.printTemplateHeader("Veranstaltung \"" + Util.mknohtml(lecture.getName()) + "\" bearbeiten", "<a href=\"Overview\">Meine Veranstaltungen</a> - <a href=\"AdminMenue\">Admin-Menü</a> &gt; Veranstaltung \"" + Util.mknohtml(lecture.getName()) + "\" bearbeiten");
+			template.printTemplateHeader("Veranstaltung \"" + Util.mknohtml(lecture.getName()) + "\" bearbeiten", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"AdminMenue\">Admin-Menü</a> &gt; Veranstaltung \"" + Util.mknohtml(lecture.getName()) + "\" bearbeiten");
 			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("?action=deleteLecture&amp;lecture=" + lecture.getId()) + "\">Veranstaltung löschen</a></p>");
 			out.println("<h2>Betreuer</h2>");
 			Iterator<Participation> advisorIterator = lecture.getParticipants().iterator();

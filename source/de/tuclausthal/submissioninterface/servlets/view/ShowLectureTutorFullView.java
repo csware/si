@@ -83,8 +83,8 @@ public class ShowLectureTutorFullView extends HttpServlet {
 				out.println("<td>n/a</td>");
 				out.println("<td>n/a</td>");
 			}
-			out.println("<td><a href=\"ShowUser?uid=" + lectureParticipation.getUser().getUid() + "\">" + Util.mknohtml(lectureParticipation.getUser().getLastName()) + "</a></td>");
-			out.println("<td><a href=\"ShowUser?uid=" + lectureParticipation.getUser().getUid() + "\">" + Util.mknohtml(lectureParticipation.getUser().getFirstName()) + "</a></td>");
+			out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + lectureParticipation.getUser().getUid()) + "\">" + Util.mknohtml(lectureParticipation.getUser().getLastName()) + "</a></td>");
+			out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + lectureParticipation.getUser().getUid()) + "\">" + Util.mknohtml(lectureParticipation.getUser().getFirstName()) + "</a></td>");
 			int points = 0;
 			for (Task task : taskList) {
 				Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());

@@ -71,7 +71,7 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		for (Participation participation : submission.getSubmitters()) {
-			out.println("<a href=\"ShowUser?uid=" + participation.getUser().getUid() + "\">" + Util.mknohtml(participation.getUser().getFullName()) + "</a><br>");
+			out.println("<a href=\"" + response.encodeURL("ShowUser?uid=" + participation.getUser().getUid()) + "\">" + Util.mknohtml(participation.getUser().getFullName()) + "</a><br>");
 		}
 
 		if (submission.getSubmitters().iterator().next().getGroup() != null) {
@@ -91,7 +91,7 @@ public class ShowSubmissionView extends HttpServlet {
 				oldInternalComment = submission.getPoints().getInternalComment();
 				points = submission.getPoints().getPoints();
 				pointsOk = submission.getPoints().getPointsOk();
-				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte  vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>, <a href=\"ShowMarkHistory?sid=" + submission.getSubmissionid() + "\">History</a>)";
+				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte  vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>, <a href=\"" + response.encodeURL("ShowMarkHistory?sid=" + submission.getSubmissionid()) + "\">History</a>)";
 			}
 			out.println("<tr>");
 			out.println("<td>");
@@ -157,7 +157,7 @@ public class ShowSubmissionView extends HttpServlet {
 		if (submittedFiles.size() > 0) {
 			out.println("<h2>Dateien: <a href=\"#\" onclick=\"$('#files').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<div id=files class=mid>");
-			out.println("<p><a href=\"DownloadAsZip?sid=" + submission.getSubmissionid() + "\">alles als .zip herunterladen</a></p>");
+			out.println("<p><a href=\"" + response.encodeURL("DownloadAsZip?sid=" + submission.getSubmissionid()) + "\">alles als .zip herunterladen</a></p>");
 			List<String> featuredFiles = Arrays.asList(task.getFeaturedFiles().split(","));
 			int id = 0;
 			for (String file : submittedFiles) {

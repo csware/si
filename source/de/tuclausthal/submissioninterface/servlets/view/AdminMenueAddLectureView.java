@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -39,7 +39,7 @@ public class AdminMenueAddLectureView extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		PrintWriter out = response.getWriter();
-		template.printTemplateHeader("neue Veranstaltung", "<a href=\"Overview\">Meine Veranstaltungen</a> - <a href=\"AdminMenue\">Admin-Menü</a> &gt; neue Veranstaltung");
+		template.printTemplateHeader("neue Veranstaltung", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"AdminMenue\">Admin-Menü</a> &gt; neue Veranstaltung");
 
 		out.println("<form action=\"" + response.encodeURL("?action=saveLecture") + "\" method=post>");
 		out.println("<table class=border>");

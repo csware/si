@@ -57,7 +57,7 @@ public class SubmitSolutionAdvisorFormView extends HttpServlet {
 		}
 		setWithUser.append("</select><p>");
 
-		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"?taskid=" + task.getTaskid() + "\">");
+		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 		out.println(setWithUser.toString());
 		out.println("<p>Bitte wählen Sie eine Datei aus, die Sie einsenden möchten.</p>");
 		out.println("<INPUT TYPE=file NAME=file>");

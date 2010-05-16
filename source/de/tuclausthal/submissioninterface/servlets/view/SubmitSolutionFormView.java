@@ -79,7 +79,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 		}
 
 		if (!"-".equals(task.getFilenameRegexp())) {
-			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"?taskid=" + task.getTaskid() + "\">");
+			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 			out.println(setWithUser.toString());
 			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie einsenden möchten.</p>");
 			out.println("<INPUT TYPE=file NAME=file>");
@@ -91,7 +91,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 		}
 
 		if (task.isShowTextArea()) {
-			out.println("<FORM class=mid method=POST action=\"?taskid=" + task.getTaskid() + "\">");
+			out.println("<FORM class=mid method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 			out.println(setWithUser.toString());
 			out.println("<p>Bitte füllen Sie das Textfeld mit Ihrer Lösung:</p>");
 			out.println("<p><textarea cols=60 rows=10 name=textsolution>" + Util.mknohtml((String) request.getAttribute("textsolution")) + "</textarea></p>");
