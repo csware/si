@@ -76,13 +76,11 @@ public class ShowLectureStudentView extends HttpServlet {
 				}
 			}
 		}
-		if ((participation.getGroup() == null || (participation.getGroup() != null && participation.getGroup().isAllowStudentsToQuit())) && joinAbleGroups != null && joinAbleGroups.size() > 0) {
+		if (joinAbleGroups != null && joinAbleGroups.size() > 0) {
 			out.println("<form action=\"" + response.encodeURL("JoinGroup") + "\">");
 			out.println("<select name=groupid>");
 			for (Group group : joinAbleGroups) {
-				if (participation.getGroup() == null || participation.getGroup().getGid() != group.getGid()) {
-					out.println("<option value=" + group.getGid() + ">" + Util.mknohtml(group.getName()));
-				}
+				out.println("<option value=" + group.getGid() + ">" + Util.mknohtml(group.getName()));
 			}
 			out.println("</select>");
 			out.println("<input type=submit value=\"Gruppe wechseln\">");

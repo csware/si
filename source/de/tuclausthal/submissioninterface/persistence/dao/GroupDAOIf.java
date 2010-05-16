@@ -60,5 +60,5 @@ public interface GroupDAOIf {
 	 */
 	public void saveGroup(Group group);
 
-	public List<Group> getJoinAbleGroups(Lecture lecture);
+	public List<Group> getJoinAbleGroups(Lecture lecture, Group participationGroup);
 }

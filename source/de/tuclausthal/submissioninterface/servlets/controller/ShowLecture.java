@@ -70,8 +70,8 @@ public class ShowLecture extends HttpServlet {
 		if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 			if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 				GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
-				List<Group> joinAbleGroups = groupDAO.getJoinAbleGroups(lecture);
-				if (participation.getGroup() == null || participation.getGroup().isAllowStudentsToQuit() && joinAbleGroups != null && joinAbleGroups.size() > 0) {
+				List<Group> joinAbleGroups = groupDAO.getJoinAbleGroups(lecture, participation.getGroup());
+				if (participation.getGroup() == null || participation.getGroup().isAllowStudentsToQuit() && joinAbleGroups.size() > 0) {
 					request.setAttribute("joinAbleGroups", joinAbleGroups);
 				}
 			}
