@@ -47,7 +47,7 @@ public class Submission implements Serializable {
 	private Points points;
 	private Set<TestResult> testResults;
 	private Set<Similarity> similarSubmissions;
-	private Date lastModified = new Date();
+	private Date lastModified = null;
 
 	// for Hibernate
 	private Submission() {}

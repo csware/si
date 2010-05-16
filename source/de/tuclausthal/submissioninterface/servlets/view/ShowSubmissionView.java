@@ -66,7 +66,7 @@ public class ShowSubmissionView extends HttpServlet {
 		template.printTemplateHeader(submission);
 		StringBuffer javaScript = new StringBuffer();
 
-		if (submission.getLastModified() != null) { // for historic reasons
+		if (submission.getLastModified() != null) {
 			out.println("<p>Letzte Änderung: " + Util.mknohtml(submission.getLastModified().toLocaleString()) + "</p>");
 		}
 

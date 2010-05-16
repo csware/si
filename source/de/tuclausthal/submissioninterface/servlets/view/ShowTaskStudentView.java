@@ -91,7 +91,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("</td>");
 				out.println("</tr>");
 			}
-			if (submission.getLastModified() != null) { // for historic reasons
+			if (submission.getLastModified() != null) {
 				out.println("<tr>");
 				out.println("<th>Letzte Änderung:</th>");
 				out.println("<td>");
