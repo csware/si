@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -158,7 +159,10 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<h2>Dateien: <a href=\"#\" onclick=\"$('#files').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<div id=files class=mid>");
 			out.println("<p><a href=\"" + response.encodeURL("DownloadAsZip?sid=" + submission.getSubmissionid()) + "\">alles als .zip herunterladen</a></p>");
-			List<String> featuredFiles = Arrays.asList(task.getFeaturedFiles().split(","));
+			List<String> featuredFiles = new LinkedList<String>();
+			if (!"".equals(task.getFeaturedFiles().trim())) {
+				featuredFiles = Arrays.asList(task.getFeaturedFiles().split(","));
+			}
 			int id = 0;
 			for (String file : submittedFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
