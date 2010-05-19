@@ -99,25 +99,27 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("</td>");
 				out.println("</tr>");
 			}
-			out.println("<tr>");
-			out.println("<th>Besteht aus:</th>");
-			out.println("<td>");
-			for (String file : submittedFiles) {
-				file = file.replace(System.getProperty("file.separator"), "/");
-				out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(file) + "</a>");
-				if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
-					out.println(" (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DeleteFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)");
+			if (submittedFiles.size() > 0) {
+				out.println("<tr>");
+				out.println("<th>Besteht aus:</th>");
+				out.println("<td>");
+				for (String file : submittedFiles) {
+					file = file.replace(System.getProperty("file.separator"), "/");
+					out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(file) + "</a>");
+					if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
+						out.println(" (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DeleteFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)");
+					}
+					out.println("<br>");
 				}
-				out.println("<br>");
+				out.println("</td>");
+				out.println("</tr>");
 			}
-			out.println("</td>");
-			out.println("</tr>");
 			if (task.getShowPoints().before(Util.correctTimezone(new Date())) && submission.getPoints() != null) {
 				out.println("<tr>");
 				out.println("<th>Bewertung:</th>");
 				out.println("<td>");
 				if (submission.getPoints().getPointsOk()) {
-					out.println(Util.showPoints(submission.getPoints().getPoints()) + " von " + Util.showPoints(task.getMaxPoints()));
+					out.println(Util.showPoints(submission.getPoints().getPoints()) + " von " + Util.showPoints(task.getMaxPoints()) + " Punkt(e)");
 				} else {
 					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", nicht abgenommen");
 				}
@@ -136,7 +138,9 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("</table>");
 
 			out.println("<p>");
-			if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+			if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false) {
+				out.println("<div class=mid>Keine Abgabe möglich.</div>");
+			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
 			} else {
 				out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div");
@@ -144,7 +148,7 @@ public class ShowTaskStudentView extends HttpServlet {
 
 			List<Test> tests = DAOFactory.TestDAOIf(session).getStudentTests(task);
 			TestCountDAOIf testCountDAO = DAOFactory.TestCountDAOIf(session);
-			if (tests.size() > 0 && task.getDeadline().after(Util.correctTimezone(new Date()))) {
+			if (submittedFiles.size() > 0 && tests.size() > 0 && task.getDeadline().after(Util.correctTimezone(new Date()))) {
 				out.println("<p><h2>Mögliche Tests:</h2>");
 				out.println("<table class=border>");
 				for (Test test : tests) {
@@ -166,7 +170,9 @@ public class ShowTaskStudentView extends HttpServlet {
 			}
 		} else {
 			out.println("<p>");
-			if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+			if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false) {
+				out.println("<div class=mid>Keine Abgabe möglich.</div>");
+			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
 			} else {
 				out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div");
