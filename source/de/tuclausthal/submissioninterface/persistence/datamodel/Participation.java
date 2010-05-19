@@ -42,7 +42,7 @@ public class Participation implements Serializable {
 	private User user;
 	private Group group;
 	private Lecture lecture;
-	private String Role = "normal";
+	private String role = "normal";
 	private Set<Submission> submissions;
 
 	/**
@@ -114,14 +114,14 @@ public class Participation implements Serializable {
 	 */
 	@Column(nullable = false)
 	private String getRole() {
-		return Role;
+		return role;
 	}
 
 	/**
 	 * @param role the role to set
 	 */
 	private void setRole(String role) {
-		Role = role;
+		this.role = role;
 	}
 
 	@Transient
