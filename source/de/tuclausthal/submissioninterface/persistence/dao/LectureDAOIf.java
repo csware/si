@@ -66,5 +66,7 @@ public interface LectureDAOIf {
 	 * @param lecture
 	 * @return the average points number
 	 */
-	public int getAveragePoints(Lecture lecture);
+	public int getSumOfPoints(Lecture lecture);
+
+	public int getStudentsCount(Lecture lecture);
 }

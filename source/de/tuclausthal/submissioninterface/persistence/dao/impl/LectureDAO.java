@@ -18,7 +18,6 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -29,7 +28,6 @@ import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.LectureDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -81,15 +79,28 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 	}
 
 	@Override
-	public int getAveragePoints(Lecture lecture) {
+	public int getSumOfPoints(Lecture lecture) {
 		Session session = getSession();
-		Query query = session.createQuery("select avg(submission.points.points) from Submission submission inner join submission.task as task inner join task.lecture as lecture where lecture.id=:LECTURE and submission.points.pointsOk=true");
+		Query query = session.createQuery("select sum(submission.points.points) from Submission submission inner join submission.task as task inner join task.lecture as lecture where lecture.id=:LECTURE and submission.points.pointsOk=true");
 		query.setEntity("LECTURE", lecture);
 		Object result = query.uniqueResult();
 		if (result == null) {
 			return 0;
 		} else {
-			return ((Double) result).intValue();
+			return ((Long) result).intValue();
+		}
+	}
+
+	@Override
+	public int getStudentsCount(Lecture lecture) {
+		Session session = getSession();
+		Query query = session.createQuery("select count(*) from Participation participation inner join participation.lecture as lecture where lecture.id=:LECTURE and participation.role='NORMAL'");
+		query.setEntity("LECTURE", lecture);
+		Object result = query.uniqueResult();
+		if (result == null) {
+			return 0;
+		} else {
+			return ((Long) result).intValue();
 		}
 	}
 }
