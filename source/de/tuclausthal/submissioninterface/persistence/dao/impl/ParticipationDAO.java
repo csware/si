@@ -118,16 +118,16 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 	}
 
 	@Override
-	public List<Participation> getTutorAvailableParticipations(Group group) {
+	public List<Participation> getMarkersAvailableParticipations(Group group) {
 		if (group.getTutors().size() > 0) {
 			Integer[] ids = new Integer[group.getTutors().size()];
 			int i = 0;
 			for (Participation participation : group.getTutors()) {
 				ids[i++] = participation.getId();
 			}
-			return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.eq("role", ParticipationRole.TUTOR.toString())).add(Restrictions.not(Restrictions.in("id", ids))).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+			return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.or(Restrictions.eq("role", ParticipationRole.TUTOR.toString()), Restrictions.eq("role", ParticipationRole.ADVISOR.toString()))).add(Restrictions.not(Restrictions.in("id", ids))).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 		} else {
-			return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.eq("role", ParticipationRole.TUTOR.toString())).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+			return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.or(Restrictions.eq("role", ParticipationRole.TUTOR.toString()), Restrictions.eq("role", ParticipationRole.ADVISOR.toString()))).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 		}
 	}
 }
