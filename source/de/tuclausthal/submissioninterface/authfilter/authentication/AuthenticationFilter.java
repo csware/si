@@ -54,13 +54,15 @@ public class AuthenticationFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest filterRequest, ServletResponse filterResponse, FilterChain chain) throws IOException, ServletException {
 		Session session = HibernateSessionHelper.getSession();
-		SessionAdapter sa = new SessionAdapter((HttpServletRequest) request);
+		HttpServletRequest request = (HttpServletRequest) filterRequest;
+		HttpServletResponse response = (HttpServletResponse) filterResponse;
+		SessionAdapter sa = new SessionAdapter(request);
 		if (sa.getUser(session) == null) {
-			LoginData logindata = login.getLoginData((HttpServletRequest) request);
+			LoginData logindata = login.getLoginData(request);
 			if (logindata == null) {
-				login.failNoData((HttpServletRequest) request, (HttpServletResponse) response);
+				login.failNoData(request, response);
 				return;
 			} else {
 				User user = null;
@@ -71,21 +73,21 @@ public class AuthenticationFilter implements Filter {
 					user = DAOFactory.UserDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).getUser(logindata.getUsername());
 				}
 				if (user == null) {
-					login.failNoData("Username or password wrong.", (HttpServletRequest) request, (HttpServletResponse) response);
+					login.failNoData("Username or password wrong.", request, response);
 					return;
 				} else {
 					// fix against session fixtures
-					sa.startNewSession((HttpServletRequest) request);
+					sa.startNewSession(request);
 
 					sa.setUser(user);
 					if (login.redirectAfterLogin() == true) {
-						performRedirect((HttpServletRequest) request, (HttpServletResponse) response);
+						performRedirect(request, response);
 						return;
 					}
 				}
 			}
-		} else if (login.redirectAfterLogin() && login.isSubsequentAuthRequest((HttpServletRequest) request)) {
-			performRedirect((HttpServletRequest) request, (HttpServletResponse) response);
+		} else if (login.redirectAfterLogin() && login.isSubsequentAuthRequest(request)) {
+			performRedirect(request, response);
 			return;
 		}
 		chain.doFilter(request, response);
