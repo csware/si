@@ -37,7 +37,6 @@ import de.tuclausthal.submissioninterface.template.TemplateFactory;
 public class Logout extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		request.removeAttribute("user");
 		request.getSession().invalidate();
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.printTemplateHeader("Logged out");

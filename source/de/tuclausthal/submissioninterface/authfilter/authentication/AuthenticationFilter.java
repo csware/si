@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -57,9 +57,7 @@ public class AuthenticationFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		Session session = HibernateSessionHelper.getSession();
 		SessionAdapter sa = new SessionAdapter((HttpServletRequest) request);
-		if (sa.getUser(session) != null) {
-			request.setAttribute("user", sa.getUser(session));
-		} else {
+		if (sa.getUser(session) == null) {
 			LoginData logindata = login.getLoginData((HttpServletRequest) request);
 			if (logindata == null) {
 				login.failNoData((HttpServletRequest) request, (HttpServletResponse) response);
@@ -80,7 +78,6 @@ public class AuthenticationFilter implements Filter {
 					sa.startNewSession((HttpServletRequest) request);
 
 					sa.setUser(user);
-					request.setAttribute("user", sa.getUser());
 					if (login.redirectAfterLogin() == true) {
 						String queryString = "";
 						if (((HttpServletRequest) request).getQueryString() != null) {
