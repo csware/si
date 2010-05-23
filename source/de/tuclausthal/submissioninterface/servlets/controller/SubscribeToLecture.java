@@ -71,6 +71,7 @@ public class SubscribeToLecture extends HttpServlet {
 				return;
 			}
 		} else {
+			request.setAttribute("lectures", DAOFactory.LectureDAOIf(session).getCurrentLecturesWithoutUser(new SessionAdapter(request).getUser(session)));
 			request.getRequestDispatcher("SubscribeToLectureView").forward(request, response);
 		}
 	}
