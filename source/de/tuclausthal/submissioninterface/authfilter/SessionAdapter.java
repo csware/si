@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -36,8 +36,15 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
 public class SessionAdapter {
 	private HttpSession session = null;
 
-	/*	private String ipAddress;
-		private Boolean linkedToIP;*/
+	public void startNewSession(HttpServletRequest request) {
+		//migrate session contents
+		Object userID = session.getAttribute("userID");
+		Object queuedTest = session.getAttribute("queuedTest");
+		session.invalidate();
+		session = request.getSession(true);
+		session.setAttribute("userID", userID);
+		session.setAttribute("queuedTest", queuedTest);
+	}
 
 	public SessionAdapter(HttpServletRequest request) {
 		session = request.getSession(true);

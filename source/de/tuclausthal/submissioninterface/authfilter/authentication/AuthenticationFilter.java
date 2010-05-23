@@ -76,6 +76,9 @@ public class AuthenticationFilter implements Filter {
 					login.failNoData("Username or password wrong.", (HttpServletRequest) request, (HttpServletResponse) response);
 					return;
 				} else {
+					// fix against session fixtures
+					sa.startNewSession((HttpServletRequest) request);
+
 					sa.setUser(user);
 					request.setAttribute("user", sa.getUser());
 					if (login.redirectAfterLogin() == true) {
