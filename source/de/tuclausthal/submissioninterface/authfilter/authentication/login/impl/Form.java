@@ -49,7 +49,7 @@ public class Form implements LoginIf {
 		template.printTemplateHeader("Login erforderlich", "Login erforderlich");
 		PrintWriter out = response.getWriter();
 		if (!error.isEmpty()) {
-			out.println("<div class=\"red,mid\">" + error + "</div>");
+			out.println("<p class=\"red mid\">" + error + "</p>");
 		}
 		out.print("<form action=\"");
 		//out.print(response.encodeURL(MainBetterNameHereRequired.getServletRequest().getRequestURL().toString()));
