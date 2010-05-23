@@ -79,17 +79,24 @@ public class AuthenticationFilter implements Filter {
 
 					sa.setUser(user);
 					if (login.redirectAfterLogin() == true) {
-						String queryString = "";
-						if (((HttpServletRequest) request).getQueryString() != null) {
-							queryString = "?" + ((HttpServletRequest) request).getQueryString();
-						}
-						((HttpServletResponse) response).sendRedirect(((HttpServletResponse) response).encodeRedirectURL(((HttpServletRequest) request).getRequestURL().toString() + queryString).replace("\r", "%0d").replace("\n", "%0a")));
+						performRedirect((HttpServletRequest) request, (HttpServletResponse) response);
+						return;
 					}
-					return;
 				}
 			}
+		} else if (login.redirectAfterLogin() && login.isSubsequentAuthRequest((HttpServletRequest) request)) {
+			performRedirect((HttpServletRequest) request, (HttpServletResponse) response);
+			return;
 		}
 		chain.doFilter(request, response);
+	}
+
+	private void performRedirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String queryString = "";
+		if (request.getQueryString() != null) {
+			queryString = "?" + request.getQueryString();
+		}
+		response.sendRedirect(response.encodeRedirectURL((request.getRequestURL().toString() + queryString).replace("\r", "%0d").replace("\n", "%0a")));
 	}
 
 	@Override

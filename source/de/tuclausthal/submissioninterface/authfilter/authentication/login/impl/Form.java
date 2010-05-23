@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -35,6 +35,8 @@ import de.tuclausthal.submissioninterface.template.TemplateFactory;
  * @author Sven Strickroth
  */
 public class Form implements LoginIf {
+	private static final String LOGONEVIDENCE = "JnffhJGug47fJHGuzf";
+
 	public Form(FilterConfig filterConfig) {}
 
 	@Override
@@ -52,8 +54,8 @@ public class Form implements LoginIf {
 			out.println("<p class=\"red mid\">" + error + "</p>");
 		}
 		out.print("<form action=\"");
-		//out.print(response.encodeURL(MainBetterNameHereRequired.getServletRequest().getRequestURL().toString()));
 		out.println("\" method=POST name=login>");
+		out.println("<input type=hidden name=" + LOGONEVIDENCE + " value='1234'>");
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>");
@@ -99,5 +101,10 @@ public class Form implements LoginIf {
 	@Override
 	public boolean redirectAfterLogin() {
 		return true;
+	}
+
+	@Override
+	public boolean isSubsequentAuthRequest(HttpServletRequest request) {
+		return request.getParameter(LOGONEVIDENCE) != null;
 	}
 }

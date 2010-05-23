@@ -35,6 +35,8 @@ public interface LoginIf {
 	 */
 	public abstract boolean requiresVerification();
 
+	public boolean isSubsequentAuthRequest(HttpServletRequest request);
+
 	/**
 	 * Returns the user credentials
 	 * @param request
