@@ -65,7 +65,11 @@ public class ShowLectureStudentView extends HttpServlet {
 		if (participation.getGroup() != null) {
 			out.println("Meine Gruppe: " + Util.mknohtml(participation.getGroup().getName()));
 			if (participation.getGroup().getTutors() != null && participation.getGroup().getTutors().size() > 0) {
-				out.println("<br>Meine Tutoren: ");
+				if (participation.getGroup().getTutors().size() > 1) {
+					out.println("<br>Meine Tutoren: ");
+				} else {
+					out.println("<br>Mein Tutor: ");
+				}
 				boolean isFirst = true;
 				for (Participation tutor : participation.getGroup().getTutors()) {
 					if (!isFirst) {
