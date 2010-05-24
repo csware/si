@@ -63,9 +63,12 @@ public class SessionAdapter {
 	 * @param user
 	 */
 	public void setUser(User user) {
-		session.setAttribute("userID", user.getUid());
 		this.user = user;
-		session.setAttribute("username", user.getEmail());
+		if (user != null) {
+			session.setAttribute("userID", user.getUid());
+		} else {
+			session.invalidate();
+		}
 	}
 
 	/**
