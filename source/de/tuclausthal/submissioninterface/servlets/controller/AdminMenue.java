@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
@@ -138,7 +137,7 @@ public class AdminMenue extends HttpServlet {
 		} else if ("su".equals(request.getParameter("action")) && request.getParameter("userid") != null) {
 			User user = DAOFactory.UserDAOIf(session).getUser(Util.parseInteger(request.getParameter("userid"), 0));
 			if (user != null) {
-				new SessionAdapter(request).setUser(user);
+				RequestAdapter.getSessionAdapter(request).setUser(user);
 				response.sendRedirect(response.encodeRedirectURL("Overview"));
 			} else {
 				response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?"));

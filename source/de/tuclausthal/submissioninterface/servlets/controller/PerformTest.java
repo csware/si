@@ -80,7 +80,7 @@ public class PerformTest extends HttpServlet {
 			return;
 		}
 
-		SessionAdapter sa = new SessionAdapter(request);
+		SessionAdapter sa = RequestAdapter.getSessionAdapter(request);
 
 		TestCountDAOIf testCountDAO = DAOFactory.TestCountDAOIf(session);
 

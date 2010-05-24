@@ -58,7 +58,7 @@ public class AuthenticationFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) filterRequest;
 		HttpServletResponse response = (HttpServletResponse) filterResponse;
 		Session session = RequestAdapter.getSession(request);
-		SessionAdapter sa = new SessionAdapter(request);
+		SessionAdapter sa = RequestAdapter.getSessionAdapter(request);
 		if (sa.getUser() == null || (bindToIP && !sa.isIPCorrect(request.getRemoteAddr()))) {
 			LoginData logindata = login.getLoginData(request);
 			if (logindata == null) {
@@ -90,7 +90,6 @@ public class AuthenticationFilter implements Filter {
 			performRedirect(request, response);
 			return;
 		}
-		RequestAdapter.addUserToRequest(request, sa.getUser());
 		chain.doFilter(request, response);
 	}
 

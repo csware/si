@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
+import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
@@ -32,10 +33,6 @@ import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
  */
 public class RequestAdapter {
 	private HttpServletRequest request;
-
-	public static void addUserToRequest(HttpServletRequest request, User user) {
-		request.setAttribute("user", user);
-	}
 
 	public RequestAdapter(HttpServletRequest request) {
 		this.request = request;
@@ -50,7 +47,7 @@ public class RequestAdapter {
 	}
 
 	public static User getUser(HttpServletRequest request) {
-		return (User) request.getAttribute("user");
+		return (User) getSessionAdapter(request).getUser();
 	}
 
 	/**
@@ -67,5 +64,15 @@ public class RequestAdapter {
 			request.setAttribute("hibernateSession", HibernateSessionHelper.getSessionFactory().openSession());
 		}
 		return (Session) request.getAttribute("hibernateSession");
+	}
+
+	/**
+	 * @return the sessionAdapter
+	 */
+	public static SessionAdapter getSessionAdapter(HttpServletRequest request) {
+		if (request.getAttribute("sessionAdapter") == null) {
+			request.setAttribute("sessionAdapter", new SessionAdapter(request));
+		}
+		return (SessionAdapter) request.getAttribute("sessionAdapter");
 	}
 }
