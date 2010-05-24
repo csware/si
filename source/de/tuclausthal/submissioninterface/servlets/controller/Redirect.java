@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -36,13 +36,6 @@ public class Redirect extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
-		response.sendRedirect(request.getContextPath() + "/" + contextAdapter.getServletsPath() + "/Overview");
+		response.sendRedirect(response.encodeURL(request.getContextPath() + "/" + contextAdapter.getServletsPath() + "/Overview"));
 	}
-
-	/*
-		@Override
-		public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-			// don't want to have any special post-handling
-			doGet(request, response);
-		}*/
 }
