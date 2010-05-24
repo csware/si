@@ -90,6 +90,7 @@ public class AuthenticationFilter implements Filter {
 			performRedirect(request, response);
 			return;
 		}
+		request.setAttribute("username", sa.getUser().getEmail());
 		chain.doFilter(request, response);
 	}
 
