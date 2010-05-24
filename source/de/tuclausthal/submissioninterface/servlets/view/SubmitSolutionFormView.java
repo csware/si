@@ -85,6 +85,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie einsenden möchten.</p>");
 			out.println("<INPUT TYPE=file NAME=file>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
+			out.println("<p>Hinweis: Bestehende Dateien werde überschrieben.</p>");
 			out.println("</FORM>");
 			if (task.isShowTextArea()) {
 				out.println("<p><hr>");
