@@ -361,7 +361,7 @@ public class SubmitSolution extends HttpServlet {
 								submission.setLastModified(new Date());
 								submissionDAO.saveSubmission(submission);
 							}
-							System.out.println("SubmitSolutionProblem2");
+							System.out.println("SubmitSolutionProblem2: " + item.getName() + ";" + submittedFileName + ";" + pattern.pattern());
 							tx.commit();
 							template.printTemplateHeader("Ungültige Anfrage");
 							out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
