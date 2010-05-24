@@ -44,10 +44,15 @@ public class SessionAdapter {
 		session = request.getSession(true);
 		session.setAttribute("userID", userID);
 		session.setAttribute("queuedTest", queuedTest);
+		session.setAttribute("ip", request.getRemoteAddr());
 	}
 
 	public SessionAdapter(HttpServletRequest request) {
 		session = request.getSession(true);
+	}
+
+	public boolean isIPCorrect(String clientRemoteAddr) {
+		return clientRemoteAddr.equals(session.getAttribute("ip"));
 	}
 
 	/**

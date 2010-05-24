@@ -44,7 +44,7 @@ import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
  * @author Sven Strickroth
  */
 public class AuthenticationFilter implements Filter {
-
+	private boolean bindToIP = false;
 	private LoginIf login;
 	private VerifyIf verify;
 
@@ -59,7 +59,7 @@ public class AuthenticationFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) filterRequest;
 		HttpServletResponse response = (HttpServletResponse) filterResponse;
 		SessionAdapter sa = new SessionAdapter(request);
-		if (sa.getUser(session) == null) {
+		if (sa.getUser(session) == null || (bindToIP && !sa.isIPCorrect(request.getRemoteAddr()))) {
 			LoginData logindata = login.getLoginData(request);
 			if (logindata == null) {
 				login.failNoData(request, response);
@@ -103,6 +103,9 @@ public class AuthenticationFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		if ("true".equals(filterConfig.getInitParameter("bindToIP")) || "yes".equals(filterConfig.getInitParameter("bindToIP")) || "1".equals(filterConfig.getInitParameter("bindToIP"))) {
+			bindToIP = true;
+		}
 		try {
 			login = (LoginIf) Class.forName(filterConfig.getInitParameter("login")).getDeclaredConstructor(FilterConfig.class).newInstance(filterConfig);
 			verify = (VerifyIf) Class.forName(filterConfig.getInitParameter("verify")).getDeclaredConstructor(FilterConfig.class).newInstance(filterConfig);
