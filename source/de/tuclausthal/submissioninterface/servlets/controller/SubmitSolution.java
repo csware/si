@@ -274,7 +274,7 @@ public class SubmitSolution extends HttpServlet {
 
 		if (partnerID > 0) {
 			Participation partnerParticipation = participationDAO.getParticipation(partnerID);
-			if (submission.getSubmitters().size() < 2 && partnerParticipation != null && partnerParticipation.getLecture().getId() == task.getLecture().getId() && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
+			if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getLecture().getId() == task.getLecture().getId() && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
 				submission.getSubmitters().add(partnerParticipation);
 				session.update(submission);
 			} else {

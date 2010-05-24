@@ -59,22 +59,24 @@ public class SubmitSolutionFormView extends HttpServlet {
 		Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
 
 		StringBuffer setWithUser = new StringBuffer();
-		if (submission == null && participation.getGroup() != null) {
-			setWithUser.append("<p>Haben Sie diese Aufgabe zusammen mit einem Partner gelöst? Dann bitte hier auswählen: <select name=partnerid size=1>");
-			int cnt = 0;
-			setWithUser.append("<option value=0>alleine bearbeitet</option>");
-			for (Participation part : participation.getGroup().getMembers()) {
-				if (part.getId() != participation.getId() && submissionDAO.getSubmission(task, part.getUser()) == null) {
-					cnt++;
-					setWithUser.append("<option value=" + part.getId() + ">" + Util.mknohtml(part.getUser().getFullName()) + "</option>");
+		if (task.getMaxSubmitters() > 1) {
+			if (submission == null && participation.getGroup() != null) {
+				setWithUser.append("<p>Haben Sie diese Aufgabe zusammen mit einem Partner gelöst? Dann bitte hier auswählen: <select name=partnerid size=1>");
+				int cnt = 0;
+				setWithUser.append("<option value=0>alleine bearbeitet</option>");
+				for (Participation part : participation.getGroup().getMembers()) {
+					if (part.getId() != participation.getId() && submissionDAO.getSubmission(task, part.getUser()) == null) {
+						cnt++;
+						setWithUser.append("<option value=" + part.getId() + ">" + Util.mknohtml(part.getUser().getFullName()) + "</option>");
+					}
 				}
-			}
-			setWithUser.append("</select><p>");
-			if (cnt == 0) {
+				setWithUser.append("</select><p>");
+				if (cnt == 0) {
+					setWithUser = new StringBuffer("<p>Sie können im Moment keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, müssen von Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol></p><hr>");
+				}
+			} else if (submission == null && participation.getGroup() == null) {
 				setWithUser = new StringBuffer("<p>Sie können im Moment keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, müssen von Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol></p><hr>");
 			}
-		} else if (submission == null && participation.getGroup() == null) {
-			setWithUser = new StringBuffer("<p>Sie können im Moment keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, müssen von Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol></p><hr>");
 		}
 
 		if (!"-".equals(task.getFilenameRegexp())) {
