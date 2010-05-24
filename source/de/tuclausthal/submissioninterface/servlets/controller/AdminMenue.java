@@ -36,8 +36,8 @@ import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -48,9 +48,8 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class AdminMenue extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Session session = HibernateSessionHelper.getSession();
-		SessionAdapter sa = new SessionAdapter(request);
-		if (!sa.getUser(session).isSuperUser()) {
+		Session session = RequestAdapter.getSession(request);
+		if (RequestAdapter.getUser(request).isSuperUser()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
@@ -139,7 +138,7 @@ public class AdminMenue extends HttpServlet {
 		} else if ("su".equals(request.getParameter("action")) && request.getParameter("userid") != null) {
 			User user = DAOFactory.UserDAOIf(session).getUser(Util.parseInteger(request.getParameter("userid"), 0));
 			if (user != null) {
-				sa.setUser(user);
+				new SessionAdapter(request).setUser(user);
 				response.sendRedirect(response.encodeRedirectURL("Overview"));
 			} else {
 				response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?"));

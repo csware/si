@@ -38,6 +38,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -55,7 +56,7 @@ public class ShowUserView extends HttpServlet {
 
 		User user = (User) request.getAttribute("user");
 		List<Lecture> lectures = (List<Lecture>) request.getAttribute("lectures");
-		Session session = (Session) request.getAttribute("session");
+		Session session = RequestAdapter.getSession(request);
 
 		template.printTemplateHeader("Benutzer \"" + Util.mknohtml(user.getFullName()) + "\"");
 

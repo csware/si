@@ -35,9 +35,9 @@ import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -51,7 +51,7 @@ public class ShowTaskStudentView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		Session session = RequestAdapter.getSession(request);
 
 		Task task = (Task) request.getAttribute("task");
 		Submission submission = (Submission) request.getAttribute("submission");

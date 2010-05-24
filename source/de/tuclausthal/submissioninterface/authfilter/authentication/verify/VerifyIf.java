@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,6 +18,8 @@
 
 package de.tuclausthal.submissioninterface.authfilter.authentication.verify;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginData;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 
@@ -28,8 +30,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 public interface VerifyIf {
 	/**
 	 * Checks the credentials provided in logindata
+	 * @param session
 	 * @param logindata
 	 * @return the user or null if authentication failed
 	 */
-	public User checkCredentials(LoginData logindata);
+	public User checkCredentials(Session session, LoginData logindata);
 }

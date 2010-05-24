@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
@@ -37,9 +36,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -56,7 +55,6 @@ public class ShowLectureStudentView extends HttpServlet {
 		Participation participation = (Participation) request.getAttribute("participation");
 		Lecture lecture = participation.getLecture();
 		List<Group> joinAbleGroups = (List<Group>) request.getAttribute("joinAbleGroups");
-		SessionAdapter sessionAdapter = new SessionAdapter(request);
 
 		// list all tasks for a lecture
 		template.printTemplateHeader(lecture);
@@ -107,7 +105,7 @@ public class ShowLectureStudentView extends HttpServlet {
 					out.println("<tr>");
 					out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
 					out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
-					Submission submission = DAOFactory.SubmissionDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).getSubmission(task, sessionAdapter.getUser(HibernateSessionHelper.getSession()));
+					Submission submission = DAOFactory.SubmissionDAOIf(RequestAdapter.getSession(request)).getSubmission(task, RequestAdapter.getUser(request));
 					if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().before(Util.correctTimezone(new Date()))) {
 						if (submission.getPoints().getPointsOk()) {
 							out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPoints()) + "</td>");

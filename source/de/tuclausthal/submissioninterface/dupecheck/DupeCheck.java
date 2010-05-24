@@ -57,7 +57,7 @@ public abstract class DupeCheck {
 	 * @param similarityTest test to perform
 	 */
 	public void performDupeCheck(SimilarityTest similarityTest) {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = HibernateSessionHelper.getSessionFactory().openSession();
 		SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf(session);
 		DAOFactory.SimilarityTestDAOIf(session).resetSimilarityTest(similarityTest);
 		NormalizerCache normalizerCache = null;

@@ -29,13 +29,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
-import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -45,10 +44,10 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class ShowUser extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = RequestAdapter.getSession(request);
 
 		List<Lecture> lectures = new LinkedList<Lecture>();
-		for (Participation participation : new SessionAdapter(request).getUser(session).getLectureParticipant()) {
+		for (Participation participation : RequestAdapter.getUser(request).getLectureParticipant()) {
 			if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 				lectures.add(participation.getLecture());
 			}
@@ -68,7 +67,6 @@ public class ShowUser extends HttpServlet {
 
 		request.setAttribute("user", user);
 		request.setAttribute("lectures", lectures);
-		request.setAttribute("session", session);
 		request.getRequestDispatcher("ShowUserView").forward(request, response);
 	}
 }

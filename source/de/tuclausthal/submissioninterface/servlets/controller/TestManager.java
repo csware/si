@@ -36,7 +36,6 @@ import org.apache.tomcat.util.http.fileupload.FileUploadBase;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.hibernate.Session;
 
-import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
@@ -48,8 +47,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -59,7 +58,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class TestManager extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = RequestAdapter.getSession(request);
 		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
@@ -69,7 +68,7 @@ public class TestManager extends HttpServlet {
 		}
 
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), task.getLecture());
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getLecture());
 		if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;

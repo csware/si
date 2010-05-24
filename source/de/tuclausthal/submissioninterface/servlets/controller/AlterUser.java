@@ -28,13 +28,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Controller-Servlet for changeing user properties
@@ -43,11 +42,11 @@ import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 public class AlterUser extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		Session session = RequestAdapter.getSession(request);
 
 		UserDAOIf userDAO = DAOFactory.UserDAOIf(session);
 
-		User user = userDAO.getUser(new SessionAdapter(request).getUser(session).getUid());
+		User user = userDAO.getUser(RequestAdapter.getUser(request).getUid());
 		if (user == null) {
 			request.setAttribute("title", "Benutzer nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);

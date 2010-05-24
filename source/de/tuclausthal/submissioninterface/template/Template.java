@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -25,11 +25,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -38,14 +38,14 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 public abstract class Template {
 	protected HttpServletResponse servletResponse;
-	protected SessionAdapter sessionAdapter;
+	protected RequestAdapter requestAdapter;
 	protected String prefix;
 	private List<String> headers = new LinkedList<String>();
 
 	public Template(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
 		this.servletResponse = servletResponse;
 		prefix = servletRequest.getContextPath();
-		sessionAdapter = new SessionAdapter(servletRequest);
+		requestAdapter = new RequestAdapter(servletRequest);
 	}
 
 	/**

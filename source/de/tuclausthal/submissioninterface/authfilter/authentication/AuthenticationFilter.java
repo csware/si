@@ -37,7 +37,7 @@ import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginI
 import de.tuclausthal.submissioninterface.authfilter.authentication.verify.VerifyIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 
 /**
  * Authentication filter
@@ -55,11 +55,11 @@ public class AuthenticationFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest filterRequest, ServletResponse filterResponse, FilterChain chain) throws IOException, ServletException {
-		Session session = HibernateSessionHelper.getSession();
 		HttpServletRequest request = (HttpServletRequest) filterRequest;
 		HttpServletResponse response = (HttpServletResponse) filterResponse;
+		Session session = RequestAdapter.getSession(request);
 		SessionAdapter sa = new SessionAdapter(request);
-		if (sa.getUser(session) == null || (bindToIP && !sa.isIPCorrect(request.getRemoteAddr()))) {
+		if (sa.getUser() == null || (bindToIP && !sa.isIPCorrect(request.getRemoteAddr()))) {
 			LoginData logindata = login.getLoginData(request);
 			if (logindata == null) {
 				login.failNoData(request, response);
@@ -68,9 +68,9 @@ public class AuthenticationFilter implements Filter {
 				User user = null;
 				// if login requires no verification we load the user named in logindata
 				if (login.requiresVerification()) {
-					user = verify.checkCredentials(logindata);
+					user = verify.checkCredentials(session, logindata);
 				} else {
-					user = DAOFactory.UserDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).getUser(logindata.getUsername());
+					user = DAOFactory.UserDAOIf(session).getUser(logindata.getUsername());
 				}
 				if (user == null) {
 					login.failNoData("Username or password wrong.", request, response);
@@ -90,6 +90,7 @@ public class AuthenticationFilter implements Filter {
 			performRedirect(request, response);
 			return;
 		}
+		RequestAdapter.addUserToRequest(request, sa.getUser());
 		chain.doFilter(request, response);
 	}
 

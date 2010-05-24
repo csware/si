@@ -28,13 +28,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -44,7 +43,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class SubscribeToLecture extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = RequestAdapter.getSession(request);
 		if (request.getParameter("lecture") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 			if (lecture == null) {
@@ -55,7 +54,7 @@ public class SubscribeToLecture extends HttpServlet {
 
 			ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 			Transaction tx = session.beginTransaction();
-			Participation participation = participationDAO.getParticipationLocked(new SessionAdapter(request).getUser(session), lecture);
+			Participation participation = participationDAO.getParticipationLocked(RequestAdapter.getUser(request), lecture);
 			if (participation != null) {
 				tx.commit();
 				response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
@@ -65,13 +64,13 @@ public class SubscribeToLecture extends HttpServlet {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 				return;
 			} else {
-				participationDAO.createParticipation(new SessionAdapter(request).getUser(session), lecture, ParticipationRole.NORMAL);
+				participationDAO.createParticipation(RequestAdapter.getUser(request), lecture, ParticipationRole.NORMAL);
 				tx.commit();
 				response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
 				return;
 			}
 		} else {
-			request.setAttribute("lectures", DAOFactory.LectureDAOIf(session).getCurrentLecturesWithoutUser(new SessionAdapter(request).getUser(session)));
+			request.setAttribute("lectures", DAOFactory.LectureDAOIf(session).getCurrentLecturesWithoutUser(RequestAdapter.getUser(request)));
 			request.getRequestDispatcher("SubscribeToLectureView").forward(request, response);
 		}
 	}

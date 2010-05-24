@@ -36,9 +36,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -54,7 +54,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 
 		Participation participation = (Participation) request.getAttribute("participation");
 		Lecture lecture = participation.getLecture();
-		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		Session session = RequestAdapter.getSession(request);
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 
 		// list all tasks for a lecture

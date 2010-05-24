@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,8 +18,6 @@
 
 package de.tuclausthal.submissioninterface.util;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 
@@ -44,14 +42,5 @@ public class HibernateSessionHelper {
 
 	public static SessionFactory getSessionFactory() {
 		return sessionFactory;
-	}
-
-	/**
-	 * Gibt eine Hibernation-Datenbank-Sitzung zurück
-	 * @return Hibernate Session
-	 * @throws HibernateException
-	 */
-	public static Session getSession() throws HibernateException {
-		return sessionFactory.openSession();
 	}
 }

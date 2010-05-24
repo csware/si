@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,12 +20,13 @@ package de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl
 
 import javax.servlet.FilterConfig;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginData;
 import de.tuclausthal.submissioninterface.authfilter.authentication.verify.VerifyIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * Fake verifyer: Accepts all stored users with any password
@@ -35,8 +36,8 @@ public class FakeVerify implements VerifyIf {
 	public FakeVerify(FilterConfig filterConfig) {}
 
 	@Override
-	public User checkCredentials(LoginData logindata) {
-		UserDAOIf userdao = DAOFactory.UserDAOIf(HibernateSessionHelper.getSessionFactory().openSession());
+	public User checkCredentials(Session session, LoginData logindata) {
+		UserDAOIf userdao = DAOFactory.UserDAOIf(session);
 		User user = userdao.getUser(logindata.getUsername());
 		return user;
 	}

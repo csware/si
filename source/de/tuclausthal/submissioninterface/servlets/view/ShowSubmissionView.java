@@ -39,10 +39,10 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowFile;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -58,7 +58,7 @@ public class ShowSubmissionView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		Session session = RequestAdapter.getSession(request);
 
 		Submission submission = (Submission) request.getAttribute("submission");
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");

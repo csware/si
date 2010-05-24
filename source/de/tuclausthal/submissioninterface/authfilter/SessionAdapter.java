@@ -23,10 +23,9 @@ import java.util.concurrent.Future;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.hibernate.Session;
-
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 
 /**
@@ -35,6 +34,7 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
  */
 public class SessionAdapter {
 	private HttpSession session = null;
+	private User user = null;
 
 	public void startNewSession(HttpServletRequest request) {
 		//migrate session contents
@@ -49,6 +49,9 @@ public class SessionAdapter {
 
 	public SessionAdapter(HttpServletRequest request) {
 		session = request.getSession(true);
+		if (session.getAttribute("userID") != null) {
+			user = DAOFactory.UserDAOIf(RequestAdapter.getSession(request)).getUser((Integer) session.getAttribute("userID"));
+		}
 	}
 
 	public boolean isIPCorrect(String clientRemoteAddr) {
@@ -61,20 +64,16 @@ public class SessionAdapter {
 	 */
 	public void setUser(User user) {
 		session.setAttribute("userID", user.getUid());
+		this.user = user;
 		session.setAttribute("username", user.getEmail());
 	}
 
 	/**
 	 * Reads the user from the session
-	 * @param hibernateSession 
 	 * @return the user or null if no user was stored to the session
 	 */
-	public User getUser(Session hibernateSession) {
-		if (session.getAttribute("userID") != null) {
-			return DAOFactory.UserDAOIf(hibernateSession).getUser((Integer) session.getAttribute("userID"));
-		} else {
-			return null;
-		}
+	public User getUser() {
+		return user;
 	}
 
 	public Future<TestExecutorTestResult> getQueuedTest() {

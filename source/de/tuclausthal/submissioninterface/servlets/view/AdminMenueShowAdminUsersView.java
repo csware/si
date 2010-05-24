@@ -30,9 +30,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
  * View-Servlet for displaying the admin users and an add form for new ones
@@ -61,7 +61,7 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 		}
 		out.println("<tr>");
 		out.println("<td colspan=2>");
-		userIterator = DAOFactory.UserDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).getUsers().iterator();
+		userIterator = DAOFactory.UserDAOIf(RequestAdapter.getSession(request)).getUsers().iterator();
 		out.println("<form action=\"?\">");
 		out.println("<input type=hidden name=action value=addSuperUser>");
 		out.println("<select name=userid>");

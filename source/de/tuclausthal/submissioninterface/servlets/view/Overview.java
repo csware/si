@@ -28,13 +28,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
-import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -49,8 +48,8 @@ public class Overview extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		template.printTemplateHeader("Meine Veranstaltungen", "Meine Veranstaltungen");
 
-		Session session = HibernateSessionHelper.getSession();
-		User user = new SessionAdapter(request).getUser(session);
+		Session session = RequestAdapter.getSession(request);
+		User user = RequestAdapter.getUser(request);
 
 		if (user instanceof Student) {
 			Student student = (Student) user;

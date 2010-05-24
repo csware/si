@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
-import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
@@ -40,10 +39,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -59,8 +57,8 @@ public class ShowLectureTutorView extends HttpServlet {
 
 		Participation participation = (Participation) request.getAttribute("participation");
 		Lecture lecture = participation.getLecture();
-		SessionAdapter sessionAdapter = new SessionAdapter(request);
-		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		RequestAdapter requestAdapter = new RequestAdapter(request);
+		Session session = RequestAdapter.getSession(request);
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 
 		// list all tasks for a lecture
@@ -96,7 +94,7 @@ public class ShowLectureTutorView extends HttpServlet {
 		boolean isAdvisor = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0);
 		if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
 			out.println("<h3>Ohne Gruppe</h3>");
-			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, sessionAdapter.getUser(session));
+			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, requestAdapter);
 			if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 				out.println("<p class=mid><a href=\"" + response.encodeURL("AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a></p>");
 			}
@@ -122,14 +120,14 @@ public class ShowLectureTutorView extends HttpServlet {
 				}
 				out.println("</table><p>");
 			}
-			listMembers(participationDAO.getParticipationsOfGroup(group).iterator(), response, isAdvisor, sessionAdapter.getUser(session));
+			listMembers(participationDAO.getParticipationsOfGroup(group).iterator(), response, isAdvisor, requestAdapter);
 		}
 		out.println("<h3>Gesamtdurchschnitt: " + Util.showPoints(((Double) (DAOFactory.LectureDAOIf(session).getSumOfPoints(lecture) / (double) DAOFactory.LectureDAOIf(session).getStudentsCount(lecture))).intValue()) + "</h3>");
 		out.println("<p><div class=mid><a href=\"" + response.encodeURL("ShowLecture?lecture=" + lecture.getId() + "&amp;show=list") + "\">Gesamtliste</a> - <a href=\"" + response.encodeURL("ShowLecture?lecture=" + lecture.getId() + "&amp;show=csv") + "\">CSV-Download</a></div>");
 		template.printTemplateFooter();
 	}
 
-	public void listMembers(Iterator<Participation> participationIterator, HttpServletResponse response, boolean isAdvisor, User currentUser) throws IOException {
+	public void listMembers(Iterator<Participation> participationIterator, HttpServletResponse response, boolean isAdvisor, RequestAdapter requestAdapter) throws IOException {
 		if (participationIterator.hasNext()) {
 			PrintWriter out = response.getWriter();
 			int sumOfPoints = 0;
@@ -163,7 +161,7 @@ public class ShowLectureTutorView extends HttpServlet {
 					if (isAdvisor) {
 						out.println(" (<a onclick=\"return confirmLink('Wirklich degradieren?')\" href=\"" + response.encodeURL("EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;type=normal\">-</a>)");
 					}
-					if (thisParticipation.getGroup() != null && thisParticipation.getUser() != currentUser) {
+					if (thisParticipation.getGroup() != null && thisParticipation.getUser() != requestAdapter.getUser()) {
 						out.println(" <a onclick=\"return confirmLink('Wirklich aus der Gruppe entfernen?')\" href=\"" + response.encodeURL("EditGroup?groupid=" + thisParticipation.getGroup().getGid() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;action=removeFromGroup\"><img src=\"" + getServletContext().getContextPath() + "/log-out.png\"width=16 height=16 border=0 alt=\"aus Gruppe entfernen\" title=\"aus Gruppe entfernen\"></a>");
 					}
 				} else {

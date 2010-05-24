@@ -28,12 +28,13 @@ import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
 import javax.servlet.FilterConfig;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginData;
 import de.tuclausthal.submissioninterface.authfilter.authentication.verify.VerifyIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -56,7 +57,7 @@ public class LDAPVerify implements VerifyIf {
 	}
 
 	@Override
-	public User checkCredentials(LoginData logindata) {
+	public User checkCredentials(Session session, LoginData logindata) {
 		User user = null;
 		String username = logindata.getUsername();
 		String password = logindata.getPassword();
@@ -79,7 +80,7 @@ public class LDAPVerify implements VerifyIf {
 			LdapContext ctx = new InitialLdapContext(env, null);
 
 			// if ldap user found, search or create local user
-			UserDAOIf userdao = DAOFactory.UserDAOIf(HibernateSessionHelper.getSessionFactory().openSession());
+			UserDAOIf userdao = DAOFactory.UserDAOIf(session);
 			user = userdao.getUser((String) ctx.getAttributes(userAttribute + "=" + username).get(userAttribute).get());
 
 			if (user == null) {

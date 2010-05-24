@@ -48,7 +48,6 @@ import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerIf;
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -61,10 +60,10 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -74,7 +73,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class SubmitSolution extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = RequestAdapter.getSession(request);
 		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
@@ -85,7 +84,7 @@ public class SubmitSolution extends HttpServlet {
 
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-		Participation participation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), task.getLecture());
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getLecture());
 		if (participation == null) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
@@ -127,7 +126,7 @@ public class SubmitSolution extends HttpServlet {
 
 			if (task.isShowTextArea()) {
 				String textsolution = "";
-				Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, new SessionAdapter(request).getUser(session));
+				Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, RequestAdapter.getUser(request));
 				if (submission != null) {
 					ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
 					File textSolutionFile = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + "textloesung.txt");
@@ -151,7 +150,7 @@ public class SubmitSolution extends HttpServlet {
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = RequestAdapter.getSession(request);
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		PrintWriter out = response.getWriter();
@@ -168,7 +167,7 @@ public class SubmitSolution extends HttpServlet {
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 
-		Participation studentParticipation = participationDAO.getParticipation(new SessionAdapter(request).getUser(session), task.getLecture());
+		Participation studentParticipation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getLecture());
 		if (studentParticipation == null) {
 			template.printTemplateHeader("Ungültige Anfrage");
 			out.println("<div class=mid>Sie sind kein Teilnehmer dieser Veranstaltung.</div>");

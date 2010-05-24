@@ -28,14 +28,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.GroupDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -46,7 +45,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class JoinGroup extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Session session = HibernateSessionHelper.getSession();
+		Session session = RequestAdapter.getSession(request);
 		GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
 		Transaction tx = session.beginTransaction();
 		Group group = groupDAO.getGroupLocked(Util.parseInteger(request.getParameter("groupid"), 0));
@@ -59,7 +58,7 @@ public class JoinGroup extends HttpServlet {
 
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-		Participation participation = participationDAO.getParticipationLocked(new SessionAdapter(request).getUser(session), group.getLecture());
+		Participation participation = participationDAO.getParticipationLocked(RequestAdapter.getUser(request), group.getLecture());
 		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.NORMAL) != 0) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "operation not allowed");
 			tx.commit();
