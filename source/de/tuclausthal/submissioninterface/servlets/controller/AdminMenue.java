@@ -32,8 +32,10 @@ import org.hibernate.Transaction;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
@@ -64,17 +66,26 @@ public class AdminMenue extends HttpServlet {
 				} else if (lectures.isDirectory()) {
 					// list all tasks
 					for (File tasks : lectures.listFiles()) {
-						if (!tasks.getName().startsWith("junittest") && DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(tasks.getName(), 0)) == null) {
+						if (!tasks.isDirectory() || DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(tasks.getName(), 0)) == null) {
 							Util.recursiveDelete(tasks);
-						} else if (tasks.getName().startsWith("junittest")) {
-							// TODO: 2bd
-							//if (DAOFactory.TaskDAOIf().getTask(Util.parseInteger(tasks.getName(), 0)) == null && !(DAOFactory.TaskDAOIf().getTask(Util.parseInteger(tasks.getName(), 0)).getTest() instanceof JUnitTest)) {
-								tasks.delete();
-							//}
 						} else {
 							// list all submissions
 							for (File submissions : tasks.listFiles()) {
-								if (DAOFactory.SubmissionDAOIf(session).getSubmission(Util.parseInteger(submissions.getName(), 0)) == null) {
+								// check for junittests
+								if (submissions.getName().startsWith("junittest")) {
+									if (DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(submissions.getName(), 0)) == null) {
+										boolean kill = true;
+										for (Test test : DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(tasks.getName(), 0)).getTests()) {
+											if (submissions.getName().equals("junittest" + test.getId() + ".jar") && test instanceof JUnitTest) {
+												kill = false;
+												break;
+											}
+										}
+										if (kill) {
+											tasks.delete();
+										}
+									}
+								} else if (DAOFactory.SubmissionDAOIf(session).getSubmissionLocked(Util.parseInteger(submissions.getName(), 0)) == null) {
 									Util.recursiveDelete(submissions);
 								} else {
 									Util.recursiveDeleteEmptySubDirectories(submissions);
