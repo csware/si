@@ -61,6 +61,7 @@ public class SessionAdapter {
 	 */
 	public void setUser(User user) {
 		session.setAttribute("userID", user.getUid());
+		session.setAttribute("username", user.getEmail());
 	}
 
 	/**
