@@ -49,7 +49,7 @@ public class AdminMenue extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
-		if (RequestAdapter.getUser(request).isSuperUser()) {
+		if (!RequestAdapter.getUser(request).isSuperUser()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
