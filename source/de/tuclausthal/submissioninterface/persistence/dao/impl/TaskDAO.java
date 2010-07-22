@@ -55,7 +55,7 @@ public class TaskDAO extends AbstractDAO implements TaskDAOIf {
 	public void saveTask(Task task) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		session.save(task);
+		session.saveOrUpdate(task);
 		tx.commit();
 	}
 
