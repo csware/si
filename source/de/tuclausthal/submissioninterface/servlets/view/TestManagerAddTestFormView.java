@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -52,7 +52,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
-		out.println("<td><input type=text name=title></td>");
+		out.println("<td><input type=text name=title value=\"Syntax-Test\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
@@ -81,7 +81,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
-		out.println("<td><input type=text name=title></td>");
+		out.println("<td><input type=text name=title value=\"Funktionstest\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
@@ -123,7 +123,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
-		out.println("<td><input type=text name=title></td>");
+		out.println("<td><input type=text name=title value=\"Funktionstest\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
