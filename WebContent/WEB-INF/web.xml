@@ -20,7 +20,7 @@
     <listener-class>de.tuclausthal.submissioninterface.util.HibernateListener</listener-class>
   </listener>
   <welcome-file-list>
-    <welcome-file>servlets/Redirect</welcome-file>
+    <welcome-file>Redirect</welcome-file>
   </welcome-file-list>
   <filter>
     <filter-name>AuthenticationFilter</filter-name>
@@ -477,7 +477,7 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Redirect</servlet-name>
-    <url-pattern>/servlets/Redirect</url-pattern>
+    <url-pattern>/Redirect</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>PerformTestRunningView</servlet-name>
