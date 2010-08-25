@@ -80,7 +80,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 			}
 			if (changed && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid()) {
 				// HACK hardcoded URL
-				MailSender.sendMail(participation.getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + oldPoints.getIssuedBy().getUser().getFullName() + " hat Deine Bewertung von <https://si.in.tu-clausthal.de/submissionsystem/servlets/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
+				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + oldPoints.getIssuedBy().getUser().getFullName() + " hat Deine Bewertung von <https://si.in.tu-clausthal.de/submissionsystem/servlets/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
 			}
 		} else {
 			if (points.getPointsOk() != null) {
