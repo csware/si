@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -50,6 +51,7 @@ public class TaskManagerView extends HttpServlet {
 
 		Task task = (Task) request.getAttribute("task");
 		Lecture lecture = task.getLecture();
+		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
 
 		template.addHead("<script type=\"text/javascript\" src=\"" + getServletContext().getContextPath() + "/tiny_mce/tiny_mce.js\"></script>");
 		template.addHead("<script type=\"text/javascript\">\ntinyMCE.init({" +
@@ -102,7 +104,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<td><input type=text name=featuredfiles value=\"" + Util.mknohtml(task.getFeaturedFiles()) + "\"> Sollen alle Dateien zugeklappt sein: \"-\", sonst Komma-separierte Datei-Liste oder leer.</td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Tutoren dürfen Dateien hochladen:</th>");
+		out.println("<th>Tutoren dürfen Dateien für Studenten hochladen:</th>");
 		out.println("<td><input type=checkbox name=tutorsCanUploadFiles " + (task.isTutorsCanUploadFiles() ? "checked" : "") + "></td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -132,6 +134,23 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
+
+		out.println("<h2>Dateien hinterlegen</h2>");
+		if (advisorFiles.size() > 0) {
+			out.println("<ul>");
+			for (String file : advisorFiles) {
+				file = file.replace(System.getProperty("file.separator"), "/");
+				out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.mknohtml(file) + "</a> (<a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?action=delete&taskid=" + task.getTaskid()) + "\">del</a>)</li>");
+			}
+			out.println("</ul>");
+		}
+
+		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadTaskFile&lecture="+task.getLecture().getId()+"&taskid=" + task.getTaskid()) + "\">");
+		out.println("<p>Bitte wählen Sie eine Datei aus, die Sie den Studenten zur Verfügung stellen möchten:</p>");
+		out.println("<INPUT TYPE=file NAME=file>");
+		out.println("<INPUT TYPE=submit VALUE=upload>");
+		out.println("</FORM>");
+
 		// don't show for new tasks
 		if (task.getTaskid() != 0 && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
 			out.println("<h2>Ähnlichkeitsprüfungen</h2>");

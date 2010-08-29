@@ -86,6 +86,11 @@ body.filepreview h1, .previewmenubox, .highlightborder {
 	border-style:solid;
 }
 
+.taskfiles {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
 .previewmenubox {
 	z-index: 2000;
 	position: fixed;

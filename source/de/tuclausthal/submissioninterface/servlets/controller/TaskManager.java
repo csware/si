@@ -18,16 +18,27 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.util.http.fileupload.DiskFileUpload;
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.FileUpload;
+import org.apache.tomcat.util.http.fileupload.FileUploadBase;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -38,6 +49,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.template.Template;
+import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -84,6 +98,7 @@ public class TaskManager extends HttpServlet {
 			}
 
 			request.setAttribute("task", task);
+			request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"))));
 			request.getRequestDispatcher("TaskManagerView").forward(request, response);
 		} else if (request.getParameter("action") != null && (request.getParameter("action").equals("saveNewTask") || request.getParameter("action").equals("saveTask"))) {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
@@ -138,6 +153,72 @@ public class TaskManager extends HttpServlet {
 			}
 			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
 			return;
+		} else if ("uploadTaskFile".equals(request.getParameter("action"))) {
+			Template template = TemplateFactory.getTemplate(request, response);
+			PrintWriter out = response.getWriter();
+
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+			if (task == null) {
+				request.setAttribute("title", "Aufgabe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+			}
+			if (FileUpload.isMultipartContent(request)) {
+				ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+
+				File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"));
+				if (path.exists() == false) {
+					path.mkdirs();
+				}
+				List<FileItem> items = null;
+				// Create a new file upload handler
+				FileUploadBase upload = new DiskFileUpload();
+
+				// Parse the request
+				try {
+					items = upload.parseRequest(request);
+				} catch (FileUploadException e) {
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+					return;
+				}
+
+				// Process the uploaded items
+				Iterator<FileItem> iter = items.iterator();
+				while (iter.hasNext()) {
+					FileItem item = iter.next();
+
+					// Process a file upload
+					if (!item.isFormField()) {
+						Pattern pattern = Pattern.compile(".*?(?:\\\\|/)?([a-zA-Z0-9_.-]+)$");
+						StringBuffer submittedFileName = new StringBuffer(item.getName());
+						if (submittedFileName.lastIndexOf(".") > 0) {
+							int lastDot = submittedFileName.lastIndexOf(".");
+							submittedFileName.replace(lastDot, submittedFileName.length(), submittedFileName.subSequence(lastDot, submittedFileName.length()).toString().toLowerCase());
+						}
+						Matcher m = pattern.matcher(submittedFileName);
+						if (!m.matches()) {
+							System.out.println("SubmitSolutionProblem2: " + item.getName() + ";" + submittedFileName + ";" + pattern.pattern());
+							template.printTemplateHeader("Ungültige Anfrage");
+							out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
+							template.printTemplateFooter();
+							return;
+						}
+						String fileName = m.group(1);
+
+						File uploadedFile = new File(path, fileName);
+						try {
+							item.write(uploadedFile);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+
+				response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + task.getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid()));
+				return;
+			} else {
+				// error
+			}
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
 			request.getRequestDispatcher("MessageView").forward(request, response);

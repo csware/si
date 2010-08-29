@@ -75,6 +75,7 @@ public class ShowTask extends HttpServlet {
 
 		request.setAttribute("participation", participation);
 		request.setAttribute("task", task);
+		request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"))));
 		if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 			if ("grouplist".equals(request.getParameter("action"))) {
 				Group group = DAOFactory.GroupDAOIf(session).getGroup(Util.parseInteger(request.getParameter("groupid"), 0));

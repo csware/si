@@ -496,7 +496,6 @@
     <url-pattern>/Nagios</url-pattern>
   </servlet-mapping>
   <servlet>
-    <display-name>LocalExecutorStartUp</display-name>
     <servlet-name>LocalExecutorStartUp</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.testframework.executor.impl.LocalExecutorStartUp</servlet-class>
     <init-param>
@@ -505,7 +504,6 @@
     </init-param>
   </servlet>
   <servlet>
-    <display-name>JoinGroup</display-name>
     <servlet-name>JoinGroup</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.JoinGroup</servlet-class>
   </servlet>
@@ -518,13 +516,19 @@
     <location>/Error500</location>
   </error-page>
   <servlet>
-    <description></description>
-    <display-name>Error500</display-name>
     <servlet-name>Error500</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.Error500View</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Error500</servlet-name>
     <url-pattern>/Error500</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>DownloadTaskFile</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.DownloadTaskFile</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DownloadTaskFile</servlet-name>
+    <url-pattern>/servlets/DownloadTaskFile/*</url-pattern>
   </servlet-mapping>
 </web-app>

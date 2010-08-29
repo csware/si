@@ -61,6 +61,7 @@ public class ShowTaskTutorView extends HttpServlet {
 
 		Task task = (Task) request.getAttribute("task");
 		Participation participation = (Participation) request.getAttribute("participation");
+		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
 
 		template.printTemplateHeader(task);
 
@@ -86,6 +87,17 @@ public class ShowTaskTutorView extends HttpServlet {
 		out.println("<th>Max. Punkte:</th>");
 		out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 		out.println("</tr>");
+		if (advisorFiles.size() > 0) {
+			out.println("<tr>");
+			out.println("<th>Hinterlegte Dateien:</th>");
+			out.println("<td><ul class=taskfiles>");
+			for (String file : advisorFiles) {
+				file = file.replace(System.getProperty("file.separator"), "/");
+				out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.mknohtml(file) + "</a></li>");
+			}
+			out.println("</ul></td>");
+			out.println("</tr>");
+		}
 		out.println("</table>");
 
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
