@@ -73,9 +73,9 @@ public class TaskGroupManagerView extends HttpServlet {
 		out.println("</table>");
 		out.println("</form>");
 		if (taskGroup.getTaskGroupId() != 0) {
-			out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"");
+			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"");
 			out.println(response.encodeURL("TaskManager?action=deleteTaskGroup&taskgroupid=" + taskGroup.getTaskGroupId() + "&lecture=" + lecture.getId()));
-			out.println("\">Löschen</a></td>");
+			out.println("\">Löschen</a></p>");
 		}
 		template.printTemplateFooter();
 	}
