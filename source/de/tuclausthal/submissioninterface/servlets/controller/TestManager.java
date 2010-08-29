@@ -40,6 +40,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -173,7 +174,6 @@ public class TestManager extends HttpServlet {
 			test.setTimeout(Util.parseInteger(request.getParameter("timeout"), 15));
 			test.setRegularExpression(request.getParameter("regexp"));
 			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
-			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
 			test.setForTutors(request.getParameter("tutortest") != null);
 			test.setTestTitle(request.getParameter("title"));
 			test.setTestDescription(request.getParameter("description"));
@@ -188,6 +188,24 @@ public class TestManager extends HttpServlet {
 			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
 			test.setForTutors(request.getParameter("tutortest") != null);
 			test.setTestTitle(request.getParameter("title"));
+			test.setTestDescription(request.getParameter("description"));
+			testDAO.saveTest(test);
+			session.getTransaction().commit();
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
+		} else if ("saveNewTest".equals(request.getParameter("action")) && "commentmetric".equals(request.getParameter("type"))) {
+			// store it
+			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
+			session.beginTransaction();
+			CommentsMetricTest test = testDAO.createCommentsMetricTest(task);
+			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
+			test.setForTutors(request.getParameter("tutortest") != null);
+			test.setTestTitle(request.getParameter("title"));
+			int minProzent = Util.parseInteger(request.getParameter("minProzent"), 5);
+			if (minProzent < 1 || minProzent > 100) {
+				minProzent = 5;
+			}
+			test.setMinProzent(minProzent);
+			test.setExcludedFiles(request.getParameter("excludedFiles"));
 			test.setTestDescription(request.getParameter("description"));
 			testDAO.saveTest(test);
 			session.getTransaction().commit();

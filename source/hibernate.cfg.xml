@@ -45,6 +45,7 @@
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TestCount"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory"/>

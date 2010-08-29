@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.persistence.dao;
 
 import java.util.List;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
@@ -51,6 +52,8 @@ public interface TestDAOIf {
 	 * @return the created test
 	 */
 	public CompileTest createCompileTest(Task task);
+
+	public CommentsMetricTest createCommentsMetricTest(Task task);
 
 	/**
 	 * Update/save a test

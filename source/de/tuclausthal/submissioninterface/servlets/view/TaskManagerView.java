@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
@@ -196,6 +197,8 @@ public class TaskManagerView extends HttpServlet {
 						out.println("Compile-Test<br>");
 					} else if (test instanceof JUnitTest) {
 						out.println("JUnit-Test<br>");
+					} else if (test instanceof CommentsMetricTest) {
+						out.println("Kommentar-Metrik-Test<br>");
 					} else {
 						out.println("unknown<br>");
 					}

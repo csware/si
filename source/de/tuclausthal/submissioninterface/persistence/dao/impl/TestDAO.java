@@ -27,6 +27,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
@@ -114,5 +115,14 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 	@Override
 	public List<Test> getTutorTests(Task task) {
 		return getSession().createCriteria(Test.class).add(Restrictions.eq("task", task)).add(Restrictions.eq("forTutors", true)).list();
+	}
+
+	@Override
+	public CommentsMetricTest createCommentsMetricTest(Task task) {
+		Session session = getSession();
+		CommentsMetricTest test = new CommentsMetricTest();
+		test.setTask(task);
+		session.save(test);
+		return test;
 	}
 }
