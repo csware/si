@@ -58,7 +58,7 @@ public class DupeCheck extends HttpServlet {
 
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getLecture());
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
 		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
@@ -72,13 +72,13 @@ public class DupeCheck extends HttpServlet {
 				semilarityTestDAO.deleteSimilarityTest(similarityTest);
 			}
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getLecture().getId()));
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId()));
 		} else if (request.getParameter("type") != null && "savesimilaritytest".equals(request.getParameter("action"))) {
 			int minSimilarity = Util.parseInteger(request.getParameter("minsimilarity"), 50);
 			Transaction tx = session.beginTransaction();
 			semilarityTestDAO.addSimilarityTest(task, request.getParameter("type"), request.getParameter("normalizer1"), "lc".equals(request.getParameter("normalizer2")), request.getParameter("normalizer3"), minSimilarity, request.getParameter("excludeFiles"));
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getLecture().getId()));
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId()));
 		} else if ("rerunSimilarityTest".equals(request.getParameter("action")) && request.getParameter("similaritytestid") != null) {
 			Transaction tx = session.beginTransaction();
 			SimilarityTest similarityTest = semilarityTestDAO.getSimilarityTestLocked(Util.parseInteger(request.getParameter("similaritytestid"), 0));
@@ -87,7 +87,7 @@ public class DupeCheck extends HttpServlet {
 				semilarityTestDAO.saveSimilarityTest(similarityTest);
 			}
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getLecture().getId()));
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId()));
 		} else {
 			request.setAttribute("task", task);
 			request.getRequestDispatcher("DupeCheckFormView").forward(request, response);

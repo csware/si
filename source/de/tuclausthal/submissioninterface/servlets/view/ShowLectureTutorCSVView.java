@@ -36,6 +36,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -56,11 +57,15 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		List<Task> taskList = lecture.getTasks();
+		List<TaskGroup> taskGroupList = lecture.getTaskGroups();
 
 		out.print("Teilnahme;MatrikelNo;Studiengang;Nachname;Vorname;eMail;");
-		for (Task task : taskList) {
-			out.print(Util.csvQuote(task.getTitle()) + " (Pkts: " + Util.showPoints(task.getMaxPoints()) + ")" + ";");
+
+		for (TaskGroup taskGroup : taskGroupList) {
+			List<Task> taskList = taskGroup.getTasks();
+			for (Task task : taskList) {
+				out.print(Util.csvQuote(task.getTitle()) + " (Pkts: " + Util.showPoints(task.getMaxPoints()) + ")" + ";");
+			}
 		}
 		out.println("Gesamt");
 
@@ -75,25 +80,28 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 			out.print(Util.csvQuote(lectureParticipation.getUser().getLastName()) + ";");
 			out.print(Util.csvQuote(lectureParticipation.getUser().getFirstName()) + ";");
 			out.print(Util.csvQuote(lectureParticipation.getUser().getFullEmail()));
-			if (taskList.size() > 0) {
+			if (taskGroupList.size() > 0) {
 				out.print(";");
 			}
 			int points = 0;
-			for (Task task : taskList) {
-				Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
-				if (submission != null) {
-					if (submission.getPoints() != null) {
-						if (submission.getPoints().getPointsOk()) {
-							out.print(Util.showPoints(submission.getPoints().getPoints()) + ";");
-							points += submission.getPoints().getPoints();
+			for (TaskGroup taskGroup : taskGroupList) {
+				List<Task> taskList = taskGroup.getTasks();
+				for (Task task : taskList) {
+					Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
+					if (submission != null) {
+						if (submission.getPoints() != null) {
+							if (submission.getPoints().getPointsOk()) {
+								out.print(Util.showPoints(submission.getPoints().getPoints()) + ";");
+								points += submission.getPoints().getPoints();
+							} else {
+								out.print("(" + Util.showPoints(submission.getPoints().getPoints()) + ");");
+							}
 						} else {
-							out.print("(" + Util.showPoints(submission.getPoints().getPoints()) + ");");
+							out.print("n.b.;");
 						}
 					} else {
-						out.print("n.b.;");
+						out.print("k.A.;");
 					}
-				} else {
-					out.print("k.A.;");
 				}
 			}
 			if (points > 0) {

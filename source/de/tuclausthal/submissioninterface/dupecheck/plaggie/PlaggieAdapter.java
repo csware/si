@@ -1,6 +1,6 @@
 /* 
  *  Copyright (C) 2006 Aleksi Ahtiainen, Mikko Rahikainen.
- *  Copyright (C) 2009 Sven Strickroth <email@cs-ware.de> 
+ *  Copyright (C) 2009 - 2010 Sven Strickroth <email@cs-ware.de> 
  * 
  *  This file is part of the homework submission interface.
  *
@@ -94,7 +94,7 @@ public class PlaggieAdapter extends DupeCheck {
 
 			Debug.setEnabled(config.debugMessages);
 
-			File file1 = new File(path + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
+			File file1 = new File(path + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
 
 			// -- Create the code tokenizer object for parsing the source code files
 			codeTokenizer = (CodeTokenizer) Class.forName(config.codeTokenizer).newInstance();

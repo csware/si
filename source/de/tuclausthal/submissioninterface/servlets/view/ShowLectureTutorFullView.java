@@ -36,6 +36,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -60,18 +61,28 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		// list all tasks for a lecture
 		template.printTemplateHeader("Gesamtübersicht", lecture);
 
-		List<Task> taskList = lecture.getTasks();
+		List<TaskGroup> taskGroupList = lecture.getTaskGroups();
 
 		out.println("<table class=border>");
 		out.println("<tr>");
-		out.println("<th>MatrikelNo</th>");
-		out.println("<th>Studiengang</th>");
-		out.println("<th>Nachname</th>");
-		out.println("<th>Vorname</th>");
-		for (Task task : taskList) {
-			out.println("<th>" + Util.mknohtml(task.getTitle()) + "<br>Pkts: " + Util.showPoints(task.getMaxPoints()) + "</th>");
+		out.println("<th rowspan=2>MatrikelNo</th>");
+		out.println("<th rowspan=2>Studiengang</th>");
+		out.println("<th rowspan=2>Nachname</th>");
+		out.println("<th rowspan=2>Vorname</th>");
+		for (TaskGroup taskGroup : taskGroupList) {
+			List<Task> taskList = taskGroup.getTasks();
+			out.println("<th colspan=" + taskList.size() + ">" + Util.mknohtml(taskGroup.getTitle()) + "</th>");
 		}
-		out.println("<th>Gesamt</th>");
+		out.println("<th rowspan=2>Gesamt</th>");
+		out.println("</tr>");
+
+		out.println("<tr>");
+		for (TaskGroup taskGroup : taskGroupList) {
+			List<Task> taskList = taskGroup.getTasks();
+			for (Task task : taskList) {
+				out.println("<th>" + Util.mknohtml(task.getTitle()) + "<br>Pkts: " + Util.showPoints(task.getMaxPoints()) + "</th>");
+			}
+		}
 		out.println("</tr>");
 
 		for (Participation lectureParticipation : lecture.getParticipants()) {
@@ -86,21 +97,24 @@ public class ShowLectureTutorFullView extends HttpServlet {
 			out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + lectureParticipation.getUser().getUid()) + "\">" + Util.mknohtml(lectureParticipation.getUser().getLastName()) + "</a></td>");
 			out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + lectureParticipation.getUser().getUid()) + "\">" + Util.mknohtml(lectureParticipation.getUser().getFirstName()) + "</a></td>");
 			int points = 0;
-			for (Task task : taskList) {
-				Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
-				if (submission != null) {
-					if (submission.getPoints() != null) {
-						if (submission.getPoints().getPointsOk()) {
-							out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPoints()) + "</td>");
-							points += submission.getPoints().getPoints();
+			for (TaskGroup taskGroup : taskGroupList) {
+				List<Task> taskList = taskGroup.getTasks();
+				for (Task task : taskList) {
+					Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
+					if (submission != null) {
+						if (submission.getPoints() != null) {
+							if (submission.getPoints().getPointsOk()) {
+								out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPoints()) + "</td>");
+								points += submission.getPoints().getPoints();
+							} else {
+								out.println("<td class=points>(" + Util.showPoints(submission.getPoints().getPoints()) + ")</td>");
+							}
 						} else {
-							out.println("<td class=points>(" + Util.showPoints(submission.getPoints().getPoints()) + ")</td>");
+							out.println("<td><span title=\"nicht bewertet\">n.b.</span></td>");
 						}
 					} else {
-						out.println("<td><span title=\"nicht bewertet\">n.b.</span></td>");
+						out.println("<td><span title=\"keine Abgabe vom Studenten\">k.A.</span></td>");
 					}
-				} else {
-					out.println("<td><span title=\"keine Abgabe vom Studenten\">k.A.</span></td>");
 				}
 			}
 			if (points > 0) {

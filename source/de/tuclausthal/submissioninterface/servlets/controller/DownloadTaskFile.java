@@ -63,7 +63,7 @@ public class DownloadTaskFile extends HttpServlet {
 
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getLecture());
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
 		if (participation == null) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
@@ -75,14 +75,14 @@ public class DownloadTaskFile extends HttpServlet {
 			return;
 		}
 
-		File file = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator") + request.getPathInfo().substring(1));
+		File file = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator") + request.getPathInfo().substring(1));
 		if (file.exists() && file.isFile()) {
 			if ("delete".equals(request.getParameter("action"))) {
 				if (participation.getRoleType() != ParticipationRole.ADVISOR) {
 					response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 				} else {
 					file.delete();
-					response.sendRedirect(response.encodeRedirectURL(getServletContext().getContextPath() + "/" + contextAdapter.getServletsPath() + "/TaskManager?lecture=" + task.getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid()));
+					response.sendRedirect(response.encodeRedirectURL(getServletContext().getContextPath() + "/" + contextAdapter.getServletsPath() + "/TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid()));
 					return;
 				}
 			}

@@ -531,4 +531,12 @@
     <servlet-name>DownloadTaskFile</servlet-name>
     <url-pattern>/servlets/DownloadTaskFile/*</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>TaskGroupManagerView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.TaskGroupManagerView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TaskGroupManagerView</servlet-name>
+    <url-pattern>/servlets/TaskGroupManagerView</url-pattern>
+  </servlet-mapping>
 </web-app>

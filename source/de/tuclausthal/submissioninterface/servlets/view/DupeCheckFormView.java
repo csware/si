@@ -62,7 +62,7 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("<td><input type=text name=excludeFiles> (Dateinamen durch Komma getrennt)</td>");
 		out.println("</tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=starten> <a href=\"");
-		out.println(response.encodeURL("TaskManager?taskid=" + task.getTaskid() + "&amp;action=editTask&amp;lecture=" + task.getLecture().getId()));
+		out.println(response.encodeURL("TaskManager?taskid=" + task.getTaskid() + "&amp;action=editTask&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
@@ -114,7 +114,7 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=starten> <a href=\"");
-		out.println(response.encodeURL("TaskManager?taskid=" + task.getTaskid() + "&amp;action=editTask&amp;lecture=" + task.getLecture().getId()));
+		out.println(response.encodeURL("TaskManager?taskid=" + task.getTaskid() + "&amp;action=editTask&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");

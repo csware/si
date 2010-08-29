@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -28,6 +28,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.impl.SimilarityDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.SimilarityTestDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.SubmissionDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TaskDAO;
+import de.tuclausthal.submissioninterface.persistence.dao.impl.TaskGroupDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TestCountDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TestDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TestResultDAO;
@@ -139,5 +140,9 @@ public class DAOFactory {
 
 	public static TestCountDAOIf TestCountDAOIf(Session session) {
 		return new TestCountDAO(session);
+	}
+
+	public static TaskGroupDAOIf TaskGroupDAOIf(Session session) {
+		return new TaskGroupDAO(session);
 	}
 }

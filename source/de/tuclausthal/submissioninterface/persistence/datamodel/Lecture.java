@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -41,7 +41,7 @@ public class Lecture implements Serializable {
 	private String name;
 	private int semester;
 	private Set<Participation> participants;
-	private List<Task> tasks;
+	private List<TaskGroup> taskGroups;
 	private Set<Group> groups;
 
 	/**
@@ -123,20 +123,20 @@ public class Lecture implements Serializable {
 	}
 
 	/**
-	 * @return the tasks
+	 * @return the taskGroups
 	 */
 	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(clause = "taskid asc")
-	public List<Task> getTasks() {
-		return tasks;
+	@OrderBy(clause = "taskgroupid asc")
+	public List<TaskGroup> getTaskGroups() {
+		return taskGroups;
 	}
 
 	/**
-	 * @param tasks the tasks to set
+	 * @param taskGroups the taskGroups to set
 	 */
-	public void setTasks(List<Task> tasks) {
-		this.tasks = tasks;
+	public void setTaskGroups(List<TaskGroup> taskGroups) {
+		this.taskGroups = taskGroups;
 	}
 
 	/**

@@ -40,14 +40,17 @@ import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.apache.tomcat.util.http.fileupload.FileUploadBase;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.TaskGroupDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -88,20 +91,30 @@ public class TaskManager extends HttpServlet {
 					return;
 				}
 			} else {
+				if (lecture.getTaskGroups().size() == 0) {
+					request.setAttribute("title", "Es wurde noch keine Aufgabengruppe angelegt");
+					request.getRequestDispatcher("MessageView").forward(request, response);
+					return;
+				}
 				// temp. Task for code-reuse
 				task = new Task();
 				task.setStart(new Date());
 				task.setDeadline(new Date(new Date().getTime() + 3600 * 24 * 7 * 1000));
 				task.setShowPoints(task.getDeadline());
 				task.setFilenameRegexp("[A-Z][A-Za-z0-9_]+\\.java");
-				task.setLecture(lecture);
+				task.setTaskGroup(lecture.getTaskGroups().get(0));
 			}
 
 			request.setAttribute("task", task);
-			request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"))));
+			request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"))));
 			request.getRequestDispatcher("TaskManagerView").forward(request, response);
 		} else if (request.getParameter("action") != null && (request.getParameter("action").equals("saveNewTask") || request.getParameter("action").equals("saveTask"))) {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+			TaskGroup taskGroup = DAOFactory.TaskGroupDAOIf(session).getTaskGroup(Util.parseInteger(request.getParameter("taskGroup"), 0));
+			if (taskGroup == null) {
+				request.setAttribute("title", "Aufgabengruppe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+			}
 			Task task;
 			if (request.getParameter("action").equals("saveTask")) {
 				task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
@@ -126,6 +139,7 @@ public class TaskManager extends HttpServlet {
 				if (task.getShowPoints().before(task.getDeadline())) {
 					task.setShowPoints(task.getDeadline());
 				}
+				task.setTaskGroup(taskGroup);
 				taskDAO.saveTask(task);
 			} else {
 				Date startdate = parseDate(request.getParameter("startdate"), new Date());
@@ -137,7 +151,7 @@ public class TaskManager extends HttpServlet {
 				if (showPoints.before(deadline)) {
 					showPoints = deadline;
 				}
-				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints")), startdate, deadline, request.getParameter("description"), lecture, showPoints, request.getParameter("filenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null);
+				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints")), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, request.getParameter("filenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null);
 			}
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
@@ -166,7 +180,7 @@ public class TaskManager extends HttpServlet {
 			if (FileUpload.isMultipartContent(request)) {
 				ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
 
-				File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"));
+				File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"));
 				if (path.exists() == false) {
 					path.mkdirs();
 				}
@@ -214,11 +228,63 @@ public class TaskManager extends HttpServlet {
 					}
 				}
 
-				response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + task.getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid()));
+				response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid()));
 				return;
 			} else {
 				// error
 			}
+		} else if ((("editTaskGroup".equals(request.getParameter("action")) && request.getParameter("taskgroupid") != null) || (request.getParameter("action").equals("newTaskGroup") && request.getParameter("lecture") != null))) {
+			boolean editTaskGroup = request.getParameter("action").equals("editTaskGroup");
+			TaskGroup taskGroup;
+			if (editTaskGroup == true) {
+				TaskGroupDAOIf taskDAO = DAOFactory.TaskGroupDAOIf(session);
+				taskGroup = taskDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
+				if (taskGroup == null) {
+					request.setAttribute("title", "Aufgabengruppe nicht gefunden");
+					request.getRequestDispatcher("MessageView").forward(request, response);
+					return;
+				}
+			} else {
+				// temp. Task for code-reuse
+				taskGroup = new TaskGroup();
+				taskGroup.setLecture(lecture);
+			}
+			request.setAttribute("taskGroup", taskGroup);
+			request.getRequestDispatcher("TaskGroupManagerView").forward(request, response);
+		} else if (("saveNewTaskGroup".equals(request.getParameter("action")) || "saveTaskGroup".equals(request.getParameter("action")))) {
+			TaskGroupDAOIf taskGroupDAO = DAOFactory.TaskGroupDAOIf(session);
+			TaskGroup taskGroup;
+			if (request.getParameter("action").equals("saveTaskGroup")) {
+				taskGroup = taskGroupDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
+				if (taskGroup == null) {
+					request.setAttribute("title", "Aufgabengruppe nicht gefunden");
+					request.getRequestDispatcher("MessageView").forward(request, response);
+					return;
+				}
+				taskGroup.setTitle(request.getParameter("title"));
+				Transaction tx = session.beginTransaction();
+				taskGroupDAO.saveTaskGroup(taskGroup);
+				tx.commit();
+			} else {
+				Transaction tx = session.beginTransaction();
+				taskGroupDAO.newTaskGroup(request.getParameter("title"), lecture);
+				tx.commit();
+			}
+			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
+			return;
+		} else if ("deleteTaskGroup".equals(request.getParameter("action"))) {
+			TaskGroupDAOIf taskGroupDAO = DAOFactory.TaskGroupDAOIf(session);
+			TaskGroup taskGroup = taskGroupDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
+			if (taskGroup == null) {
+				request.setAttribute("title", "Aufgabengruppe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+			} else {
+				Transaction tx = session.beginTransaction();
+				taskGroupDAO.deleteTaskGroup(taskGroup);
+				tx.commit();
+			}
+			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
+			return;
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
 			request.getRequestDispatcher("MessageView").forward(request, response);

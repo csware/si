@@ -63,7 +63,7 @@ public abstract class DupeCheck {
 		NormalizerCache normalizerCache = null;
 		try {
 			Task task = similarityTest.getTask();
-			File taskPath = new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+			File taskPath = new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
 			normalizerCache = new NormalizerCache(taskPath, similarityTest.getNormalizer());
 			List<Submission> submissions = new LinkedList<Submission>(task.getSubmissions());
 			List<String> excludedFileNames = Arrays.asList(similarityTest.getExcludeFiles().split(","));

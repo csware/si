@@ -50,7 +50,7 @@ public class Task implements Serializable {
 	private Date showPoints;
 	private String description = "";
 	private Set<Submission> submissions;
-	private Lecture lecture;
+	private TaskGroup taskGroup;
 	private Set<Test> tests;
 	private Set<SimilarityTest> simularityTests;
 	private String filenameRegexp = "[A-Z][A-Za-z0-9_]+\\.java";
@@ -66,20 +66,20 @@ public class Task implements Serializable {
 	 * @param start
 	 * @param deadline
 	 * @param description
-	 * @param lecture
+	 * @param taskGroup
 	 * @param showPoints 
 	 * @param filenameRegexp 
 	 * @param showTextArea 
 	 * @param featuredFiles 
 	 * @param tutorsCanUploadFiles 
 	 */
-	public Task(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles) {
+	public Task(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles) {
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.start = start;
 		this.deadline = deadline;
 		this.description = description;
-		this.lecture = lecture;
+		this.taskGroup = taskGroup;
 		this.showPoints = showPoints;
 		this.filenameRegexp = filenameRegexp;
 		this.showTextArea = showTextArea;
@@ -195,19 +195,19 @@ public class Task implements Serializable {
 	}
 
 	/**
-	 * @return the lecture
+	 * @return the taskGroup
 	 */
 	@ManyToOne
-	@JoinColumn(name = "lectureid", nullable = false)
-	public Lecture getLecture() {
-		return lecture;
+	@JoinColumn(name = "taskgroupid", nullable = false)
+	public TaskGroup getTaskGroup() {
+		return taskGroup;
 	}
 
 	/**
-	 * @param lecture the lecture to set
+	 * @param taskGroup the taskGroup to set
 	 */
-	public void setLecture(Lecture lecture) {
-		this.lecture = lecture;
+	public void setTaskGroup(TaskGroup taskGroup) {
+		this.taskGroup = taskGroup;
 	}
 
 	/**

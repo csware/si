@@ -50,7 +50,7 @@ public class SubmitSolutionAdvisorFormView extends HttpServlet {
 
 		StringBuffer setWithUser = new StringBuffer();
 		setWithUser.append("<p>Abgabe erstellen für: <select name=uploadFor size=1>");
-		for (Participation part : task.getLecture().getParticipants()) {
+		for (Participation part : task.getTaskGroup().getLecture().getParticipants()) {
 			if (part.getRoleType().equals(ParticipationRole.NORMAL)) {
 				setWithUser.append("<option value=" + part.getId() + ">" + Util.mknohtml(part.getUser().getFullName()) + "</option>");
 			}

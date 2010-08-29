@@ -39,6 +39,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -61,37 +62,63 @@ public class ShowLectureTutorView extends HttpServlet {
 		Session session = RequestAdapter.getSession(request);
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 
+		boolean isAdvisor = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0);
+
 		// list all tasks for a lecture
 		template.printTemplateHeader(lecture);
 
-		// todo: wenn keine abrufbaren tasks da sind, nichts anzeigen
-		Iterator<Task> taskIterator = lecture.getTasks().iterator();
-		if (taskIterator.hasNext()) {
-			out.println("<table class=border>");
-			out.println("<tr>");
-			out.println("<th>Aufgabe</th>");
-			out.println("<th>Max. Punkte</th>");
-			out.println("</tr>");
-			while (taskIterator.hasNext()) {
-				Task task = taskIterator.next();
-				if (task.getStart().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
-					out.println("<tr>");
-					out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
-					out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
-					out.println("</tr>");
+		Iterator<TaskGroup> taskGroupIterator = lecture.getTaskGroups().iterator();
+		if (taskGroupIterator.hasNext()) {
+			boolean isStartedTable = false;
+			while (taskGroupIterator.hasNext()) {
+				TaskGroup taskGroup = taskGroupIterator.next();
+				Iterator<Task> taskIterator = taskGroup.getTasks().iterator();
+				if (taskIterator.hasNext() || isAdvisor) {
+					if (!isStartedTable) {
+						isStartedTable = true;
+						out.println("<table class=border>");
+						out.println("<tr>");
+						out.println("<th>Aufgabe</th>");
+						out.println("<th>Max. Punkte</th>");
+						out.println("</tr>");
+					}
+					if (isStartedTable && (taskGroup.getTitle() != null || isAdvisor)) {
+						out.println("<tr>");
+						String editLink = "";
+						if (isAdvisor) {
+							editLink = " (<a href=\"" + response.encodeURL("TaskManager?lecture=" + lecture.getId() + "&amp;action=editTaskGroup&amp;taskgroupid=" + taskGroup.getTaskGroupId()) + "\">edit</a>)";
+						}
+						out.println("<th colspan=2>Aufgabengruppe " + Util.mknohtml(taskGroup.getTitle()) + editLink + "</th>");
+						out.println("</tr>");
+					}
+					while (taskIterator.hasNext()) {
+						Task task = taskIterator.next();
+						if (task.getStart().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+							out.println("<tr>");
+							out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
+							out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
+							out.println("</tr>");
+						}
+					}
 				}
 			}
-			out.println("</table>");
+			if (isStartedTable) {
+				out.println("</table>");
+			} else {
+				out.println("<div class=mid>keine Aufgaben gefunden.</div>");
+			}
 		} else {
 			out.println("<div class=mid>keine Aufgaben gefunden.</div>");
 		}
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
-			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + lecture.getId() + "&amp;action=newTask") + "\">Neue Aufgabe</a></div>");
+			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + lecture.getId() + "&amp;action=newTaskGroup") + "\">Neue Aufgabengruppe</a></div>");
+			if (lecture.getTaskGroups().size() > 0) {
+				out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + lecture.getId() + "&amp;action=newTask") + "\">Neue Aufgabe</a></div>");
+			}
 		}
 
 		out.println("<p>");
 		out.println("<h2>Teilnehmer</h2>");
-		boolean isAdvisor = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0);
 		if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
 			out.println("<h3>Ohne Gruppe</h3>");
 			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, requestAdapter);

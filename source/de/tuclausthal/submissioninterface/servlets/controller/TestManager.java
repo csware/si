@@ -68,7 +68,7 @@ public class TestManager extends HttpServlet {
 		}
 
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getLecture());
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
 		if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
@@ -100,7 +100,7 @@ public class TestManager extends HttpServlet {
 					return;
 				}
 
-				File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
+				File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
 				if (path.exists() == false) {
 					path.mkdirs();
 				}
@@ -150,7 +150,7 @@ public class TestManager extends HttpServlet {
 				test.setTimeout(timeout);
 				testDAO.saveTest(test);
 				session.getTransaction().commit();
-				response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
+				response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
 			} else {
 				request.setAttribute("title", "Ungültiger Aufruf");
 				request.getRequestDispatcher("MessageView").forward(request, response);
@@ -179,7 +179,7 @@ public class TestManager extends HttpServlet {
 			test.setTestDescription(request.getParameter("description"));
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "compile".equals(request.getParameter("type"))) {
 			// store it
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
@@ -191,7 +191,7 @@ public class TestManager extends HttpServlet {
 			test.setTestDescription(request.getParameter("description"));
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
 		} else if ("deleteTest".equals(request.getParameter("action"))) {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			session.beginTransaction();
@@ -200,7 +200,7 @@ public class TestManager extends HttpServlet {
 				testDAO.deleteTest(test);
 			}
 			session.getTransaction().commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
 			return;
 		} else if ("rerunTest".equals(request.getParameter("action"))) {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
@@ -211,7 +211,7 @@ public class TestManager extends HttpServlet {
 				testDAO.saveTest(test);
 			}
 			session.getTransaction().commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getLecture().getId() + "&taskid=" + task.getTaskid()));
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
 			return;
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");

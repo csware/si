@@ -36,6 +36,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -91,34 +92,53 @@ public class ShowLectureStudentView extends HttpServlet {
 		out.println("</div><p>");
 
 		// todo: wenn keine abrufbaren tasks da sind, nichts anzeigen
-		Iterator<Task> taskIterator = lecture.getTasks().iterator();
-		if (taskIterator.hasNext()) {
-			out.println("<table class=border>");
-			out.println("<tr>");
-			out.println("<th>Aufgabe</th>");
-			out.println("<th>Max. Punkte</th>");
-			out.println("<th>Meine Punkte</th>");
-			out.println("</tr>");
-			while (taskIterator.hasNext()) {
-				Task task = taskIterator.next();
-				if (task.getStart().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
-					out.println("<tr>");
-					out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
-					out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
-					Submission submission = DAOFactory.SubmissionDAOIf(RequestAdapter.getSession(request)).getSubmission(task, RequestAdapter.getUser(request));
-					if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().before(Util.correctTimezone(new Date()))) {
-						if (submission.getPoints().getPointsOk()) {
-							out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPoints()) + "</td>");
-						} else {
-							out.println("<td class=points>0, nicht abgenommen</td>");
-						}
-					} else {
-						out.println("<td class=points>n/a</td>");
+		Iterator<TaskGroup> taskGroupIterator = lecture.getTaskGroups().iterator();
+		if (taskGroupIterator.hasNext()) {
+			boolean isStartedTable = false;
+			while (taskGroupIterator.hasNext()) {
+				TaskGroup taskGroup = taskGroupIterator.next();
+				Iterator<Task> taskIterator = taskGroup.getTasks().iterator();
+				if (taskIterator.hasNext()) {
+					if (!isStartedTable) {
+						isStartedTable = true;
+						out.println("<table class=border>");
+						out.println("<tr>");
+						out.println("<th>Aufgabe</th>");
+						out.println("<th>Max. Punkte</th>");
+						out.println("<th>Meine Punkte</th>");
+						out.println("</tr>");
 					}
-					out.println("</tr>");
+					if (isStartedTable && taskGroup.getTitle() != null) {
+						out.println("<tr>");
+						out.println("<th colspan=3>Aufgabengruppe " + Util.mknohtml(taskGroup.getTitle()) + "</th>");
+						out.println("</tr>");
+					}
+					while (taskIterator.hasNext()) {
+						Task task = taskIterator.next();
+						if (task.getStart().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+							out.println("<tr>");
+							out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
+							out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
+							Submission submission = DAOFactory.SubmissionDAOIf(RequestAdapter.getSession(request)).getSubmission(task, RequestAdapter.getUser(request));
+							if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().before(Util.correctTimezone(new Date()))) {
+								if (submission.getPoints().getPointsOk()) {
+									out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPoints()) + "</td>");
+								} else {
+									out.println("<td class=points>0, nicht abgenommen</td>");
+								}
+							} else {
+								out.println("<td class=points>n/a</td>");
+							}
+							out.println("</tr>");
+						}
+					}
 				}
 			}
-			out.println("</table>");
+			if (isStartedTable) {
+				out.println("</table>");
+			} else {
+				out.println("<div class=mid>keine Aufgaben gefunden.</div>");
+			}
 		} else {
 			out.println("<div class=mid>keine Aufgaben gefunden.</div>");
 		}

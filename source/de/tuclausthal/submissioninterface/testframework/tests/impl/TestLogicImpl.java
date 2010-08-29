@@ -79,7 +79,7 @@ public class TestLogicImpl extends TestTask {
 
 			testResult.setTestID(testId);
 
-			File path = new File(basePath.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
+			File path = new File(basePath.getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 			if (path.exists() == false) {
 				path.mkdirs();
 			}
@@ -130,7 +130,7 @@ public class TestLogicImpl extends TestTask {
 					policyFileWriter.write("	permission java.security.AllPermission;\n");
 					policyFileWriter.write("};\n");
 					policyFileWriter.write("\n");
-					policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar") + "\" {\n");
+					policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar") + "\" {\n");
 					policyFileWriter.write("	permission java.lang.RuntimePermission \"setIO\";\n");
 					policyFileWriter.write("	permission java.lang.reflect.ReflectPermission \"suppressAccessChecks\";\n");
 					policyFileWriter.write("	permission java.io.FilePermission \"file:" + mkPath(tempDir.getAbsolutePath()) + "\", \"read, write, delete\";\n");
@@ -154,7 +154,7 @@ public class TestLogicImpl extends TestTask {
 					params.add("-Djava.security.policy=" + policyFile.getAbsolutePath());
 					if (test instanceof JUnitTest) {
 						params.add("-cp");
-						params.add(basePath.getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar" + File.pathSeparator + basePath.getAbsolutePath() + System.getProperty("file.separator") + "junit.jar" + File.pathSeparator + tempDir.getAbsolutePath());
+						params.add(basePath.getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar" + File.pathSeparator + basePath.getAbsolutePath() + System.getProperty("file.separator") + "junit.jar" + File.pathSeparator + tempDir.getAbsolutePath());
 						params.add("junit.textui.TestRunner");
 						params.add("AllTests");
 					} else if (test instanceof RegExpTest) {

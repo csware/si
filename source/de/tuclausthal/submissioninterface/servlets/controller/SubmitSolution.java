@@ -84,7 +84,7 @@ public class SubmitSolution extends HttpServlet {
 
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getLecture());
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
 		if (participation == null) {
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
@@ -129,7 +129,7 @@ public class SubmitSolution extends HttpServlet {
 				Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, RequestAdapter.getUser(request));
 				if (submission != null) {
 					ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
-					File textSolutionFile = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + "textloesung.txt");
+					File textSolutionFile = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + "textloesung.txt");
 					if (textSolutionFile.exists()) {
 						BufferedReader bufferedReader = new BufferedReader(new FileReader(textSolutionFile));
 						StringBuffer sb = new StringBuffer();
@@ -167,7 +167,7 @@ public class SubmitSolution extends HttpServlet {
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 
-		Participation studentParticipation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getLecture());
+		Participation studentParticipation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
 		if (studentParticipation == null) {
 			template.printTemplateHeader("Ungültige Anfrage");
 			out.println("<div class=mid>Sie sind kein Teilnehmer dieser Veranstaltung.</div>");
@@ -221,7 +221,7 @@ public class SubmitSolution extends HttpServlet {
 				return;
 			}
 			studentParticipation = participationDAO.getParticipation(uploadFor);
-			if (studentParticipation == null || studentParticipation.getLecture().getId() != task.getLecture().getId()) {
+			if (studentParticipation == null || studentParticipation.getLecture().getId() != task.getTaskGroup().getLecture().getId()) {
 				template.printTemplateHeader("Ungültige Anfrage");
 				out.println("<div class=mid>Der gewählte Student ist kein Teilnehmer dieser Veranstaltung.</div>");
 				out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
@@ -274,7 +274,7 @@ public class SubmitSolution extends HttpServlet {
 
 		if (partnerID > 0) {
 			Participation partnerParticipation = participationDAO.getParticipation(partnerID);
-			if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getLecture().getId() == task.getLecture().getId() && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
+			if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
 				submission.getSubmitters().add(partnerParticipation);
 				session.update(submission);
 			} else {
@@ -288,7 +288,7 @@ public class SubmitSolution extends HttpServlet {
 
 		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
 
-		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
+		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 		if (path.exists() == false) {
 			path.mkdirs();
 		}

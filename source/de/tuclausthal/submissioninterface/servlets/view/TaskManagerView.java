@@ -33,6 +33,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -50,7 +51,7 @@ public class TaskManagerView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		Task task = (Task) request.getAttribute("task");
-		Lecture lecture = task.getLecture();
+		Lecture lecture = task.getTaskGroup().getLecture();
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
 
 		template.addHead("<script type=\"text/javascript\" src=\"" + getServletContext().getContextPath() + "/tiny_mce/tiny_mce.js\"></script>");
@@ -83,6 +84,18 @@ public class TaskManagerView extends HttpServlet {
 		}
 		out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
 		out.println("<table class=border>");
+		out.println("<tr>");
+		out.println("<th>Aufgabengruppe:</th>");
+		out.println("<td><select size=1 name=taskGroup>");
+		for (TaskGroup taskGroup : lecture.getTaskGroups()) {
+			String selected = "";
+			if (taskGroup.getTaskGroupId() == task.getTaskGroup().getTaskGroupId()) {
+				selected = " selected";
+			}
+			out.println("<option value=\"" + taskGroup.getTaskGroupId() + "\"" + selected + ">" + Util.mknohtml(taskGroup.getTitle()) + "</option>");
+		}
+		out.println("</select></td>");
+		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title value=\"" + Util.mknohtml(task.getTitle()) + "\"></td>");
@@ -145,7 +158,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("</ul>");
 		}
 
-		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadTaskFile&lecture="+task.getLecture().getId()+"&taskid=" + task.getTaskid()) + "\">");
+		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadTaskFile&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()) + "\">");
 		out.println("<p>Bitte wählen Sie eine Datei aus, die Sie den Studenten zur Verfügung stellen möchten:</p>");
 		out.println("<INPUT TYPE=file NAME=file>");
 		out.println("<INPUT TYPE=submit VALUE=upload>");

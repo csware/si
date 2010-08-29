@@ -31,6 +31,7 @@
     <property name="hibernate.show_sql">true</property>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.User"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Student"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Task"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Similarity"/>

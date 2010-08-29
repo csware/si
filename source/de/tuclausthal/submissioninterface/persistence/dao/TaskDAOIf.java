@@ -20,8 +20,8 @@ package de.tuclausthal.submissioninterface.persistence.dao;
 
 import java.util.Date;
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 
 /**
  * Data Access Object Interface for the Task-class
@@ -35,7 +35,7 @@ public interface TaskDAOIf {
 	 * @param start the start date of the task/when it get's visible to students
 	 * @param deadline the date after which no submission is possible any more
 	 * @param description the description of the task (HTML possible)
-	 * @param lecture the lecture to which the task should be associated
+	 * @param taskGroup the lecture to which the task should be associated
 	 * @param showPoints the daten when the issued points will be shown
 	 * @param filenameRegexp 
 	 * @param showTextArea 
@@ -43,7 +43,7 @@ public interface TaskDAOIf {
 	 * @param tutorsCanUploadFiles 
 	 * @return a new Task
 	 */
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, Lecture lecture, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles);
+	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles);
 
 	/**
 	 * Fetch a task based on it's id
