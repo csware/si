@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -26,6 +26,10 @@ public class TimeoutThread extends Thread {
 	private Process process;
 	private int timeout;
 
+	/**
+	 * @param process
+	 * @param timeout
+	 */
 	public TimeoutThread(Process process, int timeout) {
 		this.process = process;
 		this.timeout = timeout;

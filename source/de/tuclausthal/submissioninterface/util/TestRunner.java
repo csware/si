@@ -28,7 +28,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.TestExecutor;
 import de.tuclausthal.submissioninterface.testframework.executor.impl.LocalExecutor;
-import de.tuclausthal.submissioninterface.testframework.tests.impl.TestLogicImpl;
+import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
 
 /**
  * Test runner
@@ -57,7 +57,7 @@ public class TestRunner {
 		Test test;
 		while ((test = DAOFactory.TestDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).takeTest()) != null) {
 			for (Submission submission : test.getTask().getSubmissions()) {
-				TestExecutor.executeTask(new TestLogicImpl(test, submission, true));
+				TestExecutor.executeTask(new TestTask(test, submission, true));
 			}
 		}
 		TestExecutor.shutdown();

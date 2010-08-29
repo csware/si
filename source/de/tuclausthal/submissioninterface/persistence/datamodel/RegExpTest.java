@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,6 +19,10 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
+
+import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
+import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaIORegexpTest;
 
 @Entity
 public class RegExpTest extends Test {
@@ -67,5 +71,11 @@ public class RegExpTest extends Test {
 	 */
 	public void setCommandLineParameter(String commandLineParameter) {
 		this.commandLineParameter = commandLineParameter;
+	}
+
+	@Override
+	@Transient
+	public AbstractTest getTestImpl() {
+		return new JavaIORegexpTest();
 	}
 }

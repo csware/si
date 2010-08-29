@@ -44,7 +44,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogActi
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.testframework.TestExecutor;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
-import de.tuclausthal.submissioninterface.testframework.tests.impl.TestLogicImpl;
+import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -97,7 +97,7 @@ public class PerformTest extends HttpServlet {
 					return;
 				}
 
-				sa.setQueuedTest(TestExecutor.executeTask(new TestLogicImpl(test, submission)));
+				sa.setQueuedTest(TestExecutor.executeTask(new TestTask(test, submission)));
 				gotoWaitingView(request, response, "sid=" + submission.getSubmissionid() + "&testid=" + test.getId());
 			} else {
 				request.setAttribute("title", "Ungültige Anfrage");

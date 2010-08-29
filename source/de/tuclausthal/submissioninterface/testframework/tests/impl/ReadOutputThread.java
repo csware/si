@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -37,12 +37,12 @@ public class ReadOutputThread extends Thread {
 		stdErrInputStream = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 	}
 
-	public String getStdOut() {
-		return stdOutStringBuffer.toString();
+	public StringBuffer getStdOut() {
+		return stdOutStringBuffer;
 	}
 
-	public String getStdErr() {
-		return stdErrStringBuffer.toString();
+	public StringBuffer getStdErr() {
+		return stdErrStringBuffer;
 	}
 
 	@Override

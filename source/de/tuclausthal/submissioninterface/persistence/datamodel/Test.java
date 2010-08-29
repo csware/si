@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -27,6 +27,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 
 /**
  * Function test
@@ -161,4 +164,7 @@ public abstract class Test implements Serializable {
 	public boolean isNeedsToRun() {
 		return needsToRun;
 	}
+
+	@Transient
+	abstract public AbstractTest getTestImpl();
 }

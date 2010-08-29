@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,6 +19,10 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
+
+import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
+import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaJUnitTest;
 
 /**
  * JUnit function test
@@ -26,4 +30,9 @@ import javax.persistence.Entity;
  */
 @Entity
 public class JUnitTest extends Test {
+	@Override
+	@Transient
+	public AbstractTest getTestImpl() {
+		return new JavaJUnitTest();
+	}
 }
