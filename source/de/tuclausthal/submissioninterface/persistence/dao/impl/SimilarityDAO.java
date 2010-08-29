@@ -40,17 +40,20 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 
 	@Override
 	public void addSimilarityResult(SimilarityTest similarityTest, Submission submissionOne, Submission submissionTwo, int percentage) {
-		Session session = getSession();
-		Transaction tx = session.beginTransaction();
-		for (Similarity similarity : (List<Similarity>) session.createCriteria(Similarity.class).add(Restrictions.eq("similarityTest", similarityTest)).add(Restrictions.or(Restrictions.and(Restrictions.eq("submissionOne", submissionOne), Restrictions.eq("submissionTwo", submissionTwo)), Restrictions.and(Restrictions.eq("submissionOne", submissionTwo), Restrictions.eq("submissionTwo", submissionOne)))).list()) {
-			session.delete(similarity);
+		// TODO: check in plaggie that only submissiondirectories are considered
+		if (submissionOne != null && submissionTwo != null) {
+			Session session = getSession();
+			Transaction tx = session.beginTransaction();
+			for (Similarity similarity : (List<Similarity>) session.createCriteria(Similarity.class).add(Restrictions.eq("similarityTest", similarityTest)).add(Restrictions.or(Restrictions.and(Restrictions.eq("submissionOne", submissionOne), Restrictions.eq("submissionTwo", submissionTwo)), Restrictions.and(Restrictions.eq("submissionOne", submissionTwo), Restrictions.eq("submissionTwo", submissionOne)))).list()) {
+				session.delete(similarity);
+			}
+			Similarity simularity;
+			simularity = new Similarity(similarityTest, submissionOne, submissionTwo, percentage);
+			session.save(simularity);
+			simularity = new Similarity(similarityTest, submissionTwo, submissionOne, percentage);
+			session.save(simularity);
+			tx.commit();
 		}
-		Similarity simularity;
-		simularity = new Similarity(similarityTest, submissionOne, submissionTwo, percentage);
-		session.save(simularity);
-		simularity = new Similarity(similarityTest, submissionTwo, submissionOne, percentage);
-		session.save(simularity);
-		tx.commit();
 	}
 
 	@Override
