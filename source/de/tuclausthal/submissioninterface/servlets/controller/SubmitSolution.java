@@ -303,7 +303,8 @@ public class SubmitSolution extends HttpServlet {
 				if (!item.isFormField()) {
 					if (item.getName().toLowerCase().endsWith(".zip") || item.getName().toLowerCase().endsWith(".jar")) {
 						ZipInputStream zipFile;
-						Pattern pattern = Pattern.compile("([\\/a-zA-Z0-9_.-]+)$");
+						// TODO: relocate java-files from jar/zip archives?
+						Pattern pattern = Pattern.compile("([\\/a-zA-Z0-9_ .-]+)$");
 						try {
 							zipFile = new ZipInputStream(item.getInputStream());
 							ZipEntry entry = null;
