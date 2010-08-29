@@ -87,13 +87,7 @@ public class ShowFile extends HttpServlet {
 		if (file.exists() && file.isFile()) {
 			if (isPlainTextFile(file.getName().toLowerCase()) && !"true".equals(request.getParameter("download"))) {
 				// code for loading/displaying text-files
-				BufferedReader freader = new BufferedReader(new FileReader(file));
-				String line;
-				StringBuffer code = new StringBuffer();
-				while ((line = freader.readLine()) != null) {
-					code.append(line + "\n");
-				}
-				freader.close();
+				StringBuffer code = Util.loadFile(file);
 
 				request.setAttribute("submission", submission);
 				request.setAttribute("code", code);
