@@ -46,7 +46,6 @@ import plag.parser.MultipleCodeExcluder;
 import plag.parser.MultipleFilenameFilter;
 import plag.parser.SimpleSubmissionSimilarityChecker;
 import plag.parser.SimpleTokenSimilarityChecker;
-import plag.parser.SingleFileSubmission;
 import plag.parser.SubdirectoryFilter;
 import plag.parser.Submission;
 import plag.parser.SubmissionDetectionResult;
@@ -230,22 +229,14 @@ public class PlaggieAdapter extends DupeCheck {
 
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isDirectory()) {
-				if (!config.severalSubmissionDirectories) {
+				try {
+					Integer.parseInt(files[i].getName());
 					Debug.println("Adding directory submission: " + files[i].getPath());
 					DirectorySubmission dirS = new DirectorySubmission(files[i], filter, config.useRecursive);
 					submissions.add(dirS);
-				} else {
-					File subDir = new File(files[i].getPath() + File.separator + config.submissionDirectory);
-					if (subDir.isDirectory()) {
-						Debug.println("Adding directory submission: " + subDir.getPath());
-						DirectorySubmission dirS = new DirectorySubmission(subDir, filter, config.useRecursive);
-						submissions.add(dirS);
-					}
+				} catch (NumberFormatException e) {
+					// ignore, we just want to handle submission-directories
 				}
-			} else {
-				Debug.println("Adding single file submission: " + files[i].getPath());
-				SingleFileSubmission sub = new SingleFileSubmission(files[i]);
-				submissions.add(sub);
 			}
 		}
 		return submissions;
