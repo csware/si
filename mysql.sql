@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 16. Mai 2010 um 22:01
--- Server Version: 5.1.41
+-- Erstellungszeit: 30. August 2010 um 21:54
+-- Server Version: 5.1.50
 -- PHP-Version: 5.3.1
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -16,7 +16,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Datenbank: `abgabesystem`
+-- Datenbank: `submissionsystem`
 --
 
 -- --------------------------------------------------------
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `lectureid` int(11) NOT NULL,
   `allowStudentsToSignup` bit(1) NOT NULL,
   `allowStudentsToQuit` bit(1) NOT NULL,
-  `maxStudents` int(11) NOT NULL,
+  `maxStudents` int(11) unsigned NOT NULL DEFAULT '20',
   PRIMARY KEY (`gid`),
   KEY `FKB63DD9D4AF18EDD1` (`lectureid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
@@ -78,8 +78,11 @@ CREATE TABLE IF NOT EXISTS `logs` (
   `taskId` int(11) NOT NULL,
   `testId` int(11) DEFAULT NULL,
   `userId` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7485 ;
+  PRIMARY KEY (`id`),
+  KEY `userId` (`userId`),
+  KEY `testId` (`testId`),
+  KEY `taskId` (`taskId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8489 ;
 
 -- --------------------------------------------------------
 
@@ -98,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `participations` (
   KEY `FKA301B52E28A1D21` (`uid`),
   KEY `FKA301B527F3A8A13` (`groupid`),
   KEY `FKA301B52AF18EDD1` (`lectureid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=404 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=406 ;
 
 -- --------------------------------------------------------
 
@@ -117,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `pointhistory` (
   PRIMARY KEY (`id`),
   KEY `FK1DB12D04AEB18C37` (`who_id`),
   KEY `FK1DB12D046B74DB4C` (`submission_submissionid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=458 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2318 ;
 
 -- --------------------------------------------------------
 
@@ -135,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `similarities` (
   KEY `FKB31AC117AAD798` (`submissionTwo_submissionid`),
   KEY `FKB31AC193B8B275` (`similarityTest_similarityTestId`),
   KEY `FKB31AC1B470E5BE` (`submissionOne_submissionid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=70379 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=76931 ;
 
 -- --------------------------------------------------------
 
@@ -155,7 +158,7 @@ CREATE TABLE IF NOT EXISTS `similaritytests` (
   `taskid` int(11) NOT NULL,
   PRIMARY KEY (`similarityTestId`),
   KEY `FK86B2AD1EAE0697EB` (`taskid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=63 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=87 ;
 
 -- --------------------------------------------------------
 
@@ -175,7 +178,7 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   PRIMARY KEY (`submissionid`),
   KEY `FK2912EA7AE0697EB` (`taskid`),
   KEY `issuedby` (`issuedBy_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4393 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5066 ;
 
 -- --------------------------------------------------------
 
@@ -194,6 +197,20 @@ CREATE TABLE IF NOT EXISTS `submissions_participations` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `taskgroups`
+--
+
+CREATE TABLE IF NOT EXISTS `taskgroups` (
+  `taskgroupid` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL,
+  `lectureid` int(11) NOT NULL,
+  PRIMARY KEY (`taskgroupid`),
+  KEY `FK5BD51799AF18EDD1` (`lectureid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `tasks`
 --
 
@@ -208,12 +225,12 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `showTextArea` bit(1) NOT NULL,
   `start` datetime NOT NULL,
   `title` varchar(255) DEFAULT NULL,
-  `lectureid` int(11) NOT NULL,
+  `taskgroupid` int(11) NOT NULL,
   `featuredFiles` text NOT NULL,
   `tutorsCanUploadFiles` bit(1) NOT NULL,
   PRIMARY KEY (`taskid`),
-  KEY `FK6907B8EAF18EDD1` (`lectureid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=34 ;
+  KEY `taskgroupid` (`taskgroupid`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
 
 -- --------------------------------------------------------
 
@@ -230,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `testresults` (
   PRIMARY KEY (`id`),
   KEY `FKC6CC0F246B74DB4C` (`submission_submissionid`),
   KEY `FKC6CC0F248DBEBD80` (`test_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6192 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6680 ;
 
 -- --------------------------------------------------------
 
@@ -251,9 +268,11 @@ CREATE TABLE IF NOT EXISTS `tests` (
   `mainClass` varchar(255) DEFAULT NULL,
   `regularExpression` varchar(255) DEFAULT NULL,
   `taskid` int(11) NOT NULL,
+  `minProzent` int(11) DEFAULT NULL,
+  `excludedFiles` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK6924E21AE0697EB` (`taskid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=62 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=80 ;
 
 -- --------------------------------------------------------
 
@@ -269,7 +288,7 @@ CREATE TABLE IF NOT EXISTS `testscounts` (
   PRIMARY KEY (`id`),
   KEY `FKF81042A5D2AB5AAD` (`user_uid`),
   KEY `FKF81042A58DBEBD80` (`test_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2744 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2741 ;
 
 -- --------------------------------------------------------
 
@@ -307,6 +326,14 @@ ALTER TABLE `groups_tutors`
   ADD CONSTRAINT `groups_tutors_ibfk_2` FOREIGN KEY (`tutors_id`) REFERENCES `participations` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints der Tabelle `logs`
+--
+ALTER TABLE `logs`
+  ADD CONSTRAINT `logs_ibfk_1` FOREIGN KEY (`taskId`) REFERENCES `tasks` (`taskid`) ON DELETE CASCADE,
+  ADD CONSTRAINT `logs_ibfk_2` FOREIGN KEY (`testId`) REFERENCES `tests` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `logs_ibfk_3` FOREIGN KEY (`userId`) REFERENCES `users` (`uid`) ON DELETE CASCADE;
+
+--
 -- Constraints der Tabelle `participations`
 --
 ALTER TABLE `participations`
@@ -318,8 +345,8 @@ ALTER TABLE `participations`
 -- Constraints der Tabelle `pointhistory`
 --
 ALTER TABLE `pointhistory`
-  ADD CONSTRAINT `FK1DB12D046B74DB4C` FOREIGN KEY (`submission_submissionid`) REFERENCES `submissions` (`submissionid`),
-  ADD CONSTRAINT `FK1DB12D04AEB18C37` FOREIGN KEY (`who_id`) REFERENCES `participations` (`id`);
+  ADD CONSTRAINT `FK1DB12D04AEB18C37` FOREIGN KEY (`who_id`) REFERENCES `participations` (`id`),
+  ADD CONSTRAINT `pointhistory_ibfk_1` FOREIGN KEY (`submission_submissionid`) REFERENCES `submissions` (`submissionid`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `similarities`
@@ -346,14 +373,20 @@ ALTER TABLE `submissions`
 -- Constraints der Tabelle `submissions_participations`
 --
 ALTER TABLE `submissions_participations`
-  ADD CONSTRAINT `FK27F157EA5F9373D1` FOREIGN KEY (`submissions_submissionid`) REFERENCES `submissions` (`submissionid`) ON DELETE CASCADE,
-  ADD CONSTRAINT `FK27F157EA16D3DBEB` FOREIGN KEY (`submitters_id`) REFERENCES `participations` (`id`);
+  ADD CONSTRAINT `FK27F157EA16D3DBEB` FOREIGN KEY (`submitters_id`) REFERENCES `participations` (`id`),
+  ADD CONSTRAINT `FK27F157EA5F9373D1` FOREIGN KEY (`submissions_submissionid`) REFERENCES `submissions` (`submissionid`) ON DELETE CASCADE;
+
+--
+-- Constraints der Tabelle `taskgroups`
+--
+ALTER TABLE `taskgroups`
+  ADD CONSTRAINT `FK5BD51799AF18EDD1` FOREIGN KEY (`lectureid`) REFERENCES `lectures` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `tasks`
 --
 ALTER TABLE `tasks`
-  ADD CONSTRAINT `FK6907B8EAF18EDD1` FOREIGN KEY (`lectureid`) REFERENCES `lectures` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`taskgroupid`) REFERENCES `taskgroups` (`taskgroupid`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `testresults`
@@ -366,14 +399,14 @@ ALTER TABLE `testresults`
 -- Constraints der Tabelle `tests`
 --
 ALTER TABLE `tests`
-  ADD CONSTRAINT `FK6924E21AE0697EB` FOREIGN KEY (`taskid`) REFERENCES `tasks` (`taskid`);
+  ADD CONSTRAINT `tests_ibfk_1` FOREIGN KEY (`taskid`) REFERENCES `tasks` (`taskid`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `testscounts`
 --
 ALTER TABLE `testscounts`
-  ADD CONSTRAINT `FKF81042A58DBEBD80` FOREIGN KEY (`test_id`) REFERENCES `tests` (`id`),
-  ADD CONSTRAINT `FKF81042A5D2AB5AAD` FOREIGN KEY (`user_uid`) REFERENCES `users` (`uid`);
+  ADD CONSTRAINT `testscounts_ibfk_1` FOREIGN KEY (`test_id`) REFERENCES `tests` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `testscounts_ibfk_2` FOREIGN KEY (`user_uid`) REFERENCES `users` (`uid`) ON DELETE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
