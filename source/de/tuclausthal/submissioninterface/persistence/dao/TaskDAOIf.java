@@ -41,9 +41,10 @@ public interface TaskDAOIf {
 	 * @param showTextArea 
 	 * @param featuredFiles 
 	 * @param tutorsCanUploadFiles 
+	 * @param maxSubmitters 
 	 * @return a new Task
 	 */
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles);
+	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters);
 
 	/**
 	 * Fetch a task based on it's id

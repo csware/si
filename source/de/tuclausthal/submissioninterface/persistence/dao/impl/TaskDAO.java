@@ -42,10 +42,10 @@ public class TaskDAO extends AbstractDAO implements TaskDAOIf {
 	}
 
 	@Override
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameregexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles) {
+	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameregexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		Task task = new Task(title, maxPoints, start, deadline, description, taskGroup, showPoints, filenameregexp, showTextArea, featuredFiles, tutorsCanUploadFiles);
+		Task task = new Task(title, maxPoints, start, deadline, description, taskGroup, showPoints, filenameregexp, showTextArea, featuredFiles, tutorsCanUploadFiles, maxSubmitters);
 		session.save(task);
 		tx.commit();
 		return task;

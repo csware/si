@@ -72,8 +72,9 @@ public class Task implements Serializable {
 	 * @param showTextArea 
 	 * @param featuredFiles 
 	 * @param tutorsCanUploadFiles 
+	 * @param maxSubmitters 
 	 */
-	public Task(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles) {
+	public Task(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters) {
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.start = start;
@@ -85,6 +86,7 @@ public class Task implements Serializable {
 		this.showTextArea = showTextArea;
 		this.featuredFiles = featuredFiles;
 		this.tutorsCanUploadFiles = tutorsCanUploadFiles;
+		this.maxSubmitters = maxSubmitters;
 	}
 
 	/**

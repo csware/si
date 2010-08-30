@@ -126,6 +126,9 @@ public class TaskManager extends HttpServlet {
 				task.setMaxPoints(Util.convertToPoints(request.getParameter("maxpoints")));
 				task.setTitle(request.getParameter("title"));
 				task.setDescription(request.getParameter("description"));
+				if (request.getParameter("twosubmitters") != null) {
+					task.setMaxSubmitters(2);
+				}
 				task.setFilenameRegexp(request.getParameter("filenameregexp"));
 				task.setFeaturedFiles(request.getParameter("featuredfiles"));
 				task.setShowTextArea(request.getParameter("showtextarea") != null);
@@ -151,7 +154,11 @@ public class TaskManager extends HttpServlet {
 				if (showPoints.before(deadline)) {
 					showPoints = deadline;
 				}
-				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints")), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, request.getParameter("filenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null);
+				int maxSubmitters = 1;
+				if (request.getParameter("twosubmitters") != null) {
+					maxSubmitters = 2;
+				}
+				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints")), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, request.getParameter("filenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null, maxSubmitters);
 			}
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));

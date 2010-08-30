@@ -106,6 +106,10 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<td><textarea cols=60 rows=10 name=description>" + Util.mknohtml(task.getDescription()) + "</textarea></td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Abgaben in Zweiergruppen:</th>");
+		out.println("<td><input type=checkbox name=twosubmitters " + (task.getMaxSubmitters() == 2 ? "checked" : "") + "></td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<th>Filename Regexp:</th>");
 		out.println("<td><input type=text name=filenameregexp value=\"" + Util.mknohtml(task.getFilenameRegexp()) + "\"> <b>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;, &quot;-&quot; = upload disabled</b></td>");
 		out.println("</tr>");
