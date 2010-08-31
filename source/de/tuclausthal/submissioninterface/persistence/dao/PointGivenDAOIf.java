@@ -30,6 +30,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
  */
 public interface PointGivenDAOIf {
 	public void revokePointGiven(PointGiven pointGiven);
+
 	public PointGiven givePoint(int issuedPoints, Submission submission, PointCategory category);
+
 	public List<PointGiven> getPointsGivenOfSubmission(Submission submission);
 }

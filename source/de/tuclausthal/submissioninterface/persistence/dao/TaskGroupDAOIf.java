@@ -46,7 +46,7 @@ public interface TaskGroupDAOIf {
 	 * @param taskGroup the taskGroup
 	 */
 	public void saveTaskGroup(TaskGroup taskGroup);
-	
+
 	/**
 	 * Deletes a specific taskGroup from the DB
 	 * @param taskGroup the taskGroup to remove

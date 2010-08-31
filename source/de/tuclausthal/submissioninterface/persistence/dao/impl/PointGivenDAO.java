@@ -45,6 +45,7 @@ public class PointGivenDAO extends AbstractDAO implements PointGivenDAOIf {
 		session.save(pointGiven);
 		return pointGiven;
 	}
+
 	@Override
 	public List<PointGiven> getPointsGivenOfSubmission(Submission submission) {
 		return getSession().createCriteria(PointGiven.class).add(Restrictions.eq("submission", submission)).addOrder(Order.asc("category")).list();

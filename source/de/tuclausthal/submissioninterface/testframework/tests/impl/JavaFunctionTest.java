@@ -94,7 +94,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			StringBuffer processOutput = readOutputThread.getStdOut();
 			testResult.setTestPassed(calculateTestResult(test, exitedCleanly, processOutput));
 			// append STDERR
-			if (readOutputThread.getStdErr().length()>0) {
+			if (readOutputThread.getStdErr().length() > 0) {
 				processOutput.append("\nFehlerausgabe (StdErr)\n");
 				processOutput.append(readOutputThread.getStdErr());
 			}

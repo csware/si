@@ -62,7 +62,7 @@ public class JavaCommentsMetricTest extends AbstractTest {
 
 		Long ratio = 0l;
 		if (charsOfCode > 0) {
-			ratio = Math.round(100.0d*charsOfComment / charsOfCode);
+			ratio = Math.round(100.0d * charsOfComment / charsOfCode);
 		}
 
 		testResult.setTestPassed(ratio >= commentsMetricTest.getMinProzent());
