@@ -31,6 +31,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTe
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
+import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -137,10 +138,17 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<th>Punktedatum:</th>");
 		out.println("<td><input type=text name=pointsdate value=\"" + Util.mknohtml(task.getShowPoints().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Max. Punkte:</th>");
-		out.println("<td><input type=text name=maxpoints value=\"" + Util.showPoints(task.getMaxPoints()) + "\"> <b>bei Änderung bereits vergebene Pkts. prüfen!</b></td>");
-		out.println("</tr>");
+		if (task.getPointCategories().size() == 0) {
+			out.println("<tr>");
+			out.println("<th>Max. Punkte:</th>");
+			out.println("<td><input type=text name=maxpoints value=\"" + Util.showPoints(task.getMaxPoints()) + "\"> <b>bei Änderung bereits vergebene Pkts. prüfen!</b></td>");
+			out.println("</tr>");
+		} else {
+			out.println("<tr>");
+			out.println("<th>Max. Punkte:</th>");
+			out.println("<td><input type=text disabled name=maxpoints value=\"" + Util.showPoints(task.getMaxPoints()) + "\"> (berechnet)</td>");
+			out.println("</tr>");
+		}
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
 		if (task.getTaskid() != 0) {
@@ -152,6 +160,27 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
+
+		if (task.getTaskid() != 0) {
+			out.println("<h2>Punkte</h2>");
+			out.println("<p>Werden hier Kriterien angelegt, so werden den Tutoren nur noch Checkboxen angezeigt.</p>");
+			if (task.getPointCategories().size() > 0) {
+				out.println("<ul>");
+				for (PointCategory category : task.getPointCategories()) {
+					out.println("<li>" + Util.mknohtml(category.getDescription()) + " " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? " optional" : "") + " (<a href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deletePointCategory&pointCategoryId=" + category.getPointcatid()) + "\">del</a>)</li>");
+				}
+				out.println("</ul>");
+			}
+			out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+			out.println("<input type=hidden name=action value=\"newPointCategory\">");
+			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
+			out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
+			out.println("Kriteria: <input type=text name=description><br>");
+			out.println("Punkte: <input type=text name=points value=1><br>");
+			out.println("Optional: <input type=checkbox name=optional> (für Bonuspunkte)<br>");
+			out.println("<input type=submit value=speichern>");
+			out.println("</form>");
+		}
 
 		out.println("<h2>Dateien hinterlegen</h2>");
 		if (advisorFiles.size() > 0) {

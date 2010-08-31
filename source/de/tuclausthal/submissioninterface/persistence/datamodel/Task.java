@@ -51,6 +51,7 @@ public class Task implements Serializable {
 	private String description = "";
 	private Set<Submission> submissions;
 	private TaskGroup taskGroup;
+	private Set<PointCategory> pointCategories;
 	private Set<Test> tests;
 	private Set<SimilarityTest> simularityTests;
 	private String filenameRegexp = "[A-Z][A-Za-z0-9_]+\\.java";
@@ -330,5 +331,22 @@ public class Task implements Serializable {
 	 */
 	public void setTutorsCanUploadFiles(boolean tutorsCanUploadFiles) {
 		this.tutorsCanUploadFiles = tutorsCanUploadFiles;
+	}
+
+	/**
+	 * @return the pointCategories
+	 */
+	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OrderBy(clause = "pointcatid asc")
+	public Set<PointCategory> getPointCategories() {
+		return pointCategories;
+	}
+
+	/**
+	 * @param pointCategories the pointCategories to set
+	 */
+	public void setPointCategories(Set<PointCategory> pointCategories) {
+		this.pointCategories = pointCategories;
 	}
 }

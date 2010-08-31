@@ -106,6 +106,38 @@ CREATE TABLE IF NOT EXISTS `participations` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `pointcategories`
+--
+
+CREATE TABLE IF NOT EXISTS `pointcategories` (
+  `pointcatid` int(11) NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) NOT NULL,
+  `optional` bit(1) NOT NULL,
+  `points` int(11) NOT NULL,
+  `taskid` int(11) NOT NULL,
+  PRIMARY KEY (`pointcatid`),
+  KEY `FK2623E7ACAE0697EB` (`taskid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `pointgiven`
+--
+
+CREATE TABLE IF NOT EXISTS `pointgiven` (
+  `pointgivenid` int(11) NOT NULL AUTO_INCREMENT,
+  `points` int(11) NOT NULL,
+  `categoryid` int(11) NOT NULL,
+  `submissionid` int(11) NOT NULL,
+  PRIMARY KEY (`pointgivenid`),
+  KEY `FK4BE59BED638E4301` (`categoryid`),
+  KEY `FK4BE59BED39FBF139` (`submissionid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `pointhistory`
 --
 
@@ -340,6 +372,19 @@ ALTER TABLE `participations`
   ADD CONSTRAINT `FKA301B527F3A8A13` FOREIGN KEY (`groupid`) REFERENCES `groups` (`gid`),
   ADD CONSTRAINT `FKA301B52AF18EDD1` FOREIGN KEY (`lectureid`) REFERENCES `lectures` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FKA301B52E28A1D21` FOREIGN KEY (`uid`) REFERENCES `users` (`uid`);
+
+--
+-- Constraints der Tabelle `pointcategories`
+--
+ALTER TABLE `pointcategories`
+  ADD CONSTRAINT `FK2623E7ACAE0697EB` FOREIGN KEY (`taskid`) REFERENCES `tasks` (`taskid`) ON DELETE CASCADE;
+
+--
+-- Constraints der Tabelle `pointgiven`
+--
+ALTER TABLE `pointgiven`
+  ADD CONSTRAINT `FK4BE59BED39FBF139` FOREIGN KEY (`submissionid`) REFERENCES `submissions` (`submissionid`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK4BE59BED638E4301` FOREIGN KEY (`categoryid`) REFERENCES `pointcategories` (`pointcatid`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `pointhistory`

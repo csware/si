@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,7 +34,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
+import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
@@ -99,7 +103,43 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<td>");
 			out.println("<form action=\"?\" method=post>");
 			out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
-			out.println("<b>Punkte:</b> <input type=text name=points size=3 value=\"" + Util.showPoints(points) + "\"> (max. " + Util.showPoints(task.getMaxPoints()) + ")" + pointsGivenBy + "<br>");
+			if (task.getPointCategories().size() > 0) {
+				PointGivenDAOIf pointGivenDAO = DAOFactory.PointGivenDAOIf(session);
+				Iterator<PointGiven> pointsGivenIterator = pointGivenDAO.getPointsGivenOfSubmission(submission).iterator();
+				PointGiven lastPointGiven = null;
+				if (pointsGivenIterator.hasNext()) {
+					lastPointGiven = pointsGivenIterator.next();
+				}
+				out.println("<b>Punkte:</b> " + pointsGivenBy + "<br>");
+				out.println("<input type=hidden name=points value=categories>");
+				out.println("<ul>");
+				for (PointCategory category : task.getPointCategories()) {
+					while (lastPointGiven != null && category.getPointcatid() > lastPointGiven.getCategory().getPointcatid()) {
+						if (pointsGivenIterator.hasNext()) {
+							lastPointGiven = pointsGivenIterator.next();
+						} else {
+							lastPointGiven = null;
+							break;
+						}
+					}
+					int curPoints = 0;
+					if (lastPointGiven != null && category.getPointcatid() == lastPointGiven.getCategory().getPointcatid()) {
+						curPoints = lastPointGiven.getPoints();
+					}
+					if (category.getPoints() == Util.convertToPoints("1")) {
+						String checked = "";
+						if (curPoints > 0) {
+							checked = " checked";
+						}
+						out.println("<li><input type=checkbox id=\"point_" + category.getPointcatid() + "\" name=\"point_" + category.getPointcatid() + "\" value=\"" + Util.convertToPoints("1") + "\" " + checked + "> <label for=\"point_" + category.getPointcatid() + "\">" + Util.mknohtml(category.getDescription()) + "</label></li>");
+					} else {
+						out.println("<li><input type=text size=3 id=\"point_" + category.getPointcatid() + "\" name=\"point_" + category.getPointcatid() + "\" value=\"" + Util.showPoints(curPoints) + "\"> <label for=\"point_" + category.getPointcatid() + "\">" + Util.mknohtml(category.getDescription()) + " (max. " + Util.showPoints(category.getPoints()) + ")</label></li>");
+					}
+				}
+				out.println("</ul>");
+			} else {
+				out.println("<b>Punkte:</b> <input type=text name=points size=3 value=\"" + Util.showPoints(points) + "\"> (max. " + Util.showPoints(task.getMaxPoints()) + ")" + pointsGivenBy + "<br>");
+			}
 			out.println("<b>Öffentlicher Kommentar:</b><br><textarea cols=80 rows=8 name=publiccomment>" + Util.mknohtml(oldPublicComment) + "</textarea><br>");
 			out.println("<b>Interner Kommentar:</b><br><textarea cols=80 rows=8 name=internalcomment>" + Util.mknohtml(oldInternalComment) + "</textarea><br>");
 			out.println("<b>Abgenommen:</b> <input type=checkbox name=pointsok " + (pointsOk ? "checked" : "") + "><br>");

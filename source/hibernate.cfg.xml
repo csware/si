@@ -39,6 +39,8 @@
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Lecture"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Participation"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Points"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Group"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TestResult"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Test"/>

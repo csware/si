@@ -157,5 +157,4 @@ public class PointHistory implements Serializable {
 	public void setWho(Participation who) {
 		this.who = who;
 	}
-
 }

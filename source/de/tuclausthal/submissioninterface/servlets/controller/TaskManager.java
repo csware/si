@@ -39,16 +39,19 @@ import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.apache.tomcat.util.http.fileupload.FileUploadBase;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.PointCategoryDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskGroupDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
@@ -123,7 +126,9 @@ public class TaskManager extends HttpServlet {
 					request.getRequestDispatcher("MessageView").forward(request, response);
 					return;
 				}
-				task.setMaxPoints(Util.convertToPoints(request.getParameter("maxpoints")));
+				if (task.getPointCategories().size() == 0) {
+					task.setMaxPoints(Util.convertToPoints(request.getParameter("maxpoints")));
+				}
 				task.setTitle(request.getParameter("title"));
 				task.setDescription(request.getParameter("description"));
 				if (request.getParameter("twosubmitters") != null) {
@@ -291,6 +296,41 @@ public class TaskManager extends HttpServlet {
 				tx.commit();
 			}
 			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
+			return;
+		} else if ("deletePointCategory".equals(request.getParameter("action"))) {
+			PointCategoryDAOIf pointCategoryDAO = DAOFactory.PointCategoryDAOIf(session);
+			PointCategory pointCategory = pointCategoryDAO.getPointCategory(Util.parseInteger(request.getParameter("pointCategoryId"), 0));
+			if (pointCategory == null) {
+				request.setAttribute("title", "Punktkategorie nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+			} else {
+				Transaction tx = session.beginTransaction();
+				// TODO make nice! and use DAOs
+				Task task = pointCategory.getTask();
+				session.lock(task, LockMode.UPGRADE);
+				pointCategoryDAO.deletePointCategory(pointCategory);
+				task.setMaxPoints(pointCategoryDAO.countPoints(task));
+				session.update(task);
+				tx.commit();
+			}
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + pointCategory.getTask().getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + pointCategory.getTask().getTaskid()));
+			return;
+		} else if ("newPointCategory".equals(request.getParameter("action"))) {
+			PointCategoryDAOIf pointCategoryDAO = DAOFactory.PointCategoryDAOIf(session);
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+			if (task == null) {
+				request.setAttribute("title", "Aufgabe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+			}
+			// TODO make nice! and use DAOs
+			Transaction tx = session.beginTransaction();
+			session.lock(task, LockMode.UPGRADE);
+			pointCategoryDAO.newPointCategory(task, Util.convertToPoints(request.getParameter("points")), request.getParameter("description"), request.getParameter("optional") != null);
+			task.setMaxPoints(pointCategoryDAO.countPoints(task));
+			session.update(task);
+			tx.commit();
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid()));
 			return;
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");

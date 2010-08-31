@@ -23,6 +23,8 @@ import org.hibernate.Session;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.GroupDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LectureDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.ParticipationDAO;
+import de.tuclausthal.submissioninterface.persistence.dao.impl.PointCategoryDAO;
+import de.tuclausthal.submissioninterface.persistence.dao.impl.PointGivenDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.PointsDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.SimilarityDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.SimilarityTestDAO;
@@ -144,5 +146,13 @@ public class DAOFactory {
 
 	public static TaskGroupDAOIf TaskGroupDAOIf(Session session) {
 		return new TaskGroupDAO(session);
+	}
+
+	public static PointGivenDAOIf PointGivenDAOIf(Session session) {
+		return new PointGivenDAO(session);
+	}
+
+	public static PointCategoryDAOIf PointCategoryDAOIf(Session session) {
+		return new PointCategoryDAO(session);
 	}
 }

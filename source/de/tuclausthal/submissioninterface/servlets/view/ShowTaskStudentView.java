@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -31,7 +32,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
+import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
@@ -131,11 +135,40 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<th>Bewertung:</th>");
 				out.println("<td>");
 				if (submission.getPoints().getPointsOk()) {
-					out.println(Util.showPoints(submission.getPoints().getPoints()) + " von " + Util.showPoints(task.getMaxPoints()) + " Punkt(e)");
+					if (task.getPointCategories().size() > 0) {
+						PointGivenDAOIf pointGivenDAO = DAOFactory.PointGivenDAOIf(session);
+						Iterator<PointGiven> pointsGivenIterator = pointGivenDAO.getPointsGivenOfSubmission(submission).iterator();
+						PointGiven lastPointGiven = null;
+						if (pointsGivenIterator.hasNext()) {
+							lastPointGiven = pointsGivenIterator.next();
+						}
+						out.println("<ul>");
+						for (PointCategory category : task.getPointCategories()) {
+							int issuedPoints = 0;
+							while (lastPointGiven != null && category.getPointcatid() > lastPointGiven.getCategory().getPointcatid()) {
+								if (pointsGivenIterator.hasNext()) {
+									lastPointGiven = pointsGivenIterator.next();
+								} else {
+									lastPointGiven = null;
+									break;
+								}
+							}
+							if (lastPointGiven != null && category.getPointcatid() == lastPointGiven.getCategory().getPointcatid()) {
+								issuedPoints = lastPointGiven.getPoints();
+							} else if (category.isOptional()) {
+								continue;
+							}
+							out.println("<li>" + Util.showPoints(issuedPoints) + "/" + Util.showPoints(category.getPoints()) + " " + Util.mknohtml(category.getDescription()) + "</li>");
+						}
+						out.println("</ul>");
+					} else {
+						out.println(Util.showPoints(submission.getPoints().getPoints()) + " von " + Util.showPoints(task.getMaxPoints()) + " Punkt(e)");
+					}
+
 				} else {
 					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", nicht abgenommen");
 				}
-				out.println("<br>Vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>");
+				out.println("<p>Vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a></p>");
 				out.println("</td>");
 				out.println("</tr>");
 				if (submission.getPoints().getPublicComment() != null && !"".equals(submission.getPoints().getPublicComment())) {
