@@ -167,7 +167,7 @@ public class TaskManagerView extends HttpServlet {
 			if (task.getPointCategories().size() > 0) {
 				out.println("<ul>");
 				for (PointCategory category : task.getPointCategories()) {
-					out.println("<li>" + Util.mknohtml(category.getDescription()) + " " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? " optional" : "") + " (<a href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deletePointCategory&pointCategoryId=" + category.getPointcatid()) + "\">del</a>)</li>");
+					out.println("<li>" + Util.mknohtml(category.getDescription()) + " " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? " optional" : "") + " (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deletePointCategory&pointCategoryId=" + category.getPointcatid()) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
@@ -187,7 +187,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<ul>");
 			for (String file : advisorFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
-				out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.mknohtml(file) + "</a> (<a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?action=delete&taskid=" + task.getTaskid()) + "\">del</a>)</li>");
+				out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.mknohtml(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?action=delete&taskid=" + task.getTaskid()) + "\">del</a>)</li>");
 			}
 			out.println("</ul>");
 		}
