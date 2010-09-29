@@ -104,7 +104,7 @@ public class EditGroup extends HttpServlet {
 				if (request.getParameterValues("tutors") != null && request.getParameterValues("tutors").length > 0) {
 					for (String newMember : request.getParameterValues("tutors")) {
 						Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(newMember, 0));
-						if (memberParticipation != null && memberParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) == 0) {
+						if (memberParticipation != null && memberParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 							group.getTutors().add(memberParticipation);
 							groupDAO.saveGroup(group);
 						}
