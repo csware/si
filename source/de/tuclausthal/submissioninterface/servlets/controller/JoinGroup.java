@@ -65,7 +65,8 @@ public class JoinGroup extends HttpServlet {
 			return;
 		}
 
-		if (participation.getGroup() == null || (participation.getGroup().isAllowStudentsToQuit() && group.isAllowStudentsToSignup() && group.getMembers().size() < group.getMaxStudents())) {
+		boolean canJoin = group.isAllowStudentsToSignup() && group.getMembers().size() < group.getMaxStudents();
+		if ((participation.getGroup() == null || participation.getGroup().isAllowStudentsToQuit()) && canJoin) {
 			participation.setGroup(group);
 			participationDAO.saveParticipation(participation);
 		}
