@@ -73,7 +73,7 @@ public class AuthenticationFilter implements Filter {
 					user = DAOFactory.UserDAOIf(session).getUser(logindata.getUsername());
 				}
 				if (user == null) {
-					login.failNoData("Username or password wrong.", request, response);
+					login.failNoData("Login fehlgeschlagen! Bitte versuchen Sie es erneut.", request, response);
 					return;
 				} else {
 					// fix against session fixtures
