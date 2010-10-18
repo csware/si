@@ -387,14 +387,17 @@ public class SubmitSolution extends HttpServlet {
 							StringBuffer javaFileContents = stripComments.normalize(Util.loadFile(uploadedFile));
 							Pattern packagePattern = Pattern.compile(".*package\\s+([a-zA-Z$]([a-zA-Z0-9_$]|\\.[a-zA-Z0-9_$])*)\\s*;.*", Pattern.DOTALL);
 							Matcher packageMatcher = packagePattern.matcher(javaFileContents);
+							File destFile = new File(path, fileName);
 							if (packageMatcher.matches()) {
 								String packageName = packageMatcher.group(1).replace(".", System.getProperty("file.separator"));
 								File packageDirectory = new File(path, packageName);
 								packageDirectory.mkdirs();
-								uploadedFile.renameTo(new File(packageDirectory, fileName));
-							} else {
-								uploadedFile.renameTo(new File(path, fileName));
+								destFile = new File(packageDirectory, fileName);
 							}
+							if (destFile.exists() && destFile.isFile()) {
+								destFile.delete();
+							}
+							uploadedFile.renameTo(destFile);
 						}
 					}
 					if (!submissionDAO.deleteIfNoFiles(submission, path)) {
