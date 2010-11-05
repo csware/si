@@ -304,7 +304,7 @@ public class SubmitSolution extends HttpServlet {
 					if (item.getName().toLowerCase().endsWith(".zip") || item.getName().toLowerCase().endsWith(".jar")) {
 						ZipInputStream zipFile;
 						// TODO: relocate java-files from jar/zip archives?
-						Pattern pattern = Pattern.compile("([\\/a-zA-Z0-9_ .-]+)$");
+						Pattern pattern = Pattern.compile("^([\\/a-zA-Z0-9_ .-]+)$");
 						try {
 							zipFile = new ZipInputStream(item.getInputStream());
 							ZipEntry entry = null;
@@ -347,9 +347,9 @@ public class SubmitSolution extends HttpServlet {
 					} else {
 						Pattern pattern;
 						if (task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty() || uploadFor > 0) {
-							pattern = Pattern.compile(".*?(?:\\\\|/)?([a-zA-Z0-9_.-]+)$");
+							pattern = Pattern.compile("^(?:.*?\\\\|/)?([a-zA-Z0-9_.-]+)$");
 						} else {
-							pattern = Pattern.compile(".*?(?:\\\\|/)?(" + task.getFilenameRegexp() + ")$");
+							pattern = Pattern.compile("^(?:.*?\\\\|/)?(" + task.getFilenameRegexp() + ")$");
 						}
 						StringBuffer submittedFileName = new StringBuffer(item.getName());
 						if (submittedFileName.lastIndexOf(".") > 0) {
