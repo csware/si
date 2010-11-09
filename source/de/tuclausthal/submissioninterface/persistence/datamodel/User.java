@@ -62,7 +62,7 @@ public class User implements Serializable {
 	 * @return the lectureParticipant
 	 */
 	@OneToMany(mappedBy = "user")
-	@OrderBy(clause = "id asc")
+	@OrderBy(clause = "id desc")
 	public Set<Participation> getLectureParticipant() {
 		return lectureParticipant;
 	}
