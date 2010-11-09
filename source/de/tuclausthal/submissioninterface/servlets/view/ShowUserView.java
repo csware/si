@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class ShowUserView extends HttpServlet {
 					out.println("<h1>Vorlesungen</h1>");
 					titleShown = true;
 				}
-				out.println("<h2><a href=\"" + response.encodeURL("ShowLecture?lecture=" + participation.getLecture().getId()) + "\">" + Util.mknohtml(participation.getLecture().getName()) + "</a></h2>");
+				out.println("<h2><a href=\"" + response.encodeURL("ShowLecture?lecture=" + participation.getLecture().getId()) + "\">" + Util.mknohtml(participation.getLecture().getName()) + " (" + participation.getLecture().getReadableSemester() + ")</a></h2>");
 				int points = 0;
 				int maxPoints = 0;
 
@@ -117,7 +118,11 @@ public class ShowUserView extends HttpServlet {
 											out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(" + Util.showPoints(submission.getPoints().getPoints()) + ")");
 										}
 									} else {
-										out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">noch unbewertet");
+										if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
+											out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(noch unbewertet)");
+										} else {
+											out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">noch unbewertet");
+										}
 									}
 									out.println("</a></td>");
 								} else {
