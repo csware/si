@@ -206,10 +206,12 @@ public class TaskManagerView extends HttpServlet {
 					out.print("<li>" + similarityTest + "<br>");
 					out.println("Ignored Files: " + Util.mknohtml(similarityTest.getExcludeFiles()) + "<br>");
 					out.print("Status: ");
-					if (similarityTest.isNeedsToRun()) {
+					if (similarityTest.getStatus() == 1) {
 						out.println("in Queue, noch nicht ausgeführt<br>");
-					} else {
-						out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("DupeCheck?action=rerunSimilarityTest&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
+					} else if (similarityTest.getStatus() == 2) {
+						out.println("in Ausführung<br>");
+						} else {
+						out.println("bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("DupeCheck?action=rerunSimilarityTest&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
 					}
 					out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DupeCheck?action=deleteSimilarityTest&amp;taskid=" + task.getTaskid() + "&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "\">löschen</a></li>");
 				}

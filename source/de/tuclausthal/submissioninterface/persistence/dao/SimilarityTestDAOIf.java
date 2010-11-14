@@ -69,4 +69,10 @@ public interface SimilarityTestDAOIf {
 	 * @return SimilarityTest or null if none is "queued".
 	 */
 	public SimilarityTest takeSimilarityTest();
+
+	/**
+	 * Marks a test as finished
+	 * ATTENTION: this method starts it's own transaction!
+	 */
+	public void finish(SimilarityTest similarityTest);
 }

@@ -83,7 +83,7 @@ public class DupeCheck extends HttpServlet {
 			Transaction tx = session.beginTransaction();
 			SimilarityTest similarityTest = semilarityTestDAO.getSimilarityTestLocked(Util.parseInteger(request.getParameter("similaritytestid"), 0));
 			if (similarityTest != null) {
-				similarityTest.setNeedsToRun(true);
+				similarityTest.setStatus(1);
 				semilarityTestDAO.saveSimilarityTest(similarityTest);
 			}
 			tx.commit();

@@ -49,7 +49,7 @@ public class SimilarityTest implements Serializable {
 	private int similarityTestId;
 	private Task task;
 	private int minimumDifferenceInPercent = 50;
-	private boolean needsToRun = true;
+	private int status = 1; // 1 = needs to run, 2 = running, 0 = done
 	private String type;
 	private String basis;
 	private boolean normalizeCapitalization;
@@ -111,18 +111,18 @@ public class SimilarityTest implements Serializable {
 	}
 
 	/**
-	 * @return the needsToRun
+	 * @return the status
 	 */
 	@Column(nullable = false)
-	public boolean isNeedsToRun() {
-		return needsToRun;
+	public int getStatus() {
+		return status;
 	}
 
 	/**
-	 * @param needsToRun the needsToRun to set
+	 * @param status the status to set
 	 */
-	public void setNeedsToRun(boolean needsToRun) {
-		this.needsToRun = needsToRun;
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	/**

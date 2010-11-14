@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `similaritytests` (
   `basis` varchar(255) NOT NULL,
   `excludeFiles` varchar(255) DEFAULT NULL,
   `minimumDifferenceInPercent` int(11) NOT NULL,
-  `needsToRun` bit(1) NOT NULL,
+  `status` tinyint(1) NOT NULL,
   `normalizeCapitalization` bit(1) NOT NULL,
   `tabsSpacesNewlinesNormalization` varchar(255) NOT NULL,
   `type` varchar(255) NOT NULL,

@@ -100,6 +100,7 @@ public abstract class DupeCheck {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
+			DAOFactory.SimilarityTestDAOIf(session).finish(similarityTest);
 			if (normalizerCache != null) {
 				normalizerCache.cleanUp();
 			}

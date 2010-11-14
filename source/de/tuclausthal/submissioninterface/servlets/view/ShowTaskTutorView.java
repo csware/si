@@ -172,7 +172,13 @@ public class ShowTaskTutorView extends HttpServlet {
 							out.println("<th>" + Util.mknohtml(test.getTestTitle()) + "</th>");
 						}
 						for (SimilarityTest similarityTest : task.getSimularityTests()) {
-							out.println("<th><span title=\"Max. Ähnlichkeit\">" + similarityTest + "</span></th>");
+							String color = "";
+							String hint = "";
+							if (similarityTest.getStatus() > 0) {
+								color = "red";
+								hint = "(läuft)";
+							}
+							out.println("<th><span class=" + color + " title=\"Max. Ähnlichkeit\">" + similarityTest + hint + "</span></th>");
 						}
 						out.println("<th>Punkte</th>");
 						out.println("<th>Abnehmen</th>");
@@ -192,7 +198,6 @@ public class ShowTaskTutorView extends HttpServlet {
 							}
 						}
 						for (SimilarityTest similarityTest : task.getSimularityTests()) {
-							//TODO: tooltip and who it is
 							String users = "";
 							for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(similarityTest, submission)) {
 								users += Util.mknohtml(similarity.getSubmissionTwo().getSubmitterNames()) + "\n";

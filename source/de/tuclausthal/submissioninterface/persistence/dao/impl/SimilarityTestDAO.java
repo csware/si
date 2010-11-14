@@ -76,9 +76,9 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 	public SimilarityTest takeSimilarityTest() {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		SimilarityTest similarityTest = (SimilarityTest) session.createCriteria(SimilarityTest.class).add(Restrictions.eq("needsToRun", true)).setLockMode(LockMode.UPGRADE).createCriteria("task").add(Restrictions.le("deadline", Util.correctTimezone(new Date()))).setMaxResults(1).uniqueResult();
+		SimilarityTest similarityTest = (SimilarityTest) session.createCriteria(SimilarityTest.class).add(Restrictions.eq("status", 1)).setLockMode(LockMode.UPGRADE).createCriteria("task").add(Restrictions.le("deadline", Util.correctTimezone(new Date()))).setMaxResults(1).uniqueResult();
 		if (similarityTest != null) {
-			similarityTest.setNeedsToRun(false);
+			similarityTest.setStatus(2);
 			session.save(similarityTest);
 		}
 		tx.commit();
@@ -89,5 +89,17 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 	public void saveSimilarityTest(SimilarityTest similarityTest) {
 		Session session = getSession();
 		session.update(similarityTest);
+	}
+
+	@Override
+	public void finish(SimilarityTest similarityTest) {
+		Session session = getSession();
+		Transaction tx = session.beginTransaction();
+		SimilarityTest TheSimilarityTest = getSimilarityTestLocked(similarityTest.getSimilarityTestId());
+		if (TheSimilarityTest != null) {
+			TheSimilarityTest.setStatus(0);
+			session.save(TheSimilarityTest);
+		}
+		tx.commit();
 	}
 }
