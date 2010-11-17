@@ -66,12 +66,11 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		points.setInternalComment(internalComment);
 		session.save(submission);
 
-		// TODO: Attention: see @MarkApproved.java
+		// TODO: Attention: see @MarkApproved.java and below!!!
 		if (oldPoints != null) {
 			boolean changed = false;
 			if (!oldPoints.getPointsOk().equals(points.getPointsOk())) {
 				storeInHistory(submission, "pointsOk", oldPoints.getPointsOk() + "", points.getPointsOk() + "", participation);
-				changed = true;
 			}
 			if (!oldPoints.getPoints().equals(points.getPoints())) {
 				storeInHistory(submission, "points", Util.showPoints(oldPoints.getPoints()), Util.showPoints(points.getPoints()), participation);
@@ -182,7 +181,6 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		if (oldPoints != null) {
 			if (!oldPoints.getPointsOk().equals(points.getPointsOk())) {
 				storeInHistory(submission, "pointsOk", oldPoints.getPointsOk() + "", points.getPointsOk() + "", participation);
-				changed = true;
 			}
 			if (!oldPoints.getPoints().equals(points.getPoints())) {
 				storeInHistory(submission, "points", Util.showPoints(oldPoints.getPoints()), Util.showPoints(points.getPoints()), participation);
