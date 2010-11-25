@@ -46,7 +46,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	}
 
 	@Override
-	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, boolean pointsOk) {
+	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, boolean pointsOk, boolean isDupe) {
 		Session session = getSession();
 
 		session.lock(submission, LockMode.UPGRADE);
@@ -60,6 +60,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		Points points = new Points();
 		points.setPoints(issuedPoints);
 		points.setPointsOk(pointsOk);
+		points.setIsDupe(isDupe);
 		points.setIssuedBy(participation);
 		submission.setPoints(points);
 		points.setPublicComment(publicComment);
@@ -71,6 +72,14 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 			boolean changed = false;
 			if (!oldPoints.getPointsOk().equals(points.getPointsOk())) {
 				storeInHistory(submission, "pointsOk", oldPoints.getPointsOk() + "", points.getPointsOk() + "", participation);
+			}
+			if (!points.getIsDupe().equals(oldPoints.getIsDupe())) {
+				if (oldPoints.getIsDupe() == null && points.getIsDupe() != false) {
+					storeInHistory(submission, "isDupe", "false", points.getIsDupe() + "", participation);
+				} else {
+					storeInHistory(submission, "isDupe", oldPoints.getIsDupe() + "", points.getIsDupe() + "", participation);
+				}
+				changed = true;
 			}
 			if (!oldPoints.getPoints().equals(points.getPoints())) {
 				storeInHistory(submission, "points", Util.showPoints(oldPoints.getPoints()), Util.showPoints(points.getPoints()), participation);
@@ -93,6 +102,9 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 				storeInHistory(submission, "pointsOk", "", points.getPointsOk() + "", participation);
 			}
 			if (points.getPoints() != null) {
+				storeInHistory(submission, "isDupe", "", points.getPoints() + "", participation);
+			}
+			if (points.getPoints() != null) {
 				storeInHistory(submission, "points", "", Util.showPoints(points.getPoints()), participation);
 			}
 			if (points.getInternalComment() != null && !"".equals(points.getInternalComment())) {
@@ -111,7 +123,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	}
 
 	@Override
-	public Points createPoints(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, boolean pointsOk) {
+	public Points createPoints(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, boolean pointsOk, boolean isDupe) {
 		Session session = getSession();
 
 		session.lock(submission, LockMode.UPGRADE);
@@ -171,6 +183,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		Points points = new Points();
 		points.setPoints(numPoints);
 		points.setPointsOk(pointsOk);
+		points.setIsDupe(isDupe);
 		points.setIssuedBy(participation);
 		submission.setPoints(points);
 		points.setPublicComment(publicComment);
@@ -181,6 +194,14 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		if (oldPoints != null) {
 			if (!oldPoints.getPointsOk().equals(points.getPointsOk())) {
 				storeInHistory(submission, "pointsOk", oldPoints.getPointsOk() + "", points.getPointsOk() + "", participation);
+			}
+			if (!points.getIsDupe().equals(oldPoints.getIsDupe())) {
+				if (oldPoints.getIsDupe() == null && points.getIsDupe() != false) {
+					storeInHistory(submission, "isDupe", "false", points.getIsDupe() + "", participation);
+				} else {
+					storeInHistory(submission, "isDupe", oldPoints.getIsDupe() + "", points.getIsDupe() + "", participation);
+				}
+				changed = true;
 			}
 			if (!oldPoints.getPoints().equals(points.getPoints())) {
 				storeInHistory(submission, "points", Util.showPoints(oldPoints.getPoints()), Util.showPoints(points.getPoints()), participation);
@@ -201,6 +222,9 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		} else {
 			if (points.getPointsOk() != null) {
 				storeInHistory(submission, "pointsOk", "", points.getPointsOk() + "", participation);
+			}
+			if (points.getPoints() != null) {
+				storeInHistory(submission, "isDupe", "", points.getPoints() + "", participation);
 			}
 			if (points.getPoints() != null) {
 				storeInHistory(submission, "points", "", Util.showPoints(points.getPoints()), participation);

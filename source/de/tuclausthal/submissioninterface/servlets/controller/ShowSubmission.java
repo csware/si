@@ -80,9 +80,9 @@ public class ShowSubmission extends HttpServlet {
 			}
 			Transaction tx = session.beginTransaction();
 			if (task.getPointCategories().size() > 0) {
-				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, request.getParameter("pointsok") != null);
+				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, request.getParameter("pointsok") != null, request.getParameter("isdupe") != null);
 			} else {
-				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, request.getParameter("pointsok") != null);
+				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, request.getParameter("pointsok") != null, request.getParameter("isdupe") != null);
 			}
 			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));

@@ -91,11 +91,15 @@ public class ShowSubmissionView extends HttpServlet {
 			String oldInternalComment = "";
 			int points = 0;
 			boolean pointsOk = false;
+			boolean isDupe = false;
 			String pointsGivenBy = "";
 			if (submission.getPoints() != null) {
 				oldPublicComment = submission.getPoints().getPublicComment();
 				oldInternalComment = submission.getPoints().getInternalComment();
 				points = submission.getPoints().getPoints();
+				if (submission.getPoints().getIsDupe() != null) {
+					isDupe = submission.getPoints().getIsDupe();
+				}
 				pointsOk = submission.getPoints().getPointsOk();
 				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte  vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>, <a href=\"" + response.encodeURL("ShowMarkHistory?sid=" + submission.getSubmissionid()) + "\">History</a>)";
 			}
@@ -142,6 +146,7 @@ public class ShowSubmissionView extends HttpServlet {
 			}
 			out.println("<b>Öffentlicher Kommentar:</b><br><textarea cols=80 rows=8 name=publiccomment>" + Util.mknohtml(oldPublicComment) + "</textarea><br>");
 			out.println("<b>Interner Kommentar:</b><br><textarea cols=80 rows=8 name=internalcomment>" + Util.mknohtml(oldInternalComment) + "</textarea><br>");
+			out.println("<b>Best&auml;tigtes Plagiat:</b> <input type=checkbox name=isdupe " + (isDupe ? "checked" : "") + "><br>");
 			out.println("<b>Abgenommen:</b> <input type=checkbox name=pointsok " + (pointsOk ? "checked" : "") + "><br>");
 			out.println("<input type=submit value=Speichern>");
 			out.println("</form>");

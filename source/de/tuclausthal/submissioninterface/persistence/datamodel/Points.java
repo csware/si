@@ -33,6 +33,7 @@ public class Points implements Serializable {
 	private Participation issuedBy;
 	private String publicComment;
 	private String internalComment;
+	private Boolean isDupe;
 
 	/**
 	 * @return the points
@@ -106,5 +107,19 @@ public class Points implements Serializable {
 	 */
 	public void setInternalComment(String internalComment) {
 		this.internalComment = internalComment;
+	}
+
+	/**
+	 * @return the isDupe
+	 */
+	public Boolean getIsDupe() {
+		return isDupe;
+	}
+
+	/**
+	 * @param isDupe the isDupe to set
+	 */
+	public void setIsDupe(Boolean isDupe) {
+		this.isDupe = isDupe;
 	}
 }
