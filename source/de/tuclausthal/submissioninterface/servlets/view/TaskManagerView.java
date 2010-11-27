@@ -112,7 +112,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Filename Regexp:</th>");
-		out.println("<td><input type=text name=filenameregexp value=\"" + Util.mknohtml(task.getFilenameRegexp()) + "\"> <b>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;, &quot;-&quot; = upload disabled</b></td>");
+		out.println("<td><input type=text name=filenameregexp value=\"" + Util.mknohtml(task.getFilenameRegexp()) + "\"> <b>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;, für allgemeine Dateien: &quot;[A-Za-z0-9. _-]+&quot;, für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot;, &quot;-&quot; = upload disabled</b></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Text-Eingabefeld:</th>");
