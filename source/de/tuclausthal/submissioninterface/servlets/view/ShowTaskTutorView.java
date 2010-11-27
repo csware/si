@@ -176,7 +176,7 @@ public class ShowTaskTutorView extends HttpServlet {
 							String hint = "";
 							if (similarityTest.getStatus() > 0) {
 								color = "red";
-								hint = "(läuft)";
+								hint = " (läuft)";
 							}
 							out.println("<th><span class=" + color + " title=\"Max. Ähnlichkeit\">" + similarityTest + hint + "</span></th>");
 						}
