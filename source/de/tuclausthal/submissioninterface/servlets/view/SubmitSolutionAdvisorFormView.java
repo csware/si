@@ -57,6 +57,9 @@ public class SubmitSolutionAdvisorFormView extends HttpServlet {
 		}
 		setWithUser.append("</select><p>");
 
+		if (task.getMaxSubmitters() > 1) {
+			out.println("<p>Partner können im zweiten Schritt bei der Abgabe eingestellt werden.</p>");
+		}
 		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 		out.println(setWithUser.toString());
 		out.println("<p>Bitte wählen Sie eine Datei aus, die Sie einsenden möchten.</p>");

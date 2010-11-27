@@ -35,6 +35,7 @@ import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
@@ -82,6 +83,25 @@ public class ShowSubmissionView extends HttpServlet {
 
 		if (submission.getSubmitters().iterator().next().getGroup() != null) {
 			out.println("<h2>Gruppe: " + submission.getSubmitters().iterator().next().getGroup().getName() + "</h2>");
+			if (task.getMaxSubmitters() > 1 && submission.getSubmitters().size() < task.getMaxSubmitters()) {
+				StringBuffer setWithUser = new StringBuffer();
+				setWithUser.append("<form action=\"?\" method=post>");
+				setWithUser.append("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
+				SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+				Participation participation = submission.getSubmitters().iterator().next();
+				setWithUser.append("<p>Fehlt ein Partner: <select name=partnerid size=1>");
+				int cnt = 0;
+				for (Participation part : participation.getGroup().getMembers()) {
+					if (part.getId() != participation.getId() && submissionDAO.getSubmission(task, part.getUser()) == null) {
+						cnt++;
+						setWithUser.append("<option value=" + part.getId() + ">" + Util.mknohtml(part.getUser().getFullName()) + "</option>");
+					}
+				}
+				setWithUser.append("</select> <input type=submit value= \"Hinzufügen\"></p></form>");
+				if (cnt > 0) {
+					out.println(setWithUser.toString());
+				}
+			}
 		}
 
 		if (task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()))) {

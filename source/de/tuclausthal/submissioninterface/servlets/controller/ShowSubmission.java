@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -39,6 +40,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.template.Template;
+import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -87,6 +90,26 @@ public class ShowSubmission extends HttpServlet {
 			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));
 			return;
+		}
+
+		if (Util.parseInteger(request.getParameter("partnerid"), 0) > 0) {
+			Transaction tx = session.beginTransaction();
+			Participation partnerParticipation = participationDAO.getParticipation(Util.parseInteger(request.getParameter("partnerid"), 0));
+			if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
+				submission.getSubmitters().add(partnerParticipation);
+				session.update(submission);
+				tx.commit();
+				response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));
+				return;
+			} else {
+				tx.rollback();
+				PrintWriter out = response.getWriter();
+				Template template = TemplateFactory.getTemplate(request, response);
+				template.printTemplateHeader("Ungültige Anfrage");
+				out.println("<div class=mid>Der ausgewählte Partner hat bereits eine eigene Abgabe initiiert oder es wurden insgesamt zu viele Partner ausgewählt.</div>");
+				template.printTemplateFooter();
+				return;
+			}
 		}
 
 		request.setAttribute("submission", submission);
