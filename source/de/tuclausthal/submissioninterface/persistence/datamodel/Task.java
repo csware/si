@@ -21,6 +21,8 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -83,7 +85,7 @@ public class Task implements Serializable {
 		this.description = description;
 		this.taskGroup = taskGroup;
 		this.showPoints = showPoints;
-		this.filenameRegexp = filenameRegexp;
+		this.setFilenameRegexp(filenameRegexp);
 		this.showTextArea = showTextArea;
 		this.featuredFiles = featuredFiles;
 		this.tutorsCanUploadFiles = tutorsCanUploadFiles;
@@ -271,7 +273,12 @@ public class Task implements Serializable {
 	 * @param filenameRegexp the filenameRegexp to set
 	 */
 	public void setFilenameRegexp(String filenameRegexp) {
-		this.filenameRegexp = filenameRegexp;
+		try {
+			Pattern.compile(filenameRegexp);
+			this.filenameRegexp = filenameRegexp;
+		} catch (PatternSyntaxException e) {
+			this.filenameRegexp = "";
+		}
 	}
 
 	/**
