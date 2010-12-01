@@ -90,6 +90,7 @@ public class ShowSubmissionView extends HttpServlet {
 				SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 				Participation participation = submission.getSubmitters().iterator().next();
 				setWithUser.append("<p>Fehlt ein Partner: <select name=partnerid size=1>");
+				setWithUser.append("<option value='0'></option>");
 				int cnt = 0;
 				for (Participation part : participation.getGroup().getMembers()) {
 					if (part.getId() != participation.getId() && submissionDAO.getSubmission(task, part.getUser()) == null) {
