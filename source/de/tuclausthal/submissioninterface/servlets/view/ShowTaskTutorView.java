@@ -121,6 +121,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			int sumOfSubmissions = 0;
 			int sumOfPoints = 0;
 			int groupSumOfSubmissions = 0;
+			int groupSumOfAllSubmissions = 0;
 			int groupSumOfPoints = 0;
 			int testCols = 0;
 			for (Test test : task.getTests()) {
@@ -141,7 +142,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					if (first == false) {
 						if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 							out.println("<tr>");
-							out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
+							out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte: (#: " + groupSumOfAllSubmissions + ")</td>");
 							out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
 							if (hasUnapprochedPoints) {
 								out.println("<td><input type=submit value=Save></td>");
@@ -152,6 +153,7 @@ public class ShowTaskTutorView extends HttpServlet {
 						}
 						out.println("</table><p>");
 						out.println("</form>");
+						groupSumOfAllSubmissions =0;
 						groupSumOfSubmissions = 0;
 						groupSumOfPoints = 0;
 					}
@@ -186,6 +188,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("</tr>");
 				}
 				if (lastSID != submission.getSubmissionid()) {
+					groupSumOfAllSubmissions++;
 					out.println("<tr>");
 					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(submission.getSubmitterNames()) + "</a></td>");
 					lastSID = submission.getSubmissionid();
@@ -228,7 +231,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			if (first == false) {
 				if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 					out.println("<tr>");
-					out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte:</td>");
+					out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte: (#: " + groupSumOfAllSubmissions + ")</td>");
 					out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
 					if (hasUnapprochedPoints) {
 						out.println("<td><input type=submit value=Save></td>");
