@@ -119,6 +119,8 @@ public class PlaggieAdapter extends DupeCheck {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			DAOFactory.SimilarityTestDAOIf(session).finish(similarityTest);
 		}
 	}
 
