@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -209,15 +209,15 @@ public class ShowTaskTutorView extends HttpServlet {
 						}
 						if (submission.getPoints() != null) {
 							if (submission.getPoints().getPointsOk()) {
-								out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPoints()) + "</td>");
+								out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "</td>");
 								out.println("<td></td>");
 							} else {
-								out.println("<td align=right>(" + Util.showPoints(submission.getPoints().getPoints()) + ")</td>");
+								out.println("<td align=right>(" + Util.showPoints(submission.getPoints().getPointsByStatus()) + ")</td>");
 								out.println("<td><input type=checkbox name=\"sid" + submission.getSubmissionid() + "\"></td>");
 								hasUnapprochedPoints = true;
 							}
-							sumOfPoints += submission.getPoints().getPoints();
-							groupSumOfPoints += submission.getPoints().getPoints();
+							sumOfPoints += submission.getPoints().getPointsByStatus();
+							groupSumOfPoints += submission.getPoints().getPointsByStatus();
 							sumOfSubmissions++;
 							groupSumOfSubmissions++;
 						} else {

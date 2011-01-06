@@ -36,6 +36,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
@@ -134,7 +135,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<tr>");
 				out.println("<th>Bewertung:</th>");
 				out.println("<td>");
-				if (submission.getPoints().getPointsOk()) {
+				if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN.ordinal()) {
 					if (task.getPointCategories().size() > 0) {
 						PointGivenDAOIf pointGivenDAO = DAOFactory.PointGivenDAOIf(session);
 						Iterator<PointGiven> pointsGivenIterator = pointGivenDAO.getPointsGivenOfSubmission(submission).iterator();
@@ -162,9 +163,10 @@ public class ShowTaskStudentView extends HttpServlet {
 						}
 						out.println("</ul>");
 					} else {
-						out.println(Util.showPoints(submission.getPoints().getPoints()) + " von " + Util.showPoints(task.getMaxPoints()) + " Punkt(e)");
+						out.println(Util.showPoints(submission.getPoints().getPointsByStatus()) + " von " + Util.showPoints(task.getMaxPoints()) + " Punkt(e)");
 					}
-
+				} else if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal()) {
+					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", Abhahme nicht bestanden");
 				} else {
 					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", nicht abgenommen");
 				}

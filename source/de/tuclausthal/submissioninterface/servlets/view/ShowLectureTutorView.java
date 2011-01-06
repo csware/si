@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -227,7 +227,7 @@ public class ShowLectureTutorView extends HttpServlet {
 		int points = 0;
 		for (Submission submission : participation.getSubmissions()) {
 			if (submission.getPoints() != null && submission.getPoints().getPointsOk()) {
-				points += submission.getPoints().getPoints();
+				points += submission.getPoints().getPointsByStatus();
 			}
 		}
 		return points;

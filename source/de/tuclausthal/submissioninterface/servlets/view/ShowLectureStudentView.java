@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -34,6 +34,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
@@ -121,8 +122,10 @@ public class ShowLectureStudentView extends HttpServlet {
 							out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 							Submission submission = DAOFactory.SubmissionDAOIf(RequestAdapter.getSession(request)).getSubmission(task, RequestAdapter.getUser(request));
 							if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().before(Util.correctTimezone(new Date()))) {
-								if (submission.getPoints().getPointsOk()) {
-									out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPoints()) + "</td>");
+								if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN.ordinal()) {
+									out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "</td>");
+								} else if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal()) {
+									out.println("<td class=points>0, Abnahme nicht bestanden.</td>");
 								} else {
 									out.println("<td class=points>0, nicht abgenommen</td>");
 								}

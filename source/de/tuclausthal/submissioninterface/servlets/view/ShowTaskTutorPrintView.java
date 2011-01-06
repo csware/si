@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -79,7 +79,7 @@ public class ShowTaskTutorPrintView extends HttpServlet {
 					lastSID = submission.getSubmissionid();
 					if (submission.getPoints() != null) {
 						out.println("<td>" + Util.mkTextToHTML(submission.getPoints().getPublicComment()) + "</td>");
-						out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPoints()) + "</td>");
+						out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "</td>");
 						if (submission.getPoints().getPointsOk()) {
 							out.println("<td>ok</td>");
 						} else {

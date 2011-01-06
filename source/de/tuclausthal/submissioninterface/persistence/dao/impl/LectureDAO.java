@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -81,7 +81,7 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 	@Override
 	public int getSumOfPoints(Lecture lecture) {
 		Session session = getSession();
-		Query query = session.createQuery("select sum(submission.points.points) from Submission submission inner join submission.task as task inner join task.taskGroup as taskgroup inner join taskgroup.lecture as lecture where lecture.id=:LECTURE and submission.points.pointsOk=true");
+		Query query = session.createQuery("select sum(submission.points.points) from Submission submission inner join submission.task as task inner join task.taskGroup as taskgroup inner join taskgroup.lecture as lecture where lecture.id=:LECTURE and submission.points.pointStatus=2");
 		query.setEntity("LECTURE", lecture);
 		Object result = query.uniqueResult();
 		if (result == null) {

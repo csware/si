@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -39,6 +39,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
@@ -112,6 +113,7 @@ public class ShowSubmissionView extends HttpServlet {
 			String oldInternalComment = "";
 			int points = 0;
 			boolean pointsOk = false;
+			boolean pointsFailed = false;
 			boolean isDupe = false;
 			String pointsGivenBy = "";
 			if (submission.getPoints() != null) {
@@ -121,7 +123,8 @@ public class ShowSubmissionView extends HttpServlet {
 				if (submission.getPoints().getIsDupe() != null) {
 					isDupe = submission.getPoints().getIsDupe();
 				}
-				pointsOk = submission.getPoints().getPointsOk();
+				pointsOk = submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN.ordinal();
+				pointsFailed = submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal();
 				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte  vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>, <a href=\"" + response.encodeURL("ShowMarkHistory?sid=" + submission.getSubmissionid()) + "\">History</a>)";
 			}
 			out.println("<tr>");
@@ -168,7 +171,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<b>Öffentlicher Kommentar:</b><br><textarea cols=80 rows=8 name=publiccomment>" + Util.mknohtml(oldPublicComment) + "</textarea><br>");
 			out.println("<b>Interner Kommentar:</b><br><textarea cols=80 rows=8 name=internalcomment>" + Util.mknohtml(oldInternalComment) + "</textarea><br>");
 			out.println("<b>Best&auml;tigtes Plagiat:</b> <input type=checkbox name=isdupe " + (isDupe ? "checked" : "") + "><br>");
-			out.println("<b>Abgenommen:</b> <input type=checkbox name=pointsok " + (pointsOk ? "checked" : "") + "><br>");
+			out.println("<b><label for=\"nabgen\">Nicht abgenommen:</label></b> <input id=\"nabgen\" type=radio name=pointsstatus value=\"nabgen\"" + (!(pointsOk || pointsFailed) ? "checked" : "") + ">, <b><label for=\"abgen\">Abgenommen (ok):</label></b> <input id=\"abgen\" type=radio name=pointsstatus value=\"ok\"" + (pointsOk ? "checked" : "") + ">, <b><label for=\"failed\">Abnahme nicht bestanden:</b> <input id=\"failed\" type=radio name=pointsstatus value=\"failed\" " + (pointsFailed ? "checked" : "") + "><br>");
 			out.println("<input type=submit value=Speichern>");
 			out.println("</form>");
 			out.println("</td>");

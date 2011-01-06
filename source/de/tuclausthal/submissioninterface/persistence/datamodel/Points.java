@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -23,13 +23,14 @@ import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.ForeignKey;
 
 @Embeddable
 public class Points implements Serializable {
 	private Integer points;
-	private Boolean pointsOk;
+	private Integer pointStatus; // NULL = ungraded, 0 = nicht abgenommen, 1 = abnahme nicht bestanden, 2 = abgenommen
 	private Participation issuedBy;
 	private String publicComment;
 	private String internalComment;
@@ -40,6 +41,18 @@ public class Points implements Serializable {
 	 */
 	public Integer getPoints() {
 		return points;
+	}
+
+	/**
+	 * @return the points
+	 */
+	@Transient
+	public Integer getPointsByStatus() {
+		if (pointStatus == 1) {
+			return 0;
+		} else {
+			return points;
+		}
 	}
 
 	/**
@@ -83,15 +96,9 @@ public class Points implements Serializable {
 	/**
 	 * @return the pointsOk
 	 */
+	@Transient
 	public Boolean getPointsOk() {
-		return pointsOk;
-	}
-
-	/**
-	 * @param pointsOk the pointsOk to set
-	 */
-	public void setPointsOk(Boolean pointsOk) {
-		this.pointsOk = pointsOk;
+		return (pointStatus >= 1);
 	}
 
 	/**
@@ -121,5 +128,31 @@ public class Points implements Serializable {
 	 */
 	public void setIsDupe(Boolean isDupe) {
 		this.isDupe = isDupe;
+	}
+
+	/**
+	 * @return the pointStatus
+	 */
+	public Integer getPointStatus() {
+		return pointStatus;
+	}
+
+	/**
+	 * @param pointStatus the pointStatus to set
+	 */
+	private void setPointStatus(Integer pointStatus) {
+		this.pointStatus = pointStatus;
+	}
+
+	/**
+	 * @param pointStatus the pointStatus to set
+	 */
+	@Transient
+	public void setPointStatus(PointStatus pointStatus) {
+		setPointStatus(pointStatus.ordinal());
+	}
+
+	public static enum PointStatus {
+		NICHT_ABGENOMMEN, ABGENOMMEN_FAILED, ABGENOMMEN
 	}
 }

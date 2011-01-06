@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -116,10 +116,10 @@ public class ShowUserView extends HttpServlet {
 								if (submission != null) {
 									if (submission.getPoints() != null) {
 										if (submission.getPoints().getPointsOk()) {
-											out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.showPoints(submission.getPoints().getPoints()) + "");
-											points += submission.getPoints().getPoints();
+											out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "");
+											points += submission.getPoints().getPointsByStatus();
 										} else {
-											out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(" + Util.showPoints(submission.getPoints().getPoints()) + ")");
+											out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(" + Util.showPoints(submission.getPoints().getPointsByStatus()) + ")");
 										}
 									} else {
 										if (task.getDeadline().after(Util.correctTimezone(new Date()))) {

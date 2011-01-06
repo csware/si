@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -34,6 +34,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.PointsDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
@@ -90,7 +91,11 @@ public class MarkEmptyTask extends HttpServlet {
 			if (request.getParameter("internalcomment") != null) {
 				internalComment = request.getParameter("internalcomment");
 			}
-			pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, request.getParameter("pointsok") != null, false);
+			PointStatus pointStatus = PointStatus.NICHT_ABGENOMMEN;
+			if (request.getParameter("pointsok") != null) {
+				pointStatus = PointStatus.ABGENOMMEN;
+			}
+			pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, false);
 			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("MarkEmptyTask?taskid=" + task.getTaskid()));
 			return;

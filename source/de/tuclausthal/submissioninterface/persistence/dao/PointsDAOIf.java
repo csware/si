@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -22,6 +22,7 @@ import java.util.Map;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 
 /**
@@ -36,11 +37,11 @@ public interface PointsDAOIf {
 	 * @param participation the participation of the issuer
 	 * @param publicComment 
 	 * @param internalComment 
-	 * @param pointsOk 
+	 * @param pointStatus 
 	 * @param isDupe its a proven dupe
 	 * @return the (new or updated) points instance
 	 */
-	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, boolean pointsOk, boolean isDupe);
+	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, boolean isDupe);
 
-	public Points createPoints(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, boolean pointsOk, boolean isDupe);
+	public Points createPoints(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, boolean isDupe);
 }

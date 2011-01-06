@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   `issuedBy_id` int(11) DEFAULT NULL,
   `taskid` int(11) NOT NULL,
   `publicComment` longtext,
-  `pointsOk` bit(1) DEFAULT NULL,
+  `pointStatus` tinyint(1) unsigned DEFAULT NULL,
   `isDupe` bit(1) DEFAULT NULL,
   `internalComment` longtext,
   `lastModified` datetime DEFAULT NULL,

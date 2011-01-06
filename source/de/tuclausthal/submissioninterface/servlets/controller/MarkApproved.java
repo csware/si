@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -37,6 +37,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
@@ -81,8 +82,8 @@ public class MarkApproved extends HttpServlet {
 			String parameterName = parameterNameEnumerator.nextElement();
 			if (parameterName.matches("sid[0-9]+")) {
 				Submission submission = submissionDAO.getSubmissionLocked(Util.parseInteger(parameterName.substring(3), 0));
-				if (submission != null && submission.getTask().getTaskid() == task.getTaskid() && submission.getPoints() != null && submission.getPoints().getPoints() != null && submission.getPoints().getPointsOk() != null && submission.getPoints().getPointsOk() == false) {
-					submission.getPoints().setPointsOk(true);
+				if (submission != null && submission.getTask().getTaskid() == task.getTaskid() && submission.getPoints() != null && submission.getPoints().getPointsByStatus() != null && submission.getPoints().getPointStatus() != null && submission.getPoints().getPointStatus() == PointStatus.NICHT_ABGENOMMEN.ordinal()) {
+					submission.getPoints().setPointStatus(PointStatus.ABGENOMMEN);
 					submission.getPoints().setIssuedBy(participation);
 					session.save(submission);
 					// TODO: Attention! Manual update

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -39,6 +39,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -81,11 +82,17 @@ public class ShowSubmission extends HttpServlet {
 			if (request.getParameter("internalcomment") != null) {
 				internalComment = request.getParameter("internalcomment").trim();
 			}
+			PointStatus pointStatus = PointStatus.NICHT_ABGENOMMEN;
+			if("failed".equals(request.getParameter("pointsstatus"))) {
+				pointStatus = PointStatus.ABGENOMMEN_FAILED;
+			} else if ("ok".equals(request.getParameter("pointsstatus"))) {
+				pointStatus = PointStatus.ABGENOMMEN;
+			}
 			Transaction tx = session.beginTransaction();
 			if (task.getPointCategories().size() > 0) {
-				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, request.getParameter("pointsok") != null, request.getParameter("isdupe") != null);
+				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, request.getParameter("isdupe") != null);
 			} else {
-				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, request.getParameter("pointsok") != null, request.getParameter("isdupe") != null);
+				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, request.getParameter("isdupe") != null);
 			}
 			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));
