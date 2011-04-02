@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,11 +56,11 @@ import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LogDAO;
+import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -181,11 +182,16 @@ public class SubmitSolution extends HttpServlet {
 		// Check that we have a file upload request
 		boolean isMultipart = FileUpload.isMultipartContent(request);
 
-		int partnerID = 0;
+		List<Integer> partnerIDs = new LinkedList<Integer>();
 		int uploadFor = 0;
 		List<FileItem> items = null;
 		if (!isMultipart) {
-			partnerID = Util.parseInteger(request.getParameter("partnerid"), 0);
+			for (String partnerIdParameter : request.getParameterValues("partnerid")) {
+				int partnerID = Util.parseInteger(partnerIdParameter, 0);
+				if (partnerID > 0) {
+					partnerIDs.add(partnerID);
+				}
+			}
 		} else {
 			// Create a new file upload handler
 			FileUploadBase upload = new DiskFileUpload();
@@ -203,7 +209,10 @@ public class SubmitSolution extends HttpServlet {
 			while (iter.hasNext()) {
 				FileItem item = iter.next();
 				if (item.isFormField() && "partnerid".equals(item.getFieldName())) {
-					partnerID = Util.parseInteger(item.getString(), 0);
+					int partnerID = Util.parseInteger(item.getString(), 0);
+					if (partnerID > 0) {
+						partnerIDs.add(partnerID);
+					}
 				} else if (item.isFormField() && "uploadFor".equals(item.getFieldName())) {
 					uploadFor = Util.parseInteger(item.getString(), 0);
 				}
@@ -272,7 +281,7 @@ public class SubmitSolution extends HttpServlet {
 		Transaction tx = session.beginTransaction();
 		Submission submission = submissionDAO.createSubmission(task, studentParticipation);
 
-		if (partnerID > 0) {
+		for (int partnerID : partnerIDs) {
 			Participation partnerParticipation = participationDAO.getParticipation(partnerID);
 			if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
 				submission.getSubmitters().add(partnerParticipation);
@@ -280,7 +289,7 @@ public class SubmitSolution extends HttpServlet {
 			} else {
 				tx.rollback();
 				template.printTemplateHeader("Ungültige Anfrage");
-				out.println("<div class=mid>Der ausgewählte Partner hat bereits eine eigene Abgabe initiiert oder Sie haben bereits einen Partner ausgewählt.</div>");
+				out.println("<div class=mid>Ein ausgewählter Partner hat bereits eine eigene Abgabe initiiert oder Sie haben bereits die maximale Anzahl von Partnern ausgewählt.</div>");
 				template.printTemplateFooter();
 				return;
 			}
