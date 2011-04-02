@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -62,6 +62,10 @@ public class AuthenticationFilter implements Filter {
 		if (sa.getUser() == null || (bindToIP && !sa.isIPCorrect(request.getRemoteAddr()))) {
 			LoginData logindata = login.getLoginData(request);
 			if (logindata == null) {
+				// save textarea content
+				if (request.getParameter("textsolution") != null) {
+					sa.setSavedTextsolution(request.getParameter("textsolution"));
+				}
 				login.failNoData(request, response);
 				return;
 			} else {

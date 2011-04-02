@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
+import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -54,7 +55,8 @@ public class SubmitSolutionFormView extends HttpServlet {
 
 		template.printTemplateHeader("Abgabe starten", task);
 
-		Session session = RequestAdapter.getSession(request);
+		RequestAdapter requestAdapter = new RequestAdapter(request);
+		Session session = requestAdapter.getSession();
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 		Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
 
@@ -103,7 +105,14 @@ public class SubmitSolutionFormView extends HttpServlet {
 			out.println("<FORM class=mid method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 			out.println(setWithUser.toString());
 			out.println("<p>Bitte füllen Sie das Textfeld mit Ihrer Lösung:</p>");
-			out.println("<p><textarea cols=60 rows=10 name=textsolution>" + Util.mknohtml((String) request.getAttribute("textsolution")) + "</textarea></p>");
+			String textsolution = requestAdapter.getSessionAdapter().getSavedTextsolution();
+			if (textsolution != null) {
+				requestAdapter.getSessionAdapter().setSavedTextsolution(null);
+				out.println("<p class=mid><b>Hinweis:</b> Der folgende Text wurde aus einer abgelaufenen Sitzung wiederhergestellt und wurde noch nicht gespeichert. Möchten Sie wieder auf den aktuell gespeicherten zugreifen, laden Sie einfach diese Seite neu.</p>");
+			} else {
+				textsolution = (String) request.getAttribute("textsolution");
+			}
+			out.println("<p><textarea cols=60 rows=10 name=textsolution>" + Util.mknohtml(textsolution) + "</textarea></p>");
 			out.println("<INPUT TYPE=submit VALUE=speichern>");
 			out.println("</FORM>");
 			out.println("<p class=mid><b>Achtung:</b> Bitte beachten Sie, dass Sie nach 5 Minuten Inaktivität automatisch ausgeloggt werden. Kopieren Sie den Text vor dem Absenden sicherheitshalber in die Zwischenablage, wenn Sie nicht sicher sind, ob Sie die Zeit überschritten haben.</p>");

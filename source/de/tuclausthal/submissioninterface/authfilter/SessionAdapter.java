@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -40,11 +40,13 @@ public class SessionAdapter {
 		//migrate session contents
 		Object userID = session.getAttribute("userID");
 		Object queuedTest = session.getAttribute("queuedTest");
+		Object savedTextarea = session.getAttribute("savedTextsolution");
 		session.invalidate();
 		session = request.getSession(true);
 		session.setAttribute("userID", userID);
 		session.setAttribute("queuedTest", queuedTest);
 		session.setAttribute("ip", request.getRemoteAddr());
+		session.setAttribute("savedTextsolution", savedTextarea);
 	}
 
 	public SessionAdapter(HttpServletRequest request) {
@@ -69,6 +71,14 @@ public class SessionAdapter {
 		} else {
 			session.invalidate();
 		}
+	}
+
+	public void setSavedTextsolution(String textsolution) {
+		session.setAttribute("savedTextolution", textsolution);
+	}
+
+	public String getSavedTextsolution() {
+		return (String)session.getAttribute("savedTextsolution");
 	}
 
 	/**

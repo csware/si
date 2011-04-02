@@ -66,6 +66,10 @@ public class RequestAdapter {
 		return (Session) request.getAttribute("hibernateSession");
 	}
 
+	public SessionAdapter getSessionAdapter() {
+		return getSessionAdapter(request);
+	}
+
 	/**
 	 * @return the sessionAdapter
 	 */
