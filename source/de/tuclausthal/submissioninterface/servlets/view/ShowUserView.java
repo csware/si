@@ -78,7 +78,7 @@ public class ShowUserView extends HttpServlet {
 				}
 				out.println("<h2><a href=\"" + response.encodeURL("ShowLecture?lecture=" + participation.getLecture().getId()) + "\">" + Util.mknohtml(participation.getLecture().getName()) + " (" + participation.getLecture().getReadableSemester() + ")</a></h2>");
 				if (participation.getGroup() != null) {
-					out.println("Gruppe: " + Util.mknohtml(participation.getGroup().getName()) + "<br>");
+					out.println("<p>Gruppe: " + Util.mknohtml(participation.getGroup().getName()) + "</p>");
 				}
 
 				int points = 0;
