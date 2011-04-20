@@ -239,7 +239,7 @@ public class ShowSubmissionView extends HttpServlet {
 				if (ShowFile.isInlineAble(file.toLowerCase())) {
 					out.println("<h3 class=files>" + Util.mknohtml(file) + " <a id=\"showbtn" + id + "\" style=\"display: none;\" href=\"#\" onclick='$(\"#codepreview" + id + "\").show();$(\"#showbtn" + id + "\").hide();return false;'>(show)</a></h3>");
 					out.println("<div id=\"codepreview" + id + "\" class=\"mid\">");
-					out.println("<div class=\"inlinemenu\"><a href=\"#\" onclick='this.href=document.getElementById(\"iframe" + id + "\").contentWindow.location' target=\"_blank\">(new window)</a>");
+					out.println("<div class=\"inlinemenu\"><a href=\"#\" onclick='this.href=$(\"iframe" + id + "\").contentWindow.location' target=\"_blank\">(new window)</a>");
 					out.println(" <a id=\"hidebtn" + id + "\" href=\"#\" onclick='hideCodePreview(\"" + id + "\");return false;'>(hide)</a>");
 					out.println("</div>");
 					out.println("<div id=\"resizablecodepreview" + id + "\" class=\"mid inlinefile\">");
