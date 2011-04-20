@@ -76,6 +76,7 @@ public class ShowFileView extends HttpServlet {
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + request.getContextPath() + "/si.css\" />");
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />");
 		out.println("<title>" + Util.mknohtml(fileName) + "</title>");
+		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + request.getContextPath() + "/scripts.js\"></script>");
 		out.println("</head>");
 		out.println("<body class=\"filepreview\">");
 
@@ -95,12 +96,13 @@ public class ShowFileView extends HttpServlet {
 				options.append(" <a href=\"" + response.encodeURL("?sid=" + submission.getSubmissionid() + "&amp;wrap=yes") + "\">(toggle wrapping)</a>");
 			}
 		}
+		options.append(" <a href='#' onclick=\"selectAll('fileContents'); return false;\">(select all)</a>");
 		if (options.length() > 0) {
 			out.println("<div class=\"previewmenubox inlinemenu\">" + options.toString() + "</div>");
 		}
 
 		out.println("<h1>" + Util.mknohtml(fileName) + "</h1>");
-		out.println(renderedCode.toString());
+		out.println("<div id=\"fileContents\">" + renderedCode.toString() + "</div>");
 		out.println("</body></html>");
 	}
 
