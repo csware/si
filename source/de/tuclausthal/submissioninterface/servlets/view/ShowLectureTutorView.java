@@ -53,6 +53,7 @@ public class ShowLectureTutorView extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
+		template.addJQuery();
 
 		PrintWriter out = response.getWriter();
 
@@ -127,7 +128,12 @@ public class ShowLectureTutorView extends HttpServlet {
 			}
 		}
 		for (Group group : lecture.getGroups()) {
-			out.println("<h3><a name=\"group" + group.getGid() + "\">Gruppe: " + Util.mknohtml(group.getName()) + "</a></h3>");
+			out.println("<h3><a name=\"group" + group.getGid() + "\">Gruppe: " + Util.mknohtml(group.getName()) + "</a> <a href=\"#\" onclick=\"$('#contentgroup" + group.getGid() + "').toggle(); return false;\">(+/-)</a></h3>");
+			String defaultState = "";
+			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0 && group.getTutors().size() > 0 && !group.getTutors().contains(participation)) {
+				defaultState = "style=\"display: none;\"";
+			}
+			out.println("<div " + defaultState + " id=\"contentgroup" + group.getGid() + "\">");
 			if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
 				out.println("<p class=mid><a href=\"" + response.encodeURL("EditGroup?groupid=" + group.getGid()) + "\">Teilnehmer zuordnen</a></p>");
 			}
@@ -148,6 +154,7 @@ public class ShowLectureTutorView extends HttpServlet {
 				out.println("</table><p>");
 			}
 			listMembers(participationDAO.getParticipationsOfGroup(group).iterator(), response, isAdvisor, requestAdapter);
+			out.println("</div>");
 		}
 		out.println("<h3>Gesamtdurchschnitt: " + Util.showPoints(((Double) (DAOFactory.LectureDAOIf(session).getSumOfPoints(lecture) / (double) DAOFactory.LectureDAOIf(session).getStudentsCount(lecture))).intValue()) + "</h3>");
 		out.println("<p><div class=mid><a href=\"" + response.encodeURL("ShowLecture?lecture=" + lecture.getId() + "&amp;show=list") + "\">Gesamtliste</a> - <a href=\"" + response.encodeURL("ShowLecture?lecture=" + lecture.getId() + "&amp;show=csv") + "\">CSV-Download</a></div>");

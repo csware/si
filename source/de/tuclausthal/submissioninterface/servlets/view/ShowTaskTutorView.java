@@ -54,6 +54,7 @@ public class ShowTaskTutorView extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
+		template.addJQuery();
 
 		PrintWriter out = response.getWriter();
 
@@ -152,8 +153,8 @@ public class ShowTaskTutorView extends HttpServlet {
 							out.println("</tr>");
 						}
 						out.println("</table><p>");
-						out.println("</form>");
-						groupSumOfAllSubmissions =0;
+						out.println("</form></div>");
+						groupSumOfAllSubmissions = 0;
 						groupSumOfSubmissions = 0;
 						groupSumOfPoints = 0;
 					}
@@ -161,8 +162,14 @@ public class ShowTaskTutorView extends HttpServlet {
 					hasUnapprochedPoints = false;
 					if (group == null) {
 						out.println("<h3>Ohne Gruppe</h3>");
+						out.println("<div id=\"contentgroup0\">");
 					} else {
-						out.println("<h3>Gruppe: " + Util.mknohtml(group.getName()) + "</h3>");
+						out.println("<h3>Gruppe: " + Util.mknohtml(group.getName()) + " <a href=\"#\" onclick=\"$('#contentgroup" + group.getGid() + "').toggle(); return false;\">(+/-)</a></h3>");
+						String defaultState = "";
+						if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0 && group.getTutors().size() > 0 && !group.getTutors().contains(participation)) {
+							defaultState = "style=\"display: none;\"";
+						}
+						out.println("<div " + defaultState + " id=\"contentgroup" + group.getGid() + "\">");
 						out.println("<div class=mid><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid() + "&amp;action=grouplist&amp;groupid=" + group.getGid()) + "\" target=\"_blank\">Druckbare Liste</a></div>");
 					}
 					out.println("<form method=post action=\"" + response.encodeURL("MarkApproved?taskid=" + task.getTaskid()) + "\">");
@@ -241,7 +248,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("</tr>");
 				}
 				out.println("</table><p>");
-				out.println("</form>");
+				out.println("</form></div>");
 				if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 					out.println("<h3>Gesamtdurchschnitt: " + Util.showPoints(Float.valueOf(sumOfPoints / (float) sumOfSubmissions).intValue()) + "</h3>");
 				}
