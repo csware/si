@@ -163,7 +163,7 @@ public class TaskManagerView extends HttpServlet {
 
 		if (task.getTaskid() != 0) {
 			out.println("<h2>Punkte</h2>");
-			out.println("<p>Werden hier Kriterien angelegt, so werden den Tutoren nur noch Checkboxen angezeigt.</p>");
+			out.println("<p>Werden hier Kriterien angelegt, so werden den Tutoren nur noch Checkboxen angezeigt (für \"1 Punkte\", für >1 erscheint wieder ein Textfeld).</p>");
 			if (task.getPointCategories().size() > 0) {
 				out.println("<ul>");
 				for (PointCategory category : task.getPointCategories()) {
