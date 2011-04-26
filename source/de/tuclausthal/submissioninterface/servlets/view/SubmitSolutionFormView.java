@@ -71,7 +71,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 				for (Participation part : participation.getGroup().getMembers()) {
 					if (part.getId() != participation.getId() && submissionDAO.getSubmission(task, part.getUser()) == null) {
 						cnt++;
-						partnerField.append("<option value=" + part.getId() + ">" + Util.mknohtml(part.getUser().getFullName()) + "</option>");
+						partnerField.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getFullName()) + "</option>");
 					}
 				}
 				partnerField.append("</select><br>");
@@ -112,7 +112,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 			} else {
 				textsolution = (String) request.getAttribute("textsolution");
 			}
-			out.println("<p><textarea cols=60 rows=10 name=textsolution>" + Util.mknohtml(textsolution) + "</textarea></p>");
+			out.println("<p><textarea cols=60 rows=10 name=textsolution>" + Util.escapeHTML(textsolution) + "</textarea></p>");
 			out.println("<INPUT TYPE=submit VALUE=speichern>");
 			out.println("</FORM>");
 			out.println("<p class=mid><b>Achtung:</b> Bitte beachten Sie, dass Sie nach 5 Minuten Inaktivität automatisch ausgeloggt werden. Kopieren Sie den Text vor dem Absenden sicherheitshalber in die Zwischenablage, wenn Sie nicht sicher sind, ob Sie die Zeit überschritten haben.</p>");

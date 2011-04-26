@@ -60,13 +60,13 @@ public class ShowUserView extends HttpServlet {
 		List<Lecture> lectures = (List<Lecture>) request.getAttribute("lectures");
 		Session session = RequestAdapter.getSession(request);
 
-		template.printTemplateHeader("Benutzer \"" + Util.mknohtml(user.getFullName()) + "\"");
+		template.printTemplateHeader("Benutzer \"" + Util.escapeHTML(user.getFullName()) + "\"");
 
-		out.println("<p><a href=\"mailto:" + Util.mknohtml(user.getFullEmail()) + "\">" + Util.mknohtml(user.getFullEmail()) + "</a></p>");
+		out.println("<p><a href=\"mailto:" + Util.escapeHTML(user.getFullEmail()) + "\">" + Util.escapeHTML(user.getFullEmail()) + "</a></p>");
 
 		if (user instanceof Student) {
 			out.println("<p>Matrikelnummer: " + ((Student) user).getMatrikelno() + "</p>");
-			out.println("<p>Studiengang: " + Util.mknohtml(((Student) user).getStudiengang()) + "</p>");
+			out.println("<p>Studiengang: " + Util.escapeHTML(((Student) user).getStudiengang()) + "</p>");
 		}
 
 		boolean titleShown = false;
@@ -76,9 +76,9 @@ public class ShowUserView extends HttpServlet {
 					out.println("<h1>Vorlesungen</h1>");
 					titleShown = true;
 				}
-				out.println("<h2><a href=\"" + response.encodeURL("ShowLecture?lecture=" + participation.getLecture().getId()) + "\">" + Util.mknohtml(participation.getLecture().getName()) + " (" + participation.getLecture().getReadableSemester() + ")</a></h2>");
+				out.println("<h2><a href=\"" + response.encodeURL("ShowLecture?lecture=" + participation.getLecture().getId()) + "\">" + Util.escapeHTML(participation.getLecture().getName()) + " (" + participation.getLecture().getReadableSemester() + ")</a></h2>");
 				if (participation.getGroup() != null) {
-					out.println("<p>Gruppe: " + Util.mknohtml(participation.getGroup().getName()) + "</p>");
+					out.println("<p>Gruppe: " + Util.escapeHTML(participation.getGroup().getName()) + "</p>");
 				}
 
 				int points = 0;
@@ -103,13 +103,13 @@ public class ShowUserView extends HttpServlet {
 							if (isStartedTable && (taskGroup.getTitle() != null)) {
 								out.println("<tr>");
 								String editLink = "";
-								out.println("<th colspan=3>Aufgabengruppe " + Util.mknohtml(taskGroup.getTitle()) + editLink + "</th>");
+								out.println("<th colspan=3>Aufgabengruppe " + Util.escapeHTML(taskGroup.getTitle()) + editLink + "</th>");
 								out.println("</tr>");
 							}
 							while (taskIterator.hasNext()) {
 								Task task = taskIterator.next();
 								out.println("<tr>");
-								out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
+								out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
 								out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 								maxPoints += task.getMaxPoints();
 								Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, user);

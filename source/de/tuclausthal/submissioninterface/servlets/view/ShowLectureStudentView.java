@@ -63,7 +63,7 @@ public class ShowLectureStudentView extends HttpServlet {
 
 		out.println("<div class=mid>");
 		if (participation.getGroup() != null) {
-			out.println("Meine Gruppe: " + Util.mknohtml(participation.getGroup().getName()));
+			out.println("Meine Gruppe: " + Util.escapeHTML(participation.getGroup().getName()));
 			if (participation.getGroup().getTutors() != null && participation.getGroup().getTutors().size() > 0) {
 				if (participation.getGroup().getTutors().size() > 1) {
 					out.println("<br>Meine Tutoren: ");
@@ -76,7 +76,7 @@ public class ShowLectureStudentView extends HttpServlet {
 						out.print(", ");
 					}
 					isFirst = false;
-					out.print("<a href=\"mailto:" + Util.mknohtml(tutor.getUser().getFullEmail()) + "\">" + Util.mknohtml(tutor.getUser().getFullName()) + "</a>");
+					out.print("<a href=\"mailto:" + Util.escapeHTML(tutor.getUser().getFullEmail()) + "\">" + Util.escapeHTML(tutor.getUser().getFullName()) + "</a>");
 				}
 			}
 		}
@@ -84,7 +84,7 @@ public class ShowLectureStudentView extends HttpServlet {
 			out.println("<form action=\"" + response.encodeURL("JoinGroup") + "\">");
 			out.println("<select name=groupid>");
 			for (Group group : joinAbleGroups) {
-				out.println("<option value=" + group.getGid() + ">" + Util.mknohtml(group.getName()));
+				out.println("<option value=" + group.getGid() + ">" + Util.escapeHTML(group.getName()));
 			}
 			out.println("</select>");
 			out.println("<input type=submit value=\"Gruppe wechseln\">");
@@ -111,14 +111,14 @@ public class ShowLectureStudentView extends HttpServlet {
 					}
 					if (isStartedTable && taskGroup.getTitle() != null) {
 						out.println("<tr>");
-						out.println("<th colspan=3>Aufgabengruppe " + Util.mknohtml(taskGroup.getTitle()) + "</th>");
+						out.println("<th colspan=3>Aufgabengruppe " + Util.escapeHTML(taskGroup.getTitle()) + "</th>");
 						out.println("</tr>");
 					}
 					while (taskIterator.hasNext()) {
 						Task task = taskIterator.next();
 						if (task.getStart().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 							out.println("<tr>");
-							out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
+							out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
 							out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 							Submission submission = DAOFactory.SubmissionDAOIf(RequestAdapter.getSession(request)).getSubmission(task, RequestAdapter.getUser(request));
 							if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().before(Util.correctTimezone(new Date()))) {

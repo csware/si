@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -75,7 +75,7 @@ public class ShowFileView extends HttpServlet {
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + request.getContextPath() + "/screen.css\" />");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + request.getContextPath() + "/si.css\" />");
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />");
-		out.println("<title>" + Util.mknohtml(fileName) + "</title>");
+		out.println("<title>" + Util.escapeHTML(fileName) + "</title>");
 		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + request.getContextPath() + "/scripts.js\"></script>");
 		out.println("</head>");
 		out.println("<body class=\"filepreview\">");
@@ -88,7 +88,7 @@ public class ShowFileView extends HttpServlet {
 			} else {
 				renderedCode.append("<pre>");
 			}
-			renderedCode.append(Util.mkTextToHTML(code.toString()).replace("<br>", "<br />") + "</pre>"); // XHTML here!
+			renderedCode.append(Util.textToHTML(code.toString()).replace("<br>", "<br />") + "</pre>"); // XHTML here!
 
 			if ("yes".equals(request.getParameter("wrap"))) {
 				options.append(" <a href=\"" + response.encodeURL("?sid=" + submission.getSubmissionid()) + "\">(toggle wrapping)</a>");
@@ -101,7 +101,7 @@ public class ShowFileView extends HttpServlet {
 			out.println("<div class=\"previewmenubox inlinemenu\">" + options.toString() + "</div>");
 		}
 
-		out.println("<h1>" + Util.mknohtml(fileName) + "</h1>");
+		out.println("<h1>" + Util.escapeHTML(fileName) + "</h1>");
 		out.println("<div id=\"fileContents\">" + renderedCode.toString() + "</div>");
 		out.println("</body></html>");
 	}

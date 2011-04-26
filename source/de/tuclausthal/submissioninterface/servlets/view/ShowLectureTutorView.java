@@ -89,14 +89,14 @@ public class ShowLectureTutorView extends HttpServlet {
 						if (isAdvisor) {
 							editLink = " (<a href=\"" + response.encodeURL("TaskManager?lecture=" + lecture.getId() + "&amp;action=editTaskGroup&amp;taskgroupid=" + taskGroup.getTaskGroupId()) + "\">edit</a>)";
 						}
-						out.println("<th colspan=2>Aufgabengruppe " + Util.mknohtml(taskGroup.getTitle()) + editLink + "</th>");
+						out.println("<th colspan=2>Aufgabengruppe " + Util.escapeHTML(taskGroup.getTitle()) + editLink + "</th>");
 						out.println("</tr>");
 					}
 					while (taskIterator.hasNext()) {
 						Task task = taskIterator.next();
 						if (task.getStart().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 							out.println("<tr>");
-							out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.mknohtml(task.getTitle()) + "</a></td>");
+							out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
 							out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 							out.println("</tr>");
 						}
@@ -128,7 +128,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			}
 		}
 		for (Group group : lecture.getGroups()) {
-			out.println("<h3><a name=\"group" + group.getGid() + "\">Gruppe: " + Util.mknohtml(group.getName()) + "</a> <a href=\"#\" onclick=\"$('#contentgroup" + group.getGid() + "').toggle(); return false;\">(+/-)</a></h3>");
+			out.println("<h3><a name=\"group" + group.getGid() + "\">Gruppe: " + Util.escapeHTML(group.getName()) + "</a> <a href=\"#\" onclick=\"$('#contentgroup" + group.getGid() + "').toggle(); return false;\">(+/-)</a></h3>");
 			String defaultState = "";
 			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0 && group.getTutors().size() > 0 && !group.getTutors().contains(participation)) {
 				defaultState = "style=\"display: none;\"";
@@ -144,7 +144,7 @@ public class ShowLectureTutorView extends HttpServlet {
 				out.println("</tr>");
 				for (Participation tutorParticipation : group.getTutors()) {
 					out.println("<tr>");
-					out.println("<td><a href=\"mailto:" + Util.mknohtml(tutorParticipation.getUser().getFullEmail()) + "\">" + Util.mknohtml(tutorParticipation.getUser().getFullName()) + "</a>");
+					out.println("<td><a href=\"mailto:" + Util.escapeHTML(tutorParticipation.getUser().getFullEmail()) + "\">" + Util.escapeHTML(tutorParticipation.getUser().getFullName()) + "</a>");
 					if (isAdvisor) {
 						out.println(" <a onclick=\"return confirmLink('Tutor-Gruppen-Zugehöhrigkeit entfernen?')\" href=\"" + response.encodeURL("EditGroup?groupid=" + group.getGid() + "&amp;participationid=" + tutorParticipation.getId()) + "&amp;action=removeTutorFromGroup\"><img src=\"" + getServletContext().getContextPath() + "/log-out.png\"width=16 height=16 border=0 alt=\"Tutor-Gruppen-Zugehöhrigkeit entfernen\" title=\"Tutor-Gruppen-Zugehöhrigkeit entfernen\"></a>");
 					}
@@ -181,9 +181,9 @@ public class ShowLectureTutorView extends HttpServlet {
 				} else {
 					out.println("<td>n/a</td>");
 				}
-				out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + thisParticipation.getUser().getUid()) + "\">" + Util.mknohtml(thisParticipation.getUser().getFullName()) + "</a></td>");
+				out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + thisParticipation.getUser().getUid()) + "\">" + Util.escapeHTML(thisParticipation.getUser().getFullName()) + "</a></td>");
 				if (thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
-					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
+					out.println("<td>" + Util.escapeHTML(thisParticipation.getRoleType().toString()));
 					if (isAdvisor) {
 						out.println(" (<a onclick=\"return confirmLink('Wirklich promoten?')\" href=\"" + response.encodeURL("EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;type=tutor\">+</a>)");
 					}
@@ -191,7 +191,7 @@ public class ShowLectureTutorView extends HttpServlet {
 						out.println(" <a onclick=\"return confirmLink('Wirklich aus der Gruppe entfernen?')\" href=\"" + response.encodeURL("EditGroup?groupid=" + thisParticipation.getGroup().getGid() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;action=removeFromGroup\"><img src=\"" + getServletContext().getContextPath() + "/log-out.png\"width=16 height=16 border=0 alt=\"aus Gruppe entfernen\" title=\"aus Gruppe entfernen\"></a>");
 					}
 				} else if (thisParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) == 0) {
-					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
+					out.println("<td>" + Util.escapeHTML(thisParticipation.getRoleType().toString()));
 					if (isAdvisor) {
 						out.println(" (<a onclick=\"return confirmLink('Wirklich degradieren?')\" href=\"" + response.encodeURL("EditParticipation?lectureid=" + thisParticipation.getLecture().getId() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;type=normal\">-</a>)");
 					}
@@ -199,7 +199,7 @@ public class ShowLectureTutorView extends HttpServlet {
 						out.println(" <a onclick=\"return confirmLink('Wirklich aus der Gruppe entfernen?')\" href=\"" + response.encodeURL("EditGroup?groupid=" + thisParticipation.getGroup().getGid() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;action=removeFromGroup\"><img src=\"" + getServletContext().getContextPath() + "/log-out.png\"width=16 height=16 border=0 alt=\"aus Gruppe entfernen\" title=\"aus Gruppe entfernen\"></a>");
 					}
 				} else {
-					out.println("<td>" + Util.mknohtml(thisParticipation.getRoleType().toString()));
+					out.println("<td>" + Util.escapeHTML(thisParticipation.getRoleType().toString()));
 					if (isAdvisor && thisParticipation.getGroup() != null) {
 						out.println(" <a onclick=\"return confirmLink('Wirklich aus der Gruppe entfernen?')\" href=\"" + response.encodeURL("EditGroup?groupid=" + thisParticipation.getGroup().getGid() + "&amp;participationid=" + thisParticipation.getId()) + "&amp;action=removeFromGroup\"><img src=\"" + getServletContext().getContextPath() + "/log-out.png\"width=16 height=16 border=0 alt=\"aus Gruppe entfernen\" title=\"aus Gruppe entfernen\"></a>");
 					}

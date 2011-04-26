@@ -72,11 +72,11 @@ public class ShowTaskStudentView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");
-		out.println("<td>" + Util.mknohtml(task.getStart().toLocaleString()) + "</td>");
+		out.println("<td>" + Util.escapeHTML(task.getStart().toLocaleString()) + "</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Enddatum:</th>");
-		out.println("<td>" + Util.mknohtml(task.getDeadline().toLocaleString()));
+		out.println("<td>" + Util.escapeHTML(task.getDeadline().toLocaleString()));
 		out.println("</td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -89,7 +89,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("<td><ul class=taskfiles>");
 			for (String file : advisorFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
-				out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.mknohtml(file) + "</a></li>");
+				out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.escapeHTML(file) + "</a></li>");
 			}
 			out.println("</ul></td>");
 			out.println("</tr>");
@@ -111,7 +111,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<tr>");
 				out.println("<th>Letzte Änderung:</th>");
 				out.println("<td>");
-				out.println(Util.mknohtml(submission.getLastModified().toLocaleString()));
+				out.println(Util.escapeHTML(submission.getLastModified().toLocaleString()));
 				out.println("</td>");
 				out.println("</tr>");
 			}
@@ -121,7 +121,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<td>");
 				for (String file : submittedFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
-					out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(file) + "</a>");
+					out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">" + Util.escapeHTML(file) + "</a>");
 					if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
 						out.println(" (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DeleteFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)");
 					}
@@ -158,7 +158,7 @@ public class ShowTaskStudentView extends HttpServlet {
 							} else if (category.isOptional()) {
 								continue;
 							}
-							out.println("<li>" + Util.showPoints(issuedPoints) + "/" + Util.showPoints(category.getPoints()) + " " + Util.mknohtml(category.getDescription()) + "</li>");
+							out.println("<li>" + Util.showPoints(issuedPoints) + "/" + Util.showPoints(category.getPoints()) + " " + Util.escapeHTML(category.getDescription()) + "</li>");
 						}
 						out.println("</ul>");
 					} else {
@@ -169,14 +169,14 @@ public class ShowTaskStudentView extends HttpServlet {
 				} else {
 					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", nicht abgenommen");
 				}
-				out.println("<p>Vergeben von: <a href=\"mailto:" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.mknohtml(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a></p>");
+				out.println("<p>Vergeben von: <a href=\"mailto:" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a></p>");
 				out.println("</td>");
 				out.println("</tr>");
 				if (submission.getPoints().getPublicComment() != null && !"".equals(submission.getPoints().getPublicComment())) {
 					out.println("<tr>");
 					out.println("<th>Kommentar:</th>");
 					out.println("<td>");
-					out.println(Util.mkTextToHTML(submission.getPoints().getPublicComment()));
+					out.println(Util.textToHTML(submission.getPoints().getPublicComment()));
 					out.println("</td>");
 					out.println("</tr>");
 				}
@@ -203,9 +203,9 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<table class=border>");
 				for (Test test : tests) {
 					out.println("<tr>");
-					out.println("<th>" + Util.mknohtml(test.getTestTitle()) + "</th>");
+					out.println("<th>" + Util.escapeHTML(test.getTestTitle()) + "</th>");
 					out.println("<td>");
-					out.println(Util.mkTextToHTML(test.getTestDescription()));
+					out.println(Util.textToHTML(test.getTestDescription()));
 					out.println("</td>");
 					out.println("<td>");
 					if (testCountDAO.canStillRunXTimes(test, submission) > 0) {

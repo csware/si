@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -80,13 +80,13 @@ public class ShowMarkHistoryView extends HttpServlet {
 		for (PointHistory entry : ph) {
 			out.println("<tr>");
 			if (isFirst) {
-				out.println("<td valign=top rowspan=" + ph.size() + "><a href=\"mailto:" + Util.mknohtml(entry.getWho().getUser().getFullEmail()) + "\">" + Util.mknohtml(entry.getWho().getUser().getFullName()) + "</a></td>");
-				out.println("<td valign=top rowspan=" + ph.size() + ">" + Util.mknohtml(entry.getDate().toLocaleString()) + "</td>");
+				out.println("<td valign=top rowspan=" + ph.size() + "><a href=\"mailto:" + Util.escapeHTML(entry.getWho().getUser().getFullEmail()) + "\">" + Util.escapeHTML(entry.getWho().getUser().getFullName()) + "</a></td>");
+				out.println("<td valign=top rowspan=" + ph.size() + ">" + Util.escapeHTML(entry.getDate().toLocaleString()) + "</td>");
 				isFirst = false;
 			}
-			out.println("<td valign=top>" + Util.mknohtml(entry.getField()) + "</td>");
-			out.println("<td valign=top>" + Util.mkTextToHTML(entry.getRemoved()) + "</td>");
-			out.println("<td valign=top>" + Util.mkTextToHTML(entry.getAdded()) + "</td>");
+			out.println("<td valign=top>" + Util.escapeHTML(entry.getField()) + "</td>");
+			out.println("<td valign=top>" + Util.textToHTML(entry.getRemoved()) + "</td>");
+			out.println("<td valign=top>" + Util.textToHTML(entry.getAdded()) + "</td>");
 			out.println("</tr>");
 		}
 		ph.clear();

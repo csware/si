@@ -73,11 +73,11 @@ public class ShowTaskTutorView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");
-		out.println("<td>" + Util.mknohtml(task.getStart().toLocaleString()) + "</td>");
+		out.println("<td>" + Util.escapeHTML(task.getStart().toLocaleString()) + "</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Enddatum:</th>");
-		out.println("<td>" + Util.mknohtml(task.getDeadline().toLocaleString()));
+		out.println("<td>" + Util.escapeHTML(task.getDeadline().toLocaleString()));
 		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 			out.println(" Keine Abgabe mehr möglich");
 		}
@@ -93,7 +93,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<td><ul class=taskfiles>");
 			for (String file : advisorFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
-				out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.mknohtml(file) + "</a></li>");
+				out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.escapeHTML(file) + "</a></li>");
 			}
 			out.println("</ul></td>");
 			out.println("</tr>");
@@ -163,7 +163,7 @@ public class ShowTaskTutorView extends HttpServlet {
 						out.println("<h3>Ohne Gruppe</h3>");
 						out.println("<div id=\"contentgroup0\">");
 					} else {
-						out.println("<h3>Gruppe: " + Util.mknohtml(group.getName()) + " <a href=\"#\" onclick=\"$('#contentgroup" + group.getGid() + "').toggle(); return false;\">(+/-)</a></h3>");
+						out.println("<h3>Gruppe: " + Util.escapeHTML(group.getName()) + " <a href=\"#\" onclick=\"$('#contentgroup" + group.getGid() + "').toggle(); return false;\">(+/-)</a></h3>");
 						String defaultState = "";
 						if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0 && group.getTutors().size() > 0 && !group.getTutors().contains(participation)) {
 							defaultState = "style=\"display: none;\"";
@@ -177,7 +177,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("<th>Benutzer</th>");
 					if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 						for (Test test : tests) {
-							out.println("<th>" + Util.mknohtml(test.getTestTitle()) + "</th>");
+							out.println("<th>" + Util.escapeHTML(test.getTestTitle()) + "</th>");
 						}
 						for (SimilarityTest similarityTest : task.getSimularityTests()) {
 							String color = "";
@@ -196,7 +196,7 @@ public class ShowTaskTutorView extends HttpServlet {
 				if (lastSID != submission.getSubmissionid()) {
 					groupSumOfAllSubmissions++;
 					out.println("<tr>");
-					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.mknohtml(submission.getSubmitterNames()) + "</a></td>");
+					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
 					lastSID = submission.getSubmissionid();
 					if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 						for (Test test : tests) {
@@ -209,7 +209,7 @@ public class ShowTaskTutorView extends HttpServlet {
 						for (SimilarityTest similarityTest : task.getSimularityTests()) {
 							String users = "";
 							for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(similarityTest, submission)) {
-								users += Util.mknohtml(similarity.getSubmissionTwo().getSubmitterNames()) + "\n";
+								users += Util.escapeHTML(similarity.getSubmissionTwo().getSubmitterNames()) + "\n";
 							}
 							out.println("<td class=points><span title=\"" + users + "\">" + DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(similarityTest, submission) + "</span></td>");
 						}

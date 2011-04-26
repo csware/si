@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -49,11 +49,11 @@ public class PerformTestResultView extends HttpServlet {
 		template.printTemplateHeader("Testergebnis", task);
 
 		PrintWriter out = response.getWriter();
-		out.println("<b>Titel:</b> " + Util.mknohtml(test.getTestTitle()) + "<br>");
-		out.println("<b>Beschreibung:</b><br>" + Util.mkTextToHTML(test.getTestDescription()) + "<br>");
+		out.println("<b>Titel:</b> " + Util.escapeHTML(test.getTestTitle()) + "<br>");
+		out.println("<b>Beschreibung:</b><br>" + Util.textToHTML(test.getTestDescription()) + "<br>");
 		out.println("<b>Bestanden:</b> " + Util.boolToHTML(testResult.isTestPassed()) + "<br>");
 		if (!testResult.getTestOutput().isEmpty()) {
-			out.println("<b>Ausgabe:</b><br><pre>" + Util.mknohtml(testResult.getTestOutput()) + "</pre>");
+			out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
 		}
 
 		template.printTemplateFooter();

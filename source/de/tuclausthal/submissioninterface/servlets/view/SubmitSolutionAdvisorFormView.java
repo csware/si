@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -52,7 +52,7 @@ public class SubmitSolutionAdvisorFormView extends HttpServlet {
 		setWithUser.append("<p>Abgabe erstellen für: <select name=uploadFor size=1>");
 		for (Participation part : task.getTaskGroup().getLecture().getParticipants()) {
 			if (part.getRoleType().equals(ParticipationRole.NORMAL)) {
-				setWithUser.append("<option value=" + part.getId() + ">" + Util.mknohtml(part.getUser().getFullName()) + "</option>");
+				setWithUser.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getFullName()) + "</option>");
 			}
 		}
 		setWithUser.append("</select><p>");

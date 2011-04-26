@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -55,7 +55,7 @@ public class SubscribeToLectureView extends HttpServlet {
 			out.println("</tr>");
 			for (Lecture lecture : lectures) {
 				out.println("<tr>");
-				out.println("<td>" + Util.mknohtml(lecture.getName()) + "</td>");
+				out.println("<td>" + Util.escapeHTML(lecture.getName()) + "</td>");
 				out.println("<td><a href=\"" + response.encodeURL("?lecture=" + lecture.getId()) + "\">anmelden</a></td>");
 				out.println("</tr>");
 			}

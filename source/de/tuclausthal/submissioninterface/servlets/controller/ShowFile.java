@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -89,7 +89,7 @@ public class ShowFile extends HttpServlet {
 
 				request.setAttribute("submission", submission);
 				request.setAttribute("code", code);
-				request.setAttribute("fileName", Util.mknohtml(file.getName()));
+				request.setAttribute("fileName", Util.escapeHTML(file.getName()));
 				request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/ShowFileView").forward(request, response);
 			} else {
 				if (file.getName().toLowerCase().endsWith(".pdf")) {

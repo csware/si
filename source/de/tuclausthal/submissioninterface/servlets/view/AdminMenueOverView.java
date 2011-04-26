@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -55,7 +55,7 @@ public class AdminMenueOverView extends HttpServlet {
 			while (lectureIterator.hasNext()) {
 				Lecture lecture = lectureIterator.next();
 				out.println("<tr>");
-				out.println("<td><a href=\"" + response.encodeURL("?action=showLecture&amp;lecture=" + lecture.getId()) + "\">" + Util.mknohtml(lecture.getName()) + "</a></td>");
+				out.println("<td><a href=\"" + response.encodeURL("?action=showLecture&amp;lecture=" + lecture.getId()) + "\">" + Util.escapeHTML(lecture.getName()) + "</a></td>");
 				out.println("<td>" + lecture.getReadableSemester() + "</td>");
 				out.println("</tr>");
 			}

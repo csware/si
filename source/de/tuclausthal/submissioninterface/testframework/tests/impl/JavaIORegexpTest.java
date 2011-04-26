@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -49,7 +49,7 @@ public class JavaIORegexpTest extends JavaFunctionTest {
 		RegExpTest regExpTest = (RegExpTest) test;
 		params.add(regExpTest.getMainClass());
 		if (regExpTest.getCommandLineParameter() != null && !regExpTest.getCommandLineParameter().isEmpty()) {
-			params.addAll(Arrays.asList(Util.mksafecmdargs(regExpTest.getCommandLineParameter()).split(" ")));
+			params.addAll(Arrays.asList(Util.escapeCommandlineArguments(regExpTest.getCommandLineParameter()).split(" ")));
 		}
 	}
 }

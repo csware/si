@@ -42,7 +42,7 @@ public final class Util {
 	 * @param message
 	 * @return the escaped string
 	 */
-	public static String mknohtml(String message) {
+	public static String escapeHTML(String message) {
 		if (message == null) {
 			return "";
 		}
@@ -81,7 +81,7 @@ public final class Util {
 			return "";
 		}
 		String regexp = "(?is:<\\s*(!--.*?--|/?\\s*a(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*b(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*blockquote(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*br(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*center(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*div(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?dl\\s*/?|/?dd\\s*/?|/?dt\\s*/?|/?\\s*em(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*font(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?h1\\s*/?|/?h2\\s*/?|/?\\s*h3(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?h4\\s*/?|/?h5\\s*/?|/?h6\\s*/?|/?\\s*hr(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*i(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*img(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*li(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*ol(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*p(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*pre(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*span(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*strong(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*table(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?tbody\\s*/?|/?\\s*td(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*th(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*tr(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*tt(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*ul(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?)\\s*>)";
-		String string = mknohtml(message.replaceAll(regexp, "\022$1\024"));
+		String string = escapeHTML(message.replaceAll(regexp, "\022$1\024"));
 		Pattern pattern = Pattern.compile("\022([^\024]*)\024");
 		Matcher matcher = pattern.matcher(string);
 		StringBuffer returnString = new StringBuffer(string.length() + 50);
@@ -92,11 +92,11 @@ public final class Util {
 		return returnString.toString().replaceAll("(?i:&amp;([a-z#0-9]+);)", "&$1;");
 	}
 
-	public static String mkTextToHTML(String message) {
+	public static String textToHTML(String message) {
 		if (message == null) {
 			return "";
 		}
-		return mknohtml(message).replace("\n", "<br>");
+		return escapeHTML(message).replace("\n", "<br>");
 	}
 
 	/**
@@ -104,7 +104,7 @@ public final class Util {
 	 * @param message
 	 * @return escaped string
 	 */
-	public static String mksafecmdargs(String message) {
+	public static String escapeCommandlineArguments(String message) {
 		if (message == null) {
 			return null;
 		}

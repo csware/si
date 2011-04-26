@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -94,17 +94,17 @@ public class TaskManagerView extends HttpServlet {
 			if (taskGroup.getTaskGroupId() == task.getTaskGroup().getTaskGroupId()) {
 				selected = " selected";
 			}
-			out.println("<option value=\"" + taskGroup.getTaskGroupId() + "\"" + selected + ">" + Util.mknohtml(taskGroup.getTitle()) + "</option>");
+			out.println("<option value=\"" + taskGroup.getTaskGroupId() + "\"" + selected + ">" + Util.escapeHTML(taskGroup.getTitle()) + "</option>");
 		}
 		out.println("</select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
-		out.println("<td><input type=text name=title value=\"" + Util.mknohtml(task.getTitle()) + "\"></td>");
+		out.println("<td><input type=text name=title value=\"" + Util.escapeHTML(task.getTitle()) + "\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
-		out.println("<td><textarea cols=60 rows=10 name=description>" + Util.mknohtml(task.getDescription()) + "</textarea></td>");
+		out.println("<td><textarea cols=60 rows=10 name=description>" + Util.escapeHTML(task.getDescription()) + "</textarea></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Abgaben mit max. Partnern:</th>");
@@ -112,7 +112,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Filename Regexp:</th>");
-		out.println("<td><input type=text name=filenameregexp value=\"" + Util.mknohtml(task.getFilenameRegexp()) + "\"> <b>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;, für allgemeine Dateien: &quot;[A-Za-z0-9. _-]+&quot;, für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot;, &quot;-&quot; = upload disabled</b></td>");
+		out.println("<td><input type=text name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <b>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;, für allgemeine Dateien: &quot;[A-Za-z0-9. _-]+&quot;, für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot;, &quot;-&quot; = upload disabled</b></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Text-Eingabefeld:</th>");
@@ -120,7 +120,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Dateien bei Tutor aufklappen:</th>");
-		out.println("<td><input type=text name=featuredfiles value=\"" + Util.mknohtml(task.getFeaturedFiles()) + "\"> Sollen alle Dateien zugeklappt sein: \"-\", sonst Komma-separierte Datei-Liste oder leer.</td>");
+		out.println("<td><input type=text name=featuredfiles value=\"" + Util.escapeHTML(task.getFeaturedFiles()) + "\"> Sollen alle Dateien zugeklappt sein: \"-\", sonst Komma-separierte Datei-Liste oder leer.</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Tutoren dürfen Dateien für Studenten hochladen:</th>");
@@ -128,15 +128,15 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");
-		out.println("<td><input type=text name=startdate value=\"" + Util.mknohtml(task.getStart().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
+		out.println("<td><input type=text name=startdate value=\"" + Util.escapeHTML(task.getStart().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Enddatum:</th>");
-		out.println("<td><input type=text name=deadline value=\"" + Util.mknohtml(task.getDeadline().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
+		out.println("<td><input type=text name=deadline value=\"" + Util.escapeHTML(task.getDeadline().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Punktedatum:</th>");
-		out.println("<td><input type=text name=pointsdate value=\"" + Util.mknohtml(task.getShowPoints().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
+		out.println("<td><input type=text name=pointsdate value=\"" + Util.escapeHTML(task.getShowPoints().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 		out.println("</tr>");
 		if (task.getPointCategories() == null || task.getPointCategories().size() == 0) {
 			out.println("<tr>");
@@ -167,7 +167,7 @@ public class TaskManagerView extends HttpServlet {
 			if (task.getPointCategories().size() > 0) {
 				out.println("<ul>");
 				for (PointCategory category : task.getPointCategories()) {
-					out.println("<li>" + Util.mknohtml(category.getDescription()) + " " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? " optional" : "") + " (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deletePointCategory&amp;pointCategoryId=" + category.getPointcatid()) + "\">del</a>)</li>");
+					out.println("<li>" + Util.escapeHTML(category.getDescription()) + " " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? " optional" : "") + " (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deletePointCategory&amp;pointCategoryId=" + category.getPointcatid()) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
@@ -186,7 +186,7 @@ public class TaskManagerView extends HttpServlet {
 				out.println("<ul>");
 				for (String file : advisorFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
-					out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.mknohtml(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?action=delete&taskid=" + task.getTaskid()) + "\">del</a>)</li>");
+					out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?action=delete&taskid=" + task.getTaskid()) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
@@ -204,7 +204,7 @@ public class TaskManagerView extends HttpServlet {
 				out.println("<ul>");
 				for (SimilarityTest similarityTest : task.getSimularityTests()) {
 					out.print("<li>" + similarityTest + "<br>");
-					out.println("Ignored Files: " + Util.mknohtml(similarityTest.getExcludeFiles()) + "<br>");
+					out.println("Ignored Files: " + Util.escapeHTML(similarityTest.getExcludeFiles()) + "<br>");
 					out.print("Status: ");
 					if (similarityTest.getStatus() == 1) {
 						out.println("in Queue, noch nicht ausgeführt<br>");
@@ -223,10 +223,10 @@ public class TaskManagerView extends HttpServlet {
 			if (task.getTests().size() > 0) {
 				out.println("<ul>");
 				for (Test test : task.getTests()) {
-					out.println("<li>&quot;" + Util.mknohtml(test.getTestTitle()) + "&quot;: ");
+					out.println("<li>&quot;" + Util.escapeHTML(test.getTestTitle()) + "&quot;: ");
 					if (test instanceof RegExpTest) {
 						RegExpTest regexptest = (RegExpTest) test;
-						out.println("RegExp-Test:<br>Prüfpattern: " + Util.mknohtml(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.mknohtml(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.mknohtml(regexptest.getMainClass()) + "<br>");
+						out.println("RegExp-Test:<br>Prüfpattern: " + Util.escapeHTML(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.escapeHTML(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.escapeHTML(regexptest.getMainClass()) + "<br>");
 					} else if (test instanceof CompileTest) {
 						out.println("Compile-Test<br>");
 					} else if (test instanceof JUnitTest) {

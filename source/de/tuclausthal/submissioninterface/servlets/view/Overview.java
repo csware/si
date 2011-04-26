@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -58,7 +58,7 @@ public class Overview extends HttpServlet {
 
 				String studiengang = "";
 				if (student.getStudiengang() != null) {
-					studiengang = Util.mknohtml(student.getStudiengang());
+					studiengang = Util.escapeHTML(student.getStudiengang());
 				}
 				out.println("Bitte nennen Sie Ihren Studiengang: <input type=text name=studiengang size=40 value=\"" + studiengang + "\"> <input type=submit value=\"speichern...\">");
 				out.println("</form></p><br>");
@@ -73,7 +73,7 @@ public class Overview extends HttpServlet {
 			out.println("</tr>");
 			for (Participation participation : user.getLectureParticipant()) {
 				out.println("<tr>");
-				out.println("<td><a href=\"" + response.encodeURL("ShowLecture?lecture=" + participation.getLecture().getId()) + "\">" + Util.mknohtml(participation.getLecture().getName()) + "</a></td>");
+				out.println("<td><a href=\"" + response.encodeURL("ShowLecture?lecture=" + participation.getLecture().getId()) + "\">" + Util.escapeHTML(participation.getLecture().getName()) + "</a></td>");
 				out.println("<td>" + participation.getLecture().getReadableSemester() + "</td>");
 				out.println("</tr>");
 			}

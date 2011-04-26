@@ -376,7 +376,7 @@ public class SubmitSolution extends HttpServlet {
 							template.printTemplateHeader("Ungültige Anfrage");
 							out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
 							if (uploadFor > 0) {
-								out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.mknohtml(pattern.pattern()));
+								out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
 							}
 							template.printTemplateFooter();
 							return;

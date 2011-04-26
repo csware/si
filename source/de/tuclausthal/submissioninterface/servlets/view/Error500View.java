@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -55,7 +55,7 @@ public class Error500View extends HttpServlet {
 		}
 		Throwable throwable = (Throwable) request.getAttribute(Globals.EXCEPTION_ATTR);
 
-		out.println("Das Skript, auf das Sie versuchen zuzugreifen, hat einen schweren Fehler verursacht (" + Util.mknohtml(throwable.toString()) + ").<br>");
+		out.println("Das Skript, auf das Sie versuchen zuzugreifen, hat einen schweren Fehler verursacht (" + Util.escapeHTML(throwable.toString()) + ").<br>");
 
 		out.println("<br>");
 		out.println("<b>Sollte dieser Fehler öfter auftreten, wenden Sie sich bitte mit der o.g. Fehlermeldung, der Adresse und Informationen, was Sie gerade versucht haben durchzuführen, an den <a href=\"mailto:" + new ContextAdapter(getServletContext()).getAdminMail() + "\">Webmaster</a>.</b><br>");

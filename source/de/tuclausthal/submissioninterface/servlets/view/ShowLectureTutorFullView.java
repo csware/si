@@ -71,7 +71,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		out.println("<th rowspan=2>Vorname</th>");
 		for (TaskGroup taskGroup : taskGroupList) {
 			List<Task> taskList = taskGroup.getTasks();
-			out.println("<th colspan=" + taskList.size() + ">" + Util.mknohtml(taskGroup.getTitle()) + "</th>");
+			out.println("<th colspan=" + taskList.size() + ">" + Util.escapeHTML(taskGroup.getTitle()) + "</th>");
 		}
 		out.println("<th rowspan=2>Gesamt</th>");
 		out.println("</tr>");
@@ -80,7 +80,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		for (TaskGroup taskGroup : taskGroupList) {
 			List<Task> taskList = taskGroup.getTasks();
 			for (Task task : taskList) {
-				out.println("<th>" + Util.mknohtml(task.getTitle()) + "<br>Pkts: " + Util.showPoints(task.getMaxPoints()) + "</th>");
+				out.println("<th>" + Util.escapeHTML(task.getTitle()) + "<br>Pkts: " + Util.showPoints(task.getMaxPoints()) + "</th>");
 			}
 		}
 		out.println("</tr>");
@@ -89,13 +89,13 @@ public class ShowLectureTutorFullView extends HttpServlet {
 			out.println("<tr>");
 			if (lectureParticipation.getUser() instanceof Student) {
 				out.println("<td>" + ((Student) lectureParticipation.getUser()).getMatrikelno() + "</td>");
-				out.println("<td>" + Util.mknohtml(((Student) lectureParticipation.getUser()).getStudiengang()) + "</td>");
+				out.println("<td>" + Util.escapeHTML(((Student) lectureParticipation.getUser()).getStudiengang()) + "</td>");
 			} else {
 				out.println("<td>n/a</td>");
 				out.println("<td>n/a</td>");
 			}
-			out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + lectureParticipation.getUser().getUid()) + "\">" + Util.mknohtml(lectureParticipation.getUser().getLastName()) + "</a></td>");
-			out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + lectureParticipation.getUser().getUid()) + "\">" + Util.mknohtml(lectureParticipation.getUser().getFirstName()) + "</a></td>");
+			out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + lectureParticipation.getUser().getUid()) + "\">" + Util.escapeHTML(lectureParticipation.getUser().getLastName()) + "</a></td>");
+			out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + lectureParticipation.getUser().getUid()) + "\">" + Util.escapeHTML(lectureParticipation.getUser().getFirstName()) + "</a></td>");
 			int points = 0;
 			for (TaskGroup taskGroup : taskGroupList) {
 				List<Task> taskList = taskGroup.getTasks();

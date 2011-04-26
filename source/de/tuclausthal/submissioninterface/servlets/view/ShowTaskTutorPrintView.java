@@ -57,8 +57,8 @@ public class ShowTaskTutorPrintView extends HttpServlet {
 		out.println("<html>");
 		out.println("<body>");
 
-		out.println("<H1>" + Util.mknohtml(task.getTitle()) + "</H1>");
-		out.println("<h3>Gruppe: " + Util.mknohtml(group.getName()) + "</h3>");
+		out.println("<H1>" + Util.escapeHTML(task.getTitle()) + "</H1>");
+		out.println("<h3>Gruppe: " + Util.escapeHTML(group.getName()) + "</h3>");
 
 		if (task.getSubmissions() != null && task.getSubmissions().size() > 0) {
 			out.println("<table border=1>");
@@ -75,10 +75,10 @@ public class ShowTaskTutorPrintView extends HttpServlet {
 				Submission submission = submissionIterator.next();
 				if (lastSID != submission.getSubmissionid()) {
 					out.println("<tr>");
-					out.println("<td>" + Util.mknohtml(submission.getSubmitterNames()) + "</td>");
+					out.println("<td>" + Util.escapeHTML(submission.getSubmitterNames()) + "</td>");
 					lastSID = submission.getSubmissionid();
 					if (submission.getPoints() != null) {
-						out.println("<td>" + Util.mkTextToHTML(submission.getPoints().getPublicComment()) + "</td>");
+						out.println("<td>" + Util.textToHTML(submission.getPoints().getPublicComment()) + "</td>");
 						out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "</td>");
 						if (submission.getPoints().getPointsOk()) {
 							out.println("<td>ok</td>");

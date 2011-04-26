@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -58,7 +58,7 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Gruppe:</th>");
-		out.println("<td><input type=text name=title value=\"" + Util.mknohtml(group.getName()) + "\" " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "readonly") + "></td>");
+		out.println("<td><input type=text name=title value=\"" + Util.escapeHTML(group.getName()) + "\" " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "readonly") + "></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Studenten können sich eintragen:</th>");
@@ -79,7 +79,7 @@ public class EditGroupFormView extends HttpServlet {
 		while (participationIterator.hasNext()) {
 			Participation thisParticipation = participationIterator.next();
 			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0 || thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
-				out.println("<option value=" + thisParticipation.getId() + ">" + Util.mknohtml(thisParticipation.getUser().getFullName()) + "</option>");
+				out.println("<option value=" + thisParticipation.getId() + ">" + Util.escapeHTML(thisParticipation.getUser().getFullName()) + "</option>");
 			}
 		}
 		out.println("</select></td>");
@@ -93,7 +93,7 @@ public class EditGroupFormView extends HttpServlet {
 			while (participationIterator.hasNext()) {
 				Participation thisParticipation = participationIterator.next();
 				if (!group.getTutors().contains(thisParticipation)) {
-					out.println("<option value=" + thisParticipation.getId() + ">" + Util.mknohtml(thisParticipation.getUser().getFullName()) + "</option>");
+					out.println("<option value=" + thisParticipation.getId() + ">" + Util.escapeHTML(thisParticipation.getUser().getFullName()) + "</option>");
 				}
 			}
 			out.println("</select></td>");

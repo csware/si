@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -54,7 +54,7 @@ public class MarkEmptyTaskView extends HttpServlet {
 		out.println("<b>Student:</b> <select size=1 name=pid>");
 		for (Participation participation : participations) {
 			if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
-				out.println("<option value=\"" + participation.getId() + "\">" + Util.mknohtml(participation.getUser().getFullName()) + "</option>");
+				out.println("<option value=\"" + participation.getId() + "\">" + Util.escapeHTML(participation.getUser().getFullName()) + "</option>");
 			}
 		}
 		out.println("</select><br>");
