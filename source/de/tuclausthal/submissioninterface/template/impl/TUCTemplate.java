@@ -46,6 +46,9 @@ public class TUCTemplate extends Template {
 			if (user.isSuperUser()) {
 				out.println(" - <a href=\"" + servletResponse.encodeURL("AdminMenue") + "\">Admin-Menü</a>");
 			}
+			if (requestAdapter.isInTUCNet()) {
+				out.println(" - <a href=\"" + servletResponse.encodeURL("SwitchLogin?uid=" + user.getUid()) + "\">Tutor Login</a>");
+			}
 			out.println(" - <a href=\"" + servletResponse.encodeURL("Logout") + "\">LogOut</a>");
 		} else {
 			out.println("nicht eingeloggt");

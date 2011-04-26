@@ -39,6 +39,13 @@ public class RequestAdapter {
 	}
 
 	/**
+	 * @return if the requestee is within the TUC net
+	 */
+	public boolean isInTUCNet() {
+		return request.getRemoteAddr().startsWith("139.174.");
+	}
+
+	/**
 	 * Reads the user from the session
 	 * @return the user or null if no user was stored to the session
 	 */
