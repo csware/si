@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -68,8 +68,7 @@ public class ShowTaskStudentView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
-		// HTML must be possible here
-		out.println("<td id=taskdescription>" + task.getDescription() + "</td>");
+		out.println("<td id=taskdescription>" + Util.makeCleanHTML(task.getDescription()) + "</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");
