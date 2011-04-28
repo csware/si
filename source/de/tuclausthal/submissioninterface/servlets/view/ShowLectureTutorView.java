@@ -124,7 +124,11 @@ public class ShowLectureTutorView extends HttpServlet {
 			out.println("<h3>Ohne Gruppe</h3>");
 			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, requestAdapter);
 			if (participation.getRoleType() == ParticipationRole.ADVISOR) {
-				out.println("<p class=mid><a href=\"" + response.encodeURL("AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a></p>");
+				out.println("<p class=mid><a href=\"" + response.encodeURL("AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a>");
+				if (lecture.getGroups().size() > 0) {
+					out.println("<br><a href=\"" + response.encodeURL("EditMultipleGroups?lecture=" + lecture.getId()) + "\">Mehrere Gruppen auf einmal bearbeiten</a>");
+				}
+				out.println("</p>");
 			}
 		}
 		for (Group group : lecture.getGroups()) {

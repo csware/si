@@ -539,4 +539,20 @@
     <servlet-name>TaskGroupManagerView</servlet-name>
     <url-pattern>/servlets/TaskGroupManagerView</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>EditMultipleGroups</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.EditMultipleGroups</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EditMultipleGroups</servlet-name>
+    <url-pattern>/servlets/EditMultipleGroups</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>EditMultipleGroupsFormView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.EditMultipleGroupsFormView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EditMultipleGroupsFormView</servlet-name>
+    <url-pattern>/servlets/EditMultipleGroupsFormView</url-pattern>
+  </servlet-mapping>
 </web-app>
