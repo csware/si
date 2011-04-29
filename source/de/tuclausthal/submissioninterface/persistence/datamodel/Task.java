@@ -47,6 +47,7 @@ public class Task implements Serializable {
 	private String title = "";
 	private int maxSubmitters = 1;
 	private int maxPoints = 0;
+	private int minPointStep = 50;
 	private Date start;
 	private Date deadline;
 	private Date showPoints;
@@ -67,6 +68,7 @@ public class Task implements Serializable {
 	/**
 	 * @param title
 	 * @param maxPoints
+	 * @param minPointStep
 	 * @param start
 	 * @param deadline
 	 * @param description
@@ -79,9 +81,10 @@ public class Task implements Serializable {
 	 * @param tutorsCanUploadFiles 
 	 * @param maxSubmitters 
 	 */
-	public Task(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters) {
+	public Task(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters) {
 		this.title = title;
 		this.maxPoints = maxPoints;
+		this.minPointStep = minPointStep;
 		this.start = start;
 		this.deadline = deadline;
 		this.description = description;
@@ -377,5 +380,19 @@ public class Task implements Serializable {
 		} catch (PatternSyntaxException e) {
 			this.archiveFilenameRegexp = "-";
 		}
+	}
+
+	/**
+	 * @return the minPointStep
+	 */
+	public int getMinPointStep() {
+		return minPointStep;
+	}
+
+	/**
+	 * @param minPointStep the minPointStep to set
+	 */
+	public void setMinPointStep(int minPointStep) {
+		this.minPointStep = minPointStep;
 	}
 }

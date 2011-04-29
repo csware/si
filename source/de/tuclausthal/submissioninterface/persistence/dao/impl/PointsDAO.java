@@ -52,6 +52,9 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 
 		session.lock(submission, LockMode.UPGRADE);
 		session.lock(submission.getTask(), LockMode.UPGRADE);
+		if (issuedPoints % submission.getTask().getMinPointStep() != 0) {
+			issuedPoints = (issuedPoints / submission.getTask().getMinPointStep()) * submission.getTask().getMinPointStep();
+		}
 		if (issuedPoints < 0) {
 			issuedPoints = 0;
 		} else if (issuedPoints > submission.getTask().getMaxPoints()) {
@@ -151,7 +154,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 			}
 			int issuedPoints = 0;
 			if (pointGiven.get("point_" + category.getPointcatid()) != null) {
-				issuedPoints = Util.convertToPoints(pointGiven.get("point_" + category.getPointcatid())[0]);
+				issuedPoints = Util.convertToPoints(pointGiven.get("point_" + category.getPointcatid())[0], submission.getTask().getMinPointStep());
 			}
 			if (issuedPoints > category.getPoints()) {
 				issuedPoints = category.getPoints();

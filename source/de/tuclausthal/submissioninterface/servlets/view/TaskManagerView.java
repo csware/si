@@ -142,6 +142,10 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<th>Punktedatum:</th>");
 		out.println("<td><input type=text name=pointsdate value=\"" + Util.escapeHTML(task.getShowPoints().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Min. Punkt-Schrittweite:</th>");
+		out.println("<td><input type=text name=minpointstep value=\"" + Util.showPoints(task.getMinPointStep()) + "\"> <b>bei Änderung bereits vergebene Pkts. prüfen!</b></td>");
+		out.println("</tr>");
 		if (task.getPointCategories() == null || task.getPointCategories().size() == 0) {
 			out.println("<tr>");
 			out.println("<th>Max. Punkte:</th>");
@@ -167,7 +171,7 @@ public class TaskManagerView extends HttpServlet {
 
 		if (task.getTaskid() != 0) {
 			out.println("<h2>Punkte</h2>");
-			out.println("<p>Werden hier Kriterien angelegt, so werden den Tutoren nur noch Checkboxen angezeigt (für \"1 Punkte\", für >1 erscheint wieder ein Textfeld).</p>");
+			out.println("<p>Werden hier Kriterien angelegt, so wird den Tutoren eine differenzierte Bewertung ermöglicht (für \"Min. Punkt-Schrittweite\" wird eine Checkbox angezeigt, für &gt; erscheint ein Texteingabefeld).</p>");
 			if (task.getPointCategories().size() > 0) {
 				out.println("<ul>");
 				for (PointCategory category : task.getPointCategories()) {
@@ -180,7 +184,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 			out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
 			out.println("Kriteria: <input type=text name=description><br>");
-			out.println("Punkte: <input type=text name=points value=1><br>");
+			out.println("Punkte: <input type=text name=points value=\"" + Util.showPoints(task.getMinPointStep()) + "\"><br>");
 			out.println("Optional: <input type=checkbox name=optional> (für Bonuspunkte)<br>");
 			out.println("<input type=submit value=speichern>");
 			out.println("</form>");

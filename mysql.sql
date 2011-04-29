@@ -245,6 +245,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `filenameRegexp` varchar(255) DEFAULT NULL,
   `archiveFilenameRegexp` varchar(255) DEFAULT NULL,
   `maxPoints` int(11) NOT NULL,
+  `minPointStep` int(11) NOT NULL,
   `maxSubmitters` int(11) NOT NULL,
   `showPoints` datetime DEFAULT NULL,
   `showTextArea` bit(1) NOT NULL,

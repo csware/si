@@ -360,6 +360,15 @@ public final class Util {
 		}
 	}
 
+	public static int convertToPoints(String parameter, int minPointStep) {
+		int points = convertToPoints(parameter);
+		if (points % minPointStep == 0) {
+			return points;
+		} else {
+			return (points / minPointStep) * minPointStep;
+		}
+	}
+
 	public static String csvQuote(String title) {
 		if (title == null) {
 			return null;

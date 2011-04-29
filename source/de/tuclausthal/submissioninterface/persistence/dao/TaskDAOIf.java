@@ -32,6 +32,7 @@ public interface TaskDAOIf {
 	 * Creates and stores a new task on the DB with given attribute-values
 	 * @param title the title of the task
 	 * @param maxPoints the maximum number of points
+	 * @param minPointStep 
 	 * @param start the start date of the task/when it get's visible to students
 	 * @param deadline the date after which no submission is possible any more
 	 * @param description the description of the task (HTML possible)
@@ -45,7 +46,7 @@ public interface TaskDAOIf {
 	 * @param maxSubmitters 
 	 * @return a new Task
 	 */
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters);
+	public Task newTask(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters);
 
 	/**
 	 * Fetch a task based on it's id

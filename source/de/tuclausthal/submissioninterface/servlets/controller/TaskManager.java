@@ -127,8 +127,9 @@ public class TaskManager extends HttpServlet {
 					request.getRequestDispatcher("MessageView").forward(request, response);
 					return;
 				}
+				task.setMinPointStep(Util.convertToPoints(request.getParameter("minpointstep")));
 				if (task.getPointCategories().size() == 0) {
-					task.setMaxPoints(Util.convertToPoints(request.getParameter("maxpoints")));
+					task.setMaxPoints(Util.convertToPoints(request.getParameter("maxpoints"), task.getMinPointStep()));
 				}
 				task.setTitle(request.getParameter("title"));
 				task.setDescription(request.getParameter("description"));
@@ -163,7 +164,7 @@ public class TaskManager extends HttpServlet {
 				if (request.getParameter("twosubmitters") != null) {
 					maxSubmitters = 2;
 				}
-				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints")), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, request.getParameter("filenameregexp"), request.getParameter("archivefilenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null, maxSubmitters);
+				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), Util.convertToPoints(request.getParameter("minpointstep"))), Util.convertToPoints(request.getParameter("minpointstep")), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, request.getParameter("filenameregexp"), request.getParameter("archivefilenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null, maxSubmitters);
 			}
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
@@ -323,14 +324,19 @@ public class TaskManager extends HttpServlet {
 				request.setAttribute("title", "Aufgabe nicht gefunden");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 			}
-			// TODO make nice! and use DAOs
-			Transaction tx = session.beginTransaction();
-			session.lock(task, LockMode.UPGRADE);
-			pointCategoryDAO.newPointCategory(task, Util.convertToPoints(request.getParameter("points")), request.getParameter("description"), request.getParameter("optional") != null);
-			task.setMaxPoints(pointCategoryDAO.countPoints(task));
-			session.update(task);
-			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid()));
+			if (Util.convertToPoints(request.getParameter("points"), task.getMinPointStep()) > 0) {
+				// TODO make nice! and use DAOs
+				Transaction tx = session.beginTransaction();
+				session.lock(task, LockMode.UPGRADE);
+				pointCategoryDAO.newPointCategory(task, Util.convertToPoints(request.getParameter("points")), request.getParameter("description"), request.getParameter("optional") != null);
+				task.setMaxPoints(pointCategoryDAO.countPoints(task));
+				session.update(task);
+				tx.commit();
+				response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid()));
+			} else {
+				request.setAttribute("title", "Punkte ungültig.");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+			}
 			return;
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
