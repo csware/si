@@ -1,12 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 3.2.4
--- http://www.phpmyadmin.net
---
--- Host: localhost
--- Erstellungszeit: 30. August 2010 um 21:54
--- Server Version: 5.1.50
--- PHP-Version: 5.3.1
-
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 
@@ -34,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `maxStudents` int(11) unsigned NOT NULL DEFAULT '20',
   PRIMARY KEY (`gid`),
   KEY `FKB63DD9D4AF18EDD1` (`lectureid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -61,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `lectures` (
   `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_german2_ci DEFAULT NULL,
   `semester` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -82,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `logs` (
   KEY `userId` (`userId`),
   KEY `testId` (`testId`),
   KEY `taskId` (`taskId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8489 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -101,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `participations` (
   KEY `FKA301B52E28A1D21` (`uid`),
   KEY `FKA301B527F3A8A13` (`groupid`),
   KEY `FKA301B52AF18EDD1` (`lectureid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=406 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -117,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `pointcategories` (
   `taskid` int(11) NOT NULL,
   PRIMARY KEY (`pointcatid`),
   KEY `FK2623E7ACAE0697EB` (`taskid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -133,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `pointgiven` (
   PRIMARY KEY (`pointgivenid`),
   KEY `FK4BE59BED638E4301` (`categoryid`),
   KEY `FK4BE59BED39FBF139` (`submissionid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -152,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `pointhistory` (
   PRIMARY KEY (`id`),
   KEY `FK1DB12D04AEB18C37` (`who_id`),
   KEY `FK1DB12D046B74DB4C` (`submission_submissionid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2318 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -170,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `similarities` (
   KEY `FKB31AC117AAD798` (`submissionTwo_submissionid`),
   KEY `FKB31AC193B8B275` (`similarityTest_similarityTestId`),
   KEY `FKB31AC1B470E5BE` (`submissionOne_submissionid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=76931 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -190,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `similaritytests` (
   `taskid` int(11) NOT NULL,
   PRIMARY KEY (`similarityTestId`),
   KEY `FK86B2AD1EAE0697EB` (`taskid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=87 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -211,7 +202,7 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   PRIMARY KEY (`submissionid`),
   KEY `FK2912EA7AE0697EB` (`taskid`),
   KEY `issuedby` (`issuedBy_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5066 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -239,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `taskgroups` (
   `lectureid` int(11) NOT NULL,
   PRIMARY KEY (`taskgroupid`),
   KEY `FK5BD51799AF18EDD1` (`lectureid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -264,7 +255,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `tutorsCanUploadFiles` bit(1) NOT NULL,
   PRIMARY KEY (`taskid`),
   KEY `taskgroupid` (`taskgroupid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -281,7 +272,7 @@ CREATE TABLE IF NOT EXISTS `testresults` (
   PRIMARY KEY (`id`),
   KEY `FKC6CC0F246B74DB4C` (`submission_submissionid`),
   KEY `FKC6CC0F248DBEBD80` (`test_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6680 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -306,7 +297,7 @@ CREATE TABLE IF NOT EXISTS `tests` (
   `excludedFiles` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK6924E21AE0697EB` (`taskid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=80 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -322,7 +313,7 @@ CREATE TABLE IF NOT EXISTS `testscounts` (
   PRIMARY KEY (`id`),
   KEY `FKF81042A5D2AB5AAD` (`user_uid`),
   KEY `FKF81042A58DBEBD80` (`test_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2741 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -340,7 +331,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `studiengang` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=383 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 --
 -- Constraints der exportierten Tabellen
