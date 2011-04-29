@@ -131,6 +131,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<td>");
 			out.println("<form action=\"?\" method=post>");
 			out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
+			// attention: quite similar code in MarkEmptyTaskView
 			if (task.getPointCategories().size() > 0) {
 				PointGivenDAOIf pointGivenDAO = DAOFactory.PointGivenDAOIf(session);
 				Iterator<PointGiven> pointsGivenIterator = pointGivenDAO.getPointsGivenOfSubmission(submission).iterator();

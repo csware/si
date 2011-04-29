@@ -95,7 +95,12 @@ public class MarkEmptyTask extends HttpServlet {
 			if (request.getParameter("pointsok") != null) {
 				pointStatus = PointStatus.ABGENOMMEN;
 			}
-			pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, false);
+			// attention: quite similar code in ShowSubmission
+			if (task.getPointCategories().size() > 0) {
+				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, false);
+			} else {
+				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, false);
+			}
 			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("MarkEmptyTask?taskid=" + task.getTaskid()));
 			return;

@@ -89,6 +89,7 @@ public class ShowSubmission extends HttpServlet {
 				pointStatus = PointStatus.ABGENOMMEN;
 			}
 			Transaction tx = session.beginTransaction();
+			// attention: quite similar code in MarkEmptyTask
 			if (task.getPointCategories().size() > 0) {
 				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, request.getParameter("isdupe") != null);
 			} else {

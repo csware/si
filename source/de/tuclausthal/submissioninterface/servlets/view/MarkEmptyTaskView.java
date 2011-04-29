@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -27,9 +28,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
+import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
+import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -45,6 +53,8 @@ public class MarkEmptyTaskView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
+		Session session = RequestAdapter.getSession(request);
+
 		List<Participation> participations = (List<Participation>) request.getAttribute("participations");
 		Task task = (Task) request.getAttribute("task");
 
@@ -58,7 +68,21 @@ public class MarkEmptyTaskView extends HttpServlet {
 			}
 		}
 		out.println("</select><br>");
-		out.println("<b>Punkte:</b> <input type=text name=points size=3 value=\"\"> (max. " + Util.showPoints(task.getMaxPoints()) + ")<br>");
+		if (task.getPointCategories().size() > 0) {
+			out.println("<b>Punkte:</b><br>");
+			out.println("<input type=hidden name=points value=categories>");
+			out.println("<ul>");
+			for (PointCategory category : task.getPointCategories()) {
+				if (category.getPoints() == task.getMinPointStep()) {
+					out.println("<li><input type=checkbox id=\"point_" + category.getPointcatid() + "\" name=\"point_" + category.getPointcatid() + "\" value=\"" + category.getPoints() + "\"> <label for=\"point_" + category.getPointcatid() + "\">" + Util.escapeHTML(category.getDescription()) + "</label></li>");
+				} else {
+					out.println("<li><input type=text size=3 id=\"point_" + category.getPointcatid() + "\" name=\"point_" + category.getPointcatid() + "\"> <label for=\"point_" + category.getPointcatid() + "\">" + Util.escapeHTML(category.getDescription()) + " (max. " + Util.showPoints(category.getPoints()) + ")</label></li>");
+				}
+			}
+			out.println("</ul>");
+		} else {
+			out.println("<b>Punkte:</b> <input type=text name=points size=3 value=\"\"> (max. " + Util.showPoints(task.getMaxPoints()) + ")<br>");
+		}
 		out.println("<b>Öffentlicher Kommentar:</b><br><textarea cols=80 rows=8 name=publiccomment></textarea><br>");
 		out.println("<b>Interner Kommentar:</b><br><textarea cols=80 rows=8 name=internalcomment></textarea><br>");
 		out.println("<b>Abgenommen:</b> <input type=checkbox name=pointsok checked><br>");
