@@ -109,7 +109,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th># Ausführbar für Studenten:</th>");
-		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\"></td>");
+		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
@@ -119,7 +119,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</table>");
 		out.println("</form>");
 		out.println("<p><h2>JUnit. Test</h2>");
-		out.println("<form ENCTYPE=\"multipart/form-data\" action=\"" + response.encodeURL("?taskid=" + task.getTaskid() + "&amp;action=saveNewTest&type=junit") + "\" method=post>");
+		out.println("<form ENCTYPE=\"multipart/form-data\" action=\"" + response.encodeURL("?taskid=" + task.getTaskid() + "&amp;action=saveNewTest&amp;type=junit") + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
@@ -143,7 +143,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th># Ausführbar für Studenten:</th>");
-		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\"></td>");
+		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
@@ -180,7 +180,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th># Ausführbar für Studenten:</th>");
-		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\"></td>");
+		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");

@@ -56,6 +56,7 @@ public class TaskManagerView extends HttpServlet {
 		Lecture lecture = task.getTaskGroup().getLecture();
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
 
+		template.addJQuery();
 		template.addHead("<script type=\"text/javascript\" src=\"" + getServletContext().getContextPath() + "/tiny_mce/tiny_mce.js\"></script>");
 		template.addHead("<script type=\"text/javascript\">\ntinyMCE.init({" +
 							"mode : \"textareas\"," +
@@ -87,7 +88,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
 		out.println("<table class=border>");
 		out.println("<tr>");
-		out.println("<th>Aufgabengruppe:</th>");
+		out.println("<th width=\"30%\">Aufgabengruppe:</th>");
 		out.println("<td><select size=1 name=taskGroup>");
 		for (TaskGroup taskGroup : lecture.getTaskGroups()) {
 			String selected = "";
@@ -100,23 +101,23 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
-		out.println("<td><input type=text name=title value=\"" + Util.escapeHTML(task.getTitle()) + "\"></td>");
+		out.println("<td><input type=text size=100 name=title value=\"" + Util.escapeHTML(task.getTitle()) + "\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
-		out.println("<td><textarea cols=60 rows=10 name=description>" + Util.escapeHTML(task.getDescription()) + "</textarea></td>");
+		out.println("<td><textarea cols=60 rows=20 name=description>" + Util.escapeHTML(task.getDescription()) + "</textarea></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Abgaben mit max. Partnern:</th>");
-		out.println("<td><input type=input name=\"maxSubmitters\" value=\"" + task.getMaxSubmitters() + "\"></td>");
+		out.println("<td><input type=text size=5 name=\"maxSubmitters\" value=\"" + task.getMaxSubmitters() + "\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Filename Regexp:</th>");
-		out.println("<td><input type=text name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <b>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;, für allgemeine Dateien: &quot;[A-Za-z0-9. _-]+&quot;, für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot;, &quot;-&quot; = upload disabled</b></td>");
+		out.println("<td><input type=text size=100 name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#fileregexphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=fileregexphelp><b>Hilfe:</b><br>Dateinamen, die von Studenten hochgeladen werden, werden mit diesem regulären Ausdruck überprüft, bevor diese verarbeitet werden.<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>&quot;-&quot; = Dateiupload nicht anbieten bzw. verbieten</span></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Archive Filename Regexp:</th>");
-		out.println("<td><input type=text name=archivefilenameregexp value=\"" + Util.escapeHTML(task.getArchiveFilenameRegexp()) + "\"> <b>siehe oben, prepend &quot;^&quot; to match full filename with path, &quot;-&quot; = archive nicht autom. entpacken</b></td>");
+		out.println("<th>Archiv-Filename Regexp:</th>");
+		out.println("<td><input type=text size=100 name=archivefilenameregexp value=\"" + Util.escapeHTML(task.getArchiveFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#archivefileregexphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=archivefileregexphelp><b>Hilfe:</b><br>Das Hochladen von Archiven (.zip und .jar) muss im o.g. regulären Ausdruck erlaubt werden, um diese Funktion nutzen zu können. Mit diesem regulären Ausdruck werden die Dateien im Archiv geprüft und nur diese extrahiert, andere werden ignoriert. Prepend &quot;^&quot; to match full filename with path<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>&quot;-&quot; = Archive nicht automatisch entpacken</span></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Text-Eingabefeld:</th>");
@@ -124,7 +125,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Dateien bei Tutor aufklappen:</th>");
-		out.println("<td><input type=text name=featuredfiles value=\"" + Util.escapeHTML(task.getFeaturedFiles()) + "\"> Sollen alle Dateien zugeklappt sein: \"-\", sonst Komma-separierte Datei-Liste oder leer.</td>");
+		out.println("<td><input type=text name=featuredfiles size=100 value=\"" + Util.escapeHTML(task.getFeaturedFiles()) + "\"><br>Sollen alle Dateien zugeklappt sein: \"-\", sonst Komma-separierte Datei-Liste oder leer.</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Tutoren dürfen Dateien für Studenten hochladen:</th>");
@@ -144,12 +145,12 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Min. Punkt-Schrittweite:</th>");
-		out.println("<td><input type=text name=minpointstep value=\"" + Util.showPoints(task.getMinPointStep()) + "\"> <b>bei Änderung bereits vergebene Pkts. prüfen!</b></td>");
+		out.println("<td><input type=text size=5 name=minpointstep value=\"" + Util.showPoints(task.getMinPointStep()) + "\"> <b>bei Änderung bereits vergebene Pkts. prüfen!</b></td>");
 		out.println("</tr>");
 		if (task.getPointCategories() == null || task.getPointCategories().size() == 0) {
 			out.println("<tr>");
 			out.println("<th>Max. Punkte:</th>");
-			out.println("<td><input type=text name=maxpoints value=\"" + Util.showPoints(task.getMaxPoints()) + "\"> <b>bei Änderung bereits vergebene Pkts. prüfen!</b></td>");
+			out.println("<td><input type=text size=5 name=maxpoints value=\"" + Util.showPoints(task.getMaxPoints()) + "\"> <b>bei Änderung bereits vergebene Pkts. prüfen!</b></td>");
 			out.println("</tr>");
 		} else {
 			out.println("<tr>");
@@ -171,11 +172,11 @@ public class TaskManagerView extends HttpServlet {
 
 		if (task.getTaskid() != 0) {
 			out.println("<h2>Punkte</h2>");
-			out.println("<p>Werden hier Kriterien angelegt, so wird den Tutoren eine differenzierte Bewertung ermöglicht (für \"Min. Punkt-Schrittweite\" wird eine Checkbox angezeigt, für &gt; erscheint ein Texteingabefeld).</p>");
+			out.println("<p>Werden hier Kriterien angelegt, so wird den Tutoren eine differenzierte Bewertung ermöglicht (für " + Util.showPoints(task.getMinPointStep()) + " Punkte wird eine Checkbox angezeigt, für &gt; " + Util.showPoints(task.getMinPointStep()) + " Punkte erscheint ein Texteingabefeld).</p>");
 			if (task.getPointCategories().size() > 0) {
 				out.println("<ul>");
 				for (PointCategory category : task.getPointCategories()) {
-					out.println("<li>" + Util.escapeHTML(category.getDescription()) + " " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? " optional" : "") + " (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deletePointCategory&amp;pointCategoryId=" + category.getPointcatid()) + "\">del</a>)</li>");
+					out.println("<li>" + Util.escapeHTML(category.getDescription()) + "; " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? ", optional" : "") + " (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deletePointCategory&amp;pointCategoryId=" + category.getPointcatid()) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
@@ -184,7 +185,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 			out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
 			out.println("Kriteria: <input type=text name=description><br>");
-			out.println("Punkte: <input type=text name=points value=\"" + Util.showPoints(task.getMinPointStep()) + "\"><br>");
+			out.println("Punkte: <input size=5 type=text name=points value=\"" + Util.showPoints(task.getMinPointStep()) + "\"><br>");
 			out.println("Optional: <input type=checkbox name=optional> (für Bonuspunkte)<br>");
 			out.println("<input type=submit value=speichern>");
 			out.println("</form>");
@@ -198,7 +199,7 @@ public class TaskManagerView extends HttpServlet {
 				}
 				out.println("</ul>");
 			}
-			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadTaskFile&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()) + "\">");
+			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadTaskFile&amp;lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid()) + "\">");
 			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie den Studenten zur Verfügung stellen möchten:</p>");
 			out.println("<INPUT TYPE=file NAME=file>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");

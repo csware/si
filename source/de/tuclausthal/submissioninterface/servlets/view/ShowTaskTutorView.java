@@ -180,7 +180,7 @@ public class ShowTaskTutorView extends HttpServlet {
 							out.println("<th>" + Util.escapeHTML(test.getTestTitle()) + "</th>");
 						}
 						for (SimilarityTest similarityTest : task.getSimularityTests()) {
-							String color = "";
+							String color = "\"\"";
 							String hint = "";
 							if (similarityTest.getStatus() > 0) {
 								color = "red";

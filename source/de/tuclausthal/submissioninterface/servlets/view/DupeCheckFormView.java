@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -55,13 +55,14 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Minimale Ähnlichkeit:</th>");
-		out.println("<td><input type=text value=50 name=minsimilarity> %</td>");
+		out.println("<td><input size=5 type=text value=80 name=minsimilarity> %</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Dateien ausschließen:</th>");
-		out.println("<td><input type=text name=excludeFiles> (Dateinamen durch Komma getrennt)</td>");
+		out.println("<td><input size=100 type=text name=excludeFiles><br>(Dateinamen durch Komma getrennt)</td>");
 		out.println("</tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=starten> <a href=\"");
+		out.println("<tr>");
+		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
 		out.println(response.encodeURL("TaskManager?taskid=" + task.getTaskid() + "&amp;action=editTask&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
@@ -75,14 +76,14 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Typ:</th>");
-		out.println("<td><select name=type>");
+		out.println("<td><select size=1 name=type>");
 		out.println("<option value=\"levenshtein\">Levenshtein</option>");
 		out.println("<option value=\"compression\">Kolmogorov Komplexität</option>");
 		out.println("</select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Grundlage:</th>");
-		out.println("<td><select name=normalizer1>");
+		out.println("<td><select size=1 name=normalizer1>");
 		out.println("<option value=\"code\">Quellcode ohne Kommentare</option>");
 		out.println("<option value=\"comments\">nur Kommentare</option>");
 		out.println("<option value=\"both\">kompletter Quellcode</option>");
@@ -90,13 +91,14 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Schreibweise:</th>");
-		out.println("<td><select name=normalizer2>");
+		out.println("<td><select size=1 name=normalizer2>");
 		out.println("<option value=\"lc\">Groß- und Kleinschreibung ignorieren</option>");
 		out.println("<option value=\"none\">nicht ignorieren</option>");
 		out.println("</select></td>");
 		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<th>Normalizer:</th>");
-		out.println("<td><select name=normalizer3>");
+		out.println("<td><select size=1 name=normalizer3>");
 		out.println("<option value=\"newlines\">Doppelte Leerzeilen entfernen</option>");
 		out.println("<option value=\"spacestabs\">Doppelte Spaces/Tabs entfernen</option>");
 		out.println("<option value=\"all\" selected>Doppelte Leerzeilen/Spaces/Tabs entfernen</option>");
@@ -105,15 +107,14 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Minimale Ähnlichkeit:</th>");
-		out.println("<td><input type=text value=50 name=minsimilarity> %</td>");
-		out.println("</tr>");
+		out.println("<td><input size=5 type=text value=80 name=minsimilarity> %</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Dateien ausschließen:</th>");
-		out.println("<td><input type=text name=excludeFiles value=\".classpath,.project,META-INF,.settings\"> (Dateinamen durch Komma getrennt)</td>");
+		out.println("<td><input size=100 type=text name=excludeFiles value=\".classpath,.project,META-INF,.settings\"><br>(Dateinamen durch Komma getrennt)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=starten> <a href=\"");
+		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
 		out.println(response.encodeURL("TaskManager?taskid=" + task.getTaskid() + "&amp;action=editTask&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
