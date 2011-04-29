@@ -115,6 +115,10 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<td><input type=text name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <b>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;, für allgemeine Dateien: &quot;[A-Za-z0-9. _-]+&quot;, für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot;, &quot;-&quot; = upload disabled</b></td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Archive Filename Regexp:</th>");
+		out.println("<td><input type=text name=archivefilenameregexp value=\"" + Util.escapeHTML(task.getArchiveFilenameRegexp()) + "\"> <b>siehe oben, prepend &quot;^&quot; to match full filename with path, &quot;-&quot; = archive nicht autom. entpacken</b></td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<th>Text-Eingabefeld:</th>");
 		out.println("<td><input type=checkbox name=showtextarea " + (task.isShowTextArea() ? "checked" : "") + "></td>");
 		out.println("</tr>");

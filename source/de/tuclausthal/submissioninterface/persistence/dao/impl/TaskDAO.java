@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -42,10 +42,10 @@ public class TaskDAO extends AbstractDAO implements TaskDAOIf {
 	}
 
 	@Override
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameregexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters) {
+	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameregexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		Task task = new Task(title, maxPoints, start, deadline, description, taskGroup, showPoints, filenameregexp, showTextArea, featuredFiles, tutorsCanUploadFiles, maxSubmitters);
+		Task task = new Task(title, maxPoints, start, deadline, description, taskGroup, showPoints, filenameregexp, archiveFilenameRegexp, showTextArea, featuredFiles, tutorsCanUploadFiles, maxSubmitters);
 		session.save(task);
 		tx.commit();
 		return task;

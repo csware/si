@@ -105,6 +105,7 @@ public class TaskManager extends HttpServlet {
 				task.setDeadline(new Date(new Date().getTime() + 3600 * 24 * 7 * 1000));
 				task.setShowPoints(task.getDeadline());
 				task.setFilenameRegexp("[A-Z][A-Za-z0-9_]+\\.java");
+				task.setArchiveFilenameRegexp("-");
 				task.setTaskGroup(lecture.getTaskGroups().get(0));
 			}
 
@@ -133,6 +134,7 @@ public class TaskManager extends HttpServlet {
 				task.setDescription(request.getParameter("description"));
 				task.setMaxSubmitters(Util.parseInteger(request.getParameter("maxSubmitters"), 1));
 				task.setFilenameRegexp(request.getParameter("filenameregexp"));
+				task.setArchiveFilenameRegexp(request.getParameter("archivefilenameregexp"));
 				task.setFeaturedFiles(request.getParameter("featuredfiles"));
 				task.setShowTextArea(request.getParameter("showtextarea") != null);
 				task.setTutorsCanUploadFiles(request.getParameter("tutorsCanUploadFiles") != null);
@@ -161,7 +163,7 @@ public class TaskManager extends HttpServlet {
 				if (request.getParameter("twosubmitters") != null) {
 					maxSubmitters = 2;
 				}
-				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints")), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, request.getParameter("filenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null, maxSubmitters);
+				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints")), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, request.getParameter("filenameregexp"), request.getParameter("archivefilenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null, maxSubmitters);
 			}
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));

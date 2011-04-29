@@ -310,10 +310,44 @@ public class SubmitSolution extends HttpServlet {
 
 				// Process a file upload
 				if (!item.isFormField()) {
-					if (item.getName().toLowerCase().endsWith(".zip") || item.getName().toLowerCase().endsWith(".jar")) {
+					Pattern pattern;
+					if (task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty() || uploadFor > 0) {
+						pattern = Pattern.compile("^(?:.*?\\\\|/)?([a-zA-Z0-9_.-]+)$");
+					} else {
+						pattern = Pattern.compile("^(?:.*?\\\\|/)?(" + task.getFilenameRegexp() + ")$");
+					}
+					StringBuffer submittedFileName = new StringBuffer(item.getName());
+					if (submittedFileName.lastIndexOf(".") > 0) {
+						int lastDot = submittedFileName.lastIndexOf(".");
+						submittedFileName.replace(lastDot, submittedFileName.length(), submittedFileName.subSequence(lastDot, submittedFileName.length()).toString().toLowerCase());
+					}
+					Matcher m = pattern.matcher(submittedFileName);
+					if (!m.matches()) {
+						if (!submissionDAO.deleteIfNoFiles(submission, path)) {
+							submission.setLastModified(new Date());
+							submissionDAO.saveSubmission(submission);
+						}
+						System.out.println("SubmitSolutionProblem2: " + item.getName() + ";" + submittedFileName + ";" + pattern.pattern());
+						tx.commit();
+						template.printTemplateHeader("Ungültige Anfrage");
+						out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
+						if (uploadFor > 0) {
+							out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
+						}
+						template.printTemplateFooter();
+						return;
+					}
+					String fileName = m.group(1);
+					if (!"-".equals(task.getArchiveFilenameRegexp()) && (fileName.endsWith(".zip") || fileName.endsWith(".jar"))) {
 						ZipInputStream zipFile;
-						// TODO: relocate java-files from jar/zip archives?
-						Pattern pattern = Pattern.compile("^([\\/a-zA-Z0-9_ .-]+)$");
+						Pattern archivePattern;
+						if (task.getArchiveFilenameRegexp() == null || task.getArchiveFilenameRegexp().isEmpty()) {
+							archivePattern = Pattern.compile("^([\\/a-zA-Z0-9_ .-]*([a-zA-Z0-9_ .-]+))$");
+						} else if (task.getArchiveFilenameRegexp().startsWith("^")) {
+							archivePattern = Pattern.compile("^(" + task.getArchiveFilenameRegexp().substring(1) + ")$");
+						} else {
+							archivePattern = Pattern.compile("^([\\/a-zA-Z0-9_ .-]*(" + task.getArchiveFilenameRegexp() + "))$");
+						}
 						try {
 							zipFile = new ZipInputStream(item.getInputStream());
 							ZipEntry entry = null;
@@ -321,17 +355,18 @@ public class SubmitSolution extends HttpServlet {
 								if (entry.getName().contains("..")) {
 									continue;
 								}
-								StringBuffer submittedFileName = new StringBuffer(entry.getName());
-								if (!pattern.matcher(submittedFileName).matches()) {
-									System.out.println("Ignored entry: " + submittedFileName);
+								StringBuffer archivedFileName = new StringBuffer(entry.getName());
+								if (!archivePattern.matcher(archivedFileName).matches()) {
+									System.out.println("Ignored entry: " + archivedFileName);
 									continue;
 								}
 								if (entry.isDirectory() == false && !entry.getName().toLowerCase().endsWith(".class")) {
-									if (submittedFileName.lastIndexOf(".") > 0) {
-										int lastDot = submittedFileName.lastIndexOf(".");
-										submittedFileName.replace(lastDot, submittedFileName.length(), submittedFileName.subSequence(lastDot, submittedFileName.length()).toString().toLowerCase());
+									if (archivedFileName.lastIndexOf(".") > 0) {
+										int lastDot = archivedFileName.lastIndexOf(".");
+										archivedFileName.replace(lastDot, archivedFileName.length(), archivedFileName.subSequence(lastDot, archivedFileName.length()).toString().toLowerCase());
 									}
-									File fileToCreate = new File(path, submittedFileName.toString());
+									// TODO: relocate java-files from jar/zip archives?
+									File fileToCreate = new File(path, archivedFileName.toString());
 									if (!fileToCreate.getParentFile().exists()) {
 										fileToCreate.getParentFile().mkdirs();
 									}
@@ -349,40 +384,11 @@ public class SubmitSolution extends HttpServlet {
 							System.out.println(e.getMessage());
 							e.printStackTrace();
 							template.printTemplateHeader("Ungültige Anfrage");
-							out.println("Problem beim entpacken der .zip-Datei.");
+							out.println("Problem beim Entpacken des Archives.");
 							template.printTemplateFooter();
 							return;
 						}
 					} else {
-						Pattern pattern;
-						if (task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty() || uploadFor > 0) {
-							pattern = Pattern.compile("^(?:.*?\\\\|/)?([a-zA-Z0-9_.-]+)$");
-						} else {
-							pattern = Pattern.compile("^(?:.*?\\\\|/)?(" + task.getFilenameRegexp() + ")$");
-						}
-						StringBuffer submittedFileName = new StringBuffer(item.getName());
-						if (submittedFileName.lastIndexOf(".") > 0) {
-							int lastDot = submittedFileName.lastIndexOf(".");
-							submittedFileName.replace(lastDot, submittedFileName.length(), submittedFileName.subSequence(lastDot, submittedFileName.length()).toString().toLowerCase());
-						}
-						Matcher m = pattern.matcher(submittedFileName);
-						if (!m.matches()) {
-							if (!submissionDAO.deleteIfNoFiles(submission, path)) {
-								submission.setLastModified(new Date());
-								submissionDAO.saveSubmission(submission);
-							}
-							System.out.println("SubmitSolutionProblem2: " + item.getName() + ";" + submittedFileName + ";" + pattern.pattern());
-							tx.commit();
-							template.printTemplateHeader("Ungültige Anfrage");
-							out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
-							if (uploadFor > 0) {
-								out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
-							}
-							template.printTemplateFooter();
-							return;
-						}
-						String fileName = m.group(1);
-
 						File uploadedFile = new File(path, fileName);
 						// handle .java-files differently in order to extract package and move it to the correct folder
 						if (fileName.toLowerCase().endsWith(".java")) {

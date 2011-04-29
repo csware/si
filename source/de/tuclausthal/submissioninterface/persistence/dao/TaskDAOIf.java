@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -38,13 +38,14 @@ public interface TaskDAOIf {
 	 * @param taskGroup the lecture to which the task should be associated
 	 * @param showPoints the daten when the issued points will be shown
 	 * @param filenameRegexp 
+	 * @param archiveFilenameRegexp TODO
 	 * @param showTextArea 
 	 * @param featuredFiles 
 	 * @param tutorsCanUploadFiles 
 	 * @param maxSubmitters 
 	 * @return a new Task
 	 */
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters);
+	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters);
 
 	/**
 	 * Fetch a task based on it's id

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -57,6 +57,7 @@ public class Task implements Serializable {
 	private Set<Test> tests;
 	private Set<SimilarityTest> simularityTests;
 	private String filenameRegexp = "[A-Z][A-Za-z0-9_]+\\.java";
+	private String archiveFilenameRegexp = "-";
 	private boolean showTextArea = false;
 	private String featuredFiles = "";
 	private boolean tutorsCanUploadFiles = false;
@@ -72,12 +73,13 @@ public class Task implements Serializable {
 	 * @param taskGroup
 	 * @param showPoints 
 	 * @param filenameRegexp 
+	 * @param archiveFilenameRegexp 
 	 * @param showTextArea 
 	 * @param featuredFiles 
 	 * @param tutorsCanUploadFiles 
 	 * @param maxSubmitters 
 	 */
-	public Task(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters) {
+	public Task(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters) {
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.start = start;
@@ -86,6 +88,7 @@ public class Task implements Serializable {
 		this.taskGroup = taskGroup;
 		this.showPoints = showPoints;
 		this.setFilenameRegexp(filenameRegexp);
+		this.setArchiveFilenameRegexp(archiveFilenameRegexp);
 		this.showTextArea = showTextArea;
 		this.featuredFiles = featuredFiles;
 		this.tutorsCanUploadFiles = tutorsCanUploadFiles;
@@ -355,5 +358,24 @@ public class Task implements Serializable {
 	 */
 	public void setPointCategories(Set<PointCategory> pointCategories) {
 		this.pointCategories = pointCategories;
+	}
+
+	/**
+	 * @return the archiveFilenameRegexp
+	 */
+	public String getArchiveFilenameRegexp() {
+		return archiveFilenameRegexp;
+	}
+
+	/**
+	 * @param archiveFilenameRegexp the archiveFilenameRegexp to set
+	 */
+	public void setArchiveFilenameRegexp(String archiveFilenameRegexp) {
+		try {
+			Pattern.compile(archiveFilenameRegexp);
+			this.archiveFilenameRegexp = archiveFilenameRegexp;
+		} catch (PatternSyntaxException e) {
+			this.archiveFilenameRegexp = "-";
+		}
 	}
 }

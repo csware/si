@@ -252,6 +252,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `deadline` datetime NOT NULL,
   `description` longtext,
   `filenameRegexp` varchar(255) DEFAULT NULL,
+  `archiveFilenameRegexp` varchar(255) DEFAULT NULL,
   `maxPoints` int(11) NOT NULL,
   `maxSubmitters` int(11) NOT NULL,
   `showPoints` datetime DEFAULT NULL,
