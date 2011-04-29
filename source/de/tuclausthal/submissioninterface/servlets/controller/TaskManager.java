@@ -104,7 +104,7 @@ public class TaskManager extends HttpServlet {
 				task.setStart(new Date());
 				task.setDeadline(new Date(new Date().getTime() + 3600 * 24 * 7 * 1000));
 				task.setShowPoints(task.getDeadline());
-				task.setTaskGroup(lecture.getTaskGroups().get(0));
+				task.setTaskGroup(lecture.getTaskGroups().get(lecture.getTaskGroups().size() - 1));
 			}
 
 			request.setAttribute("task", task);
