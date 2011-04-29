@@ -104,8 +104,6 @@ public class TaskManager extends HttpServlet {
 				task.setStart(new Date());
 				task.setDeadline(new Date(new Date().getTime() + 3600 * 24 * 7 * 1000));
 				task.setShowPoints(task.getDeadline());
-				task.setFilenameRegexp("[A-Z][A-Za-z0-9_]+\\.java");
-				task.setArchiveFilenameRegexp("-");
 				task.setTaskGroup(lecture.getTaskGroups().get(0));
 			}
 
