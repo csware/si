@@ -129,7 +129,7 @@ public class TaskManager extends HttpServlet {
 				if (task.getPointCategories().size() == 0) {
 					task.setMaxPoints(Util.convertToPoints(request.getParameter("maxpoints"), task.getMinPointStep()));
 				}
-				task.setTitle(request.getParameter("title"));
+				task.setTitle(request.getParameter("title").trim());
 				task.setDescription(request.getParameter("description"));
 				task.setMaxSubmitters(Util.parseInteger(request.getParameter("maxSubmitters"), 1));
 				task.setFilenameRegexp(request.getParameter("filenameregexp"));
