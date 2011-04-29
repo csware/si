@@ -78,7 +78,7 @@ public class SessionAdapter {
 	}
 
 	public String getSavedTextsolution() {
-		return (String)session.getAttribute("savedTextsolution");
+		return (String) session.getAttribute("savedTextsolution");
 	}
 
 	/**
