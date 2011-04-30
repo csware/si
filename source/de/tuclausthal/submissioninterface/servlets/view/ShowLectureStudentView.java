@@ -91,7 +91,6 @@ public class ShowLectureStudentView extends HttpServlet {
 		}
 		out.println("</div><p>");
 
-		// todo: wenn keine abrufbaren tasks da sind, nichts anzeigen
 		Iterator<TaskGroup> taskGroupIterator = lecture.getTaskGroups().iterator();
 		if (taskGroupIterator.hasNext()) {
 			int points = 0;
@@ -102,39 +101,45 @@ public class ShowLectureStudentView extends HttpServlet {
 				TaskGroup taskGroup = taskGroupIterator.next();
 				Iterator<Task> taskIterator = taskGroup.getTasks().iterator();
 				if (taskIterator.hasNext()) {
-					if (!isStartedTable) {
-						isStartedTable = true;
-						out.println("<table class=border>");
-						out.println("<tr>");
-						out.println("<th>Aufgabe</th>");
-						out.println("<th>Max. Punkte</th>");
-						out.println("<th>Meine Punkte</th>");
-						out.println("</tr>");
-					}
-					if (isStartedTable && taskGroup.getTitle() != null) {
-						out.println("<tr>");
-						out.println("<th colspan=3>Aufgabengruppe " + Util.escapeHTML(taskGroup.getTitle()) + "</th>");
-						out.println("</tr>");
-					}
+					boolean isStartedTaskgroup = false;
 					while (taskIterator.hasNext()) {
 						Task task = taskIterator.next();
 						if (task.getStart().before(Util.correctTimezone(new Date()))) {
+							if (!isStartedTable) {
+								isStartedTable = true;
+								out.println("<table class=border>");
+								out.println("<tr>");
+								out.println("<th>Aufgabe</th>");
+								out.println("<th>Max. Punkte</th>");
+								out.println("<th>Meine Punkte</th>");
+								out.println("</tr>");
+							}
+							if (!isStartedTaskgroup && taskGroup.getTitle() != null) {
+								isStartedTaskgroup = true;
+								out.println("<tr>");
+								out.println("<th colspan=3>Aufgabengruppe " + Util.escapeHTML(taskGroup.getTitle()) + "</th>");
+								out.println("</tr>");
+							}
 							maxPoints += task.getMaxPoints();
 							out.println("<tr>");
 							out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
 							out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 							Submission submission = DAOFactory.SubmissionDAOIf(RequestAdapter.getSession(request)).getSubmission(task, RequestAdapter.getUser(request));
-							if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().before(Util.correctTimezone(new Date()))) {
-								if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN.ordinal()) {
-									out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "</td>");
-									points += submission.getPoints().getPointsByStatus();
-								} else if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal()) {
-									out.println("<td class=points>0, Abnahme nicht bestanden.</td>");
+							if (submission != null) {
+								if (submission.getPoints() != null && submission.getTask().getShowPoints().before(Util.correctTimezone(new Date()))) {
+									if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN.ordinal()) {
+										out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "</td>");
+										points += submission.getPoints().getPointsByStatus();
+									} else if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal()) {
+										out.println("<td class=points>0, Abnahme nicht bestanden</td>");
+									} else {
+										out.println("<td class=points>0, nicht abgenommen</td>");
+									}
 								} else {
-									out.println("<td class=points>0, nicht abgenommen</td>");
+									out.println("<td class=points>noch unbewertet</td>");
 								}
 							} else {
-								out.println("<td class=points>n/a</td>");
+								out.println("<td class=points>nicht bearbeitet</td>");
 							}
 							out.println("</tr>");
 						}

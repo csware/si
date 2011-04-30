@@ -91,54 +91,60 @@ public class ShowUserView extends HttpServlet {
 						TaskGroup taskGroup = taskGroupIterator.next();
 						Iterator<Task> taskIterator = taskGroup.getTasks().iterator();
 						if (taskIterator.hasNext()) {
-							if (!isStartedTable) {
-								isStartedTable = true;
-								out.println("<table class=border>");
-								out.println("<tr>");
-								out.println("<th>Aufgabe</th>");
-								out.println("<th>Max. Punkte</th>");
-								out.println("<th>Vergebene Punkte</th>");
-								out.println("</tr>");
-							}
-							if (isStartedTable && (taskGroup.getTitle() != null)) {
-								out.println("<tr>");
-								String editLink = "";
-								out.println("<th colspan=3>Aufgabengruppe " + Util.escapeHTML(taskGroup.getTitle()) + editLink + "</th>");
-								out.println("</tr>");
-							}
+							boolean isStartedTaskgroup = false;
 							while (taskIterator.hasNext()) {
 								Task task = taskIterator.next();
-								out.println("<tr>");
-								out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
-								out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
-								maxPoints += task.getMaxPoints();
-								Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, user);
-								if (submission != null) {
-									if (submission.getPoints() != null) {
-										if (submission.getPoints().getPointsOk()) {
-											out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "");
-											points += submission.getPoints().getPointsByStatus();
-										} else {
-											out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(" + Util.showPoints(submission.getPoints().getPointsByStatus()) + ")");
-										}
-									} else {
-										if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
-											out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(noch unbewertet)");
-										} else {
-											out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">noch unbewertet");
-										}
+								if (task.getStart().before(Util.correctTimezone(new Date()))) { // doesn't make sense to check for tutors, since the students cannot see the task
+									if (!isStartedTable) {
+										isStartedTable = true;
+										out.println("<table class=border>");
+										out.println("<tr>");
+										out.println("<th>Aufgabe</th>");
+										out.println("<th>Max. Punkte</th>");
+										out.println("<th>Meine Punkte</th>");
+										out.println("</tr>");
 									}
-									out.println("</a></td>");
-								} else {
-									out.println("<td>nicht bearbeitet</td>");
+									if (!isStartedTaskgroup && taskGroup.getTitle() != null) {
+										isStartedTaskgroup = true;
+										out.println("<tr>");
+										out.println("<th colspan=3>Aufgabengruppe " + Util.escapeHTML(taskGroup.getTitle()) + "</th>");
+										out.println("</tr>");
+									}
+									out.println("<tr>");
+									out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
+									out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
+									maxPoints += task.getMaxPoints();
+									Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, user);
+									if (submission != null) {
+										if (submission.getPoints() != null) {
+											if (submission.getPoints().getPointsOk()) {
+												out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "");
+												points += submission.getPoints().getPointsByStatus();
+											} else {
+												out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(" + Util.showPoints(submission.getPoints().getPointsByStatus()) + ")");
+											}
+										} else {
+											if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
+												out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(noch unbewertet)");
+											} else {
+												out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">noch unbewertet");
+											}
+										}
+										out.println("</a></td>");
+									} else {
+										out.println("<td class=points>nicht bearbeitet</td>");
+									}
+									out.println("</tr>");
 								}
-								out.println("</tr>");
 							}
 						}
 					}
 					if (isStartedTable) {
 						out.println("<tr>");
-						out.println("<td>Gesamt:</td>");
+						out.println("<td colspan=3 style=\"height: 1px\"></td>");
+						out.println("</tr>");
+						out.println("<tr>");
+						out.println("<td><b>Gesamt:</b></td>");
 						out.println("<td class=points>" + Util.showPoints(maxPoints) + "</td>");
 						out.println("<td class=points>" + Util.showPoints(points) + "</td>");
 						out.println("</tr>");
