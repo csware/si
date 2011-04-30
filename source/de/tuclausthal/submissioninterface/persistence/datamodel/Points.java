@@ -48,7 +48,7 @@ public class Points implements Serializable {
 	 */
 	@Transient
 	public Integer getPointsByStatus() {
-		if (pointStatus == 1) {
+		if (pointStatus == PointStatus.ABGENOMMEN_FAILED.ordinal()) {
 			return 0;
 		} else {
 			return points;
@@ -98,7 +98,7 @@ public class Points implements Serializable {
 	 */
 	@Transient
 	public Boolean getPointsOk() {
-		return (pointStatus >= 1);
+		return (pointStatus >= PointStatus.ABGENOMMEN_FAILED.ordinal());
 	}
 
 	/**
