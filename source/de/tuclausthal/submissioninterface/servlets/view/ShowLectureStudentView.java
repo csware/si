@@ -94,6 +94,9 @@ public class ShowLectureStudentView extends HttpServlet {
 		// todo: wenn keine abrufbaren tasks da sind, nichts anzeigen
 		Iterator<TaskGroup> taskGroupIterator = lecture.getTaskGroups().iterator();
 		if (taskGroupIterator.hasNext()) {
+			int points = 0;
+			int maxPoints = 0;
+
 			boolean isStartedTable = false;
 			while (taskGroupIterator.hasNext()) {
 				TaskGroup taskGroup = taskGroupIterator.next();
@@ -116,6 +119,7 @@ public class ShowLectureStudentView extends HttpServlet {
 					while (taskIterator.hasNext()) {
 						Task task = taskIterator.next();
 						if (task.getStart().before(Util.correctTimezone(new Date()))) {
+							maxPoints += task.getMaxPoints();
 							out.println("<tr>");
 							out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
 							out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
@@ -123,6 +127,7 @@ public class ShowLectureStudentView extends HttpServlet {
 							if (submission != null && submission.getPoints() != null && submission.getTask().getShowPoints().before(Util.correctTimezone(new Date()))) {
 								if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN.ordinal()) {
 									out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "</td>");
+									points += submission.getPoints().getPointsByStatus();
 								} else if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal()) {
 									out.println("<td class=points>0, Abnahme nicht bestanden.</td>");
 								} else {
@@ -137,6 +142,14 @@ public class ShowLectureStudentView extends HttpServlet {
 				}
 			}
 			if (isStartedTable) {
+				out.println("<tr>");
+				out.println("<td colspan=3 style=\"height: 1px\"></td>");
+				out.println("</tr>");
+				out.println("<tr>");
+				out.println("<td><b>Gesamt:</b></td>");
+				out.println("<td class=points>" + Util.showPoints(maxPoints) + "</td>");
+				out.println("<td class=points>" + Util.showPoints(points) + "</td>");
+				out.println("</tr>");
 				out.println("</table>");
 			} else {
 				out.println("<div class=mid>keine Aufgaben gefunden.</div>");
