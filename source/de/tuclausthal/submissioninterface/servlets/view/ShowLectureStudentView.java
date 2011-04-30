@@ -33,7 +33,6 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
-import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -116,7 +115,7 @@ public class ShowLectureStudentView extends HttpServlet {
 					}
 					while (taskIterator.hasNext()) {
 						Task task = taskIterator.next();
-						if (task.getStart().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+						if (task.getStart().before(Util.correctTimezone(new Date()))) {
 							out.println("<tr>");
 							out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
 							out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -65,12 +65,10 @@ public class ShowLecture extends HttpServlet {
 
 		request.setAttribute("participation", participation);
 		if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
-			if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
-				GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
-				List<Group> joinAbleGroups = groupDAO.getJoinAbleGroups(lecture, participation.getGroup());
-				if (participation.getGroup() == null || participation.getGroup().isAllowStudentsToQuit() && joinAbleGroups.size() > 0) {
-					request.setAttribute("joinAbleGroups", joinAbleGroups);
-				}
+			GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
+			List<Group> joinAbleGroups = groupDAO.getJoinAbleGroups(lecture, participation.getGroup());
+			if (participation.getGroup() == null || participation.getGroup().isAllowStudentsToQuit() && joinAbleGroups.size() > 0) {
+				request.setAttribute("joinAbleGroups", joinAbleGroups);
 			}
 			request.getRequestDispatcher("ShowLectureStudentView").forward(request, response);
 		} else if ("list".equals(request.getParameter("show"))) {
