@@ -165,7 +165,7 @@ public class ShowTaskStudentView extends HttpServlet {
 						out.println(Util.showPoints(submission.getPoints().getPointsByStatus()) + " von " + Util.showPoints(task.getMaxPoints()) + " Punkt(e)");
 					}
 				} else if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal()) {
-					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", Abhahme nicht bestanden");
+					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", Abnahme nicht bestanden");
 				} else {
 					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", nicht abgenommen");
 				}
