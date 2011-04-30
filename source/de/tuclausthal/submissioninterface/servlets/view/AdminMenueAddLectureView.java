@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -26,8 +26,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * View-Servlet for displaying a form for adding a new lecture
@@ -41,6 +43,8 @@ public class AdminMenueAddLectureView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		template.printTemplateHeader("neue Veranstaltung", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"AdminMenue\">Admin-Menü</a> &gt; neue Veranstaltung");
 
+		Lecture dummyLecture = new Lecture();
+		dummyLecture.setSemester(Util.getCurrentSemester());
 		out.println("<form action=\"" + response.encodeURL("?action=saveLecture") + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");
@@ -49,7 +53,7 @@ public class AdminMenueAddLectureView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Semester:</th>");
-		out.println("<td>aktuelles Semester</td>");
+		out.println("<td>" + dummyLecture.getReadableSemester() + "</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=anlegen> <a href=\"" + response.encodeURL("?") + "\">Abbrechen</a></td>");
