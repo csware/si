@@ -65,7 +65,8 @@ public class ShowSubmissionView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		Session session = RequestAdapter.getSession(request);
+		RequestAdapter requestAdapter = new RequestAdapter(request);
+		Session session = requestAdapter.getSession();
 
 		Submission submission = (Submission) request.getAttribute("submission");
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
@@ -178,7 +179,11 @@ public class ShowSubmissionView extends HttpServlet {
 				out.println("<b>Punkte:</b> <input type=text name=points size=3 value=\"" + Util.showPoints(points) + "\"> (max. " + Util.showPoints(task.getMaxPoints()) + ")" + pointsGivenBy + "<br>");
 			}
 			out.println("<b>Öffentlicher Kommentar:</b><br><textarea cols=80 rows=8 name=publiccomment>" + Util.escapeHTML(oldPublicComment) + "</textarea><br>");
-			out.println("<b>Interner Kommentar:</b><br><textarea cols=80 rows=8 name=internalcomment>" + Util.escapeHTML(oldInternalComment) + "</textarea><br>");
+			if (requestAdapter.isPrivacyMode()) {
+				out.println("<input type=hidden name=internalcomment value=\"" + Util.escapeHTML(oldInternalComment) + "\">");
+			} else {
+				out.println("<b>Interner Kommentar:</b><br><textarea cols=80 rows=8 name=internalcomment>" + Util.escapeHTML(oldInternalComment) + "</textarea><br>");
+			}
 			out.println("<b>Best&auml;tigtes Plagiat:</b> <input type=checkbox name=isdupe " + (isDupe ? "checked" : "") + "><br>");
 			out.println("<b><label for=\"nbewertet\">Nicht fertig bewertet:</label></b> <input id=\"nbewertet\" type=radio name=pointsstatus value=\"nbewertet\"" + (pointsBewertet ? " checked" : "") + ">, <b><label for=\"nabgen\">Nicht abgenommen:</label></b> <input id=\"nabgen\" type=radio name=pointsstatus value=\"nabgen\"" + (!pointsBewertet && !(pointsOk || pointsFailed) ? "checked" : "") + ">, <b><label for=\"abgen\">Abgenommen (ok):</label></b> <input id=\"abgen\" type=radio name=pointsstatus value=\"ok\"" + (pointsOk ? "checked" : "") + ">, <b><label for=\"failed\">Abnahme nicht bestanden:</label></b> <input id=\"failed\" type=radio name=pointsstatus value=\"failed\" " + (pointsFailed ? "checked" : "") + "><br>");
 			out.println("<input type=submit value=Speichern>");
@@ -192,7 +197,11 @@ public class ShowSubmissionView extends HttpServlet {
 
 		if (submission.getSimilarSubmissions().size() > 0) {
 			out.println("<h2>Ähnliche Abgaben: <a href=\"#\" onclick=\"$('#similarSubmissions').toggle(); return false;\">(+/-)</a></h2>");
-			out.println("<table id=similarSubmissions>");
+			if (requestAdapter.isPrivacyMode()) {
+				out.println("<table id=similarSubmissions style=\"display:none;\">");
+			} else {
+				out.println("<table id=similarSubmissions>");
+			}
 			out.println("<tr>");
 			for (SimilarityTest similarityTest : task.getSimularityTests()) {
 				out.println("<th><span title=\"Ähnlichkeit zu\">" + similarityTest + "</span></th>");

@@ -540,6 +540,14 @@
     <url-pattern>/servlets/TaskGroupManagerView</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>SwitchLogin</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.SwitchLogin</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SwitchLogin</servlet-name>
+    <url-pattern>/servlets/SwitchLogin</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>EditMultipleGroups</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.EditMultipleGroups</servlet-class>
   </servlet>

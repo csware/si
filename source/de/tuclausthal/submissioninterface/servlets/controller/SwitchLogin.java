@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,7 +19,6 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -28,26 +27,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
-import de.tuclausthal.submissioninterface.template.Template;
-import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * Controller-Servlet for clearing up the session
+ * Controller-Servlet for clearing up the session and redirect to a user overview page
  * @author Sven Strickroth
- *
  */
-public class Logout extends HttpServlet {
+public class SwitchLogin extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		RequestAdapter.getSessionAdapter(request).setUser(null);
 		request.getSession().invalidate();
-		Cookie privacyCookie = new Cookie("privacy", "0");
-		privacyCookie.setMaxAge(0);
-		response.addCookie(privacyCookie);
-		Template template = TemplateFactory.getTemplate(request, response);
-		template.printTemplateHeader("Logged out");
-		PrintWriter out = response.getWriter();
-		out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
-		template.printTemplateFooter();
+
+		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+		int uid = Util.parseInteger(request.getParameter("uid"), -1);
+		if (uid <= 0) {
+			request.setAttribute("title", "Invalid Request");
+			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
+		} else {
+			response.addCookie(new Cookie("privacy", "1"));
+			response.sendRedirect(request.getContextPath() + "/" + contextAdapter.getServletsPath() + "/ShowUser?uid=" + uid);
+		}
 	}
 }
