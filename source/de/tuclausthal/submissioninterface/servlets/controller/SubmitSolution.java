@@ -186,10 +186,12 @@ public class SubmitSolution extends HttpServlet {
 		int uploadFor = 0;
 		List<FileItem> items = null;
 		if (!isMultipart) {
-			for (String partnerIdParameter : request.getParameterValues("partnerid")) {
-				int partnerID = Util.parseInteger(partnerIdParameter, 0);
-				if (partnerID > 0) {
-					partnerIDs.add(partnerID);
+			if (request.getParameterValues("partnerid") != null) {
+				for (String partnerIdParameter : request.getParameterValues("partnerid")) {
+					int partnerID = Util.parseInteger(partnerIdParameter, 0);
+					if (partnerID > 0) {
+						partnerIDs.add(partnerID);
+					}
 				}
 			}
 		} else {
