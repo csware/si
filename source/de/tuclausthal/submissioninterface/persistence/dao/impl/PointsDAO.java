@@ -76,6 +76,9 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 			boolean changed = false;
 			if (!oldPoints.getPointStatus().equals(points.getPointStatus())) {
 				storeInHistory(submission, "status", PointStatus.values()[oldPoints.getPointStatus()].toString(), PointStatus.values()[points.getPointStatus()].toString(), participation);
+				if (!((oldPoints.getPointStatus() == PointStatus.NICHT_ABGENOMMEN.ordinal() && points.getPointStatus() == PointStatus.ABGENOMMEN.ordinal()) || (oldPoints.getPointStatus() == PointStatus.NICHT_ABGENOMMEN.ordinal() && points.getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal()))) {
+					changed = true;
+				}
 			}
 			if (oldPoints.getDuplicate() != null || points.getDuplicate() != null) {
 				if (oldPoints.getDuplicate() == null && points.getDuplicate() != null) {
@@ -202,6 +205,9 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		if (oldPoints != null) {
 			if (!oldPoints.getPointStatus().equals(points.getPointStatus())) {
 				storeInHistory(submission, "status", PointStatus.values()[oldPoints.getPointStatus()].toString(), PointStatus.values()[points.getPointStatus()].toString(), participation);
+				if (!((oldPoints.getPointStatus() == PointStatus.NICHT_ABGENOMMEN.ordinal() && points.getPointStatus() == PointStatus.ABGENOMMEN.ordinal()) || (oldPoints.getPointStatus() == PointStatus.NICHT_ABGENOMMEN.ordinal() && points.getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal()))) {
+					changed = true;
+				}
 			}
 			if (oldPoints.getDuplicate() != null || points.getDuplicate() != null) {
 				if (oldPoints.getDuplicate() == null) {
