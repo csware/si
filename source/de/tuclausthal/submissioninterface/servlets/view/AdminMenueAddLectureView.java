@@ -52,6 +52,10 @@ public class AdminMenueAddLectureView extends HttpServlet {
 		out.println("<td><input type=text name=name></td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Lösungen müssen abgenommen werden:</th>");
+		out.println("<td><input type=checkbox name=requiresAbhnahme></td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<th>Semester:</th>");
 		out.println("<td>" + dummyLecture.getReadableSemester() + "</td>");
 		out.println("</tr>");

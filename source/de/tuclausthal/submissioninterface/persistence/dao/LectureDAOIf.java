@@ -39,7 +39,7 @@ public interface LectureDAOIf {
 	 * @param name the lecture-name
 	 * @return the new lecture
 	 */
-	public Lecture newLecture(String name);
+	public Lecture newLecture(String name, boolean requiresAbhnahme);
 
 	/**
 	 * Fetch a lecture by id

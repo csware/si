@@ -136,6 +136,9 @@ public class ShowSubmissionView extends HttpServlet {
 				}
 			} else {
 				out.println("<tr bgcolor=\"lightgrey\">");
+				if (!task.getTaskGroup().getLecture().isRequiresAbhnahme()) {
+					pointsOk = true;
+				}
 			}
 			out.println("<td>");
 			out.println("<form action=\"?\" method=post>");

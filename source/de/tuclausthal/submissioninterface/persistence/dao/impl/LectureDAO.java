@@ -46,12 +46,13 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 	}
 
 	@Override
-	public Lecture newLecture(String name) {
+	public Lecture newLecture(String name, boolean requiresAbhnahme) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		Lecture lecture = new Lecture();
 		lecture.setName(name);
 		lecture.setSemester(Util.getCurrentSemester());
+		lecture.setRequiresAbhnahme(requiresAbhnahme);
 		session.save(lecture);
 		tx.commit();
 		return lecture;

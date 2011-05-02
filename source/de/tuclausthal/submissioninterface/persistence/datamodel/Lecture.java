@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -40,6 +40,7 @@ public class Lecture implements Serializable {
 	private int id;
 	private String name;
 	private int semester;
+	private boolean requiresAbhnahme;
 	private Set<Participation> participants;
 	private List<TaskGroup> taskGroups;
 	private Set<Group> groups;
@@ -154,5 +155,19 @@ public class Lecture implements Serializable {
 	 */
 	public void setGroups(Set<Group> groups) {
 		this.groups = groups;
+	}
+
+	/**
+	 * @return the requiresAbhnahme
+	 */
+	public boolean isRequiresAbhnahme() {
+		return requiresAbhnahme;
+	}
+
+	/**
+	 * @param requiresAbhnahme the requiresAbhnahme to set
+	 */
+	public void setRequiresAbhnahme(boolean requiresAbhnahme) {
+		this.requiresAbhnahme = requiresAbhnahme;
 	}
 }

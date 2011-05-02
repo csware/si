@@ -97,7 +97,7 @@ public class AdminMenue extends HttpServlet {
 			}
 			response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?"));
 		} else if ("saveLecture".equals(request.getParameter("action")) && request.getParameter("name") != null && !request.getParameter("name").trim().isEmpty()) {
-			Lecture newLecture = DAOFactory.LectureDAOIf(session).newLecture(request.getParameter("name").trim());
+			Lecture newLecture = DAOFactory.LectureDAOIf(session).newLecture(request.getParameter("name").trim(), request.getParameter("requiresAbhnahme") != null);
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
 			response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?action=showLecture&lecture=" + newLecture.getId()));
 		} else if ("deleteLecture".equals(request.getParameter("action")) && request.getParameter("lecture") != null) {
