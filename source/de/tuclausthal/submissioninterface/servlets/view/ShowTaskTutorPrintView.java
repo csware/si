@@ -33,6 +33,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -77,9 +78,9 @@ public class ShowTaskTutorPrintView extends HttpServlet {
 					out.println("<tr>");
 					out.println("<td>" + Util.escapeHTML(submission.getSubmitterNames()) + "</td>");
 					lastSID = submission.getSubmissionid();
-					if (submission.getPoints() != null) {
+					if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 						out.println("<td>" + Util.textToHTML(submission.getPoints().getPublicComment()) + "</td>");
-						out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "</td>");
+						out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPoints()) + "</td>");
 						if (submission.getPoints().getPointsOk()) {
 							out.println("<td>ok</td>");
 						} else {

@@ -74,8 +74,8 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		// TODO: Attention: see @MarkApproved.java and below!!!
 		if (oldPoints != null) {
 			boolean changed = false;
-			if (!oldPoints.getPointsOk().equals(points.getPointsOk())) {
-				storeInHistory(submission, "abgenommen", oldPoints.getPointsOk() + "", points.getPointsOk() + "", participation);
+			if (!oldPoints.getPointStatus().equals(points.getPointStatus())) {
+				storeInHistory(submission, "status", PointStatus.values()[oldPoints.getPointStatus()].toString(), PointStatus.values()[points.getPointStatus()].toString(), participation);
 			}
 			if (!points.getIsDupe().equals(oldPoints.getIsDupe())) {
 				if (oldPoints.getIsDupe() == null && points.getIsDupe() != false) {
@@ -85,8 +85,8 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 				}
 				changed = true;
 			}
-			if (!oldPoints.getPointsByStatus().equals(points.getPointsByStatus())) {
-				storeInHistory(submission, "points", Util.showPoints(oldPoints.getPointsByStatus()), Util.showPoints(points.getPointsByStatus()), participation);
+			if (!oldPoints.getPoints().equals(points.getPoints())) {
+				storeInHistory(submission, "points", Util.showPoints(oldPoints.getPoints()), Util.showPoints(points.getPoints()), participation);
 				changed = true;
 			}
 			if (oldPoints.getInternalComment() != null && !oldPoints.getInternalComment().equals(points.getInternalComment())) {
@@ -102,14 +102,14 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <https://si.in.tu-clausthal.de/submissionsystem/servlets/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
 			}
 		} else {
-			if (points.getPointsOk() != null) {
-				storeInHistory(submission, "abgenommen", "", points.getPointsOk() + "", participation);
+			if (points.getPointStatus() != null) {
+				storeInHistory(submission, "status", "", PointStatus.values()[points.getPointStatus()].toString(), participation);
 			}
 			if (points.getIsDupe() != null) {
 				storeInHistory(submission, "isDupe", "", points.getIsDupe() + "", participation);
 			}
-			if (points.getPointsByStatus() != null) {
-				storeInHistory(submission, "points", "", Util.showPoints(points.getPointsByStatus()), participation);
+			if (points.getPoints() != null) {
+				storeInHistory(submission, "points", "", Util.showPoints(points.getPoints()), participation);
 			}
 			if (points.getInternalComment() != null && !"".equals(points.getInternalComment())) {
 				storeInHistory(submission, "internalComment", "", points.getInternalComment(), participation);
@@ -196,8 +196,8 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 
 		// TODO: Attention: see @MarkApproved.java
 		if (oldPoints != null) {
-			if (!oldPoints.getPointsOk().equals(points.getPointsOk())) {
-				storeInHistory(submission, "abgenommen", oldPoints.getPointsOk() + "", points.getPointsOk() + "", participation);
+			if (!oldPoints.getPointStatus().equals(points.getPointStatus())) {
+				storeInHistory(submission, "status", PointStatus.values()[oldPoints.getPointStatus()].toString(), PointStatus.values()[points.getPointStatus()].toString(), participation);
 			}
 			if (!points.getIsDupe().equals(oldPoints.getIsDupe())) {
 				if (oldPoints.getIsDupe() == null && points.getIsDupe() != false) {
@@ -207,8 +207,8 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 				}
 				changed = true;
 			}
-			if (!oldPoints.getPointsByStatus().equals(points.getPointsByStatus())) {
-				storeInHistory(submission, "points", Util.showPoints(oldPoints.getPointsByStatus()), Util.showPoints(points.getPointsByStatus()), participation);
+			if (!oldPoints.getPoints().equals(points.getPoints())) {
+				storeInHistory(submission, "points", Util.showPoints(oldPoints.getPoints()), Util.showPoints(points.getPoints()), participation);
 				changed = true;
 			}
 			if (oldPoints.getInternalComment() != null && !oldPoints.getInternalComment().equals(points.getInternalComment())) {
@@ -224,14 +224,14 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <https://si.in.tu-clausthal.de/submissionsystem/servlets/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
 			}
 		} else {
-			if (points.getPointsOk() != null) {
-				storeInHistory(submission, "abgenommen", "", points.getPointsOk() + "", participation);
+			if (points.getPointStatus() != null) {
+				storeInHistory(submission, "status", "", PointStatus.values()[points.getPointStatus()].toString(), participation);
 			}
 			if (points.getIsDupe() != null) {
 				storeInHistory(submission, "isDupe", "", points.getIsDupe() + "", participation);
 			}
-			if (points.getPointsByStatus() != null) {
-				storeInHistory(submission, "points", "", Util.showPoints(points.getPointsByStatus()), participation);
+			if (points.getPoints() != null) {
+				storeInHistory(submission, "points", "", Util.showPoints(points.getPoints()), participation);
 			}
 			if (points.getInternalComment() != null && !"".equals(points.getInternalComment())) {
 				storeInHistory(submission, "internalComment", "", points.getInternalComment(), participation);

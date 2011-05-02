@@ -40,6 +40,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -116,12 +117,12 @@ public class ShowUserView extends HttpServlet {
 									maxPoints += task.getMaxPoints();
 									Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, user);
 									if (submission != null) {
-										if (submission.getPoints() != null) {
+										if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 											if (submission.getPoints().getPointsOk()) {
 												out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "");
 												points += submission.getPoints().getPointsByStatus();
 											} else {
-												out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(" + Util.showPoints(submission.getPoints().getPointsByStatus()) + ")");
+												out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(" + Util.showPoints(submission.getPoints().getPoints()) + ")");
 											}
 										} else {
 											if (task.getDeadline().after(Util.correctTimezone(new Date()))) {

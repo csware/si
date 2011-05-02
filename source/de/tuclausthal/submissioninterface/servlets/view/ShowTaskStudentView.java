@@ -36,6 +36,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -130,7 +131,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("</td>");
 				out.println("</tr>");
 			}
-			if (task.getShowPoints().before(Util.correctTimezone(new Date())) && submission.getPoints() != null) {
+			if (submission.isPointsVisibleToStudents()) {
 				out.println("<tr>");
 				out.println("<th>Bewertung:</th>");
 				out.println("<td>");

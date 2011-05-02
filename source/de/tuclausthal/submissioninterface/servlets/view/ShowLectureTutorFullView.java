@@ -33,6 +33,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -102,12 +103,12 @@ public class ShowLectureTutorFullView extends HttpServlet {
 				for (Task task : taskList) {
 					Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
 					if (submission != null) {
-						if (submission.getPoints() != null) {
+						if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 							if (submission.getPoints().getPointsOk()) {
 								out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "</td>");
 								points += submission.getPoints().getPointsByStatus();
 							} else {
-								out.println("<td class=points>(" + Util.showPoints(submission.getPoints().getPointsByStatus()) + ")</td>");
+								out.println("<td class=points>(" + Util.showPoints(submission.getPoints().getPoints()) + ")</td>");
 							}
 						} else {
 							out.println("<td><span title=\"nicht bewertet\">n.b.</span></td>");

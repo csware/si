@@ -87,6 +87,8 @@ public class ShowSubmission extends HttpServlet {
 				pointStatus = PointStatus.ABGENOMMEN_FAILED;
 			} else if ("ok".equals(request.getParameter("pointsstatus"))) {
 				pointStatus = PointStatus.ABGENOMMEN;
+			}else if ("nbewertet".equals(request.getParameter("pointsstatus"))) {
+				pointStatus = PointStatus.NICHT_BEWERTET;
 			}
 			Transaction tx = session.beginTransaction();
 			// attention: quite similar code in MarkEmptyTask

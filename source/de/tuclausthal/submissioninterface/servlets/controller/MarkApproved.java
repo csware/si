@@ -82,12 +82,12 @@ public class MarkApproved extends HttpServlet {
 			String parameterName = parameterNameEnumerator.nextElement();
 			if (parameterName.matches("sid[0-9]+")) {
 				Submission submission = submissionDAO.getSubmissionLocked(Util.parseInteger(parameterName.substring(3), 0));
-				if (submission != null && submission.getTask().getTaskid() == task.getTaskid() && submission.getPoints() != null && submission.getPoints().getPointsByStatus() != null && submission.getPoints().getPointStatus() != null && submission.getPoints().getPointStatus() == PointStatus.NICHT_ABGENOMMEN.ordinal()) {
+				if (submission != null && submission.getTask().getTaskid() == task.getTaskid() && submission.getPoints() != null && submission.getPoints().getPoints() != null && submission.getPoints().getPointStatus() != null && submission.getPoints().getPointStatus() == PointStatus.NICHT_ABGENOMMEN.ordinal()) {
 					submission.getPoints().setPointStatus(PointStatus.ABGENOMMEN);
 					submission.getPoints().setIssuedBy(participation);
 					session.save(submission);
 					// TODO: Attention! Manual update
-					PointHistory ph = new PointHistory(submission, "pointsOk", "false", "true", participation);
+					PointHistory ph = new PointHistory(submission, "status", PointStatus.NICHT_ABGENOMMEN.toString(), PointStatus.ABGENOMMEN.toString(), participation);
 					session.save(ph);
 				}
 			}

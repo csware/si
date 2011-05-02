@@ -37,6 +37,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -89,12 +90,12 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 				for (Task task : taskList) {
 					Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
 					if (submission != null) {
-						if (submission.getPoints() != null) {
+						if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 							if (submission.getPoints().getPointsOk()) {
 								out.print(Util.showPoints(submission.getPoints().getPointsByStatus()) + ";");
 								points += submission.getPoints().getPointsByStatus();
 							} else {
-								out.print("(" + Util.showPoints(submission.getPoints().getPointsByStatus()) + ");");
+								out.print("(" + Util.showPoints(submission.getPoints().getPoints()) + ");");
 							}
 						} else {
 							out.print("n.b.;");

@@ -30,7 +30,7 @@ import org.hibernate.annotations.ForeignKey;
 @Embeddable
 public class Points implements Serializable {
 	private Integer points;
-	private Integer pointStatus; // NULL = ungraded, 0 = nicht abgenommen, 1 = abnahme nicht bestanden, 2 = abgenommen
+	private Integer pointStatus; // 0 = ungraded, 1 = nicht abgenommen, 2 = abnahme nicht bestanden, 3 = abgenommen
 	private Participation issuedBy;
 	private String publicComment;
 	private String internalComment;
@@ -48,7 +48,7 @@ public class Points implements Serializable {
 	 */
 	@Transient
 	public Integer getPointsByStatus() {
-		if (pointStatus == PointStatus.ABGENOMMEN_FAILED.ordinal()) {
+		if (pointStatus <= PointStatus.ABGENOMMEN_FAILED.ordinal()) {
 			return 0;
 		} else {
 			return points;
@@ -153,6 +153,6 @@ public class Points implements Serializable {
 	}
 
 	public static enum PointStatus {
-		NICHT_ABGENOMMEN, ABGENOMMEN_FAILED, ABGENOMMEN
+		NICHT_BEWERTET, NICHT_ABGENOMMEN, ABGENOMMEN_FAILED, ABGENOMMEN
 	}
 }

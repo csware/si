@@ -41,6 +41,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -213,19 +214,19 @@ public class ShowTaskTutorView extends HttpServlet {
 							}
 							out.println("<td class=points><span title=\"" + users + "\">" + DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(similarityTest, submission) + "</span></td>");
 						}
-						if (submission.getPoints() != null) {
+						if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 							if (submission.getPoints().getPointsOk()) {
 								out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "</td>");
 								out.println("<td></td>");
+								sumOfPoints += submission.getPoints().getPointsByStatus();
+								groupSumOfPoints += submission.getPoints().getPointsByStatus();
+								sumOfSubmissions++;
+								groupSumOfSubmissions++;
 							} else {
-								out.println("<td align=right>(" + Util.showPoints(submission.getPoints().getPointsByStatus()) + ")</td>");
+								out.println("<td align=right>(" + Util.showPoints(submission.getPoints().getPoints()) + ")</td>");
 								out.println("<td><input type=checkbox name=\"sid" + submission.getSubmissionid() + "\"></td>");
 								hasUnapprochedPoints = true;
 							}
-							sumOfPoints += submission.getPoints().getPointsByStatus();
-							groupSumOfPoints += submission.getPoints().getPointsByStatus();
-							sumOfSubmissions++;
-							groupSumOfSubmissions++;
 						} else {
 							out.println("<td>n/a</td>");
 							out.println("<td></td>");

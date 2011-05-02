@@ -126,7 +126,7 @@ public class ShowLectureStudentView extends HttpServlet {
 							out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 							Submission submission = DAOFactory.SubmissionDAOIf(RequestAdapter.getSession(request)).getSubmission(task, RequestAdapter.getUser(request));
 							if (submission != null) {
-								if (submission.getPoints() != null && submission.getTask().getShowPoints().before(Util.correctTimezone(new Date()))) {
+								if (submission.isPointsVisibleToStudents()) {
 									if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN.ordinal()) {
 										out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "</td>");
 										points += submission.getPoints().getPointsByStatus();
