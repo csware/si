@@ -219,18 +219,18 @@ public class ShowTaskTutorView extends HttpServlet {
 							for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(similarityTest, submission)) {
 								users += Util.escapeHTML(similarity.getSubmissionTwo().getSubmitterNames()) + "\n";
 							}
-							out.println("<td class=points><span title=\"" + users + "\">" + DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(similarityTest, submission) + "</span></td>");
+							out.println("<td align=right><span title=\"" + users + "\">" + DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(similarityTest, submission) + "</span></td>");
 						}
 						if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 							if (submission.getPoints().getPointsOk()) {
-								out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + "</td>");
+								out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + "</td>");
 								out.println("<td></td>");
 								sumOfPoints += submission.getPoints().getPointsByStatus(task.getMinPointStep());
 								groupSumOfPoints += submission.getPoints().getPointsByStatus(task.getMinPointStep());
 								sumOfSubmissions++;
 								groupSumOfSubmissions++;
 							} else {
-								out.println("<td align=right>(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ")</td>");
+								out.println("<td class=points>(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ")</td>");
 								out.println("<td><input type=checkbox name=\"sid" + submission.getSubmissionid() + "\"></td>");
 								hasUnapprochedPoints = true;
 							}
