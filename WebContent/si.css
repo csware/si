@@ -133,6 +133,14 @@ a[href ^="mailto:"] {
 	padding-right: 18px;
 }
 
+.dupe {
+	color: red;
+}
+
+.abgenfailed {
+	color: blue;
+}
+
 /* JHighlight */
 .java_plain {
 	color: rgb(0,0,0);
