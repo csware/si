@@ -162,8 +162,14 @@ public class ShowTaskStudentView extends HttpServlet {
 							out.println("<li>" + Util.showPoints(issuedPoints) + "/" + Util.showPoints(category.getPoints()) + " " + Util.escapeHTML(category.getDescription()) + "</li>");
 						}
 						out.println("</ul>");
+						if (submission.getPoints().getDuplicate() != null) {
+							out.println("(Plagiat)");
+						}
 					} else {
-						out.println(Util.showPoints(submission.getPoints().getPointsByStatus()) + " von " + Util.showPoints(task.getMaxPoints()) + " Punkt(e)");
+						out.println(Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + " von " + Util.showPoints(task.getMaxPoints()) + " Punkt(e)");
+						if (submission.getPoints().getDuplicate() != null) {
+							out.println(" (Plagiat)");
+						}
 					}
 				} else if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal()) {
 					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", Abnahme nicht bestanden");

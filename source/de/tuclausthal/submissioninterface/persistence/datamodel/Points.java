@@ -34,7 +34,7 @@ public class Points implements Serializable {
 	private Participation issuedBy;
 	private String publicComment;
 	private String internalComment;
-	private Boolean isDupe;
+	private Integer duplicate;
 
 	/**
 	 * @return the points
@@ -47,11 +47,11 @@ public class Points implements Serializable {
 	 * @return the points
 	 */
 	@Transient
-	public Integer getPointsByStatus() {
+	public Integer getPointsByStatus(int minPointStep) {
 		if (pointStatus <= PointStatus.ABGENOMMEN_FAILED.ordinal()) {
 			return 0;
 		} else {
-			return points;
+			return getPlagiarismPoints(minPointStep);
 		}
 	}
 
@@ -119,15 +119,33 @@ public class Points implements Serializable {
 	/**
 	 * @return the isDupe
 	 */
-	public Boolean getIsDupe() {
-		return isDupe;
+	public Integer getDuplicate() {
+		return duplicate;
 	}
 
 	/**
-	 * @param isDupe the isDupe to set
+	 * @param duplicate null = no dupe, 0 = no points, 1 = for historic reasons, other positive values: divisor for points
 	 */
-	public void setIsDupe(Boolean isDupe) {
-		this.isDupe = isDupe;
+	public void setDuplicate(Integer duplicate) {
+		if (duplicate != null && duplicate < 0) {
+			duplicate = null;
+		}
+		this.duplicate = duplicate;
+	}
+
+	@Transient
+	public int getPlagiarismPoints(int minPointStep) {
+		if (duplicate == null) {
+			return getPoints();
+		} else if (duplicate == 0) {
+			return 0;
+		} else {
+			int divided = getPoints() / duplicate;
+			if (divided % minPointStep != 0) {
+				return minPointStep * (divided / minPointStep);
+			}
+			return divided;
+		}
 	}
 
 	/**

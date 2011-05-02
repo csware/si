@@ -117,13 +117,15 @@ public class ShowSubmissionView extends HttpServlet {
 			boolean pointsFailed = false;
 			boolean pointsBewertet = false;
 			boolean isDupe = false;
+			String duplicate = "";
 			String pointsGivenBy = "";
 			if (submission.getPoints() != null) {
 				oldPublicComment = submission.getPoints().getPublicComment();
 				oldInternalComment = submission.getPoints().getInternalComment();
 				points = submission.getPoints().getPoints();
-				if (submission.getPoints().getIsDupe() != null) {
-					isDupe = submission.getPoints().getIsDupe();
+				if (submission.getPoints().getDuplicate() != null) {
+					isDupe = true;
+					duplicate = String.valueOf(submission.getPoints().getDuplicate());
 				}
 				pointsOk = submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN.ordinal();
 				pointsFailed = submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal();
@@ -187,7 +189,7 @@ public class ShowSubmissionView extends HttpServlet {
 			} else {
 				out.println("<b>Interner Kommentar:</b><br><textarea cols=80 rows=8 name=internalcomment>" + Util.escapeHTML(oldInternalComment) + "</textarea><br>");
 			}
-			out.println("<b>Best&auml;tigtes Plagiat:</b> <input type=checkbox name=isdupe " + (isDupe ? "checked" : "") + "><br>");
+			out.println("<b>Best&auml;tigtes Plagiat:</b> <input type=checkbox name=isdupe " + (isDupe ? "checked" : "") + "><span id=duplicate>, wenn ja: <input type=text size=3 name=duplicate value=" + duplicate + "> (0 = keine Punkte, 2 = Punkte * 1/2, 3 = Punkte * 1/3, ...)</span><br>");
 			out.println("<b><label for=\"nbewertet\">Nicht fertig bewertet:</label></b> <input id=\"nbewertet\" type=radio name=pointsstatus value=\"nbewertet\"" + (pointsBewertet ? " checked" : "") + ">, <b><label for=\"nabgen\">Nicht abgenommen:</label></b> <input id=\"nabgen\" type=radio name=pointsstatus value=\"nabgen\"" + (!pointsBewertet && !(pointsOk || pointsFailed) ? "checked" : "") + ">, <b><label for=\"abgen\">Abgenommen (ok):</label></b> <input id=\"abgen\" type=radio name=pointsstatus value=\"ok\"" + (pointsOk ? "checked" : "") + ">, <b><label for=\"failed\">Abnahme nicht bestanden:</label></b> <input id=\"failed\" type=radio name=pointsstatus value=\"failed\" " + (pointsFailed ? "checked" : "") + "><br>");
 			out.println("<input type=submit value=Speichern>");
 			out.println("</form>");

@@ -223,14 +223,14 @@ public class ShowTaskTutorView extends HttpServlet {
 						}
 						if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 							if (submission.getPoints().getPointsOk()) {
-								out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "</td>");
+								out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + "</td>");
 								out.println("<td></td>");
-								sumOfPoints += submission.getPoints().getPointsByStatus();
-								groupSumOfPoints += submission.getPoints().getPointsByStatus();
+								sumOfPoints += submission.getPoints().getPointsByStatus(task.getMinPointStep());
+								groupSumOfPoints += submission.getPoints().getPointsByStatus(task.getMinPointStep());
 								sumOfSubmissions++;
 								groupSumOfSubmissions++;
 							} else {
-								out.println("<td align=right>(" + Util.showPoints(submission.getPoints().getPoints()) + ")</td>");
+								out.println("<td align=right>(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ")</td>");
 								out.println("<td><input type=checkbox name=\"sid" + submission.getSubmissionid() + "\"></td>");
 								hasUnapprochedPoints = true;
 							}

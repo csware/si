@@ -80,7 +80,7 @@ public class ShowTaskTutorPrintView extends HttpServlet {
 					lastSID = submission.getSubmissionid();
 					if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 						out.println("<td>" + Util.textToHTML(submission.getPoints().getPublicComment()) + "</td>");
-						out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPoints()) + "</td>");
+						out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + "</td>");
 						if (submission.getPoints().getPointsOk()) {
 							out.println("<td>ok</td>");
 						} else {

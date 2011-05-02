@@ -38,10 +38,10 @@ public interface PointsDAOIf {
 	 * @param publicComment 
 	 * @param internalComment 
 	 * @param pointStatus 
-	 * @param isDupe its a proven dupe
+	 * @param duplicate see definition in Points class
 	 * @return the (new or updated) points instance
 	 */
-	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, boolean isDupe);
+	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate);
 
-	public Points createPoints(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, boolean isDupe);
+	public Points createPoints(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate);
 }

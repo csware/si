@@ -128,8 +128,8 @@ public class ShowLectureStudentView extends HttpServlet {
 							if (submission != null) {
 								if (submission.isPointsVisibleToStudents()) {
 									if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN.ordinal()) {
-										out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "</td>");
-										points += submission.getPoints().getPointsByStatus();
+										out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + "</td>");
+										points += submission.getPoints().getPointsByStatus(task.getMinPointStep());
 									} else if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal()) {
 										out.println("<td class=points>0, Abnahme nicht bestanden</td>");
 									} else {

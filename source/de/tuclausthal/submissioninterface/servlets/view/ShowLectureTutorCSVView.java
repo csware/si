@@ -92,10 +92,10 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 					if (submission != null) {
 						if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 							if (submission.getPoints().getPointsOk()) {
-								out.print(Util.showPoints(submission.getPoints().getPointsByStatus()) + ";");
-								points += submission.getPoints().getPointsByStatus();
+								out.print(Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + ";");
+								points += submission.getPoints().getPointsByStatus(task.getMinPointStep());
 							} else {
-								out.print("(" + Util.showPoints(submission.getPoints().getPoints()) + ");");
+								out.print("(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ");");
 							}
 						} else {
 							out.print("n.b.;");

@@ -105,10 +105,10 @@ public class ShowLectureTutorFullView extends HttpServlet {
 					if (submission != null) {
 						if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 							if (submission.getPoints().getPointsOk()) {
-								out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "</td>");
-								points += submission.getPoints().getPointsByStatus();
+								out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + "</td>");
+								points += submission.getPoints().getPointsByStatus(task.getMinPointStep());
 							} else {
-								out.println("<td class=points>(" + Util.showPoints(submission.getPoints().getPoints()) + ")</td>");
+								out.println("<td class=points>(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ")</td>");
 							}
 						} else {
 							out.println("<td><span title=\"nicht bewertet\">n.b.</span></td>");

@@ -119,10 +119,10 @@ public class ShowUserView extends HttpServlet {
 									if (submission != null) {
 										if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 											if (submission.getPoints().getPointsOk()) {
-												out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.showPoints(submission.getPoints().getPointsByStatus()) + "");
-												points += submission.getPoints().getPointsByStatus();
+												out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + "");
+												points += submission.getPoints().getPointsByStatus(task.getMinPointStep());
 											} else {
-												out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(" + Util.showPoints(submission.getPoints().getPoints()) + ")");
+												out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ")");
 											}
 										} else {
 											if (task.getDeadline().after(Util.correctTimezone(new Date()))) {

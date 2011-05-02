@@ -47,7 +47,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	}
 
 	@Override
-	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, boolean isDupe) {
+	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate) {
 		Session session = getSession();
 
 		session.lock(submission, LockMode.UPGRADE);
@@ -64,7 +64,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		Points points = new Points();
 		points.setPoints(issuedPoints);
 		points.setPointStatus(pointStatus);
-		points.setIsDupe(isDupe);
+		points.setDuplicate(duplicate);
 		points.setIssuedBy(participation);
 		submission.setPoints(points);
 		points.setPublicComment(publicComment);
@@ -77,13 +77,17 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 			if (!oldPoints.getPointStatus().equals(points.getPointStatus())) {
 				storeInHistory(submission, "status", PointStatus.values()[oldPoints.getPointStatus()].toString(), PointStatus.values()[points.getPointStatus()].toString(), participation);
 			}
-			if (!points.getIsDupe().equals(oldPoints.getIsDupe())) {
-				if (oldPoints.getIsDupe() == null && points.getIsDupe() != false) {
-					storeInHistory(submission, "isDupe", "false", points.getIsDupe() + "", participation);
-				} else {
-					storeInHistory(submission, "isDupe", oldPoints.getIsDupe() + "", points.getIsDupe() + "", participation);
+			if (oldPoints.getDuplicate() != null || points.getDuplicate() != null) {
+				if (oldPoints.getDuplicate() == null && points.getDuplicate() != null) {
+					storeInHistory(submission, "duplicate", "", points.getDuplicate() + "", participation);
+					changed = true;
+				} else if (oldPoints.getDuplicate() != null && points.getDuplicate() == null) {
+					storeInHistory(submission, "duplicate", oldPoints.getDuplicate() + "", "", participation);
+					changed = true;
+				} else if (!oldPoints.getDuplicate().equals(points.getDuplicate())) {
+					storeInHistory(submission, "duplicate", oldPoints.getDuplicate() + "", points.getDuplicate() + "", participation);
+					changed = true;
 				}
-				changed = true;
 			}
 			if (!oldPoints.getPoints().equals(points.getPoints())) {
 				storeInHistory(submission, "points", Util.showPoints(oldPoints.getPoints()), Util.showPoints(points.getPoints()), participation);
@@ -105,8 +109,8 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 			if (points.getPointStatus() != null) {
 				storeInHistory(submission, "status", "", PointStatus.values()[points.getPointStatus()].toString(), participation);
 			}
-			if (points.getIsDupe() != null) {
-				storeInHistory(submission, "isDupe", "", points.getIsDupe() + "", participation);
+			if (points.getDuplicate() != null) {
+				storeInHistory(submission, "duplicate", "", points.getDuplicate() + "", participation);
 			}
 			if (points.getPoints() != null) {
 				storeInHistory(submission, "points", "", Util.showPoints(points.getPoints()), participation);
@@ -127,7 +131,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	}
 
 	@Override
-	public Points createPoints(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, boolean isDupe) {
+	public Points createPoints(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate) {
 		Session session = getSession();
 
 		session.lock(submission, LockMode.UPGRADE);
@@ -187,7 +191,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		Points points = new Points();
 		points.setPoints(numPoints);
 		points.setPointStatus(pointStatus);
-		points.setIsDupe(isDupe);
+		points.setDuplicate(duplicate);
 		points.setIssuedBy(participation);
 		submission.setPoints(points);
 		points.setPublicComment(publicComment);
@@ -199,13 +203,17 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 			if (!oldPoints.getPointStatus().equals(points.getPointStatus())) {
 				storeInHistory(submission, "status", PointStatus.values()[oldPoints.getPointStatus()].toString(), PointStatus.values()[points.getPointStatus()].toString(), participation);
 			}
-			if (!points.getIsDupe().equals(oldPoints.getIsDupe())) {
-				if (oldPoints.getIsDupe() == null && points.getIsDupe() != false) {
-					storeInHistory(submission, "isDupe", "false", points.getIsDupe() + "", participation);
-				} else {
-					storeInHistory(submission, "isDupe", oldPoints.getIsDupe() + "", points.getIsDupe() + "", participation);
+			if (oldPoints.getDuplicate() != null || points.getDuplicate() != null) {
+				if (oldPoints.getDuplicate() == null) {
+					storeInHistory(submission, "duplicate", "", points.getDuplicate() + "", participation);
+					changed = true;
+				} else if (points.getDuplicate() == null) {
+					storeInHistory(submission, "duplicate", oldPoints.getDuplicate() + "", "", participation);
+					changed = true;
+				} else if (!oldPoints.getDuplicate().equals(points.getDuplicate())) {
+					storeInHistory(submission, "duplicate", oldPoints.getDuplicate() + "", points.getDuplicate() + "", participation);
+					changed = true;
 				}
-				changed = true;
 			}
 			if (!oldPoints.getPoints().equals(points.getPoints())) {
 				storeInHistory(submission, "points", Util.showPoints(oldPoints.getPoints()), Util.showPoints(points.getPoints()), participation);
@@ -227,8 +235,8 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 			if (points.getPointStatus() != null) {
 				storeInHistory(submission, "status", "", PointStatus.values()[points.getPointStatus()].toString(), participation);
 			}
-			if (points.getIsDupe() != null) {
-				storeInHistory(submission, "isDupe", "", points.getIsDupe() + "", participation);
+			if (points.getDuplicate() != null) {
+				storeInHistory(submission, "duplicate", "", points.getDuplicate() + "", participation);
 			}
 			if (points.getPoints() != null) {
 				storeInHistory(submission, "points", "", Util.showPoints(points.getPoints()), participation);

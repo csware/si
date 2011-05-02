@@ -91,11 +91,15 @@ public class ShowSubmission extends HttpServlet {
 				pointStatus = PointStatus.NICHT_BEWERTET;
 			}
 			Transaction tx = session.beginTransaction();
+			Integer duplicate = null;
+			if (request.getParameter("isdupe") != null && Util.parseInteger(request.getParameter("duplicate"), -1) >= 0) {
+				duplicate = Util.parseInteger(request.getParameter("duplicate"), -1);
+			}
 			// attention: quite similar code in MarkEmptyTask
 			if (task.getPointCategories().size() > 0) {
-				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, request.getParameter("isdupe") != null);
+				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, duplicate);
 			} else {
-				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, request.getParameter("isdupe") != null);
+				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, duplicate);
 			}
 			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));

@@ -242,7 +242,7 @@ public class ShowLectureTutorView extends HttpServlet {
 		int points = 0;
 		for (Submission submission : participation.getSubmissions()) {
 			if (submission.getPoints() != null && submission.getPoints().getPointsOk()) {
-				points += submission.getPoints().getPointsByStatus();
+				points += submission.getPoints().getPointsByStatus(submission.getTask().getMinPointStep());
 			}
 		}
 		return points;
