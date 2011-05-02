@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.servlets;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.HibernateException;
@@ -85,5 +86,18 @@ public class RequestAdapter {
 			request.setAttribute("sessionAdapter", new SessionAdapter(request));
 		}
 		return (SessionAdapter) request.getAttribute("sessionAdapter");
+	}
+
+	/**
+	 * Returns true if the request requested the privacy mode
+	 * @return privacy mode is on
+	 */
+	public boolean isPrivacyMode() {
+		for (Cookie cookie : request.getCookies()) {
+			if ("privacy".equals(cookie.getName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

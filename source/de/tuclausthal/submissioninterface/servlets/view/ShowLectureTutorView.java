@@ -60,7 +60,7 @@ public class ShowLectureTutorView extends HttpServlet {
 		Participation participation = (Participation) request.getAttribute("participation");
 		Lecture lecture = participation.getLecture();
 		RequestAdapter requestAdapter = new RequestAdapter(request);
-		Session session = RequestAdapter.getSession(request);
+		Session session = requestAdapter.getSession();
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 
 		boolean isAdvisor = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0);
@@ -118,6 +118,10 @@ public class ShowLectureTutorView extends HttpServlet {
 			}
 		}
 
+		if (requestAdapter.isPrivacyMode()) {
+			template.printTemplateFooter();
+			return;
+		}
 		out.println("<p>");
 		out.println("<h2>Teilnehmer</h2>");
 		if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {

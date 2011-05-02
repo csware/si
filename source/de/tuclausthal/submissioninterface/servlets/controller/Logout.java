@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +41,9 @@ public class Logout extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		RequestAdapter.getSessionAdapter(request).setUser(null);
 		request.getSession().invalidate();
+		Cookie privacyCookie = new Cookie("privacy", "0");
+		privacyCookie.setMaxAge(0);
+		response.addCookie(privacyCookie);
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.printTemplateHeader("Logged out");
 		PrintWriter out = response.getWriter();

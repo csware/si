@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,6 +46,7 @@ public class SwitchLogin extends HttpServlet {
 			request.setAttribute("title", "Invalid Request");
 			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 		} else {
+			response.addCookie(new Cookie("privacy", "1"));
 			response.sendRedirect(request.getContextPath() + "/" + contextAdapter.getServletsPath() + "/ShowUser?uid=" + uid);
 		}
 	}

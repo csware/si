@@ -58,7 +58,8 @@ public class ShowTaskTutorView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		Session session = RequestAdapter.getSession(request);
+		RequestAdapter requestAdapter = new RequestAdapter(request);
+		Session session = requestAdapter.getSession();
 
 		Task task = (Task) request.getAttribute("task");
 		Participation participation = (Participation) request.getAttribute("participation");
@@ -140,7 +141,7 @@ public class ShowTaskTutorView extends HttpServlet {
 				if (first == true || lastGroup != group) {
 					lastGroup = group;
 					if (first == false) {
-						if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+						if (task.getDeadline().before(Util.correctTimezone(new Date())) && !requestAdapter.isPrivacyMode()) {
 							out.println("<tr>");
 							out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte: (#: " + groupSumOfAllSubmissions + ")</td>");
 							out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
@@ -175,7 +176,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("<table class=border>");
 					out.println("<tr>");
 					out.println("<th>Benutzer</th>");
-					if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+					if (task.getDeadline().before(Util.correctTimezone(new Date())) && !requestAdapter.isPrivacyMode()) {
 						for (Test test : tests) {
 							out.println("<th>" + Util.escapeHTML(test.getTestTitle()) + "</th>");
 						}
@@ -198,7 +199,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("<tr>");
 					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
 					lastSID = submission.getSubmissionid();
-					if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+					if (task.getDeadline().before(Util.correctTimezone(new Date())) && !requestAdapter.isPrivacyMode()) {
 						for (Test test : tests) {
 							if (testResultDAO.getResult(test, submission) != null) {
 								out.println("<td>" + Util.boolToHTML(testResultDAO.getResult(test, submission).getPassedTest()) + "</td>");
@@ -235,7 +236,7 @@ public class ShowTaskTutorView extends HttpServlet {
 				}
 			}
 			if (first == false) {
-				if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+				if (task.getDeadline().before(Util.correctTimezone(new Date())) && !requestAdapter.isPrivacyMode()) {
 					out.println("<tr>");
 					out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte: (#: " + groupSumOfAllSubmissions + ")</td>");
 					out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
@@ -248,7 +249,7 @@ public class ShowTaskTutorView extends HttpServlet {
 				}
 				out.println("</table><p>");
 				out.println("</form></div>");
-				if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+				if (task.getDeadline().before(Util.correctTimezone(new Date())) && !requestAdapter.isPrivacyMode()) {
 					out.println("<h3>Gesamtdurchschnitt: " + Util.showPoints(Float.valueOf(sumOfPoints / (float) sumOfSubmissions).intValue()) + "</h3>");
 				}
 			}
