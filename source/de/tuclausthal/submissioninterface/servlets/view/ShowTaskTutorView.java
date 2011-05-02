@@ -134,6 +134,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			TestResultDAOIf testResultDAO = DAOFactory.TestResultDAOIf(session);
 			List<Test> tests = DAOFactory.TestDAOIf(session).getTutorTests(task);
 			boolean hasUnapprochedPoints = false;
+			boolean showAllColumns = task.getDeadline().before(Util.correctTimezone(new Date())) && !requestAdapter.isPrivacyMode();
 			// dynamic splitter for groups
 			while (submissionIterator.hasNext()) {
 				Submission submission = submissionIterator.next();
@@ -141,7 +142,7 @@ public class ShowTaskTutorView extends HttpServlet {
 				if (first == true || lastGroup != group) {
 					lastGroup = group;
 					if (first == false) {
-						if (task.getDeadline().before(Util.correctTimezone(new Date())) && !requestAdapter.isPrivacyMode()) {
+						if (showAllColumns) {
 							out.println("<tr>");
 							out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte: (#: " + groupSumOfAllSubmissions + ")</td>");
 							out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
@@ -176,7 +177,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("<table class=border>");
 					out.println("<tr>");
 					out.println("<th>Benutzer</th>");
-					if (task.getDeadline().before(Util.correctTimezone(new Date())) && !requestAdapter.isPrivacyMode()) {
+					if (showAllColumns) {
 						for (Test test : tests) {
 							out.println("<th>" + Util.escapeHTML(test.getTestTitle()) + "</th>");
 						}
@@ -199,7 +200,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("<tr>");
 					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
 					lastSID = submission.getSubmissionid();
-					if (task.getDeadline().before(Util.correctTimezone(new Date())) && !requestAdapter.isPrivacyMode()) {
+					if (showAllColumns) {
 						for (Test test : tests) {
 							if (testResultDAO.getResult(test, submission) != null) {
 								out.println("<td>" + Util.boolToHTML(testResultDAO.getResult(test, submission).getPassedTest()) + "</td>");
@@ -236,7 +237,7 @@ public class ShowTaskTutorView extends HttpServlet {
 				}
 			}
 			if (first == false) {
-				if (task.getDeadline().before(Util.correctTimezone(new Date())) && !requestAdapter.isPrivacyMode()) {
+				if (showAllColumns) {
 					out.println("<tr>");
 					out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte: (#: " + groupSumOfAllSubmissions + ")</td>");
 					out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
@@ -249,7 +250,7 @@ public class ShowTaskTutorView extends HttpServlet {
 				}
 				out.println("</table><p>");
 				out.println("</form></div>");
-				if (task.getDeadline().before(Util.correctTimezone(new Date())) && !requestAdapter.isPrivacyMode()) {
+				if (showAllColumns) {
 					out.println("<h3>Gesamtdurchschnitt: " + Util.showPoints(Float.valueOf(sumOfPoints / (float) sumOfSubmissions).intValue()) + "</h3>");
 				}
 			}
