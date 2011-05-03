@@ -87,8 +87,11 @@ public class ShowTaskTutorView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Punktedatum:</th>");
-		out.println("<td>" + Util.escapeHTML(task.getShowPoints().toLocaleString()));
-		out.println("</td>");
+		if (task.getShowPoints() != null) {
+			out.println("<td>" + Util.escapeHTML(task.getShowPoints().toLocaleString()) + "</td>");
+		} else {
+			out.println("<td><a href=\"" + response.encodeURL("PublishGrades?taskid=" + task.getTaskid()) + "\">Punkte freigeben</a></td>");
+		}
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Max. Punkte:</th>");

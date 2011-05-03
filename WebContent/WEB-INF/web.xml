@@ -563,4 +563,20 @@
     <servlet-name>EditMultipleGroupsFormView</servlet-name>
     <url-pattern>/servlets/EditMultipleGroupsFormView</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>PublishGrades</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.PublishGrades</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PublishGrades</servlet-name>
+    <url-pattern>/servlets/PublishGrades</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>PublishGradesView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PublishGradesView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PublishGradesView</servlet-name>
+    <url-pattern>/servlets/PublishGradesView</url-pattern>
+  </servlet-mapping>
 </web-app>

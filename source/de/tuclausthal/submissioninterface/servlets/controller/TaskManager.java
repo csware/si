@@ -142,9 +142,13 @@ public class TaskManager extends HttpServlet {
 				if (task.getDeadline().before(task.getStart())) {
 					task.setDeadline(task.getStart());
 				}
-				task.setShowPoints(parseDate(request.getParameter("pointsdate"), new Date()));
-				if (task.getShowPoints().before(task.getDeadline())) {
-					task.setShowPoints(task.getDeadline());
+				if (request.getParameter("pointsmanual") != null) {
+					task.setShowPoints(null);
+				} else {
+					task.setShowPoints(parseDate(request.getParameter("pointsdate"), new Date()));
+					if (task.getShowPoints().before(task.getDeadline())) {
+						task.setShowPoints(task.getDeadline());
+					}
 				}
 				task.setTaskGroup(taskGroup);
 				taskDAO.saveTask(task);

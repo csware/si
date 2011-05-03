@@ -141,7 +141,11 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Punktedatum:</th>");
-		out.println("<td><input type=text name=pointsdate value=\"" + Util.escapeHTML(task.getShowPoints().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
+		String pointsDate = "";
+		if (task.getShowPoints() != null) {
+			pointsDate = Util.escapeHTML(task.getShowPoints().toLocaleString());
+		}
+		out.println("<td><input type=checkbox name=pointsmanual " + (task.getShowPoints() == null ? "checked" : "") + "> manuell freischalten oder <input type=text name=pointsdate value=\"" + pointsDate + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Min. Punkt-Schrittweite:</th>");

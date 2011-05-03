@@ -89,7 +89,7 @@ public class Submission implements Serializable {
 
 	@Transient
 	public boolean isPointsVisibleToStudents() {
-		if (getTask().getShowPoints().before(Util.correctTimezone(new Date())) && getPoints() != null && getPoints().getPointStatus() > Points.PointStatus.NICHT_BEWERTET.ordinal()) {
+		if (getTask().getShowPoints() != null && getTask().getShowPoints().before(Util.correctTimezone(new Date())) && getPoints() != null && getPoints().getPointStatus() > Points.PointStatus.NICHT_BEWERTET.ordinal()) {
 			return true;
 		} else {
 			return false;
