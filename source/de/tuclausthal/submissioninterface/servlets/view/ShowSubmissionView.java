@@ -133,7 +133,7 @@ public class ShowSubmissionView extends HttpServlet {
 				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte  vergeben von: <a href=\"mailto:" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>, <a href=\"" + response.encodeURL("ShowMarkHistory?sid=" + submission.getSubmissionid()) + "\">History</a>)";
 				if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal()) {
 					pointsClass = " abgenfailed";
-				}else if (submission.getPoints().getDuplicate() != null) {
+				} else if (submission.getPoints().getDuplicate() != null) {
 					pointsClass = " dupe";
 				}
 				if (submission.getPoints().getPointStatus() == PointStatus.NICHT_BEWERTET.ordinal()) {
@@ -180,14 +180,14 @@ public class ShowSubmissionView extends HttpServlet {
 						if (curPoints > 0) {
 							checked = " checked";
 						}
-						out.println("<li><input class=\""+pointsClass+"\" type=checkbox id=\"point_" + category.getPointcatid() + "\" name=\"point_" + category.getPointcatid() + "\" value=\"" + category.getPoints() + "\" " + checked + "> <label for=\"point_" + category.getPointcatid() + "\">" + Util.escapeHTML(category.getDescription()) + " (" + Util.showPoints(category.getPoints()) + ")</label></li>");
+						out.println("<li><input class=\"" + pointsClass + "\" type=checkbox id=\"point_" + category.getPointcatid() + "\" name=\"point_" + category.getPointcatid() + "\" value=\"" + category.getPoints() + "\" " + checked + "> <label for=\"point_" + category.getPointcatid() + "\">" + Util.escapeHTML(category.getDescription()) + " (" + Util.showPoints(category.getPoints()) + ")</label></li>");
 					} else {
-						out.println("<li><input class=\""+pointsClass+"\" type=text size=3 id=\"point_" + category.getPointcatid() + "\" name=\"point_" + category.getPointcatid() + "\" value=\"" + Util.showPoints(curPoints) + "\"> <label for=\"point_" + category.getPointcatid() + "\">" + Util.escapeHTML(category.getDescription()) + " (max. " + Util.showPoints(category.getPoints()) + ")</label></li>");
+						out.println("<li><input class=\"" + pointsClass + "\" type=text size=3 id=\"point_" + category.getPointcatid() + "\" name=\"point_" + category.getPointcatid() + "\" value=\"" + Util.showPoints(curPoints) + "\"> <label for=\"point_" + category.getPointcatid() + "\">" + Util.escapeHTML(category.getDescription()) + " (max. " + Util.showPoints(category.getPoints()) + ")</label></li>");
 					}
 				}
 				out.println("</ul>");
 			} else {
-				out.println("<b>Punkte:</b> <input type=text class=\""+pointsClass+"\" name=points size=3 value=\"" + Util.showPoints(points) + "\"> (max. " + Util.showPoints(task.getMaxPoints()) + ")" + pointsGivenBy + "<br>");
+				out.println("<b>Punkte:</b> <input type=text class=\"" + pointsClass + "\" name=points size=3 value=\"" + Util.showPoints(points) + "\"> (max. " + Util.showPoints(task.getMaxPoints()) + ")" + pointsGivenBy + "<br>");
 			}
 			out.println("<b>Öffentlicher Kommentar:</b><br><textarea cols=80 rows=8 name=publiccomment>" + Util.escapeHTML(oldPublicComment) + "</textarea><br>");
 			if (requestAdapter.isPrivacyMode()) {
