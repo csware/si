@@ -20,11 +20,11 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -259,9 +259,13 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<h2>Dateien: <a href=\"#\" onclick=\"$('#files').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<div id=files class=mid>");
 			out.println("<p><a href=\"" + response.encodeURL("DownloadAsZip?sid=" + submission.getSubmissionid()) + "\">alles als .zip herunterladen</a></p>");
-			List<String> featuredFiles = new LinkedList<String>();
+			Pattern pattern = null;
 			if (!"".equals(task.getFeaturedFiles().trim())) {
-				featuredFiles = Arrays.asList(task.getFeaturedFiles().split(","));
+				if (task.getFeaturedFiles().startsWith("^")) {
+					pattern = Pattern.compile("^(" + task.getFeaturedFiles().substring(1) + ")$");
+				} else {
+					pattern = Pattern.compile("^([\\/a-zA-Z0-9_ .-]*(" + task.getFeaturedFiles() + "))$");
+				}
 			}
 			int id = 0;
 			for (String file : submittedFiles) {
@@ -276,8 +280,11 @@ public class ShowSubmissionView extends HttpServlet {
 					out.println("<iframe name=\"iframe" + id + "\" id=\"iframe" + id + "\" scrolling=\"yes\" width=\"100%\" height=\"100%\" src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe></div>");
 					out.println("</div>");
 					javaScript.append("iframeSetup('" + id + "');");
-					if (featuredFiles.size() > 0 && !featuredFiles.contains(file)) {
-						javaScript.append("hideCodePreview('" + id + "');");
+					if (pattern != null) {
+						Matcher m = pattern.matcher(file);
+						if (!m.matches()) {
+							javaScript.append("hideCodePreview('" + id + "');");
+						}
 					}
 				} else {
 					out.println("<h3 class=files>" + Util.escapeHTML(file) + "</h3>");

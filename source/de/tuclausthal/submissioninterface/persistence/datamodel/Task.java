@@ -328,7 +328,12 @@ public class Task implements Serializable {
 	 * @param featuredFiles the featuredFiles to set
 	 */
 	public void setFeaturedFiles(String featuredFiles) {
-		this.featuredFiles = featuredFiles;
+		try {
+			Pattern.compile(featuredFiles);
+			this.featuredFiles = featuredFiles;
+		} catch (PatternSyntaxException e) {
+			this.featuredFiles = "";
+		}
 	}
 
 	/**
