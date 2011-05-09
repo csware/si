@@ -314,7 +314,7 @@ public class SubmitSolution extends HttpServlet {
 				if (!item.isFormField()) {
 					Pattern pattern;
 					if (task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty() || uploadFor > 0) {
-						pattern = Pattern.compile("^(?:.*?\\\\|/)?([a-zA-Z0-9_.-]+)$");
+						pattern = Pattern.compile("^(?:.*?\\\\|/)?([a-zA-Z0-9_. -]+)$");
 					} else {
 						pattern = Pattern.compile("^(?:.*?\\\\|/)?(" + task.getFilenameRegexp() + ")$");
 					}
