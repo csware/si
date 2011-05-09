@@ -218,7 +218,7 @@ public class TaskManager extends HttpServlet {
 
 					// Process a file upload
 					if (!item.isFormField()) {
-						Pattern pattern = Pattern.compile(".*?(?:\\\\|/)?([a-zA-Z0-9_. -]+)$");
+						Pattern pattern = Pattern.compile("^(?:.*?[\\\\/])?([a-zA-Z0-9_. -]+)$");
 						StringBuffer submittedFileName = new StringBuffer(item.getName());
 						if (submittedFileName.lastIndexOf(".") > 0) {
 							int lastDot = submittedFileName.lastIndexOf(".");

@@ -314,9 +314,9 @@ public class SubmitSolution extends HttpServlet {
 				if (!item.isFormField()) {
 					Pattern pattern;
 					if (task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty() || uploadFor > 0) {
-						pattern = Pattern.compile("^(?:.*?\\\\|/)?([a-zA-Z0-9_. -]+)$");
+						pattern = Pattern.compile("^(?:.*?[\\\\/])?([a-zA-Z0-9_. -]+)$");
 					} else {
-						pattern = Pattern.compile("^(?:.*?\\\\|/)?(" + task.getFilenameRegexp() + ")$");
+						pattern = Pattern.compile("^(?:.*?[\\\\/])?(" + task.getFilenameRegexp() + ")$");
 					}
 					StringBuffer submittedFileName = new StringBuffer(item.getName());
 					if (submittedFileName.lastIndexOf(".") > 0) {
@@ -344,11 +344,11 @@ public class SubmitSolution extends HttpServlet {
 						ZipInputStream zipFile;
 						Pattern archivePattern;
 						if (task.getArchiveFilenameRegexp() == null || task.getArchiveFilenameRegexp().isEmpty()) {
-							archivePattern = Pattern.compile("^([\\/a-zA-Z0-9_ .-]*([a-zA-Z0-9_ .-]+))$");
+							archivePattern = Pattern.compile("^(([\\/a-zA-Z0-9_ .-]*?[\\\\/])?([a-zA-Z0-9_ .-]+))$");
 						} else if (task.getArchiveFilenameRegexp().startsWith("^")) {
 							archivePattern = Pattern.compile("^(" + task.getArchiveFilenameRegexp().substring(1) + ")$");
 						} else {
-							archivePattern = Pattern.compile("^([\\/a-zA-Z0-9_ .-]*(" + task.getArchiveFilenameRegexp() + "))$");
+							archivePattern = Pattern.compile("^(([\\/a-zA-Z0-9_ .-]*?[\\\\/])?(" + task.getArchiveFilenameRegexp() + "))$");
 						}
 						try {
 							zipFile = new ZipInputStream(item.getInputStream());

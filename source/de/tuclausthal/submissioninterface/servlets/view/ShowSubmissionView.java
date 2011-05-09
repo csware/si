@@ -264,7 +264,7 @@ public class ShowSubmissionView extends HttpServlet {
 				if (task.getFeaturedFiles().startsWith("^")) {
 					pattern = Pattern.compile("^(" + task.getFeaturedFiles().substring(1) + ")$");
 				} else {
-					pattern = Pattern.compile("^([\\/a-zA-Z0-9_ .-]*(" + task.getFeaturedFiles() + "))$");
+					pattern = Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?(" + task.getFeaturedFiles() + "))$");
 				}
 			}
 			int id = 0;
