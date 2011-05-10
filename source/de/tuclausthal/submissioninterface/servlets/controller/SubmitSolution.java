@@ -354,7 +354,7 @@ public class SubmitSolution extends HttpServlet {
 							zipFile = new ZipInputStream(item.getInputStream());
 							ZipEntry entry = null;
 							while ((entry = zipFile.getNextEntry()) != null) {
-								if (entry.getName().contains("..")) {
+								if (entry.getName().contains("..") || entry.isDirectory()) {
 									continue;
 								}
 								StringBuffer archivedFileName = new StringBuffer(entry.getName().replace("\\", "/"));
