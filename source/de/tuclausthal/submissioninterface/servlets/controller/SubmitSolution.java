@@ -344,11 +344,11 @@ public class SubmitSolution extends HttpServlet {
 						ZipInputStream zipFile;
 						Pattern archivePattern;
 						if (task.getArchiveFilenameRegexp() == null || task.getArchiveFilenameRegexp().isEmpty()) {
-							archivePattern = Pattern.compile("^(([\\/a-zA-Z0-9_ .-]*?[\\\\/])?([a-zA-Z0-9_ .-]+))$");
+							archivePattern = Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?([a-zA-Z0-9_ .-]+))$");
 						} else if (task.getArchiveFilenameRegexp().startsWith("^")) {
 							archivePattern = Pattern.compile("^(" + task.getArchiveFilenameRegexp().substring(1) + ")$");
 						} else {
-							archivePattern = Pattern.compile("^(([\\/a-zA-Z0-9_ .-]*?[\\\\/])?(" + task.getArchiveFilenameRegexp() + "))$");
+							archivePattern = Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?(" + task.getArchiveFilenameRegexp() + "))$");
 						}
 						try {
 							zipFile = new ZipInputStream(item.getInputStream());
@@ -357,7 +357,7 @@ public class SubmitSolution extends HttpServlet {
 								if (entry.getName().contains("..")) {
 									continue;
 								}
-								StringBuffer archivedFileName = new StringBuffer(entry.getName());
+								StringBuffer archivedFileName = new StringBuffer(entry.getName().replace("\\", "/"));
 								if (!archivePattern.matcher(archivedFileName).matches()) {
 									System.out.println("Ignored entry: " + archivedFileName);
 									continue;
