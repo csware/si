@@ -329,7 +329,7 @@ public class SubmitSolution extends HttpServlet {
 							submission.setLastModified(new Date());
 							submissionDAO.saveSubmission(submission);
 						}
-						System.out.println("SubmitSolutionProblem2: " + item.getName() + ";" + submittedFileName + ";" + pattern.pattern());
+						System.err.println("SubmitSolutionProblem2: " + item.getName() + ";" + submittedFileName + ";" + pattern.pattern());
 						tx.commit();
 						template.printTemplateHeader("Ungültige Anfrage");
 						out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
@@ -355,11 +355,12 @@ public class SubmitSolution extends HttpServlet {
 							ZipEntry entry = null;
 							while ((entry = zipFile.getNextEntry()) != null) {
 								if (entry.getName().contains("..") || entry.isDirectory()) {
+									System.err.println("Ignored entry: " + entry.getName() + "; contains \"..\" or is directory");
 									continue;
 								}
 								StringBuffer archivedFileName = new StringBuffer(entry.getName().replace("\\", "/"));
 								if (!archivePattern.matcher(archivedFileName).matches()) {
-									System.out.println("Ignored entry: " + archivedFileName);
+									System.err.println("Ignored entry: " + archivedFileName + ";" + archivePattern.pattern());
 									continue;
 								}
 								if (entry.isDirectory() == false && !entry.getName().toLowerCase().endsWith(".class")) {
@@ -381,9 +382,9 @@ public class SubmitSolution extends HttpServlet {
 								submission.setLastModified(new Date());
 								submissionDAO.saveSubmission(submission);
 							}
-							System.out.println("SubmitSolutionProblem1");
+							System.err.println("SubmitSolutionProblem1");
 							tx.commit();
-							System.out.println(e.getMessage());
+							System.err.println(e.getMessage());
 							e.printStackTrace();
 							template.printTemplateHeader("Ungültige Anfrage");
 							out.println("Problem beim Entpacken des Archives.");
@@ -434,8 +435,8 @@ public class SubmitSolution extends HttpServlet {
 				submission.setLastModified(new Date());
 				submissionDAO.saveSubmission(submission);
 			}
-			System.out.println("SubmitSolutionProblem3");
-			System.out.println("Problem: Keine Abgabedaten gefunden.");
+			System.err.println("SubmitSolutionProblem3");
+			System.err.println("Problem: Keine Abgabedaten gefunden.");
 			tx.commit();
 			out.println("Problem: Keine Abgabedaten gefunden.");
 		} else if (request.getParameter("textsolution") != null) {
