@@ -199,7 +199,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				if (submittedFiles.size() > 0) {
 					out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe erweitern</a></div");
 				} else {
-					out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div");
+					out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div>");
 				}
 			}
 
@@ -232,7 +232,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
 			} else {
-				out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div");
+				out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div>");
 			}
 		}
 		template.printTemplateFooter();
