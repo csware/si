@@ -283,17 +283,35 @@ public class SubmitSolution extends HttpServlet {
 		Transaction tx = session.beginTransaction();
 		Submission submission = submissionDAO.createSubmission(task, studentParticipation);
 
-		for (int partnerID : partnerIDs) {
-			Participation partnerParticipation = participationDAO.getParticipation(partnerID);
-			if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
-				submission.getSubmitters().add(partnerParticipation);
-				session.update(submission);
+		if (studentParticipation.getGroup() != null) {
+			if (studentParticipation.getGroup().isSubmissionGroup()) {
+				for (Participation partnerParticipation : studentParticipation.getGroup().getMembers()) {
+					Submission partnerSubmission = submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser());
+					if (partnerSubmission == null) {
+						submission.getSubmitters().add(partnerParticipation);
+						session.update(submission);
+					} else if (partnerSubmission.getSubmissionid() != submission.getSubmissionid()) {
+						tx.rollback();
+						template.printTemplateHeader("Ungültige Anfrage");
+						out.println("<div class=mid>Ein Gruppenpartner hat bereits eine Gruppen-Abgabe initiiert.</div>");
+						template.printTemplateFooter();
+						return;
+					}
+				}
 			} else {
-				tx.rollback();
-				template.printTemplateHeader("Ungültige Anfrage");
-				out.println("<div class=mid>Ein ausgewählter Partner hat bereits eine eigene Abgabe initiiert oder Sie haben bereits die maximale Anzahl von Partnern ausgewählt.</div>");
-				template.printTemplateFooter();
-				return;
+				for (int partnerID : partnerIDs) {
+					Participation partnerParticipation = participationDAO.getParticipation(partnerID);
+					if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && partnerParticipation.getGroup() != null && partnerParticipation.getGroup().getGid() == studentParticipation.getGroup().getGid() && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
+						submission.getSubmitters().add(partnerParticipation);
+						session.update(submission);
+					} else {
+						tx.rollback();
+						template.printTemplateHeader("Ungültige Anfrage");
+						out.println("<div class=mid>Ein ausgewählter Partner hat bereits eine eigene Abgabe initiiert oder Sie haben bereits die maximale Anzahl von Partnern ausgewählt.</div>");
+						template.printTemplateFooter();
+						return;
+					}
+				}
 			}
 		}
 

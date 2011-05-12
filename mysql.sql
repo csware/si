@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `lectureid` int(11) NOT NULL,
   `allowStudentsToSignup` bit(1) NOT NULL,
   `allowStudentsToQuit` bit(1) NOT NULL,
+  `submissionGroup` bit(1) NOT NULL,
   `maxStudents` int(11) unsigned NOT NULL DEFAULT '20',
   PRIMARY KEY (`gid`),
   KEY `FKB63DD9D4AF18EDD1` (`lectureid`)

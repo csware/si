@@ -50,6 +50,7 @@ public class EditGroupFormView extends HttpServlet {
 		Group group = (Group) request.getAttribute("group");
 		Participation participation = (Participation) request.getAttribute("participation");
 
+		template.addJQuery();
 		template.printTemplateHeader(group);
 
 		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
@@ -71,6 +72,10 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Max. Studenten:</th>");
 		out.println("<td><input type=text name=maxStudents value=\"" + group.getMaxStudents() + "\" " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "readonly") + "></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Abgabegruppe:</th>");
+		out.println("<td><input type=checkbox name=submissionGroup " + (group.isSubmissionGroup() ? "checked" : "") + " " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "disabled") + "> <a href=\"#\" onclick=\"$('#submissiongrouphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=submissiongrouphelp><b>Hilfe:</b><br>Wird dieses Flag gesetzt, werden alle Mitglieder dieser Gruppe bei der ersten Abgabe als Partner hinzugefügt.</span></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Teilnehmer hinzufügen:</th>");

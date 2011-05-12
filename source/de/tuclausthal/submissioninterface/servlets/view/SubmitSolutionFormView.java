@@ -60,7 +60,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 		Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
 
 		StringBuffer setWithUser = new StringBuffer();
-		if (task.getMaxSubmitters() > 1 && submission == null) {
+		if (task.getMaxSubmitters() > 1 && submission == null && !(participation.getGroup() != null && participation.getGroup().isSubmissionGroup())) {
 			if (participation.getGroup() != null) {
 				StringBuffer partnerField = new StringBuffer();
 				setWithUser.append("<p>Haben Sie diese Aufgabe zusammen mit einem Partner gelöst? Dann bitte hier auswählen:<br>");

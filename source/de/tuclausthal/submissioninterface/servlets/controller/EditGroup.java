@@ -97,6 +97,7 @@ public class EditGroup extends HttpServlet {
 				group.setName(request.getParameter("title"));
 				group.setAllowStudentsToSignup(request.getParameter("allowStudentsToSignup") != null);
 				group.setAllowStudentsToQuit(request.getParameter("allowStudentsToQuit") != null);
+				group.setSubmissionGroup(request.getParameter("submissionGroup") != null);
 				group.setMaxStudents(Util.parseInteger(request.getParameter("maxStudents"), 0));
 				groupDAO.saveGroup(group);
 

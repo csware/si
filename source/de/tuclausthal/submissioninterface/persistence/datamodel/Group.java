@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -42,6 +42,7 @@ public class Group implements Serializable {
 	private boolean allowStudentsToSignup = false;
 	private boolean allowStudentsToQuit = false;
 	private int maxStudents = 20;
+	private boolean submissionGroup = false;
 
 	/**
 	 * @return the gid
@@ -160,5 +161,19 @@ public class Group implements Serializable {
 	 */
 	public void setTutors(Set<Participation> tutors) {
 		this.tutors = tutors;
+	}
+
+	/**
+	 * @return the submissionGroup
+	 */
+	public boolean isSubmissionGroup() {
+		return submissionGroup;
+	}
+
+	/**
+	 * @param submissionGroup the submissionGroup to set
+	 */
+	public void setSubmissionGroup(boolean submissionGroup) {
+		this.submissionGroup = submissionGroup;
 	}
 }
