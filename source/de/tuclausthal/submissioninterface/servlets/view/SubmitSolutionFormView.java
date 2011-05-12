@@ -60,8 +60,8 @@ public class SubmitSolutionFormView extends HttpServlet {
 		Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
 
 		StringBuffer setWithUser = new StringBuffer();
-		if (task.getMaxSubmitters() > 1) {
-			if (submission == null && participation.getGroup() != null) {
+		if (task.getMaxSubmitters() > 1 && submission == null) {
+			if (participation.getGroup() != null) {
 				StringBuffer partnerField = new StringBuffer();
 				setWithUser.append("<p>Haben Sie diese Aufgabe zusammen mit einem Partner gelöst? Dann bitte hier auswählen:<br>");
 				partnerField.append("<select name=partnerid size=1>");
@@ -82,7 +82,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 					}
 					setWithUser.append("<br>");
 				}
-			} else if (submission == null && participation.getGroup() == null) {
+			} else if (participation.getGroup() == null) {
 				setWithUser = new StringBuffer("<p>Sie können im Moment keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, müssen von Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol></p><hr>");
 			}
 		}
