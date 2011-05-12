@@ -121,7 +121,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Text-Eingabefeld:</th>");
-		out.println("<td><input type=checkbox name=showtextarea " + (task.isShowTextArea() ? "checked" : "") + "></td>");
+		out.println("<td><input type=checkbox name=showtextarea " + (task.isShowTextArea() ? "checked" : "") + "> (wird als textloesung.txt gespeichert)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Dateien bei Tutor aufklappen:</th>");
