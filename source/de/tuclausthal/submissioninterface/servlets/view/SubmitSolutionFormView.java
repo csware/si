@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -63,13 +64,19 @@ public class SubmitSolutionFormView extends HttpServlet {
 		if (task.getMaxSubmitters() > 1 && submission == null) {
 			if (participation.getGroup() != null && participation.getGroup().isSubmissionGroup()) {
 				setWithUser = new StringBuffer("<p>Diese Abgabe wird automatisch für alle Studenten in Ihrer Gruppe durchgeführt.</p>");
-			} else if (participation.getGroup() != null) {
+			} else if (task.isAllowSubmittersAcrossGroups() || participation.getGroup() != null) {
 				StringBuffer partnerField = new StringBuffer();
 				setWithUser.append("<p>Haben Sie diese Aufgabe zusammen mit einem Partner gelöst? Dann bitte hier auswählen:<br>");
 				partnerField.append("<select name=partnerid size=1>");
 				int cnt = 0;
 				partnerField.append("<option value=0>-</option>");
-				for (Participation part : participation.getGroup().getMembers()) {
+				Set<Participation> participations = null;
+				if (task.isAllowSubmittersAcrossGroups()) {
+					participations = task.getTaskGroup().getLecture().getParticipants();
+				} else {
+					participations = participation.getGroup().getMembers();
+				}
+				for (Participation part : participations) {
 					if (part.getId() != participation.getId() && submissionDAO.getSubmission(task, part.getUser()) == null) {
 						cnt++;
 						partnerField.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getFullName()) + "</option>");

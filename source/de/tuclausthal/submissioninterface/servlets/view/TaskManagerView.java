@@ -109,7 +109,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Abgaben mit max. Partnern:</th>");
-		out.println("<td><input type=text size=5 name=\"maxSubmitters\" value=\"" + task.getMaxSubmitters() + "\"> <a href=\"#\" onclick=\"$('#maxsubmittershelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=maxsubmittershelp><b>Hilfe:</b><br>Studenten müssen in Gruppen eingeteilt sein. Wird bei Abgabegruppen ignoriert, wenn &gt; 1 (es werden alle Studenten der Gruppe bei der ersten Abgabe hinzugefügt; 1 für Einzelabgaben).</span></td>");
+		out.println("<td><input type=text size=5 name=\"maxSubmitters\" value=\"" + task.getMaxSubmitters() + "\">, <input type=checkbox name=allowSubmittersAcrossGroups " + (task.isAllowSubmittersAcrossGroups() ? "checked" : "") + "> über Gruppengrenzen hinweg <a href=\"#\" onclick=\"$('#maxsubmittershelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=maxsubmittershelp><b>Hilfe:</b><br>Sofern &quot;über Gruppengrenzen hinweg&quot; nicht gesetzt ist, müssen die Studenten in Gruppen eingeteilt sein und können auch nur Partner wählen, die in der gleichen Gruppe sind. Die Zahl wird als Gesamtanzahl der Studenten, die eine Aufgabe gemeinsam bearbeiten dürfen angesehen. Bei Abgabegruppen wird die maximale Anzahl bei &gt; 1 (1 für Einzelabgaben) ignoriert (es werden alle Studenten der Gruppe bei der ersten Abgabe hinzugefügt, ist der abgebende Student in keiner Gruppe ist es eine Einzelabgabe).</span></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Filename Regexp:</th>");

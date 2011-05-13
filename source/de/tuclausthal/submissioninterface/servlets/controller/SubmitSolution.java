@@ -301,7 +301,7 @@ public class SubmitSolution extends HttpServlet {
 			} else {
 				for (int partnerID : partnerIDs) {
 					Participation partnerParticipation = participationDAO.getParticipation(partnerID);
-					if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && partnerParticipation.getGroup() != null && partnerParticipation.getGroup().getGid() == studentParticipation.getGroup().getGid() && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
+					if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && (task.isAllowSubmittersAcrossGroups() || (partnerParticipation.getGroup() != null && partnerParticipation.getGroup().getGid() == studentParticipation.getGroup().getGid())) && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
 						submission.getSubmitters().add(partnerParticipation);
 						session.update(submission);
 					} else {

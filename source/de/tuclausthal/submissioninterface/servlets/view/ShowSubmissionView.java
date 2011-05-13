@@ -23,6 +23,7 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -83,27 +84,34 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<a href=\"" + response.encodeURL("ShowUser?uid=" + participation.getUser().getUid()) + "\">" + Util.escapeHTML(participation.getUser().getFullName()) + "</a><br>");
 		}
 
-		if (submission.getSubmitters().iterator().next().getGroup() != null) {
+		if (!task.isAllowSubmittersAcrossGroups() && submission.getSubmitters().iterator().next().getGroup() != null) {
 			out.println("<h2>Gruppe: " + submission.getSubmitters().iterator().next().getGroup().getName() + "</h2>");
-			if (task.getMaxSubmitters() > 1 && submission.getSubmitters().size() < task.getMaxSubmitters()) {
-				StringBuffer setWithUser = new StringBuffer();
-				setWithUser.append("<form action=\"?\" method=post>");
-				setWithUser.append("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
-				SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+		}
+
+		if ((task.isAllowSubmittersAcrossGroups() || submission.getSubmitters().iterator().next().getGroup() != null) && task.getMaxSubmitters() > 1 && submission.getSubmitters().size() < task.getMaxSubmitters()) {
+			StringBuffer setWithUser = new StringBuffer();
+			setWithUser.append("<form action=\"?\" method=post>");
+			setWithUser.append("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
+			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+			setWithUser.append("<p>Fehlt ein Partner: <select name=partnerid size=1>");
+			setWithUser.append("<option value='0'></option>");
+			int cnt = 0;
+			Set<Participation> participations = null;
+			if (task.isAllowSubmittersAcrossGroups()) {
+				participations = task.getTaskGroup().getLecture().getParticipants();
+			} else {
 				Participation participation = submission.getSubmitters().iterator().next();
-				setWithUser.append("<p>Fehlt ein Partner: <select name=partnerid size=1>");
-				setWithUser.append("<option value='0'></option>");
-				int cnt = 0;
-				for (Participation part : participation.getGroup().getMembers()) {
-					if (part.getId() != participation.getId() && submissionDAO.getSubmission(task, part.getUser()) == null) {
-						cnt++;
-						setWithUser.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getFullName()) + "</option>");
-					}
+				participations = participation.getGroup().getMembers();
+			}
+			for (Participation part : participations) {
+				if (submissionDAO.getSubmission(task, part.getUser()) == null) {
+					cnt++;
+					setWithUser.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getFullName()) + "</option>");
 				}
-				setWithUser.append("</select> <input type=submit value= \"Hinzufügen\"></p></form>");
-				if (cnt > 0) {
-					out.println(setWithUser.toString());
-				}
+			}
+			setWithUser.append("</select> <input type=submit value= \"Hinzufügen\"></p></form>");
+			if (cnt > 0) {
+				out.println(setWithUser.toString());
 			}
 		}
 

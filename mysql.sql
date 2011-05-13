@@ -249,6 +249,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `maxPoints` int(11) NOT NULL,
   `minPointStep` int(11) NOT NULL,
   `maxSubmitters` int(11) NOT NULL,
+  `allowSubmittersAcrossGroups` bit(1) NOT NULL,
   `showPoints` datetime DEFAULT NULL,
   `showTextArea` bit(1) NOT NULL,
   `start` datetime NOT NULL,

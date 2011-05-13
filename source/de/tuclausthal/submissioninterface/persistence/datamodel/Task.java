@@ -62,6 +62,7 @@ public class Task implements Serializable {
 	private boolean showTextArea = false;
 	private String featuredFiles = "";
 	private boolean tutorsCanUploadFiles = false;
+	private boolean allowSubmittersAcrossGroups = false;
 
 	public Task() {}
 
@@ -80,8 +81,9 @@ public class Task implements Serializable {
 	 * @param featuredFiles 
 	 * @param tutorsCanUploadFiles 
 	 * @param maxSubmitters 
+	 * @param allowSubmittersAcrossGroups 
 	 */
-	public Task(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters) {
+	public Task(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups) {
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.minPointStep = minPointStep;
@@ -96,6 +98,7 @@ public class Task implements Serializable {
 		this.featuredFiles = featuredFiles;
 		this.tutorsCanUploadFiles = tutorsCanUploadFiles;
 		this.maxSubmitters = maxSubmitters;
+		this.allowSubmittersAcrossGroups = allowSubmittersAcrossGroups;
 	}
 
 	/**
@@ -399,5 +402,19 @@ public class Task implements Serializable {
 	 */
 	public void setMinPointStep(int minPointStep) {
 		this.minPointStep = minPointStep;
+	}
+
+	/**
+	 * @return the allowSubmittersAcrossGroups
+	 */
+	public boolean isAllowSubmittersAcrossGroups() {
+		return allowSubmittersAcrossGroups;
+	}
+
+	/**
+	 * @param allowSubmittersAcrossGroups the allowSubmittersAcrossGroups to set
+	 */
+	public void setAllowSubmittersAcrossGroups(boolean allowSubmittersAcrossGroups) {
+		this.allowSubmittersAcrossGroups = allowSubmittersAcrossGroups;
 	}
 }
