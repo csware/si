@@ -26,8 +26,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.Session;
-
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
@@ -48,7 +46,6 @@ public class Overview extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		template.printTemplateHeader("Meine Veranstaltungen", "Meine Veranstaltungen");
 
-		Session session = RequestAdapter.getSession(request);
 		User user = RequestAdapter.getUser(request);
 
 		if (user instanceof Student) {
