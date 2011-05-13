@@ -141,6 +141,22 @@ a[href ^="mailto:"] {
 	color: blue;
 }
 
+.ui-widget {
+	font: 82% Verdana, Lucida, sans-serif !important;
+}
+.ui-autocomplete {
+	max-height: 200px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
+	/* add padding to account for vertical scrollbar */
+	padding-right: 20px;
+}
+/* IE 6 doesn't support max-height, we use height instead, but this forces the menu to always be this tall */
+* html .ui-autocomplete {
+	height: 200px;
+}
+
 /* JHighlight */
 .java_plain {
 	color: rgb(0,0,0);

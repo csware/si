@@ -44,6 +44,7 @@ public class Overview extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		PrintWriter out = response.getWriter();
+		template.addJQuery();
 		template.printTemplateHeader("Meine Veranstaltungen", "Meine Veranstaltungen");
 
 		User user = RequestAdapter.getUser(request);
@@ -57,7 +58,8 @@ public class Overview extends HttpServlet {
 				if (student.getStudiengang() != null) {
 					studiengang = Util.escapeHTML(student.getStudiengang());
 				}
-				out.println("Bitte nennen Sie Ihren Studiengang: <input type=text name=studiengang size=40 value=\"" + studiengang + "\"> <input type=submit value=\"speichern...\">");
+				out.println("Bitte nennen Sie Ihren Studiengang: <input type=text name=studiengang id=studiengang size=40 value=\"" + studiengang + "\"> <input type=submit value=\"speichern...\">");
+				out.println("<script src=\"" + request.getContextPath() + "/studiengaenge.js\" type=\"text/javascript\"></script>");
 				out.println("</form></p><br>");
 			}
 		}
