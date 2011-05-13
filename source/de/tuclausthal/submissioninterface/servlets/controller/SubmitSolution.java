@@ -283,7 +283,7 @@ public class SubmitSolution extends HttpServlet {
 		Transaction tx = session.beginTransaction();
 		Submission submission = submissionDAO.createSubmission(task, studentParticipation);
 
-		if (studentParticipation.getGroup() != null) {
+		if (studentParticipation.getGroup() != null && task.getMaxSubmitters() > 1) {
 			if (studentParticipation.getGroup().isSubmissionGroup()) {
 				for (Participation partnerParticipation : studentParticipation.getGroup().getMembers()) {
 					Submission partnerSubmission = submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser());
