@@ -61,6 +61,10 @@ public class EditMultipleGroupsFormView extends HttpServlet {
 		out.println("<td><input type=text name=maxStudents> (leer: keine Speicherung)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Abgabegruppe:</th>");
+		out.println("<td><input type=checkbox name=submissionGroup></td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<th>Setzen für:</th>");
 		out.println("<td><select multiple size=15 name=gids>");
 		for (Group group : lecture.getGroups()) {
