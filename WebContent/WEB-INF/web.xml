@@ -39,7 +39,7 @@
     </init-param>
     <init-param>
       <param-name>PROVIDER_URL</param-name>
-      <param-value>ldaps://beelzebub.rz.tu-clausthal.de/ou=people,dc=tu-clausthal,dc=de</param-value>
+      <param-value>ldaps://beelzebub.rz.tu-clausthal.de/ou=people,dc=tu-clausthal,dc=de;ldaps://bastet.rz.tu-clausthal.de/ou=people,dc=tu-clausthal,dc=de</param-value>
     </init-param>
     <init-param>
       <param-name>SECURITY_AUTHENTICATION</param-name>

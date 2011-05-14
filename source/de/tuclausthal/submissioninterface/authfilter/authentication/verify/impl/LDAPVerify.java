@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -42,14 +42,14 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class LDAPVerify implements VerifyIf {
-	private String providerURL;
+	private String[] providerURLs;
 	private String securityAuthentication;
 	private String securityPrincipal;
 	private String userAttribute;
 	private String matrikelNumberAttribute;
 
 	public LDAPVerify(FilterConfig filterConfig) {
-		this.providerURL = filterConfig.getInitParameter("PROVIDER_URL");
+		this.providerURLs = filterConfig.getInitParameter("PROVIDER_URL").split(";");
 		this.securityAuthentication = filterConfig.getInitParameter("SECURITY_AUTHENTICATION");
 		this.securityPrincipal = filterConfig.getInitParameter("SECURITY_PRINCIPAL");
 		this.userAttribute = filterConfig.getInitParameter("userAttribute");
@@ -61,45 +61,51 @@ public class LDAPVerify implements VerifyIf {
 		User user = null;
 		String username = logindata.getUsername();
 		String password = logindata.getPassword();
-		// Set up environment for creating initial context
-		Hashtable<String, String> env = new Hashtable<String, String>(5);
-		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-		env.put(Context.PROVIDER_URL, providerURL);
-		env.put(Context.SECURITY_AUTHENTICATION, securityAuthentication);
 
 		if (!username.matches("^[a-z0-9A-Z]+$")) {
 			// die here!
 			return null;
 		}
 
+		// Set up environment for creating initial context
+		Hashtable<String, String> env = new Hashtable<String, String>(5);
+		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+		env.put(Context.SECURITY_AUTHENTICATION, securityAuthentication);
+
 		env.put(Context.SECURITY_PRINCIPAL, MessageFormat.format(securityPrincipal, new Object[] { username }));
 		env.put(Context.SECURITY_CREDENTIALS, password);
 
-		try {
-			// Create initial context
-			LdapContext ctx = new InitialLdapContext(env, null);
+		for (String providerURL : providerURLs) {
+			env.put(Context.PROVIDER_URL, providerURL);
+			try {
+				// Create initial context
+				LdapContext ctx = new InitialLdapContext(env, null);
 
-			// if ldap user found, search or create local user
-			UserDAOIf userdao = DAOFactory.UserDAOIf(session);
-			user = userdao.getUser((String) ctx.getAttributes(userAttribute + "=" + username).get(userAttribute).get());
+				// if ldap user found, search or create local user
+				UserDAOIf userdao = DAOFactory.UserDAOIf(session);
+				user = userdao.getUser((String) ctx.getAttributes(userAttribute + "=" + username).get(userAttribute).get());
 
-			if (user == null) {
-				String lastName = (String) ctx.getAttributes(userAttribute + "=" + username).get("sn").get();
-				String firstName = (String) ctx.getAttributes(userAttribute + "=" + username).get("cn").get();
-				firstName = firstName.substring(0, firstName.lastIndexOf(lastName) - 1);
-				if (matrikelNumberAttribute != null && ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute) != null && Util.isInteger((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get())) {
-					user = userdao.createUser((String) ctx.getAttributes(userAttribute + "=" + username).get(userAttribute).get(), firstName, lastName, Integer.parseInt((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get()));
-				} else {
-					user = userdao.createUser((String) ctx.getAttributes(userAttribute + "=" + username).get(userAttribute).get(), firstName, lastName);
+				if (user == null) {
+					String lastName = (String) ctx.getAttributes(userAttribute + "=" + username).get("sn").get();
+					String firstName = (String) ctx.getAttributes(userAttribute + "=" + username).get("cn").get();
+					firstName = firstName.substring(0, firstName.lastIndexOf(lastName) - 1);
+					if (matrikelNumberAttribute != null && ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute) != null && Util.isInteger((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get())) {
+						user = userdao.createUser((String) ctx.getAttributes(userAttribute + "=" + username).get(userAttribute).get(), firstName, lastName, Integer.parseInt((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get()));
+					} else {
+						user = userdao.createUser((String) ctx.getAttributes(userAttribute + "=" + username).get(userAttribute).get(), firstName, lastName);
+					}
 				}
-			}
 
-			// Close the context when we're done
-			ctx.close();
-		} catch (AuthenticationException e) {
-			// ignore authentication errors
-		} catch (NamingException e) {
-			e.printStackTrace();
+				// Close the context when we're done
+				ctx.close();
+
+				break;
+			} catch (AuthenticationException e) {
+				// ignore authentication errors
+				break;
+			} catch (NamingException e) {
+				e.printStackTrace();
+			}
 		}
 		return user;
 	}
