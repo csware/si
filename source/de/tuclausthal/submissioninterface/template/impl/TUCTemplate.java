@@ -31,7 +31,7 @@ public class TUCTemplate extends Template {
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/print.css\" media=\"print\">");
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">");
 		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + prefix + "/scripts.js\"></script>");
-		out.println("<title>" + title + "</title>");
+		out.println("<title>GATE: " + title + "</title>");
 		getHeads();
 		out.println("</head>");
 		out.println("<body>");

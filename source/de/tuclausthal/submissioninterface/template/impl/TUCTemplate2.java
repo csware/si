@@ -27,7 +27,7 @@ public class TUCTemplate2 extends Template {
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Strict//EN\">");
 		out.println("<html>");
 		out.println("<head>");
-		out.println("<title>" + title + "</title>");
+		out.println("<title>GATE: " + title + "</title>");
 		out.println("<link rel=StyleSheet type=\"text/css\" href=\"" + prefix + "/formate.css\">");
 		getHeads();
 		out.println("</head>");
