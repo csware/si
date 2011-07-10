@@ -579,4 +579,12 @@
     <servlet-name>PublishGradesView</servlet-name>
     <url-pattern>/servlets/PublishGradesView</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>Noop</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.Noop</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Noop</servlet-name>
+    <url-pattern>/servlets/Noop</url-pattern>
+  </servlet-mapping>
 </web-app>

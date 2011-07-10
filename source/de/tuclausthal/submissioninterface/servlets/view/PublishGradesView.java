@@ -44,6 +44,7 @@ public class PublishGradesView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		Task task = (Task) request.getAttribute("task");
+		template.addKeepAlive();
 		template.printTemplateHeader("Punkte freischalten", task);
 
 		out.println("<form action=\"?\" method=post>");

@@ -45,6 +45,7 @@ public class EditMultipleGroupsFormView extends HttpServlet {
 
 		Lecture lecture = (Lecture) request.getAttribute("lecture");
 
+		template.addKeepAlive();
 		template.printTemplateHeader("Mehrere Gruppen bearbeiten", lecture);
 		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
 		out.println("<table class=border>");

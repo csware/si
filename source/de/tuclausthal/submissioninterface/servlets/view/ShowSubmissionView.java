@@ -62,6 +62,7 @@ public class ShowSubmissionView extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		template.addJQuery();
+		template.addKeepAlive();
 		template.addHead("<script type=\"text/javascript\">function hideCodePreview(id) { $(\"#codepreview\" + id).hide();$(\"#showbtn\" + id).show(); } function testResultSetup(id) { $(\"#testresult\" + id).resizable({ handles: 'se' }); } function iframeSetup(id) { $(\"#resizablecodepreview\" + id).resizable({ helper: 'ui-resizable-helper', minWidth: 800, minHeight: 100, handles: 'se' }); }</script>");
 
 		PrintWriter out = response.getWriter();

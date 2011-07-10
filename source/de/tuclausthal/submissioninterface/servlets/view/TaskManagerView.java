@@ -57,6 +57,7 @@ public class TaskManagerView extends HttpServlet {
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
 
 		template.addJQuery();
+		template.addKeepAlive();
 		template.addHead("<script type=\"text/javascript\" src=\"" + getServletContext().getContextPath() + "/tiny_mce/tiny_mce.js\"></script>");
 		template.addHead("<script type=\"text/javascript\">\ntinyMCE.init({" +
 							"mode : \"textareas\"," +

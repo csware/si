@@ -53,6 +53,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 		Task task = (Task) request.getAttribute("task");
 		Participation participation = (Participation) request.getAttribute("participation");
 
+		template.addKeepAlive();
 		template.printTemplateHeader("Abgabe starten", task);
 
 		Session session = RequestAdapter.getSession(request);

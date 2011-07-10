@@ -51,6 +51,7 @@ public class EditGroupFormView extends HttpServlet {
 		Participation participation = (Participation) request.getAttribute("participation");
 
 		template.addJQuery();
+		template.addKeepAlive();
 		template.printTemplateHeader(group);
 
 		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");

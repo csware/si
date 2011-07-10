@@ -43,6 +43,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 
 		Task task = (Task) request.getAttribute("task");
 
+		template.addKeepAlive();
 		template.printTemplateHeader("Test erstellen", task);
 		out.println("<h2>Compile/Syntax Test</h2>");
 		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");

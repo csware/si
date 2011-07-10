@@ -101,6 +101,10 @@ public abstract class Template {
 		addHead("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + prefix + "/jquery/jquery-ui-1.8.1.custom.min.js\"></script>");
 	}
 
+	public void addKeepAlive() {
+		addHead("<script type=\"text/javascript\">keepAlive(\"" + servletResponse.encodeURL("Noop") + "\", 120);</script>");
+	}
+
 	/**
 	 * Prints the HTML page header with a title and breadcrums
 	 * @param title
