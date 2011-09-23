@@ -209,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   `taskid` int(11) NOT NULL,
   `publicComment` longtext,
   `pointStatus` tinyint(1) unsigned DEFAULT NULL,
-  `isDupe` bit(1) DEFAULT NULL,
+  `duplicate` int(11) DEFAULT NULL,
   `internalComment` longtext,
   `lastModified` datetime DEFAULT NULL,
   PRIMARY KEY (`submissionid`),
