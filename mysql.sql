@@ -16,6 +16,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Tabellenstruktur für Tabelle `groups`
 --
 
+DROP TABLE IF EXISTS `groups`;
 CREATE TABLE IF NOT EXISTS `groups` (
   `gid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_german2_ci DEFAULT NULL,
@@ -34,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
 -- Tabellenstruktur für Tabelle `groups_tutors`
 --
 
+DROP TABLE IF EXISTS `groups_tutors`;
 CREATE TABLE IF NOT EXISTS `groups_tutors` (
   `groups_gid` int(11) NOT NULL,
   `tutors_id` int(11) NOT NULL,
@@ -48,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `groups_tutors` (
 -- Tabellenstruktur für Tabelle `lectures`
 --
 
+DROP TABLE IF EXISTS `lectures`;
 CREATE TABLE IF NOT EXISTS `lectures` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_german2_ci DEFAULT NULL,
@@ -62,6 +65,7 @@ CREATE TABLE IF NOT EXISTS `lectures` (
 -- Tabellenstruktur für Tabelle `logs`
 --
 
+DROP TABLE IF EXISTS `logs`;
 CREATE TABLE IF NOT EXISTS `logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `action` int(11) NOT NULL,
@@ -83,6 +87,7 @@ CREATE TABLE IF NOT EXISTS `logs` (
 -- Tabellenstruktur für Tabelle `participations`
 --
 
+DROP TABLE IF EXISTS `participations`;
 CREATE TABLE IF NOT EXISTS `participations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role` varchar(255) NOT NULL,
@@ -102,6 +107,7 @@ CREATE TABLE IF NOT EXISTS `participations` (
 -- Tabellenstruktur für Tabelle `pointcategories`
 --
 
+DROP TABLE IF EXISTS `pointcategories`;
 CREATE TABLE IF NOT EXISTS `pointcategories` (
   `pointcatid` int(11) NOT NULL AUTO_INCREMENT,
   `description` varchar(255) NOT NULL,
@@ -118,6 +124,7 @@ CREATE TABLE IF NOT EXISTS `pointcategories` (
 -- Tabellenstruktur für Tabelle `pointgiven`
 --
 
+DROP TABLE IF EXISTS `pointgiven`;
 CREATE TABLE IF NOT EXISTS `pointgiven` (
   `pointgivenid` int(11) NOT NULL AUTO_INCREMENT,
   `points` int(11) NOT NULL,
@@ -134,6 +141,7 @@ CREATE TABLE IF NOT EXISTS `pointgiven` (
 -- Tabellenstruktur für Tabelle `pointhistory`
 --
 
+DROP TABLE IF EXISTS `pointhistory`;
 CREATE TABLE IF NOT EXISTS `pointhistory` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `added` longtext NOT NULL,
@@ -153,6 +161,7 @@ CREATE TABLE IF NOT EXISTS `pointhistory` (
 -- Tabellenstruktur für Tabelle `similarities`
 --
 
+DROP TABLE IF EXISTS `similarities`;
 CREATE TABLE IF NOT EXISTS `similarities` (
   `similarityid` int(11) NOT NULL AUTO_INCREMENT,
   `percentage` int(11) NOT NULL,
@@ -171,6 +180,7 @@ CREATE TABLE IF NOT EXISTS `similarities` (
 -- Tabellenstruktur für Tabelle `similaritytests`
 --
 
+DROP TABLE IF EXISTS `similaritytests`;
 CREATE TABLE IF NOT EXISTS `similaritytests` (
   `similarityTestId` int(11) NOT NULL AUTO_INCREMENT,
   `basis` varchar(255) NOT NULL,
@@ -191,6 +201,7 @@ CREATE TABLE IF NOT EXISTS `similaritytests` (
 -- Tabellenstruktur für Tabelle `submissions`
 --
 
+DROP TABLE IF EXISTS `submissions`;
 CREATE TABLE IF NOT EXISTS `submissions` (
   `submissionid` int(11) NOT NULL AUTO_INCREMENT,
   `points` int(11) DEFAULT NULL,
@@ -212,6 +223,7 @@ CREATE TABLE IF NOT EXISTS `submissions` (
 -- Tabellenstruktur für Tabelle `submissions_participations`
 --
 
+DROP TABLE IF EXISTS `submissions_participations`;
 CREATE TABLE IF NOT EXISTS `submissions_participations` (
   `submitters_id` int(11) NOT NULL,
   `submissions_submissionid` int(11) NOT NULL,
@@ -226,6 +238,7 @@ CREATE TABLE IF NOT EXISTS `submissions_participations` (
 -- Tabellenstruktur für Tabelle `taskgroups`
 --
 
+DROP TABLE IF EXISTS `taskgroups`;
 CREATE TABLE IF NOT EXISTS `taskgroups` (
   `taskgroupid` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) DEFAULT NULL,
@@ -240,6 +253,7 @@ CREATE TABLE IF NOT EXISTS `taskgroups` (
 -- Tabellenstruktur für Tabelle `tasks`
 --
 
+DROP TABLE IF EXISTS `tasks`;
 CREATE TABLE IF NOT EXISTS `tasks` (
   `taskid` int(11) NOT NULL AUTO_INCREMENT,
   `deadline` datetime NOT NULL,
@@ -267,6 +281,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
 -- Tabellenstruktur für Tabelle `testresults`
 --
 
+DROP TABLE IF EXISTS `testresults`;
 CREATE TABLE IF NOT EXISTS `testresults` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `passedTest` bit(1) DEFAULT NULL,
@@ -284,6 +299,7 @@ CREATE TABLE IF NOT EXISTS `testresults` (
 -- Tabellenstruktur für Tabelle `tests`
 --
 
+DROP TABLE IF EXISTS `tests`;
 CREATE TABLE IF NOT EXISTS `tests` (
   `DTYPE` varchar(31) NOT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -309,6 +325,7 @@ CREATE TABLE IF NOT EXISTS `tests` (
 -- Tabellenstruktur für Tabelle `testscounts`
 --
 
+DROP TABLE IF EXISTS `testscounts`;
 CREATE TABLE IF NOT EXISTS `testscounts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `timesExecuted` int(11) NOT NULL,
@@ -325,6 +342,7 @@ CREATE TABLE IF NOT EXISTS `testscounts` (
 -- Tabellenstruktur für Tabelle `users`
 --
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(255) NOT NULL,
