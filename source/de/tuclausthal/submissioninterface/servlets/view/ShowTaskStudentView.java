@@ -96,10 +96,6 @@ public class ShowTaskStudentView extends HttpServlet {
 		}
 		out.println("</table>");
 
-		if ("[A-Za-z0-9 _-]+\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
-			out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
-		}
-
 		if (submission != null) {
 			out.println("<p><h2>Informationen zu meiner Abgabe:</h2>");
 			out.println("<table class=border>");
@@ -194,6 +190,9 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("</table>");
 
 			out.println("<p>");
+			if ("[A-Za-z0-9 _-]+\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
+				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
+			}
 			if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
