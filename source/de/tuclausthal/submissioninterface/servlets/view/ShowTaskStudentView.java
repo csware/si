@@ -36,7 +36,6 @@ import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -96,6 +95,10 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("</tr>");
 		}
 		out.println("</table>");
+
+		if ("[A-Za-z0-9 _-]+\\.(xmi|zargo)".equals(task.getFilenameRegexp())) {
+			out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
+		}
 
 		if (submission != null) {
 			out.println("<p><h2>Informationen zu meiner Abgabe:</h2>");

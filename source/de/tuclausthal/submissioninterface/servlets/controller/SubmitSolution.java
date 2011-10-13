@@ -61,6 +61,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -445,6 +447,15 @@ public class SubmitSolution extends HttpServlet {
 					}
 					tx.commit();
 					new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, LogAction.UPLOAD, null, null);
+					response.addIntHeader("SID", submission.getSubmissionid());
+
+					for (Test test : task.getTests()) {
+						if (test instanceof UMLConstraintTest && test.getTimesRunnableByStudents() > 0) {
+							response.addIntHeader("TID", test.getId());
+							break;
+						}
+					}
+
 					response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 					return;
 				}

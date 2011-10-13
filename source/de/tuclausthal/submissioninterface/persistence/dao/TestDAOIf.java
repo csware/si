@@ -26,6 +26,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
 
 /**
  * Data Access Object Interface for the Test-class(es)
@@ -38,6 +39,13 @@ public interface TestDAOIf {
 	 * @return the created test
 	 */
 	public JUnitTest createJUnitTest(Task task);
+
+	/**
+	 * Create and store a UMLConstraintTest to a specific task
+	 * @param task the task to associtate the test to
+	 * @return the created test
+	 */
+	public UMLConstraintTest createUMLConstraintTest(Task task);
 
 	/**
 	 * Create and store a JUnitTest to a specific task

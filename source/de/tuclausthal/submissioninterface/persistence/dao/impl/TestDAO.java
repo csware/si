@@ -33,6 +33,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -48,6 +49,15 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 	public JUnitTest createJUnitTest(Task task) {
 		Session session = getSession();
 		JUnitTest test = new JUnitTest();
+		test.setTask(task);
+		session.save(test);
+		return test;
+	}
+
+	@Override
+	public UMLConstraintTest createUMLConstraintTest(Task task) {
+		Session session = getSession();
+		UMLConstraintTest test = new UMLConstraintTest();
 		test.setTask(task);
 		session.save(test);
 		return test;
