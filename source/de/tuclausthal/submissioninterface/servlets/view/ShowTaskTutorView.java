@@ -112,10 +112,6 @@ public class ShowTaskTutorView extends HttpServlet {
 		}
 		out.println("</table>");
 
-		if ("[A-Za-z0-9 _-]+\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
-			out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
-		}
-
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=editTask") + "\">Aufgabe bearbeiten</a></div>");
 			out.println("<p><div class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deleteTask") + "\">Aufgabe löschen</a></div>");
