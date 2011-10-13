@@ -192,6 +192,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("<p>");
 			if ("[A-Za-z0-9 _-]+\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
 				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
+				out.println("if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");");
 			}
 			if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
