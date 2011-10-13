@@ -96,7 +96,7 @@ public class ShowTaskStudentView extends HttpServlet {
 		}
 		out.println("</table>");
 
-		if ("[A-Za-z0-9 _-]+\\.(xmi|zargo)".equals(task.getFilenameRegexp())) {
+		if ("[A-Za-z0-9 _-]+\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
 			out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
 		}
 
