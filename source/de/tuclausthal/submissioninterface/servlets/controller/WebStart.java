@@ -56,10 +56,12 @@ public class WebStart extends HttpServlet {
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 
-		if (request.getParameter("sid") != null && submission == null) {
+		if (request.getParameter("submissionid") != null && submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
 			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 			return;
+		} else if (submission != null) {
+			task = submission.getTask();
 		}
 
 		// check Lecture Participation

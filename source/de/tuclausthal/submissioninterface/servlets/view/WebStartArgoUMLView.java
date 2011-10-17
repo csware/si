@@ -141,7 +141,10 @@ public class WebStartArgoUMLView extends HttpServlet {
 		out.println("<argument>" + sessionID + "</argument>");
 		out.println("<argument>-taskid</argument>");
 		out.println("<argument>" + task.getTaskid() + "</argument>");
-
+		if (submission != null) {
+			out.println("<argument>-submission</argument>");
+			out.println("<argument>" + submission.getSubmissionid() + "</argument>");
+		}
 		out.println("</application-desc>");
 		out.println("</jnlp>");
 	}
