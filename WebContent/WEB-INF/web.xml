@@ -611,4 +611,12 @@
     <servlet-name>PerformTestArgoUMLView</servlet-name>
     <url-pattern>/servlets/PerformTestArgoUMLView</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>ShowTaskDescriptionView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ShowTaskDescriptionView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ShowTaskDescriptionView</servlet-name>
+    <url-pattern>/servlets/ShowTaskDescriptionView</url-pattern>
+  </servlet-mapping>
 </web-app>
