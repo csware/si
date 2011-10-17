@@ -137,8 +137,6 @@ public class WebStartArgoUMLView extends HttpServlet {
 		out.println("  <application-desc main-class=\"org.argouml.application.Main\">");
 
 		//Parameter, dynamischer Teil
-		out.println("<argument>-taskDescription</argument>");
-		out.println("<argument>" + task.getDescription().replaceAll("\\<.*?>", "") + "</argument>");
 		out.println("<argument>-sessionid</argument>");
 		out.println("<argument>" + sessionID + "</argument>");
 		out.println("<argument>-taskid</argument>");
