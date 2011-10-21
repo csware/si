@@ -127,27 +127,31 @@ public class SubmitSolution extends HttpServlet {
 		} else {
 			request.setAttribute("participation", participation);
 
-			if (task.isShowTextArea()) {
-				String textsolution = "";
-				Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, RequestAdapter.getUser(request));
-				if (submission != null) {
-					ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
-					File textSolutionFile = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + "textloesung.txt");
-					if (textSolutionFile.exists()) {
-						BufferedReader bufferedReader = new BufferedReader(new FileReader(textSolutionFile));
-						StringBuffer sb = new StringBuffer();
-						String line;
-						while ((line = bufferedReader.readLine()) != null) {
-							sb.append(line);
-							sb.append(System.getProperty("line.separator"));
+			if (request.getParameter("onlypartners") == null) {
+				if (task.isShowTextArea()) {
+					String textsolution = "";
+					Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, RequestAdapter.getUser(request));
+					if (submission != null) {
+						ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+						File textSolutionFile = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + "textloesung.txt");
+						if (textSolutionFile.exists()) {
+							BufferedReader bufferedReader = new BufferedReader(new FileReader(textSolutionFile));
+							StringBuffer sb = new StringBuffer();
+							String line;
+							while ((line = bufferedReader.readLine()) != null) {
+								sb.append(line);
+								sb.append(System.getProperty("line.separator"));
+							}
+							textsolution = sb.toString();
+							bufferedReader.close();
 						}
-						textsolution = sb.toString();
-						bufferedReader.close();
 					}
+					request.setAttribute("textsolution", textsolution);
 				}
-				request.setAttribute("textsolution", textsolution);
+				request.getRequestDispatcher("SubmitSolutionFormView").forward(request, response);
+			} else {
+				request.getRequestDispatcher("SubmitSolutionPossiblePartnersView").forward(request, response);
 			}
-			request.getRequestDispatcher("SubmitSolutionFormView").forward(request, response);
 		}
 	}
 

@@ -619,4 +619,14 @@
     <servlet-name>ShowTaskDescriptionView</servlet-name>
     <url-pattern>/servlets/ShowTaskDescriptionView</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>SubmitSolutionPossiblePartnersView</display-name>
+    <servlet-name>SubmitSolutionPossiblePartnersView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.SubmitSolutionPossiblePartnersView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SubmitSolutionPossiblePartnersView</servlet-name>
+    <url-pattern>/servlets/SubmitSolutionPossiblePartnersView</url-pattern>
+  </servlet-mapping>
 </web-app>
