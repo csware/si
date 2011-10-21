@@ -22,10 +22,18 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl.uml;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -56,6 +64,7 @@ public abstract class UMLDiagramm {
 	public static UMLDiagramm getDiagramm(File file) {
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setNamespaceAware(true);
 		Document document = null;
 		try {
 			DocumentBuilder builder = factory.newDocumentBuilder();
@@ -72,31 +81,49 @@ public abstract class UMLDiagramm {
 		}
 
 		Node xmiNode = document.getFirstChild();
-		if (xmiNode == null || !xmiNode.getNodeName().equals("XMI")){
+		if (xmiNode == null || !xmiNode.getNodeName().equals("XMI")) {
 			return null;
 		}
 
-		Node xmiContentNode = xmiNode.getFirstChild();
-		if (xmiContentNode == null || !xmiContentNode.getNodeName().equals("XMI.content")){
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath xpath = xPathfactory.newXPath();
+
+		xpath.setNamespaceContext(new NamespaceContext() {
+			@Override
+			public Iterator getPrefixes(String namespaceURI) {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public String getPrefix(String namespaceURI) {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public String getNamespaceURI(String prefix) {
+				if (prefix == null)
+					throw new NullPointerException("Null prefix");
+				else if ("UML".equals(prefix))
+					return "org.omg.xmi.namespace.UML";
+				else if ("xml".equals(prefix))
+					return XMLConstants.XML_NS_URI;
+				return XMLConstants.NULL_NS_URI;
+			}
+		});
+
+		XPathExpression expr;
+		Node result = null;
+		try {
+			expr = xpath.compile("//UML:Namespace.ownedElement/node()[2]");
+			result = (Node) expr.evaluate(document, XPathConstants.NODE);
+		} catch (XPathExpressionException e) {
+		}
+
+		if (result == null || !result.getNodeName().startsWith("UML:")) {
 			return null;
 		}
 
-		Node umlContentNode = xmiContentNode.getFirstChild();
-		if (umlContentNode == null || !umlContentNode.getNodeName().equals("UML:Model")){
-			return null;
-		}
-
-		Node umlModelNode = umlContentNode.getFirstChild();
-		if (umlModelNode == null || !umlModelNode.getNodeName().equals("UML:Namespace.ownedElement")){
-			return null;
-		}
-
-		Node umlOwnedElementNode = umlModelNode.getFirstChild();
-		if (umlOwnedElementNode == null || !umlOwnedElementNode.getNodeName().startsWith("UML:")){
-			return null;
-		}
-
-		String diagrammType = umlOwnedElementNode.getNodeName();
+		String diagrammType = result.getNodeName();
 
 		if (diagrammType.equals("UML:ActivityGraph")) {
 			return new ActivityDiagramm(file.getAbsolutePath());
