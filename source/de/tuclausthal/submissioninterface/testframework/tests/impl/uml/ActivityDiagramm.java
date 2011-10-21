@@ -277,4 +277,9 @@ public class ActivityDiagramm extends UMLDiagramm {
 		}
 		freader.close();
 	}
+
+	@Override
+	public String getType() {
+		return TYPE;
+	}
 }

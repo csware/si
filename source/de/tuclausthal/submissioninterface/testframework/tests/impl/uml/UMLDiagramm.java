@@ -69,6 +69,8 @@ public abstract class UMLDiagramm {
 	public Node getXmiContentNode() {
 		return xmiContentNode;
 	}
+	
+	abstract public String getType();
 
 	//lesen der XMI Datei und einordnen der Diagrammart
 	public static UMLDiagramm getDiagramm(File file) {

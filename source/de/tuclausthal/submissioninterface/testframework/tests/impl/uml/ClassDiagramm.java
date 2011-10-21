@@ -362,4 +362,9 @@ public class ClassDiagramm extends UMLDiagramm {
 		setAs2C();
 		freader.close();
 	}
+
+	@Override
+	public String getType() {
+		return TYPE;
+	}
 }
