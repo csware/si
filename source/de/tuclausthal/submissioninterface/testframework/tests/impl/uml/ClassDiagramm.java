@@ -34,6 +34,8 @@ import org.w3c.dom.Node;
  * und speichert die Elemente des Klassendiagramms
  */
 public class ClassDiagramm extends UMLDiagramm {
+	public static String TYPE = "UML:Class";
+
 	public ClassDiagramm(File file, Node xmiContentNode) {
 		super(file, xmiContentNode);
 	}

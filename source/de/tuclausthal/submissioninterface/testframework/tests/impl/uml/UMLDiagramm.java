@@ -135,9 +135,9 @@ public abstract class UMLDiagramm {
 
 		String diagrammType = result.getNodeName();
 
-		if (diagrammType.equals("UML:ActivityGraph")) {
+		if (diagrammType.equals(ActivityDiagramm.TYPE)) {
 			return new ActivityDiagramm(file, result);
-		} else if (diagrammType.equals("UML:Class")) {
+		} else if (diagrammType.equals(ClassDiagramm.TYPE)) {
 			return new ClassDiagramm(file, result);
 		}
 

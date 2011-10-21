@@ -32,6 +32,8 @@ import org.w3c.dom.Node;
  * @author Joachim Schramm
  */
 public class ActivityDiagramm extends UMLDiagramm {
+	public static String TYPE = "UML:ActivityGraph";
+
 	private int numberOfFinalStates;
 	private int numberOfSignalEvents;
 	private int numberOfCompositeStates;
