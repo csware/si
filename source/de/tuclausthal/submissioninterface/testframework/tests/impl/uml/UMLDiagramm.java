@@ -19,10 +19,18 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests.impl.uml;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Diese Klasse checkt die XMI Datei hinsichtlich der Diagrammart
@@ -45,25 +53,57 @@ public abstract class UMLDiagramm {
 	}
 
 	//lesen der XMI Datei und einordnen der Diagrammart
-	public static UMLDiagramm getDiagramm(File file) throws IOException {
-		FileReader freader = new FileReader(file);
-		BufferedReader reader = new BufferedReader(freader);
+	public static UMLDiagramm getDiagramm(File file) {
 
-		UMLDiagramm result = null;
-
-		String line;
-		while ((line = reader.readLine()) != null) {
-			if (line.contains("UML:ActivityGraph xmi.id =")) {
-				result = new ActivityDiagramm(file.getAbsolutePath());
-				break;
-			} else if (line.contains("Class xmi.id =")) {
-				result = new ClassDiagramm(file.getAbsolutePath());
-				break;
-			}
-			
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		Document document = null;
+		try {
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			FileReader freader = new FileReader(file);
+			document = builder.parse(new InputSource(freader));
+			freader.close();
+		} catch (ParserConfigurationException e) {
+		} catch (SAXException e) {
+		} catch (IOException e) {
 		}
 
-		freader.close();
-		return result;
+		if (document == null) {
+			return null;
+		}
+
+		Node xmiNode = document.getFirstChild();
+		if (xmiNode == null || !xmiNode.getNodeName().equals("XMI")){
+			return null;
+		}
+
+		Node xmiContentNode = xmiNode.getFirstChild();
+		if (xmiContentNode == null || !xmiContentNode.getNodeName().equals("XMI.content")){
+			return null;
+		}
+
+		Node umlContentNode = xmiContentNode.getFirstChild();
+		if (umlContentNode == null || !umlContentNode.getNodeName().equals("UML:Model")){
+			return null;
+		}
+
+		Node umlModelNode = umlContentNode.getFirstChild();
+		if (umlModelNode == null || !umlModelNode.getNodeName().equals("UML:Namespace.ownedElement")){
+			return null;
+		}
+
+		Node umlOwnedElementNode = umlModelNode.getFirstChild();
+		if (umlOwnedElementNode == null || !umlOwnedElementNode.getNodeName().startsWith("UML:")){
+			return null;
+		}
+
+		String diagrammType = umlOwnedElementNode.getNodeName();
+
+		if (diagrammType.equals("UML:ActivityGraph")) {
+			return new ActivityDiagramm(file.getAbsolutePath());
+		} else if (diagrammType.equals("UML:Class")) {
+			return new ClassDiagramm(file.getAbsolutePath());
+		}
+
+		return null;
 	}
 }
