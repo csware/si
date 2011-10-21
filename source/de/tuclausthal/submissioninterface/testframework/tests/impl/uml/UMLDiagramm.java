@@ -46,10 +46,16 @@ import org.xml.sax.SAXException;
 public abstract class UMLDiagramm {
 
 	private String name;
+	private Node xmiContentNode;
 
 	public UMLDiagramm(String name) {
 		super();
 		this.name = name;
+	}
+
+	public UMLDiagramm(File file, Node xmiContentNode) {
+		this.name = file.getAbsolutePath();
+		this.xmiContentNode = xmiContentNode;
 	}
 
 	public String getName() {
@@ -58,6 +64,10 @@ public abstract class UMLDiagramm {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Node getXmiContentNode() {
+		return xmiContentNode;
 	}
 
 	//lesen der XMI Datei und einordnen der Diagrammart
@@ -126,9 +136,9 @@ public abstract class UMLDiagramm {
 		String diagrammType = result.getNodeName();
 
 		if (diagrammType.equals("UML:ActivityGraph")) {
-			return new ActivityDiagramm(file.getAbsolutePath());
+			return new ActivityDiagramm(file, result);
 		} else if (diagrammType.equals("UML:Class")) {
-			return new ClassDiagramm(file.getAbsolutePath());
+			return new ClassDiagramm(file, result);
 		}
 
 		return null;

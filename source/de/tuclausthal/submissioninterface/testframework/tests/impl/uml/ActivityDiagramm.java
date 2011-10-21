@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.w3c.dom.Node;
+
 /**
  * Diese Klasse liesst die XMI Datei mit Aktivitätsdiagramminhalt ein
  * und speichert die Elemente des Aktivitätsdiagramm
@@ -73,6 +75,10 @@ public class ActivityDiagramm extends UMLDiagramm {
 		this.numberOfActionExpressions = numberOfActionExpressions;
 		this.numberOfTransitions = numberOfTransitions;
 		this.numberOfRepeats = numberOfRepeats;
+	}
+
+	public ActivityDiagramm(File file, Node xmiContentNode) {
+		super(file, xmiContentNode);
 	}
 
 	//Startzustaende

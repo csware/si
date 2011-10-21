@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Vector;
 
+import org.w3c.dom.Node;
+
 /**
  * Diese Klasse liesst die XMI Datei mit Klassendiagramminhalt ein
  * und speichert die Elemente des Klassendiagramms
@@ -61,6 +63,10 @@ public class ClassDiagramm extends UMLDiagramm {
 		this.m2i = m2i;
 		this.as2c = as2c;
 		this.IDs = IDs;
+	}
+
+	public ClassDiagramm(File file, Node xmiContentNode) {
+		super(file, xmiContentNode);
 	}
 
 	private String name;
