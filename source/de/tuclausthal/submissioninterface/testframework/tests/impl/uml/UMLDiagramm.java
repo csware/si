@@ -69,7 +69,7 @@ public abstract class UMLDiagramm {
 	public Node getXmiContentNode() {
 		return xmiContentNode;
 	}
-	
+
 	abstract public String getType();
 
 	//lesen der XMI Datei und einordnen der Diagrammart
@@ -100,28 +100,7 @@ public abstract class UMLDiagramm {
 		XPathFactory xPathfactory = XPathFactory.newInstance();
 		XPath xpath = xPathfactory.newXPath();
 
-		xpath.setNamespaceContext(new NamespaceContext() {
-			@Override
-			public Iterator getPrefixes(String namespaceURI) {
-				throw new UnsupportedOperationException();
-			}
-
-			@Override
-			public String getPrefix(String namespaceURI) {
-				throw new UnsupportedOperationException();
-			}
-
-			@Override
-			public String getNamespaceURI(String prefix) {
-				if (prefix == null)
-					throw new NullPointerException("Null prefix");
-				else if ("UML".equals(prefix))
-					return "org.omg.xmi.namespace.UML";
-				else if ("xml".equals(prefix))
-					return XMLConstants.XML_NS_URI;
-				return XMLConstants.NULL_NS_URI;
-			}
-		});
+		xpath.setNamespaceContext(new UMLNameSpaceContext());
 
 		XPathExpression expr;
 		Node result = null;
@@ -139,10 +118,31 @@ public abstract class UMLDiagramm {
 
 		if (diagrammType.equals(ActivityDiagramm.TYPE)) {
 			return new ActivityDiagramm(file, result);
-		} else if (diagrammType.equals(ClassDiagramm.TYPE)) {
-			return new ClassDiagramm(file, result);
+		} else {
+			return new ClassDiagramm(file, result.getParentNode());
+		}
+	}
+
+	static protected class UMLNameSpaceContext implements NamespaceContext {
+		@Override
+		public Iterator getPrefixes(String namespaceURI) {
+			throw new UnsupportedOperationException();
 		}
 
-		return null;
+		@Override
+		public String getPrefix(String namespaceURI) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public String getNamespaceURI(String prefix) {
+			if (prefix == null)
+				throw new NullPointerException("Null prefix");
+			else if ("UML".equals(prefix))
+				return "org.omg.xmi.namespace.UML";
+			else if ("xml".equals(prefix))
+				return XMLConstants.XML_NS_URI;
+			return XMLConstants.NULL_NS_URI;
+		}
 	}
 }

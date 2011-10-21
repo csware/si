@@ -19,12 +19,16 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests.impl.uml;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Diese Klasse liesst die XMI Datei mit Aktivitätsdiagramminhalt ein
@@ -34,28 +38,24 @@ import org.w3c.dom.Node;
 public class ActivityDiagramm extends UMLDiagramm {
 	public static String TYPE = "UML:ActivityGraph";
 
-	private int numberOfFinalStates;
-	private int numberOfSignalEvents;
-	private int numberOfCompositeStates;
-	private int numberOfActionStates;
-	private int numberOfUninterpretedActions;
-	private int numberOfActionExpressions;
-	private int numberOfTransitions;
+	private int numberOfFinalStates = 0;
+	private int numberOfSignalEvents = 0;
+	private int numberOfCompositeStates = 0;
+	private int numberOfActionStates = 0;
+	private int numberOfUninterpretedActions = 0;
+	private int numberOfActionExpressions = 0;
+	private int numberOfTransitions = 0;
 
-	private int numberOfPseudoStates;
-	private int numberOfInitials;
-	private int numberOfForks;
-	private int numberOfJoins;
-	private int numberOfJunctions;
-	private int numberOfRepeats;
-
-	private int numberOfIncomingTransitionsInAnActionState;
-	private int numberOfOutgoingTransitionsOfAnActionState;
-	private String stateVertex = "";
-	private boolean isActionState = false;
+	private int numberOfPseudoStates = 0;
+	private int numberOfInitials = 0;
+	private int numberOfForks = 0;
+	private int numberOfJoins = 0;
+	private int numberOfJunctions = 0;
+	private int numberOfRepeats = 0;
 
 	public ActivityDiagramm(File file, Node xmiContentNode) {
 		super(file, xmiContentNode);
+		parse();
 	}
 
 	//Startzustaende
@@ -63,21 +63,9 @@ public class ActivityDiagramm extends UMLDiagramm {
 		return numberOfInitials;
 	}
 
-	public void setNumberOfInitials(String line) {
-		if (line.contains("kind = 'initial'")) {
-			numberOfInitials++;
-		}
-	}
-
 	//Gabelungen
 	public int getNumberOfForks() {
 		return numberOfForks;
-	}
-
-	public void setNumberOfForks(String line) {
-		if (line.contains("kind = 'fork'")) {
-			numberOfForks++;
-		}
 	}
 
 	//Vereinigungen
@@ -85,21 +73,9 @@ public class ActivityDiagramm extends UMLDiagramm {
 		return numberOfJoins;
 	}
 
-	public void setNumberOfJoins(String line) {
-		if (line.contains("kind = 'join'")) {
-			numberOfJoins++;
-		}
-	}
-
 	//Kreuzungen
 	public int getNumberOfJunctions() {
 		return numberOfJunctions;
-	}
-
-	public void setNumberOfJunctions(String line) {
-		if (line.contains("kind = 'junction'")) {
-			numberOfJunctions++;
-		}
 	}
 
 	//Endzustände
@@ -107,41 +83,21 @@ public class ActivityDiagramm extends UMLDiagramm {
 		return numberOfFinalStates;
 	}
 
-	public void setNumberOfFinalStates(String line) {
-		if (line.contains("UML:FinalState xmi.id =")) {
-			numberOfFinalStates++;
-		}
-	}
-
 	//Kreuzungsbedingungen
 	public int getNumberOfSignalEvents() {
 		return numberOfSignalEvents;
 	}
 
-	public void setNumberOfSignalEvents(String line) {
-		if (line.contains("UML:SignalEvent xmi.id =")) {
-			numberOfSignalEvents++;
-		}
+	private void setNumberOfSignalEvents(Node node) {
+		numberOfSignalEvents = countNodes(node, "UML:SignalEvent");
 	}
 
 	public int getNumberOfCompositeStates() {
 		return numberOfCompositeStates;
 	}
 
-	public void setNumberOfCompositeStates(String line) {
-		if (line.contains("UML:CompositeState xmi.id =")) {
-			numberOfCompositeStates++;
-		}
-	}
-
 	public int getNumberOfPseudoStates() {
 		return numberOfPseudoStates;
-	}
-
-	public void setNumberOfPseudoStates(String line) {
-		if (line.contains("UML:Pseudostate xmi.id =")) {
-			numberOfPseudoStates++;
-		}
 	}
 
 	//Aktivitaet
@@ -149,71 +105,20 @@ public class ActivityDiagramm extends UMLDiagramm {
 		return numberOfActionStates;
 	}
 
-	public void setNumberOfActionStates(String line) {
-		if (line.contains("<UML:ActionState xmi.id =")) {
-			numberOfActionStates++;
-			numberOfIncomingTransitionsInAnActionState = 0;
-			numberOfOutgoingTransitionsOfAnActionState = 0;
-			isActionState = true;
-		}
-	}
-
-	public void isNotAnActionStates(String line) {
-		if (line.contains("</UML:ActionState>")) {
-			isActionState = false;
-		}
-	}
-
-	public void setStateVertex(String line) {
-		if (isActionState) {
-			if (line.contains("<UML:StateVertex.outgoing")) {
-				stateVertex = "out";
-			} else if (line.contains("<UML:StateVertex.incoming")) {
-				stateVertex = "in";
-			} else if (line.contains("</UML:StateVertex.outgoing>")) {
-				stateVertex = "";
-			} else if (line.contains("</UML:StateVertex.incoming>")) {
-				stateVertex = "";
-			}
-		}
-	}
-
-	public void setIncomingAndOutgoingTransitionOfAnActionState(String line) {
-		if (line.contains("UML:Transition xmi.idref = ") && stateVertex.equals("out")) {
-			numberOfOutgoingTransitionsOfAnActionState++;
-		} else if (line.contains("UML:Transition xmi.idref = ") && stateVertex.equals("in")) {
-			numberOfIncomingTransitionsInAnActionState++;
-		}
-		checkRepeat();
-	}
-
-	public void checkRepeat() {
-		if (numberOfIncomingTransitionsInAnActionState >= 2 && numberOfOutgoingTransitionsOfAnActionState >= 1 && !stateVertex.isEmpty()) {
-			setNumberOfRepeats();
-			stateVertex = "";
-			numberOfIncomingTransitionsInAnActionState = 0;
-			numberOfOutgoingTransitionsOfAnActionState = 0;
-		}
-	}
-
 	public int getNumberOfUninterpretedActions() {
 		return numberOfUninterpretedActions;
 	}
 
-	public void setNumberOfUninterpretedActions(String line) {
-		if (line.contains("UML:UninterpretedAction xmi.id =")) {
-			numberOfUninterpretedActions++;
-		}
+	private void setNumberOfUninterpretedActions(Node node) {
+		numberOfUninterpretedActions = countNodes(node, "UML:UninterpretedAction");
 	}
 
 	public int getNumberOfActionExpressions() {
 		return numberOfActionExpressions;
 	}
 
-	public void setNumberOfActionExpressions(String line) {
-		if (line.contains("UML:ActionExpression xmi.id =")) {
-			numberOfActionExpressions++;
-		}
+	private void setNumberOfActionExpressions(Node node) {
+		numberOfActionExpressions = countNodes(node, "UML:ActionExpression");
 	}
 
 	//Transitionen
@@ -221,15 +126,8 @@ public class ActivityDiagramm extends UMLDiagramm {
 		return numberOfTransitions;
 	}
 
-	public void setNumberOfTransitions(String line) {
-		if (line.contains("UML:Transition xmi.id =")) {
-			numberOfTransitions++;
-		}
-	}
-
-	//Schleifen
-	public void setNumberOfRepeats() {
-		numberOfRepeats++;
+	private void setNumberOfTransitions(Node node) {
+		numberOfTransitions = countNodes(node, "UML:Transition");
 	}
 
 	public int getNumberOfRepeats() {
@@ -237,45 +135,108 @@ public class ActivityDiagramm extends UMLDiagramm {
 	}
 
 	//lesen der XMI Datei und abspeichern der Werte
-	public void read(ActivityDiagramm activitydiagramm) throws IOException {
-
-		File file = new File(activitydiagramm.getName());
-		FileReader freader = new FileReader(file);
-		BufferedReader reader = new BufferedReader(freader);
-
-		numberOfFinalStates = 0;
-		numberOfSignalEvents = 0;
-		numberOfCompositeStates = 0;
-		numberOfPseudoStates = 0;
-		numberOfActionStates = 0;
-		numberOfUninterpretedActions = 0;
-		numberOfActionExpressions = 0;
-		numberOfTransitions = 0;
-		numberOfInitials = 0;
-		numberOfForks = 0;
-		numberOfJoins = 0;
-		numberOfJunctions = 0;
-		numberOfRepeats = 0;
-
-		String line;
-		while ((line = reader.readLine()) != null) {
-			setNumberOfActionExpressions(line);
-			setNumberOfActionStates(line);
-			setNumberOfCompositeStates(line);
-			setNumberOfFinalStates(line);
-			setNumberOfPseudoStates(line);
-			setNumberOfSignalEvents(line);
-			setNumberOfTransitions(line);
-			setNumberOfUninterpretedActions(line);
-			setNumberOfForks(line);
-			setNumberOfJunctions(line);
-			setNumberOfInitials(line);
-			setNumberOfJoins(line);
-			setStateVertex(line);
-			setIncomingAndOutgoingTransitionOfAnActionState(line);
-			isNotAnActionStates(line);
+	private void parse() {
+		Node xmiContentNode = getXmiContentNode();
+		NodeList childNodes = xmiContentNode.getChildNodes();
+		for (int i = 0; i < childNodes.getLength(); i++) {
+			Node node = childNodes.item(i);
+			parseTOP(node);
 		}
-		freader.close();
+
+		setNumberOfTransitions(xmiContentNode);
+		setNumberOfActionExpressions(xmiContentNode);
+		setNumberOfSignalEvents(xmiContentNode);
+		setNumberOfUninterpretedActions(xmiContentNode);
+	}
+
+	private void parseTOP(Node node) {
+		if ("UML:StateMachine.top".equals(node.getNodeName())) {
+			for (int i = 0; i < node.getChildNodes().getLength(); i++) {
+				parseCompositeState(node.getChildNodes().item(i));
+			}
+		}
+	}
+
+	private void parseCompositeState(Node node) {
+		if ("UML:CompositeState".equals(node.getNodeName())) {
+			numberOfCompositeStates++;
+			for (int i = 0; i < node.getChildNodes().getLength(); i++) {
+				parseCompositeStateSubVertex(node.getChildNodes().item(i));
+			}
+		}
+	}
+
+	private void parseCompositeStateSubVertex(Node node) {
+		if ("UML:CompositeState.subvertex".equals(node.getNodeName())) {
+			for (int i = 0; i < node.getChildNodes().getLength(); i++) {
+				parsePseudoState(node.getChildNodes().item(i));
+				parseFinalState(node.getChildNodes().item(i));
+				parseActionState(node.getChildNodes().item(i));
+			}
+		}
+	}
+
+	private void parseActionState(Node node) {
+		if ("UML:ActionState".equals(node.getNodeName())) {
+			numberOfActionStates++;
+
+			XPathFactory xPathfactory = XPathFactory.newInstance();
+			XPath xpath = xPathfactory.newXPath();
+
+			xpath.setNamespaceContext(new UMLNameSpaceContext());
+
+			XPathExpression expr;
+			int numberOfIncomingTransitions = 0;
+			int numberOfOutgoingTransitions = 0;
+			try {
+				expr = xpath.compile("count(UML:StateVertex.incoming/UML:Transition)");
+				numberOfIncomingTransitions = ((Double) expr.evaluate(node, XPathConstants.NUMBER)).intValue();
+				expr = xpath.compile("count(UML:StateVertex.outgoing/UML:Transition)");
+				numberOfOutgoingTransitions = ((Double) expr.evaluate(node, XPathConstants.NUMBER)).intValue();
+			} catch (XPathExpressionException e) {
+			}
+
+			if (numberOfIncomingTransitions >= 2 && numberOfOutgoingTransitions >= 1) {
+				numberOfRepeats++;
+			}
+		}
+	}
+
+	private void parsePseudoState(Node node) {
+		if ("UML:Pseudostate".equals(node.getNodeName())) {
+			numberOfPseudoStates++;
+			Node kind = node.getAttributes().getNamedItem("kind");
+			if ("initial".equals(kind.getNodeValue())) {
+				numberOfInitials++;
+			} else if ("join".equals(kind.getNodeValue())) {
+				numberOfJoins++;
+			} else if ("fork".equals(kind.getNodeValue())) {
+				numberOfForks++;
+			} else if ("junction".equals(kind.getNodeValue())) {
+				numberOfJunctions++;
+			}
+		}
+	}
+
+	private void parseFinalState(Node node) {
+		if ("UML:FinalState".equals(node.getNodeName())) {
+			numberOfFinalStates++;
+		}
+	}
+
+	private int countNodes(Node node, String nodeName) {
+		XPathFactory xPathfactory = XPathFactory.newInstance();
+		XPath xpath = xPathfactory.newXPath();
+		xpath.setNamespaceContext(new UMLNameSpaceContext());
+		XPathExpression expr;
+
+		try {
+			expr = xpath.compile("count(//" + nodeName + "[xmi.id])");
+			return ((Double) expr.evaluate(node, XPathConstants.NUMBER)).intValue();
+		} catch (XPathExpressionException e) {
+		}
+
+		return 0;
 	}
 
 	@Override

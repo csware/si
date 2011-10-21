@@ -71,8 +71,6 @@ public class JavaUMLConstraintTest extends AbstractTest {
 		if (diagramm instanceof ActivityDiagramm) {
 			ActivityDiagramm activitydiagramm = (ActivityDiagramm)diagrammMusterLoesung;
 			ActivityDiagramm activitydiagramm2 = (ActivityDiagramm)diagramm;
-			activitydiagramm.read(activitydiagramm);
-			activitydiagramm2.read(activitydiagramm2);
 
 			ActivityDiagrammConstraint adc = new ActivityDiagrammConstraint();
 			/*
@@ -127,8 +125,6 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			//Instanz für Studentenloesung erzeugen
 			ClassDiagramm classdiagramm2 = (ClassDiagramm) diagramm;
 			//Instanzen einlesen
-			classdiagramm.read(classdiagramm);
-			classdiagramm2.read(classdiagramm2);
 
 			ClassDiagrammConstraint cdc = new ClassDiagrammConstraint();
 
