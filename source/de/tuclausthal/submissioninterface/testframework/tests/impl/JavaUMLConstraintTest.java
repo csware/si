@@ -1,5 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
+ * Copyright 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -48,7 +49,7 @@ public class JavaUMLConstraintTest extends AbstractTest {
 		UMLDiagramm diagramm = new UMLDiagramm(musterLoesung);
 
 		//Klassen oder Aktivitätsdiagramm
-		int diagrammType = diagramm.read(diagramm);
+		int diagrammType = diagramm.getType();
 
 		//Ausgaben, falls Aktivitätsdiagramm
 		if (diagrammType == 1) {
@@ -189,15 +190,11 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			output = output + cdc.checkM2I(classdiagramm, classdiagramm2) + "\n";
 
 			output = output + cdc.checkPairsOfAssociations(classdiagramm, classdiagramm2) + "\n";
-
 		} else {
-
 			output = output + "Unbekannter Diagrammtyp";
 		}
 
 		testResult.setTestOutput(output);
 		testResult.setTestPassed(true);
-
 	}
-
 }

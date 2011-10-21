@@ -24,11 +24,6 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl.uml;
  * @author Joachim Schramm
  */
 public class ActivityDiagrammConstraint {
-
-	public ActivityDiagrammConstraint() {
-
-	}
-
 	public String checkNumberOfStates(ActivityDiagramm ad1, ActivityDiagramm ad2) {
 		if (ad1.getNumberOfActionStates() > ad2.getNumberOfActionStates()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfActionStates() - ad2.getNumberOfActionStates()) + " Aktion(en)";

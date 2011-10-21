@@ -1,5 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
+ * Copyright 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -54,7 +55,6 @@ public class ActivityDiagramm extends UMLDiagramm {
 	public ActivityDiagramm(String name) {
 		super(name);
 		this.name = name;
-
 	}
 
 	public ActivityDiagramm(String name, int numberOfFinalStates, int numberOfSignalEvents, int numberOfCompositeStates, int numberOfPseudoStates, int numberOfInitials, int numberOfActionStates, int numberOfForks, int numberOfJoins, int numberOfJunctions, int numberOfUninterpretedActions, int numberOfActionExpressions, int numberOfTransitions, int numberOfRepeats) {
@@ -282,32 +282,24 @@ public class ActivityDiagramm extends UMLDiagramm {
 		numberOfJunctions = 0;
 		numberOfRepeats = 0;
 
-		while (true) {
-			String line = reader.readLine();
-
-			if (line != null) {
-
-				setNumberOfActionExpressions(line);
-				setNumberOfActionStates(line);
-				setNumberOfCompositeStates(line);
-				setNumberOfFinalStates(line);
-				setNumberOfPseudoStates(line);
-				setNumberOfSignalEvents(line);
-				setNumberOfTransitions(line);
-				setNumberOfUninterpretedActions(line);
-				setNumberOfForks(line);
-				setNumberOfJunctions(line);
-				setNumberOfInitials(line);
-				setNumberOfJoins(line);
-				setStateVertex(line);
-				setIncomingAndOutgoingTransitionOfAnActionState(line);
-				isNotAnActionStates(line);
-
-			} else
-				break;
+		String line;
+		while ((line = reader.readLine()) != null) {
+			setNumberOfActionExpressions(line);
+			setNumberOfActionStates(line);
+			setNumberOfCompositeStates(line);
+			setNumberOfFinalStates(line);
+			setNumberOfPseudoStates(line);
+			setNumberOfSignalEvents(line);
+			setNumberOfTransitions(line);
+			setNumberOfUninterpretedActions(line);
+			setNumberOfForks(line);
+			setNumberOfJunctions(line);
+			setNumberOfInitials(line);
+			setNumberOfJoins(line);
+			setStateVertex(line);
+			setIncomingAndOutgoingTransitionOfAnActionState(line);
+			isNotAnActionStates(line);
 		}
-
 		freader.close();
-
 	}
 }

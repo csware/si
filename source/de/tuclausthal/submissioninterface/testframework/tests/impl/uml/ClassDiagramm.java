@@ -1,5 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
+ * Copyright 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -373,32 +374,25 @@ public class ClassDiagramm extends UMLDiagramm {
 		m2i.clear();
 		as2c = "";
 
-		while (true) {
-			String line = reader.readLine();
-			if (line != null) {
-
-				setNumberOfClasses(line);
-				setClassNames(line);
-				setNumberOfAttributes(line);
-				setAttributeNames(line);
-				setNumberOfMethods(line);
-				setMethodsNames(line);
-				setNumberOfAssociations(line);
-				setAssociationNames(line);
-				setNumberOfAggregates(line);
-				setNumberOfComposites(line);
-				setNumberOfGeneralizations(line);
-				setNumberAbstractions(line);
-				setNumberOfInterfaces(line);
-				setInterfaceNames(line);
-				allocateAssociation(line);
-
-			} else
-				break;
+		String line;
+		while ((line = reader.readLine()) != null) {
+			setNumberOfClasses(line);
+			setClassNames(line);
+			setNumberOfAttributes(line);
+			setAttributeNames(line);
+			setNumberOfMethods(line);
+			setMethodsNames(line);
+			setNumberOfAssociations(line);
+			setAssociationNames(line);
+			setNumberOfAggregates(line);
+			setNumberOfComposites(line);
+			setNumberOfGeneralizations(line);
+			setNumberAbstractions(line);
+			setNumberOfInterfaces(line);
+			setInterfaceNames(line);
+			allocateAssociation(line);
 		}
 		setAs2C();
 		freader.close();
-
 	}
-
 }

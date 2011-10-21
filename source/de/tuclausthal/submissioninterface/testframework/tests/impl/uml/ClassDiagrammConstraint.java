@@ -26,11 +26,6 @@ import java.util.Vector;
  * der Musterlösung mit der Studentenlösungen 
  */
 public class ClassDiagrammConstraint {
-
-	public ClassDiagrammConstraint() {
-
-	}
-
 	public String checkNumberOfClassesPlusAttributes(ClassDiagramm cd1, ClassDiagramm cd2) {
 		if (cd1.getNumberOfClasses() + cd1.getNumberOfAttributes() > cd2.getNumberOfClasses() + cd2.getNumberOfAttributes()) {
 			return "Achtung! Es fehlt/fehlen " + (cd1.getNumberOfClasses() + cd1.getNumberOfAttributes() - cd2.getNumberOfClasses() - cd2.getNumberOfAttributes()) + " Klasse(n) oder Attribut(e)";
@@ -246,7 +241,5 @@ public class ClassDiagrammConstraint {
 		} else {
 			return "";
 		}
-
 	}
-
 }
