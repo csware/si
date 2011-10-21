@@ -1,5 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
+ * Copyright 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -26,7 +27,7 @@ import java.io.IOException;
 /**
  * Diese Klasse checkt die XMI Datei hinsichtlich der Diagrammart
  */
-public class UMLDiagramm {
+public abstract class UMLDiagramm {
 
 	private String name;
 
@@ -44,31 +45,25 @@ public class UMLDiagramm {
 	}
 
 	//lesen der XMI Datei und einordnen der Diagrammart
-	public int read(UMLDiagramm diagramm) throws IOException {
-
-		File file = new File(diagramm.getName());
+	public static UMLDiagramm getDiagramm(File file) throws IOException {
 		FileReader freader = new FileReader(file);
 		BufferedReader reader = new BufferedReader(freader);
 
-		int CLASS_DIAGRAMM = 0;
-		int ACTIVITY_DIAGRAMM = 1;
+		UMLDiagramm result = null;
 
-		int result = CLASS_DIAGRAMM;
-
-		while (true) {
-			String line = reader.readLine();
-			if (line != null) {
-				if (line.contains("UML:ActivityGraph xmi.id =")) {
-					result = ACTIVITY_DIAGRAMM;
-				}
-
-			} else
+		String line;
+		while ((line = reader.readLine()) != null) {
+			if (line.contains("UML:ActivityGraph xmi.id =")) {
+				result = new ActivityDiagramm(file.getAbsolutePath());
 				break;
+			} else if (line.contains("Class xmi.id =")) {
+				result = new ClassDiagramm(file.getAbsolutePath());
+				break;
+			}
+			
 		}
 
 		freader.close();
 		return result;
-
 	}
-
 }

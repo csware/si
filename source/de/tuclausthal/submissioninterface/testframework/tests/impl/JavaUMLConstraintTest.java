@@ -44,17 +44,14 @@ public class JavaUMLConstraintTest extends AbstractTest {
 		String output = "";
 
 		String musterLoesung = basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "musterloesung" + test.getId() + ".xmi";
-		String studentenLoesung = new File(submissionPath, "loesung.xmi").getAbsolutePath();
+		File studentenLoesung = new File(submissionPath, "loesung.xmi");
 
-		UMLDiagramm diagramm = new UMLDiagramm(musterLoesung);
-
-		//Klassen oder Aktivitätsdiagramm
-		int diagrammType = diagramm.getType();
+		UMLDiagramm diagramm = UMLDiagramm.getDiagramm(studentenLoesung);
 
 		//Ausgaben, falls Aktivitätsdiagramm
-		if (diagrammType == 1) {
+		if (diagramm != null && diagramm instanceof ActivityDiagramm) {
 			ActivityDiagramm activitydiagramm = new ActivityDiagramm(musterLoesung);
-			ActivityDiagramm activitydiagramm2 = new ActivityDiagramm(studentenLoesung);
+			ActivityDiagramm activitydiagramm2 = (ActivityDiagramm)diagramm;
 			activitydiagramm.read(activitydiagramm);
 			activitydiagramm2.read(activitydiagramm2);
 
@@ -105,11 +102,11 @@ public class JavaUMLConstraintTest extends AbstractTest {
 
 		}
 		//Ausgaben, falls Klassendiagramm
-		else if (diagrammType == 0) {
+		else if (diagramm != null && diagramm instanceof ClassDiagramm) {
 			//Instanz für Musterloesung erzeugen
 			ClassDiagramm classdiagramm = new ClassDiagramm(musterLoesung);
 			//Instanz für Studentenloesung erzeugen
-			ClassDiagramm classdiagramm2 = new ClassDiagramm(studentenLoesung);
+			ClassDiagramm classdiagramm2 = (ClassDiagramm) diagramm;
 			//Instanzen einlesen
 			classdiagramm.read(classdiagramm);
 			classdiagramm2.read(classdiagramm2);
