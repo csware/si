@@ -34,42 +34,13 @@ import org.w3c.dom.Node;
  * und speichert die Elemente des Klassendiagramms
  */
 public class ClassDiagramm extends UMLDiagramm {
-
 	public ClassDiagramm(String name) {
 		super(name);
-		this.name = name;
-
-	}
-
-	public ClassDiagramm(String name, int numberOfClasses, int numberOfAttributes, int numberOfMethods, int numberOfAssociation, int numberOfComposites, int numberOfAggregates, int numberOfGeneralizations, int numberOfAbstractions, int numberOfInterfaces, Vector<String> classes, Vector<String> attributes, Vector<String> methods, Vector<String> associations, Vector<String> interfaces, HashMap<String, Vector<String>> m2c, HashMap<String, Vector<String>> a2c, HashMap<String, Vector<String>> m2i, String as2c, HashMap<String, String> IDs) {
-		super(name);
-		this.name = name;
-		this.numberOfClasses = numberOfClasses;
-		this.numberOfAttributes = numberOfAttributes;
-		this.numberOfMethods = numberOfMethods;
-		this.numberOfAssociation = numberOfAssociation;
-		this.numberOfComposites = numberOfComposites;
-		this.numberOfAggregates = numberOfAggregates;
-		this.numberOfGeneralizations = numberOfGeneralizations;
-		this.numberOfAbstractions = numberOfAbstractions;
-		this.numberOfInterfaces = numberOfInterfaces;
-		this.classes = classes;
-		this.attributes = attributes;
-		this.methods = methods;
-		this.associations = associations;
-		this.interfaces = interfaces;
-		this.m2c = m2c;
-		this.a2c = a2c;
-		this.m2i = m2i;
-		this.as2c = as2c;
-		this.IDs = IDs;
 	}
 
 	public ClassDiagramm(File file, Node xmiContentNode) {
 		super(file, xmiContentNode);
 	}
-
-	private String name;
 
 	public String lastLineMethodOrAttribute = "";
 	public String lastLineClassOrInterface = "";
@@ -101,14 +72,6 @@ public class ClassDiagramm extends UMLDiagramm {
 	private String as2c;
 
 	private HashMap<String, String> IDs = new HashMap<String, String>();
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public void setNumberOfClasses(String line) {
 		if (line.contains("UML:Class xmi.id =")) {

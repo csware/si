@@ -32,8 +32,6 @@ import org.w3c.dom.Node;
  * @author Joachim Schramm
  */
 public class ActivityDiagramm extends UMLDiagramm {
-
-	private String name;
 	private int numberOfFinalStates;
 	private int numberOfSignalEvents;
 	private int numberOfCompositeStates;
@@ -56,25 +54,6 @@ public class ActivityDiagramm extends UMLDiagramm {
 
 	public ActivityDiagramm(String name) {
 		super(name);
-		this.name = name;
-	}
-
-	public ActivityDiagramm(String name, int numberOfFinalStates, int numberOfSignalEvents, int numberOfCompositeStates, int numberOfPseudoStates, int numberOfInitials, int numberOfActionStates, int numberOfForks, int numberOfJoins, int numberOfJunctions, int numberOfUninterpretedActions, int numberOfActionExpressions, int numberOfTransitions, int numberOfRepeats) {
-		super(name);
-		this.name = name;
-		this.numberOfFinalStates = numberOfFinalStates;
-		this.numberOfSignalEvents = numberOfSignalEvents;
-		this.numberOfCompositeStates = numberOfCompositeStates;
-		this.numberOfPseudoStates = numberOfPseudoStates;
-		this.numberOfInitials = numberOfInitials;
-		this.numberOfForks = numberOfForks;
-		this.numberOfJoins = numberOfJoins;
-		this.numberOfJunctions = numberOfJunctions;
-		this.numberOfActionStates = numberOfActionStates;
-		this.numberOfUninterpretedActions = numberOfUninterpretedActions;
-		this.numberOfActionExpressions = numberOfActionExpressions;
-		this.numberOfTransitions = numberOfTransitions;
-		this.numberOfRepeats = numberOfRepeats;
 	}
 
 	public ActivityDiagramm(File file, Node xmiContentNode) {
@@ -123,14 +102,6 @@ public class ActivityDiagramm extends UMLDiagramm {
 		if (line.contains("kind = 'junction'")) {
 			numberOfJunctions++;
 		}
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	//Endzustände
