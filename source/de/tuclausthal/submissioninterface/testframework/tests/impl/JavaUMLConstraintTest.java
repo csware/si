@@ -61,6 +61,12 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			return;
 		}
 
+		if (!diagrammMusterLoesung.getClass().equals(diagramm)) {
+			testResult.setTestOutput("Erwarteter Diagrammtyp: " + diagrammMusterLoesung.getType() + ", Gefundener Diagramm-Typ: " + diagramm.getType());
+			testResult.setTestPassed(false);
+			return;
+		}
+
 		//Ausgaben, falls Aktivitätsdiagramm
 		if (diagramm instanceof ActivityDiagramm) {
 			ActivityDiagramm activitydiagramm = (ActivityDiagramm)diagrammMusterLoesung;
