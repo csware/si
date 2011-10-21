@@ -52,10 +52,6 @@ public class ActivityDiagramm extends UMLDiagramm {
 	private String stateVertex = "";
 	private boolean isActionState = false;
 
-	public ActivityDiagramm(String name) {
-		super(name);
-	}
-
 	public ActivityDiagramm(File file, Node xmiContentNode) {
 		super(file, xmiContentNode);
 	}

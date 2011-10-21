@@ -43,14 +43,27 @@ public class JavaUMLConstraintTest extends AbstractTest {
 		//Feedbackoutput
 		String output = "";
 
-		String musterLoesung = basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "musterloesung" + test.getId() + ".xmi";
+		File musterLoesung = new File(basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "musterloesung" + test.getId() + ".xmi");
 		File studentenLoesung = new File(submissionPath, "loesung.xmi");
 
 		UMLDiagramm diagramm = UMLDiagramm.getDiagramm(studentenLoesung);
+		UMLDiagramm diagrammMusterLoesung = UMLDiagramm.getDiagramm(musterLoesung);
+
+		if (diagrammMusterLoesung == null) {
+			testResult.setTestOutput("Musterlösung defekt.");
+			testResult.setTestPassed(false);
+			return;
+		}
+
+		if (diagramm == null) {
+			testResult.setTestOutput("Unbekannter Diagrammtyp.");
+			testResult.setTestPassed(false);
+			return;
+		}
 
 		//Ausgaben, falls Aktivitätsdiagramm
-		if (diagramm != null && diagramm instanceof ActivityDiagramm) {
-			ActivityDiagramm activitydiagramm = new ActivityDiagramm(musterLoesung);
+		if (diagramm instanceof ActivityDiagramm) {
+			ActivityDiagramm activitydiagramm = (ActivityDiagramm)diagrammMusterLoesung;
 			ActivityDiagramm activitydiagramm2 = (ActivityDiagramm)diagramm;
 			activitydiagramm.read(activitydiagramm);
 			activitydiagramm2.read(activitydiagramm2);
@@ -102,9 +115,9 @@ public class JavaUMLConstraintTest extends AbstractTest {
 
 		}
 		//Ausgaben, falls Klassendiagramm
-		else if (diagramm != null && diagramm instanceof ClassDiagramm) {
+		else if (diagramm instanceof ClassDiagramm) {
 			//Instanz für Musterloesung erzeugen
-			ClassDiagramm classdiagramm = new ClassDiagramm(musterLoesung);
+			ClassDiagramm classdiagramm = (ClassDiagramm) diagrammMusterLoesung;
 			//Instanz für Studentenloesung erzeugen
 			ClassDiagramm classdiagramm2 = (ClassDiagramm) diagramm;
 			//Instanzen einlesen
@@ -187,8 +200,6 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			output = output + cdc.checkM2I(classdiagramm, classdiagramm2) + "\n";
 
 			output = output + cdc.checkPairsOfAssociations(classdiagramm, classdiagramm2) + "\n";
-		} else {
-			output = output + "Unbekannter Diagrammtyp";
 		}
 
 		testResult.setTestOutput(output);
