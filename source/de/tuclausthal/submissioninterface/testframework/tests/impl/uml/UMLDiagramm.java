@@ -70,6 +70,15 @@ public abstract class UMLDiagramm {
 		return xmiContentNode;
 	}
 
+	public String compareTextResult(UMLDiagramm diagramm) {
+		if (!getClass().equals(diagramm)) {
+			return "Erwarteter Diagrammtyp: " + getType() + ", Gefundener Diagramm-Typ: " + diagramm.getType();
+		}
+		return compareTextResultInternal(diagramm);
+	}
+
+	protected abstract String compareTextResultInternal(UMLDiagramm diagramm);
+
 	abstract public String getType();
 
 	//lesen der XMI Datei und einordnen der Diagrammart

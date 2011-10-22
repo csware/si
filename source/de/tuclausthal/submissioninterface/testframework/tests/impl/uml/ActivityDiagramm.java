@@ -247,4 +247,22 @@ public class ActivityDiagramm extends UMLDiagramm {
 	public ActivityDiagrammConstraint compare(ActivityDiagramm diagramm) {
 		return new ActivityDiagrammConstraint(this, diagramm);
 	}
+
+	@Override
+	public String compareTextResultInternal(UMLDiagramm diagramm) {
+		ActivityDiagrammConstraint adc = compare((ActivityDiagramm) diagramm);
+		String output = "";
+
+		output = adc.checkNumberOfInitials() + "\n";
+		output = output + adc.checkNumberOfFinals() + "\n";
+		output = output + adc.checkNumberOfStates() + "\n";
+		output = output + adc.checkNumberOfTransitions() + "\n";
+		output = output + adc.checkNumberOfForks() + "\n";
+		output = output + adc.checkNumberOfJoins() + "\n";
+		output = output + adc.checkNumberOfJunctions() + "\n";
+		output = output + adc.checkNumberOfSignalEvents() + "\n";
+		output = output + adc.checkNumberOfRepeats() + "\n";
+
+		return output;
+	}
 }

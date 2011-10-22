@@ -72,7 +72,6 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			ActivityDiagramm activitydiagramm = (ActivityDiagramm)diagrammMusterLoesung;
 			ActivityDiagramm activitydiagramm2 = (ActivityDiagramm)diagramm;
 
-			ActivityDiagrammConstraint adc = activitydiagramm.compare(activitydiagramm2);
 			/*
 			output = output + "Musterlösung:"+"\n";
 			output = output + ""+"\n";
@@ -106,17 +105,7 @@ public class JavaUMLConstraintTest extends AbstractTest {
 
 			output = output + "Vergleichsergebnis:" + "\n";
 			output = output + "" + "\n";
-
-			output = output + adc.checkNumberOfInitials() + "\n";
-			output = output + adc.checkNumberOfFinals() + "\n";
-			output = output + adc.checkNumberOfStates() + "\n";
-			output = output + adc.checkNumberOfTransitions() + "\n";
-			output = output + adc.checkNumberOfForks() + "\n";
-			output = output + adc.checkNumberOfJoins() + "\n";
-			output = output + adc.checkNumberOfJunctions() + "\n";
-			output = output + adc.checkNumberOfSignalEvents() + "\n";
-			output = output + adc.checkNumberOfRepeats() + "\n";
-
+			output = output + activitydiagramm.compareTextResult(activitydiagramm2);
 		}
 		//Ausgaben, falls Klassendiagramm
 		else if (diagramm instanceof ClassDiagramm) {
@@ -183,25 +172,7 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			output = output + "" + "\n";
 			output = output + "Vergleichsergebnis:" + "\n";
 			output = output + "" + "\n";
-
-			output = output + cdc.checkNumberOfClassesPlusAttributes() + "\n";
-			output = output + cdc.checkNumberOfInterfaces() + "\n";
-			output = output + cdc.checkNumberOfMethods() + "\n";
-			output = output + cdc.checkNumberOfAssociations() + "\n";
-			output = output + cdc.checkNumberOfGeneralizations() + "\n";
-			output = output + cdc.checkNumberOfAbstractions() + "\n";
-			output = output + cdc.checkNumberOfAggregates() + "\n";
-			output = output + cdc.checkNumberOfComposites() + "\n";
-
-			output = output + cdc.checkNamesOfClassesAndAttributes() + "\n";
-			output = output + cdc.checkNamesOfMethods() + "\n";
-			output = output + cdc.checkNamesOfInterfaces() + "\n";
-
-			output = output + cdc.checkA2C() + "\n";
-			output = output + cdc.checkM2C() + "\n";
-			output = output + cdc.checkM2I() + "\n";
-
-			output = output + cdc.checkPairsOfAssociations() + "\n";
+			output = output + classdiagramm.compareTextResult(classdiagramm2);
 		}
 
 		testResult.setTestOutput(output);

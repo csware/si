@@ -326,4 +326,31 @@ public class ClassDiagramm extends UMLDiagramm {
 	public ClassDiagrammConstraint compare(ClassDiagramm diagramm) {
 		return new ClassDiagrammConstraint(this, diagramm);
 	}
+
+	@Override
+	public String compareTextResultInternal(UMLDiagramm diagramm) {
+		ClassDiagrammConstraint cdc = compare((ClassDiagramm) diagramm);
+		String output = "";
+
+		output = output + cdc.checkNumberOfClassesPlusAttributes() + "\n";
+		output = output + cdc.checkNumberOfInterfaces() + "\n";
+		output = output + cdc.checkNumberOfMethods() + "\n";
+		output = output + cdc.checkNumberOfAssociations() + "\n";
+		output = output + cdc.checkNumberOfGeneralizations() + "\n";
+		output = output + cdc.checkNumberOfAbstractions() + "\n";
+		output = output + cdc.checkNumberOfAggregates() + "\n";
+		output = output + cdc.checkNumberOfComposites() + "\n";
+
+		output = output + cdc.checkNamesOfClassesAndAttributes() + "\n";
+		output = output + cdc.checkNamesOfMethods() + "\n";
+		output = output + cdc.checkNamesOfInterfaces() + "\n";
+
+		output = output + cdc.checkA2C() + "\n";
+		output = output + cdc.checkM2C() + "\n";
+		output = output + cdc.checkM2I() + "\n";
+
+		output = output + cdc.checkPairsOfAssociations() + "\n";
+
+		return output;
+	}
 }
