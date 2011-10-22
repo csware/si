@@ -61,7 +61,7 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			return;
 		}
 
-		if (!diagrammMusterLoesung.getClass().equals(diagramm)) {
+		if (!diagrammMusterLoesung.isSameType(diagramm)) {
 			testResult.setTestOutput("Erwarteter Diagrammtyp: " + diagrammMusterLoesung.getType() + ", Gefundener Diagramm-Typ: " + diagramm.getType());
 			testResult.setTestPassed(false);
 			return;

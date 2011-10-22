@@ -70,9 +70,16 @@ public abstract class UMLDiagramm {
 		return xmiContentNode;
 	}
 
-	public String compareTextResult(UMLDiagramm diagramm) {
+	public boolean isSameType(UMLDiagramm diagramm) {
 		if (!getClass().equals(diagramm)) {
-			return "Erwarteter Diagrammtyp: " + getType() + ", Gefundener Diagramm-Typ: " + diagramm.getType();
+			return false;
+		}
+		return true;
+	}
+
+	public String compareTextResult(UMLDiagramm diagramm) {
+		if (!isSameType(diagramm)) {
+			return null;
 		}
 		return compareTextResultInternal(diagramm);
 	}
