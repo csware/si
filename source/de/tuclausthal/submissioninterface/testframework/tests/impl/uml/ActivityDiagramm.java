@@ -243,4 +243,8 @@ public class ActivityDiagramm extends UMLDiagramm {
 	public String getType() {
 		return TYPE;
 	}
+
+	public ActivityDiagrammConstraint compare(ActivityDiagramm diagramm) {
+		return new ActivityDiagrammConstraint(this, diagramm);
+	}
 }

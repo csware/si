@@ -27,7 +27,7 @@ public class ActivityDiagrammConstraint {
 	private ActivityDiagramm ad1;
 	private ActivityDiagramm ad2;
 
-	public ActivityDiagrammConstraint(ActivityDiagramm ad1, ActivityDiagramm ad2) {
+	ActivityDiagrammConstraint(ActivityDiagramm ad1, ActivityDiagramm ad2) {
 		if (ad1 == null || ad2 == null) {
 			throw new NullPointerException();
 		}

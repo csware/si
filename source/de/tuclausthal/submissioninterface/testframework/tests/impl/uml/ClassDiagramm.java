@@ -322,4 +322,8 @@ public class ClassDiagramm extends UMLDiagramm {
 		public List<String> attributes = new LinkedList<String>();
 		public List<String> methods = new LinkedList<String>();
 	}
+
+	public ClassDiagrammConstraint compare(ClassDiagramm diagramm) {
+		return new ClassDiagrammConstraint(this, diagramm);
+	}
 }

@@ -29,7 +29,7 @@ public class ClassDiagrammConstraint {
 	private ClassDiagramm cd1;
 	private ClassDiagramm cd2;
 
-	public ClassDiagrammConstraint(ClassDiagramm cd1, ClassDiagramm cd2) {
+	ClassDiagrammConstraint(ClassDiagramm cd1, ClassDiagramm cd2) {
 		if (cd1 == null || cd2 == null) {
 			throw new NullPointerException();
 		}

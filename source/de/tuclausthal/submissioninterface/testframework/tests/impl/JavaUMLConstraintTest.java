@@ -72,7 +72,7 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			ActivityDiagramm activitydiagramm = (ActivityDiagramm)diagrammMusterLoesung;
 			ActivityDiagramm activitydiagramm2 = (ActivityDiagramm)diagramm;
 
-			ActivityDiagrammConstraint adc = new ActivityDiagrammConstraint(activitydiagramm, activitydiagramm2);
+			ActivityDiagrammConstraint adc = activitydiagramm.compare(activitydiagramm2);
 			/*
 			output = output + "Musterlösung:"+"\n";
 			output = output + ""+"\n";
@@ -126,7 +126,7 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			ClassDiagramm classdiagramm2 = (ClassDiagramm) diagramm;
 			//Instanzen einlesen
 
-			ClassDiagrammConstraint cdc = new ClassDiagrammConstraint(classdiagramm, classdiagramm2);
+			ClassDiagrammConstraint cdc = classdiagramm.compare(classdiagramm2);
 
 			/*
 			output = output + "Musterlösung:"+"\n";
