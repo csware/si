@@ -72,7 +72,7 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			ActivityDiagramm activitydiagramm = (ActivityDiagramm)diagrammMusterLoesung;
 			ActivityDiagramm activitydiagramm2 = (ActivityDiagramm)diagramm;
 
-			ActivityDiagrammConstraint adc = new ActivityDiagrammConstraint();
+			ActivityDiagrammConstraint adc = new ActivityDiagrammConstraint(activitydiagramm, activitydiagramm2);
 			/*
 			output = output + "Musterlösung:"+"\n";
 			output = output + ""+"\n";
@@ -107,15 +107,15 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			output = output + "Vergleichsergebnis:" + "\n";
 			output = output + "" + "\n";
 
-			output = output + adc.checkNumberOfInitials(activitydiagramm, activitydiagramm2) + "\n";
-			output = output + adc.checkNumberOfFinals(activitydiagramm, activitydiagramm2) + "\n";
-			output = output + adc.checkNumberOfStates(activitydiagramm, activitydiagramm2) + "\n";
-			output = output + adc.checkNumberOfTransitions(activitydiagramm, activitydiagramm2) + "\n";
-			output = output + adc.checkNumberOfForks(activitydiagramm, activitydiagramm2) + "\n";
-			output = output + adc.checkNumberOfJoins(activitydiagramm, activitydiagramm2) + "\n";
-			output = output + adc.checkNumberOfJunctions(activitydiagramm, activitydiagramm2) + "\n";
-			output = output + adc.checkNumberOfSignalEvents(activitydiagramm, activitydiagramm2) + "\n";
-			output = output + adc.checkNumberOfRepeats(activitydiagramm, activitydiagramm2) + "\n";
+			output = output + adc.checkNumberOfInitials() + "\n";
+			output = output + adc.checkNumberOfFinals() + "\n";
+			output = output + adc.checkNumberOfStates() + "\n";
+			output = output + adc.checkNumberOfTransitions() + "\n";
+			output = output + adc.checkNumberOfForks() + "\n";
+			output = output + adc.checkNumberOfJoins() + "\n";
+			output = output + adc.checkNumberOfJunctions() + "\n";
+			output = output + adc.checkNumberOfSignalEvents() + "\n";
+			output = output + adc.checkNumberOfRepeats() + "\n";
 
 		}
 		//Ausgaben, falls Klassendiagramm
@@ -126,7 +126,7 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			ClassDiagramm classdiagramm2 = (ClassDiagramm) diagramm;
 			//Instanzen einlesen
 
-			ClassDiagrammConstraint cdc = new ClassDiagrammConstraint();
+			ClassDiagrammConstraint cdc = new ClassDiagrammConstraint(classdiagramm, classdiagramm2);
 
 			/*
 			output = output + "Musterlösung:"+"\n";
@@ -184,24 +184,24 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			output = output + "Vergleichsergebnis:" + "\n";
 			output = output + "" + "\n";
 
-			output = output + cdc.checkNumberOfClassesPlusAttributes(classdiagramm, classdiagramm2) + "\n";
-			output = output + cdc.checkNumberOfInterfaces(classdiagramm, classdiagramm2) + "\n";
-			output = output + cdc.checkNumberOfMethods(classdiagramm, classdiagramm2) + "\n";
-			output = output + cdc.checkNumberOfAssociations(classdiagramm, classdiagramm2) + "\n";
-			output = output + cdc.checkNumberOfGeneralizations(classdiagramm, classdiagramm2) + "\n";
-			output = output + cdc.checkNumberOfAbstractions(classdiagramm, classdiagramm2) + "\n";
-			output = output + cdc.checkNumberOfAggregates(classdiagramm, classdiagramm2) + "\n";
-			output = output + cdc.checkNumberOfComposites(classdiagramm, classdiagramm2) + "\n";
+			output = output + cdc.checkNumberOfClassesPlusAttributes() + "\n";
+			output = output + cdc.checkNumberOfInterfaces() + "\n";
+			output = output + cdc.checkNumberOfMethods() + "\n";
+			output = output + cdc.checkNumberOfAssociations() + "\n";
+			output = output + cdc.checkNumberOfGeneralizations() + "\n";
+			output = output + cdc.checkNumberOfAbstractions() + "\n";
+			output = output + cdc.checkNumberOfAggregates() + "\n";
+			output = output + cdc.checkNumberOfComposites() + "\n";
 
-			output = output + cdc.checkNamesOfClassesAndAttributes(classdiagramm, classdiagramm2) + "\n";
-			output = output + cdc.checkNamesOfMethods(classdiagramm, classdiagramm2) + "\n";
-			output = output + cdc.checkNamesOfInterfaces(classdiagramm, classdiagramm2) + "\n";
+			output = output + cdc.checkNamesOfClassesAndAttributes() + "\n";
+			output = output + cdc.checkNamesOfMethods() + "\n";
+			output = output + cdc.checkNamesOfInterfaces() + "\n";
 
-			output = output + cdc.checkA2C(classdiagramm, classdiagramm2) + "\n";
-			output = output + cdc.checkM2C(classdiagramm, classdiagramm2) + "\n";
-			output = output + cdc.checkM2I(classdiagramm, classdiagramm2) + "\n";
+			output = output + cdc.checkA2C() + "\n";
+			output = output + cdc.checkM2C() + "\n";
+			output = output + cdc.checkM2I() + "\n";
 
-			output = output + cdc.checkPairsOfAssociations(classdiagramm, classdiagramm2) + "\n";
+			output = output + cdc.checkPairsOfAssociations() + "\n";
 		}
 
 		testResult.setTestOutput(output);

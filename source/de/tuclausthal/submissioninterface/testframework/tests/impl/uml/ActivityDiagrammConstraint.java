@@ -24,7 +24,18 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl.uml;
  * @author Joachim Schramm
  */
 public class ActivityDiagrammConstraint {
-	public String checkNumberOfStates(ActivityDiagramm ad1, ActivityDiagramm ad2) {
+	private ActivityDiagramm ad1;
+	private ActivityDiagramm ad2;
+
+	public ActivityDiagrammConstraint(ActivityDiagramm ad1, ActivityDiagramm ad2) {
+		if (ad1 == null || ad2 == null) {
+			throw new NullPointerException();
+		}
+		this.ad1 = ad1;
+		this.ad2 = ad2;
+	}
+
+	public String checkNumberOfStates() {
 		if (ad1.getNumberOfActionStates() > ad2.getNumberOfActionStates()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfActionStates() - ad2.getNumberOfActionStates()) + " Aktion(en)";
 		} else if (ad1.getNumberOfActionStates() < ad2.getNumberOfActionStates()) {
@@ -34,7 +45,7 @@ public class ActivityDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfTransitions(ActivityDiagramm ad1, ActivityDiagramm ad2) {
+	public String checkNumberOfTransitions() {
 		if (ad1.getNumberOfTransitions() > ad2.getNumberOfTransitions()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfTransitions() - ad2.getNumberOfTransitions()) + " Transition(en)";
 		} else if (ad1.getNumberOfTransitions() < ad2.getNumberOfTransitions()) {
@@ -44,7 +55,7 @@ public class ActivityDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfInitials(ActivityDiagramm ad1, ActivityDiagramm ad2) {
+	public String checkNumberOfInitials() {
 		if (ad1.getNumberOfInitials() > ad2.getNumberOfInitials()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfInitials() - ad2.getNumberOfInitials()) + " Startzustand/Startzustände";
 		} else if (ad1.getNumberOfInitials() < ad2.getNumberOfInitials()) {
@@ -54,7 +65,7 @@ public class ActivityDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfFinals(ActivityDiagramm ad1, ActivityDiagramm ad2) {
+	public String checkNumberOfFinals() {
 		if (ad1.getNumberOfFinalStates() > ad2.getNumberOfFinalStates()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfFinalStates() - ad2.getNumberOfFinalStates()) + " Endzustand/Endzustände";
 		} else if (ad1.getNumberOfFinalStates() < ad2.getNumberOfFinalStates()) {
@@ -64,7 +75,7 @@ public class ActivityDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfForks(ActivityDiagramm ad1, ActivityDiagramm ad2) {
+	public String checkNumberOfForks() {
 		if (ad1.getNumberOfForks() > ad2.getNumberOfForks()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfForks() - ad2.getNumberOfForks()) + " Gabelung(en)";
 		} else if (ad1.getNumberOfForks() < ad2.getNumberOfForks()) {
@@ -74,7 +85,7 @@ public class ActivityDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfJoins(ActivityDiagramm ad1, ActivityDiagramm ad2) {
+	public String checkNumberOfJoins() {
 		if (ad1.getNumberOfJoins() > ad2.getNumberOfJoins()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfJoins() - ad2.getNumberOfJoins()) + " Vereinigung(en)";
 		} else if (ad1.getNumberOfJoins() < ad2.getNumberOfJoins()) {
@@ -84,7 +95,7 @@ public class ActivityDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfJunctions(ActivityDiagramm ad1, ActivityDiagramm ad2) {
+	public String checkNumberOfJunctions() {
 		if (ad1.getNumberOfJunctions() > ad2.getNumberOfJunctions()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfJunctions() - ad2.getNumberOfJunctions()) + " Kreuzung(en)";
 		} else if (ad1.getNumberOfJunctions() < ad2.getNumberOfJunctions()) {
@@ -94,7 +105,7 @@ public class ActivityDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfSignalEvents(ActivityDiagramm ad1, ActivityDiagramm ad2) {
+	public String checkNumberOfSignalEvents() {
 		if (ad1.getNumberOfSignalEvents() > ad2.getNumberOfSignalEvents()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfSignalEvents() - ad2.getNumberOfSignalEvents()) + " Bedingung(en)";
 		} else if (ad1.getNumberOfSignalEvents() < ad2.getNumberOfSignalEvents()) {
@@ -104,7 +115,7 @@ public class ActivityDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfRepeats(ActivityDiagramm ad1, ActivityDiagramm ad2) {
+	public String checkNumberOfRepeats() {
 		if (ad1.getNumberOfRepeats() > ad2.getNumberOfRepeats()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfRepeats() - ad2.getNumberOfRepeats()) + " Schleife(n)";
 		} else if (ad1.getNumberOfRepeats() < ad2.getNumberOfRepeats()) {

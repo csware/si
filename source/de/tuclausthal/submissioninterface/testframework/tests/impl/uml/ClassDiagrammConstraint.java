@@ -26,7 +26,18 @@ import java.util.Vector;
  * der Musterlösung mit der Studentenlösungen 
  */
 public class ClassDiagrammConstraint {
-	public String checkNumberOfClassesPlusAttributes(ClassDiagramm cd1, ClassDiagramm cd2) {
+	private ClassDiagramm cd1;
+	private ClassDiagramm cd2;
+
+	public ClassDiagrammConstraint(ClassDiagramm cd1, ClassDiagramm cd2) {
+		if (cd1 == null || cd2 == null) {
+			throw new NullPointerException();
+		}
+		this.cd1 = cd1;
+		this.cd2 = cd2;
+	}
+
+	public String checkNumberOfClassesPlusAttributes() {
 		if (cd1.getNumberOfClasses() + cd1.getNumberOfAttributes() > cd2.getNumberOfClasses() + cd2.getNumberOfAttributes()) {
 			return "Achtung! Es fehlt/fehlen " + (cd1.getNumberOfClasses() + cd1.getNumberOfAttributes() - cd2.getNumberOfClasses() - cd2.getNumberOfAttributes()) + " Klasse(n) oder Attribut(e)";
 		} else if (cd1.getNumberOfClasses() + cd1.getNumberOfAttributes() < cd2.getNumberOfClasses() + cd2.getNumberOfAttributes()) {
@@ -40,7 +51,7 @@ public class ClassDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfInterfaces(ClassDiagramm cd1, ClassDiagramm cd2) {
+	public String checkNumberOfInterfaces() {
 		if (cd1.getNumberOfInterfaces() > cd2.getNumberOfInterfaces()) {
 			return "Achtung! Es fehlt/fehlen " + (cd1.getNumberOfInterfaces() - cd2.getNumberOfInterfaces()) + " Schnittstelle(n)";
 		} else if (cd1.getNumberOfInterfaces() == cd2.getNumberOfInterfaces()) {
@@ -50,7 +61,7 @@ public class ClassDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfMethods(ClassDiagramm cd1, ClassDiagramm cd2) {
+	public String checkNumberOfMethods() {
 		if (cd1.getNumberOfMethods() > cd2.getNumberOfMethods()) {
 			return "Achtung! Es fehlt/fehlen " + (cd1.getNumberOfMethods() - cd2.getNumberOfMethods()) + " Methode(n)";
 		} else if (cd1.getNumberOfMethods() == cd2.getNumberOfMethods()) {
@@ -60,7 +71,7 @@ public class ClassDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfAssociations(ClassDiagramm cd1, ClassDiagramm cd2) {
+	public String checkNumberOfAssociations() {
 		if (cd2.getNumberOfAttributes() > cd1.getNumberOfAttributes()) {
 			int difference = cd2.getNumberOfAttributes() - cd1.getNumberOfAttributes();
 			if ((cd1.getNumberOfAssociations() - difference) == cd2.getNumberOfAssociations()) {
@@ -88,7 +99,7 @@ public class ClassDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfGeneralizations(ClassDiagramm cd1, ClassDiagramm cd2) {
+	public String checkNumberOfGeneralizations() {
 		if (cd1.getNumberOfGeneralizations() > cd2.getNumberOfGeneralizations()) {
 			return "Achtung! Es fehlt/fehlen " + (cd1.getNumberOfGeneralizations() - cd2.getNumberOfGeneralizations()) + " Vererbungsbeziehung(en)";
 		} else if (cd1.getNumberOfGeneralizations() == cd2.getNumberOfGeneralizations()) {
@@ -98,7 +109,7 @@ public class ClassDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfAbstractions(ClassDiagramm cd1, ClassDiagramm cd2) {
+	public String checkNumberOfAbstractions() {
 		if (cd1.getNumberOfAbstractions() > cd2.getNumberOfAbstractions()) {
 			return "Achtung! Es fehlt/fehlen " + (cd1.getNumberOfAbstractions() - cd2.getNumberOfAbstractions()) + " Schnittstellenrealisierung(en)";
 		} else if (cd1.getNumberOfAbstractions() == cd2.getNumberOfAbstractions()) {
@@ -108,7 +119,7 @@ public class ClassDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfAggregates(ClassDiagramm cd1, ClassDiagramm cd2) {
+	public String checkNumberOfAggregates() {
 		if (cd1.getNumberOfAggregates() > cd2.getNumberOfAggregates()) {
 			return "Achtung! Es fehlt/fehlen " + (cd1.getNumberOfAggregates() - cd2.getNumberOfAggregates()) + " Aggregation(en)";
 		} else if (cd1.getNumberOfAggregates() == cd2.getNumberOfAggregates()) {
@@ -118,7 +129,7 @@ public class ClassDiagrammConstraint {
 		}
 	}
 
-	public String checkNumberOfComposites(ClassDiagramm cd1, ClassDiagramm cd2) {
+	public String checkNumberOfComposites() {
 		if (cd1.getNumberOfComposites() > cd2.getNumberOfComposites()) {
 			return "Achtung! Es fehlt/fehlen " + (cd1.getNumberOfComposites() - cd2.getNumberOfComposites()) + " Komposition(en)";
 		} else if (cd1.getNumberOfComposites() == cd2.getNumberOfComposites()) {
@@ -128,7 +139,7 @@ public class ClassDiagrammConstraint {
 		}
 	}
 
-	public String checkNamesOfClassesAndAttributes(ClassDiagramm cd1, ClassDiagramm cd2) {
+	public String checkNamesOfClassesAndAttributes() {
 		Vector<String> result1 = new Vector<String>();
 		Vector<String> result2 = new Vector<String>();
 		for (int i = 0; i < cd1.getClassNames().size(); i++) {
@@ -150,7 +161,7 @@ public class ClassDiagrammConstraint {
 		}
 	}
 
-	public String checkNamesOfMethods(ClassDiagramm cd1, ClassDiagramm cd2) {
+	public String checkNamesOfMethods() {
 
 		if (cd2.getMethodsNames().containsAll(cd1.getMethodsNames())) {
 			return "Methodennamen okay";
@@ -160,7 +171,7 @@ public class ClassDiagrammConstraint {
 		}
 	}
 
-	public String checkNamesOfInterfaces(ClassDiagramm cd1, ClassDiagramm cd2) {
+	public String checkNamesOfInterfaces() {
 
 		if (cd2.getInterfaceNames().containsAll(cd1.getInterfaceNames())) {
 			return "Schnittstellennamen okay";
@@ -170,7 +181,7 @@ public class ClassDiagrammConstraint {
 		}
 	}
 
-	public String checkM2C(ClassDiagramm cd1, ClassDiagramm cd2) {
+	public String checkM2C() {
 
 		if (cd1.getM2C().equals(cd2.getM2C())) {
 			return "Zuordnung von Methoden zu Klassen okay";
@@ -180,7 +191,7 @@ public class ClassDiagrammConstraint {
 		}
 	}
 
-	public String checkA2C(ClassDiagramm cd1, ClassDiagramm cd2) {
+	public String checkA2C() {
 		if (cd1.getNumberOfAttributes() == cd2.getNumberOfAttributes() && cd1.getNumberOfClasses() == cd2.getNumberOfClasses()) {
 			if (cd1.getA2C().equals(cd2.getA2C())) {
 				return "Zuordnung von Attributen zu Klassen okay";
@@ -192,7 +203,7 @@ public class ClassDiagrammConstraint {
 		}
 	}
 
-	public String checkM2I(ClassDiagramm cd1, ClassDiagramm cd2) {
+	public String checkM2I() {
 		if (cd1.getNumberOfMethods() == cd2.getNumberOfMethods() && cd1.getNumberOfInterfaces() == cd2.getNumberOfInterfaces()) {
 			if (cd1.getM2I().equals(cd2.getM2I())) {
 				return "Zuordnung von Methoden zu Interfaces okay";
@@ -204,9 +215,8 @@ public class ClassDiagrammConstraint {
 		}
 	}
 
-	public String checkPairsOfAssociations(ClassDiagramm cd1, ClassDiagramm cd2) {
-
-		if (cd1.getNumberOfAbstractions() == cd2.getNumberOfAbstractions() && checkNumberOfAssociations(cd1, cd2).equals("Anzahl der Assoziationen okay.")) {
+	public String checkPairsOfAssociations() {
+		if (cd1.getNumberOfAbstractions() == cd2.getNumberOfAbstractions() && checkNumberOfAssociations().equals("Anzahl der Assoziationen okay.")) {
 			Vector<String> v1 = cd1.getAllocationOfAssociation();
 			Vector<String> v2 = cd2.getAllocationOfAssociation();
 			boolean b = true;
