@@ -75,31 +75,15 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			/*
 			output = output + "Musterlösung:"+"\n";
 			output = output + ""+"\n";
-			
-			output = output + "Endzustände: "+ activitydiagramm.getNumberOfFinalStates()+"\n";
-			output = output + "Transitionen: "+ activitydiagramm.getNumberOfTransitions()+"\n";
-			output = output + "Aktivitäten: "+ activitydiagramm.getNumberOfActionStates()+"\n";
-			output = output + "Startzustände: "+ activitydiagramm.getNumberOfInitials()+"\n";
-			output = output + "Vereinigungen: "+ activitydiagramm.getNumberOfJoins()+"\n";
-			output = output + "Gabelungen: "+ activitydiagramm.getNumberOfForks()+"\n";
-			output = output + "Kreuzungen: "+ activitydiagramm.getNumberOfJunctions()+"\n";
-			output = output + "Bedingungen: "+ activitydiagramm.getNumberOfSignalEvents()+"\n";
-			output = output + "Schleifen: "+ activitydiagramm.getNumberOfRepeats()+"\n";
-			
+
+			output = output + activitydiagramm.toString();
+
 			output = output + ""+"\n";
 			*/
 			output = output + "Studentenlösung:" + "\n";
 			output = output + "" + "\n";
 
-			output = output + "Endzustände: " + activitydiagramm2.getNumberOfFinalStates() + "\n";
-			output = output + "Transitionen: " + activitydiagramm2.getNumberOfTransitions() + "\n";
-			output = output + "Aktivitäten: " + activitydiagramm2.getNumberOfActionStates() + "\n";
-			output = output + "Startzustände: " + activitydiagramm2.getNumberOfInitials() + "\n";
-			output = output + "Vereinigungen: " + activitydiagramm2.getNumberOfJoins() + "\n";
-			output = output + "Gabelungen: " + activitydiagramm2.getNumberOfForks() + "\n";
-			output = output + "Kreuzungen: " + activitydiagramm2.getNumberOfJunctions() + "\n";
-			output = output + "Bedingungen: " + activitydiagramm2.getNumberOfSignalEvents() + "\n";
-			output = output + "Schleifen: " + activitydiagramm2.getNumberOfRepeats() + "\n";
+			output = output + activitydiagramm2.toString();
 
 			output = output + "" + "\n";
 
@@ -121,53 +105,14 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			output = output + "Musterlösung:"+"\n";
 			output = output + ""+"\n";
 
-			output = output + "Klassen: "+classdiagramm.getNumberOfClasses()+"\n";
-			output = output + classdiagramm.getClassNames()+"\n";
-			output = output + "Interfaces: "+ classdiagramm.getNumberOfInterfaces()+"\n";
-			output = output + classdiagramm.getInterfaceNames()+"\n";
-			output = output + "Attribute: "+classdiagramm.getNumberOfAttributes()+"\n";
-			output = output + classdiagramm.getAttributeNames()+"\n";
-			output = output + "Methoden: "+classdiagramm.getNumberOfMethods()+"\n";
-			output = output + classdiagramm.getMethodsNames()+"\n";
-			output = output + "Assoziationen: "+classdiagramm.getNumberOfAssociations()+"\n";
-			output = output + classdiagramm.getAssociationNames()+"\n";
-			output = output + "Aggregationen: "+classdiagramm.getNumberOfAggregates()+"\n";
-			output = output + "Kompositionen: "+classdiagramm.getNumberOfComposites()+"\n";
-			output = output + "Generalisierungen: "+classdiagramm.getNumberOfGeneralizations()+"\n";
-			output = output + "Interfacerealisierungen: "+classdiagramm.getNumberOfAbstractions()+"\n";
-			
-			
-			output = output + "Zuordnung von Methoden zu Klassen: "+classdiagramm.getM2C()+"\n";
-			output = output + "Zuordnung von Attributen zu Klassen: "+classdiagramm.getA2C()+"\n";
-			output = output + "Zuordnung von Methoden zu Interfaces: "+classdiagramm.getM2I()+"\n";
-			output = output + "Zuordnung von Assoziationen zu Klassen: "+classdiagramm.getAs2C()+"\n";
-			//output = output + classdiagramm.getAllocationOfAssociation()+"\n";
-			
+			output = output + classdiagramm.toString();
+
 			output = output + ""+"\n";
 			*/
 			output = output + "Studentenlösung:" + "\n";
 			output = output + "" + "\n";
 
-			output = output + "Klassen: " + classdiagramm2.getNumberOfClasses() + "\n";
-			output = output + classdiagramm2.getClassNames() + "\n";
-			output = output + "Schnittstellen: " + classdiagramm2.getNumberOfInterfaces() + "\n";
-			output = output + classdiagramm2.getInterfaceNames() + "\n";
-			output = output + "Attribute: " + classdiagramm2.getNumberOfAttributes() + "\n";
-			output = output + classdiagramm2.getAttributeNames() + "\n";
-			output = output + "Methoden: " + classdiagramm2.getNumberOfMethods() + "\n";
-			output = output + classdiagramm2.getMethodsNames() + "\n";
-			output = output + "Assoziationen: " + classdiagramm2.getNumberOfAssociations() + "\n";
-			output = output + classdiagramm2.getAssociationNames() + "\n";
-			output = output + "Aggregationen: " + classdiagramm2.getNumberOfAggregates() + "\n";
-			output = output + "Kompositionen: " + classdiagramm2.getNumberOfComposites() + "\n";
-			output = output + "Generalisierungen: " + classdiagramm2.getNumberOfGeneralizations() + "\n";
-			output = output + "Schnittstellenrealisierungen: " + classdiagramm2.getNumberOfAbstractions() + "\n";
-
-			output = output + "Zuordnung von Methoden zu Klassen: " + classdiagramm2.getM2C() + "\n";
-			output = output + "Zuordnung von Attributen zu Klassen: " + classdiagramm2.getA2C() + "\n";
-			output = output + "Zuordnung von Methoden zu Interfaces: " + classdiagramm2.getM2I() + "\n";
-			output = output + "Zuordnung von Assoziationen zu Klassen: " + classdiagramm2.getAs2C() + "\n";
-			//output = output + classdiagramm2.getAllocationOfAssociation()+"\n";
+			output = output + classdiagramm2.toString();
 
 			output = output + "" + "\n";
 			output = output + "Vergleichsergebnis:" + "\n";

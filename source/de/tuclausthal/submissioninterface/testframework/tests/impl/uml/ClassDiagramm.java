@@ -353,4 +353,30 @@ public class ClassDiagramm extends UMLDiagramm {
 
 		return output;
 	}
+
+	@Override
+	public String toString() {
+		String output = "";
+		output = output + "Klassen: " + getNumberOfClasses() + "\n";
+		output = output + getClassNames() + "\n";
+		output = output + "Schnittstellen: " + getNumberOfInterfaces() + "\n";
+		output = output + getInterfaceNames() + "\n";
+		output = output + "Attribute: " + getNumberOfAttributes() + "\n";
+		output = output + getAttributeNames() + "\n";
+		output = output + "Methoden: " + getNumberOfMethods() + "\n";
+		output = output + getMethodsNames() + "\n";
+		output = output + "Assoziationen: " + getNumberOfAssociations() + "\n";
+		output = output + getAssociationNames() + "\n";
+		output = output + "Aggregationen: " + getNumberOfAggregates() + "\n";
+		output = output + "Kompositionen: " + getNumberOfComposites() + "\n";
+		output = output + "Generalisierungen: " + getNumberOfGeneralizations() + "\n";
+		output = output + "Schnittstellenrealisierungen: " + getNumberOfAbstractions() + "\n";
+
+		output = output + "Zuordnung von Methoden zu Klassen: " + getM2C() + "\n";
+		output = output + "Zuordnung von Attributen zu Klassen: " + getA2C() + "\n";
+		output = output + "Zuordnung von Methoden zu Interfaces: " + getM2I() + "\n";
+		output = output + "Zuordnung von Assoziationen zu Klassen: " + getAs2C() + "\n";
+		//output = output + getAllocationOfAssociation()+"\n";
+		return output;
+	}
 }

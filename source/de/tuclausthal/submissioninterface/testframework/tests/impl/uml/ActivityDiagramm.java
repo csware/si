@@ -265,4 +265,19 @@ public class ActivityDiagramm extends UMLDiagramm {
 
 		return output;
 	}
+
+	@Override
+	public String toString() {
+		String output = "";
+		output = output + "Endzustände: " + getNumberOfFinalStates() + "\n";
+		output = output + "Transitionen: " + getNumberOfTransitions() + "\n";
+		output = output + "Aktivitäten: " + getNumberOfActionStates() + "\n";
+		output = output + "Startzustände: " + getNumberOfInitials() + "\n";
+		output = output + "Vereinigungen: " + getNumberOfJoins() + "\n";
+		output = output + "Gabelungen: " + getNumberOfForks() + "\n";
+		output = output + "Kreuzungen: " + getNumberOfJunctions() + "\n";
+		output = output + "Bedingungen: " + getNumberOfSignalEvents() + "\n";
+		output = output + "Schleifen: " + getNumberOfRepeats() + "\n";
+		return output;
+	}
 }
