@@ -67,56 +67,24 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			return;
 		}
 
-		//Ausgaben, falls Aktivitätsdiagramm
-		if (diagramm instanceof ActivityDiagramm) {
-			ActivityDiagramm activitydiagramm = (ActivityDiagramm)diagrammMusterLoesung;
-			ActivityDiagramm activitydiagramm2 = (ActivityDiagramm)diagramm;
+		/*
+		output = output + "Musterlösung:"+"\n";
+		output = output + ""+"\n";
 
-			/*
-			output = output + "Musterlösung:"+"\n";
-			output = output + ""+"\n";
+		output = output + diagrammMusterLoesung();
 
-			output = output + activitydiagramm.toString();
+		output = output + ""+"\n";
+		*/
+		output = output + "Studentenlösung:" + "\n";
+		output = output + "" + "\n";
 
-			output = output + ""+"\n";
-			*/
-			output = output + "Studentenlösung:" + "\n";
-			output = output + "" + "\n";
+		output = output + diagramm.toString();
 
-			output = output + activitydiagramm2.toString();
+		output = output + "" + "\n";
 
-			output = output + "" + "\n";
-
-			output = output + "Vergleichsergebnis:" + "\n";
-			output = output + "" + "\n";
-			output = output + activitydiagramm.compareTextResult(activitydiagramm2);
-		}
-		//Ausgaben, falls Klassendiagramm
-		else if (diagramm instanceof ClassDiagramm) {
-			//Instanz für Musterloesung erzeugen
-			ClassDiagramm classdiagramm = (ClassDiagramm) diagrammMusterLoesung;
-			//Instanz für Studentenloesung erzeugen
-			ClassDiagramm classdiagramm2 = (ClassDiagramm) diagramm;
-			//Instanzen einlesen
-
-			/*
-			output = output + "Musterlösung:"+"\n";
-			output = output + ""+"\n";
-
-			output = output + classdiagramm.toString();
-
-			output = output + ""+"\n";
-			*/
-			output = output + "Studentenlösung:" + "\n";
-			output = output + "" + "\n";
-
-			output = output + classdiagramm2.toString();
-
-			output = output + "" + "\n";
-			output = output + "Vergleichsergebnis:" + "\n";
-			output = output + "" + "\n";
-			output = output + classdiagramm.compareTextResult(classdiagramm2);
-		}
+		output = output + "Vergleichsergebnis:" + "\n";
+		output = output + "" + "\n";
+		output = output + diagrammMusterLoesung.compareTextResult(diagramm);
 
 		testResult.setTestOutput(output);
 		testResult.setTestPassed(true);
