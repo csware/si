@@ -73,10 +73,7 @@ public abstract class UMLDiagramm {
 	}
 
 	public boolean isSameType(UMLDiagramm diagramm) {
-		if (!getClass().equals(diagramm)) {
-			return false;
-		}
-		return true;
+		return getType().equals(diagramm.getType());
 	}
 
 	public String compareTextResult(UMLDiagramm diagramm) {
