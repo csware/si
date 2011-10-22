@@ -34,6 +34,7 @@ import org.w3c.dom.NodeList;
  * Diese Klasse liesst die XMI Datei mit Aktivitätsdiagramminhalt ein
  * und speichert die Elemente des Aktivitätsdiagramm
  * @author Joachim Schramm
+ * @author Sven Strickroth
  */
 public class ActivityDiagramm extends UMLDiagramm {
 	public static String TYPE = "UML:ActivityGraph";

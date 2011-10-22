@@ -1,5 +1,4 @@
 /*
- * Copyright 2011 Joachim Schramm
  * Copyright 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
@@ -25,22 +24,16 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
-import de.tuclausthal.submissioninterface.testframework.tests.impl.uml.ActivityDiagramm;
-import de.tuclausthal.submissioninterface.testframework.tests.impl.uml.ActivityDiagrammConstraint;
-import de.tuclausthal.submissioninterface.testframework.tests.impl.uml.ClassDiagramm;
-import de.tuclausthal.submissioninterface.testframework.tests.impl.uml.ClassDiagrammConstraint;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.uml.UMLDiagramm;
 
 /**
- * Diese Klasse sorgt für die Ausgaben beim Feedback
- * @author Joachim Schramm
+ * Provides feedback for UML diagrams
+ * @author Sven Strickroth
  */
 public class JavaUMLConstraintTest extends AbstractTest {
 
 	@Override
 	public void performTest(Test test, Submission submission, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
-
-		//Feedbackoutput
 		String output = "";
 
 		File musterLoesung = new File(basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "musterloesung" + test.getId() + ".xmi");
@@ -68,23 +61,23 @@ public class JavaUMLConstraintTest extends AbstractTest {
 		}
 
 		/*
-		output = output + "Musterlösung:"+"\n";
-		output = output + ""+"\n";
+		output += "Musterlösung:"+"\n";
+		output += "\n";
 
-		output = output + diagrammMusterLoesung();
+		output += diagrammMusterLoesung();
 
-		output = output + ""+"\n";
+		output += "\n";
 		*/
-		output = output + "Studentenlösung:" + "\n";
-		output = output + "" + "\n";
+		output += "Studentenlösung:\n";
+		output += "\n";
 
-		output = output + diagramm.toString();
+		output += diagramm.toString();
 
-		output = output + "" + "\n";
+		output += "\n";
 
-		output = output + "Vergleichsergebnis:" + "\n";
-		output = output + "" + "\n";
-		output = output + diagrammMusterLoesung.compareTextResult(diagramm);
+		output += "Vergleichsergebnis:\n";
+		output += "\n";
+		output += diagrammMusterLoesung.compareTextResult(diagramm);
 
 		testResult.setTestOutput(output);
 		testResult.setTestPassed(true);

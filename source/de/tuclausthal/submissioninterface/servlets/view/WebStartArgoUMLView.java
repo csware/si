@@ -36,6 +36,8 @@ import de.tuclausthal.submissioninterface.util.ContextAdapter;
 /**
  * View-Servlet für den ArgoUML Webstart
  * Es wird eine dynamische jnlp Datei erzeugt
+ * @author Sven Strickroth
+ * @author Joachim Schramm
  */
 public class WebStartArgoUMLView extends HttpServlet {
 

@@ -38,6 +38,8 @@ import org.w3c.dom.NodeList;
 /**
  * Diese Klasse liesst die XMI Datei mit Klassendiagramminhalt ein
  * und speichert die Elemente des Klassendiagramms
+ * @author Joachim Schramm
+ * @author Sven Strickroth
  */
 public class ClassDiagramm extends UMLDiagramm {
 	public static String TYPE = "UML:Class";

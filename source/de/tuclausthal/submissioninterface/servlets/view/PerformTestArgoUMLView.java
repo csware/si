@@ -1,4 +1,5 @@
 /*
+ * Copyright 2011 Sven Strickroth <email@cs-ware.de>
  * Copyright 2011 Joachim Schramm
  * 
  * This file is part of the SubmissionInterface.
@@ -26,7 +27,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -36,18 +36,15 @@ public class PerformTestArgoUMLView extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		TestExecutorTestResult testResult = (TestExecutorTestResult) request.getAttribute("testresult");
-		Task task = (Task) request.getAttribute("task");
 		Test test = (Test) request.getAttribute("test");
 
 		PrintWriter out = response.getWriter();
 		out.println("<html>");
 		out.println("<b>Titel:</b> " + Util.makeCleanHTML(test.getTestTitle()) + "<br>");
 		out.println("<b>Beschreibung:</b><br>" + Util.escapeHTML(test.getTestDescription()) + "<br>");
-		//out.println("<b>Bestanden:</b> " + Util.boolToHTML(testResult.isTestPassed()) + "<br>");
 		if (!testResult.getTestOutput().isEmpty()) {
 			out.println("<b>Ausgabe:</b><br><pre>" + Util.makeCleanHTML(testResult.getTestOutput()) + "</pre>");
 		}
 		out.println("</html>");
-
 	}
 }

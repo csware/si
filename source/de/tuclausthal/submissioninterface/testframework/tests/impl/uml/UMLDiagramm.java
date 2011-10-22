@@ -42,6 +42,8 @@ import org.xml.sax.SAXException;
 
 /**
  * Diese Klasse checkt die XMI Datei hinsichtlich der Diagrammart
+ * @author Joachim Schramm
+ * @author Sven Strickroth
  */
 public abstract class UMLDiagramm {
 

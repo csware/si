@@ -1,5 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
+ * Copyright 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -22,6 +23,7 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl.uml;
  * Diese Klasse vergleicht die XMI Datei mit Aktivitätsdiagramminhalt
  * der Musterlösung mit der Studentenlösungen 
  * @author Joachim Schramm
+ * @author Sven Strickroth
  */
 public class ActivityDiagrammConstraint {
 	private ActivityDiagramm ad1;

@@ -1,5 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
+ * Copyright 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -24,6 +25,8 @@ import java.util.Vector;
 /**
  * Diese Klasse vergleicht die XMI Datei mit Klassendiagramminhalt
  * der Musterlösung mit der Studentenlösungen 
+ * @author Joachim Schramm
+ * @author Sven Strickroth
  */
 public class ClassDiagrammConstraint {
 	private ClassDiagramm cd1;
@@ -166,7 +169,6 @@ public class ClassDiagrammConstraint {
 		if (cd2.getMethodsNames().containsAll(cd1.getMethodsNames())) {
 			return "Methodennamen okay";
 		} else {
-
 			return "Überprüfe die Namen der Methoden deiner Lösung noch einmal mit der in der Aufgabenstellung.";
 		}
 	}
@@ -176,7 +178,6 @@ public class ClassDiagrammConstraint {
 		if (cd2.getInterfaceNames().containsAll(cd1.getInterfaceNames())) {
 			return "Schnittstellennamen okay";
 		} else {
-
 			return "Überprüfe die Namen der Schnittstellen deiner Lösung noch einmal mit der in der Aufgabenstellung.";
 		}
 	}
@@ -186,7 +187,6 @@ public class ClassDiagrammConstraint {
 		if (cd1.getM2C().equals(cd2.getM2C())) {
 			return "Zuordnung von Methoden zu Klassen okay";
 		} else {
-
 			return "Überprüfe die Zuordnung deiner Methoden zu Klassen in deiner Lösung.";
 		}
 	}
@@ -219,7 +219,6 @@ public class ClassDiagrammConstraint {
 		if (cd1.getNumberOfAbstractions() == cd2.getNumberOfAbstractions() && checkNumberOfAssociations().equals("Anzahl der Assoziationen okay.")) {
 			Vector<String> v1 = cd1.getAllocationOfAssociation();
 			Vector<String> v2 = cd2.getAllocationOfAssociation();
-			boolean b = true;
 
 			HashMap<Integer, String> h1 = new HashMap<Integer, String>();
 			HashMap<Integer, String> h2a = new HashMap<Integer, String>();
@@ -235,19 +234,12 @@ public class ClassDiagrammConstraint {
 			}
 
 			for (int i = 0; i <= cd1.getNumberOfAssociations() * 2 - 2; i = i + 2) {
-				if (h2a.containsValue(h1.get(i)) || h2b.containsValue(h1.get(i))) {
-
-				} else {
-					b = false;
+				if (!(h2a.containsValue(h1.get(i)) || h2b.containsValue(h1.get(i)))) {
+					return "Überprüfe die Zuordnung deiner Assoziationen in deiner Lösung.";
 				}
-
 			}
 
-			if (b) {
-				return "Zuordnung der Assoziationen okay";
-			} else {
-				return "Überprüfe die Zuordnung deiner Assoziationen in deiner Lösung.";
-			}
+			return "Zuordnung der Assoziationen okay";
 		} else {
 			return "";
 		}
