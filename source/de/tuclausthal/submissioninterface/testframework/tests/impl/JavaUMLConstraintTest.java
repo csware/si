@@ -99,8 +99,6 @@ public class JavaUMLConstraintTest extends AbstractTest {
 			ClassDiagramm classdiagramm2 = (ClassDiagramm) diagramm;
 			//Instanzen einlesen
 
-			ClassDiagrammConstraint cdc = classdiagramm.compare(classdiagramm2);
-
 			/*
 			output = output + "Musterlösung:"+"\n";
 			output = output + ""+"\n";
