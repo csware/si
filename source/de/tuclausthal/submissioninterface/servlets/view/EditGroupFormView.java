@@ -90,7 +90,6 @@ public class EditGroupFormView extends HttpServlet {
 		}
 		out.println("</select></td>");
 		out.println("</tr>");
-		out.println("<tr>");
 		if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
 			out.println("<tr>");
 			out.println("<th>Verantwortliche Tutoren hinzufügen:</th>");
