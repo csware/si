@@ -59,9 +59,10 @@ public class WebStartArgoUMLView extends HttpServlet {
 			urlprefix += "s";
 		}
 		urlprefix += "://" + request.getServerName();
-		if ((request.isSecure() && request.getServerPort() != 443) || request.getServerPort() != 80) {
+		if ((request.isSecure() && request.getServerPort() != 443) || (!request.isSecure() && request.getServerPort() != 80)) {
 			urlprefix += ":" + request.getServerPort();
 		}
+		String servletPath = urlprefix + request.getContextPath() + "/servlets";
 		urlprefix += request.getContextPath() + "/argouml/";
 
 		//Generiere jnlp Datei
@@ -141,6 +142,8 @@ public class WebStartArgoUMLView extends HttpServlet {
 		//Parameter, dynamischer Teil
 		out.println("<argument>-sessionid</argument>");
 		out.println("<argument>" + sessionID + "</argument>");
+		out.println("<argument>-srvpath</argument>");
+		out.println("<argument>" + servletPath + "</argument>");
 		out.println("<argument>-taskid</argument>");
 		out.println("<argument>" + task.getTaskid() + "</argument>");
 		if (submission != null) {
