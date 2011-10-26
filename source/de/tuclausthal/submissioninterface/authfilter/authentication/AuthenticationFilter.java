@@ -60,6 +60,7 @@ public class AuthenticationFilter implements Filter {
 		Session session = RequestAdapter.getSession(request);
 		SessionAdapter sa = RequestAdapter.getSessionAdapter(request);
 		if (sa.getUser() == null || (bindToIP && !sa.isIPCorrect(request.getRemoteAddr()))) {
+			response.addHeader("LoggedIn", "false");
 			LoginData logindata = login.getLoginData(request);
 			if (logindata == null) {
 				login.failNoData(request, response);
