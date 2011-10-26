@@ -77,6 +77,11 @@ public class ShowTask extends HttpServlet {
 		request.setAttribute("task", task);
 		request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"))));
 		if (request.getParameter("onlydescription") != null) {
+			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+			Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
+			if (submission != null) {
+				response.addHeader("SID", String.valueOf(submission.getSubmissionid()));
+			}
 			request.getRequestDispatcher("ShowTaskDescriptionView").forward(request, response);
 		} else if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 			if ("grouplist".equals(request.getParameter("action"))) {
