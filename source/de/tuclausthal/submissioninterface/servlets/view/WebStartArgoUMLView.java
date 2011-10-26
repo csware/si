@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -51,7 +50,6 @@ public class WebStartArgoUMLView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		Task task = (Task) request.getAttribute("task");
-		Submission submission = (Submission) request.getAttribute("submission");
 		String sessionID = request.getSession().getId();
 
 		String urlprefix = "http";
@@ -146,10 +144,6 @@ public class WebStartArgoUMLView extends HttpServlet {
 		out.println("<argument>" + servletPath + "</argument>");
 		out.println("<argument>-taskid</argument>");
 		out.println("<argument>" + task.getTaskid() + "</argument>");
-		if (submission != null) {
-			out.println("<argument>-submission</argument>");
-			out.println("<argument>" + submission.getSubmissionid() + "</argument>");
-		}
 		out.println("</application-desc>");
 		out.println("</jnlp>");
 	}

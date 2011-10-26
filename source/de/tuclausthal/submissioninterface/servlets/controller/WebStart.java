@@ -28,9 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
@@ -53,17 +51,6 @@ public class WebStart extends HttpServlet {
 			return;
 		}
 
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
-		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
-
-		if (request.getParameter("submissionid") != null && submission == null) {
-			request.setAttribute("title", "Abgabe nicht gefunden");
-			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
-			return;
-		} else if (submission != null) {
-			task = submission.getTask();
-		}
-
 		// check Lecture Participation
 		/*
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
@@ -76,7 +63,6 @@ public class WebStart extends HttpServlet {
 		if ("argouml".equals(request.getParameter("tool"))) {
 			response.setContentType("application/x-java-jnlp-file");
 			request.setAttribute("task", task);
-			request.setAttribute("submission", submission);
 			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/WebStartArgoUMLView").forward(request, response);
 			return;
 		}
