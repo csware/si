@@ -193,8 +193,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
 				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;submissionid=" + submission.getSubmissionid() + "\">ArgoUML öffnen</a></div>");
 				out.println("<script type=\"javascript\">if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
-			}
-			if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false) {
+			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
@@ -233,8 +232,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
 				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
 				out.println("<script type=\"javascript\">if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
-			}
-			if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false) {
+			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
