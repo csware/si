@@ -91,13 +91,13 @@ public class PerformTest extends HttpServlet {
 		if (test instanceof UMLConstraintTest) {
 			if (testCountDAO.canStillRunXTimes(test, submission) == 0) {
 				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				request.getRequestDispatcher("MessageArgoUMLView").forward(request, response);
 				return;
 			}
 			sa.setQueuedTest(TestExecutor.executeTask(new TestTask(test, submission)));
 			while (!sa.getQueuedTest().isDone()) {
 				try {
-					Thread.sleep(50);
+					Thread.sleep(250);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -115,7 +115,7 @@ public class PerformTest extends HttpServlet {
 			if (!testCountDAO.canSeeResultAndIncrementCounter(test, submission)) {
 				sa.setQueuedTest(null);
 				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				request.getRequestDispatcher("MessageArgoUMLView").forward(request, response);
 				return;
 			}
 
