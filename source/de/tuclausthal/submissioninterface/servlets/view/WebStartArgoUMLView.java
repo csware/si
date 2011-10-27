@@ -81,7 +81,6 @@ public class WebStartArgoUMLView extends HttpServlet {
 		out.println("    <icon href=\"http://argouml.tigris.org/images/argologo16x16.gif\" width=\"16\" height=\"16\" />");
 		out.println("    <icon href=\"http://argouml.tigris.org/images/argologo32x32.gif\" width=\"32\" height=\"32\" />");
 		out.println("    <icon href=\"http://argouml.tigris.org/images/argologo64x64.gif\" width=\"64\" height=\"64\" />");
-		out.println("    <offline-allowed/>");
 		out.println("  </information>");
 		out.println("  <security>");
 		out.println("    <all-permissions/>");
