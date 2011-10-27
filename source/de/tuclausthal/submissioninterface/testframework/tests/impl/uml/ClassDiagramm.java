@@ -162,8 +162,8 @@ public class ClassDiagramm extends UMLDiagramm {
 	}
 
 	public void setAs2C() {
-		for (int i = 0; i < allocationOfAssociations.size() - 1; i = i + 2) {
-			as2c = as2c + " " + allocationOfAssociations.get(i) + " verbunden mit " + allocationOfAssociations.get(i + 1) + ",";
+		for (int i = 1; i < allocationOfAssociations.size() - 1; i += 2) {
+			as2c = as2c + " " + allocationOfAssociations.get(i - 1) + " verbunden mit " + allocationOfAssociations.get(i) + ",";
 		}
 	}
 
