@@ -88,7 +88,7 @@ public class PerformTest extends HttpServlet {
 		request.setAttribute("task", task);
 		request.setAttribute("test", test);
 
-		if (test instanceof UMLConstraintTest) {
+		if (test instanceof UMLConstraintTest && request.getParameter("argouml") != null) {
 			if (testCountDAO.canStillRunXTimes(test, submission) == 0) {
 				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
 				request.getRequestDispatcher("MessageArgoUMLView").forward(request, response);
