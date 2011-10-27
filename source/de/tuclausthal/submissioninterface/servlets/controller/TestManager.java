@@ -1,6 +1,8 @@
 /*
  * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
  * 
+ * Copyright 2011 Joachim Schramm
+ * 
  * This file is part of the SubmissionInterface.
  * 
  * SubmissionInterface is free software: you can redistribute it and/or modify
@@ -48,6 +50,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -80,6 +83,85 @@ public class TestManager extends HttpServlet {
 		if ("newTest".equals(request.getParameter("action"))) {
 			request.setAttribute("task", task);
 			request.getRequestDispatcher("TestManagerAddTestFormView").forward(request, response);
+
+			//Controlleranpassung für den UML Constraint Test
+		} else if ("saveNewTest".equals(request.getParameter("action")) && "umlConstraint".equals(request.getParameter("type"))) {
+			// Check that we have a file upload request
+
+			session.beginTransaction();
+			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
+			UMLConstraintTest test = testDAO.createUMLConstraintTest(task);
+
+			if (FileUploadBase.isMultipartContent(request)) {
+				// Create a new file upload handler
+				FileUploadBase upload = new DiskFileUpload();
+
+				// Parse the request
+				List<FileItem> items = null;
+				try {
+					items = upload.parseRequest(request);
+				} catch (FileUploadException e) {
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "filename invalid");
+					session.getTransaction().rollback();
+					return;
+				}
+
+				File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
+				if (path.exists() == false) {
+					path.mkdirs();
+				}
+				int timesRunnableByStudents = 0;
+				int timeout = 15;
+				boolean tutortest = false;
+				String title = "";
+				String description = "";
+				// Process the uploaded items
+				Iterator<FileItem> iter = items.iterator();
+				while (iter.hasNext()) {
+					FileItem item = iter.next();
+
+					// Process a file upload
+					if (!item.isFormField()) {
+						if (!item.getName().endsWith(".xmi")) {
+							request.setAttribute("title", "Dateiname ungültig.");
+							request.getRequestDispatcher("MessageView").forward(request, response);
+							session.getTransaction().rollback();
+							return;
+						}
+						File uploadedFile = new File(path, "musterloesung" + test.getId() + ".xmi");
+						try {
+							item.write(uploadedFile);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					} else {
+						if ("timesRunnableByStudents".equals(item.getFieldName())) {
+							timesRunnableByStudents = Util.parseInteger(item.getString(), 0);
+						} else if ("title".equals(item.getFieldName())) {
+							title = item.getString();
+						} else if ("description".equals(item.getFieldName())) {
+							description = item.getString();
+						} else if ("tutortest".equals(item.getFieldName())) {
+							tutortest = true;
+						} else if ("timeout".equals(item.getFieldName())) {
+							timeout = Util.parseInteger(item.getString(), 15);
+						}
+					}
+				}
+
+				test.setTimesRunnableByStudents(timesRunnableByStudents);
+				test.setForTutors(tutortest);
+				test.setTestTitle(title);
+				test.setTestDescription(description);
+				test.setTimeout(timeout);
+				testDAO.saveTest(test);
+				session.getTransaction().commit();
+				response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
+			} else {
+				request.setAttribute("title", "Ungültiger Aufruf");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+			}
+
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "junit".equals(request.getParameter("type"))) {
 			// Check that we have a file upload request
 

@@ -587,4 +587,52 @@
     <servlet-name>Noop</servlet-name>
     <url-pattern>/servlets/Noop</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>WebStart</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.WebStart</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>WebStart</servlet-name>
+    <url-pattern>/servlets/WebStart</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>WebStartArgoUMLView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.WebStartArgoUMLView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>WebStartArgoUMLView</servlet-name>
+    <url-pattern>/servlets/WebStartArgoUMLView</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>PerformTestArgoUMLView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PerformTestArgoUMLView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PerformTestArgoUMLView</servlet-name>
+    <url-pattern>/servlets/PerformTestArgoUMLView</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ShowTaskDescriptionView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ShowTaskDescriptionView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ShowTaskDescriptionView</servlet-name>
+    <url-pattern>/servlets/ShowTaskDescriptionView</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>SubmitSolutionPossiblePartnersView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.SubmitSolutionPossiblePartnersView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SubmitSolutionPossiblePartnersView</servlet-name>
+    <url-pattern>/servlets/SubmitSolutionPossiblePartnersView</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>MessageArgoUMLView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.MessageArgoUMLView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MessageArgoUMLView</servlet-name>
+    <url-pattern>/servlets/MessageArgoUMLView</url-pattern>
+  </servlet-mapping>
 </web-app>

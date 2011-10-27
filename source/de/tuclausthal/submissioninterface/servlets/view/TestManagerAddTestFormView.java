@@ -74,6 +74,43 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
+
+		//Formular um UML Constraint Test anzulegen
+		out.println("<p><h2>UML Constraint Test</h2>");
+		out.println("<form ENCTYPE=\"multipart/form-data\" action=\"" + response.encodeURL("?taskid=" + task.getTaskid() + "&amp;action=saveNewTest&amp;type=umlConstraint") + "\" method=post>");
+		out.println("<table class=border>");
+		out.println("<tr>");
+		out.println("<th>Titel:</th>");
+		out.println("<td><input type=text name=title value=\"UML Vergleichstest\"></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Beschreibung:</th>");
+		out.println("<td><textarea cols=60 rows=10 name=description></textarea></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Timeout:</th>");
+		out.println("<td><input type=text name=timeout value=15></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Musterl&ouml;sung:</th>");
+		out.println("<td><INPUT TYPE=file NAME=testcase></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Tutorentest:</th>");
+		out.println("<td><input type=checkbox name=tutortest></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th># Ausführbar für Studenten:</th>");
+		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\"></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.println(response.encodeURL("ShowTask?taskid=" + task.getTaskid()));
+		out.println("\">Abbrechen</a></td>");
+		out.println("</tr>");
+		out.println("</table>");
+		out.println("</form>");
+
 		out.println("<h2>RegExp. Test</h2>");
 		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -35,12 +35,13 @@ import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LogDAO;
+import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
-import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
+import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.testframework.TestExecutor;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
@@ -86,6 +87,45 @@ public class PerformTest extends HttpServlet {
 
 		request.setAttribute("task", task);
 		request.setAttribute("test", test);
+
+		if (test instanceof UMLConstraintTest && request.getParameter("argouml") != null) {
+			if (testCountDAO.canStillRunXTimes(test, submission) == 0) {
+				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
+				request.getRequestDispatcher("MessageArgoUMLView").forward(request, response);
+				return;
+			}
+			sa.setQueuedTest(TestExecutor.executeTask(new TestTask(test, submission)));
+			while (!sa.getQueuedTest().isDone()) {
+				try {
+					Thread.sleep(250);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			TestExecutorTestResult result = null;
+			try {
+				result = sa.getQueuedTest().get();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+
+			if (!testCountDAO.canSeeResultAndIncrementCounter(test, submission)) {
+				sa.setQueuedTest(null);
+				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
+				request.getRequestDispatcher("MessageArgoUMLView").forward(request, response);
+				return;
+			}
+
+			sa.setQueuedTest(null);
+
+			new LogDAO(session).createLogEntry(participation.getUser(), test, test.getTask(), LogAction.PERFORMED_TEST, result.isTestPassed(), result.getTestOutput());
+			request.setAttribute("testresult", result);
+			request.getRequestDispatcher("PerformTestArgoUMLView").forward(request, response);
+			return;
+		}
 
 		if (sa.getQueuedTest() == null) {
 			if (request.getParameter("refresh") == null) {
