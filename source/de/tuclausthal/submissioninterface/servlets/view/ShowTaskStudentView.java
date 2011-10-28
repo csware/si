@@ -128,9 +128,9 @@ public class ShowTaskStudentView extends HttpServlet {
 						out.println(" (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DeleteFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)");
 					}
 					out.println("<br>");
-					if (file.endsWith(".txt")) {
-						out.println("Lösung: " + result.getResult());
-					}
+				}
+				if (task.isDynamicTask()) {
+					out.println("Lösung: " + result.getResult());
 				}
 				out.println("</td>");
 				out.println("</tr>");

@@ -302,6 +302,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `taskgroupid` int(11) NOT NULL,
   `featuredFiles` text NOT NULL,
   `tutorsCanUploadFiles` bit(1) NOT NULL,
+  `dynamicTask` bit(1) BOT NULL,
   PRIMARY KEY (`taskid`),
   KEY `taskgroupid` (`taskgroupid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;

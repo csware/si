@@ -81,18 +81,6 @@ public class ShowTask extends HttpServlet {
 
 		request.setAttribute("participation", participation);
 
-		TaskNumberDAOIf taskNumberDAO = DAOFactory.TaskNumberDAOIf(session);
-		RandomNumber random = new RandomNumber(session, task.getTaskid(), RequestAdapter.getUser(request).getUid());
-
-		Task studentTask = task;
-		List<TaskNumber> numbers = taskNumberDAO.getTaskNumbersforTask(task.getTaskid(), RequestAdapter.getUser(request).getUid());
-		if (numbers.size() == 0) {
-			studentTask.setDescription(random.setTaskDescription(task.getDescription()));
-			taskNumberDAO.createTaskNumbers(task.getTaskid(), RequestAdapter.getUser(request).getUid(), 0, random.getTaskNumbers());
-		} else {
-			studentTask.setDescription(random.setTaskDescription(task.getDescription(), numbers));
-		}
-
 		request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"))));
 		if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 			request.setAttribute("task", task);
@@ -111,12 +99,22 @@ public class ShowTask extends HttpServlet {
 
 			if (submission != null) {
 				result = resultDAO.getResult(submission.getResultid());
-				//List<TaskNumber> numbers = taskNumberDAO.getTaskNumbersforTask(submission.getSubmissionid());
-				//studentTask.setDescription(random.setTaskDescription(task.getDescription(), numbers));
 				File path = new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 				request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringList(path));
 			}
-			request.setAttribute("task", studentTask);
+			if (task.isDynamicTask()) {
+				TaskNumberDAOIf taskNumberDAO = DAOFactory.TaskNumberDAOIf(session);
+				RandomNumber random = new RandomNumber(session, task.getTaskid(), RequestAdapter.getUser(request).getUid());
+
+				List<TaskNumber> numbers = taskNumberDAO.getTaskNumbersforTask(task.getTaskid(), RequestAdapter.getUser(request).getUid());
+				if (numbers.size() == 0) {
+					task.setDescription(random.setTaskDescription(task.getDescription()));
+					taskNumberDAO.createTaskNumbers(task.getTaskid(), RequestAdapter.getUser(request).getUid(), 0, random.getTaskNumbers());
+				} else {
+					task.setDescription(random.setTaskDescription(task.getDescription(), numbers));
+				}
+			}
+			request.setAttribute("task", task);
 			request.setAttribute("submission", submission);
 			request.setAttribute("result", result);
 			request.getRequestDispatcher("ShowTaskStudentView").forward(request, response);

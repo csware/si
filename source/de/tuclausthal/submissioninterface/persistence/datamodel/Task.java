@@ -63,6 +63,7 @@ public class Task implements Serializable {
 	private String featuredFiles = "";
 	private boolean tutorsCanUploadFiles = false;
 	private boolean allowSubmittersAcrossGroups = false;
+	private boolean dynamicTask = false;
 
 	public Task() {}
 
@@ -82,8 +83,9 @@ public class Task implements Serializable {
 	 * @param tutorsCanUploadFiles 
 	 * @param maxSubmitters 
 	 * @param allowSubmittersAcrossGroups 
+	 * @param dynamicTask 
 	 */
-	public Task(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups) {
+	public Task(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups, boolean dynamicTask) {
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.minPointStep = minPointStep;
@@ -99,6 +101,7 @@ public class Task implements Serializable {
 		this.tutorsCanUploadFiles = tutorsCanUploadFiles;
 		this.maxSubmitters = maxSubmitters;
 		this.allowSubmittersAcrossGroups = allowSubmittersAcrossGroups;
+		this.dynamicTask = dynamicTask;
 	}
 
 	/**
@@ -416,5 +419,19 @@ public class Task implements Serializable {
 	 */
 	public void setAllowSubmittersAcrossGroups(boolean allowSubmittersAcrossGroups) {
 		this.allowSubmittersAcrossGroups = allowSubmittersAcrossGroups;
+	}
+
+	/**
+	 * @return the dynamicTask
+	 */
+	public boolean isDynamicTask() {
+		return dynamicTask;
+	}
+
+	/**
+	 * @param dynamicTask the dynamicTask to set
+	 */
+	public void setDynamicTask(boolean dynamicTask) {
+		this.dynamicTask = dynamicTask;
 	}
 }

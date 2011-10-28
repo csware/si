@@ -105,6 +105,10 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<td><input type=text size=100 name=title value=\"" + Util.escapeHTML(task.getTitle()) + "\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Aufgabe mit dynamischen Werten:</th>");
+		out.println("<td><input type=checkbox name=dynamicTask " + (task.isDynamicTask() ? "checked" : "") + "></td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
 		out.println("<td><textarea cols=60 rows=20 name=description>" + Util.escapeHTML(task.getDescription()) + "</textarea></td>");
 		out.println("</tr>");
