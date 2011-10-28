@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,13 +32,17 @@ import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.ResultDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.TaskNumberDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Result;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -74,9 +79,22 @@ public class ShowTask extends HttpServlet {
 		}
 
 		request.setAttribute("participation", participation);
-		request.setAttribute("task", task);
+
+		TaskNumberDAOIf taskNumberDAO = DAOFactory.TaskNumberDAOIf(session);
+		RandomNumber random = new RandomNumber(session, task.getTaskid(), RequestAdapter.getUser(request).getUid());
+
+		Task studentTask = task;
+		List<TaskNumber> numbers = taskNumberDAO.getTaskNumbersforTask(task.getTaskid(), RequestAdapter.getUser(request).getUid());
+		if (numbers.size() == 0) {
+			studentTask.setDescription(random.setTaskDescription(task.getDescription()));
+			taskNumberDAO.createTaskNumbers(task.getTaskid(), RequestAdapter.getUser(request).getUid(), 0, random.getTaskNumbers());
+		} else {
+			studentTask.setDescription(random.setTaskDescription(task.getDescription(), numbers));
+		}
+
 		request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"))));
 		if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+			request.setAttribute("task", task);
 			if ("grouplist".equals(request.getParameter("action"))) {
 				Group group = DAOFactory.GroupDAOIf(session).getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
 				request.setAttribute("group", group);
@@ -87,11 +105,19 @@ public class ShowTask extends HttpServlet {
 		} else {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 			Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
+			ResultDAOIf resultDAO = DAOFactory.ResultDAOIf(session);
+			Result result = null;
+
 			if (submission != null) {
+				result = resultDAO.getResult(submission.getResultid());
+				//List<TaskNumber> numbers = taskNumberDAO.getTaskNumbersforTask(submission.getSubmissionid());
+				//studentTask.setDescription(random.setTaskDescription(task.getDescription(), numbers));
 				File path = new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 				request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringList(path));
 			}
+			request.setAttribute("task", studentTask);
 			request.setAttribute("submission", submission);
+			request.setAttribute("result", result);
 			request.getRequestDispatcher("ShowTaskStudentView").forward(request, response);
 		}
 	}

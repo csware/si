@@ -50,6 +50,7 @@ public class Submission implements Serializable {
 	private Set<TestResult> testResults;
 	private Set<Similarity> similarSubmissions;
 	private Date lastModified = null;
+	private int resultid;
 
 	// for Hibernate
 	private Submission() {}
@@ -58,9 +59,10 @@ public class Submission implements Serializable {
 	 * @param task
 	 * @param submitter
 	 */
-	public Submission(Task task, Participation submitter) {
+	public Submission(Task task, Participation submitter, int resultid) {
 		this.task = task;
 		this.submitters.add(submitter);
+		this.resultid = resultid;
 	}
 
 	/**
@@ -188,5 +190,19 @@ public class Submission implements Serializable {
 	 */
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
+	}
+
+	/**
+	 * @return the resultID
+	 */
+	public int getResultid() {
+		return resultid;
+	}
+
+	/**
+	 * @param resultid the resultid to set
+	 */
+	public void setResultid(int resultid) {
+		this.resultid = resultid;
 	}
 }

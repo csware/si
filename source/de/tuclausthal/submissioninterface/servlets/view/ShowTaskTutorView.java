@@ -32,17 +32,20 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.TaskNumberDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestResultDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.controller.RandomNumber;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -146,10 +149,15 @@ public class ShowTaskTutorView extends HttpServlet {
 			List<Test> tests = DAOFactory.TestDAOIf(session).getTutorTests(task);
 			boolean hasUnapprochedPoints = false;
 			boolean showAllColumns = task.getDeadline().before(Util.correctTimezone(new Date())) && !requestAdapter.isPrivacyMode();
+
+			TaskNumberDAOIf taskNumberDAO = DAOFactory.TaskNumberDAOIf(session);
+			RandomNumber random = new RandomNumber(session, task.getTaskid(), participation.getUser().getUid());
+
 			// dynamic splitter for groups
 			while (submissionIterator.hasNext()) {
 				Submission submission = submissionIterator.next();
 				Group group = submission.getSubmitters().iterator().next().getGroup();
+				List<TaskNumber> numbers = taskNumberDAO.getTaskNumbersforTask(submission.getSubmissionid());
 				if (first == true || lastGroup != group) {
 					lastGroup = group;
 					if (first == false) {
@@ -188,6 +196,9 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("<table class=border>");
 					out.println("<tr>");
 					out.println("<th>Benutzer</th>");
+					for (TaskNumber taskNumber : numbers) {
+						out.println("<th>-" + taskNumber.getType() + "-</th>");
+					}
 					if (showAllColumns) {
 						for (Test test : tests) {
 							out.println("<th>" + Util.escapeHTML(test.getTestTitle()) + "</th>");
@@ -211,6 +222,9 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("<tr>");
 					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
 					lastSID = submission.getSubmissionid();
+					for (TaskNumber taskNumber : numbers) {
+						out.println("<td>" + random.getNumber(taskNumber.getNumber(), random.getRandonParam(taskNumber.getType())) + "</td>");
+					}
 					if (showAllColumns) {
 						for (Test test : tests) {
 							if (testResultDAO.getResult(test, submission) != null) {

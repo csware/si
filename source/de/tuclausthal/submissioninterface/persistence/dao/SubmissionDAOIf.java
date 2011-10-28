@@ -61,9 +61,10 @@ public interface SubmissionDAOIf {
 	 * Create and store a new submission in the DB
 	 * @param task the task to associate the submission to
 	 * @param submitter the participation of the submitter
+	 * @param resultid the ID of the result
 	 * @return the (new or existing) submission
 	 */
-	public Submission createSubmission(Task task, Participation submitter);
+	public Submission createSubmission(Task task, Participation submitter, int resultid);
 
 	/**
 	 * Returns the submission of a task orderd by name

@@ -53,12 +53,15 @@ import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerIf;
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.ResultDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.TaskNumberDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LogDAO;
 import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Result;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
@@ -128,7 +131,11 @@ public class SubmitSolution extends HttpServlet {
 			if (task.isShowTextArea()) {
 				String textsolution = "";
 				Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, RequestAdapter.getUser(request));
+				String result = "";
 				if (submission != null) {
+					ResultDAOIf resultDAOIf = DAOFactory.ResultDAOIf(session);
+					Result theResult = resultDAOIf.getResult(submission.getResultid());
+					result = theResult.getResult();
 					ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
 					File textSolutionFile = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + "textloesung.txt");
 					if (textSolutionFile.exists()) {
@@ -144,6 +151,7 @@ public class SubmitSolution extends HttpServlet {
 					}
 				}
 				request.setAttribute("textsolution", textsolution);
+				request.setAttribute("numbersolution", result);
 			}
 			request.getRequestDispatcher("SubmitSolutionFormView").forward(request, response);
 		}
@@ -176,6 +184,17 @@ public class SubmitSolution extends HttpServlet {
 			template.printTemplateFooter();
 			return;
 		}
+
+		ResultDAOIf resultDAO = DAOFactory.ResultDAOIf(session);
+		String theResult = request.getParameter("numbersolution");
+		Result result = resultDAO.createResult(task, studentParticipation, theResult);
+
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+		Transaction tx = session.beginTransaction();
+		Submission submission = submissionDAO.createSubmission(task, studentParticipation, result.getResultid());
+
+		TaskNumberDAOIf taskNumberDAO = DAOFactory.TaskNumberDAOIf(session);
+		taskNumberDAO.createTaskNumbers(task.getTaskid(), RequestAdapter.getUser(request).getUid(), submission.getSubmissionid(), taskNumberDAO.getTaskNumbersforTask(0));
 
 		//http://commons.apache.org/fileupload/using.html
 
@@ -278,11 +297,6 @@ public class SubmitSolution extends HttpServlet {
 			}
 		}
 
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
-
-		Transaction tx = session.beginTransaction();
-		Submission submission = submissionDAO.createSubmission(task, studentParticipation);
-
 		if (studentParticipation.getGroup() != null && task.getMaxSubmitters() > 1) {
 			if (studentParticipation.getGroup().isSubmissionGroup()) {
 				for (Participation partnerParticipation : studentParticipation.getGroup().getMembers()) {
@@ -290,6 +304,7 @@ public class SubmitSolution extends HttpServlet {
 					if (partnerSubmission == null) {
 						submission.getSubmitters().add(partnerParticipation);
 						session.update(submission);
+						session.update(result);
 					} else if (partnerSubmission.getSubmissionid() != submission.getSubmissionid()) {
 						tx.rollback();
 						template.printTemplateHeader("Ungültige Anfrage");
@@ -304,6 +319,7 @@ public class SubmitSolution extends HttpServlet {
 					if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && (task.isAllowSubmittersAcrossGroups() || (partnerParticipation.getGroup() != null && partnerParticipation.getGroup().getGid() == studentParticipation.getGroup().getGid())) && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
 						submission.getSubmitters().add(partnerParticipation);
 						session.update(submission);
+						session.update(result);
 					} else {
 						tx.rollback();
 						template.printTemplateHeader("Ungültige Anfrage");
@@ -346,6 +362,7 @@ public class SubmitSolution extends HttpServlet {
 						if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 							submission.setLastModified(new Date());
 							submissionDAO.saveSubmission(submission);
+							resultDAO.saveResult(result);
 						}
 						System.err.println("SubmitSolutionProblem2: " + item.getName() + ";" + submittedFileName + ";" + pattern.pattern());
 						tx.commit();
@@ -399,6 +416,7 @@ public class SubmitSolution extends HttpServlet {
 							if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 								submission.setLastModified(new Date());
 								submissionDAO.saveSubmission(submission);
+								resultDAO.saveResult(result);
 							}
 							System.err.println("SubmitSolutionProblem1");
 							tx.commit();
@@ -442,6 +460,7 @@ public class SubmitSolution extends HttpServlet {
 					if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 						submission.setLastModified(new Date());
 						submissionDAO.saveSubmission(submission);
+						resultDAO.saveResult(result);
 					}
 					tx.commit();
 					new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, LogAction.UPLOAD, null, null);
@@ -466,6 +485,7 @@ public class SubmitSolution extends HttpServlet {
 
 			submission.setLastModified(new Date());
 			submissionDAO.saveSubmission(submission);
+			resultDAO.saveResult(result);
 			tx.commit();
 
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));

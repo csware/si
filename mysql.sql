@@ -158,6 +158,17 @@ CREATE TABLE IF NOT EXISTS `pointhistory` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `results`
+--
+
+DROP TABLE IF EXISTS `results`;
+CREATE TABLE `results` (
+  `resultid` int(11) NOT NULL AUTO_INCREMENT,
+  `result` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`resultid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
 -- Tabellenstruktur für Tabelle `similarities`
 --
 
@@ -198,6 +209,25 @@ CREATE TABLE IF NOT EXISTS `similaritytests` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `submission_tasknumbers`
+--
+
+DROP TABLE IF EXISTS `submission_tasknumbers`;
+CREATE TABLE `submission_tasknumbers` (
+  `tasknumberid` int(11) NOT NULL AUTO_INCREMENT,
+  `taskid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `submissionid` int(11) DEFAULT NULL,
+  `number` varchar(255) NOT NULL,
+  `type` char(1) NOT NULL,
+  PRIMARY KEY (`tasknumberid`),
+  KEY `taskid` (`taskid`),
+  KEY `userid` (`userid`),
+  CONSTRAINT `submission_tasknumbers_ibfk_1` FOREIGN KEY (`taskid`) REFERENCES `tasks` (`taskid`) ON DELETE CASCADE,
+  CONSTRAINT `submission_tasknumbers_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `users` (`uid`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
 -- Tabellenstruktur für Tabelle `submissions`
 --
 
@@ -210,6 +240,7 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   `publicComment` longtext,
   `pointStatus` tinyint(1) unsigned DEFAULT NULL,
   `duplicate` int(11) DEFAULT NULL,
+  `resultid` int(11) NOT NULL,
   `internalComment` longtext,
   `lastModified` datetime DEFAULT NULL,
   PRIMARY KEY (`submissionid`),

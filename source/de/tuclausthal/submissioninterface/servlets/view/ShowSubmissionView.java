@@ -277,6 +277,8 @@ public class ShowSubmissionView extends HttpServlet {
 				}
 			}
 			int id = 0;
+			String result = DAOFactory.ResultDAOIf(session).getResult(submission.getResultid()).getResult();
+			out.println("<h3 class=files>Lösung: " + result + "</h3>");
 			for (String file : submittedFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
 				if (ShowFile.isInlineAble(file.toLowerCase())) {

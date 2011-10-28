@@ -51,5 +51,7 @@
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TestCount"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Result"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber"/>
  </session-factory>
 </hibernate-configuration>

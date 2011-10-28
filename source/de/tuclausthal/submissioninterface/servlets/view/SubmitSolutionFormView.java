@@ -112,7 +112,9 @@ public class SubmitSolutionFormView extends HttpServlet {
 		if (task.isShowTextArea()) {
 			out.println("<FORM class=mid method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 			out.println(setWithUser.toString());
-			out.println("<p>Bitte füllen Sie das Textfeld mit Ihrer Lösung:</p>");
+			out.println("<p>Bitte füllen Sie das Feld mit Ihrer endgültigen Lösung:</p>");
+			out.println("<p><input type=text name=numbersolution id=numbersolution size=20 value=\"" + Util.escapeHTML((String) request.getAttribute("numbersolution")) + "\"></p>");
+			out.println("<p>Bitte füllen Sie das Textfeld mit dem Rechnenweg zu Ihrer Lösung:</p>");
 			out.println("<p><textarea cols=60 rows=10 name=textsolution>" + Util.escapeHTML((String) request.getAttribute("textsolution")) + "</textarea></p>");
 			out.println("<INPUT TYPE=submit VALUE=speichern>");
 			out.println("</FORM>");

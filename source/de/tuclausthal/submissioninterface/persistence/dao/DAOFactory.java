@@ -26,11 +26,13 @@ import de.tuclausthal.submissioninterface.persistence.dao.impl.ParticipationDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.PointCategoryDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.PointGivenDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.PointsDAO;
+import de.tuclausthal.submissioninterface.persistence.dao.impl.ResultDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.SimilarityDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.SimilarityTestDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.SubmissionDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TaskDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TaskGroupDAO;
+import de.tuclausthal.submissioninterface.persistence.dao.impl.TaskNumberDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TestCountDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TestDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TestResultDAO;
@@ -154,5 +156,13 @@ public class DAOFactory {
 
 	public static PointCategoryDAOIf PointCategoryDAOIf(Session session) {
 		return new PointCategoryDAO(session);
+	}
+
+	public static ResultDAOIf ResultDAOIf(Session session) {
+		return new ResultDAO(session);
+	}
+
+	public static TaskNumberDAOIf TaskNumberDAOIf(Session session) {
+		return new TaskNumberDAO(session);
 	}
 }
