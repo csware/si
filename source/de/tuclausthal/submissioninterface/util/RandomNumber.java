@@ -16,7 +16,7 @@
  * along with SubmissionInterface. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tuclausthal.submissioninterface.servlets.controller;
+package de.tuclausthal.submissioninterface.util;
 
 import java.math.BigInteger;
 import java.text.DecimalFormat;

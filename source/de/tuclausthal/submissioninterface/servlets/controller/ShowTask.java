@@ -45,6 +45,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.RandomNumber;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
