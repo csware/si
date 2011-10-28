@@ -26,7 +26,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "results")
+@Table(name = "submissions_results")
 public class Result implements Serializable {
 	private int resultid;
 	private String result;

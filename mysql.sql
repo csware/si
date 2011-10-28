@@ -158,11 +158,11 @@ CREATE TABLE IF NOT EXISTS `pointhistory` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `results`
+-- Tabellenstruktur für Tabelle `submissions_results`
 --
 
-DROP TABLE IF EXISTS `results`;
-CREATE TABLE `results` (
+DROP TABLE IF EXISTS `submissions_results`;
+CREATE TABLE `submissions_results` (
   `resultid` int(11) NOT NULL AUTO_INCREMENT,
   `result` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`resultid`)
