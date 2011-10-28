@@ -26,7 +26,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "submission_tasknumbers")
+@Table(name = "submissions_tasknumbers")
 public class TaskNumber implements Serializable {
 	private int tasknumberid;
 	private int taskid;

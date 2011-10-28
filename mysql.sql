@@ -209,11 +209,11 @@ CREATE TABLE IF NOT EXISTS `similaritytests` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `submission_tasknumbers`
+-- Tabellenstruktur für Tabelle `submissions_tasknumbers`
 --
 
-DROP TABLE IF EXISTS `submission_tasknumbers`;
-CREATE TABLE `submission_tasknumbers` (
+DROP TABLE IF EXISTS `submissions_tasknumbers`;
+CREATE TABLE `submissions_tasknumbers` (
   `tasknumberid` int(11) NOT NULL AUTO_INCREMENT,
   `taskid` int(11) NOT NULL,
   `userid` int(11) NOT NULL,
