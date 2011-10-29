@@ -112,9 +112,8 @@ public class SubmitSolutionFormView extends HttpServlet {
 		if (task.isShowTextArea()) {
 			out.println("<FORM class=mid method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 			out.println(setWithUser.toString());
-			if (task.isDynamicTask()) {
-				out.println("<p>Bitte füllen Sie das Feld mit Ihrer berechneten Lösung:</p>");
-				out.println("<p><input type=text name=numbersolution id=numbersolution size=20 value=\"" + Util.escapeHTML((String) request.getAttribute("numbersolution")) + "\"></p>");
+			if (task.isADynamicTask()) {
+				out.println(task.getDynamicTaskStrategie(session).getFields(participation, submission));
 				out.println("<p>Bitte füllen Sie das Textfeld mit dem Rechnenweg zu Ihrer Lösung:</p>");
 			} else {
 				out.println("<p>Bitte füllen Sie das Textfeld mit Ihrer Lösung:</p>");

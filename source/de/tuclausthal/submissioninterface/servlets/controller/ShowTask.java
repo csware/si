@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -21,7 +21,6 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,20 +31,15 @@ import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
-import de.tuclausthal.submissioninterface.persistence.dao.ResultDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
-import de.tuclausthal.submissioninterface.persistence.dao.TaskNumberDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Result;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
-import de.tuclausthal.submissioninterface.util.RandomNumber;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -94,29 +88,20 @@ public class ShowTask extends HttpServlet {
 		} else {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 			Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
-			ResultDAOIf resultDAO = DAOFactory.ResultDAOIf(session);
-			Result result = null;
-
 			if (submission != null) {
-				result = resultDAO.getResult(submission.getResultid());
 				File path = new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 				request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringList(path));
-			}
-			if (task.isDynamicTask()) {
-				TaskNumberDAOIf taskNumberDAO = DAOFactory.TaskNumberDAOIf(session);
-				RandomNumber random = new RandomNumber(session, task.getTaskid(), RequestAdapter.getUser(request).getUid());
-
-				List<TaskNumber> numbers = taskNumberDAO.getTaskNumbersforTask(task.getTaskid(), RequestAdapter.getUser(request).getUid());
-				if (numbers.size() == 0) {
-					task.setDescription(random.setTaskDescription(task.getDescription()));
-					taskNumberDAO.createTaskNumbers(task.getTaskid(), RequestAdapter.getUser(request).getUid(), 0, random.getTaskNumbers());
-				} else {
-					task.setDescription(random.setTaskDescription(task.getDescription(), numbers));
+				if (task.isADynamicTask()) {
+					task.setDescription(task.getDynamicTaskStrategie(session).getTranslatedDescription(submission));
+				}
+			} else {
+				if (task.isADynamicTask()) {
+					task.setDescription(task.getDynamicTaskStrategie(session).getTranslatedDescription(participation));
 				}
 			}
+
 			request.setAttribute("task", task);
 			request.setAttribute("submission", submission);
-			request.setAttribute("result", result);
 			request.getRequestDispatcher("ShowTaskStudentView").forward(request, response);
 		}
 	}

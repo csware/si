@@ -26,8 +26,6 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.dao.ResultDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -65,11 +63,11 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 	}
 
 	@Override
-	public Submission createSubmission(Task task, Participation submitter, int resultid) {
+	public Submission createSubmission(Task task, Participation submitter) {
 		Session session = getSession();
 		Submission submission = getSubmissionLocked(task, submitter.getUser());
 		if (submission == null) {
-			submission = new Submission(task, submitter, resultid);
+			submission = new Submission(task, submitter);
 			session.save(submission);
 		}
 		return submission;
@@ -93,9 +91,6 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 		boolean result = false;
 		Util.recursiveDeleteEmptySubDirectories(submissionPath);
 		if (submissionPath.listFiles().length == 0 && submissionPath.delete()) {
-			ResultDAOIf resultDAOIf = DAOFactory.ResultDAOIf(session);
-			session.delete(resultDAOIf.getResult(submission.getResultid()));
-			DAOFactory.TaskNumberDAOIf(session).updateSubmissionToNull(submission.getSubmissionid());
 			session.delete(submission);
 			result = true;
 		}

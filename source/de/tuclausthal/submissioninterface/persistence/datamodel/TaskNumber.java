@@ -1,5 +1,6 @@
 /*
  * Copyright 2011 Giselle Rodriguez
+ * Copyright 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -23,35 +24,33 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "submissions_tasknumbers")
 public class TaskNumber implements Serializable {
 	private int tasknumberid;
-	private int taskid;
-	private int userid;
-	private int submissionid;
+	private Task task;
+	private Participation participation;
+	private Submission submission = null;
 	private String number;
-	private char type;
+	private String origNumber;
 
 	// for Hibernate
 	public TaskNumber() {}
 
-	public TaskNumber(int taskid, int userid, String number, char type) {
-		this.taskid = taskid;
-		this.userid = userid;
-		this.submissionid = 0;
-		this.number = number;
-		this.type = type;
+	public TaskNumber(Task task, Participation participation, String number, String origNumber) {
+		this(task, participation, null, number, origNumber);
 	}
 
-	public TaskNumber(int taskid, int userid, int submissionid, String number, char type) {
-		this.taskid = taskid;
-		this.userid = userid;
-		this.submissionid = submissionid;
+	public TaskNumber(Task task, Participation participation, Submission submission, String number, String origNumber) {
+		this.task = task;
+		this.participation = participation;
+		this.submission = submission;
 		this.number = number;
-		this.type = type;
+		this.origNumber = origNumber;
 	}
 
 	/**
@@ -71,45 +70,51 @@ public class TaskNumber implements Serializable {
 	}
 
 	/**
-	 * @return the taskid
+	 * @return the task
 	 */
-	public int getTaskid() {
-		return taskid;
+	@ManyToOne
+	@JoinColumn(name = "taskid", nullable = false)
+	public Task getTask() {
+		return task;
 	}
 
 	/**
-	 * @param taskid the taskid to set
+	 * @param task the task to set
 	 */
-	public void setTaskid(int taskid) {
-		this.taskid = taskid;
+	public void setTask(Task task) {
+		this.task = task;
 	}
 
 	/**
-	 * @return the userid
+	 * @return the participation
 	 */
-	public int getUserid() {
-		return userid;
+	@ManyToOne
+	@JoinColumn(name = "participationid", nullable = false)
+	public Participation getParticipation() {
+		return participation;
 	}
 
 	/**
-	 * @param userid the userid to set
+	 * @param participation the participation to set
 	 */
-	public void setUserid(int userid) {
-		this.userid = userid;
+	public void setParticipation(Participation participation) {
+		this.participation = participation;
 	}
 
 	/**
-	 * @return the submissionid
+	 * @return the submission
 	 */
-	public int getSubmissionid() {
-		return submissionid;
+	@ManyToOne
+	@JoinColumn(name = "submissionid")
+	public Submission getSubmission() {
+		return submission;
 	}
 
 	/**
-	 * @param submissionid the submissionid to set
+	 * @param submission the submission to set
 	 */
-	public void setSubmissionid(int submissionid) {
-		this.submissionid = submissionid;
+	public void setSubmission(Submission submission) {
+		this.submission = submission;
 	}
 
 	/**
@@ -127,16 +132,16 @@ public class TaskNumber implements Serializable {
 	}
 
 	/**
-	 * @return the type of number
+	 * @param origNumber the origNumber to set
 	 */
-	public char getType() {
-		return type;
+	public void setOrigNumber(String origNumber) {
+		this.origNumber = origNumber;
 	}
 
 	/**
-	 * @param type the type of number to set
+	 * @return the origNumber
 	 */
-	public void setType(char type) {
-		this.type = type;
+	public String getOrigNumber() {
+		return origNumber;
 	}
 }

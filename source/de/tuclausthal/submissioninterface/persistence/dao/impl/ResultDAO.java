@@ -1,6 +1,5 @@
 /*
- * Copyright 2011 Giselle Rodriguez
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,22 +18,21 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import org.hibernate.LockMode;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ResultDAOIf;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Result;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 
 /**
  * Data Access Object implementation for the ResultDAOIf
- * @author Giselle Rodriguez
+ * @author Sven Strickroth
  */
 public class ResultDAO extends AbstractDAO implements ResultDAOIf {
 	public ResultDAO(Session session) {
@@ -42,42 +40,23 @@ public class ResultDAO extends AbstractDAO implements ResultDAOIf {
 	}
 
 	@Override
-	public Result getResult(int resultid) {
-		return (Result) getSession().get(Result.class, resultid);
-	}
-
-	@Override
-	public Result getResult(Task task, User user) {
+	public List<String> getResultsForSubmission(Submission submission) {
 		Session session = getSession();
-		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmissionLocked(task, user);
-		if (submission != null) {
-			return (Result) session.createCriteria(Result.class).add(Restrictions.eq("resultid", submission.getResultid())).uniqueResult();
-		} else {
-			return null;
+		List<String> results = new LinkedList<String>();
+		for (Result result : (List<Result>) session.createCriteria(Result.class).add(Restrictions.eq("submission", submission)).addOrder(Order.asc("resultid")).list()) {
+			results.add(result.getResult());
 		}
+		return results;
 	}
 
 	@Override
-	public Result createResult(Task task, Participation submitter, String theResult) {
-		Session session = getSession();
-		Result result = getResult(task, submitter.getUser());
-		if (result == null) {
-			result = new Result(theResult);
-			session.save(result);
-		} else {
-			result.setResult(theResult);
+	public void createResults(Submission submission, List<String> results) {
+		session.lock(submission, LockMode.UPGRADE);
+		for (Result result : (List<Result>) session.createCriteria(Result.class).add(Restrictions.eq("submission", submission)).setLockMode(LockMode.UPGRADE).list()) {
+			session.delete(result);
 		}
-		return result;
-	}
-
-	@Override
-	public void saveResult(Result result) {
-		Session session = getSession();
-		session.saveOrUpdate(result);
-	}
-
-	@Override
-	public List<Result> getResultsForResult(String result) {
-		return getSession().createCriteria(Result.class, "re").add(Restrictions.eq("result", result)).list();
+		for (String stringResult : results) {
+			session.save(new Result(submission, stringResult));
+		}
 	}
 }

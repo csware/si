@@ -37,7 +37,6 @@ import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Result;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
@@ -61,7 +60,6 @@ public class ShowTaskStudentView extends HttpServlet {
 
 		Task task = (Task) request.getAttribute("task");
 		Submission submission = (Submission) request.getAttribute("submission");
-		Result result = (Result) request.getAttribute("result");
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
 
@@ -129,8 +127,8 @@ public class ShowTaskStudentView extends HttpServlet {
 					}
 					out.println("<br>");
 				}
-				if (task.isDynamicTask()) {
-					out.println("Lösung: " + result.getResult());
+				if (task.isADynamicTask()) {
+					out.println(task.getDynamicTaskStrategie(session).showUserResult(submission));
 				}
 				out.println("</td>");
 				out.println("</tr>");

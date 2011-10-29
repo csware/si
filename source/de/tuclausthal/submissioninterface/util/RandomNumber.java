@@ -20,96 +20,10 @@ package de.tuclausthal.submissioninterface.util;
 
 import java.math.BigInteger;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
-
-import org.hibernate.Session;
-
-import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.dao.TaskNumberDAOIf;
-import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 
 public class RandomNumber {
-	private TaskNumberDAOIf taskNumberDAO;
-	private List<TaskNumber> taskNumbers;
-	private int taskid;
-	private int userid;
-	private int submissionid;
-	private String description;
-	private final char[] types = { 'B', 'O', 'D', 'F', 'H', 'L' };
-	private final int[][] randomParam = { { 2, 2, 0 }, { 8, 2, 0 }, { 10, 2, 0 }, { 10, 2, 2 }, { 16, 3, 0 }, { 10, 8, 0 } };
-
-	public RandomNumber(Session session, int taskid, int userid) {
-		this.taskNumberDAO = DAOFactory.TaskNumberDAOIf(session);
-		this.taskid = taskid;
-		this.userid = userid;
-		this.submissionid = 0;
-		//this.submissionid = -1;
-		this.taskNumbers = new ArrayList<TaskNumber>();
-	}
-
-	public RandomNumber(int taskid, int userid, int submissionid) {
-		this.taskid = taskid;
-		this.userid = userid;
-		this.submissionid = submissionid;
-		this.taskNumbers = new ArrayList<TaskNumber>();
-	}
-
-	public List<TaskNumber> getTaskNumbers() {
-		return taskNumbers;
-	}
-
-	public void setTaskNumbers(ArrayList<TaskNumber> taskNumbers) {
-		this.taskNumbers = taskNumbers;
-	}
-
-	public List<TaskNumber> setSubmissionid(int submissionid) {
-		this.submissionid = submissionid;
-		ListIterator<TaskNumber> it = this.taskNumbers.listIterator(this.taskNumbers.size());
-		while (it.hasPrevious()) {
-			it.previous().setSubmissionid(submissionid);
-		}
-		return this.taskNumbers;
-	}
-
-	public String getTaskDescription() {
-		return this.description;
-	}
-
-	public String setTaskDescription(String taskDescription, List<TaskNumber> taskNumberList) {
-		this.description = taskDescription;
-		for (TaskNumber taskNumber : taskNumberList) {
-			this.replaceDescription(this.description, taskNumber.getType(), taskNumber.getNumber());
-		}
-		return this.description;
-	}
-
-	public String setTaskDescription(String taskDescription) {
-		this.description = taskDescription;
-		for (int i = 0; i < this.types.length; i++) {
-			this.description = this.replaceDescription(description, this.types[i], this.randomParam[i]);
-		}
-		return this.description;
-	}
-
-	private String replaceDescription(String description, char type, int[] randomParam) {
-		while (description.contains("-" + type + "-") == true) {
-			String number = getRandomNumber(randomParam);
-			if (this.submissionid != 0) {
-				this.taskNumbers.add(new TaskNumber(this.taskid, this.userid, this.submissionid, number, type));
-			} else {
-				this.taskNumbers.add(new TaskNumber(this.taskid, this.userid, number, type));
-			}
-			description = description.replaceFirst("-" + type + "-", this.getNumber(number, randomParam));
-		}
-		return description;
-	}
-
-	private String replaceDescription(String description, char type, String number) {
-		this.description = description.replaceFirst("-" + type + "-", this.getNumber(number, this.getRandonParam(type)));
-		return this.description;
-	}
+	private static final char[] types = { 'B', 'O', 'D', 'F', 'H', 'L' };
+	private static final int[][] randomParam = { { 2, 2, 0 }, { 8, 2, 0 }, { 10, 2, 0 }, { 10, 2, 2 }, { 16, 3, 0 }, { 10, 8, 0 } };
 
 	/**
 	 * @param type, type of numeral system representation(2 for binary etc)
@@ -117,7 +31,7 @@ public class RandomNumber {
 	 * @param afterComa, number of positions after the decimal point
 	 * @return str, String with the representation of the number
 	 */
-	private String getRandomNumber(int[] randomParam) {
+	public static String getRandomNumber(int[] randomParam) {
 		String before = "1";
 		String str = null;
 		for (int i = 0; i < randomParam[1]; i++) {
@@ -145,21 +59,22 @@ public class RandomNumber {
 		return str;
 	}
 
-	public int[] getRandonParam(char type) {
+	public static int[] getRandomParam(char type) {
 		int pos = 0;
-		for (int i = 0; i < this.types.length; i++) {
-			if (type == this.types[i]) {
+		for (int i = 0; i < types.length; i++) {
+			if (type == types[i]) {
 				pos = i;
-				i = this.types.length;
+				break;
 			}
 		}
-		return this.randomParam[pos];
+		return randomParam[pos];
 	}
 
-	public String getNumber(String number, int[] randomParam) {
+	public static String getNumber(String origNumber, int[] randomParam) {
+		String number = origNumber;
 		if (randomParam[1] > 6) {
 			BigInteger big = new BigInteger(number);
-			big.byteValue();
+			//big.byteValue();
 			number = number + " (vereinfacht: " + get2Skalierung(big) + ")";
 		} else {
 			double zahl = Double.parseDouble(number);
@@ -190,7 +105,7 @@ public class RandomNumber {
 		return number;
 	}
 
-	private String get2Skalierung(BigInteger number) {
+	private static String get2Skalierung(BigInteger number) {
 		BigInteger result = number;
 		BigInteger div = new BigInteger("2");
 		int scale = -1;

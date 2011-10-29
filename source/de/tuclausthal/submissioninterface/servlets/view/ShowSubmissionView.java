@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
+import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTask;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
@@ -45,6 +46,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowFile;
@@ -264,6 +266,31 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("</ul>");
 		}
 
+		if (task.isADynamicTask()) {
+			out.println("<h2>Dynamische Aufgabe: <a href=\"#\" onclick=\"$('#dynamictask').toggle(); return false;\">(+/-)</a></h2>");
+			AbstractDynamicTask dynamicTask = task.getDynamicTaskStrategie(session);
+			out.println("<ul id=dynamictask>");
+			out.println("<li><b>Benutzer-Werte:</b><br>");
+			for (TaskNumber tn : dynamicTask.getVariables(submission)) {
+				out.println(tn.getNumber() + "<br>");
+			}
+			out.println("</li>");
+			out.println("<li><b>Lösung:</b><br>");
+			boolean correct = true;
+			List<String> correctResults = dynamicTask.getCorrectResults(submission);
+			int resultCounter = 0;
+			for (String result : dynamicTask.getUserResults(submission)) {
+				if (correct && !result.equals(correctResults.get(resultCounter))) {
+					correct = false;
+				}
+				out.println(result + " (" + correctResults.get(resultCounter) + ")<br>");
+				resultCounter++;
+			}
+			out.println("</li>");
+			out.println("<li>Ist korrekt: " + Util.boolToHTML(correct && resultCounter > 0) + "</li>");
+			out.println("</ul>");
+		}
+
 		if (submittedFiles.size() > 0) {
 			out.println("<h2>Dateien: <a href=\"#\" onclick=\"$('#files').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<div id=files class=mid>");
@@ -277,8 +304,6 @@ public class ShowSubmissionView extends HttpServlet {
 				}
 			}
 			int id = 0;
-			String result = DAOFactory.ResultDAOIf(session).getResult(submission.getResultid()).getResult();
-			out.println("<h3 class=files>Lösung: " + result + "</h3>");
 			for (String file : submittedFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
 				if (ShowFile.isInlineAble(file.toLowerCase())) {

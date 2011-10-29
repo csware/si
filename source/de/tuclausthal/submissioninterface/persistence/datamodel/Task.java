@@ -35,10 +35,15 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import org.hibernate.Session;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.OrderBy;
+
+import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTask;
+import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskFactory;
 
 @Entity
 @Table(name = "tasks")
@@ -63,7 +68,7 @@ public class Task implements Serializable {
 	private String featuredFiles = "";
 	private boolean tutorsCanUploadFiles = false;
 	private boolean allowSubmittersAcrossGroups = false;
-	private boolean dynamicTask = false;
+	private String dynamicTask = null;
 
 	public Task() {}
 
@@ -85,7 +90,7 @@ public class Task implements Serializable {
 	 * @param allowSubmittersAcrossGroups 
 	 * @param dynamicTask 
 	 */
-	public Task(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups, boolean dynamicTask) {
+	public Task(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups, String dynamicTask) {
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.minPointStep = minPointStep;
@@ -422,16 +427,35 @@ public class Task implements Serializable {
 	}
 
 	/**
+	 * Checks if the task has a valid dynamic task attached
+	 * @return true/false
+	 */
+	@Transient
+	public boolean isADynamicTask() {
+		return DynamicTaskFactory.IsValidStrategie(dynamicTask);
+	}
+
+	/**
 	 * @return the dynamicTask
 	 */
-	public boolean isDynamicTask() {
+	public String getDynamicTask() {
 		return dynamicTask;
 	}
 
 	/**
 	 * @param dynamicTask the dynamicTask to set
 	 */
-	public void setDynamicTask(boolean dynamicTask) {
+	public void setDynamicTask(String dynamicTask) {
 		this.dynamicTask = dynamicTask;
+	}
+
+	/**
+	 * Returns the dynamic task strategie
+	 * @param session
+	 * @return the dynamicTask Strategie or null
+	 */
+	@Transient
+	public AbstractDynamicTask getDynamicTaskStrategie(Session session) {
+		return DynamicTaskFactory.createDynamicTask(session, dynamicTask, this);
 	}
 }
