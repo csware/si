@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
-import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTask;
+import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
@@ -268,7 +268,7 @@ public class ShowSubmissionView extends HttpServlet {
 
 		if (task.isADynamicTask()) {
 			out.println("<h2>Dynamische Aufgabe: <a href=\"#\" onclick=\"$('#dynamictask').toggle(); return false;\">(+/-)</a></h2>");
-			AbstractDynamicTask dynamicTask = task.getDynamicTaskStrategie(session);
+			DynamicTaskStrategieIf dynamicTask = task.getDynamicTaskStrategie(session);
 			out.println("<ul id=dynamictask>");
 			out.println("<li><b>Benutzer-Werte:</b><br>");
 			int variableCounter = 0;

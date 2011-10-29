@@ -36,27 +36,33 @@ import de.tuclausthal.submissioninterface.util.Util;
  * AbtractDynamicTask strategie
  * @author Sven Strickroth
  */
-public abstract class AbstractDynamicTask {
+public abstract class AbstractDynamicTaskStrategie implements DynamicTaskStrategieIf {
 	private Task task;
 	private Session session;
 
-	public AbstractDynamicTask(Session session, Task task) {
+	public AbstractDynamicTaskStrategie(Session session, Task task) {
 		this.session = session;
 		this.task = task;
 	}
 
+	@Override
 	public abstract boolean isCorrect(Submission submission);
 
+	@Override
 	public abstract String[] getResultFields();
 
+	@Override
 	public int getNumberOfResultFields() {
 		return getResultFields().length;
 	}
 
+	@Override
 	public abstract List<String> getCorrectResults(Submission submission);
 
+	@Override
 	public abstract String[] getVariableNames();
 
+	@Override
 	final public List<TaskNumber> getVariables(Participation participation) {
 		if (participation == null) {
 			return createTaskNumbers(null);
@@ -76,14 +82,17 @@ public abstract class AbstractDynamicTask {
 
 	protected abstract List<TaskNumber> createTaskNumbers(Participation participation);
 
+	@Override
 	final public List<TaskNumber> getVariables(Submission submission) {
 		return DAOFactory.TaskNumberDAOIf(session).getTaskNumbersForSubmission(submission);
 	}
 
+	@Override
 	final public String getTranslatedDescription(Participation participation) {
 		return translateDescription(getVariables(participation));
 	}
 
+	@Override
 	final public String getTranslatedDescription(Submission submission) {
 		return translateDescription(getVariables(submission));
 	}
@@ -96,6 +105,7 @@ public abstract class AbstractDynamicTask {
 		return description;
 	}
 
+	@Override
 	final public List<String> getUserResults(Submission submission) {
 		List<String> results = DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission);
 		if (results.size() == 0) {

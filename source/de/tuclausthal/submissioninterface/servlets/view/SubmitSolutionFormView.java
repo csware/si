@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
-import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTask;
+import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -115,7 +115,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 			out.println("<FORM class=mid method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 			out.println(setWithUser.toString());
 			if (task.isADynamicTask()) {
-				AbstractDynamicTask dynamicTask = task.getDynamicTaskStrategie(session);
+				DynamicTaskStrategieIf dynamicTask = task.getDynamicTaskStrategie(session);
 				String[] resultFields = dynamicTask.getResultFields();
 				List<String> studentResults = dynamicTask.getUserResults(submission);
 				for (int i = 0; i < resultFields.length; i++) {

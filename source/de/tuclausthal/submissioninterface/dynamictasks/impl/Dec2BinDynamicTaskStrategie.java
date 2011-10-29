@@ -5,18 +5,18 @@ import java.util.List;
 
 import org.hibernate.Session;
 
-import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTask;
+import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 import de.tuclausthal.submissioninterface.util.RandomNumber;
 
-public class Dec2BinDynamicTask extends AbstractDynamicTask {
+public class Dec2BinDynamicTaskStrategie extends AbstractDynamicTaskStrategie {
 	private static final String[] RESULT_FIELDS = { "Lösung der Umrechnung" };
 	private static final String[] VARIABLES = { "Wert" };
 
-	public Dec2BinDynamicTask(Session session, Task task) {
+	public Dec2BinDynamicTaskStrategie(Session session, Task task) {
 		super(session, task);
 	}
 

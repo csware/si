@@ -42,8 +42,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.OrderBy;
 
-import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTask;
-import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskFactory;
+import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieFactory;
+import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 
 @Entity
 @Table(name = "tasks")
@@ -432,7 +432,7 @@ public class Task implements Serializable {
 	 */
 	@Transient
 	public boolean isADynamicTask() {
-		return DynamicTaskFactory.IsValidStrategie(dynamicTask);
+		return DynamicTaskStrategieFactory.IsValidStrategieName(dynamicTask);
 	}
 
 	/**
@@ -455,7 +455,7 @@ public class Task implements Serializable {
 	 * @return the dynamicTask Strategie or null
 	 */
 	@Transient
-	public AbstractDynamicTask getDynamicTaskStrategie(Session session) {
-		return DynamicTaskFactory.createDynamicTask(session, dynamicTask, this);
+	public DynamicTaskStrategieIf getDynamicTaskStrategie(Session session) {
+		return DynamicTaskStrategieFactory.createDynamicTaskStrategie(session, dynamicTask, this);
 	}
 }

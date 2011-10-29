@@ -20,17 +20,17 @@ package de.tuclausthal.submissioninterface.dynamictasks;
 
 import org.hibernate.Session;
 
-import de.tuclausthal.submissioninterface.dynamictasks.impl.Dec2BinDynamicTask;
+import de.tuclausthal.submissioninterface.dynamictasks.impl.Dec2BinDynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 
 /**
  * @author Sven Strickroth
  */
-public class DynamicTaskFactory {
+public class DynamicTaskStrategieFactory {
 	public static final String[] STRATEGIES = { "dec2bin" };
 	public static final String[] NAMES = { "Dezimal2Binär (1 Parameter)" };
 
-	public static boolean IsValidStrategie(String dynamicTask) {
+	public static boolean IsValidStrategieName(String dynamicTask) {
 		for (String strategie : STRATEGIES) {
 			if (strategie.equals(dynamicTask)) {
 				return true;
@@ -39,9 +39,9 @@ public class DynamicTaskFactory {
 		return false;
 	}
 
-	public static AbstractDynamicTask createDynamicTask(Session session, String dynamicTask, Task task) {
+	public static DynamicTaskStrategieIf createDynamicTaskStrategie(Session session, String dynamicTask, Task task) {
 		if ("dec2bin".equals(dynamicTask)) {
-			return new Dec2BinDynamicTask(session, task);
+			return new Dec2BinDynamicTaskStrategie(session, task);
 		}
 		return null;
 	}

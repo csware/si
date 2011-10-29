@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
-import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTask;
+import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
@@ -135,7 +135,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<tr>");
 				out.println("<th>Berechnete Lösung(en):</th>");
 				out.println("<td>");
-				AbstractDynamicTask dynamicTask = task.getDynamicTaskStrategie(session);
+				DynamicTaskStrategieIf dynamicTask = task.getDynamicTaskStrategie(session);
 				String[] resultFields = dynamicTask.getResultFields();
 				int resultCounter = 0;
 				for (String result : dynamicTask.getUserResults(submission)) {
