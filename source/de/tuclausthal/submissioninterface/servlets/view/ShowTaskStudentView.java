@@ -199,7 +199,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
 			} else {
 				if (submittedFiles.size() > 0) {
-					out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe erweitern</a></div");
+					out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe erweitern</a></div>");
 				} else {
 					out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div>");
 				}
