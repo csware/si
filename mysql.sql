@@ -235,6 +235,41 @@ CREATE TABLE IF NOT EXISTS `submissions_participations` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `submissions_results`
+--
+
+DROP TABLE IF EXISTS `submissions_results`;
+CREATE TABLE IF NOT EXISTS `submissions_results` (
+  `resultid` int(11) NOT NULL AUTO_INCREMENT,
+  `submissionid` int(11) NOT NULL,
+  `result` varchar(255) NOT NULL,
+  PRIMARY KEY (`resultid`),
+  KEY `submissionid` (`submissionid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `submissions_tasknumbers`
+--
+
+DROP TABLE IF EXISTS `submissions_tasknumbers`;
+CREATE TABLE IF NOT EXISTS `submissions_tasknumbers` (
+  `tasknumberid` int(11) NOT NULL AUTO_INCREMENT,
+  `taskid` int(11) NOT NULL,
+  `participationid` int(11) NOT NULL,
+  `submissionid` int(11) DEFAULT NULL,
+  `number` varchar(255) NOT NULL,
+  `origNumber` varchar(255) NOT NULL,
+  PRIMARY KEY (`tasknumberid`),
+  KEY `taskid` (`taskid`),
+  KEY `submissionid` (`submissionid`),
+  KEY `participationid` (`participationid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `taskgroups`
 --
 
@@ -271,6 +306,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `taskgroupid` int(11) NOT NULL,
   `featuredFiles` text NOT NULL,
   `tutorsCanUploadFiles` bit(1) NOT NULL,
+  `dynamicTask` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`taskid`),
   KEY `taskgroupid` (`taskgroupid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
@@ -435,6 +471,22 @@ ALTER TABLE `submissions`
 ALTER TABLE `submissions_participations`
   ADD CONSTRAINT `FK27F157EA16D3DBEB` FOREIGN KEY (`submitters_id`) REFERENCES `participations` (`id`),
   ADD CONSTRAINT `FK27F157EA5F9373D1` FOREIGN KEY (`submissions_submissionid`) REFERENCES `submissions` (`submissionid`) ON DELETE CASCADE;
+
+--
+-- Constraints der Tabelle `submissions_results`
+--
+
+ALTER TABLE `submissions_results`
+  ADD FOREIGN KEY (`submissionid`) REFERENCES `submissions` (`submissionid`) ON DELETE CASCADE;
+
+--
+-- Constraints der Tabelle `submissions_tasknumbers`
+--
+
+ALTER TABLE `submissions_tasknumbers`
+  ADD FOREIGN KEY (`taskid`) REFERENCES `tasks` (`taskid`) ON DELETE CASCADE,
+  ADD FOREIGN KEY (`participationid`) REFERENCES `participations` (`id`),
+  ADD FOREIGN KEY (`submissionid`) REFERENCES `submissions` (`submissionid`) ON DELETE SET NULL;
 
 --
 -- Constraints der Tabelle `taskgroups`

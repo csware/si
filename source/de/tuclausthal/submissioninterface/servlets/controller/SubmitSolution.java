@@ -473,6 +473,20 @@ public class SubmitSolution extends HttpServlet {
 			tx.commit();
 			out.println("Problem: Keine Abgabedaten gefunden.");
 		} else if (request.getParameter("textsolution") != null) {
+			if (task.isADynamicTask()) {
+				int numberOfFields = task.getDynamicTaskStrategie(session).getNumberOfResultFields();
+				List<String> results = new LinkedList<String>();
+				for (int i = 0; i < numberOfFields; i++) {
+					String result = request.getParameter("dynamicresult" + i);
+					if (result == null) {
+						result = "";
+					}
+					results.add(result);
+				}
+				DAOFactory.ResultDAOIf(session).createResults(submission, results);
+				DAOFactory.TaskNumberDAOIf(session).assignTaskNumbersToSubmission(submission, studentParticipation);
+			}
+
 			File uploadedFile = new File(path, "textloesung.txt");
 			FileWriter fileWriter = new FileWriter(uploadedFile);
 			fileWriter.write(request.getParameter("textsolution"));

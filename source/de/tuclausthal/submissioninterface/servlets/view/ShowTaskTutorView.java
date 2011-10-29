@@ -36,12 +36,12 @@ import de.tuclausthal.submissioninterface.persistence.dao.TestResultDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -141,6 +141,9 @@ public class ShowTaskTutorView extends HttpServlet {
 					testCols++;
 				}
 			}
+			if (task.isADynamicTask()) {
+				testCols++;
+			}
 			int lastSID = 0;
 			TestResultDAOIf testResultDAO = DAOFactory.TestResultDAOIf(session);
 			List<Test> tests = DAOFactory.TestDAOIf(session).getTutorTests(task);
@@ -189,6 +192,9 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("<tr>");
 					out.println("<th>Benutzer</th>");
 					if (showAllColumns) {
+						if (task.isADynamicTask()) {
+							out.println("<th>Berechnung</th>");
+						}
 						for (Test test : tests) {
 							out.println("<th>" + Util.escapeHTML(test.getTestTitle()) + "</th>");
 						}
@@ -212,6 +218,9 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
 					lastSID = submission.getSubmissionid();
 					if (showAllColumns) {
+						if (task.isADynamicTask()) {
+							out.println("<td>"+Util.boolToHTML(task.getDynamicTaskStrategie(session).isCorrect(submission))+"</td>");
+						}
 						for (Test test : tests) {
 							if (testResultDAO.getResult(test, submission) != null) {
 								out.println("<td>" + Util.boolToHTML(testResultDAO.getResult(test, submission).getPassedTest()) + "</td>");

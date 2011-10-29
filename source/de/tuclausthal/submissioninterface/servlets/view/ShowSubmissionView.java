@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
+import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
@@ -45,6 +46,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowFile;
@@ -261,6 +263,34 @@ public class ShowSubmissionView extends HttpServlet {
 				}
 				out.println("</li>");
 			}
+			out.println("</ul>");
+		}
+
+		if (task.isADynamicTask()) {
+			out.println("<h2>Dynamische Aufgabe: <a href=\"#\" onclick=\"$('#dynamictask').toggle(); return false;\">(+/-)</a></h2>");
+			DynamicTaskStrategieIf dynamicTask = task.getDynamicTaskStrategie(session);
+			out.println("<ul id=dynamictask>");
+			out.println("<li><b>Benutzer-Werte:</b><br>");
+			int variableCounter = 0;
+			for (TaskNumber tn : dynamicTask.getVariables(submission)) {
+				out.println(Util.escapeHTML(dynamicTask.getVariableNames()[variableCounter]) + ": " + Util.escapeHTML(tn.getNumber()) + "<br>");
+				variableCounter++;
+			}
+			out.println("</li>");
+			out.println("<li><b>Lösung:</b><br>");
+			boolean correct = true;
+			List<String> correctResults = dynamicTask.getCorrectResults(submission);
+			String[] resultFields = dynamicTask.getResultFields();
+			int resultCounter = 0;
+			for (String result : dynamicTask.getUserResults(submission)) {
+				if (correct && !result.equals(correctResults.get(resultCounter))) {
+					correct = false;
+				}
+				out.println(Util.escapeHTML(resultFields[resultCounter]) + ": " + Util.escapeHTML(result) + " (" + Util.escapeHTML(correctResults.get(resultCounter)) + ")<br>");
+				resultCounter++;
+			}
+			out.println("</li>");
+			out.println("<li>Ist korrekt: " + Util.boolToHTML(correct && resultCounter > 0) + "</li>");
 			out.println("</ul>");
 		}
 

@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
@@ -103,6 +104,15 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text size=100 name=title value=\"" + Util.escapeHTML(task.getTitle()) + "\"></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Aufgabe mit dynamischen Werten:</th>");
+		out.println("<td><select size=1 name=dynamicTask " + (task.getTaskid() != 0 ? " disabled" : "") + ">");
+		out.println("<option value=\"\"" + (task.getDynamicTask() == null ? " selected" : "") + ">-</option>");
+		for (int i = 0; i < DynamicTaskStrategieFactory.STRATEGIES.length; i++) {
+			out.println("<option value=\"" + DynamicTaskStrategieFactory.STRATEGIES[i] + "\"" + (DynamicTaskStrategieFactory.STRATEGIES[i].equals(task.getDynamicTask()) ? " selected" : "") + ">" + DynamicTaskStrategieFactory.NAMES[i] + "</option>");
+		}
+		out.println("</select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -74,8 +74,9 @@ public class ShowTask extends HttpServlet {
 		}
 
 		request.setAttribute("participation", participation);
-		request.setAttribute("task", task);
+
 		request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"))));
+		request.setAttribute("task", task);
 		if (request.getParameter("onlydescription") != null) {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 			Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
@@ -97,7 +98,15 @@ public class ShowTask extends HttpServlet {
 			if (submission != null) {
 				File path = new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 				request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringList(path));
+				if (task.isADynamicTask()) {
+					task.setDescription(task.getDynamicTaskStrategie(session).getTranslatedDescription(submission));
+				}
+			} else {
+				if (task.isADynamicTask()) {
+					task.setDescription(task.getDynamicTaskStrategie(session).getTranslatedDescription(participation));
+				}
 			}
+
 			request.setAttribute("submission", submission);
 			request.getRequestDispatcher("ShowTaskStudentView").forward(request, response);
 		}

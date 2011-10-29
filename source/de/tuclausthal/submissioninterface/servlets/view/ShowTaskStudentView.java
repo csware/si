@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
+import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
@@ -126,6 +127,20 @@ public class ShowTaskStudentView extends HttpServlet {
 						out.println(" (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DeleteFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)");
 					}
 					out.println("<br>");
+				}
+				out.println("</td>");
+				out.println("</tr>");
+			}
+			if (task.isADynamicTask()) {
+				out.println("<tr>");
+				out.println("<th>Berechnete Lösung(en):</th>");
+				out.println("<td>");
+				DynamicTaskStrategieIf dynamicTask = task.getDynamicTaskStrategie(session);
+				String[] resultFields = dynamicTask.getResultFields();
+				int resultCounter = 0;
+				for (String result : dynamicTask.getUserResults(submission)) {
+					out.println(Util.escapeHTML(resultFields[resultCounter]) + ": " + Util.escapeHTML(result) + "<br>");
+					resultCounter++;
 				}
 				out.println("</td>");
 				out.println("</tr>");
