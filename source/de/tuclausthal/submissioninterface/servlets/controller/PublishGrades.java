@@ -107,9 +107,10 @@ public class PublishGrades extends HttpServlet {
 		if (request.getParameter("mail") != null) {
 			for (Submission submission : task.getSubmissions()) {
 				for (Participation submitterParticipation : submission.getSubmitters()) {
-					if (submission.getPoints() != null && submission.getPoints().getPointsOk())
-					// HACK hardcoded URL
-					MailSender.sendMail(submitterParticipation.getUser().getFullEmail(), "Bewertung erfolgt", "Hallo " + submitterParticipation.getUser().getFullName() + ",\n\neine Ihrer Abgaben wurde bewertet.\n\nEinsehen: <https://si.in.tu-clausthal.de/submissionsystem/servlets/ShowTask?taskid=" + task.getTaskid() + ">.\n\n-- \nReply is not possible.");
+					if (submission.getPoints() != null && submission.getPoints().getPointsOk()) {
+						// HACK hardcoded URL
+						MailSender.sendMail(submitterParticipation.getUser().getFullEmail(), "Bewertung erfolgt", "Hallo " + submitterParticipation.getUser().getFullName() + ",\n\neine Ihrer Abgaben wurde bewertet.\n\nEinsehen: <https://si.in.tu-clausthal.de/submissionsystem/servlets/ShowTask?taskid=" + task.getTaskid() + ">.\n\n-- \nReply is not possible.");
+					}
 				}
 			}
 		}

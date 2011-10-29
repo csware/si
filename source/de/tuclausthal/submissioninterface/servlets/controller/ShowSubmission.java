@@ -83,11 +83,11 @@ public class ShowSubmission extends HttpServlet {
 				internalComment = request.getParameter("internalcomment").trim();
 			}
 			PointStatus pointStatus = PointStatus.NICHT_ABGENOMMEN;
-			if("failed".equals(request.getParameter("pointsstatus"))) {
+			if ("failed".equals(request.getParameter("pointsstatus"))) {
 				pointStatus = PointStatus.ABGENOMMEN_FAILED;
 			} else if ("ok".equals(request.getParameter("pointsstatus"))) {
 				pointStatus = PointStatus.ABGENOMMEN;
-			}else if ("nbewertet".equals(request.getParameter("pointsstatus"))) {
+			} else if ("nbewertet".equals(request.getParameter("pointsstatus"))) {
 				pointStatus = PointStatus.NICHT_BEWERTET;
 			}
 			Transaction tx = session.beginTransaction();
