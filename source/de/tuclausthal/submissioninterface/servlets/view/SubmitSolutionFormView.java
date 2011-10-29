@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
+import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTask;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -113,7 +115,12 @@ public class SubmitSolutionFormView extends HttpServlet {
 			out.println("<FORM class=mid method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 			out.println(setWithUser.toString());
 			if (task.isADynamicTask()) {
-				out.println(task.getDynamicTaskStrategie(session).getFields(participation, submission));
+				AbstractDynamicTask dynamicTask = task.getDynamicTaskStrategie(session);
+				String[] resultFields = dynamicTask.getResultFields();
+				List<String> studentResults = dynamicTask.getUserResults(submission);
+				for (int i = 0; i < resultFields.length; i++) {
+					out.println("<p>" + resultFields[i] + ": <input type=text name=\"dynamicresult" + i + "\" size=20 value=\"" + Util.escapeHTML(studentResults.get(i)) + "\"></p>");
+				}
 				out.println("<p>Bitte füllen Sie das Textfeld mit dem Rechnenweg zu Ihrer Lösung:</p>");
 			} else {
 				out.println("<p>Bitte füllen Sie das Textfeld mit Ihrer Lösung:</p>");

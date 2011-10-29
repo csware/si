@@ -30,6 +30,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * AbtractDynamicTask strategie
@@ -46,13 +47,15 @@ public abstract class AbstractDynamicTask {
 
 	public abstract boolean isCorrect(Submission submission);
 
-	public abstract String getFields(Participation participation, Submission submission);
+	public abstract String[] getResultFields();
 
-	public abstract int numberOfFields();
+	public int getNumberOfResultFields() {
+		return getResultFields().length;
+	}
 
 	public abstract List<String> getCorrectResults(Submission submission);
 
-	public abstract String showUserResult(Submission submission);
+	public abstract String[] getVariableNames();
 
 	final public List<TaskNumber> getVariables(Participation participation) {
 		if (participation == null) {
@@ -88,7 +91,7 @@ public abstract class AbstractDynamicTask {
 	private String translateDescription(List<TaskNumber> variables) {
 		String description = task.getDescription();
 		for (int i = 0; i < variables.size(); i++) {
-			description = description.replace("$Var" + i + "$", variables.get(i).getNumber());
+			description = description.replace("$Var" + i + "$", Util.escapeHTML(variables.get(i).getNumber()));
 		}
 		return description;
 	}
@@ -97,7 +100,7 @@ public abstract class AbstractDynamicTask {
 		List<String> results = DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission);
 		if (results.size() == 0) {
 			results = new LinkedList<String>();
-			for (int i = 0; i < numberOfFields(); i++) {
+			for (int i = 0; i < getNumberOfResultFields(); i++) {
 				results.add("");
 			}
 		}

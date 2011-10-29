@@ -459,7 +459,7 @@ public class SubmitSolution extends HttpServlet {
 			out.println("Problem: Keine Abgabedaten gefunden.");
 		} else if (request.getParameter("textsolution") != null) {
 			if (task.isADynamicTask()) {
-				int numberOfFields = task.getDynamicTaskStrategie(session).numberOfFields();
+				int numberOfFields = task.getDynamicTaskStrategie(session).getNumberOfResultFields();
 				List<String> results = new LinkedList<String>();
 				for (int i = 0; i < numberOfFields; i++) {
 					String result = request.getParameter("dynamicresult" + i);
