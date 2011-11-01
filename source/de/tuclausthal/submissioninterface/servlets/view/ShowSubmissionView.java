@@ -273,7 +273,11 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<li><b>Benutzer-Werte:</b><br>");
 			int variableCounter = 0;
 			for (TaskNumber tn : dynamicTask.getVariables(submission)) {
-				out.println(Util.escapeHTML(dynamicTask.getVariableNames()[variableCounter]) + ": " + Util.escapeHTML(tn.getNumber()) + "<br>");
+				out.print(Util.escapeHTML(dynamicTask.getVariableNames()[variableCounter]) + ": " + Util.escapeHTML(tn.getNumber()));
+				if (!tn.getNumber().equals(tn.getOrigNumber())) {
+					out.print(" (" + Util.escapeHTML(tn.getOrigNumber()) + ")");
+				}
+				out.println("<br>");
 				variableCounter++;
 			}
 			out.println("</li>");
