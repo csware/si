@@ -283,14 +283,11 @@ public class ShowSubmissionView extends HttpServlet {
 			String[] resultFields = dynamicTask.getResultFields();
 			int resultCounter = 0;
 			for (String result : dynamicTask.getUserResults(submission)) {
-				if (correct && !result.equals(correctResults.get(resultCounter))) {
-					correct = false;
-				}
 				out.println(Util.escapeHTML(resultFields[resultCounter]) + ": " + Util.escapeHTML(result) + " (" + Util.escapeHTML(correctResults.get(resultCounter)) + ")<br>");
 				resultCounter++;
 			}
 			out.println("</li>");
-			out.println("<li>Ist korrekt: " + Util.boolToHTML(correct && resultCounter > 0) + "</li>");
+			out.println("<li>Ist korrekt: " + Util.boolToHTML(dynamicTask.isCorrect(submission)) + "</li>");
 			out.println("</ul>");
 		}
 
