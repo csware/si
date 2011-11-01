@@ -56,10 +56,11 @@ public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamic
 	public boolean isCorrect(Submission submission) {
 		List<String> correctResults = getCorrectResults(submission, false);
 		List<String> studentSolution = getUserResults(submission);
-		for (int i = 0; i < 2; i++) {
-			if (!RandomNumber.trimLeadingZeros(studentSolution.get(i)).equals(RandomNumber.trimLeadingZeros(correctResults.get(i)))) {
-				return false;
-			}
+		if (!studentSolution.get(0).equals(correctResults.get(0))) {
+			return false;
+		}
+		if (!RandomNumber.trimLeadingZeros(studentSolution.get(1)).equals(RandomNumber.trimLeadingZeros(correctResults.get(1)))) {
+			return false;
 		}
 		if (Math.abs(Double.parseDouble(correctResults.get(2)) - Double.parseDouble(studentSolution.get(2))) > 0.0000000001d) {
 			return false;
