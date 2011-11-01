@@ -36,6 +36,7 @@ import de.tuclausthal.submissioninterface.util.RandomNumber;
  */
 public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamicTaskStrategie implements DynamicTaskStrategieIf {
 	private static final String[] RESULT_FIELDS = { "Lösung der Berechnung (binär)", "Lösung der Berechnung (hex)", "Fehler der Lösung" };
+	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Lösung der Berechnung (decimal)", "Lösung der Berechnung (binär)", "Lösung der Berechnung (hex)", "-Float-Ergebnis", "Fehler der Lösung" };
 	private static final String[] VARIABLES = { "Wert 1", "Wert 2" };
 
 	public HexFloatMultiplikationDynamkicTaskStrategie(Session session, Task task) {
@@ -43,13 +44,17 @@ public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamic
 	}
 
 	@Override
-	public String[] getResultFields() {
-		return RESULT_FIELDS;
+	public String[] getResultFields(boolean includePartialSolutions) {
+		if (includePartialSolutions) {
+			return RESULT_FIELDS_WITH_PARTIAL;
+		} else {
+			return RESULT_FIELDS;
+		}
 	}
 
 	@Override
 	public boolean isCorrect(Submission submission) {
-		List<String> correctResults = getCorrectResults(submission);
+		List<String> correctResults = getCorrectResults(submission, false);
 		List<String> studentSolution = getUserResults(submission);
 		for (int i = 0; i < 2; i++) {
 			if (!RandomNumber.trimLeadingZeros(studentSolution.get(i)).equals(RandomNumber.trimLeadingZeros(correctResults.get(i)))) {
@@ -63,12 +68,18 @@ public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamic
 	}
 
 	@Override
-	public List<String> getCorrectResults(Submission submission) {
+	public List<String> getCorrectResults(Submission submission, boolean includePartialSolutions) {
 		List<TaskNumber> numbers = getVariables(submission);
 		double result = Double.parseDouble(numbers.get(0).getOrigNumber()) * Double.parseDouble(numbers.get(1).getOrigNumber());
 		List<String> results = new LinkedList<String>();
+		if (includePartialSolutions) {
+			results.add(String.valueOf(result));
+		}
 		results.add(RandomNumber.getFloatBits((float) result));
-		results.add(RandomNumber.binStringToHex(results.get(0)));
+		results.add(RandomNumber.binStringToHex(results.get(results.size() - 1)));
+		if (includePartialSolutions) {
+			results.add(String.valueOf((float) result));
+		}
 		double diff = result - Double.valueOf(Float.toString((float) result));
 		results.add(String.valueOf((float) diff));
 		return results;

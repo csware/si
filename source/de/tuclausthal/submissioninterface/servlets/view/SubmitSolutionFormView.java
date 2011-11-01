@@ -116,7 +116,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 			out.println(setWithUser.toString());
 			if (task.isADynamicTask()) {
 				DynamicTaskStrategieIf dynamicTask = task.getDynamicTaskStrategie(session);
-				String[] resultFields = dynamicTask.getResultFields();
+				String[] resultFields = dynamicTask.getResultFields(false);
 				List<String> studentResults = dynamicTask.getUserResults(submission);
 				for (int i = 0; i < resultFields.length; i++) {
 					out.println("<p>" + resultFields[i] + ": <input type=text name=\"dynamicresult" + i + "\" size=20 value=\"" + Util.escapeHTML(studentResults.get(i)) + "\"></p>");

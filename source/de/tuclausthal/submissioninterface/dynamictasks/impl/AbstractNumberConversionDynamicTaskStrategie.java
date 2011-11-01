@@ -36,12 +36,12 @@ public abstract class AbstractNumberConversionDynamicTaskStrategie extends Abstr
 	}
 
 	@Override
-	final public String[] getResultFields() {
+	final public String[] getResultFields(boolean includePartialSolutions) {
 		return RESULT_FIELDS;
 	}
 
 	@Override
-	final public List<String> getCorrectResults(Submission submission) {
+	final public List<String> getCorrectResults(Submission submission, boolean includePartialSolutions) {
 		List<String> results = new LinkedList<String>();
 		results.add(getVariables(submission).get(0).getOrigNumber());
 		return results;

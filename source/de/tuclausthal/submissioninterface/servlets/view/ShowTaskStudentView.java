@@ -136,7 +136,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<th>Berechnete Lösung(en):</th>");
 				out.println("<td>");
 				DynamicTaskStrategieIf dynamicTask = task.getDynamicTaskStrategie(session);
-				String[] resultFields = dynamicTask.getResultFields();
+				String[] resultFields = dynamicTask.getResultFields(false);
 				int resultCounter = 0;
 				for (String result : dynamicTask.getUserResults(submission)) {
 					out.println(Util.escapeHTML(resultFields[resultCounter]) + ": " + Util.escapeHTML(result) + "<br>");

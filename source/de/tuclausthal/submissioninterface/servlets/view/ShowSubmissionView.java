@@ -282,12 +282,18 @@ public class ShowSubmissionView extends HttpServlet {
 			}
 			out.println("</li>");
 			out.println("<li><b>Lösung:</b><br>");
-			boolean correct = true;
-			List<String> correctResults = dynamicTask.getCorrectResults(submission);
-			String[] resultFields = dynamicTask.getResultFields();
+			List<String> correctResults = dynamicTask.getCorrectResults(submission, true);
+			List<String> studentResults = dynamicTask.getUserResults(submission);
+			String[] resultFields = dynamicTask.getResultFields(true);
 			int resultCounter = 0;
-			for (String result : dynamicTask.getUserResults(submission)) {
-				out.println(Util.escapeHTML(resultFields[resultCounter]) + ": " + Util.escapeHTML(result) + " (" + Util.escapeHTML(correctResults.get(resultCounter)) + ")<br>");
+			int studentResultCounter = 0;
+			for (String result : correctResults) {
+				if (resultFields[resultCounter].startsWith("-")) {
+					out.println(Util.escapeHTML(resultFields[resultCounter]) + ": (" + Util.escapeHTML(result) + ")<br>");
+				} else {
+					out.println(Util.escapeHTML(resultFields[resultCounter]) + ": " + Util.escapeHTML(studentResults.get(studentResultCounter)) + " (" + Util.escapeHTML(result) + ")<br>");
+					studentResultCounter++;
+				}
 				resultCounter++;
 			}
 			out.println("</li>");

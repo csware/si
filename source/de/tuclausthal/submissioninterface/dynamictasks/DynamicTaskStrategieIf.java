@@ -28,11 +28,11 @@ public interface DynamicTaskStrategieIf {
 
 	public abstract boolean isCorrect(Submission submission);
 
-	public abstract String[] getResultFields();
+	public abstract String[] getResultFields(boolean includePartialSolutions);
 
 	public abstract int getNumberOfResultFields();
 
-	public abstract List<String> getCorrectResults(Submission submission);
+	public abstract List<String> getCorrectResults(Submission submission, boolean includePartialSolutions);
 
 	public abstract String[] getVariableNames();
 

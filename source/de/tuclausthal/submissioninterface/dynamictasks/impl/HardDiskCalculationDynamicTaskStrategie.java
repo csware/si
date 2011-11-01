@@ -35,6 +35,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
  */
 public class HardDiskCalculationDynamicTaskStrategie extends AbstractDynamicTaskStrategie implements DynamicTaskStrategieIf {
 	private static final String[] RESULT_FIELDS = { "Lösung in Terrabyte", "Lösung in Tebibyte" };
+	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Summe der Blue-Rays (bytes)", "-Summe der Audio-Files (bytes)", "-Lösung in Bytes", "Lösung in Terrabyte", "Lösung in Tebibyte" };
 	private static final String[] VARIABLES = { "Anzahl Blue-Rays", "Größe der Blue-Rays", "Anzahl Musikstücke", "Durchschnittliche Größe der Musikstücke" };
 
 	public HardDiskCalculationDynamicTaskStrategie(Session session, Task task) {
@@ -42,13 +43,17 @@ public class HardDiskCalculationDynamicTaskStrategie extends AbstractDynamicTask
 	}
 
 	@Override
-	public String[] getResultFields() {
-		return RESULT_FIELDS;
+	public String[] getResultFields(boolean includePartialSolutions) {
+		if (includePartialSolutions) {
+			return RESULT_FIELDS_WITH_PARTIAL;
+		} else {
+			return RESULT_FIELDS;
+		}
 	}
 
 	@Override
 	public boolean isCorrect(Submission submission) {
-		List<String> correctResults = getCorrectResults(submission);
+		List<String> correctResults = getCorrectResults(submission, false);
 		List<String> studentSolution = getUserResults(submission);
 		for (int i = 0; i < correctResults.size(); i++) {
 			if (Math.abs(Double.parseDouble(correctResults.get(i)) - Double.parseDouble(studentSolution.get(i))) > 0.0001d) {
@@ -59,7 +64,7 @@ public class HardDiskCalculationDynamicTaskStrategie extends AbstractDynamicTask
 	}
 
 	@Override
-	public List<String> getCorrectResults(Submission submission) {
+	public List<String> getCorrectResults(Submission submission, boolean includePartialSolutions) {
 		List<TaskNumber> numbers = getVariables(submission);
 
 		long bluerays = Integer.parseInt(numbers.get(0).getNumber());
@@ -69,12 +74,17 @@ public class HardDiskCalculationDynamicTaskStrategie extends AbstractDynamicTask
 
 		long bytesBL = bluerays * 1024l * 1024l * 1024l * blueraysgroesseInGigaByte;
 		long bytesMusi = musikstueckegroesseInByte * musikstuecke;
-		long bytes = bytesBL+bytesMusi;
+		long bytes = bytesBL + bytesMusi;
 
 		double terabytes = bytes / 1000.0 / 1000.0 / 1000.0 / 1000.0;
 		double teribytes = bytes / 1024.0 / 1024.0 / 1024.0 / 1024.0;
 
 		List<String> results = new LinkedList<String>();
+		if (includePartialSolutions) {
+			results.add(String.valueOf(bytesBL));
+			results.add(String.valueOf(bytesMusi));
+			results.add(String.valueOf(bytes));
+		}
 		results.add(String.valueOf(terabytes));
 		results.add(String.valueOf(teribytes));
 		return results;
