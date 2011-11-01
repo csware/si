@@ -36,11 +36,6 @@ public abstract class AbstractNumberConversionDynamicTaskStrategie extends Abstr
 	}
 
 	@Override
-	final public boolean isCorrect(Submission submission) {
-		return getUserResults(submission).get(0).equals(getCorrectResults(submission).get(0));
-	}
-
-	@Override
 	final public String[] getResultFields() {
 		return RESULT_FIELDS;
 	}
