@@ -139,7 +139,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				String[] resultFields = dynamicTask.getResultFields(false);
 				int resultCounter = 0;
 				for (String result : dynamicTask.getUserResults(submission)) {
-					out.println(Util.escapeHTML(resultFields[resultCounter]) + ": " + Util.escapeHTML(result) + "<br>");
+					out.println(Util.escapeHTML(resultFields[resultCounter]) + ": <span class=\"dt_studentsolution\">" + Util.escapeHTML(result) + "</span><br>");
 					resultCounter++;
 				}
 				out.println("</td>");

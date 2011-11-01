@@ -291,7 +291,7 @@ public class ShowSubmissionView extends HttpServlet {
 				if (resultFields[resultCounter].startsWith("-")) {
 					out.println(Util.escapeHTML(resultFields[resultCounter]) + ": (" + Util.escapeHTML(result) + ")<br>");
 				} else {
-					out.println(Util.escapeHTML(resultFields[resultCounter]) + ": " + Util.escapeHTML(studentResults.get(studentResultCounter)) + " (" + Util.escapeHTML(result) + ")<br>");
+					out.println(Util.escapeHTML(resultFields[resultCounter]) + ": <span class=\"dt_studentsolution\">" + Util.escapeHTML(studentResults.get(studentResultCounter)) + "</span> (" + Util.escapeHTML(result) + ")<br>");
 					studentResultCounter++;
 				}
 				resultCounter++;

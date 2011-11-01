@@ -98,6 +98,10 @@ body.filepreview h1, .previewmenubox, .highlightborder {
 	top: 0px;
 }
 
+.dt_studentsolution {
+	background-color: #E5E5E5;
+}
+
 code {
 	font-family: "Courier New",Courier,monospace;
 	white-space: nowrap;
