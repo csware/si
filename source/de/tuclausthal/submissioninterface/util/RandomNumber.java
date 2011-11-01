@@ -1,5 +1,6 @@
 /*
  * Copyright 2011 Giselle Rodriguez
+ * Copyright 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -68,6 +69,100 @@ public class RandomNumber {
 			}
 		}
 		return randomParam[pos];
+	}
+
+	public static String binStringToHex(String bin) {
+		if (bin.length() % 4 != 0) {
+			return null;
+		}
+		String hex = "";
+		for (int i = 0; i * 4 < bin.length(); i++) {
+			if ("0000".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "0";
+			} else if ("0001".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "1";
+			} else if ("0010".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "2";
+			} else if ("0011".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "3";
+			} else if ("0100".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "4";
+			} else if ("0101".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "5";
+			} else if ("0110".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "6";
+			} else if ("0111".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "7";
+			} else if ("1000".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "8";
+			} else if ("1001".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "9";
+			} else if ("1010".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "A";
+			} else if ("1011".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "B";
+			} else if ("1100".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "C";
+			} else if ("1101".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "D";
+			} else if ("1110".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "E";
+			} else if ("1111".equals(bin.substring(i * 4, (i + 1) * 4))) {
+				hex += "F";
+			} else {
+				return null;
+			}
+		}
+		return hex;
+	}
+
+	public static String trimLeadingZeros(String str) {
+		if (str == null) {
+			return null;
+		}
+		while (str.length() > 0 && str.charAt(0) == '0') {
+			str = str.substring(1);
+		}
+		return str;
+	}
+
+
+	public static String getFloatBits(float randomNumber) {
+		String bits = Integer.toBinaryString(Float.floatToIntBits(randomNumber));
+		while (bits.length() < 32)
+			bits = "0" + bits;
+		return bits;
+	}
+
+	public static String[] getFloatBitsTruncated(float randomNumber) {
+		String bits = getFloatBits(randomNumber);
+
+		int shift = 0;
+		if (randomNumber > 1) {
+			shift = (int) Math.ceil(Math.log(((Float) randomNumber).intValue()));
+		}
+		bits = bits.substring(0, 8 + 5 + shift);
+
+		while (bits.length() < 32) {
+			bits += "0";
+		}
+
+		String origNumber = "";
+		if (bits.charAt(0) == '1') {
+			origNumber = "-" + String.valueOf(Float.intBitsToFloat(Integer.parseInt(bits.substring(1), 2)));
+		} else {
+			origNumber = String.valueOf(Float.intBitsToFloat(Integer.parseInt(bits, 2)));
+		}
+
+		return new String[] { origNumber, bits };
+	}
+
+	public static float getFloat(boolean allowNegative) {
+		double randomNumber = Math.random() * 100;
+		if (allowNegative && Math.random() >= 0.7) {
+			randomNumber *= -1;
+		}
+		return (float) randomNumber;
 	}
 
 	public static String getNumber(String origNumber, int[] randomParam) {
