@@ -59,6 +59,7 @@ public class MarkEmptyTaskView extends HttpServlet {
 
 		out.println("<form action=\"?taskid=" + task.getTaskid() + "\" method=post>");
 		out.println("<b>Student:</b> <select size=1 name=pid>");
+		out.println("<option value=\"0\">-</option>");
 		for (Participation participation : participations) {
 			if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 				out.println("<option value=\"" + participation.getId() + "\">" + Util.escapeHTML(participation.getUser().getFullName()) + "</option>");
