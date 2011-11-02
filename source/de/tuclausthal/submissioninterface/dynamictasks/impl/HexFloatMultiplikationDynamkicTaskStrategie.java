@@ -95,8 +95,14 @@ public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamic
 	protected List<TaskNumber> createTaskNumbers(Participation participation) {
 		List<TaskNumber> numbers = new LinkedList<TaskNumber>();
 		String[] floatNumbers = RandomNumber.getFloatBitsTruncated(RandomNumber.getFloat(true));
+		while (floatNumbers[0].endsWith(".0")) {
+			floatNumbers = RandomNumber.getFloatBitsTruncated(RandomNumber.getFloat(true));
+		}
 		numbers.add(new TaskNumber(getTask(), participation, RandomNumber.binStringToHex(floatNumbers[1]), floatNumbers[0]));
 		floatNumbers = RandomNumber.getFloatBitsTruncated(RandomNumber.getFloat(true));
+		while (floatNumbers[0].endsWith(".0")) {
+			floatNumbers = RandomNumber.getFloatBitsTruncated(RandomNumber.getFloat(true));
+		}
 		numbers.add(new TaskNumber(getTask(), participation, RandomNumber.binStringToHex(floatNumbers[1]), floatNumbers[0]));
 		return numbers;
 	}

@@ -98,10 +98,10 @@ public class HardDiskCalculationDynamicTaskStrategie extends AbstractDynamicTask
 	@Override
 	protected List<TaskNumber> createTaskNumbers(Participation participation) {
 		List<TaskNumber> numbers = new LinkedList<TaskNumber>();
-		int bluerays = (int) (Math.random() * 20 + 1);
+		int bluerays = (int) (Math.random() * 30 + 1);
 		int blueraysgroesseInGigaByte = 20 + (int) (Math.random() * 5);
 		int musikstuecke = (int) (Math.random() * 20000 + 100);
-		int musikstueckegroesseInByte = (int) (Math.random() * 1000000 + 3000000);
+		int musikstueckegroesseInByte = (int) (Math.random() * 5000000 + 3000000);
 		numbers.add(new TaskNumber(getTask(), participation, String.valueOf(bluerays), String.valueOf(bluerays)));
 		numbers.add(new TaskNumber(getTask(), participation, String.valueOf(blueraysgroesseInGigaByte), String.valueOf(blueraysgroesseInGigaByte)));
 		numbers.add(new TaskNumber(getTask(), participation, String.valueOf(musikstuecke), String.valueOf(musikstuecke)));
