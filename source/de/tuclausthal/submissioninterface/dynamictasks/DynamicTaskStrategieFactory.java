@@ -24,14 +24,15 @@ import de.tuclausthal.submissioninterface.dynamictasks.impl.Bin2DecDynamicTaskSt
 import de.tuclausthal.submissioninterface.dynamictasks.impl.Dec2BinDynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.dynamictasks.impl.HardDiskCalculationDynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.dynamictasks.impl.HexFloatMultiplikationDynamkicTaskStrategie;
+import de.tuclausthal.submissioninterface.dynamictasks.impl.MovieSizeDynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 
 /**
  * @author Sven Strickroth
  */
 public class DynamicTaskStrategieFactory {
-	public static final String[] STRATEGIES = { "dec2bin", "bin2dec", "hexfloat2hexfloatandbin", "harddiskfillstatecalculation" };
-	public static final String[] NAMES = { "Integer-Dezimal2Binär (1 Parameter)", "Integer-Binär2Decimal (1 Parameter)", "32-bit HEX-Float2Hex- und Binär-Float (2 Parameter)", "Hard-Disk Space Calculator (4 Parameter)" };
+	public static final String[] STRATEGIES = { "dec2bin", "bin2dec", "hexfloat2hexfloatandbin", "harddiskfillstatecalculation","videocalculation" };
+	public static final String[] NAMES = { "Integer-Dezimal2Binär (1 Parameter)", "Integer-Binär2Decimal (1 Parameter)", "32-bit HEX-Float2Hex- und Binär-Float (2 Parameter)", "Hard-Disk Space Calculator (4 Parameter)","Video-Size Berechnung (4 Parameter)" };
 
 	public static boolean IsValidStrategieName(String dynamicTask) {
 		for (String strategie : STRATEGIES) {
@@ -51,6 +52,8 @@ public class DynamicTaskStrategieFactory {
 			return new HexFloatMultiplikationDynamkicTaskStrategie(session, task);
 		} else if ("harddiskfillstatecalculation".equals(dynamicTask)) {
 			return new HardDiskCalculationDynamicTaskStrategie(session, task);
+		} else if ("videocalculation".equals(dynamicTask)) {
+			return new MovieSizeDynamicTaskStrategie(session, task);
 		}
 		return null;
 	}
