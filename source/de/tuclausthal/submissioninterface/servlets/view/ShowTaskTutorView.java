@@ -158,7 +158,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					if (first == false) {
 						if (showAllColumns) {
 							out.println("<tr>");
-							out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte: (#: " + groupSumOfAllSubmissions + ")</td>");
+							out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Anzahl: " + groupSumOfAllSubmissions + " / Durchschnittspunkte:</td>");
 							out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
 							if (hasUnapprochedPoints) {
 								out.println("<td><input type=submit value=Save></td>");
@@ -265,7 +265,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			if (first == false) {
 				if (showAllColumns) {
 					out.println("<tr>");
-					out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Durchschnittspunkte: (#: " + groupSumOfAllSubmissions + ")</td>");
+					out.println("<td colspan=" + (1 + testCols + task.getSimularityTests().size()) + ">Anzahl: " + groupSumOfAllSubmissions + " / Durchschnittspunkte:</td>");
 					out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
 					if (hasUnapprochedPoints) {
 						out.println("<td><input type=submit value=Save></td>");
