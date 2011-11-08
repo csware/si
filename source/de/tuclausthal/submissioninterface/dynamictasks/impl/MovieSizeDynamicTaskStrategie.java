@@ -59,7 +59,11 @@ public class MovieSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie 
 		if (!correctResults.get(0).equals(studentSolution.get(0))) {
 			return false;
 		}
-		if (Math.abs(Double.parseDouble(correctResults.get(1)) - Double.parseDouble(studentSolution.get(1))) > 0.001d) {
+		try {
+			if (Math.abs(Double.parseDouble(correctResults.get(1)) - Double.parseDouble(studentSolution.get(1))) > 0.001d) {
+				return false;
+			}
+		} catch (NumberFormatException e) {
 			return false;
 		}
 		return true;

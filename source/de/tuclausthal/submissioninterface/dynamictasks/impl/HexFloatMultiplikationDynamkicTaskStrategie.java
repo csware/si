@@ -62,7 +62,11 @@ public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamic
 		if (!RandomNumber.trimLeadingZeros(studentSolution.get(1)).equals(RandomNumber.trimLeadingZeros(correctResults.get(1)))) {
 			return false;
 		}
-		if (Math.abs(Double.parseDouble(correctResults.get(2)) - Double.parseDouble(studentSolution.get(2))) > 0.0000000001d) {
+		try {
+			if (Math.abs(Double.parseDouble(correctResults.get(2)) - Double.parseDouble(studentSolution.get(2))) > 0.0000000001d) {
+				return false;
+			}
+		} catch (NumberFormatException e) {
 			return false;
 		}
 		return true;
