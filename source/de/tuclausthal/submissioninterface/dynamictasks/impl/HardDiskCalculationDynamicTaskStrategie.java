@@ -76,7 +76,7 @@ public class HardDiskCalculationDynamicTaskStrategie extends AbstractDynamicTask
 		long musikstuecke = Integer.parseInt(numbers.get(2).getNumber());
 		long musikstueckegroesseInByte = Integer.parseInt(numbers.get(3).getNumber());
 
-		long bytesBL = bluerays * 1024l * 1024l * 1024l * blueraysgroesseInGigaByte;
+		long bytesBL = bluerays * 1000l * 1000l * 1000l * blueraysgroesseInGigaByte;
 		long bytesMusi = musikstueckegroesseInByte * musikstuecke;
 		long bytes = bytesBL + bytesMusi;
 
