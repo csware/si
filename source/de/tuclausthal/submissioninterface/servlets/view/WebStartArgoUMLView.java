@@ -122,6 +122,7 @@ public class WebStartArgoUMLView extends HttpServlet {
 		out.println("    <jar href=\"" + urlprefix + "java-interfaces.jar\"/>");
 		out.println("    <jar href=\"" + urlprefix + "jmi.jar\"/>");
 		out.println("    <jar href=\"" + urlprefix + "jmiutils.jar\"/>");
+		out.println("    <jar href=\"" + urlprefix + "argouml-umlpropertypanels.jar\"/>");
 		//Jars für den Http upload
 		out.println("    <jar href=\"" + urlprefix + "commons-codec-1.4.jar\"/>");
 		out.println("    <jar href=\"" + urlprefix + "commons-fileupload-1.2.2.jar\"/>");
