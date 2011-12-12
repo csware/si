@@ -51,6 +51,8 @@ public class ShowFileView extends HttpServlet {
 
 		StringBuffer options = new StringBuffer();
 
+		options.append("<script type=\"text/javascript\">\n//<![CDATA[\nif (window.name.match(\"^iframe\")==\"iframe\") { document.write('<a href=\"#\" onclick=\"this.href=document.location\" target=\"_blank\">(new window)</a>'); }\n//]]>\n</script>");
+
 		StringBuffer renderedCode = new StringBuffer();
 		if (fileName.toLowerCase().endsWith(".java")) {
 			if ("off".equals(request.getParameter("comments"))) {
