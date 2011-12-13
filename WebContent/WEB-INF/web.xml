@@ -635,4 +635,20 @@
     <servlet-name>MessageArgoUMLView</servlet-name>
     <url-pattern>/servlets/MessageArgoUMLView</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>MassMail</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.MassMail</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MassMail</servlet-name>
+    <url-pattern>/servlets/MassMail</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>MassMailView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.MassMailView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MassMailView</servlet-name>
+    <url-pattern>/servlets/MassMailView</url-pattern>
+  </servlet-mapping>
 </web-app>

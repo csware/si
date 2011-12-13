@@ -132,6 +132,7 @@ public class ShowLectureTutorView extends HttpServlet {
 				if (lecture.getGroups().size() > 0) {
 					out.println("<br><a href=\"" + response.encodeURL("EditMultipleGroups?lecture=" + lecture.getId()) + "\">Mehrere Gruppen auf einmal bearbeiten</a>");
 				}
+				out.println("<br><a href=\"" + response.encodeURL("MassMail?lectureid=" + lecture.getId()) + "\">Mail an alle</a>");
 				out.println("</p>");
 			}
 		}
@@ -143,7 +144,10 @@ public class ShowLectureTutorView extends HttpServlet {
 			}
 			out.println("<div " + defaultState + " id=\"contentgroup" + group.getGid() + "\">");
 			if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
-				out.println("<p class=mid><a href=\"" + response.encodeURL("EditGroup?groupid=" + group.getGid()) + "\">Teilnehmer zuordnen</a></p>");
+				out.println("<p class=mid>");
+				out.println("<a href=\"" + response.encodeURL("EditGroup?groupid=" + group.getGid()) + "\">Teilnehmer zuordnen</a>");
+				out.println("<br><a href=\"" + response.encodeURL("MassMail?groupid=" + group.getGid()) + "\">Mail an Gruppe</a>");
+				out.println("</p>");
 			}
 			if (group.getTutors().size() > 0) {
 				out.println("<table class=border>");
