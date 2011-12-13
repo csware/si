@@ -152,7 +152,16 @@ public class ShowTaskTutorView extends HttpServlet {
 			// dynamic splitter for groups
 			while (submissionIterator.hasNext()) {
 				Submission submission = submissionIterator.next();
-				Group group = submission.getSubmitters().iterator().next().getGroup();
+				Group group = null;
+				for (Participation submitter : submission.getSubmitters()) {
+					if (lastGroup == null || lastGroup.getGid() <= submitter.getGroup().getGid()) {
+						if (group == null) {
+							group = submitter.getGroup();
+						} else if (group.getGid() > submitter.getGroup().getGid()) {
+							group = submitter.getGroup();
+						}
+					}
+				}
 				if (first == true || lastGroup != group) {
 					lastGroup = group;
 					if (first == false) {
