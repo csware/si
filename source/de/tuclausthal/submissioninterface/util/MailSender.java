@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -50,8 +50,10 @@ public class MailSender {
 			msg.setFrom(new InternetAddress(from));
 			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
 			msg.setSentDate(new Date());
+			subject = subject.replace("\r", " ");
+			subject = subject.replace("\n", " ");
 			msg.setSubject(MimeUtility.encodeText(subjectPrefix + subject, "iso-8859-1", "Q"));
-			msg.setHeader("X-Mailer", "SubmissionInterface");
+			msg.setHeader("X-Mailer", "GATE");
 
 			// kein Anhang, Mailtext wird direkt der Mail hinzugefügt.
 			msg.setText(messageText, "iso-8859-1");
