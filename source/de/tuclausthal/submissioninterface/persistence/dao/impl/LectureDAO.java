@@ -28,6 +28,7 @@ import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.LectureDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -82,7 +83,7 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 	@Override
 	public int getSumOfPoints(Lecture lecture) {
 		Session session = getSession();
-		Query query = session.createQuery("select sum(submission.points.points) from Submission submission inner join submission.task as task inner join task.taskGroup as taskgroup inner join taskgroup.lecture as lecture where lecture.id=:LECTURE and submission.points.pointStatus=2");
+		Query query = session.createQuery("select sum(submission.points.points) from Submission submission inner join submission.task as task inner join task.taskGroup as taskgroup inner join taskgroup.lecture as lecture where lecture.id=:LECTURE and submission.points.pointStatus=" + PointStatus.ABGENOMMEN.ordinal());
 		query.setEntity("LECTURE", lecture);
 		Object result = query.uniqueResult();
 		if (result == null) {
