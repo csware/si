@@ -229,7 +229,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			}
 			if (sumOfPoints > 0 && usersCount > 0) {
 				out.println("<tr>");
-				out.println("<td colspan=3>Durchschnittspunkte: (#: " + usersCount + ")</td>");
+				out.println("<td colspan=3>Anzahl: " + usersCount + " / Durchschnittspunkte:</td>");
 				out.println("<td class=points>" + Util.showPoints(Float.valueOf(sumOfPoints / (float) usersCount).intValue()) + "</td>");
 				out.println("</tr>");
 			} else {
