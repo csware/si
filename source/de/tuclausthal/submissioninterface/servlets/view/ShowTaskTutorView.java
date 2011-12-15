@@ -127,6 +127,7 @@ public class ShowTaskTutorView extends HttpServlet {
 
 		if (task.getSubmissions() != null && task.getSubmissions().size() > 0) {
 			out.println("<p><h2>Abgaben</h2><p>");
+			out.println("<p><div class=mid><a href=\"" + response.encodeURL("SearchSubmissions?taskid=" + task.getTaskid()) + "\">Suchen...</a></div>");
 			Iterator<Submission> submissionIterator = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task).iterator();
 			Group lastGroup = null;
 			boolean first = true;
