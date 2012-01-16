@@ -544,7 +544,11 @@ public class JOptionPane extends JComponent implements Accessible {
 	 * @see java.awt.GraphicsEnvironment#isHeadless
 	 */
 	public static Object showInputDialog(Component parentComponent, Object message, String title, int messageType, Icon icon, Object[] selectionValues, Object initialSelectionValue) throws HeadlessException {
-		return inputBoxResponses.poll();
+		if (inputBoxResponses.size() > 0) {
+			return inputBoxResponses.poll();
+		} else {
+			return -1;
+		}
 	}
 
 	/**
@@ -792,7 +796,11 @@ public class JOptionPane extends JComponent implements Accessible {
 			System.out.println("--" + message + "--");
 		}
 		outputs.add((String) message);
-		return optionDialogResponses.poll().intValue();
+		if (optionDialogResponses.size() > 0) {
+			return optionDialogResponses.poll();
+		} else {
+			return -1;
+		}
 	}
 
 	/**
