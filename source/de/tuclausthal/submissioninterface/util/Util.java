@@ -31,6 +31,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
+
 /**
  * Utility-class with various helpers
  * @author Sven Strickroth
@@ -366,6 +369,16 @@ public final class Util {
 		} else {
 			return (points / minPointStep) * minPointStep;
 		}
+	}
+
+	public static String getPointsCSSClass(Points points) {
+		String pointsClass = "";
+		if (points.getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal()) {
+			pointsClass = " abgenfailed";
+		} else if (points.getDuplicate() != null) {
+			pointsClass = " dupe";
+		}
+		return pointsClass;
 	}
 
 	public static String csvQuote(String title) {

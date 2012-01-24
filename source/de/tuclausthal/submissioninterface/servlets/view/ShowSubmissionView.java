@@ -142,11 +142,7 @@ public class ShowSubmissionView extends HttpServlet {
 				pointsOk = submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN.ordinal();
 				pointsFailed = submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal();
 				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte  vergeben von: <a href=\"mailto:" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>, <a href=\"" + response.encodeURL("ShowMarkHistory?sid=" + submission.getSubmissionid()) + "\">History</a>)";
-				if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal()) {
-					pointsClass = " abgenfailed";
-				} else if (submission.getPoints().getDuplicate() != null) {
-					pointsClass = " dupe";
-				}
+				pointsClass = Util.getPointsCSSClass(submission.getPoints());
 				if (submission.getPoints().getPointStatus() == PointStatus.NICHT_BEWERTET.ordinal()) {
 					out.println("<tr bgcolor=\"lightgrey\">");
 					pointsBewertet = true;
