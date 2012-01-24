@@ -137,12 +137,12 @@ a[href ^="mailto:"] {
 	padding-right: 18px;
 }
 
-.dupe {
-	color: red;
+.dupe, .dupe a {
+	color: red !important;
 }
 
-.abgenfailed {
-	color: blue;
+.abgenfailed, .abgenfailed a {
+	color: blue !important;
 }
 
 .ui-widget {
