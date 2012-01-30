@@ -48,7 +48,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  *
  */
 public class ShowFile extends HttpServlet {
-	private final static String[] plainTextFiles = new String[] { "xml", "htm", "html", "jsp", "txt", "css", "js", "java", "c", "cpp", "h", "project", "classpath", "patch", "diff", "sql", "php", "pl", "rb", "tex", "log", "bib", "cfg" };
+	private final static String[] plainTextFiles = new String[] { "xml", "htm", "html", "jsp", "txt", "css", "js", "java", "c", "cpp", "h", "project", "classpath", "patch", "diff", "sql", "php", "pl", "rb", "tex", "log", "bib", "cfg", "sml", "lcirc" };
 	private final static String[] inlineFiles = new String[] { "jpg", "jpeg", "png", "gif", "pdf", "svg", "svgz" };
 
 	@Override
