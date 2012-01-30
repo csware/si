@@ -155,7 +155,7 @@ public class ShowTaskTutorView extends HttpServlet {
 				Submission submission = submissionIterator.next();
 				Group group = null;
 				for (Participation submitter : submission.getSubmitters()) {
-					if (lastGroup == null || lastGroup.getGid() <= submitter.getGroup().getGid()) {
+					if (submitter.getGroup() != null && (lastGroup == null || lastGroup.getGid() <= submitter.getGroup().getGid())) {
 						if (group == null) {
 							group = submitter.getGroup();
 						} else if (group.getGid() > submitter.getGroup().getGid()) {
