@@ -37,7 +37,7 @@ public class TUCTemplate extends Template {
 		out.println("<body>");
 		out.println("<div id=\"aussen\">");
 		out.println("<div id=\"logo\">");
-		out.println("<h1><a href=\"http://www.tu-clausthal.de/\"><img src=\"" + prefix + "/tuc2005.gif\" alt=\"TU Clausthal\" border=\"0\" /></a></h1>");
+		out.println("<h1><a href=\"http://www.tu-clausthal.de/\"><img src=\"" + prefix + "/tuc2005.png\" width=\"344\" height=\"64\" alt=\"TU Clausthal\" border=\"0\" /></a></h1>");
 		out.println("</div>");
 		out.println("<div id=\"menu\">");
 		User user = requestAdapter.getUser();

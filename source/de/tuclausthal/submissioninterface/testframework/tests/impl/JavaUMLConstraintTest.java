@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,7 +20,6 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
 import java.io.File;
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
@@ -33,7 +32,7 @@ import de.tuclausthal.submissioninterface.testframework.tests.impl.uml.UMLDiagra
 public class JavaUMLConstraintTest extends AbstractTest {
 
 	@Override
-	public void performTest(Test test, Submission submission, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
+	public void performTest(Test test, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
 		String output = "";
 
 		File musterLoesung = new File(basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "musterloesung" + test.getId() + ".xmi");

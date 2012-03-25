@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -30,13 +30,12 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
 public abstract class AbstractTest {
 	/**
 	 * @param test
-	 * @param submission
 	 * @param basePath
 	 * @param submissionPath
 	 * @param testResult
 	 * @throws Exception
 	 */
-	public abstract void performTest(Test test, Submission submission, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception;
+	public abstract void performTest(Test test, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception;
 
 	/**
 	 * Prepares a windows path (windows needs double backslash)

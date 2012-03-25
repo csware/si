@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,164 +18,279 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
-import java.util.concurrent.ExecutionException;
+import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.util.http.fileupload.DiskFileUpload;
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.FileUpload;
+import org.apache.tomcat.util.http.fileupload.FileUploadBase;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.hibernate.Session;
 
-import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
+import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerIf;
+import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
-import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
-import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
-import de.tuclausthal.submissioninterface.persistence.dao.impl.LogDAO;
-import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
+import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
-import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
-import de.tuclausthal.submissioninterface.testframework.TestExecutor;
+import de.tuclausthal.submissioninterface.template.Template;
+import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
+import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * Controller-Servlet for performing a test
+ * Controller-Servlet for performing a test (tutor or advisor)
  * @author Sven Strickroth
  */
 public class PerformTest extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
-		Test test = DAOFactory.TestDAOIf(session).getTest(Util.parseInteger(request.getParameter("testid"), 0));
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
-		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
-		if (submission == null || test == null) {
-			request.setAttribute("title", "Abgabe nicht gefunden");
+		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+		if (task == null) {
+			request.setAttribute("title", "Aufgabe nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
-
-		Task task = submission.getTask();
 
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
-		if (participation == null || test.getTimesRunnableByStudents() == 0) {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
-
-		if (task.getDeadline().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
-			request.setAttribute("title", "Testen nicht mehr möglich");
-			request.getRequestDispatcher("MessageView").forward(request, response);
-			return;
-		}
-
-		SessionAdapter sa = RequestAdapter.getSessionAdapter(request);
-
-		TestCountDAOIf testCountDAO = DAOFactory.TestCountDAOIf(session);
 
 		request.setAttribute("task", task);
-		request.setAttribute("test", test);
 
-		if (test instanceof UMLConstraintTest && request.getParameter("argouml") != null) {
-			if (testCountDAO.canStillRunXTimes(test, submission) == 0) {
-				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
-				request.getRequestDispatcher("MessageArgoUMLView").forward(request, response);
-				return;
-			}
-			sa.setQueuedTest(TestExecutor.executeTask(new TestTask(test, submission)));
-			while (!sa.getQueuedTest().isDone()) {
-				try {
-					Thread.sleep(250);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			TestExecutorTestResult result = null;
-			try {
-				result = sa.getQueuedTest().get();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-			}
+		request.getRequestDispatcher("PerformTestTutorFormView").forward(request, response);
+	}
 
-			if (!testCountDAO.canSeeResultAndIncrementCounter(test, submission)) {
-				sa.setQueuedTest(null);
-				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
-				request.getRequestDispatcher("MessageArgoUMLView").forward(request, response);
-				return;
-			}
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Session session = RequestAdapter.getSession(request);
+		Template template = TemplateFactory.getTemplate(request, response);
 
-			sa.setQueuedTest(null);
+		PrintWriter out = response.getWriter();
 
-			new LogDAO(session).createLogEntry(participation.getUser(), test, test.getTask(), LogAction.PERFORMED_TEST, result.isTestPassed(), result.getTestOutput());
-			request.setAttribute("testresult", result);
-			request.getRequestDispatcher("PerformTestArgoUMLView").forward(request, response);
+		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+		if (task == null) {
+			template.printTemplateHeader("Aufgabe nicht gefunden");
+			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
+			template.printTemplateFooter();
 			return;
 		}
 
-		if (sa.getQueuedTest() == null) {
-			if (request.getParameter("refresh") == null) {
-				// prevent user from redo a test by mistake
+		// check Lecture Participation
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
+		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
 
-				if (testCountDAO.canStillRunXTimes(test, submission) == 0) {
-					request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
-					request.getRequestDispatcher("MessageView").forward(request, response);
-					return;
-				}
+		//http://commons.apache.org/fileupload/using.html
 
-				sa.setQueuedTest(TestExecutor.executeTask(new TestTask(test, submission)));
-				gotoWaitingView(request, response, "sid=" + submission.getSubmissionid() + "&testid=" + test.getId());
-			} else {
-				request.setAttribute("title", "Ungültige Anfrage");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-			}
-		} else {
-			if (sa.getQueuedTest().isDone()) {
-				TestExecutorTestResult result = null;
-				try {
-					result = sa.getQueuedTest().get();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					e.printStackTrace();
-				}
+		// Check that we have a file upload request
+		boolean isMultipart = FileUpload.isMultipartContent(request);
 
-				if (!testCountDAO.canSeeResultAndIncrementCounter(test, submission)) {
-					sa.setQueuedTest(null);
-					request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
-					request.getRequestDispatcher("MessageView").forward(request, response);
-					return;
-				}
+		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
+			template.printTemplateHeader("Ungültige Anfrage");
+			out.println("<div class=mid>Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.</div>");
+			template.printTemplateFooter();
+			return;
+		}
+		if ("-".equals(task.getFilenameRegexp())) {
+			template.printTemplateHeader("Ungültige Anfrage");
+			out.println("<div class=mid>Dateiupload ist für diese Aufgabe deaktiviert.</div>");
+			template.printTemplateFooter();
+			return;
+		}
+		if (!isMultipart) {
+			template.printTemplateHeader("Invalid request");
+			template.printTemplateFooter();
+			return;
+		}
 
-				sa.setQueuedTest(null);
+		// Create a new file upload handler
+		FileUploadBase upload = new DiskFileUpload();
 
-				new LogDAO(session).createLogEntry(participation.getUser(), test, test.getTask(), LogAction.PERFORMED_TEST, result.isTestPassed(), result.getTestOutput());
-				request.setAttribute("testresult", result);
+		List<FileItem> items = null;
+		// Parse the request
+		try {
+			items = upload.parseRequest(request);
+		} catch (FileUploadException e) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+			return;
+		}
 
-				request.getRequestDispatcher("PerformTestResultView").forward(request, response);
-			} else {
-				gotoWaitingView(request, response, "sid=" + submission.getSubmissionid() + "&testid=" + test.getId());
+		int testId = -1;
+
+		// Process the uploaded items
+		Iterator<FileItem> iter = items.iterator();
+		while (iter.hasNext()) {
+			FileItem item = iter.next();
+			if (item.isFormField() && "testid".equals(item.getFieldName())) {
+				testId = Util.parseInteger(item.getString(), 0);
 			}
 		}
-	}
 
-	private void gotoWaitingView(HttpServletRequest request, HttpServletResponse response, String url) throws IOException, ServletException {
-		request.setAttribute("refreshurl", response.encodeURL(request.getRequestURL() + "?refresh=true&" + url));
-		request.setAttribute("redirectTime", 5);
-		request.getRequestDispatcher("PerformTestRunningView").forward(request, response);
+		File path = Util.createTemporaryDirectory("tutortest", null);
+		if (path == null) {
+			throw new IOException("Failed to create tempdir!");
+		}
+		if (path.exists() == false) {
+			path.mkdirs();
+		}
+
+		// Process the uploaded items
+		iter = items.iterator();
+		while (iter.hasNext()) {
+			FileItem item = iter.next();
+
+			// Process a file upload
+			if (!item.isFormField()) {
+				Pattern pattern = Pattern.compile("^(?:.*?[\\\\/])?(" + task.getFilenameRegexp() + ")$");
+				StringBuffer submittedFileName = new StringBuffer(item.getName());
+				if (submittedFileName.lastIndexOf(".") > 0) {
+					int lastDot = submittedFileName.lastIndexOf(".");
+					submittedFileName.replace(lastDot, submittedFileName.length(), submittedFileName.subSequence(lastDot, submittedFileName.length()).toString().toLowerCase());
+				}
+				Matcher m = pattern.matcher(submittedFileName);
+				if (!m.matches()) {
+					template.printTemplateHeader("Ungültige Anfrage");
+					out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
+					out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
+					template.printTemplateFooter();
+					return;
+				}
+				String fileName = m.group(1);
+				if (!"-".equals(task.getArchiveFilenameRegexp()) && (fileName.endsWith(".zip") || fileName.endsWith(".jar"))) {
+					ZipInputStream zipFile;
+					Pattern archivePattern;
+					if (task.getArchiveFilenameRegexp() == null || task.getArchiveFilenameRegexp().isEmpty()) {
+						archivePattern = Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?([a-zA-Z0-9_ .-]+))$");
+					} else if (task.getArchiveFilenameRegexp().startsWith("^")) {
+						archivePattern = Pattern.compile("^(" + task.getArchiveFilenameRegexp().substring(1) + ")$");
+					} else {
+						archivePattern = Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?(" + task.getArchiveFilenameRegexp() + "))$");
+					}
+					try {
+						zipFile = new ZipInputStream(item.getInputStream());
+						ZipEntry entry = null;
+						while ((entry = zipFile.getNextEntry()) != null) {
+							if (entry.getName().contains("..") || entry.isDirectory()) {
+								System.err.println("Ignored entry: " + entry.getName() + "; contains \"..\" or is directory");
+								continue;
+							}
+							StringBuffer archivedFileName = new StringBuffer(entry.getName().replace("\\", "/"));
+							if (!archivePattern.matcher(archivedFileName).matches()) {
+								System.err.println("Ignored entry: " + archivedFileName + ";" + archivePattern.pattern());
+								continue;
+							}
+							if (entry.isDirectory() == false && !entry.getName().toLowerCase().endsWith(".class")) {
+								if (archivedFileName.lastIndexOf(".") > 0) {
+									int lastDot = archivedFileName.lastIndexOf(".");
+									archivedFileName.replace(lastDot, archivedFileName.length(), archivedFileName.subSequence(lastDot, archivedFileName.length()).toString().toLowerCase());
+								}
+								// TODO: relocate java-files from jar/zip archives?
+								File fileToCreate = new File(path, archivedFileName.toString());
+								if (!fileToCreate.getParentFile().exists()) {
+									fileToCreate.getParentFile().mkdirs();
+								}
+								SubmitSolution.copyInputStream(zipFile, new BufferedOutputStream(new FileOutputStream(fileToCreate)));
+							}
+						}
+						zipFile.close();
+					} catch (IOException e) {
+						System.err.println("SubmitSolutionProblem1");
+						System.err.println(e.getMessage());
+						e.printStackTrace();
+						template.printTemplateHeader("Ungültige Anfrage");
+						out.println("Problem beim Entpacken des Archives.");
+						template.printTemplateFooter();
+						return;
+					}
+				} else {
+					File uploadedFile = new File(path, fileName);
+					// handle .java-files differently in order to extract package and move it to the correct folder
+					if (fileName.toLowerCase().endsWith(".java")) {
+						uploadedFile = File.createTempFile("upload", null, path);
+					}
+					try {
+						item.write(uploadedFile);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					// extract defined package in java-files
+					if (fileName.toLowerCase().endsWith(".java")) {
+						NormalizerIf stripComments = new StripCommentsNormalizer();
+						StringBuffer javaFileContents = stripComments.normalize(Util.loadFile(uploadedFile));
+						Pattern packagePattern = Pattern.compile(".*package\\s+([a-zA-Z$]([a-zA-Z0-9_$]|\\.[a-zA-Z0-9_$])*)\\s*;.*", Pattern.DOTALL);
+						Matcher packageMatcher = packagePattern.matcher(javaFileContents);
+						File destFile = new File(path, fileName);
+						if (packageMatcher.matches()) {
+							String packageName = packageMatcher.group(1).replace(".", System.getProperty("file.separator"));
+							File packageDirectory = new File(path, packageName);
+							packageDirectory.mkdirs();
+							destFile = new File(packageDirectory, fileName);
+						}
+						if (destFile.exists() && destFile.isFile()) {
+							destFile.delete();
+						}
+						uploadedFile.renameTo(destFile);
+					}
+				}
+
+				Test test = DAOFactory.TestDAOIf(session).getTest(testId);
+				if (test == null) {
+					template.printTemplateHeader("Ungültige Anfrage");
+					out.println("Test nicht gefunden.");
+					template.printTemplateFooter();
+					return;
+				}
+
+				request.setAttribute("task", test.getTask());
+				request.setAttribute("test", test);
+
+				ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+
+				TestTask testTask = new TestTask(test);
+				TestExecutorTestResult testResult = new TestExecutorTestResult();
+				testTask.performTaskInFolder(test, contextAdapter.getDataPath(), path, testResult);
+
+				Util.recursiveDelete(path);
+				
+				request.setAttribute("testresult", testResult);
+				request.getRequestDispatcher("PerformTestResultView").forward(request, response);
+				return;
+			}
+		}
+		System.err.println("SubmitSolutionProblem3");
+		System.err.println("Problem: Keine Abgabedaten gefunden.");
+		out.println("Problem: Keine Abgabedaten gefunden.");
 	}
 }

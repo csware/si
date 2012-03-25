@@ -37,15 +37,16 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a testresult
  * @author Sven Strickroth
  */
-public class PerformTestResultView extends HttpServlet {
+public class PerformStudentTestResultView extends HttpServlet {
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		TestExecutorTestResult testResult = (TestExecutorTestResult) request.getAttribute("testresult");
+		Task task = (Task) request.getAttribute("task");
 		Test test = (Test) request.getAttribute("test");
 
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		template.printTemplateHeader("Testergebnis", test.getTask());
+		template.printTemplateHeader("Testergebnis", task);
 
 		PrintWriter out = response.getWriter();
 		out.println("<b>Titel:</b> " + Util.escapeHTML(test.getTestTitle()) + "<br>");

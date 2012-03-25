@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -21,7 +21,6 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
 import java.io.File;
 import java.io.IOException;
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
@@ -32,21 +31,35 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 public abstract class TempDirTest extends AbstractTest {
 	@Override
-	final public void performTest(Test test, Submission submission, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
-		File tempDir = null;
-		try {
-			tempDir = Util.createTemporaryDirectory("test", null);
-			if (tempDir == null) {
-				throw new IOException("Failed to create tempdir!");
+	final public void performTest(Test test, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
+		// check if we are already in an tempdir
+		File checkPath = submissionPath;
+		boolean isAlreadyTempDir = true;
+		while (checkPath != null) {
+			if (basePath.equals(checkPath)) {
+				isAlreadyTempDir = false;
+				break;
 			}
+			checkPath = checkPath.getParentFile();
+		}
+		if (isAlreadyTempDir) {
+			performTestInTempDir(test, basePath, submissionPath, testResult);
+		} else {
+			File tempDir = null;
+			try {
+				tempDir = Util.createTemporaryDirectory("test", null);
+				if (tempDir == null) {
+					throw new IOException("Failed to create tempdir!");
+				}
 
-			// prepare tempdir
-			Util.recursiveCopy(submissionPath, tempDir);
+				// prepare tempdir
+				Util.recursiveCopy(submissionPath, tempDir);
 
-			performTestInTempDir(test, basePath, tempDir, testResult);
-		} finally {
-			if (tempDir != null) {
-				Util.recursiveDelete(tempDir);
+				performTestInTempDir(test, basePath, tempDir, testResult);
+			} finally {
+				if (tempDir != null) {
+					Util.recursiveDelete(tempDir);
+				}
 			}
 		}
 	}

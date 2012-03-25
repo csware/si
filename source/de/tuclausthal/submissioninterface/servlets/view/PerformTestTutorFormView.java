@@ -30,30 +30,33 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
-import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * View-Servlet for displaying a testresult
+ * View-Servlet for displaying a form for the submission of files
  * @author Sven Strickroth
  */
-public class PerformTestResultView extends HttpServlet {
+public class PerformTestTutorFormView extends HttpServlet {
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		TestExecutorTestResult testResult = (TestExecutorTestResult) request.getAttribute("testresult");
-		Test test = (Test) request.getAttribute("test");
-
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		template.printTemplateHeader("Testergebnis", test.getTask());
-
 		PrintWriter out = response.getWriter();
-		out.println("<b>Titel:</b> " + Util.escapeHTML(test.getTestTitle()) + "<br>");
-		out.println("<b>Beschreibung:</b><br>" + Util.textToHTML(test.getTestDescription()) + "<br>");
-		out.println("<b>Bestanden:</b> " + Util.boolToHTML(testResult.isTestPassed()) + "<br>");
-		if (!testResult.getTestOutput().isEmpty()) {
-			out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
+
+		Task task = (Task) request.getAttribute("task");
+
+		template.printTemplateHeader("Test durchführen", task);
+
+		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
+		out.println("<p>Test: <select name=\"testid\" size=1>");
+		for (Test test : task.getTests()) {
+			out.println("<option value=\"" + test.getId() + "\">" + Util.escapeHTML(test.getTestTitle()) + (test.isForTutors() ? " (Tutortest)" : "") + "</option>");
 		}
+		out.println("</select></p>");
+		out.println("<p>Bitte wählen Sie eine Datei aus, die Sie testen möchten.</p>");
+		out.println("<INPUT TYPE=file NAME=file>");
+		out.println("<INPUT TYPE=submit VALUE=upload>");
+		out.println("</FORM>");
 
 		template.printTemplateFooter();
 	}
