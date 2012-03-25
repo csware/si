@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -46,9 +46,12 @@ public class TestTask implements Serializable {
 	}
 
 	public TestTask(Test test, Submission submission, boolean saveTestResult) {
-		this.testId = test.getId();
-		this.submissionid = submission.getSubmissionid();
+		this(test, submission);
 		this.saveTestResult = saveTestResult;
+	}
+
+	public TestTask(Test test) {
+		this.testId = test.getId();
 	}
 
 	/**
@@ -68,17 +71,8 @@ public class TestTask implements Serializable {
 			testResult.setTestID(testId);
 
 			File path = new File(basePath.getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-			if (path.exists() == false) {
-				path.mkdirs();
-			}
 
-			AbstractTest testImpl = test.getTestImpl();
-			try {
-				testImpl.performTest(test, submission, basePath, path, testResult);
-			} catch (Exception e) {
-				e.printStackTrace();
-				testResult.setTestOutput(e.getMessage());
-			}
+			performTaskInFolder(test, basePath, path, testResult);
 
 			if (saveTestResult) {
 				try {
@@ -89,6 +83,27 @@ public class TestTask implements Serializable {
 			} else {
 				tx.commit(); // we did not do anything, just close the transaction
 			}
+		}
+	}
+
+	/**
+	 * Exetutes/performs a specific test with the files located in path
+	 * @param test the test to perform
+	 * @param basePath the path to the submissions
+	 * @param path the path of the folder where the testing data lies
+	 * @param testResult 
+	 */
+	public void performTaskInFolder(Test test, File basePath, File path, TestExecutorTestResult testResult) {
+		if (path.exists() == false) {
+			path.mkdirs();
+		}
+
+		AbstractTest testImpl = test.getTestImpl();
+		try {
+			testImpl.performTest(test, basePath, path, testResult);
+		} catch (Exception e) {
+			e.printStackTrace();
+			testResult.setTestOutput(e.getMessage());
 		}
 	}
 }

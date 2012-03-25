@@ -675,4 +675,28 @@
     <servlet-name>SearchSubmissionsResultView</servlet-name>
     <url-pattern>/servlets/SearchSubmissionsResultView</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>PerformTest</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.PerformTest</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PerformTest</servlet-name>
+    <url-pattern>/servlets/PerformTest</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>PerformTestTutorFormView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PerformTestTutorFormView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PerformTestTutorFormView</servlet-name>
+    <url-pattern>/servlets/PerformTestTutorFormView</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>PerformTestResultView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PerformTestResultView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PerformTestResultView</servlet-name>
+    <url-pattern>/servlets/PerformTestResultView</url-pattern>
+  </servlet-mapping>
 </web-app>

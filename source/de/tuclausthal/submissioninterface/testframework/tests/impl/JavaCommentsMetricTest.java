@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -26,7 +26,6 @@ import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.SpacesTabsN
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCodeNormalizer;
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
@@ -37,7 +36,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 public class JavaCommentsMetricTest extends AbstractTest {
 	@Override
-	public void performTest(Test test, Submission submission, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
+	public void performTest(Test test, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
 		CommentsMetricTest commentsMetricTest = (CommentsMetricTest) test;
 		List<String> excludedFileNames = Arrays.asList(commentsMetricTest.getExcludedFiles().split(","));
 

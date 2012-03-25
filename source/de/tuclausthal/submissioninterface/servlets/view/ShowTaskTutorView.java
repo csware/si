@@ -123,6 +123,8 @@ public class ShowTaskTutorView extends HttpServlet {
 
 		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("MarkEmptyTask?taskid=" + task.getTaskid()) + "\">Punkte vergeben</a></div>");
+		} else {
+			out.println("<p><div class=mid><a href=\"" + response.encodeURL("PerformTest?taskid=" + task.getTaskid()) + "\">Test (manuell) durchführen</a></div>");
 		}
 
 		if (task.getSubmissions() != null && task.getSubmissions().size() > 0) {
