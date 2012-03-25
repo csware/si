@@ -133,7 +133,7 @@ a.external {
 	padding-right: 13px;
 }
 a[href ^="mailto:"] {
-	background: url(mail_icon.gif) center right no-repeat;
+	background: url(mail_icon.png) center right no-repeat;
 	padding-right: 18px;
 }
 
