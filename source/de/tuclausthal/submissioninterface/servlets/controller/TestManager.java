@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * Copyright 2011 Joachim Schramm
  * 
@@ -154,6 +154,7 @@ public class TestManager extends HttpServlet {
 				test.setTestTitle(title);
 				test.setTestDescription(description);
 				test.setTimeout(timeout);
+				test.setGiveDetailsToStudents(true);
 				testDAO.saveTest(test);
 				session.getTransaction().commit();
 				response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
@@ -188,6 +189,7 @@ public class TestManager extends HttpServlet {
 					path.mkdirs();
 				}
 				int timesRunnableByStudents = 0;
+				boolean giveDetailsToStudents = false;
 				int timeout = 15;
 				boolean tutortest = false;
 				String title = "";
@@ -222,6 +224,8 @@ public class TestManager extends HttpServlet {
 							tutortest = true;
 						} else if ("timeout".equals(item.getFieldName())) {
 							timeout = Util.parseInteger(item.getString(), 15);
+						} else if ("giveDetailsToStudents".equals(item.getFieldName())) {
+							giveDetailsToStudents = true;
 						}
 					}
 				}
@@ -230,6 +234,7 @@ public class TestManager extends HttpServlet {
 				test.setForTutors(tutortest);
 				test.setTestTitle(title);
 				test.setTestDescription(description);
+				test.setGiveDetailsToStudents(giveDetailsToStudents);
 				test.setTimeout(timeout);
 				testDAO.saveTest(test);
 				session.getTransaction().commit();
@@ -257,6 +262,7 @@ public class TestManager extends HttpServlet {
 			test.setRegularExpression(request.getParameter("regexp"));
 			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
 			test.setForTutors(request.getParameter("tutortest") != null);
+			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			test.setTestTitle(request.getParameter("title"));
 			test.setTestDescription(request.getParameter("description"));
 			testDAO.saveTest(test);
@@ -269,6 +275,7 @@ public class TestManager extends HttpServlet {
 			CompileTest test = testDAO.createCompileTest(task);
 			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
 			test.setForTutors(request.getParameter("tutortest") != null);
+			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			test.setTestTitle(request.getParameter("title"));
 			test.setTestDescription(request.getParameter("description"));
 			testDAO.saveTest(test);
@@ -289,6 +296,7 @@ public class TestManager extends HttpServlet {
 			test.setMinProzent(minProzent);
 			test.setExcludedFiles(request.getParameter("excludedFiles"));
 			test.setTestDescription(request.getParameter("description"));
+			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));

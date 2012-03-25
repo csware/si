@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -260,7 +260,7 @@ public class TaskManagerView extends HttpServlet {
 					} else {
 						out.println("unknown<br>");
 					}
-					out.println("# Ausführbar für Studenten: " + test.getTimesRunnableByStudents() + "<br>");
+					out.println("# Ausführbar für Studenten: " + test.getTimesRunnableByStudents() + " (" + (test.isGiveDetailsToStudents() ? "mit" : "ohne") + " Details)<br>");
 					out.println("Tutortest: " + test.isForTutors() + "<br>");
 					if (test.isForTutors()) {
 						out.print("Status: ");

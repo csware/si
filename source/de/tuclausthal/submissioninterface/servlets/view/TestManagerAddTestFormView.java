@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -66,6 +66,10 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th># Ausführbar für Studenten:</th>");
 		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\"></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Studenten Test-Details anzeigen:</th>");
+		out.println("<td><input type=checkbox name=giveDetailsToStudents></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
@@ -150,6 +154,10 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Studenten Test-Details anzeigen:</th>");
+		out.println("<td><input type=checkbox name=giveDetailsToStudents></td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
 		out.println(response.encodeURL("ShowTask?taskid=" + task.getTaskid()));
 		out.println("\">Abbrechen</a></td>");
@@ -182,6 +190,10 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th># Ausführbar für Studenten:</th>");
 		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\"></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Studenten Test-Details anzeigen:</th>");
+		out.println("<td><input type=checkbox name=giveDetailsToStudents></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
@@ -219,6 +231,10 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th># Ausführbar für Studenten:</th>");
 		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\"></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Studenten Test-Details anzeigen:</th>");
+		out.println("<td><input type=checkbox name=giveDetailsToStudents></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");

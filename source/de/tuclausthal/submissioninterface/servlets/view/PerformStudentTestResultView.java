@@ -52,7 +52,7 @@ public class PerformStudentTestResultView extends HttpServlet {
 		out.println("<b>Titel:</b> " + Util.escapeHTML(test.getTestTitle()) + "<br>");
 		out.println("<b>Beschreibung:</b><br>" + Util.textToHTML(test.getTestDescription()) + "<br>");
 		out.println("<b>Bestanden:</b> " + Util.boolToHTML(testResult.isTestPassed()) + "<br>");
-		if (!testResult.getTestOutput().isEmpty()) {
+		if (test.isGiveDetailsToStudents() && !testResult.getTestOutput().isEmpty()) {
 			out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
 		}
 
