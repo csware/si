@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -34,7 +34,7 @@ import de.tuclausthal.submissioninterface.template.TemplateFactory;
  * View-Servlet for displaying a java-sourcecode file
  * @author Sven Strickroth
  */
-public class PerformTestRunningView extends HttpServlet {
+public class PerformStudentTestRunningView extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String url = (String) request.getAttribute("refreshurl");

@@ -76,8 +76,8 @@
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.Redirect</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>PerformTest</servlet-name>
-    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.PerformTest</servlet-class>
+    <servlet-name>PerformStudentTest</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.PerformStudentTest</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>AdminMenue</servlet-name>
@@ -272,20 +272,20 @@
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.TestManagerAddTestFormView</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>PerformTestRunningView</servlet-name>
-    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PerformTestRunningView</servlet-class>
+    <servlet-name>PerformStudentTestRunningView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PerformStudentTestRunningView</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>PerformTestResultView</servlet-name>
-    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PerformTestResultView</servlet-class>
+    <servlet-name>PerformStudentTestResultView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PerformStudentTestResultView</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>AdminMenue</servlet-name>
     <url-pattern>/servlets/AdminMenue</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>PerformTest</servlet-name>
-    <url-pattern>/servlets/PerformTest</url-pattern>
+    <servlet-name>PerformStudentTest</servlet-name>
+    <url-pattern>/servlets/PerformStudentTest</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>LectureManager</servlet-name>
@@ -480,12 +480,12 @@
     <url-pattern>/Redirect</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>PerformTestRunningView</servlet-name>
-    <url-pattern>/servlets/PerformTestRunningView</url-pattern>
+    <servlet-name>PerformStudentTestRunningView</servlet-name>
+    <url-pattern>/servlets/PerformStudentTestRunningView</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>PerformTestResultView</servlet-name>
-    <url-pattern>/servlets/PerformTestResultView</url-pattern>
+    <servlet-name>PerformStudentTestResultView</servlet-name>
+    <url-pattern>/servlets/PerformStudentTestResultView</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>Nagios</servlet-name>
@@ -604,12 +604,12 @@
     <url-pattern>/servlets/WebStartArgoUMLView</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>PerformTestArgoUMLView</servlet-name>
-    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PerformTestArgoUMLView</servlet-class>
+    <servlet-name>PerformStudentTestArgoUMLView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PerformStudentTestArgoUMLView</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>PerformTestArgoUMLView</servlet-name>
-    <url-pattern>/servlets/PerformTestArgoUMLView</url-pattern>
+    <servlet-name>PerformStudentTestArgoUMLView</servlet-name>
+    <url-pattern>/servlets/PerformStudentTestArgoUMLView</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>ShowTaskDescriptionView</servlet-name>

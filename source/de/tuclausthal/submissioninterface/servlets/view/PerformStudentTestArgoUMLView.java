@@ -1,5 +1,6 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011 Joachim Schramm
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -26,36 +27,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
-import de.tuclausthal.submissioninterface.template.Template;
-import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.util.Util;
 
-/**
- * View-Servlet for displaying a testresult
- * @author Sven Strickroth
- */
-public class PerformTestResultView extends HttpServlet {
+public class PerformStudentTestArgoUMLView extends HttpServlet {
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		TestExecutorTestResult testResult = (TestExecutorTestResult) request.getAttribute("testresult");
-		Task task = (Task) request.getAttribute("task");
 		Test test = (Test) request.getAttribute("test");
 
-		Template template = TemplateFactory.getTemplate(request, response);
-
-		template.printTemplateHeader("Testergebnis", task);
-
 		PrintWriter out = response.getWriter();
-		out.println("<b>Titel:</b> " + Util.escapeHTML(test.getTestTitle()) + "<br>");
-		out.println("<b>Beschreibung:</b><br>" + Util.textToHTML(test.getTestDescription()) + "<br>");
-		out.println("<b>Bestanden:</b> " + Util.boolToHTML(testResult.isTestPassed()) + "<br>");
+		out.println("<html>");
+		out.println("<b>Titel:</b> " + Util.makeCleanHTML(test.getTestTitle()) + "<br>");
+		out.println("<b>Beschreibung:</b><br>" + Util.escapeHTML(test.getTestDescription()) + "<br>");
 		if (!testResult.getTestOutput().isEmpty()) {
-			out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
+			out.println("<b>Ausgabe:</b><br><pre>" + Util.makeCleanHTML(testResult.getTestOutput()) + "</pre>");
 		}
-
-		template.printTemplateFooter();
+		out.println("</html>");
 	}
 }

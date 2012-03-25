@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -233,7 +233,7 @@ public class ShowTaskStudentView extends HttpServlet {
 					out.println("</td>");
 					out.println("<td>");
 					if (testCountDAO.canStillRunXTimes(test, submission) > 0) {
-						out.println("<a href=\"" + response.encodeURL("PerformTest?sid=" + submission.getSubmissionid() + "&amp;testid=" + test.getId()) + "\">Test ausführen</a>");
+						out.println("<a href=\"" + response.encodeURL("PerformStudentTest?sid=" + submission.getSubmissionid() + "&amp;testid=" + test.getId()) + "\">Test ausführen</a>");
 					} else {
 						out.println("Limit erreicht");
 					}

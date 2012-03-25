@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -52,7 +52,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for performing a test
  * @author Sven Strickroth
  */
-public class PerformTest extends HttpServlet {
+public class PerformStudentTest extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
@@ -123,7 +123,7 @@ public class PerformTest extends HttpServlet {
 
 			new LogDAO(session).createLogEntry(participation.getUser(), test, test.getTask(), LogAction.PERFORMED_TEST, result.isTestPassed(), result.getTestOutput());
 			request.setAttribute("testresult", result);
-			request.getRequestDispatcher("PerformTestArgoUMLView").forward(request, response);
+			request.getRequestDispatcher("PerformStudentTestArgoUMLView").forward(request, response);
 			return;
 		}
 
@@ -166,7 +166,7 @@ public class PerformTest extends HttpServlet {
 				new LogDAO(session).createLogEntry(participation.getUser(), test, test.getTask(), LogAction.PERFORMED_TEST, result.isTestPassed(), result.getTestOutput());
 				request.setAttribute("testresult", result);
 
-				request.getRequestDispatcher("PerformTestResultView").forward(request, response);
+				request.getRequestDispatcher("PerformStudentTestResultView").forward(request, response);
 			} else {
 				gotoWaitingView(request, response, "sid=" + submission.getSubmissionid() + "&testid=" + test.getId());
 			}
@@ -176,6 +176,6 @@ public class PerformTest extends HttpServlet {
 	private void gotoWaitingView(HttpServletRequest request, HttpServletResponse response, String url) throws IOException, ServletException {
 		request.setAttribute("refreshurl", response.encodeURL(request.getRequestURL() + "?refresh=true&" + url));
 		request.setAttribute("redirectTime", 5);
-		request.getRequestDispatcher("PerformTestRunningView").forward(request, response);
+		request.getRequestDispatcher("PerformStudentTestRunningView").forward(request, response);
 	}
 }
