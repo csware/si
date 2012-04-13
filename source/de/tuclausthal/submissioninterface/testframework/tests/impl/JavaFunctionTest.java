@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -47,6 +47,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			policyFileWriter.write("\n");
 			policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar") + "\" {\n");
 			policyFileWriter.write("	permission java.lang.RuntimePermission \"setIO\";\n");
+			policyFileWriter.write("	permission java.lang.RuntimePermission \"exitTheVM.*\";\n");
 			policyFileWriter.write("	permission java.lang.reflect.ReflectPermission \"suppressAccessChecks\";\n");
 			policyFileWriter.write("	permission java.io.FilePermission \"file:" + mkPath(tempDir.getAbsolutePath()) + "-\", \"read, write, delete\";\n");
 			policyFileWriter.write("};\n");
@@ -67,9 +68,9 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			// we have no frontend
 			params.add("-Djava.awt.headless=true");
 			// JOptionpane-Hack
-			params.add("-Xbootclasspath/p:" + basePath.getAbsolutePath() + System.getProperty("file.separator") + "joptionpane.jar");
+			params.add("-Xbootclasspath/p:" + basePath.getAbsolutePath() + System.getProperty("file.separator") + "joptionpane.jar" + File.pathSeparator + basePath.getAbsolutePath() + System.getProperty("file.separator") + "NoExitSecurityManager.jar");
 			// for security reasons, so that students cannot access the server
-			params.add("-Djava.security.manager");
+			params.add("-Djava.security.manager=secmgr.NoExitSecurityManager");
 			params.add("-Djava.security.policy=" + policyFile.getAbsolutePath());
 			params.addAll(additionalParams);
 
