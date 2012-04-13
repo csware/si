@@ -1,9 +1,11 @@
 How to setup the submission interface
 
 1. Create a new context (i.e. new folder in C:\Programme\Apache Software Foundation\Tomcat 6.0\webapps, like "ba")
-2. Unpack the web-bin.zip into that directory
+2. Copy the contents of the WebContent folder into that folder
+2a. Compile all java-files in src
+2b. Copy all .class files to the webapps\[contextname]\WEB-INF/classes folder
 3. Create a path where all submission should be stored (e.g. "c:\abgabesystem")
-4. Unpack the datapath-bin.zip there
+4. Copy submissiondir/*, CraftedJOptionpage/craftedjoptionpane.jar and SecurityManager/NoExitSecurityManager.jar to that folder
 5. Open web.xml in the webapps\[contextname]\WEB-INF-folder
 5a. set the datapath value (context-param)
 5b. If you want to use LDAP or any other login-method, update the filter-init-params of the AuthenticationFilter
