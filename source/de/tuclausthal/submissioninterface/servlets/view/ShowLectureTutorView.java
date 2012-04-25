@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -145,7 +145,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			out.println("<div " + defaultState + " id=\"contentgroup" + group.getGid() + "\">");
 			if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
 				out.println("<p class=mid>");
-				out.println("<a href=\"" + response.encodeURL("EditGroup?groupid=" + group.getGid()) + "\">Teilnehmer zuordnen</a>");
+				out.println("<a href=\"" + response.encodeURL("EditGroup?groupid=" + group.getGid()) + "\">Teilnehmer zuordnen / Gruppe bearbeiten</a>");
 				out.println("<br><a href=\"" + response.encodeURL("MassMail?groupid=" + group.getGid()) + "\">Mail an Gruppe</a>");
 				out.println("</p>");
 			}
