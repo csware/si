@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -60,6 +60,8 @@ public class ShowLectureStudentView extends HttpServlet {
 		// list all tasks for a lecture
 		template.printTemplateHeader(lecture);
 
+		boolean canJoinGroup = (joinAbleGroups != null && joinAbleGroups.size() > 0);
+
 		out.println("<div class=mid>");
 		if (participation.getGroup() != null) {
 			out.println("Meine Gruppe: " + Util.escapeHTML(participation.getGroup().getName()));
@@ -78,15 +80,21 @@ public class ShowLectureStudentView extends HttpServlet {
 					out.print("<a href=\"mailto:" + Util.escapeHTML(tutor.getUser().getFullEmail()) + "\">" + Util.escapeHTML(tutor.getUser().getFullName()) + "</a>");
 				}
 			}
+		} else if (canJoinGroup) {
+			out.println("Sie sind derzeit in keiner Gruppe.");
 		}
-		if (joinAbleGroups != null && joinAbleGroups.size() > 0) {
+		if (canJoinGroup) {
 			out.println("<form action=\"" + response.encodeURL("JoinGroup") + "\">");
 			out.println("<select name=groupid>");
 			for (Group group : joinAbleGroups) {
 				out.println("<option value=" + group.getGid() + ">" + Util.escapeHTML(group.getName()));
 			}
 			out.println("</select>");
-			out.println("<input type=submit value=\"Gruppe wechseln\">");
+			if (participation.getGroup() != null) {
+				out.println("<input type=submit value=\"Gruppe wechseln\">");
+			} else {
+				out.println("<input type=submit value=\"Gruppe beitreten\">");
+			}
 			out.println("</form>");
 		}
 		out.println("</div><p>");
