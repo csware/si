@@ -49,12 +49,11 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			policyFileWriter.write("	permission java.lang.RuntimePermission \"setIO\";\n");
 			policyFileWriter.write("	permission java.lang.RuntimePermission \"exitTheVM.*\";\n");
 			policyFileWriter.write("	permission java.lang.reflect.ReflectPermission \"suppressAccessChecks\";\n");
-			policyFileWriter.write("	permission java.io.FilePermission \"file:" + mkPath(tempDir.getAbsolutePath()) + "-\", \"read, write, delete\";\n");
 			policyFileWriter.write("};\n");
 			policyFileWriter.write("\n");
 			policyFileWriter.write("grant {\n");
 			policyFileWriter.write("	permission java.util.PropertyPermission \"*\", \"read\";\n");
-			policyFileWriter.write("	permission java.io.FilePermission \"file:" + mkPath(tempDir.getAbsolutePath()) + "-\", \"read, write, delete\";\n");
+			policyFileWriter.write("	permission java.io.FilePermission \"-\", \"read, write, delete\";\n"); // erlaube Zugriff auf alle Dateien im CWD
 			policyFileWriter.write("	permission java.lang.RuntimePermission \"accessDeclaredMembers\";\n");
 			policyFileWriter.write("};\n");
 			policyFileWriter.close();
