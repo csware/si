@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -30,6 +30,22 @@ import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaJUnitTest
  */
 @Entity
 public class JUnitTest extends Test {
+	private String mainClass = "AllTests";
+	
+	/**
+	 * @return the mainClass
+	 */
+	public String getMainClass() {
+		return mainClass;
+	}
+
+	/**
+	 * @param mainClass the mainClass to set
+	 */
+	public void setMainClass(String mainClass) {
+		this.mainClass = mainClass;
+	}
+	
 	@Override
 	@Transient
 	public AbstractTest getTestImpl() {

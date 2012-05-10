@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -21,7 +21,9 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
 import java.io.File;
 import java.util.List;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * @author Sven Strickroth
@@ -37,6 +39,6 @@ public class JavaJUnitTest extends JavaFunctionTest {
 		params.add("-cp");
 		params.add(basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar" + File.pathSeparator + basePath.getAbsolutePath() + System.getProperty("file.separator") + "junit.jar" + File.pathSeparator + tempDir.getAbsolutePath());
 		params.add("junit.textui.TestRunner");
-		params.add("AllTests");
+		params.add(Util.escapeCommandlineArguments(((JUnitTest)test).getMainClass()));
 	}
 }

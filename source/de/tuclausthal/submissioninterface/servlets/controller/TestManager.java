@@ -194,6 +194,7 @@ public class TestManager extends HttpServlet {
 				boolean tutortest = false;
 				String title = "";
 				String description = "";
+				String mainclass = "AllTests";
 				// Process the uploaded items
 				Iterator<FileItem> iter = items.iterator();
 				while (iter.hasNext()) {
@@ -226,11 +227,14 @@ public class TestManager extends HttpServlet {
 							timeout = Util.parseInteger(item.getString(), 15);
 						} else if ("giveDetailsToStudents".equals(item.getFieldName())) {
 							giveDetailsToStudents = true;
+						} else if ("mainclass".equals(item.getFieldName())) {
+							mainclass = item.getString();
 						}
 					}
 				}
 
 				test.setTimesRunnableByStudents(timesRunnableByStudents);
+				test.setMainClass(mainclass);
 				test.setForTutors(tutortest);
 				test.setTestTitle(title);
 				test.setTestDescription(description);

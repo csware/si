@@ -184,6 +184,10 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><INPUT TYPE=file NAME=testcase> (Main Testclass: AllTests)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Main-Klasse:</th>");
+		out.println("<td><input type=text name=mainclass></td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<th>Tutorentest:</th>");
 		out.println("<td><input type=checkbox name=tutortest></td>");
 		out.println("</tr>");
