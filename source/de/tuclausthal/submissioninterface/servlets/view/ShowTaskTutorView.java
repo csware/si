@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -190,6 +190,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					if (group == null) {
 						out.println("<h3>Ohne Gruppe</h3>");
 						out.println("<div id=\"contentgroup0\">");
+						out.println("<div class=mid><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid() + "&amp;action=grouplist") + "\" target=\"_blank\">Druckbare Liste</a></div>");
 					} else {
 						out.println("<h3>Gruppe: " + Util.escapeHTML(group.getName()) + " <a href=\"#\" onclick=\"$('#contentgroup" + group.getGid() + "').toggle(); return false;\">(+/-)</a></h3>");
 						String defaultState = "";
@@ -231,7 +232,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					lastSID = submission.getSubmissionid();
 					if (showAllColumns) {
 						if (task.isADynamicTask()) {
-							out.println("<td>"+Util.boolToHTML(task.getDynamicTaskStrategie(session).isCorrect(submission))+"</td>");
+							out.println("<td>" + Util.boolToHTML(task.getDynamicTaskStrategie(session).isCorrect(submission)) + "</td>");
 						}
 						for (Test test : tests) {
 							if (testResultDAO.getResult(test, submission) != null) {

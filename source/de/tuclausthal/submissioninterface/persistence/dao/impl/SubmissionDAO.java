@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -99,6 +99,10 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 
 	@Override
 	public List<Submission> getSubmissionsForTaskOfGroupOrdered(Task task, Group group) {
-		return getSession().createCriteria(Submission.class, "sub").add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.eq("group", group)).addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).list();
+		if (group == null) {
+			return getSession().createCriteria(Submission.class, "sub").add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.isNull("group")).addOrder(Order.asc("sub.submissionid")).list();	
+		} else  {
+			return getSession().createCriteria(Submission.class, "sub").add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.eq("group", group)).addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).list();
+		}
 	}
 }

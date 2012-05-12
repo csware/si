@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -59,7 +59,11 @@ public class ShowTaskTutorPrintView extends HttpServlet {
 		out.println("<body>");
 
 		out.println("<H1>" + Util.escapeHTML(task.getTitle()) + "</H1>");
-		out.println("<h3>Gruppe: " + Util.escapeHTML(group.getName()) + "</h3>");
+		if (group == null) {
+			out.println("<h3>Gruppe: ohne Gruppe</h3>");
+		} else {
+			out.println("<h3>Gruppe: " + Util.escapeHTML(group.getName()) + "</h3>");
+		}
 
 		if (task.getSubmissions() != null && task.getSubmissions().size() > 0) {
 			out.println("<table border=1>");
