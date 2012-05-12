@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -131,15 +131,17 @@ public class SearchSubmissions extends HttpServlet {
 			}
 
 		}
-		File taskPath = new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
-		for (Submission submission : task.getSubmissions()) {
-			File submissionPath = new File(taskPath, String.valueOf(submission.getSubmissionid()));
-			List<String> files = Util.listFilesAsRelativeStringList(submissionPath);
-			for (String file : files) {
-				StringBuffer fileContent = Util.loadFile(new File(submissionPath, file));
-				if (fileContent.toString().contains(request.getParameter("q"))) {
-					foundSubmissions.add(submission);
-					break;
+		if (arrayContains(request.getParameterValues("search"), "files")) {
+			File taskPath = new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+			for (Submission submission : task.getSubmissions()) {
+				File submissionPath = new File(taskPath, String.valueOf(submission.getSubmissionid()));
+				List<String> files = Util.listFilesAsRelativeStringList(submissionPath);
+				for (String file : files) {
+					StringBuffer fileContent = Util.loadFile(new File(submissionPath, file));
+					if (fileContent.toString().contains(request.getParameter("q"))) {
+						foundSubmissions.add(submission);
+						break;
+					}
 				}
 			}
 		}
