@@ -146,6 +146,10 @@ public class SearchSubmissions extends HttpServlet {
 			}
 		}
 
+		if (arrayContains(request.getParameterValues("search"), "publiccomments")) {
+			foundSubmissions.addAll(session.createCriteria(Submission.class).add(Restrictions.eq("task", task)).add(Restrictions.like("points.publicComment", "%" + request.getParameter("q") + "%")).list());
+		}
+
 		if (arrayContains(request.getParameterValues("search"), "privatecomments")) {
 			foundSubmissions.addAll(session.createCriteria(Submission.class).add(Restrictions.eq("task", task)).add(Restrictions.like("points.internalComment", "%" + request.getParameter("q") + "%")).list());
 		}

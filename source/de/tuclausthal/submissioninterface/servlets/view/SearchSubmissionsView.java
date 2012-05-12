@@ -62,6 +62,7 @@ public class SearchSubmissionsView extends HttpServlet {
 		}
 		out.println("<option value=\"files\" selected>Abgegebene Dateien</option>");
 		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+			out.println("<option value=\"publiccomments\" selected>Öffentliche Bewertungs-Kommentare</option>");
 			out.println("<option value=\"privatecomments\" selected>Interne Bewertungs-Kommentare</option>");
 			if (task.getTests().size() >= 0) {
 				out.println("<option value=\"testresults\" selected>Testergebnisse</option>");
