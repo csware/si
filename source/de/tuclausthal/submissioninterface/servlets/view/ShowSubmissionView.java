@@ -206,6 +206,14 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<b><label for=\"nbewertet\">Nicht fertig bewertet:</label></b> <input id=\"nbewertet\" type=radio name=pointsstatus value=\"nbewertet\"" + (pointsBewertet ? " checked" : "") + ">, <b><label for=\"nabgen\">Nicht abgenommen:</label></b> <input id=\"nabgen\" type=radio name=pointsstatus value=\"nabgen\"" + (!pointsBewertet && !(pointsOk || pointsFailed) ? "checked" : "") + ">, <b><label for=\"abgen\">Abgenommen (ok):</label></b> <input id=\"abgen\" type=radio name=pointsstatus value=\"ok\"" + (pointsOk ? "checked" : "") + ">, <b><label for=\"failed\">Abnahme nicht bestanden:</label></b> <input id=\"failed\" type=radio name=pointsstatus value=\"failed\" " + (pointsFailed ? "checked" : "") + "><a href=\"#\" onclick=\"$('#statehelp').toggle(); return false;\">(?)</a><br>");
 			out.println("<br><div style=\"display:none;\" id=statehelp><b>Hilfe:</b><br><dl><dt>Nicht fertig bewertet</dt><dd>Zeigt diese Abgabe in allen Listen als &quot;n/a&quot; bzw. &quot;noch unbenotet&quot; an (auch den Studenten).</dd><dt>Nicht abgenommen</dt><dd>Wird in den Listen eingeklammert angezeigt, Punkte werden nicht gezählt, bei Studenten steht &quot;0, nicht abgenommen&quot;</dd><dt>Abgenommen (ok)</dt><dd>Aufgabe wurde abschließend bewertet, Punkte werden regulär gezählt (sofern kein Plagiat; ggf. wird dem Studenten &quot;Plagiat&quot; angezeigt)</dd><dt>Abnahme nicht bestanden</dt><dd>Aufgabe wurde abschließend bewertet, aber es werden keine Punkte gezählt (dem Studenten wird &quot;0, Abnahme nicht bestanden&quot; angezeigt, überschreibt die Plagiat Option).</dd></dl></div>");
 			out.println("<input type=submit value=Speichern>");
+			if (!requestAdapter.isPrivacyMode() && submission.getPoints() != null) {
+				out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
+				String groupAdding = "";
+				if (request.getParameter("groupid") != null && Util.parseInteger(request.getParameter("groupid"), 0) > 0) {
+					groupAdding = "&amp;groupid=" + Util.parseInteger(request.getParameter("groupid"), 0);
+				}
+				out.println("- <a href=\"" + response.encodeURL("GotoNextUngradedSubmission?sid=" + submission.getSubmissionid() + "&amp;taskid=" + task.getTaskid() + groupAdding) + "\">nächste</a>");
+			}
 			out.println("</form>");
 			out.println("</td>");
 			out.println("</tr>");

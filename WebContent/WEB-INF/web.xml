@@ -699,4 +699,12 @@
     <servlet-name>PerformTestResultView</servlet-name>
     <url-pattern>/servlets/PerformTestResultView</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>GotoNextUngradedSubmission</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.GotoNextUngradedSubmission</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GotoNextUngradedSubmission</servlet-name>
+    <url-pattern>/servlets/GotoNextUngradedSubmission</url-pattern>
+  </servlet-mapping>
 </web-app>

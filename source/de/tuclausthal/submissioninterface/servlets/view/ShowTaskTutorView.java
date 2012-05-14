@@ -194,7 +194,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					} else {
 						out.println("<h3>Gruppe: " + Util.escapeHTML(group.getName()) + " <a href=\"#\" onclick=\"$('#contentgroup" + group.getGid() + "').toggle(); return false;\">(+/-)</a></h3>");
 						String defaultState = "";
-						if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0 && group.getTutors().size() > 0 && !group.getTutors().contains(participation)) {
+						if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0 && group.getTutors().size() > 0 && !group.getTutors().contains(participation) && !!"taskWise".equals(task.getTaskGroup().getLecture().getGradingMethod())) {
 							defaultState = "style=\"display: none;\"";
 						}
 						out.println("<div " + defaultState + " id=\"contentgroup" + group.getGid() + "\">");
@@ -228,7 +228,11 @@ public class ShowTaskTutorView extends HttpServlet {
 				if (lastSID != submission.getSubmissionid()) {
 					groupSumOfAllSubmissions++;
 					out.println("<tr>");
-					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
+					String groupAdding = "";
+					if (group != null) {
+						groupAdding = "&amp;groupid=" + group.getGid();
+					}
+					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid() + groupAdding) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
 					lastSID = submission.getSubmissionid();
 					if (showAllColumns) {
 						if (task.isADynamicTask()) {

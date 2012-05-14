@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -58,6 +58,10 @@ public class AdminMenueAddLectureView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Semester:</th>");
 		out.println("<td>" + dummyLecture.getReadableSemester() + "</td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Gruppenweise Bewertung:</th>");
+		out.println("<td><input type=checkbox name=groupWise></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=anlegen> <a href=\"" + response.encodeURL("?") + "\">Abbrechen</a></td>");

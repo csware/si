@@ -102,7 +102,11 @@ public class ShowSubmission extends HttpServlet {
 				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, duplicate);
 			}
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));
+			String groupAdding = "";
+			if (request.getParameter("group") != null && Util.parseInteger(request.getParameter("group"), 0) > 0) {
+				groupAdding = "&amp;groupid=" + Util.parseInteger(request.getParameter("group"), 0);
+			}
+			response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid() + groupAdding));
 			return;
 		}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -47,13 +47,18 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 	}
 
 	@Override
-	public Lecture newLecture(String name, boolean requiresAbhnahme) {
+	public Lecture newLecture(String name, boolean requiresAbhnahme, boolean groupWiseGrading) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		Lecture lecture = new Lecture();
 		lecture.setName(name);
 		lecture.setSemester(Util.getCurrentSemester());
 		lecture.setRequiresAbhnahme(requiresAbhnahme);
+		if (groupWiseGrading) {
+			lecture.setGradingMethod("groupWise");
+		} else {
+			lecture.setGradingMethod("taskWise");
+		}
 		session.save(lecture);
 		tx.commit();
 		return lecture;

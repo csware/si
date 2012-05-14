@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -44,6 +44,7 @@ public class Lecture implements Serializable {
 	private Set<Participation> participants;
 	private List<TaskGroup> taskGroups;
 	private Set<Group> groups;
+	private String gradingMethod = "";
 
 	/**
 	 * @return the name
@@ -169,5 +170,19 @@ public class Lecture implements Serializable {
 	 */
 	public void setRequiresAbhnahme(boolean requiresAbhnahme) {
 		this.requiresAbhnahme = requiresAbhnahme;
+	}
+
+	/**
+	 * @return the gradingMethod
+	 */
+	public String getGradingMethod() {
+		return gradingMethod;
+	}
+
+	/**
+	 * @param gradingMethod the gradingMethod to set
+	 */
+	public void setGradingMethod(String gradingMethod) {
+		this.gradingMethod = gradingMethod;
 	}
 }

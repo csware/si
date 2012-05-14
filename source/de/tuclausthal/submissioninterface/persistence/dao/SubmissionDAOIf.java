@@ -93,4 +93,7 @@ public interface SubmissionDAOIf {
 	 * @return success of the removal
 	 */
 	public boolean deleteIfNoFiles(Submission submission, File submissionPath);
+
+	public Submission getUngradedSubmission(Task task, int lastSubmissionID);
+	public Submission getUngradedSubmission(Task task, int lastSubmissionID, Group group);
 }
