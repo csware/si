@@ -127,15 +127,19 @@ public class ShowLectureTutorView extends HttpServlet {
 		if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
 			out.println("<h3>Ohne Gruppe</h3>");
 			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, requestAdapter);
+			out.println("<p class=mid>");
 			if (participation.getRoleType() == ParticipationRole.ADVISOR) {
-				out.println("<p class=mid><a href=\"" + response.encodeURL("AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a>");
+				out.println("<a href=\"" + response.encodeURL("AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a>");
 				if (lecture.getGroups().size() > 0) {
 					out.println("<br><a href=\"" + response.encodeURL("EditMultipleGroups?lecture=" + lecture.getId()) + "\">Mehrere Gruppen auf einmal bearbeiten</a>");
 				}
-				out.println("<br><a href=\"" + response.encodeURL("MassMail?lectureid=" + lecture.getId()) + "\">Mail an alle</a>");
-				out.println("</p>");
+				out.println("<br>");
 			}
+		} else {
+			out.println("<p class=mid>");
 		}
+		out.println("<a href=\"" + response.encodeURL("MassMail?lectureid=" + lecture.getId()) + "\">Mail an alle</a>");
+		out.println("</p>");
 		for (Group group : lecture.getGroups()) {
 			out.println("<h3><a name=\"group" + group.getGid() + "\">Gruppe: " + Util.escapeHTML(group.getName()) + "</a> <a href=\"#\" onclick=\"$('#contentgroup" + group.getGid() + "').toggle(); return false;\">(+/-)</a></h3>");
 			String defaultState = "";
