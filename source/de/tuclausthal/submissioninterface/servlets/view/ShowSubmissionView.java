@@ -197,10 +197,18 @@ public class ShowSubmissionView extends HttpServlet {
 				out.println("<b>Punkte:</b> <input type=text class=\"" + pointsClass + "\" name=points size=3 value=\"" + Util.showPoints(points) + "\"> (max. " + Util.showPoints(task.getMaxPoints()) + ")" + pointsGivenBy + "<br>");
 			}
 			out.println("<b>Öffentlicher Kommentar:</b><br><textarea cols=80 rows=8 name=publiccomment>" + Util.escapeHTML(oldPublicComment) + "</textarea><br>");
+			out.println("<b>Interner Kommentar:</b>");
 			if (requestAdapter.isPrivacyMode()) {
-				out.println("<input type=hidden name=internalcomment value=\"" + Util.escapeHTML(oldInternalComment) + "\">");
+				out.print(" <a id=\"\" href=\"#\" onclick=\"$('#stateInternalComment').toggle(); return false;\">(+/-)</a><br>");
+				out.println("<div id=\"stateInternalComment\" style=\"display:none;\">");
 			} else {
-				out.println("<b>Interner Kommentar:</b><br><textarea cols=80 rows=8 name=internalcomment>" + Util.escapeHTML(oldInternalComment) + "</textarea><br>");
+				out.print("<br>");
+			}
+			out.println("<textarea cols=80 rows=8 name=internalcomment>"+ Util.escapeHTML(oldInternalComment) + "</textarea>");
+			if (requestAdapter.isPrivacyMode()) {
+				out.print("</div>");
+			} else {
+				out.print("<br>");
 			}
 			out.println("<b>Best&auml;tigtes Plagiat:</b> <input type=checkbox id=isdupe name=isdupe " + (isDupe ? "checked" : "") + " onclick=\"if (!$('#isdupe').attr('checked')) {$('#duplicatespan').hide();} else {$('#duplicatespan').show();}return true;\"><span id=duplicatespan " + (isDupe ? "" : " style=\"display:none;\"") + ">, wenn ja: <input type=text size=3 name=duplicate id=duplicate value=\"" + duplicate + "\"> (0 = keine Punkte, 2 = 1/2 Punktzahl, 3 = 1/3 Punktzahl, ...)</span><br>");
 			out.println("<b><label for=\"nbewertet\">Nicht fertig bewertet:</label></b> <input id=\"nbewertet\" type=radio name=pointsstatus value=\"nbewertet\"" + (pointsBewertet ? " checked" : "") + ">, <b><label for=\"nabgen\">Nicht abgenommen:</label></b> <input id=\"nabgen\" type=radio name=pointsstatus value=\"nabgen\"" + (!pointsBewertet && !(pointsOk || pointsFailed) ? "checked" : "") + ">, <b><label for=\"abgen\">Abgenommen (ok):</label></b> <input id=\"abgen\" type=radio name=pointsstatus value=\"ok\"" + (pointsOk ? "checked" : "") + ">, <b><label for=\"failed\">Abnahme nicht bestanden:</label></b> <input id=\"failed\" type=radio name=pointsstatus value=\"failed\" " + (pointsFailed ? "checked" : "") + "><a href=\"#\" onclick=\"$('#statehelp').toggle(); return false;\">(?)</a><br>");
