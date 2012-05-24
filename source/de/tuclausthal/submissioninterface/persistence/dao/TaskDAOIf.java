@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -46,9 +46,10 @@ public interface TaskDAOIf {
 	 * @param maxSubmitters 
 	 * @param allowSubmittersAcrossGroups
 	 * @param dynamicTask task with dynamic nubmers and a special result field for calculated solution
+	 * @param showPointsDate if != null show points automatically after that date, otherwise manuel intervention is required
 	 * @return a new Task
 	 */
-	public Task newTask(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups, String dynamicTask);
+	public Task newTask(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups, String dynamicTask, Date showPointsDate);
 
 	/**
 	 * Fetch a task based on it's id

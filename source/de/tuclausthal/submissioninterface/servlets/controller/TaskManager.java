@@ -157,6 +157,7 @@ public class TaskManager extends HttpServlet {
 			} else {
 				Date startdate = parseDate(request.getParameter("startdate"), new Date());
 				Date deadline = parseDate(request.getParameter("deadline"), new Date());
+				Date pointsdate = parseDate(request.getParameter("pointsdate"), new Date());
 				if (deadline.before(startdate)) {
 					deadline = startdate;
 				}
@@ -164,11 +165,16 @@ public class TaskManager extends HttpServlet {
 				if (showPoints.before(deadline)) {
 					showPoints = deadline;
 				}
+				if (request.getParameter("pointsmanual") != null) {
+					pointsdate = null;
+				} else if (pointsdate.before(deadline)) {
+					pointsdate = deadline;
+				}
 				String dynamicTask = null;
 				if (DynamicTaskStrategieFactory.IsValidStrategieName(request.getParameter("dynamicTask"))) {
 					dynamicTask = request.getParameter("dynamicTask");
 				}
-				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), Util.convertToPoints(request.getParameter("minpointstep"))), Util.convertToPoints(request.getParameter("minpointstep")), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, request.getParameter("filenameregexp"), request.getParameter("archivefilenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, dynamicTask);
+				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), Util.convertToPoints(request.getParameter("minpointstep"))), Util.convertToPoints(request.getParameter("minpointstep")), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, request.getParameter("filenameregexp"), request.getParameter("archivefilenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, dynamicTask, pointsdate);
 			}
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));

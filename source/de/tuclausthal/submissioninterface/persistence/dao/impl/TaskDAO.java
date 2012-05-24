@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -42,10 +42,10 @@ public class TaskDAO extends AbstractDAO implements TaskDAOIf {
 	}
 
 	@Override
-	public Task newTask(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameregexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups, String dynamicTask) {
+	public Task newTask(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameregexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups, String dynamicTask, Date showPointsDate) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		Task task = new Task(title, maxPoints, minPointStep, start, deadline, description, taskGroup, showPoints, filenameregexp, archiveFilenameRegexp, showTextArea, featuredFiles, tutorsCanUploadFiles, maxSubmitters, allowSubmittersAcrossGroups, dynamicTask);
+		Task task = new Task(title, maxPoints, minPointStep, start, deadline, description, taskGroup, showPoints, filenameregexp, archiveFilenameRegexp, showTextArea, featuredFiles, tutorsCanUploadFiles, maxSubmitters, allowSubmittersAcrossGroups, dynamicTask, showPointsDate);
 		session.save(task);
 		tx.commit();
 		return task;
