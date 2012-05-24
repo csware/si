@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -154,6 +154,7 @@ public class TaskManager extends HttpServlet {
 				}
 				task.setTaskGroup(taskGroup);
 				taskDAO.saveTask(task);
+				response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 			} else {
 				Date startdate = parseDate(request.getParameter("startdate"), new Date());
 				Date deadline = parseDate(request.getParameter("deadline"), new Date());
@@ -175,9 +176,8 @@ public class TaskManager extends HttpServlet {
 					dynamicTask = request.getParameter("dynamicTask");
 				}
 				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), Util.convertToPoints(request.getParameter("minpointstep"))), Util.convertToPoints(request.getParameter("minpointstep")), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, request.getParameter("filenameregexp"), request.getParameter("archivefilenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, dynamicTask, pointsdate);
+				response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture() + "&taskid=" + task.getTaskid() + "&action=editTask"));
 			}
-			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
-			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 			return;
 		} else if ("deleteTask".equals(request.getParameter("action"))) {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
