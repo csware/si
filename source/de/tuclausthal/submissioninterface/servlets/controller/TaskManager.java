@@ -383,6 +383,24 @@ public class TaskManager extends HttpServlet {
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		if ("regexptest".equals(request.getParameter("action"))) {
+			response.setContentType("text/html");
+			PrintWriter out = response.getWriter();
+			String regexp = request.getParameter("regexp");
+			if ("-".equals(regexp)) {
+				out.println("Dateiupload deaktiviert.");
+				return;
+			}
+			if (regexp == null || regexp.isEmpty()) {
+				regexp = "[a-zA-Z0-9_. -]+";
+			}
+			if (Pattern.compile("^(" + regexp + ")$").matcher(request.getParameter("test")).matches()) {
+				out.println("OK");
+			} else {
+				out.println("nicht OK");
+			}
+			return;
+		}
 		// don't want to have any special post-handling
 		doGet(request, response);
 	}
