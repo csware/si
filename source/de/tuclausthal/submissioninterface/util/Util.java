@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -21,9 +21,11 @@ package de.tuclausthal.submissioninterface.util;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -293,7 +295,22 @@ public final class Util {
 	 * @throws IOException
 	 */
 	public static StringBuffer loadFile(File file) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(file));
+		return loadFile(file, false);
+	}
+
+	/**
+	 * Opens the specified file and returns it's contents as string buffer
+	 * @param file the file to open
+	 * @param isUTF8
+	 * @return the file contents
+	 * @throws IOException
+	 */
+	public static StringBuffer loadFile(File file, boolean isUTF8) throws IOException {
+		BufferedReader br;
+		if (isUTF8)
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+		else
+			br = new BufferedReader(new FileReader(file));
 		StringBuffer sb = new StringBuffer((int) file.length());
 		String line;
 		while ((line = br.readLine()) != null) {

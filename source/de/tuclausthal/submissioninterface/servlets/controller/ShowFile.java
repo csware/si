@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -23,6 +23,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -85,7 +88,7 @@ public class ShowFile extends HttpServlet {
 		if (file.exists() && file.isFile()) {
 			if (isPlainTextFile(file.getName().toLowerCase()) && !"true".equals(request.getParameter("download"))) {
 				// code for loading/displaying text-files
-				StringBuffer code = Util.loadFile(file);
+				StringBuffer code = Util.loadFile(file, isUTF8(file));
 
 				request.setAttribute("submission", submission);
 				request.setAttribute("code", code);
@@ -120,6 +123,47 @@ public class ShowFile extends HttpServlet {
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
 		request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
+	}
+
+	public static boolean isUTF8(File file) throws IOException {
+		BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+
+		byte[] bomBuffer = new byte[3];
+		int len = in.read(bomBuffer);
+
+		// Check for BOM
+		if (len == 3 && (bomBuffer[0] & 0xFF) == 0xEF && (bomBuffer[1] & 0xFF) == 0xBB & (bomBuffer[2] & 0xFF) == 0xBF) {
+			return true;
+		}
+
+		int length;
+		int octet;
+		while ((octet = in.read()) != -1) {
+			if ((octet & 0x80) == 0) {
+				continue; // ASCII
+			}
+
+			// Check for UTF-8 leading byte
+			if ((octet & 0xE0) == 0xC0) {
+				length = 1;
+			} else if ((octet & 0xF0) == 0xE0) {
+				length = 2;
+			} else if ((octet & 0xF8) == 0xF0) {
+				length = 3;
+			} else {
+				// Java only supports BMP so 3 is max
+				return false;
+			}
+
+			for (int i = 0; i < length; i++) {
+				if ((octet = in.read()) == -1 || (octet & 0xC0) != 0x80) {
+					// Not a valid trailing byte
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	private boolean isPlainTextFile(String lowercaseFilename) {
