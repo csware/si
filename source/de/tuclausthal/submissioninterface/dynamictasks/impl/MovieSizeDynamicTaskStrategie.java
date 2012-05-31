@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -70,8 +70,7 @@ public class MovieSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie 
 	}
 
 	@Override
-	public List<String> getCorrectResults(Submission submission, boolean includePartialSolutions) {
-		List<TaskNumber> numbers = getVariables(submission);
+	public List<String> getCorrectResults(List<TaskNumber> numbers, boolean includePartialSolutions) {
 		String width = numbers.get(1).getNumber().substring(0, numbers.get(1).getNumber().indexOf("x"));
 		String height = numbers.get(1).getNumber().substring(numbers.get(1).getNumber().indexOf("x") + 1);
 		long fps = Long.parseLong(numbers.get(0).getNumber());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -24,8 +24,8 @@ import java.util.List;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTaskStrategie;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 
 public abstract class AbstractNumberConversionDynamicTaskStrategie extends AbstractDynamicTaskStrategie {
 	private static final String[] RESULT_FIELDS = { "Lösung der Umrechnung" };
@@ -41,9 +41,9 @@ public abstract class AbstractNumberConversionDynamicTaskStrategie extends Abstr
 	}
 
 	@Override
-	final public List<String> getCorrectResults(Submission submission, boolean includePartialSolutions) {
+	final public List<String> getCorrectResults(List<TaskNumber> taskNumbers, boolean includePartialSolutions) {
 		List<String> results = new LinkedList<String>();
-		results.add(getVariables(submission).get(0).getOrigNumber());
+		results.add(taskNumbers.get(0).getOrigNumber());
 		return results;
 	}
 

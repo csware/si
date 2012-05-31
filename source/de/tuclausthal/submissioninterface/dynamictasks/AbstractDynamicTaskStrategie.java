@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -66,7 +66,12 @@ public abstract class AbstractDynamicTaskStrategie implements DynamicTaskStrateg
 	}
 
 	@Override
-	public abstract List<String> getCorrectResults(Submission submission, boolean includePartialSolutions);
+	public List<String> getCorrectResults(Submission submission, boolean includePartialSolutions) {
+		return getCorrectResults(getVariables(submission), includePartialSolutions);
+	}
+
+	@Override
+	public abstract List<String> getCorrectResults(List<TaskNumber> taskNumbers, boolean includePartialSolutions);
 
 	@Override
 	public abstract String[] getVariableNames();
@@ -98,15 +103,15 @@ public abstract class AbstractDynamicTaskStrategie implements DynamicTaskStrateg
 
 	@Override
 	final public String getTranslatedDescription(Participation participation) {
-		return translateDescription(getVariables(participation));
+		return getTranslatedDescription(getVariables(participation));
 	}
 
 	@Override
 	final public String getTranslatedDescription(Submission submission) {
-		return translateDescription(getVariables(submission));
+		return getTranslatedDescription(getVariables(submission));
 	}
 
-	private String translateDescription(List<TaskNumber> variables) {
+	final public String getTranslatedDescription(List<TaskNumber> variables) {
 		String description = task.getDescription();
 		for (int i = 0; i < variables.size(); i++) {
 			description = description.replace("$Var" + i + "$", Util.escapeHTML(variables.get(i).getNumber()));

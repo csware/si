@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -68,9 +68,7 @@ public class HardDiskCalculationDynamicTaskStrategie extends AbstractDynamicTask
 	}
 
 	@Override
-	public List<String> getCorrectResults(Submission submission, boolean includePartialSolutions) {
-		List<TaskNumber> numbers = getVariables(submission);
-
+	public List<String> getCorrectResults(List<TaskNumber> numbers, boolean includePartialSolutions) {
 		long bluerays = Integer.parseInt(numbers.get(0).getNumber());
 		long blueraysgroesseInGigaByte = Integer.parseInt(numbers.get(1).getNumber());
 		long musikstuecke = Integer.parseInt(numbers.get(2).getNumber());

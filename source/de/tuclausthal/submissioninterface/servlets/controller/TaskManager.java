@@ -44,6 +44,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieFactory;
+import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.PointCategoryDAOIf;
@@ -55,6 +56,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -154,7 +156,11 @@ public class TaskManager extends HttpServlet {
 				}
 				task.setTaskGroup(taskGroup);
 				taskDAO.saveTask(task);
-				response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
+				if (request.getParameter("dynamictaskpreview") != null) {
+					response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=dynamictaskpreview"));
+				} else {
+					response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
+				}
 			} else {
 				Date startdate = parseDate(request.getParameter("startdate"), new Date());
 				Date deadline = parseDate(request.getParameter("deadline"), new Date());
@@ -176,7 +182,7 @@ public class TaskManager extends HttpServlet {
 					dynamicTask = request.getParameter("dynamicTask");
 				}
 				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), Util.convertToPoints(request.getParameter("minpointstep"))), Util.convertToPoints(request.getParameter("minpointstep")), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, request.getParameter("filenameregexp"), request.getParameter("archivefilenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, dynamicTask, pointsdate);
-				response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture() + "&taskid=" + task.getTaskid() + "&action=editTask"));
+				response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask"));
 			}
 			return;
 		} else if ("deleteTask".equals(request.getParameter("action"))) {
@@ -190,6 +196,32 @@ public class TaskManager extends HttpServlet {
 			}
 			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
 			return;
+		} else if ("dynamictaskpreview".equals(request.getParameter("action"))) {
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+			if (task == null) {
+				request.setAttribute("title", "Aufgabe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
+			if (!task.isADynamicTask()) {
+				request.setAttribute("title", "Aufgabe ist keine dynamische Aufgabe");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
+
+			DynamicTaskStrategieIf dts = task.getDynamicTaskStrategie(session);
+			List<TaskNumber> taskNumbers = dts.getVariables((Participation) null);
+			List<String> correctResults = dts.getCorrectResults(taskNumbers, true);
+
+			task.setDescription(dts.getTranslatedDescription(taskNumbers));
+			request.setAttribute("task", task);
+			request.setAttribute("variableNames", dts.getVariableNames());
+			request.setAttribute("taskNumbers", taskNumbers);
+			request.setAttribute("correctResults", correctResults);
+			request.setAttribute("resultFields", dts.getResultFields(true));
+
+			request.getRequestDispatcher("TaskManagerDynamicTaskPreView").forward(request, response);
 		} else if ("uploadTaskFile".equals(request.getParameter("action"))) {
 			Template template = TemplateFactory.getTemplate(request, response);
 			PrintWriter out = response.getWriter();

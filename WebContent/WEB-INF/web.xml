@@ -707,4 +707,12 @@
     <servlet-name>GotoNextUngradedSubmission</servlet-name>
     <url-pattern>/servlets/GotoNextUngradedSubmission</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>TaskManagerDynamicTaskPreView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.TaskManagerDynamicTaskPreView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TaskManagerDynamicTaskPreView</servlet-name>
+    <url-pattern>/servlets/TaskManagerDynamicTaskPreView</url-pattern>
+  </servlet-mapping>
 </web-app>
