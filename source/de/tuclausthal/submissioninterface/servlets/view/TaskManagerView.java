@@ -85,6 +85,23 @@ public class TaskManagerView extends HttpServlet {
 								"});" +
 							"}" +
 							"\n</script>");
+		template.addHead("<script type=\"text/javascript\">\n" +
+							"function getDynamicTaskHints() {" +
+								"if (document.getElementById(\"dynamicTask\").value != \"\") {"+
+									"document.getElementById(\"dynamictaskhints\").innerHTML = \"hole Hinweise...\";" +
+									"$.ajax({" +
+											"type: \"POST\"," +
+											"url: \"" + response.encodeURL("?action=dynamictaskhints") + "\"," +
+											"data: { dynamicTask: document.getElementById(\"dynamicTask\").value }, " +
+											"success: function(msg){" +
+												"document.getElementById(\"dynamictaskhints\").innerHTML = msg;" +
+											"}" +
+										"});" +
+								"} else {" +
+									"document.getElementById(\"dynamictaskhints\").innerHTML = \"\";" +
+								"}" +
+							"}" +
+							"\n</script>");
 
 		if (task.getTaskid() != 0) {
 			template.printTemplateHeader("Aufgabe bearbeiten", task);
@@ -119,12 +136,12 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Aufgabe mit dynamischen Werten:</th>");
-		out.println("<td><select size=1 name=dynamicTask " + (task.getTaskid() != 0 ? " disabled" : "") + ">");
+		out.println("<td><select size=1 name=dynamicTask id=dynamicTask " + (task.getTaskid() != 0 ? " disabled" : " onchange=\"getDynamicTaskHints();\"") + ">");
 		out.println("<option value=\"\"" + (task.getDynamicTask() == null ? " selected" : "") + ">-</option>");
 		for (int i = 0; i < DynamicTaskStrategieFactory.STRATEGIES.length; i++) {
 			out.println("<option value=\"" + DynamicTaskStrategieFactory.STRATEGIES[i] + "\"" + (DynamicTaskStrategieFactory.STRATEGIES[i].equals(task.getDynamicTask()) ? " selected" : "") + ">" + DynamicTaskStrategieFactory.NAMES[i] + "</option>");
 		}
-		out.println("</select></td>");
+		out.println("</select><div id=dynamictaskhints></div></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");

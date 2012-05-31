@@ -432,6 +432,34 @@ public class TaskManager extends HttpServlet {
 				out.println("nicht OK");
 			}
 			return;
+		} else if ("dynamictaskhints".equals(request.getParameter("action"))) {
+			response.setContentType("text/html");
+			response.setCharacterEncoding("ISO-8859-1");
+			PrintWriter out = response.getWriter();
+			DynamicTaskStrategieIf dts = DynamicTaskStrategieFactory.createDynamicTaskStrategie(null, request.getParameter("dynamicTask"), null);
+			if (dts == null) {
+				out.println("unbekannte dynamische Aufgabe");
+			} else {
+				out.println("<b>" + DynamicTaskStrategieFactory.GetStrategieName(request.getParameter("dynamicTask")) + "</b><br>");
+				out.println("<dl>");
+				out.println("<dt><b>Variablen:</b></dt>");
+				out.println("<dd>");
+				int variableCounter = 0;
+				for (String variableName : dts.getVariableNames()) {
+					out.print(Util.escapeHTML(variableName) + ": $Var" + variableCounter + "$<br>");
+					variableCounter++;
+				}
+				out.println("</dd>");
+
+				out.println("<dt><b>Lösungsfelder:</b></dt>");
+				out.println("<dd>");
+				for (String resultField : dts.getResultFields(false)) {
+					out.println(Util.escapeHTML(resultField) + "<br>");
+				}
+				out.println("</dd>");
+				out.println("</dl>");
+			}
+			return;
 		}
 		// don't want to have any special post-handling
 		doGet(request, response);

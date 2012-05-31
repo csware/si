@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011 -2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -33,7 +33,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
  */
 public class DynamicTaskStrategieFactory {
 	public static final String[] STRATEGIES = { "dec2bin", "bin2dec", "hexfloat2hexfloatandbin", "harddiskfillstatecalculation", "videocalculation", "complexdatatypesize" };
-	public static final String[] NAMES = { "Integer-Dezimal2Binär (1 Parameter)", "Integer-Binär2Decimal (1 Parameter)", "32-bit HEX-Float2Hex- und Binär-Float (2 Parameter)", "Hard-Disk Space Calculator (4 Parameter)", "Video-Size Berechnung (4 Parameter)", "ComplexDataType-Size Berechnung (4 Parameter)" };
+	public static final String[] NAMES = { "Integer-Dezimal2Binär", "Integer-Binär2Decimal", "32-bit HEX-Float2Hex- und Binär-Float", "Hard-Disk Space Calculator", "Video-Size Berechnung", "ComplexDataType-Size Berechnung" };
 
 	public static boolean IsValidStrategieName(String dynamicTask) {
 		for (String strategie : STRATEGIES) {
@@ -42,6 +42,17 @@ public class DynamicTaskStrategieFactory {
 			}
 		}
 		return false;
+	}
+
+	public static String GetStrategieName(String dynamicTask) {
+		int i = 0;
+		for (String strategie : STRATEGIES) {
+			if (strategie.equals(dynamicTask)) {
+				return NAMES[i];
+			}
+			i++;
+		}
+		return null;
 	}
 
 	public static DynamicTaskStrategieIf createDynamicTaskStrategie(Session session, String dynamicTask, Task task) {
