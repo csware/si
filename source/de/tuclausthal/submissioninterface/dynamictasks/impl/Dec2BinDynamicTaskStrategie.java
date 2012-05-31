@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -40,5 +40,10 @@ public class Dec2BinDynamicTaskStrategie extends AbstractNumberConversionDynamic
 		String number = RandomNumber.getNumber(origNumber, RandomNumber.getRandomParam('B'));
 		numbers.add(new TaskNumber(getTask(), participation, origNumber, number));
 		return numbers;
+	}
+
+	@Override
+	public String getExampleTaskDescription() {
+		return "Berechnen Sie die Binärdarstellung des Dezimal-Wertes $Var0$.";
 	}
 }

@@ -110,4 +110,9 @@ public class HardDiskCalculationDynamicTaskStrategie extends AbstractDynamicTask
 		numbers.add(new TaskNumber(getTask(), participation, String.valueOf(musikstueckegroesseInByte), String.valueOf(musikstueckegroesseInByte)));
 		return numbers;
 	}
+
+	@Override
+	public String getExampleTaskDescription() {
+		return "Für $Var0$ Blue-Ray Discs mit der Größe $Var1$ Gigabyte und $Var2$ MP3-Musikdateien mit der Größe $Var3$ Byte soll der Speicherplatz berechnet werden.<br><br>Wie viel Terabyte und wie viel Tebibyte benötigt man?";
+	}
 }

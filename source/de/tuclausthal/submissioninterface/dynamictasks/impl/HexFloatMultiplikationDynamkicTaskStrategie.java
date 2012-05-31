@@ -109,4 +109,9 @@ public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamic
 		numbers.add(new TaskNumber(getTask(), participation, RandomNumber.binStringToHex(floatNumbers[1]), floatNumbers[0]));
 		return numbers;
 	}
+
+	@Override
+	public String getExampleTaskDescription() {
+		return "Gegeben sind die zwei Zahlen $Var0$ und $Var1$ als Hexadezimaldarstellung einer Fließkommazahl nach IEEE 754.<br><br>Berechnen Sie die Dezimaldarstellung, dann multiplizieren Sie die Zahlen. Codieren Sie das Ergebnis neu als Fließkommazahl. Falls die Umrechnung zurück einen Rundungsfehler beinhaltet, muss der auch angegeben werden.<br><br>Wie sieht die Fließkommazahl als Binärfolge aus? Wie ist die Hexadezimaldarstellung dieser Binärfolge?";
+	}
 }

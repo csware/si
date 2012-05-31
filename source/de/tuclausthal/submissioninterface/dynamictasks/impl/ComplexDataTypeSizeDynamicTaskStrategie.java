@@ -113,4 +113,9 @@ public class ComplexDataTypeSizeDynamicTaskStrategie extends AbstractDynamicTask
 		numbers.add(new TaskNumber(getTask(), participation, String.valueOf(minBetrag), String.valueOf(minBetrag)));
 		return numbers;
 	}
+
+	@Override
+	public String getExampleTaskDescription() {
+		return "Für ein Buchführungsprogramm sollen Einträge platzsparend gespeichert werden.<br><br>Diese Einträge sollen folgende Daten enthalten:<ul><li>eine laufende Nummer die mit 1 beginnt und maximal $Var0$ groß ist.</li><li>ein Verwendungszweck mit $Var1$ Zeichen mit Unicode-32 codiert.</li><li>der Betrag (gespeichert als ganze Cent), der zwischen $Var3$ und $Var2$ liegt (2er Komplement). Es soll hier der Betrag 0 auch auf 0 abgebildet werden (also keine Verschiebung des Werteraumes).</li><li>das Datum mit 10 ASCII-Zeichen codiert.</li></ul>Wie viele Bit werden mindestens benötigt um diese Werte zu speichern?";
+	}
 }

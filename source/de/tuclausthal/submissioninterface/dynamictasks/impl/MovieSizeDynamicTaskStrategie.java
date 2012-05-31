@@ -123,4 +123,9 @@ public class MovieSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie 
 		numbers.add(new TaskNumber(getTask(), participation, String.valueOf(sndks), String.valueOf(sndks)));
 		return numbers;
 	}
+
+	@Override
+	public String getExampleTaskDescription() {
+		return "Ein Video soll gespeichert werden. Dafür werden einfach alle Bilder einzeln und dazu der Ton gespeichert. Berechnen Sie den benötigten Speicherbedarf in Byte.<br><br>Gegeben sind:<ul><li>$Var0$ Bilder pro Sekunde</li> <li>Das Video hat eine $Var1$ Auflösung in RGB True Color</li><li>das Video ist $Var2$ Minuten lang</li><li>Die Tonspur hat $Var3$ Kbit/Sekunde</li></ul>";
+	}
 }

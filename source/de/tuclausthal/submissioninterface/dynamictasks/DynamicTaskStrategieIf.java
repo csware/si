@@ -42,6 +42,8 @@ public interface DynamicTaskStrategieIf {
 
 	public abstract List<TaskNumber> getVariables(Submission submission);
 
+	public abstract String getExampleTaskDescription();
+	
 	public abstract String getTranslatedDescription(Participation participation);
 
 	public abstract String getTranslatedDescription(List<TaskNumber> taskNumbers);

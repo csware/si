@@ -442,6 +442,9 @@ public class TaskManager extends HttpServlet {
 			} else {
 				out.println("<b>" + DynamicTaskStrategieFactory.GetStrategieName(request.getParameter("dynamicTask")) + "</b><br>");
 				out.println("<dl>");
+				out.println("<dt><b>Beispiel-Aufgabenstellung:</b></dt>");
+				out.println("<dd>" + Util.makeCleanHTML(dts.getExampleTaskDescription()) + "</dd>");
+
 				out.println("<dt><b>Variablen:</b></dt>");
 				out.println("<dd>");
 				int variableCounter = 0;
