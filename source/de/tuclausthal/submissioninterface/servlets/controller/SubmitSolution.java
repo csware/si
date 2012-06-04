@@ -203,6 +203,7 @@ public class SubmitSolution extends HttpServlet {
 		} else {
 			// Create a new file upload handler
 			FileUploadBase upload = new DiskFileUpload();
+			upload.setSizeMax(task.getMaxsize());
 
 			// Parse the request
 			try {
@@ -489,8 +490,9 @@ public class SubmitSolution extends HttpServlet {
 
 			File uploadedFile = new File(path, "textloesung.txt");
 			FileWriter fileWriter = new FileWriter(uploadedFile);
-			fileWriter.write(request.getParameter("textsolution"));
-			fileWriter.flush();
+			if (request.getParameter("textsolution") != null && request.getParameter("textsolution").length() <= task.getMaxsize()) {
+				fileWriter.write(request.getParameter("textsolution"));
+			}
 			fileWriter.close();
 
 			submission.setLastModified(new Date());

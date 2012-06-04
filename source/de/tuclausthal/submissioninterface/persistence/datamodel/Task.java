@@ -51,6 +51,7 @@ public class Task implements Serializable {
 	private int taskid;
 	private String title = "";
 	private int maxSubmitters = 1;
+	private long maxsize = 10485760;
 	private int maxPoints = 0;
 	private int minPointStep = 50;
 	private Date start;
@@ -459,5 +460,21 @@ public class Task implements Serializable {
 	@Transient
 	public DynamicTaskStrategieIf getDynamicTaskStrategie(Session session) {
 		return DynamicTaskStrategieFactory.createDynamicTaskStrategie(session, dynamicTask, this);
+	}
+
+	/**
+	 * Returns the maximum upload size in bytes
+	 * @return the maxsize
+	 */
+	public long getMaxsize() {
+		return maxsize;
+	}
+
+	/**
+	 * Sets the maximum upload size for this task in bytes
+	 * @param maxsize the maxsize to set
+	 */
+	public void setMaxsize(long maxsize) {
+		this.maxsize = maxsize;
 	}
 }
