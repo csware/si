@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010,2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -50,7 +50,7 @@ public class AddGroupFormView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Name:</th>");
-		out.println("<td><input type=text name=name></td>");
+		out.println("<td><input type=text required=required name=name></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Studenten können sich eintragen:</th>");

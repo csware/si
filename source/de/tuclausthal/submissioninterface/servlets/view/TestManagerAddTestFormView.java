@@ -53,7 +53,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
-		out.println("<td><input type=text name=title value=\"Syntax-Test\"></td>");
+		out.println("<td><input type=text name=title value=\"Syntax-Test\" required=required></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
@@ -65,7 +65,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th># Ausführbar für Studenten:</th>");
-		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\"></td>");
+		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Studenten Test-Details anzeigen:</th>");
@@ -85,7 +85,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
-		out.println("<td><input type=text name=title value=\"UML Vergleichstest\"></td>");
+		out.println("<td><input type=text name=title value=\"UML Vergleichstest\" required=required></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
@@ -97,7 +97,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Musterl&ouml;sung:</th>");
-		out.println("<td><INPUT TYPE=file NAME=testcase></td>");
+		out.println("<td><INPUT TYPE=file NAME=testcase required=required></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Tutorentest:</th>");
@@ -105,7 +105,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th># Ausführbar für Studenten:</th>");
-		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\"></td>");
+		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
@@ -123,7 +123,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
-		out.println("<td><input type=text name=title value=\"Funktionstest\"></td>");
+		out.println("<td><input type=text name=title value=\"Funktionstest\" required=required></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
@@ -131,7 +131,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Main-Klasse:</th>");
-		out.println("<td><input type=text name=mainclass></td>");
+		out.println("<td><input type=text name=mainclass required=required></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>CommandLine Parameter:</th>");
@@ -139,7 +139,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Reg.Exp.:</th>");
-		out.println("<td><input type=text name=regexp></td>");
+		out.println("<td><input type=text name=regexp required=required></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Timeout:</th>");
@@ -151,7 +151,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th># Ausführbar für Studenten:</th>");
-		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\"></td>");
+		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Studenten Test-Details anzeigen:</th>");
@@ -169,7 +169,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
-		out.println("<td><input type=text name=title value=\"Funktionstest\"></td>");
+		out.println("<td><input type=text name=title value=\"Funktionstest\" required=required></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
@@ -181,11 +181,11 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>JUnit-Testcase:</th>");
-		out.println("<td><INPUT TYPE=file NAME=testcase> (Main Testclass: AllTests)</td>");
+		out.println("<td><INPUT TYPE=file NAME=testcase required=required> (Main Testclass: AllTests)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Main-Klasse:</th>");
-		out.println("<td><input type=text name=mainclass></td>");
+		out.println("<td><input type=text name=mainclass value=\"AllTests\" required=required></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Tutorentest:</th>");
@@ -193,7 +193,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th># Ausführbar für Studenten:</th>");
-		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\"></td>");
+		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Studenten Test-Details anzeigen:</th>");
@@ -234,7 +234,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th># Ausführbar für Studenten:</th>");
-		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\"></td>");
+		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Studenten Test-Details anzeigen:</th>");

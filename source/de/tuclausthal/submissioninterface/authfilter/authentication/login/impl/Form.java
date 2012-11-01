@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010,2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -62,7 +62,7 @@ public class Form implements LoginIf {
 		out.println("Benutzername:");
 		out.println("</th>");
 		out.println("<td>");
-		out.println("<input type=text size=20 name=username>");
+		out.println("<input type=text size=20 name=username required=required autofocus=autofocus>");
 		out.println("</td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -70,7 +70,7 @@ public class Form implements LoginIf {
 		out.println("Passwort:");
 		out.println("</th>");
 		out.println("<td>");
-		out.println("<input type=password size=20 name=password>");
+		out.println("<input type=password size=20 name=password required=required>");
 		out.println("</td>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid>");

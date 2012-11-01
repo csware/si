@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -49,7 +49,7 @@ public class SubmitSolutionAdvisorFormView extends HttpServlet {
 		template.printTemplateHeader("Abgabe für Studenten starten", task);
 
 		StringBuffer setWithUser = new StringBuffer();
-		setWithUser.append("<p>Abgabe erstellen für: <select name=uploadFor size=1>");
+		setWithUser.append("<p>Abgabe erstellen für: <select name=uploadFor size=1 required=required>");
 		for (Participation part : task.getTaskGroup().getLecture().getParticipants()) {
 			if (part.getRoleType().equals(ParticipationRole.NORMAL)) {
 				setWithUser.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getFullName()) + "</option>");
@@ -63,7 +63,7 @@ public class SubmitSolutionAdvisorFormView extends HttpServlet {
 		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 		out.println(setWithUser.toString());
 		out.println("<p>Bitte wählen Sie eine Datei aus, die Sie einsenden möchten.</p>");
-		out.println("<INPUT TYPE=file NAME=file>");
+		out.println("<INPUT TYPE=file NAME=file required=required>");
 		out.println("<INPUT TYPE=submit VALUE=upload>");
 		out.println("</FORM>");
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -63,7 +63,7 @@ public class TaskGroupManagerView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
-		out.println("<td><input type=text name=title value=\"" + Util.escapeHTML(taskGroup.getTitle()) + "\"></td>");
+		out.println("<td><input type=text name=title value=\"" + Util.escapeHTML(taskGroup.getTitle()) + "\" required=required ></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");

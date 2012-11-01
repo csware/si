@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -60,7 +60,7 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Gruppe:</th>");
-		out.println("<td><input type=text name=title value=\"" + Util.escapeHTML(group.getName()) + "\" " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "readonly") + "></td>");
+		out.println("<td><input type=text name=title required=required value=\"" + Util.escapeHTML(group.getName()) + "\" " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "readonly") + "></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Studenten können sich eintragen:</th>");

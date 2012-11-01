@@ -48,13 +48,13 @@ public class PerformTestTutorFormView extends HttpServlet {
 		template.printTemplateHeader("Test durchführen", task);
 
 		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
-		out.println("<p>Test: <select name=\"testid\" size=1>");
+		out.println("<p>Test: <select name=\"testid\" size=1 required=required>");
 		for (Test test : task.getTests()) {
 			out.println("<option value=\"" + test.getId() + "\">" + Util.escapeHTML(test.getTestTitle()) + (test.isForTutors() ? " (Tutortest)" : "") + "</option>");
 		}
 		out.println("</select></p>");
 		out.println("<p>Bitte wählen Sie eine Datei aus, die Sie testen möchten.</p>");
-		out.println("<INPUT TYPE=file NAME=file>");
+		out.println("<INPUT TYPE=file NAME=file required=required>");
 		out.println("<INPUT TYPE=submit VALUE=upload>");
 		out.println("</FORM>");
 

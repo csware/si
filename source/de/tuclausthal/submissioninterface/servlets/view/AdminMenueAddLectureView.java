@@ -49,7 +49,7 @@ public class AdminMenueAddLectureView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Name der Veranstaltung:</th>");
-		out.println("<td><input type=text name=name></td>");
+		out.println("<td><input type=text name=name required=required></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Lösungen müssen abgenommen werden:</th>");

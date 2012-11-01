@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -96,8 +96,8 @@ public class ShowSubmissionView extends HttpServlet {
 			setWithUser.append("<form action=\"?\" method=post>");
 			setWithUser.append("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
-			setWithUser.append("<p>Fehlt ein Partner: <select name=partnerid size=1>");
-			setWithUser.append("<option value='0'></option>");
+			setWithUser.append("<p>Fehlt ein Partner: <select name=partnerid size=1 required=required>");
+			setWithUser.append("<option value=''></option>");
 			int cnt = 0;
 			Set<Participation> participations = null;
 			if (task.isAllowSubmittersAcrossGroups()) {

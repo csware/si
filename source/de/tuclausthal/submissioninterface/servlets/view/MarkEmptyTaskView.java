@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -58,8 +58,8 @@ public class MarkEmptyTaskView extends HttpServlet {
 		template.printTemplateHeader("Punkte vergeben...", task);
 
 		out.println("<form action=\"?taskid=" + task.getTaskid() + "\" method=post>");
-		out.println("<b>Student:</b> <select size=1 name=pid>");
-		out.println("<option value=\"0\">-</option>");
+		out.println("<b>Student:</b> <select size=1 name=pid required=required>");
+		out.println("<option value=\"\">-</option>");
 		for (Participation participation : participations) {
 			if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 				out.println("<option value=\"" + participation.getId() + "\">" + Util.escapeHTML(participation.getUser().getFullName()) + "</option>");

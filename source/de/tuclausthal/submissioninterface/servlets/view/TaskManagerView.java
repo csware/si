@@ -120,7 +120,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th width=\"30%\">Aufgabengruppe:</th>");
-		out.println("<td><select size=1 name=taskGroup>");
+		out.println("<td><select size=1 name=taskGroup required=required>");
 		for (TaskGroup taskGroup : lecture.getTaskGroups()) {
 			String selected = "";
 			if (taskGroup.getTaskGroupId() == task.getTaskGroup().getTaskGroupId()) {
@@ -132,7 +132,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
-		out.println("<td><input type=text size=100 name=title value=\"" + Util.escapeHTML(task.getTitle()) + "\"></td>");
+		out.println("<td><input type=text size=100 required=required name=title value=\"" + Util.escapeHTML(task.getTitle()) + "\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Aufgabe mit dynamischen Werten:</th>");
@@ -157,11 +157,11 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Filename Regexp:</th>");
-		out.println("<td><input type=text size=100 id=\"filenameregexp\" name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#fileregexphelp').toggle(); return false;\">(?)</a><br><div style=\"display:none;\" id=fileregexphelp><b>Hilfe:</b><br>Dateinamen, die von Studenten hochgeladen werden, werden mit diesem regulären Ausdruck überprüft, bevor diese verarbeitet werden.<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>ARGOUml: &quot;loesung\\.(xmi|zargo|png)&quot;<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = Dateiupload nicht anbieten bzw. verbieten<p><b>Dateinamen testen:</b><br><input type=\"text\" id=\"regexptest\" name=\"regexptest\"> <button onclick=\"checkRegexp(); return false;\">Testen</button></div></td>");
+		out.println("<td><input type=text size=100 required=required id=\"filenameregexp\" name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#fileregexphelp').toggle(); return false;\">(?)</a><br><div style=\"display:none;\" id=fileregexphelp><b>Hilfe:</b><br>Dateinamen, die von Studenten hochgeladen werden, werden mit diesem regulären Ausdruck überprüft, bevor diese verarbeitet werden.<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>ARGOUml: &quot;loesung\\.(xmi|zargo|png)&quot;<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = Dateiupload nicht anbieten bzw. verbieten<p><b>Dateinamen testen:</b><br><input type=\"text\" id=\"regexptest\" name=\"regexptest\"> <button onclick=\"checkRegexp(); return false;\">Testen</button></div></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Archiv-Filename Regexp:</th>");
-		out.println("<td><input type=text size=100 name=archivefilenameregexp value=\"" + Util.escapeHTML(task.getArchiveFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#archivefileregexphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=archivefileregexphelp><b>Hilfe:</b><br>Das Hochladen von Archiven (.zip und .jar) muss im o.g. regulären Ausdruck erlaubt werden, um diese Funktion nutzen zu können. Mit diesem regulären Ausdruck werden die Dateien im Archiv geprüft und nur diese extrahiert, andere werden ignoriert. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = Archive nicht automatisch entpacken</span></td>");
+		out.println("<td><input type=text size=100 required=required name=archivefilenameregexp value=\"" + Util.escapeHTML(task.getArchiveFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#archivefileregexphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=archivefileregexphelp><b>Hilfe:</b><br>Das Hochladen von Archiven (.zip und .jar) muss im o.g. regulären Ausdruck erlaubt werden, um diese Funktion nutzen zu können. Mit diesem regulären Ausdruck werden die Dateien im Archiv geprüft und nur diese extrahiert, andere werden ignoriert. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = Archive nicht automatisch entpacken</span></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Text-Eingabefeld:</th>");
@@ -177,11 +177,11 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");
-		out.println("<td><input type=text name=startdate value=\"" + Util.escapeHTML(task.getStart().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
+		out.println("<td><input type=text required=required pattern=\"([012][1-9]|[123][01])\\.[01][0-9]\\.[0-9]{4}( ([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])?\" name=startdate value=\"" + Util.escapeHTML(task.getStart().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Enddatum:</th>");
-		out.println("<td><input type=text name=deadline value=\"" + Util.escapeHTML(task.getDeadline().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
+		out.println("<td><input type=text required=required pattern=\"([012][1-9]|[123][01])\\.[01][0-9]\\.[0-9]{4}( ([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])?\" name=deadline value=\"" + Util.escapeHTML(task.getDeadline().toLocaleString()) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Punktedatum:</th>");
@@ -189,7 +189,7 @@ public class TaskManagerView extends HttpServlet {
 		if (task.getShowPoints() != null) {
 			pointsDate = Util.escapeHTML(task.getShowPoints().toLocaleString());
 		}
-		out.println("<td><input type=checkbox name=pointsmanual " + (task.getShowPoints() == null ? "checked" : "") + "> manuell freischalten oder <input type=text name=pointsdate value=\"" + pointsDate + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
+		out.println("<td><input type=checkbox name=pointsmanual " + (task.getShowPoints() == null ? "checked" : "") + "> manuell freischalten oder <input type=text name=pointsdate pattern=\"([012][1-9]|[123][01])\\.[01][0-9]\\.[0-9]{4}( ([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])?\" value=\"" + pointsDate + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Min. Punkt-Schrittweite:</th>");
@@ -232,7 +232,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<input type=hidden name=action value=\"newPointCategory\">");
 			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 			out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
-			out.println("Kriteria: <input type=text name=description><br>");
+			out.println("Kriteria: <input type=text name=description required=required><br>");
 			out.println("Punkte: <input size=5 type=text name=points value=\"" + Util.showPoints(task.getMinPointStep()) + "\"><br>");
 			out.println("Optional: <input type=checkbox name=optional> (für Bonuspunkte)<br>");
 			out.println("<input type=submit value=speichern>");
@@ -249,7 +249,7 @@ public class TaskManagerView extends HttpServlet {
 			}
 			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadTaskFile&amp;lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid()) + "\">");
 			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie den Studenten zur Verfügung stellen möchten:</p>");
-			out.println("<INPUT TYPE=file NAME=file>");
+			out.println("<INPUT TYPE=file NAME=file required=required>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
 			out.println("</FORM>");
 		}

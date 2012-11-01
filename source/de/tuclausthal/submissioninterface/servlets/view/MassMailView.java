@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -52,11 +52,11 @@ public class MassMailView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Betreff:</th>");
-		out.println("<td><input type=input name=subject></td>");
+		out.println("<td><input type=input required=required name=subject></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Nachricht:</th>");
-		out.println("<td><textarea cols=60 rows=10 name=message></textarea></td>");
+		out.println("<td><textarea cols=60 rows=10 required=required name=message></textarea></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Senden an:</th>");

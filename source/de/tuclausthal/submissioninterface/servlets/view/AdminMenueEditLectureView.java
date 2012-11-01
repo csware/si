@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -110,7 +110,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 		out.println("<input type=hidden name=action value=addUser>");
 		out.println("<input type=hidden name=type value=" + type + ">");
 		out.println("<input type=hidden name=lecture value=" + lecture.getId() + ">");
-		out.println("<select name=userid>");
+		out.println("<select name=userid required=required>");
 		while (iterator.hasNext()) {
 			Participation participation = iterator.next();
 			if (participation.getRoleType() == ParticipationRole.NORMAL) {
