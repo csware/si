@@ -146,6 +146,8 @@ public class ShowLectureStudentView extends HttpServlet {
 								} else {
 									out.println("<td class=points>noch unbewertet</td>");
 								}
+							} else if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
+								out.println("<td class=points>(noch) nicht bearbeitet</td>");
 							} else {
 								out.println("<td class=points>nicht bearbeitet</td>");
 							}
