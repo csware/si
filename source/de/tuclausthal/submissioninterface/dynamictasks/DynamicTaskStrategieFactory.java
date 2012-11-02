@@ -22,6 +22,7 @@ import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.dynamictasks.impl.Bin2DecDynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.dynamictasks.impl.ComplexDataTypeSizeDynamicTaskStrategie;
+import de.tuclausthal.submissioninterface.dynamictasks.impl.ComplexDataTypeSizeWithFloatDynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.dynamictasks.impl.Dec2BinDynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.dynamictasks.impl.HardDiskCalculationDynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.dynamictasks.impl.HexFloatMultiplikationDynamkicTaskStrategie;
@@ -32,8 +33,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
  * @author Sven Strickroth
  */
 public class DynamicTaskStrategieFactory {
-	public static final String[] STRATEGIES = { "dec2bin", "bin2dec", "hexfloat2hexfloatandbin", "harddiskfillstatecalculation", "videocalculation", "complexdatatypesize" };
-	public static final String[] NAMES = { "Integer-Dezimal2Binär", "Integer-Binär2Decimal", "32-bit HEX-Float2Hex- und Binär-Float", "Hard-Disk Space Calculator", "Video-Size Berechnung", "ComplexDataType-Size Berechnung" };
+	public static final String[] STRATEGIES = { "dec2bin", "bin2dec", "hexfloat2hexfloatandbin", "harddiskfillstatecalculation", "videocalculation", "complexdatatypesize", "complexdatatypesizewithfloat" };
+	public static final String[] NAMES = { "Integer-Dezimal2Binär", "Integer-Binär2Decimal", "32-bit HEX-Float2Hex- und Binär-Float", "Hard-Disk Space Calculator", "Video-Size Berechnung", "ComplexDataType-Size Berechnung mit 2er Komplement", "ComplexDataType-Size Berechnung mit Float" };
 
 	public static boolean IsValidStrategieName(String dynamicTask) {
 		for (String strategie : STRATEGIES) {
@@ -68,6 +69,8 @@ public class DynamicTaskStrategieFactory {
 			return new MovieSizeDynamicTaskStrategie(session, task);
 		} else if ("complexdatatypesize".equals(dynamicTask)) {
 			return new ComplexDataTypeSizeDynamicTaskStrategie(session, task);
+		} else if ("complexdatatypesizewithfloat".equals(dynamicTask)) {
+			return new ComplexDataTypeSizeWithFloatDynamicTaskStrategie(session, task);
 		}
 		return null;
 	}
