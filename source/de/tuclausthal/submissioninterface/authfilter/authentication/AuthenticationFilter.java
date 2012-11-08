@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -59,6 +59,7 @@ public class AuthenticationFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) filterResponse;
 		Session session = RequestAdapter.getSession(request);
 		SessionAdapter sa = RequestAdapter.getSessionAdapter(request);
+		response.addHeader("Strict-Transport-Security", "max-age=31536000");
 		if (sa.getUser() == null || (bindToIP && !sa.isIPCorrect(request.getRemoteAddr()))) {
 			response.addHeader("LoggedIn", "false");
 			LoginData logindata = login.getLoginData(request);
