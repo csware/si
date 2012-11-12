@@ -26,7 +26,6 @@ import org.hibernate.Session;
 import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 
@@ -53,9 +52,7 @@ public class MovieSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie 
 	}
 
 	@Override
-	public boolean isCorrect(Submission submission) {
-		List<String> correctResults = getCorrectResults(submission, false);
-		List<String> studentSolution = getUserResults(submission);
+	public boolean checkResults(List<String> correctResults, List<String> studentSolution) {
 		if (!correctResults.get(0).equals(studentSolution.get(0))) {
 			return false;
 		}

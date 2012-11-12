@@ -26,7 +26,6 @@ import org.hibernate.Session;
 import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 
@@ -52,9 +51,7 @@ public class HardDiskCalculationDynamicTaskStrategie extends AbstractDynamicTask
 	}
 
 	@Override
-	public boolean isCorrect(Submission submission) {
-		List<String> correctResults = getCorrectResults(submission, false);
-		List<String> studentSolution = getUserResults(submission);
+	public boolean checkResults(List<String> correctResults, List<String> studentSolution) {
 		try {
 			for (int i = 0; i < correctResults.size(); i++) {
 				if (Math.abs(Double.parseDouble(correctResults.get(i)) - Double.parseDouble(studentSolution.get(i))) > 0.0001d) {

@@ -46,9 +46,13 @@ public abstract class AbstractDynamicTaskStrategie implements DynamicTaskStrateg
 	}
 
 	@Override
-	public boolean isCorrect(Submission submission) {
+	final public boolean isCorrect(Submission submission) {
 		List<String> correctResults = getCorrectResults(submission, false);
 		List<String> studentSolution = getUserResults(submission);
+		return checkResults(correctResults, studentSolution);
+	}
+
+	public boolean checkResults(List<String> correctResults, List<String> studentSolution) {
 		for (int i = 0; i < studentSolution.size(); i++) {
 			if (!studentSolution.get(i).equals(correctResults.get(i))) {
 				return false;
