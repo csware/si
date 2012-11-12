@@ -78,9 +78,9 @@ public class ComplexDataTypeSizeDynamicTaskStrategie extends AbstractDynamicTask
 		// Wenn der größere Betrag negativ ist muss man auf basis des negativen berechnen, dabei muss bedacht werden, dass im negativen Bereich eine Zahl mehr abgebildet werden kann
 		// Für positive Werte log_2(max+1) gibt Anzahl der Bits an; max+1, weil 0 im positiven Bereich fällt 
 		int bitBetrag;
-		if(maxBetrag >= -minBetrag){
+		if (maxBetrag >= -minBetrag) {
 			bitBetrag = (int) Math.ceil(Math.log(maxBetrag + 1) / Math.log(2)) + 1; // + 1 für VZ-bit
-		}else{
+		} else {
 			bitBetrag = (int) Math.ceil(Math.log(-minBetrag) / Math.log(2)) + 1; // + 1 für VZ-bit
 		}
 
