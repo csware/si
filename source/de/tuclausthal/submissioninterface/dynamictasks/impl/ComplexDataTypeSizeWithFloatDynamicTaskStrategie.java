@@ -65,8 +65,6 @@ public class ComplexDataTypeSizeWithFloatDynamicTaskStrategie extends AbstractDy
 	public List<String> getCorrectResults(List<TaskNumber> numbers, boolean includePartialSolutions) {
 		int lfndNr = Integer.parseInt(numbers.get(0).getNumber());
 		int maxVerwZweck = Integer.parseInt(numbers.get(1).getNumber());
-		int maxBetrag = Integer.parseInt(numbers.get(2).getNumber());
-		int minBetrag = Integer.parseInt(numbers.get(3).getNumber());
 
 		int bitsLfndNr = (int) Math.ceil(Math.log(lfndNr) / Math.log(2)); // + 1 für VZ-bit
 
