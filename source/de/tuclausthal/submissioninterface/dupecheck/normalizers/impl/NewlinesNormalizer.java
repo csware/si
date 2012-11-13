@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009,2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -43,6 +43,11 @@ public class NewlinesNormalizer implements NormalizerIf {
 				lastWasNewline = false;
 				i++;
 			}
+		}
+		i = stringBuffer.length() - 1;
+		while (i>= 0 && stringBuffer.charAt(i) == '\n') {
+			stringBuffer.deleteCharAt(i);
+			i--;
 		}
 		return stringBuffer;
 	}
