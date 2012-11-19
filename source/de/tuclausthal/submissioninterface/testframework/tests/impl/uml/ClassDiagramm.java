@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -221,9 +221,9 @@ public class ClassDiagramm extends UMLDiagramm {
 				for (int i = 0; i < associationEnds.getLength(); i++) {
 					Node accociationEndNode = associationEnds.item(i);
 					Node aggregationType = accociationEndNode.getAttributes().getNamedItem("aggregation");
-					if ("aggregate".equals(aggregationType)) {
+					if ("aggregate".equals(aggregationType.toString())) {
 						numberOfAggregates++;
-					} else if ("composite".equals(aggregationType)) {
+					} else if ("composite".equals(aggregationType.toString())) {
 						numberOfComposites++;
 					}
 					NodeList accociationEndParticipants = null;

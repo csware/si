@@ -63,7 +63,7 @@ public class MassMailView extends HttpServlet {
 		out.println("<option value=\"nogroup\">ohne Gruppe</option>");
 		for (Group theGroup : lecture.getGroups()) {
 			String selected = "";
-			if (group != null && group.getGid() == theGroup.getGid()) {
+			if (group != null && group.getGid() == theGroup.getGid().intValue()) {
 				selected = " selected";
 			}
 			out.println("<option value=" + theGroup.getGid() + selected + ">" + Util.escapeHTML(theGroup.getName()) + "</option>");
