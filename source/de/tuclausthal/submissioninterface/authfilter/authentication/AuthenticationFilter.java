@@ -50,7 +50,7 @@ public class AuthenticationFilter implements Filter {
 
 	@Override
 	public void destroy() {
-	// nothing to do here
+		// nothing to do here
 	}
 
 	@Override
@@ -66,27 +66,25 @@ public class AuthenticationFilter implements Filter {
 			if (logindata == null) {
 				login.failNoData(request, response);
 				return;
+			}
+			User user = null;
+			// if login requires no verification we load the user named in logindata
+			if (login.requiresVerification()) {
+				user = verify.checkCredentials(session, logindata);
 			} else {
-				User user = null;
-				// if login requires no verification we load the user named in logindata
-				if (login.requiresVerification()) {
-					user = verify.checkCredentials(session, logindata);
-				} else {
-					user = DAOFactory.UserDAOIf(session).getUser(logindata.getUsername());
-				}
-				if (user == null) {
-					login.failNoData("Login fehlgeschlagen! Bitte versuchen Sie es erneut.", request, response);
-					return;
-				} else {
-					// fix against session fixtures
-					sa.startNewSession(request);
+				user = DAOFactory.UserDAOIf(session).getUser(logindata.getUsername());
+			}
+			if (user == null) {
+				login.failNoData("Login fehlgeschlagen! Bitte versuchen Sie es erneut.", request, response);
+				return;
+			}
+			// fix against session fixtures
+			sa.startNewSession(request);
 
-					sa.setUser(user);
-					if (login.redirectAfterLogin() == true) {
-						performRedirect(request, response);
-						return;
-					}
-				}
+			sa.setUser(user);
+			if (login.redirectAfterLogin() == true) {
+				performRedirect(request, response);
+				return;
 			}
 		} else if (login.redirectAfterLogin() && login.isSubsequentAuthRequest(request)) {
 			performRedirect(request, response);

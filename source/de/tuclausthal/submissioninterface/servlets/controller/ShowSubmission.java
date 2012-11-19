@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -119,15 +119,14 @@ public class ShowSubmission extends HttpServlet {
 				tx.commit();
 				response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));
 				return;
-			} else {
-				tx.rollback();
-				PrintWriter out = response.getWriter();
-				Template template = TemplateFactory.getTemplate(request, response);
-				template.printTemplateHeader("Ungültige Anfrage");
-				out.println("<div class=mid>Der ausgewählte Partner hat bereits eine eigene Abgabe initiiert oder es wurden insgesamt zu viele Partner ausgewählt.</div>");
-				template.printTemplateFooter();
-				return;
 			}
+			tx.rollback();
+			PrintWriter out = response.getWriter();
+			Template template = TemplateFactory.getTemplate(request, response);
+			template.printTemplateHeader("Ungültige Anfrage");
+			out.println("<div class=mid>Der ausgewählte Partner hat bereits eine eigene Abgabe initiiert oder es wurden insgesamt zu viele Partner ausgewählt.</div>");
+			template.printTemplateFooter();
+			return;
 		}
 
 		request.setAttribute("submission", submission);
