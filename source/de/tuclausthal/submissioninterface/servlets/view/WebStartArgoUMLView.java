@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
  * Copyright 2011 Joachim Schramm
  * 
  * This file is part of the SubmissionInterface.
@@ -41,10 +41,6 @@ import de.tuclausthal.submissioninterface.util.ContextAdapter;
 public class WebStartArgoUMLView extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Template template = TemplateFactory.getTemplate(request, response);
-
-		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
-
 		response.setContentType("application/x-java-jnlp-file");
 
 		PrintWriter out = response.getWriter();
