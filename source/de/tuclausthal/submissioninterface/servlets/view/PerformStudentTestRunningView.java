@@ -45,12 +45,11 @@ public class PerformStudentTestRunningView extends HttpServlet {
 		// http://en.wikipedia.org/w/index.php?title=URL_redirection&oldid=313386868#Refresh_Meta_tag_and_HTTP_refresh_header
 		response.addHeader("Refresh", redirectTime + "; url=" + url);
 
-		PrintWriter out = response.getWriter();
-
 		Task task = (Task) request.getAttribute("task");
 
 		template.printTemplateHeader("Testen...", task);
 
+		PrintWriter out = response.getWriter();
 		out.println("Der Test wird im Hintergrund ausgeführt. Bitte warten.<br>");
 		out.println("Sollte diese Seite nicht innerhalb von " + redirectTime + " Sekunden neu geladen werden, <a href=\"" + response.encodeURL(url) + "\">hier</a> gehts weiter.");
 

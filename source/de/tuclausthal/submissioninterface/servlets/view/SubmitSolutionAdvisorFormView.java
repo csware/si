@@ -42,11 +42,10 @@ public class SubmitSolutionAdvisorFormView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Task task = (Task) request.getAttribute("task");
 
 		template.printTemplateHeader("Abgabe für Studenten starten", task);
+		PrintWriter out = response.getWriter();
 
 		StringBuffer setWithUser = new StringBuffer();
 		setWithUser.append("<p>Abgabe erstellen für: <select name=uploadFor size=1 required=required>");

@@ -55,8 +55,6 @@ public class ShowTaskStudentView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Session session = RequestAdapter.getSession(request);
 
 		Task task = (Task) request.getAttribute("task");
@@ -65,7 +63,7 @@ public class ShowTaskStudentView extends HttpServlet {
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
 
 		template.printTemplateHeader(task);
-
+		PrintWriter out = response.getWriter();
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");

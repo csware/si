@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -43,12 +43,11 @@ public class ShowMarkHistoryView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Submission submission = (Submission) request.getAttribute("submission");
 		List<PointHistory> data = (List<PointHistory>) request.getAttribute("data");
 
 		template.printTemplateHeader("Aktivitätslog", submission);
+		PrintWriter out = response.getWriter();
 
 		out.println("<h1>Aktivitätslog</h1>");
 		out.println("<table class=border>");

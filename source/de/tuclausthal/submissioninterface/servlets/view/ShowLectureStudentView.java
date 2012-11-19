@@ -51,14 +51,13 @@ public class ShowLectureStudentView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Participation participation = (Participation) request.getAttribute("participation");
 		Lecture lecture = participation.getLecture();
 		List<Group> joinAbleGroups = (List<Group>) request.getAttribute("joinAbleGroups");
 
 		// list all tasks for a lecture
 		template.printTemplateHeader(lecture);
+		PrintWriter out = response.getWriter();
 
 		boolean canJoinGroup = (joinAbleGroups != null && joinAbleGroups.size() > 0);
 

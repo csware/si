@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -39,10 +39,10 @@ public class MessageView extends HttpServlet {
 		String title = (String) request.getAttribute("title");
 		String message = (String) request.getAttribute("message");
 
-		PrintWriter out = response.getWriter();
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		template.printTemplateHeader(title);
+		PrintWriter out = response.getWriter();
 		if (message == null) {
 			out.println("<div class=mid><a href=\"" + response.encodeURL(request.getContextPath() + "/?") + "\">zur Übersicht</a></div>");
 		} else {

@@ -48,10 +48,8 @@ public class TaskManagerDynamicTaskPreView extends HttpServlet {
 		String[] variableNames = (String[]) request.getAttribute("variableNames");
 		List<TaskNumber> taskNumbers = (List<TaskNumber>) request.getAttribute("taskNumbers");
 
-		PrintWriter out = response.getWriter();
-
 		template.printTemplateHeader("Vorschau", task);
-
+		PrintWriter out = response.getWriter();
 		out.println("<dl>");
 		out.println("<dt><b>Aufgabenstellung:</b></dt>");
 		out.println("<dd>" + Util.makeCleanHTML(task.getDescription()) + "</dd>");

@@ -41,8 +41,6 @@ public class TaskGroupManagerView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		TaskGroup taskGroup = (TaskGroup) request.getAttribute("taskGroup");
 		Lecture lecture = taskGroup.getLecture();
 
@@ -52,6 +50,7 @@ public class TaskGroupManagerView extends HttpServlet {
 			template.printTemplateHeader("neue Aufgabengruppe", lecture);
 		}
 
+		PrintWriter out = response.getWriter();
 		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
 		if (taskGroup.getTaskGroupId() != 0) {
 			out.println("<input type=hidden name=action value=saveTaskGroup>");

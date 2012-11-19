@@ -52,8 +52,6 @@ public class ShowLectureTutorFullView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Participation participation = (Participation) request.getAttribute("participation");
 		Lecture lecture = participation.getLecture();
 		Session session = RequestAdapter.getSession(request);
@@ -61,6 +59,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 
 		// list all tasks for a lecture
 		template.printTemplateHeader("Gesamtübersicht", lecture);
+		PrintWriter out = response.getWriter();
 
 		List<TaskGroup> taskGroupList = lecture.getTaskGroups();
 

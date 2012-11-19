@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010,2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -43,8 +43,8 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
 		template.printTemplateHeader("Super User", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"" + response.encodeURL("AdminMenue") + "\">Admin-Menü</a> &gt; Super User");
+		PrintWriter out = response.getWriter();
 
 		Iterator<User> userIterator = ((List<User>) request.getAttribute("superusers")).iterator();
 		out.println("<table class=border>");

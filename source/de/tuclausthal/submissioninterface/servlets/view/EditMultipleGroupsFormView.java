@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -41,12 +41,11 @@ public class EditMultipleGroupsFormView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Lecture lecture = (Lecture) request.getAttribute("lecture");
 
 		template.addKeepAlive();
 		template.printTemplateHeader("Mehrere Gruppen bearbeiten", lecture);
+		PrintWriter out = response.getWriter();
 		out.println("<form action=\"" + response.encodeURL("?lecture=" + lecture.getId()) + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");

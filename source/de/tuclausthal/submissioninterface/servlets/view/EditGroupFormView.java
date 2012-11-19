@@ -45,15 +45,13 @@ public class EditGroupFormView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Group group = (Group) request.getAttribute("group");
 		Participation participation = (Participation) request.getAttribute("participation");
 
 		template.addJQuery();
 		template.addKeepAlive();
 		template.printTemplateHeader(group);
-
+		PrintWriter out = response.getWriter();
 		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
 		out.println("<input type=hidden name=action value=editGroup>");
 		out.println("<input type=hidden name=groupid value=" + group.getGid() + ">");

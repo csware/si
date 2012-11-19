@@ -41,13 +41,12 @@ public class MassMailView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Lecture lecture = (Lecture) request.getAttribute("lecture");
 		Group group = (Group) request.getAttribute("group");
 
 		template.addKeepAlive();
 		template.printTemplateHeader("E-Mail senden", lecture);
+		PrintWriter out = response.getWriter();
 		out.println("<form action=\"" + response.encodeURL("?lectureid=" + lecture.getId()) + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");

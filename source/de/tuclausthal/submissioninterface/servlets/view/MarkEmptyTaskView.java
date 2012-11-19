@@ -47,8 +47,6 @@ public class MarkEmptyTaskView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Session session = RequestAdapter.getSession(request);
 
 		List<Participation> participations = (List<Participation>) request.getAttribute("participations");
@@ -56,7 +54,7 @@ public class MarkEmptyTaskView extends HttpServlet {
 
 		template.addKeepAlive();
 		template.printTemplateHeader("Punkte vergeben...", task);
-
+		PrintWriter out = response.getWriter();
 		out.println("<form action=\"?taskid=" + task.getTaskid() + "\" method=post>");
 		out.println("<b>Student:</b> <select size=1 name=pid required=required>");
 		out.println("<option value=\"\">-</option>");

@@ -93,12 +93,11 @@ public class PerformTest extends HttpServlet {
 		Session session = RequestAdapter.getSession(request);
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			template.printTemplateHeader("Aufgabe nicht gefunden");
+			PrintWriter out = response.getWriter();
 			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 			template.printTemplateFooter();
 			return;
@@ -119,12 +118,14 @@ public class PerformTest extends HttpServlet {
 
 		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
 			template.printTemplateHeader("Ungültige Anfrage");
+			PrintWriter out = response.getWriter();
 			out.println("<div class=mid>Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.</div>");
 			template.printTemplateFooter();
 			return;
 		}
 		if ("-".equals(task.getFilenameRegexp())) {
 			template.printTemplateHeader("Ungültige Anfrage");
+			PrintWriter out = response.getWriter();
 			out.println("<div class=mid>Dateiupload ist für diese Aufgabe deaktiviert.</div>");
 			template.printTemplateFooter();
 			return;
@@ -182,6 +183,7 @@ public class PerformTest extends HttpServlet {
 				Matcher m = pattern.matcher(submittedFileName);
 				if (!m.matches()) {
 					template.printTemplateHeader("Ungültige Anfrage");
+					PrintWriter out = response.getWriter();
 					out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
 					out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
 					template.printTemplateFooter();
@@ -230,6 +232,7 @@ public class PerformTest extends HttpServlet {
 						System.err.println(e.getMessage());
 						e.printStackTrace();
 						template.printTemplateHeader("Ungültige Anfrage");
+						PrintWriter out = response.getWriter();
 						out.println("Problem beim Entpacken des Archives.");
 						template.printTemplateFooter();
 						return;
@@ -268,6 +271,7 @@ public class PerformTest extends HttpServlet {
 				Test test = DAOFactory.TestDAOIf(session).getTest(testId);
 				if (test == null) {
 					template.printTemplateHeader("Ungültige Anfrage");
+					PrintWriter out = response.getWriter();
 					out.println("Test nicht gefunden.");
 					template.printTemplateFooter();
 					return;
@@ -291,6 +295,7 @@ public class PerformTest extends HttpServlet {
 		}
 		System.err.println("SubmitSolutionProblem3");
 		System.err.println("Problem: Keine Abgabedaten gefunden.");
+		PrintWriter out = response.getWriter();
 		out.println("Problem: Keine Abgabedaten gefunden.");
 	}
 }

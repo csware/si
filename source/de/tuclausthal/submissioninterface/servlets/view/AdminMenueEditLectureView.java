@@ -44,13 +44,14 @@ public class AdminMenueEditLectureView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
 		Lecture lecture = (Lecture) request.getAttribute("lecture");
 		if (lecture == null) {
 			template.printTemplateHeader("Veranstaltung nicht gefunden");
+			PrintWriter out = response.getWriter();
 			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 		} else {
 			template.printTemplateHeader("Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"AdminMenue\">Admin-Menü</a> &gt; Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten");
+			PrintWriter out = response.getWriter();
 			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("?action=deleteLecture&amp;lecture=" + lecture.getId()) + "\">Veranstaltung löschen</a></p>");
 			out.println("<h2>Betreuer</h2>");
 			Iterator<Participation> advisorIterator = lecture.getParticipants().iterator();

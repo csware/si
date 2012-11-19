@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -55,14 +55,12 @@ public class ShowUserView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		User user = (User) request.getAttribute("user");
 		List<Lecture> lectures = (List<Lecture>) request.getAttribute("lectures");
 		Session session = RequestAdapter.getSession(request);
 
 		template.printTemplateHeader("Benutzer \"" + Util.escapeHTML(user.getFullName()) + "\"");
-
+		PrintWriter out = response.getWriter();
 		out.println("<p><a href=\"mailto:" + Util.escapeHTML(user.getFullEmail()) + "\">" + Util.escapeHTML(user.getFullEmail()) + "</a></p>");
 
 		if (user instanceof Student) {

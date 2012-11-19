@@ -55,8 +55,6 @@ public class ShowLectureTutorView extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.addJQuery();
 
-		PrintWriter out = response.getWriter();
-
 		Participation participation = (Participation) request.getAttribute("participation");
 		Lecture lecture = participation.getLecture();
 		RequestAdapter requestAdapter = new RequestAdapter(request);
@@ -67,6 +65,7 @@ public class ShowLectureTutorView extends HttpServlet {
 
 		// list all tasks for a lecture
 		template.printTemplateHeader(lecture);
+		PrintWriter out = response.getWriter();
 
 		Iterator<TaskGroup> taskGroupIterator = lecture.getTaskGroups().iterator();
 		if (taskGroupIterator.hasNext()) {

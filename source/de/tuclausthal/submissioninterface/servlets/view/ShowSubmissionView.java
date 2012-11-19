@@ -67,8 +67,6 @@ public class ShowSubmissionView extends HttpServlet {
 		template.addKeepAlive();
 		template.addHead("<script type=\"text/javascript\">function hideCodePreview(id) { $(\"#codepreview\" + id).hide();$(\"#showbtn\" + id).show(); } function testResultSetup(id) { $(\"#testresult\" + id).resizable({ handles: 'se' }); } function iframeSetup(id) { $(\"#resizablecodepreview\" + id).resizable({ helper: 'ui-resizable-helper', minWidth: 800, minHeight: 100, handles: 'se' }); }</script>");
 
-		PrintWriter out = response.getWriter();
-
 		RequestAdapter requestAdapter = new RequestAdapter(request);
 		Session session = requestAdapter.getSession();
 
@@ -77,6 +75,7 @@ public class ShowSubmissionView extends HttpServlet {
 		Task task = submission.getTask();
 
 		template.printTemplateHeader(submission);
+		PrintWriter out = response.getWriter();
 		StringBuffer javaScript = new StringBuffer();
 
 		if (submission.getLastModified() != null) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -41,12 +41,10 @@ public class PublishGradesView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Task task = (Task) request.getAttribute("task");
 		template.addKeepAlive();
 		template.printTemplateHeader("Punkte freischalten", task);
-
+		PrintWriter out = response.getWriter();
 		out.println("<form action=\"?\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		int unbewertet = 0;

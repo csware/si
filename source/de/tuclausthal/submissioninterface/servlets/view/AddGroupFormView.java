@@ -39,11 +39,10 @@ public class AddGroupFormView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Lecture lecture = (Lecture) request.getAttribute("lecture");
 
 		template.printTemplateHeader("Gruppe erstellen", lecture);
+		PrintWriter out = response.getWriter();
 		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
 		out.println("<input type=hidden name=action value=saveNewGroup>");
 		out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");

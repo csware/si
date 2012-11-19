@@ -41,12 +41,11 @@ public class SearchSubmissionsView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Task task = (Task) request.getAttribute("task");
 
 		template.addKeepAlive();
 		template.printTemplateHeader("Abgaben durchsuchen", task);
+		PrintWriter out = response.getWriter();
 		out.println("<form action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");

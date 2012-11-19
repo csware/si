@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -42,12 +42,11 @@ public class SearchSubmissionsResultView extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Task task = (Task) request.getAttribute("task");
 		Set<Submission> foundSubmissions = (Set<Submission>) request.getAttribute("results");
 
 		template.printTemplateHeader("Suchergebnisse", task);
+		PrintWriter out = response.getWriter();
 		if (foundSubmissions.size() > 0) {
 			out.println("<table>");
 			for (Submission submission : foundSubmissions) {

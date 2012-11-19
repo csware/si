@@ -50,13 +50,12 @@ public class SubmitSolutionFormView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Task task = (Task) request.getAttribute("task");
 		Participation participation = (Participation) request.getAttribute("participation");
 
 		template.addKeepAlive();
 		template.printTemplateHeader("Abgabe starten", task);
+		PrintWriter out = response.getWriter();
 
 		Session session = RequestAdapter.getSession(request);
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);

@@ -57,8 +57,6 @@ public class ShowTaskTutorView extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.addJQuery();
 
-		PrintWriter out = response.getWriter();
-
 		RequestAdapter requestAdapter = new RequestAdapter(request);
 		Session session = requestAdapter.getSession();
 
@@ -67,7 +65,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
 
 		template.printTemplateHeader(task);
-
+		PrintWriter out = response.getWriter();
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");

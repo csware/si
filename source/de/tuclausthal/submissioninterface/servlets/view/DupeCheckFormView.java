@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -39,11 +39,10 @@ public class DupeCheckFormView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Task task = (Task) request.getAttribute("task");
 
 		template.printTemplateHeader("Ähnlichkeitsprüfung", task);
+		PrintWriter out = response.getWriter();
 		out.println("<h2>Plaggie Test</h2>");
 		out.println("<form action=\"" + response.encodeURL("?action=savesimilaritytest") + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");

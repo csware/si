@@ -40,8 +40,8 @@ public class AdminMenueAddLectureView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
 		template.printTemplateHeader("neue Veranstaltung", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"AdminMenue\">Admin-Menü</a> &gt; neue Veranstaltung");
+		PrintWriter out = response.getWriter();
 
 		Lecture dummyLecture = new Lecture();
 		dummyLecture.setSemester(Util.getCurrentSemester());

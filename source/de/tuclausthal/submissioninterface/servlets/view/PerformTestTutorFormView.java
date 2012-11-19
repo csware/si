@@ -41,12 +41,10 @@ public class PerformTestTutorFormView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Task task = (Task) request.getAttribute("task");
 
 		template.printTemplateHeader("Test durchführen", task);
-
+		PrintWriter out = response.getWriter();
 		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 		out.println("<p>Test: <select name=\"testid\" size=1 required=required>");
 		for (Test test : task.getTests()) {

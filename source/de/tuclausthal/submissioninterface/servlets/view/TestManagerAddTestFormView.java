@@ -39,12 +39,11 @@ public class TestManagerAddTestFormView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Task task = (Task) request.getAttribute("task");
 
 		template.addKeepAlive();
 		template.printTemplateHeader("Test erstellen", task);
+		PrintWriter out = response.getWriter();
 		out.println("<h2>Compile/Syntax Test</h2>");
 		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");

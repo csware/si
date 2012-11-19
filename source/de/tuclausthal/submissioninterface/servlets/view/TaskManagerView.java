@@ -51,8 +51,6 @@ public class TaskManagerView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		PrintWriter out = response.getWriter();
-
 		Task task = (Task) request.getAttribute("task");
 		Lecture lecture = task.getTaskGroup().getLecture();
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
@@ -109,6 +107,7 @@ public class TaskManagerView extends HttpServlet {
 			template.printTemplateHeader("neue Aufgabe", lecture);
 		}
 
+		PrintWriter out = response.getWriter();
 		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
 		if (task.getTaskid() != 0) {
 			out.println("<input type=hidden name=action value=saveTask>");
