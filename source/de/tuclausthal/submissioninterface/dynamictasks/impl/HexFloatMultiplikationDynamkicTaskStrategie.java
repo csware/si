@@ -53,14 +53,14 @@ public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamic
 
 	@Override
 	public boolean checkResults(List<String> correctResults, List<String> studentSolution) {
-		if (!studentSolution.get(0).equals(correctResults.get(0))) {
+		if (!studentSolution.get(0).trim().equals(correctResults.get(0))) {
 			return false;
 		}
-		if (!RandomNumber.trimLeadingZeros(studentSolution.get(1)).equals(RandomNumber.trimLeadingZeros(correctResults.get(1)))) {
+		if (!RandomNumber.trimLeadingZeros(studentSolution.get(1).trim()).equals(RandomNumber.trimLeadingZeros(correctResults.get(1)))) {
 			return false;
 		}
 		try {
-			if (Math.abs(Double.parseDouble(correctResults.get(2)) - Double.parseDouble(studentSolution.get(2))) > 0.0000000001d) {
+			if (Math.abs(Double.parseDouble(correctResults.get(2)) - Double.parseDouble(studentSolution.get(2).trim())) > 0.0000000001d) {
 				return false;
 			}
 		} catch (NumberFormatException e) {

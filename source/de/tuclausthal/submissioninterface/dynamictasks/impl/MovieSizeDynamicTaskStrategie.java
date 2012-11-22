@@ -53,11 +53,11 @@ public class MovieSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie 
 
 	@Override
 	public boolean checkResults(List<String> correctResults, List<String> studentSolution) {
-		if (!correctResults.get(0).equals(studentSolution.get(0))) {
+		if (!correctResults.get(0).equals(studentSolution.get(0).trim())) {
 			return false;
 		}
 		try {
-			if (Math.abs(Double.parseDouble(correctResults.get(1)) - Double.parseDouble(studentSolution.get(1))) > 0.001d) {
+			if (Math.abs(Double.parseDouble(correctResults.get(1)) - Double.parseDouble(studentSolution.get(1).trim())) > 0.001d) {
 				return false;
 			}
 		} catch (NumberFormatException e) {

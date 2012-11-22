@@ -54,7 +54,7 @@ public abstract class AbstractDynamicTaskStrategie implements DynamicTaskStrateg
 
 	public boolean checkResults(List<String> correctResults, List<String> studentSolution) {
 		for (int i = 0; i < studentSolution.size(); i++) {
-			if (!studentSolution.get(i).equals(correctResults.get(i))) {
+			if (!studentSolution.get(i).trim().equals(correctResults.get(i))) {
 				return false;
 			}
 		}

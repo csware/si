@@ -54,7 +54,7 @@ public class HardDiskCalculationDynamicTaskStrategie extends AbstractDynamicTask
 	public boolean checkResults(List<String> correctResults, List<String> studentSolution) {
 		try {
 			for (int i = 0; i < correctResults.size(); i++) {
-				if (Math.abs(Double.parseDouble(correctResults.get(i)) - Double.parseDouble(studentSolution.get(i))) > 0.0001d) {
+				if (Math.abs(Double.parseDouble(correctResults.get(i)) - Double.parseDouble(studentSolution.get(i).trim())) > 0.0001d) {
 					return false;
 				}
 			}

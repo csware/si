@@ -52,7 +52,7 @@ public class ComplexDataTypeSizeWithFloatDynamicTaskStrategie extends AbstractDy
 
 	@Override
 	public boolean checkResults(List<String> correctResults, List<String> studentSolution) {
-		if (!correctResults.get(0).equals(studentSolution.get(0))) {
+		if (!correctResults.get(0).equals(studentSolution.get(0).trim())) {
 			return false;
 		}
 		return true;
