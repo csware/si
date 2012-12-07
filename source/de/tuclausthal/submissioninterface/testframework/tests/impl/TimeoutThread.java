@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010,2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -25,6 +25,7 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
 public class TimeoutThread extends Thread {
 	private Process process;
 	private int timeout;
+	private boolean aborted = false;
 
 	/**
 	 * @param process
@@ -44,6 +45,15 @@ public class TimeoutThread extends Thread {
 		}
 		if (!interrupted()) {
 			process.destroy();
+			aborted = true;
 		}
+	}
+
+	/**
+	 * Returns if the process was terminated after the timeout
+	 * @return the aborted
+	 */
+	public boolean wasAborted() {
+		return aborted;
 	}
 }

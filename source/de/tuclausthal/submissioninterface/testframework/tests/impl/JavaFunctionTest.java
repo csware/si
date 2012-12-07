@@ -84,6 +84,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			boolean aborted = false;
 			try {
 				exitValue = process.waitFor();
+				aborted = checkTread.wasAborted();
 			} catch (InterruptedException e) {
 				aborted = true;
 			}
