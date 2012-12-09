@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `lectures` (
   `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_german2_ci DEFAULT NULL,
   `semester` int(11) NOT NULL,
   `requiresAbhnahme` bit(1) NOT NULL,
+  `gradingMethod` varchar(25) CHARACTER SET latin1 COLLATE latin1_german2_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
@@ -307,6 +308,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `featuredFiles` text NOT NULL,
   `tutorsCanUploadFiles` bit(1) NOT NULL,
   `dynamicTask` varchar(255) DEFAULT NULL,
+  `maxsize` int(11) NOT NULL DEFAULT '10485760',
   PRIMARY KEY (`taskid`),
   KEY `taskgroupid` (`taskgroupid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
@@ -351,6 +353,7 @@ CREATE TABLE IF NOT EXISTS `tests` (
   `taskid` int(11) NOT NULL,
   `minProzent` int(11) DEFAULT NULL,
   `excludedFiles` varchar(255) DEFAULT NULL,
+  `giveDetailsToStudents` bit(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK6924E21AE0697EB` (`taskid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
