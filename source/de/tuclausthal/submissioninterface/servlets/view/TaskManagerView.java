@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2013 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -231,7 +231,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<input type=hidden name=action value=\"newPointCategory\">");
 			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 			out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
-			out.println("Kriteria: <input type=text name=description required=required><br>");
+			out.println("Kriteria: <input type=text name=description required=required style=\"width:90%\"><br>");
 			out.println("Punkte: <input size=5 type=text name=points value=\"" + Util.showPoints(task.getMinPointStep()) + "\"><br>");
 			out.println("Optional: <input type=checkbox name=optional> (für Bonuspunkte)<br>");
 			out.println("<input type=submit value=speichern>");
