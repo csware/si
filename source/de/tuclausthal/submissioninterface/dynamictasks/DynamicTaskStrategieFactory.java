@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 -2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011 - 2013 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -24,6 +24,7 @@ import de.tuclausthal.submissioninterface.dynamictasks.impl.Bin2DecDynamicTaskSt
 import de.tuclausthal.submissioninterface.dynamictasks.impl.ComplexDataTypeSizeDynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.dynamictasks.impl.ComplexDataTypeSizeWithFloatDynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.dynamictasks.impl.Dec2BinDynamicTaskStrategie;
+import de.tuclausthal.submissioninterface.dynamictasks.impl.HardDiskCalculation2DynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.dynamictasks.impl.HardDiskCalculationDynamicTaskStrategie;
 import de.tuclausthal.submissioninterface.dynamictasks.impl.HexFloatMultiplikationDynamkicTaskStrategie;
 import de.tuclausthal.submissioninterface.dynamictasks.impl.MovieSizeDynamicTaskStrategie;
@@ -33,8 +34,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
  * @author Sven Strickroth
  */
 public class DynamicTaskStrategieFactory {
-	public static final String[] STRATEGIES = { "dec2bin", "bin2dec", "hexfloat2hexfloatandbin", "harddiskfillstatecalculation", "videocalculation", "complexdatatypesize", "complexdatatypesizewithfloat" };
-	public static final String[] NAMES = { "Integer-Dezimal2Binär", "Integer-Binär2Decimal", "32-bit HEX-Float2Hex- und Binär-Float", "Hard-Disk Space Calculator", "Video-Size Berechnung", "ComplexDataType-Size Berechnung mit 2er Komplement", "ComplexDataType-Size Berechnung mit Float" };
+	public static final String[] STRATEGIES = { "dec2bin", "bin2dec", "hexfloat2hexfloatandbin", "harddiskfillstatecalculation", "harddiskfillstatecalculation2", "videocalculation", "complexdatatypesize", "complexdatatypesizewithfloat" };
+	public static final String[] NAMES = { "Integer-Dezimal2Binär", "Integer-Binär2Decimal", "32-bit HEX-Float2Hex- und Binär-Float", "Hard-Disk Space Calculator", "Hard-Disk Space Calculator 2", "Video-Size Berechnung", "ComplexDataType-Size Berechnung mit 2er Komplement", "ComplexDataType-Size Berechnung mit Float" };
 
 	public static boolean IsValidStrategieName(String dynamicTask) {
 		for (String strategie : STRATEGIES) {
@@ -65,6 +66,8 @@ public class DynamicTaskStrategieFactory {
 			return new HexFloatMultiplikationDynamkicTaskStrategie(session, task);
 		} else if ("harddiskfillstatecalculation".equals(dynamicTask)) {
 			return new HardDiskCalculationDynamicTaskStrategie(session, task);
+		} else if ("harddiskfillstatecalculation2".equals(dynamicTask)) {
+			return new HardDiskCalculation2DynamicTaskStrategie(session, task);
 		} else if ("videocalculation".equals(dynamicTask)) {
 			return new MovieSizeDynamicTaskStrategie(session, task);
 		} else if ("complexdatatypesize".equals(dynamicTask)) {
