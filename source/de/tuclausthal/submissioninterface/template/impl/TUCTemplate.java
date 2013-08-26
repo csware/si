@@ -26,9 +26,9 @@ public class TUCTemplate extends Template {
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Strict//EN\">");
 		out.println("<html>");
 		out.println("<head>");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/screen.css\" media=\"screen\">");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/si.css\">");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/print.css\" media=\"print\">");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/screen.css\" media=\"screen\">");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/si.css\">");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/print.css\" media=\"print\">");
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">");
 		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + prefix + "/scripts.js\"></script>");
 		out.println("<title>GATE: " + title + "</title>");
@@ -37,7 +37,7 @@ public class TUCTemplate extends Template {
 		out.println("<body>");
 		out.println("<div id=\"aussen\">");
 		out.println("<div id=\"logo\">");
-		out.println("<h1><a href=\"http://www.tu-clausthal.de/\"><img src=\"" + prefix + "/tuc2005.png\" width=\"344\" height=\"64\" alt=\"TU Clausthal\" border=\"0\" /></a></h1>");
+		out.println("<h1><a href=\"http://www.tu-clausthal.de/\"><img src=\"" + prefix + "/template/tuc/tuc2005.png\" width=\"344\" height=\"64\" alt=\"TU Clausthal\" border=\"0\" /></a></h1>");
 		out.println("</div>");
 		out.println("<div id=\"menu\">");
 		User user = requestAdapter.getUser();
