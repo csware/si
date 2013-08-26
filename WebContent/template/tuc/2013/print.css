@@ -1,0 +1,498 @@
+body
+{
+margin: 0;
+padding: 0;
+background: none;
+color: #000;
+}
+
+/* äußerer Container */
+
+#aussen
+{
+margin: 0;
+padding: 0;
+font: 82% Verdana, Lucida, sans-serif;
+}
+
+#flaggen {
+display: none;
+}
+
+/* Links */
+
+a
+{
+color: #333;
+text-decoration: underline;
+}
+
+a img
+{
+border: 0px;
+}
+
+/* Schriften */
+
+div, p, ul, ol, dl, th, td, input, select
+{
+font-size: 1em;
+}
+
+pre, tt, code
+{
+font: 1em Courier, monospace;
+}
+
+h1
+{
+margin-top: 0;
+font: 500 1.6em Georgia, "New Century Schoolbook", Times, serif;
+}
+
+h1 a
+{
+text-decoration: none;
+}
+
+h2
+{
+font: 500 1.4em Georgia, "New Century Schoolbook", Times, serif;
+}
+
+h2 a
+{
+text-decoration: none;
+}
+
+h3
+{
+font: bold 1.2em Verdana, Lucida, sans-serif;
+}
+
+h3 a
+{
+text-decoration: none;
+}
+
+/* Logo */
+
+#logo
+{
+margin: 0;
+padding: 0;
+}
+
+/* Übergreifende Navigation oben rechts */
+
+#sitelinks
+{
+display: none; /* nicht anzeigen */
+}
+
+/* Arbeitsbereich */
+
+#topimage
+{
+display: none;
+}
+
+#blatt
+{
+margin: 0;
+padding: 0;
+}
+
+/* Instituts- oder Abteilungsname */
+
+#institut
+{
+margin: 0;
+padding: 10px 3px 10px 3px;
+border-bottom: 1px solid #666;
+}
+
+#institut h2
+{
+margin: 0;
+padding: 0;
+font: bold 1.3em Arial, Helvetica, sans-serif;
+}
+
+#institut h3
+{
+margin: 0;
+padding: 0;
+font: normal 1.3em Arial, Helvetica, sans-serif;
+}
+
+#institut a
+{
+	text-decoration: none;
+}
+
+/* Navigationsbox */
+
+#navbox
+{
+display: none; /* nicht anzeigen */
+}
+
+/* logischer Pfad zur aktuellen Seite (breadcrumb trail) */
+
+#pfad {
+padding: 3px 3px;
+border-bottom: 1px solid #666;
+font-size: 0.85em;
+}
+
+#pfad a
+{
+text-decoration: none;
+}
+
+/* Link-Logos (in Navigation und am Seitenende) */
+
+a.logo
+{
+text-decoration: none;
+}
+
+span.logo
+{
+display: none;
+}
+
+/* Inhalt */
+
+#inhalt
+{
+margin: 0;
+padding: 20px 3px;
+line-height: 140%;
+font-size: 1em;
+}
+
+#inhalt p
+{
+line-height: 130%;
+}
+
+/* 1. Spalte des Inhaltes */
+
+#spalte1
+{
+margin: 0;
+padding: 0;
+vertical-align: top;
+}
+
+/* Bildershow auf der Homepage */
+
+.bildshow
+{
+margin: 0 10px;
+padding: 10px;
+font-size: 0.9em;
+border: 1px solid #ccc;
+text-align: center;
+}
+
+.bildshow img
+{
+margin: 0 0 0 0;
+padding: 0px;
+background: #fff;
+border: 0;
+}
+
+.bildshow .autor
+{
+  font-size: 0.8em;
+  color: #999;
+  text-align: right;
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+}
+
+.bildshow .info
+{
+  margin: 0px 0 0 0;
+  padding: 0 0 0 0;
+}
+
+.bildbox
+{
+width: 250px;
+margin: 0 10px;
+padding: 0px;
+font-size: 0.9em;
+border: 0;
+text-align: center;
+}
+
+.bildbox img
+{
+margin: 0 0 0 0;
+padding: 0px;
+background: #fff;
+border: 0;
+}
+
+.bildbox .autor
+{
+  font-size: 0.8em;
+  color: #999;
+  text-align: right;
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+}
+
+.bildbox .info
+{
+  margin: 0px 0 0 0;
+  padding: 0 0 0 0;
+}
+
+/* aktuelle Stories auf der Homepage (teaser = Lockartikel) */
+
+.teaser
+{
+margin: 0;
+padding: 0;
+font-size: 0.9em;
+}
+
+.teaser h2
+{
+font: bold 1em Verdana, Arial, Helvetica, sans-serif;
+background-color: #f5f5f5;
+margin: 20px 0px 0px 0px;
+padding: 3px 5px 2px 5px;
+}
+
+.teaser p
+{
+margin: 0px 0px 20px 0px;
+padding: 10px 5px;
+background-color: #f5f5f5;
+}
+
+.teaser img
+{
+position: relative;
+border: 0;
+margin-top: 15px;
+margin-bottom: 0px;
+}
+
+.teaser img.left {
+left: 0;
+float: left;
+margin-right: 20px;
+margin-left: 5px;
+}
+
+.teaser img.right {
+right: 0;
+float: right;
+margin-left: 15px;
+margin-right: 5px;
+}
+
+/* 2. Spalte des Inhaltes (zusätzliche Infos) */
+
+#spalte2
+{
+padding: 0 0 0 15px;
+vertical-align: top;
+line-height: 100%;
+}
+
+#spalte2 dl
+{
+margin: 0 0 15px 0;
+padding: 0;
+border: 1px solid #ddd;
+}
+
+#spalte2 dt
+{
+margin: 0;
+padding: 4px 10px 4px 10px;
+background: #f5f5f5;
+font-weight: bold;
+font-size: 0.9em;
+white-space: nowrap;
+border-bottom: 1px solid #ddd;
+}
+
+#spalte2 dd
+{
+margin: 0;
+padding: 4px 10px 4px 10px;
+font-size: 0.85em;
+}
+
+/* Fuss der Seite; Copyright, Impressum etc. */
+
+#fuss
+{
+margin: 0;
+padding: 3px 3px;
+border-top: 1px solid #666;
+font-size: 0.85em;
+}
+
+#fuss-copy
+{
+float: right;
+}
+
+#fuss a
+{
+text-decoration: none;
+}
+
+/* Hervorhebungen */
+
+.highlight
+{
+background: #ddd;
+}
+
+/* Schriftgrößen */
+
+.sehrgross
+{
+font-size: 1.4em;
+}
+
+.gross
+{
+font-size: 1.2em;
+}
+
+.kleiner
+{
+font-size: 0.9em;
+}
+
+.klein
+{
+font-size: 0.85em;
+}
+
+/* diverse Klassen zur Formatierung des Inhaltes */
+
+.fleft
+{
+float: left;
+}
+
+.fright
+{
+float: right;
+}
+
+.indent /* Einzug links */
+{
+margin-left: 20px;
+}
+
+.center /* zentriert */
+{
+text-align: center;
+}
+
+.right /* rechtsbündig */
+{
+text-align: right;
+}
+
+.hide /* nicht anzeigen */
+{
+display: none;
+}
+
+.noprint /* in der Druckansicht nicht anzeigen */
+{
+display: none;
+}
+
+.dummy /* wird benötigt für korrekten Seitenfluss nach Float-Elementen */
+{
+clear: both;
+}
+
+.kasten
+{
+border: 1px solid #ddd;
+background: #e9e9e9;
+}
+
+table.gitter
+{
+border-top: 1px solid #ddd;
+border-left: 1px solid #ddd;
+margin: 0;
+padding: 0;
+}
+
+table.gitter td
+{
+border-right: 1px solid #ddd;
+border-bottom: 1px solid #ddd;
+margin: 0;
+padding: 3px;
+}
+
+table.gitter th
+{
+border-right: 1px solid #ddd;
+border-bottom: 1px solid #ddd;
+background: #ddd;
+margin: 0;
+padding: 3px;
+text-align: left;
+}
+
+table.einfach
+{
+border: 1px solid #ddd;
+margin: 0;
+padding: 0;
+}
+
+table.einfach td
+{
+margin: 0;
+padding: 3px;
+}
+
+table.einfach th
+{
+background: #ddd;
+margin: 0;
+padding: 3px;
+text-align: left;
+}
+
+/* Formate aus dem alten Design, werden ggf. noch im Inhalt verwendet */
+
+.loulr		{ border: 1px solid #999999; }
+.lolr		{ border-top: 1px solid #999999;
+		  border-right: 1px solid #999999;
+		  border-left: 1px solid #999999; }
+.lulr		{ border-right: 1px solid #999999;
+		  border-bottom: 1px solid #999999;
+		  border-left: 1px solid #999999; }
+.llr		{ border-right: 1px solid #999999;
+		  border-left: 1px solid #999999; }
+.lu		{ border-bottom: 1px solid #999999; }
+.lborder		{ border: 2px solid #dddddd; }
+.dotborder	{ border: 1px dotted #999999; }
+
+/* Menü bei on hover ausklappen */
+.menuarea {position: relative;}
+.menuarea .menubox {visibility: hidden;}

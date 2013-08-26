@@ -13,8 +13,8 @@ import de.tuclausthal.submissioninterface.template.Template;
  * An template for the TU-Clausthal layout
  * @author Sven Strickroth
  */
-public class TUCTemplate extends Template {
-	public TUCTemplate(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
+public class TUC2013Template extends Template {
+	public TUC2013Template(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
 		super(servletRequest, servletResponse);
 	}
 
@@ -24,11 +24,18 @@ public class TUCTemplate extends Template {
 		servletResponse.setCharacterEncoding("iso-8859-1");
 		PrintWriter out = servletResponse.getWriter();
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Strict//EN\">");
-		out.println("<html>");
+		out.println("<html lang=\"de\">");
 		out.println("<head>");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2005/screen.css\" media=\"screen\">");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2013/screen.css\" media=\"screen\">");
 		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/si.css\">");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2005/print.css\" media=\"print\">");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2013/print.css\" media=\"print\">");
+		out.println("<!--[if lt IE 9]>");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2013/screen-ie-fix.css\">");
+		out.println("<![endif]-->");
+		out.println("<style type=\"text/css\">");
+		out.println("#pfad, #inhalt { margin-left: 0px; }");
+		out.println("#sitelinks a { color:#008C4F; }");
+		out.println("</style>");
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">");
 		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + prefix + "/scripts.js\"></script>");
 		out.println("<title>GATE: " + title + "</title>");
@@ -36,10 +43,12 @@ public class TUCTemplate extends Template {
 		out.println("</head>");
 		out.println("<body>");
 		out.println("<div id=\"aussen\">");
+		out.println("<div id=\"innen\">");
 		out.println("<div id=\"logo\">");
-		out.println("<h1><a href=\"http://www.tu-clausthal.de/\"><img src=\"" + prefix + "/template/tuc/tuc2005.png\" width=\"344\" height=\"64\" alt=\"TU Clausthal\" border=\"0\" /></a></h1>");
+		out.println("<a href=\"http://www.tu-clausthal.de/\"><img src=\"" + prefix + "/template/tuc/tuc2005.png\" width=\"344\" height=\"64\" alt=\"TU Clausthal\" border=\"0\" /></a>");
 		out.println("</div>");
-		out.println("<div id=\"menu\">");
+		out.println("<div id=\"banner\">");
+		out.println("<div id=\"sitelinks\">");
 		User user = requestAdapter.getUser();
 		if (user != null) {
 			out.println("Benutzer: " + user.getEmail());
@@ -55,31 +64,31 @@ public class TUCTemplate extends Template {
 		} else {
 			out.println("nicht eingeloggt");
 		}
-		//out.println("<a href=\"http://search.tu-clausthal.de/\" target=\"_blank\">Suche</a>");
 		out.println("</div>");
-		out.println("<hr class=\"hide\" />");
-		out.println("<div id=\"page\">");
-		out.println("<div id=\"einrichtung\">");
+		out.println("<div id=\"institut\">");
 		out.println("<h2><a href=\"http://www.in.tu-clausthal.de/\">Institut für Informatik</a></h2>");
 		out.println("</div>");
 		out.println("<hr class=\"hide\" />");
-		out.println("<div id=\"pfad-wide\">");
+		out.println("</div>");
+		out.println("<div id=\"blatt\">");
+		// code for menu missing here
+		out.println("<div id=\"pfad\">");
 		out.println(breadCrum);
 		out.println("</div>");
 		out.println("<hr class=\"hide\" />");
-		out.println("<div id=\"inhalt-wide\">");
+		out.println("<div id=\"inhalt\">");
 		out.println("<h1>" + title + "</h1>");
 	}
 
 	@Override
 	public void printTemplateFooter() throws IOException {
 		PrintWriter out = servletResponse.getWriter();
-		out.println("<div style=\"clear: both;\">");
 		out.println("</div>");
 		out.println("</div>");
 		out.println("<hr class=\"hide\" />");
 		out.println("<div id=\"fuss-wide\">");
-		out.println("Layout &copy;&nbsp;TU&nbsp;Clausthal&nbsp;2006&nbsp;&middot;&nbsp;<a href=\"http://www.tu-clausthal.de/info/impressum/\" target=\"_blank\">Impressum</a>");
+		out.println("<a href=\"http://www.tu-clausthal.de/info/impressum/\" target=\"_blank\">Impressum</a>");
+		out.println("<span id=\"fuss-copy\">Layout &copy;&nbsp;TU&nbsp;Clausthal&nbsp;2013</span>");
 		out.println("</div>");
 		out.println("</div>");
 		out.println("</div>");

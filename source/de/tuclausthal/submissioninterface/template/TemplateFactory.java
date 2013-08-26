@@ -23,7 +23,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.tuclausthal.submissioninterface.template.impl.TUCTemplate;
+import de.tuclausthal.submissioninterface.template.impl.TUC2013Template;
 
 /**
  * Factory for the template-class(es)
@@ -39,6 +39,6 @@ public class TemplateFactory {
 	 * @throws IOException
 	 */
 	public static Template getTemplate(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
-		return new TUCTemplate(servletRequest, servletResponse);
+		return new TUC2013Template(servletRequest, servletResponse);
 	}
 }
