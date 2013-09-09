@@ -69,7 +69,7 @@ form { padding-bottom: 0px; margin-bottom: 0px; }
 body.filepreview {
 	font: 82% Verdana, Lucida, sans-serif;
 	color: black;
-	background-color: white;
+	background: none repeat scroll 0 0 white;
 	margin: 8px;
 }
 
