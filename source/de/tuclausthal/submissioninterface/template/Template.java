@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.template;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -104,6 +105,8 @@ public abstract class Template {
 	public void addKeepAlive() {
 		addHead("<script type=\"text/javascript\">keepAlive(\"" + servletResponse.encodeURL("Noop") + "\", 120);</script>");
 	}
+
+	public abstract void printStyleSheets(PrintWriter out);
 
 	/**
 	 * Prints the HTML page header with a title and breadcrums

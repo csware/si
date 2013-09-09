@@ -26,16 +26,7 @@ public class TUC2013Template extends Template {
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Strict//EN\">");
 		out.println("<html lang=\"de\">");
 		out.println("<head>");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2013/screen.css\" media=\"screen\">");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/si.css\">");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2013/print.css\" media=\"print\">");
-		out.println("<!--[if lt IE 9]>");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2013/screen-ie-fix.css\">");
-		out.println("<![endif]-->");
-		out.println("<style type=\"text/css\">");
-		out.println("#pfad, #inhalt { margin-left: 0px; }");
-		out.println("#sitelinks a { color:#008C4F; }");
-		out.println("</style>");
+		printStyleSheets(out);
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">");
 		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + prefix + "/scripts.js\"></script>");
 		out.println("<title>GATE: " + title + "</title>");
@@ -94,5 +85,19 @@ public class TUC2013Template extends Template {
 		out.println("</div>");
 		out.println("</body>");
 		out.println("</html>");
+	}
+
+	@Override
+	public void printStyleSheets(PrintWriter out) {
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2013/screen.css\" media=\"screen\">");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/si.css\">");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2013/print.css\" media=\"print\">");
+		out.println("<!--[if lt IE 9]>");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2013/screen-ie-fix.css\">");
+		out.println("<![endif]-->");
+		out.println("<style type=\"text/css\">");
+		out.println("#pfad, #inhalt { margin-left: 0px; }");
+		out.println("#sitelinks a { color:#008C4F; }");
+		out.println("</style>");
 	}
 }

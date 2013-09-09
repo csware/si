@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011,2013 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -31,6 +31,8 @@ import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
 
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.template.Template;
+import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -74,8 +76,8 @@ public class ShowFileView extends HttpServlet {
 		out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
 		out.println("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n");
 		out.println("<head>");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + request.getContextPath() + "/screen.css\" />");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + request.getContextPath() + "/si.css\" />");
+		Template template = TemplateFactory.getTemplate(request, response);
+		template.printStyleSheets(out);
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />");
 		out.println("<title>" + Util.escapeHTML(fileName) + "</title>");
 		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + request.getContextPath() + "/scripts.js\"></script>");

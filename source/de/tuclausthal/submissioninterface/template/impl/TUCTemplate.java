@@ -26,9 +26,7 @@ public class TUCTemplate extends Template {
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Strict//EN\">");
 		out.println("<html>");
 		out.println("<head>");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2005/screen.css\" media=\"screen\">");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/si.css\">");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2005/print.css\" media=\"print\">");
+		printStyleSheets(out);
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">");
 		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + prefix + "/scripts.js\"></script>");
 		out.println("<title>GATE: " + title + "</title>");
@@ -85,5 +83,12 @@ public class TUCTemplate extends Template {
 		out.println("</div>");
 		out.println("</body>");
 		out.println("</html>");
+	}
+
+	@Override
+	public void printStyleSheets(PrintWriter out) {
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2005/screen.css\" media=\"screen\">");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/si.css\">");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2005/print.css\" media=\"print\">");
 	}
 }

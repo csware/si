@@ -26,8 +26,7 @@ public class HUTemplate extends Template {
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
 		out.println("<html lang=\"de\">");
 		out.println("<head>");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/hu/default.css\">");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/hu/si.css\">");
+		printStyleSheets(out);
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">");
 		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + prefix + "/scripts.js\"></script>");
 		out.println("<title>GATE: " + title + "</title>");
@@ -85,5 +84,11 @@ public class HUTemplate extends Template {
 		out.println("</div>");
 		out.println("</body>");
 		out.println("</html>");
+	}
+
+	@Override
+	public void printStyleSheets(PrintWriter out) {
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/hu/default.css\">");
+		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/hu/si.css\">");
 	}
 }
