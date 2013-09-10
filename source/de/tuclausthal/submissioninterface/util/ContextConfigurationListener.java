@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010, 2013 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2013 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,39 +18,17 @@
 
 package de.tuclausthal.submissioninterface.util;
 
-import java.io.File;
-
-import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /**
- * Context Adapter
+ * Context Configuration
  * @author Sven Strickroth
  */
-public class ContextAdapter {
-	public ContextAdapter(ServletContext context) {
+public class ContextConfigurationListener implements ServletContextListener {
+	public void contextInitialized(ServletContextEvent event) {
+		Configuration.fillConfiguration(event.getServletContext());
 	}
 
-	/**
-	 * Returns the path to the submissions
-	 * @return the path
-	 */
-	public File getDataPath() {
-		return Configuration.getInstance().getDataPath();
-	}
-
-	/**
-	 * Returns the path to the servlets
-	 * @return the path
-	 */
-	public String getServletsPath() {
-		return Configuration.getInstance().getServletsPath();
-	}
-
-	/**
-	 * Returns the path to the servlets
-	 * @return the path
-	 */
-	public String getAdminMail() {
-		return Configuration.getInstance().getAdminMail();
-	}
+	public void contextDestroyed(ServletContextEvent event) {}
 }

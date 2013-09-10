@@ -16,6 +16,9 @@
     <param-name>adminmail</param-name>
     <param-value>sstri@tu-clausthal.de</param-value>
   </context-param>
+  <listener> <!-- must be the first listener! -->
+    <listener-class>de.tuclausthal.submissioninterface.util.ContextConfigurationListener</listener-class>
+  </listener>
   <listener>
     <listener-class>de.tuclausthal.submissioninterface.util.HibernateListener</listener-class>
   </listener>
