@@ -16,6 +16,18 @@
     <param-name>adminmail</param-name>
     <param-value>sstri@tu-clausthal.de</param-value>
   </context-param>
+  <context-param>
+    <param-name>mail-server</param-name>
+    <param-value>127.0.0.1</param-value>
+  </context-param>
+  <context-param>
+    <param-name>mail-from</param-name>
+    <param-value>noreply@localhost</param-value>
+  </context-param>
+  <context-param>
+    <param-name>mail-subject-prefix</param-name>
+    <param-value>[GATE] </param-value>
+  </context-param>
   <listener> <!-- must be the first listener! -->
     <listener-class>de.tuclausthal.submissioninterface.util.ContextConfigurationListener</listener-class>
   </listener>

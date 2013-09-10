@@ -31,6 +31,9 @@ public class Configuration {
 	private String dataPath;
 	private String servletsPath;
 	private String adminMail;
+	private String mailServer;
+	private String mailFrom;
+	private String mailSubjectPrefix;
 
 	private Configuration() {}
 
@@ -44,6 +47,9 @@ public class Configuration {
 		}
 
 		instance.adminMail = context.getInitParameter("adminmail");
+		instance.mailServer = context.getInitParameter("mail-server");
+		instance.mailFrom = context.getInitParameter("mail-from");
+		instance.mailSubjectPrefix = context.getInitParameter("mail-subject-prefix");
 
 		instance.fillDatapath(context);
 		instance.fillServletspath(context);
@@ -94,5 +100,17 @@ public class Configuration {
 	 */
 	public String getAdminMail() {
 		return adminMail;
+	}
+
+	public String getMailServer() {
+		return mailServer;
+	}
+
+	public String getMailFrom() {
+		return mailFrom;
+	}
+
+	public String getMailSubjectPrefix() {
+		return mailSubjectPrefix;
 	}
 }

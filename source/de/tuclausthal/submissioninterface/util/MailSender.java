@@ -30,14 +30,10 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 
 public class MailSender {
-	public final static String mailServer = "127.0.0.1";
-	public final static String from = "\"GATE\" <noreply@si.in.tu-clausthal.de>";
-	public final static String subjectPrefix = "[GATE] ";
-
 	public static void sendMail(String to, String subject, String messageText) {
 		MimeMessage msg;
 		Properties props = System.getProperties();
-		props.put("mail.smtp.host", mailServer);
+		props.put("mail.smtp.host", Configuration.getInstance().getMailServer());
 
 		Session session = Session.getDefaultInstance(props, null);
 
@@ -47,12 +43,12 @@ public class MailSender {
 			// Im folgenden werden die Absenderadresse, der direkte
 			// Empfänger, das Absendedatum, der Betreff kodiert in
 			// US-ASCII Zeichen und der Headereintrag "X-Mailer" gesetzt
-			msg.setFrom(new InternetAddress(from));
+			msg.setFrom(new InternetAddress(Configuration.getInstance().getMailFrom()));
 			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
 			msg.setSentDate(new Date());
 			subject = subject.replace("\r", " ");
 			subject = subject.replace("\n", " ");
-			msg.setSubject(MimeUtility.encodeText(subjectPrefix + subject, "iso-8859-1", "Q"));
+			msg.setSubject(MimeUtility.encodeText(Configuration.getInstance().getMailSubjectPrefix() + subject, "iso-8859-1", "Q"));
 			msg.setHeader("X-Mailer", "GATE");
 
 			// kein Anhang, Mailtext wird direkt der Mail hinzugefügt.
