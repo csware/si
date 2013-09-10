@@ -28,6 +28,10 @@
     <param-name>mail-subject-prefix</param-name>
     <param-value>[GATE] </param-value>
   </context-param>
+  <context-param>
+    <param-name>mail-users-domain</param-name>
+    <param-value>localhost</param-value>
+  </context-param>
   <listener> <!-- must be the first listener! -->
     <listener-class>de.tuclausthal.submissioninterface.util.ContextConfigurationListener</listener-class>
   </listener>

@@ -33,6 +33,8 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.DiscriminatorFormula;
 import org.hibernate.annotations.OrderBy;
 
+import de.tuclausthal.submissioninterface.util.Configuration;
+
 @Entity
 @Table(name = "users")
 @DiscriminatorFormula("case when matrikelno is null then 0 else 1 end")
@@ -55,7 +57,7 @@ public class User implements Serializable {
 
 	@Transient
 	public String getFullEmail() {
-		return getEmail() + "@tu-clausthal.de";
+		return getEmail() + "@" + Configuration.getInstance().getMailDomain();
 	}
 
 	/**

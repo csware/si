@@ -34,6 +34,7 @@ public class Configuration {
 	private String mailServer;
 	private String mailFrom;
 	private String mailSubjectPrefix;
+	private String mailDomain;
 
 	private Configuration() {}
 
@@ -50,6 +51,7 @@ public class Configuration {
 		instance.mailServer = context.getInitParameter("mail-server");
 		instance.mailFrom = context.getInitParameter("mail-from");
 		instance.mailSubjectPrefix = context.getInitParameter("mail-subject-prefix");
+		instance.mailDomain = context.getInitParameter("mail-users-domain");
 
 		instance.fillDatapath(context);
 		instance.fillServletspath(context);
@@ -112,5 +114,9 @@ public class Configuration {
 
 	public String getMailSubjectPrefix() {
 		return mailSubjectPrefix;
+	}
+
+	public String getMailDomain() {
+		return mailDomain;
 	}
 }
