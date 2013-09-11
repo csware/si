@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2013 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -119,7 +119,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 				String[] resultFields = dynamicTask.getResultFields(false);
 				List<String> studentResults = dynamicTask.getUserResults(submission);
 				for (int i = 0; i < resultFields.length; i++) {
-					out.println("<p>" + resultFields[i] + ": <input type=text name=\"dynamicresult" + i + "\" size=35 value=\"" + Util.escapeHTML(studentResults.get(i)) + "\"></p>");
+					out.println("<p>" + resultFields[i] + ": <input type=text name=\"dynamicresult" + i + "\" size=35 autocomplete=\"off\" value=\"" + Util.escapeHTML(studentResults.get(i)) + "\"></p>");
 				}
 				out.println("<p>Bitte füllen Sie das Textfeld mit dem Rechnenweg zu Ihrer Lösung:</p>");
 			} else {
