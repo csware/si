@@ -85,6 +85,13 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 	}
 
 	@Override
+	public void makeUserStudent(int uid, int matrikelno) {
+		Transaction tx = getSession().beginTransaction();
+		getSession().createSQLQuery("update users set matrikelno = :matrikelno where uid = :uid").setInteger("matrikelno", matrikelno).setInteger("uid", uid).executeUpdate();
+		tx.commit();
+	}
+
+	@Override
 	public List<User> getUsers() {
 		return getSession().createCriteria(User.class).addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 	}

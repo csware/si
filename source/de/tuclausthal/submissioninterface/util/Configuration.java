@@ -42,6 +42,7 @@ public class Configuration {
 	private String mailSubjectPrefix;
 	private String mailDomain;
 	private boolean matrikelNoAvailableToTutors;
+	private boolean matrikelNumberMustBeEnteredManuallyIfMissing;
 
 	private Configuration() {}
 
@@ -60,6 +61,7 @@ public class Configuration {
 		instance.mailSubjectPrefix = context.getInitParameter("mail-subject-prefix");
 		instance.mailDomain = context.getInitParameter("mail-users-domain");
 		instance.matrikelNoAvailableToTutors = parseBooleanValue(context.getInitParameter("show-matrikelno-to-tutors"), false);
+		instance.matrikelNumberMustBeEnteredManuallyIfMissing = parseBooleanValue(context.getInitParameter("matrikelno-must-be-enterend-manually-if-missing"), false);
 
 		instance.fillDatapath(context);
 		instance.fillServletspath(context);
@@ -167,5 +169,9 @@ public class Configuration {
 
 	public Constructor<Template> getTemplateConstructor() {
 		return templateConstructor;
+	}
+
+	public boolean isMatrikelNumberMustBeEnteredManuallyIfMissing() {
+		return matrikelNumberMustBeEnteredManuallyIfMissing;
 	}
 }

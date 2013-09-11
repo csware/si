@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010, 2013 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -33,7 +33,9 @@ import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Controller-Servlet for changeing user properties
@@ -53,6 +55,11 @@ public class AlterUser extends HttpServlet {
 			return;
 		}
 
+		if (Configuration.getInstance().isMatrikelNumberMustBeEnteredManuallyIfMissing() && !(user instanceof Student)) {
+			if (request.getParameter("matrikelno") != null && Util.parseInteger(request.getParameter("matrikelno"), 0) > 0) {
+				userDAO.makeUserStudent(RequestAdapter.getUser(request).getUid(), Util.parseInteger(request.getParameter("matrikelno"), 0));
+			}
+		}
 		if (user instanceof Student) {
 			Student student = (Student) user;
 			if (request.getParameter("studiengang") != null && !"".equals(request.getParameter("studiengang").trim())) {

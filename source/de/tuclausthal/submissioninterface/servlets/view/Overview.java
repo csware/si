@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2013 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -32,6 +32,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -49,6 +50,11 @@ public class Overview extends HttpServlet {
 
 		User user = RequestAdapter.getUser(request);
 
+		if (Configuration.getInstance().isMatrikelNumberMustBeEnteredManuallyIfMissing() && !(user instanceof Student)) {
+			out.println("<p><form class=\"highlightborder mid\" action=\"" + response.encodeURL("AlterUser") + "\" method=post>");
+			out.println("Bitte nennen Sie Ihre Matrikelnummer: <input type=number required=\"required\" name=matrikelno id=matrikelno pattern=\"[0-9]+\" autocomplete=\"off\" size=15\"> <input type=submit value=\"speichern...\">");
+			out.println("</form></p><br>");
+		}
 		if (user instanceof Student) {
 			Student student = (Student) user;
 			if (student.getStudiengang() == null) {
@@ -58,7 +64,7 @@ public class Overview extends HttpServlet {
 				if (student.getStudiengang() != null) {
 					studiengang = Util.escapeHTML(student.getStudiengang());
 				}
-				out.println("Bitte nennen Sie Ihren Studiengang: <input type=text name=studiengang id=studiengang size=40 value=\"" + studiengang + "\"> <input type=submit value=\"speichern...\">");
+				out.println("Bitte nennen Sie Ihren Studiengang: <input type=text required=\"required\" name=studiengang id=studiengang size=40 value=\"" + studiengang + "\"> <input type=submit value=\"speichern...\">");
 				out.println("<script src=\"" + request.getContextPath() + "/studiengaenge.js\" type=\"text/javascript\"></script>");
 				out.println("</form></p><br>");
 			}

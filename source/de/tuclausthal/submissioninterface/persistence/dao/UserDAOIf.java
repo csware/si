@@ -77,4 +77,6 @@ public interface UserDAOIf {
 	 * @param user the user to update
 	 */
 	public void saveUser(User user);
+
+	public void makeUserStudent(int uid, int matrikelno);
 }

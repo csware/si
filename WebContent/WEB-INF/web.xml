@@ -40,6 +40,10 @@
     <param-name>show-matrikelno-to-tutors</param-name>
     <param-value>no</param-value>
   </context-param>
+  <context-param>
+    <param-name>matrikelno-must-be-enterend-manually-if-missing</param-name>
+    <param-value>no</param-value>
+  </context-param>
   <listener> <!-- must be the first listener! -->
     <listener-class>de.tuclausthal.submissioninterface.util.ContextConfigurationListener</listener-class>
   </listener>
