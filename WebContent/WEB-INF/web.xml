@@ -5,6 +5,10 @@
     </description>
   <display-name>Submission Interface</display-name>
   <context-param>
+    <param-name>template-class</param-name>
+    <param-value>de.tuclausthal.submissioninterface.template.impl.HUTemplate</param-value>
+  </context-param>
+  <context-param>
     <param-name>datapath</param-name>
     <param-value>c:\submissionsystem</param-value>
   </context-param>

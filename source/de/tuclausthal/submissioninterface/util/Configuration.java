@@ -19,8 +19,13 @@
 package de.tuclausthal.submissioninterface.util;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import de.tuclausthal.submissioninterface.template.Template;
 
 /**
  * Context Configuration
@@ -28,6 +33,7 @@ import javax.servlet.ServletContext;
  */
 public class Configuration {
 	static private Configuration instance = null;
+	private Constructor<Template> templateConstructor;
 	private String dataPath;
 	private String servletsPath;
 	private String adminMail;
@@ -57,6 +63,23 @@ public class Configuration {
 
 		instance.fillDatapath(context);
 		instance.fillServletspath(context);
+		instance.fillTemplateConstructor(context);
+	}
+
+	private void fillTemplateConstructor(ServletContext context) {
+		String className = context.getInitParameter("template-class");
+		if (className == null) {
+			throw new RuntimeException("template-class not specified");
+		}
+		try {
+			templateConstructor = (Constructor<Template>) Class.forName(className).getDeclaredConstructor(HttpServletRequest.class, HttpServletResponse.class);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("template-class not found");
+		} catch (NoSuchMethodException e) {
+			throw new RuntimeException("template-class does not have required constructor");
+		} catch (SecurityException e) {
+			throw new RuntimeException("Cehcking template-class threw security exception");
+		}
 	}
 
 	private static boolean parseBooleanValue(String initParameter, boolean defaultValue) {
@@ -140,5 +163,9 @@ public class Configuration {
 
 	public String getMailDomain() {
 		return mailDomain;
+	}
+
+	public Constructor<Template> getTemplateConstructor() {
+		return templateConstructor;
 	}
 }
