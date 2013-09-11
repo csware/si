@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2013 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -43,6 +43,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -62,6 +63,7 @@ public class ShowLectureTutorView extends HttpServlet {
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 
 		boolean isAdvisor = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0);
+		boolean showMatNo = isAdvisor || new ContextAdapter(getServletContext()).isMatrikelNoAvailableToTutors(); 
 
 		// list all tasks for a lecture
 		template.printTemplateHeader(lecture);
@@ -125,7 +127,7 @@ public class ShowLectureTutorView extends HttpServlet {
 		out.println("<h2>Teilnehmer</h2>");
 		if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
 			out.println("<h3>Ohne Gruppe</h3>");
-			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, requestAdapter);
+			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, showMatNo, requestAdapter);
 			out.println("<p class=mid>");
 			if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 				out.println("<a href=\"" + response.encodeURL("AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a>");
@@ -168,7 +170,7 @@ public class ShowLectureTutorView extends HttpServlet {
 				}
 				out.println("</table><p>");
 			}
-			listMembers(participationDAO.getParticipationsOfGroup(group).iterator(), response, isAdvisor, requestAdapter);
+			listMembers(participationDAO.getParticipationsOfGroup(group).iterator(), response, isAdvisor, showMatNo, requestAdapter);
 			out.println("</div>");
 		}
 		out.println("<h3>Gesamtdurchschnitt: " + Util.showPoints(((Double) (DAOFactory.LectureDAOIf(session).getSumOfPoints(lecture) / (double) DAOFactory.LectureDAOIf(session).getStudentsCount(lecture))).intValue()) + "</h3>");
@@ -176,14 +178,16 @@ public class ShowLectureTutorView extends HttpServlet {
 		template.printTemplateFooter();
 	}
 
-	public void listMembers(Iterator<Participation> participationIterator, HttpServletResponse response, boolean isAdvisor, RequestAdapter requestAdapter) throws IOException {
+	public void listMembers(Iterator<Participation> participationIterator, HttpServletResponse response, boolean isAdvisor, boolean showMatNo, RequestAdapter requestAdapter) throws IOException {
 		if (participationIterator.hasNext()) {
 			PrintWriter out = response.getWriter();
 			int sumOfPoints = 0;
 			int usersCount = 0;
 			out.println("<table class=border>");
 			out.println("<tr>");
-			out.println("<th>MatNo</th>");
+			if (showMatNo) {
+				out.println("<th>MatNo</th>");
+			}
 			out.println("<th>Teilnehmer</th>");
 			out.println("<th>Rolle</th>");
 			out.println("<th>Punkte</th>");
@@ -191,10 +195,12 @@ public class ShowLectureTutorView extends HttpServlet {
 			while (participationIterator.hasNext()) {
 				Participation thisParticipation = participationIterator.next();
 				out.println("<tr>");
-				if (thisParticipation.getUser() instanceof Student) {
-					out.println("<td>" + ((Student) thisParticipation.getUser()).getMatrikelno() + "</td>");
-				} else {
-					out.println("<td>n/a</td>");
+				if (showMatNo) {
+					if (thisParticipation.getUser() instanceof Student) {
+						out.println("<td>" + ((Student) thisParticipation.getUser()).getMatrikelno() + "</td>");
+					} else {
+						out.println("<td>n/a</td>");
+					}
 				}
 				out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + thisParticipation.getUser().getUid()) + "\">" + Util.escapeHTML(thisParticipation.getUser().getFullName()) + "</a></td>");
 				if (thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
@@ -232,7 +238,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			}
 			if (sumOfPoints > 0 && usersCount > 0) {
 				out.println("<tr>");
-				out.println("<td colspan=3>Anzahl: " + usersCount + " / Durchschnittspunkte:</td>");
+				out.println("<td colspan=" + (2 + (showMatNo ? 1 : 0)) + ">Anzahl: " + usersCount + " / Durchschnittspunkte:</td>");
 				out.println("<td class=points>" + Util.showPoints(Float.valueOf(sumOfPoints / (float) usersCount).intValue()) + "</td>");
 				out.println("</tr>");
 			} else {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2013 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -57,6 +57,7 @@ public class ShowUserView extends HttpServlet {
 
 		User user = (User) request.getAttribute("user");
 		List<Lecture> lectures = (List<Lecture>) request.getAttribute("lectures");
+		Boolean isAtLeastAdvisorOnce = (Boolean) request.getAttribute("isAtLeastAdvisorOnce");
 		Session session = RequestAdapter.getSession(request);
 
 		template.printTemplateHeader("Benutzer \"" + Util.escapeHTML(user.getFullName()) + "\"");
@@ -64,7 +65,9 @@ public class ShowUserView extends HttpServlet {
 		out.println("<p><a href=\"mailto:" + Util.escapeHTML(user.getFullEmail()) + "\">" + Util.escapeHTML(user.getFullEmail()) + "</a></p>");
 
 		if (user instanceof Student) {
-			out.println("<p>Matrikelnummer: " + ((Student) user).getMatrikelno() + "</p>");
+			if (isAtLeastAdvisorOnce) {
+				out.println("<p>Matrikelnummer: " + ((Student) user).getMatrikelno() + "</p>");
+			}
 			out.println("<p>Studiengang: " + Util.escapeHTML(((Student) user).getStudiengang()) + "</p>");
 		}
 

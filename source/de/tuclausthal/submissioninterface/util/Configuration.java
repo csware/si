@@ -35,6 +35,7 @@ public class Configuration {
 	private String mailFrom;
 	private String mailSubjectPrefix;
 	private String mailDomain;
+	private boolean matrikelNoAvailableToTutors;
 
 	private Configuration() {}
 
@@ -52,9 +53,26 @@ public class Configuration {
 		instance.mailFrom = context.getInitParameter("mail-from");
 		instance.mailSubjectPrefix = context.getInitParameter("mail-subject-prefix");
 		instance.mailDomain = context.getInitParameter("mail-users-domain");
+		instance.matrikelNoAvailableToTutors = parseBooleanValue(context.getInitParameter("show-matrikelno-to-tutors"), false);
 
 		instance.fillDatapath(context);
 		instance.fillServletspath(context);
+	}
+
+	private static boolean parseBooleanValue(String initParameter, boolean defaultValue) {
+		if (initParameter == null)
+			return defaultValue;
+		String normalized = initParameter.trim().toLowerCase();
+		if ("yes".equals(normalized) || "true".equals(normalized)) {
+			return true;
+		} else if ("no".equals(normalized) || "false".equals(normalized)) {
+			return false;
+		}
+		if (Integer.parseInt(normalized) == 0) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	/**
@@ -102,6 +120,10 @@ public class Configuration {
 	 */
 	public String getAdminMail() {
 		return adminMail;
+	}
+
+	public boolean isMatrikelNoAvailableToTutors() {
+		return matrikelNoAvailableToTutors;
 	}
 
 	public String getMailServer() {

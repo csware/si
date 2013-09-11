@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2013 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -34,6 +34,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -41,6 +42,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -57,6 +59,8 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		Session session = RequestAdapter.getSession(request);
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 
+		boolean showMatNo = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) || new ContextAdapter(getServletContext()).isMatrikelNoAvailableToTutors();
+
 		// list all tasks for a lecture
 		template.printTemplateHeader("Gesamtübersicht", lecture);
 		PrintWriter out = response.getWriter();
@@ -65,7 +69,9 @@ public class ShowLectureTutorFullView extends HttpServlet {
 
 		out.println("<table class=border>");
 		out.println("<tr>");
-		out.println("<th rowspan=2>MatrikelNo</th>");
+		if (showMatNo) {
+			out.println("<th rowspan=2>MatrikelNo</th>");
+		}
 		out.println("<th rowspan=2>Studiengang</th>");
 		out.println("<th rowspan=2>Nachname</th>");
 		out.println("<th rowspan=2>Vorname</th>");
@@ -90,10 +96,14 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		for (Participation lectureParticipation : lecture.getParticipants()) {
 			out.println("<tr>");
 			if (lectureParticipation.getUser() instanceof Student) {
-				out.println("<td>" + ((Student) lectureParticipation.getUser()).getMatrikelno() + "</td>");
+				if (showMatNo) {
+					out.println("<td>" + ((Student) lectureParticipation.getUser()).getMatrikelno() + "</td>");
+				}
 				out.println("<td>" + Util.escapeHTML(((Student) lectureParticipation.getUser()).getStudiengang()) + "</td>");
 			} else {
-				out.println("<td>n/a</td>");
+				if (showMatNo) {
+					out.println("<td>n/a</td>");
+				}
 				out.println("<td>n/a</td>");
 			}
 			out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + lectureParticipation.getUser().getUid()) + "\">" + Util.escapeHTML(lectureParticipation.getUser().getLastName()) + "</a></td>");

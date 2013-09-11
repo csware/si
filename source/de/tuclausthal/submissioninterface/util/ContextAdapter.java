@@ -53,4 +53,8 @@ public class ContextAdapter {
 	public String getAdminMail() {
 		return Configuration.getInstance().getAdminMail();
 	}
+
+	public boolean isMatrikelNoAvailableToTutors() {
+		return Configuration.getInstance().isMatrikelNoAvailableToTutors();
+	}
 }

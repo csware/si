@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010, 2013 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -46,10 +46,15 @@ public class ShowUser extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
 
+		Boolean isAtLeastAdvisorOnce = false;
+
 		List<Lecture> lectures = new LinkedList<Lecture>();
 		for (Participation participation : RequestAdapter.getUser(request).getLectureParticipant()) {
 			if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 				lectures.add(participation.getLecture());
+				if (!isAtLeastAdvisorOnce && participation.getRoleType().compareTo(ParticipationRole.ADVISOR) >= 0) {
+					isAtLeastAdvisorOnce = true;
+				}
 			}
 		}
 
@@ -67,6 +72,7 @@ public class ShowUser extends HttpServlet {
 
 		request.setAttribute("user", user);
 		request.setAttribute("lectures", lectures);
+		request.setAttribute("isAtLeastAdvisorOnce", isAtLeastAdvisorOnce);
 		request.getRequestDispatcher("ShowUserView").forward(request, response);
 	}
 }

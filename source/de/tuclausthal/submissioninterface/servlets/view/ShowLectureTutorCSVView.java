@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2011, 2013 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -33,12 +33,14 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -53,6 +55,8 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 		Session session = RequestAdapter.getSession(request);
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 
+		boolean showMatNo = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) || new ContextAdapter(getServletContext()).isMatrikelNoAvailableToTutors();
+
 		response.setContentType("text/csv");
 		response.setHeader("Content-Disposition", "attachment; filename=export.csv");
 
@@ -60,7 +64,11 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 
 		List<TaskGroup> taskGroupList = lecture.getTaskGroups();
 
-		out.print("Teilnahme;MatrikelNo;Studiengang;Nachname;Vorname;eMail;");
+		out.print("Teilnahme;");
+		if (showMatNo) {
+			out.print("MatrikelNo;");
+		}
+		out.print("Studiengang;Nachname;Vorname;eMail;");
 
 		for (TaskGroup taskGroup : taskGroupList) {
 			List<Task> taskList = taskGroup.getTasks();
@@ -73,10 +81,15 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 		for (Participation lectureParticipation : lecture.getParticipants()) {
 			out.print(lectureParticipation.getRoleType().toString() + ";");
 			if (lectureParticipation.getUser() instanceof Student) {
-				out.print(((Student) lectureParticipation.getUser()).getMatrikelno() + ";");
+				if (showMatNo) {
+					out.print(((Student) lectureParticipation.getUser()).getMatrikelno() + ";");
+				}
 				out.print(Util.csvQuote(((Student) lectureParticipation.getUser()).getStudiengang()) + ";");
 			} else {
-				out.print("n/a;n/a;");
+				if (showMatNo) {
+					out.print("n/a;");
+				}
+				out.print("n/a;");
 			}
 			out.print(Util.csvQuote(lectureParticipation.getUser().getLastName()) + ";");
 			out.print(Util.csvQuote(lectureParticipation.getUser().getFirstName()) + ";");
