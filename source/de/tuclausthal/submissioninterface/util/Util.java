@@ -37,6 +37,10 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.tomcat.util.http.fileupload.FileItem;
+
+import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerIf;
+import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 
@@ -428,5 +432,42 @@ public final class Util {
 			title = "\"" + title + "\""; // .replace("\"", "\"\"")
 		}
 		return title;
+	}
+
+	/**
+	 * Saves a POST-submitted file (item) with filename fileName
+	 * * if the file is a Java-file (i.e. ends with .java) parse the package and create the package subfolders below path
+	 * * else it directly saves the file to path
+	 * @throws IOException 
+	 */
+	public static void saveAndRelocateJavaFile(FileItem item, File path, String fileName) throws IOException {
+		File uploadedFile = new File(path, fileName);
+		// handle .java-files differently in order to extract package and move it to the correct folder
+		if (fileName.toLowerCase().endsWith(".java")) {
+			uploadedFile = File.createTempFile("upload", null, path);
+		}
+		try {
+			item.write(uploadedFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// extract defined package in java-files
+		if (fileName.toLowerCase().endsWith(".java")) {
+			NormalizerIf stripComments = new StripCommentsNormalizer();
+			StringBuffer javaFileContents = stripComments.normalize(Util.loadFile(uploadedFile));
+			Pattern packagePattern = Pattern.compile(".*package\\s+([a-zA-Z$]([a-zA-Z0-9_$]|\\.[a-zA-Z0-9_$])*)\\s*;.*", Pattern.DOTALL);
+			Matcher packageMatcher = packagePattern.matcher(javaFileContents);
+			File destFile = new File(path, fileName);
+			if (packageMatcher.matches()) {
+				String packageName = packageMatcher.group(1).replace(".", System.getProperty("file.separator"));
+				File packageDirectory = new File(path, packageName);
+				packageDirectory.mkdirs();
+				destFile = new File(packageDirectory, fileName);
+			}
+			if (destFile.exists() && destFile.isFile()) {
+				destFile.delete();
+			}
+			uploadedFile.renameTo(destFile);
+		}
 	}
 }

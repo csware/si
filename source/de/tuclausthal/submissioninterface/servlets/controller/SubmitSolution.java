@@ -49,8 +49,6 @@ import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerIf;
-import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
@@ -429,34 +427,7 @@ public class SubmitSolution extends HttpServlet {
 							return;
 						}
 					} else {
-						File uploadedFile = new File(path, fileName);
-						// handle .java-files differently in order to extract package and move it to the correct folder
-						if (fileName.toLowerCase().endsWith(".java")) {
-							uploadedFile = File.createTempFile("upload", null, path);
-						}
-						try {
-							item.write(uploadedFile);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						// extract defined package in java-files
-						if (fileName.toLowerCase().endsWith(".java")) {
-							NormalizerIf stripComments = new StripCommentsNormalizer();
-							StringBuffer javaFileContents = stripComments.normalize(Util.loadFile(uploadedFile));
-							Pattern packagePattern = Pattern.compile(".*package\\s+([a-zA-Z$]([a-zA-Z0-9_$]|\\.[a-zA-Z0-9_$])*)\\s*;.*", Pattern.DOTALL);
-							Matcher packageMatcher = packagePattern.matcher(javaFileContents);
-							File destFile = new File(path, fileName);
-							if (packageMatcher.matches()) {
-								String packageName = packageMatcher.group(1).replace(".", System.getProperty("file.separator"));
-								File packageDirectory = new File(path, packageName);
-								packageDirectory.mkdirs();
-								destFile = new File(packageDirectory, fileName);
-							}
-							if (destFile.exists() && destFile.isFile()) {
-								destFile.delete();
-							}
-							uploadedFile.renameTo(destFile);
-						}
+						Util.saveAndRelocateJavaFile(item, path, fileName);
 					}
 					if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 						submission.setLastModified(new Date());
