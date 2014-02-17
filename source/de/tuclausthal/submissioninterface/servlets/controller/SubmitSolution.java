@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2014 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -409,7 +409,7 @@ public class SubmitSolution extends HttpServlet {
 									if (!fileToCreate.getParentFile().exists()) {
 										fileToCreate.getParentFile().mkdirs();
 									}
-									copyInputStream(zipFile, new BufferedOutputStream(new FileOutputStream(fileToCreate)));
+									Util.copyInputStreamAndClose(zipFile, new BufferedOutputStream(new FileOutputStream(fileToCreate)));
 								}
 							}
 							zipFile.close();
@@ -523,17 +523,5 @@ public class SubmitSolution extends HttpServlet {
 			PrintWriter out = response.getWriter();
 			out.println("Problem: Keine Abgabedaten gefunden.");
 		}
-	}
-
-	public static final void copyInputStream(ZipInputStream in, OutputStream out) throws IOException {
-		byte[] buffer = new byte[1024];
-		int len;
-
-		while ((len = in.read(buffer)) >= 0) {
-			out.write(buffer, 0, len);
-		}
-
-		in.closeEntry();
-		out.close();
 	}
 }

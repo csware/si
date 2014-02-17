@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2014 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -223,7 +223,7 @@ public class PerformTest extends HttpServlet {
 								if (!fileToCreate.getParentFile().exists()) {
 									fileToCreate.getParentFile().mkdirs();
 								}
-								SubmitSolution.copyInputStream(zipFile, new BufferedOutputStream(new FileOutputStream(fileToCreate)));
+								Util.copyInputStreamAndClose(zipFile, new BufferedOutputStream(new FileOutputStream(fileToCreate)));
 							}
 						}
 						zipFile.close();

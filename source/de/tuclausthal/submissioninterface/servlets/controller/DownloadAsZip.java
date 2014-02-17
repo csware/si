@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2014 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -93,16 +93,7 @@ public class DownloadAsZip extends HttpServlet {
 			try {
 				if (file.isFile()) {
 					out.putNextEntry(new ZipEntry(relativePath + file.getName()));
-					int read = 0;
-					byte[] data = new byte[1024];
-
-					FileInputStream in = new FileInputStream(file);
-
-					while ((read = in.read(data, 0, 1024)) != -1) {
-						out.write(data, 0, read);
-					}
-					out.closeEntry();
-					in.close();
+					Util.copyInputStreamAndClose(new FileInputStream(file), out);
 				} else {
 					recursivelyZip(out, file, relativePath + file.getName() + System.getProperty("file.separator"));
 				}
