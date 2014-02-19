@@ -480,8 +480,7 @@ public class SubmitSolution extends HttpServlet {
 			ZipInputStream zipFile = new ZipInputStream(item.getInputStream());
 			ZipEntry entry = null;
 			while ((entry = zipFile.getNextEntry()) != null) {
-				if (entry.getName().contains("..") || entry.isDirectory()) {
-					System.err.println("Ignored entry: " + entry.getName() + "; contains \"..\" or is directory");
+				if (entry.isDirectory()) {
 					continue;
 				}
 				StringBuffer archivedFileName = new StringBuffer(entry.getName().replace("\\", "/"));
@@ -490,6 +489,15 @@ public class SubmitSolution extends HttpServlet {
 						System.err.println("Ignored entry: " + archivedFileName + ";" + pattern.pattern());
 						continue;
 					}
+				}
+				try {
+					if (!new File(submissionPath, archivedFileName.toString()).getCanonicalPath().startsWith(submissionPath.getCanonicalPath())) {
+						System.err.println("Ignored entry: " + archivedFileName + "; tries to escape submissiondir");
+						continue;
+					}
+				} catch (IOException e) {
+					// i.e. filename not valid on system
+					continue;
 				}
 				if (!entry.getName().toLowerCase().endsWith(".class")) {
 					Util.lowerCaseExtension(archivedFileName);
