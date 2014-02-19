@@ -352,10 +352,7 @@ public class SubmitSolution extends HttpServlet {
 						pattern = Pattern.compile("^(?:.*?[\\\\/])?(" + task.getFilenameRegexp() + ")$");
 					}
 					StringBuffer submittedFileName = new StringBuffer(item.getName());
-					if (submittedFileName.lastIndexOf(".") > 0) {
-						int lastDot = submittedFileName.lastIndexOf(".");
-						submittedFileName.replace(lastDot, submittedFileName.length(), submittedFileName.subSequence(lastDot, submittedFileName.length()).toString().toLowerCase());
-					}
+					Util.lowerCaseExtension(submittedFileName);
 					Matcher m = pattern.matcher(submittedFileName);
 					if (!m.matches()) {
 						if (!submissionDAO.deleteIfNoFiles(submission, path)) {
@@ -398,10 +395,7 @@ public class SubmitSolution extends HttpServlet {
 									continue;
 								}
 								if (!entry.getName().toLowerCase().endsWith(".class")) {
-									if (archivedFileName.lastIndexOf(".") > 0) {
-										int lastDot = archivedFileName.lastIndexOf(".");
-										archivedFileName.replace(lastDot, archivedFileName.length(), archivedFileName.subSequence(lastDot, archivedFileName.length()).toString().toLowerCase());
-									}
+									Util.lowerCaseExtension(archivedFileName);
 									// TODO: relocate java-files from jar/zip archives?
 									File fileToCreate = new File(path, archivedFileName.toString());
 									if (!fileToCreate.getParentFile().exists()) {

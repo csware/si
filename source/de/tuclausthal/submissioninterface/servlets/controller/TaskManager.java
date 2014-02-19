@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012, 2014 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -260,10 +260,7 @@ public class TaskManager extends HttpServlet {
 					if (!item.isFormField()) {
 						Pattern pattern = Pattern.compile("^(?:.*?[\\\\/])?([a-zA-Z0-9_. -]+)$");
 						StringBuffer submittedFileName = new StringBuffer(item.getName());
-						if (submittedFileName.lastIndexOf(".") > 0) {
-							int lastDot = submittedFileName.lastIndexOf(".");
-							submittedFileName.replace(lastDot, submittedFileName.length(), submittedFileName.subSequence(lastDot, submittedFileName.length()).toString().toLowerCase());
-						}
+						Util.lowerCaseExtension(submittedFileName);
 						Matcher m = pattern.matcher(submittedFileName);
 						if (!m.matches()) {
 							System.out.println("SubmitSolutionProblem2: " + item.getName() + ";" + submittedFileName + ";" + pattern.pattern());

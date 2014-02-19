@@ -470,4 +470,11 @@ public final class Util {
 			uploadedFile.renameTo(destFile);
 		}
 	}
+
+	public static void lowerCaseExtension(StringBuffer filename) {
+		if (filename.lastIndexOf(".") > 0) {
+			int lastDot = filename.lastIndexOf(".");
+			filename.replace(lastDot, filename.length(), filename.subSequence(lastDot, filename.length()).toString().toLowerCase());
+		}
+	}
 }
