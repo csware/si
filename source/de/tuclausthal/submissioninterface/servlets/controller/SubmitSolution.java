@@ -25,7 +25,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Iterator;
@@ -371,57 +370,22 @@ public class SubmitSolution extends HttpServlet {
 						return;
 					}
 					String fileName = m.group(1);
-					if (!"-".equals(task.getArchiveFilenameRegexp()) && (fileName.endsWith(".zip") || fileName.endsWith(".jar"))) {
-						ZipInputStream zipFile;
-						Pattern archivePattern;
-						if (task.getArchiveFilenameRegexp() == null || task.getArchiveFilenameRegexp().isEmpty()) {
-							archivePattern = Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?([a-zA-Z0-9_ .-]+))$");
-						} else if (task.getArchiveFilenameRegexp().startsWith("^")) {
-							archivePattern = Pattern.compile("^(" + task.getArchiveFilenameRegexp().substring(1) + ")$");
-						} else {
-							archivePattern = Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?(" + task.getArchiveFilenameRegexp() + "))$");
+					try {
+						handleUploadedFile(path, task, fileName, item);
+					} catch (IOException e) {
+						if (!submissionDAO.deleteIfNoFiles(submission, path)) {
+							submission.setLastModified(new Date());
+							submissionDAO.saveSubmission(submission);
 						}
-						try {
-							zipFile = new ZipInputStream(item.getInputStream());
-							ZipEntry entry = null;
-							while ((entry = zipFile.getNextEntry()) != null) {
-								if (entry.getName().contains("..") || entry.isDirectory()) {
-									System.err.println("Ignored entry: " + entry.getName() + "; contains \"..\" or is directory");
-									continue;
-								}
-								StringBuffer archivedFileName = new StringBuffer(entry.getName().replace("\\", "/"));
-								if (!archivePattern.matcher(archivedFileName).matches()) {
-									System.err.println("Ignored entry: " + archivedFileName + ";" + archivePattern.pattern());
-									continue;
-								}
-								if (!entry.getName().toLowerCase().endsWith(".class")) {
-									Util.lowerCaseExtension(archivedFileName);
-									// TODO: relocate java-files from jar/zip archives?
-									File fileToCreate = new File(path, archivedFileName.toString());
-									if (!fileToCreate.getParentFile().exists()) {
-										fileToCreate.getParentFile().mkdirs();
-									}
-									Util.copyInputStreamAndClose(zipFile, new BufferedOutputStream(new FileOutputStream(fileToCreate)));
-								}
-							}
-							zipFile.close();
-						} catch (IOException e) {
-							if (!submissionDAO.deleteIfNoFiles(submission, path)) {
-								submission.setLastModified(new Date());
-								submissionDAO.saveSubmission(submission);
-							}
-							System.err.println("SubmitSolutionProblem1");
-							tx.commit();
-							System.err.println(e.getMessage());
-							e.printStackTrace();
-							template.printTemplateHeader("Ungültige Anfrage");
-							PrintWriter out = response.getWriter();
-							out.println("Problem beim Entpacken des Archives.");
-							template.printTemplateFooter();
-							return;
-						}
-					} else {
-						Util.saveAndRelocateJavaFile(item, path, fileName);
+						System.err.println("SubmitSolutionProblem1");
+						tx.commit();
+						System.err.println(e.getMessage());
+						e.printStackTrace();
+						template.printTemplateHeader("Ungültige Anfrage");
+						PrintWriter out = response.getWriter();
+						out.println("Problem beim Entpacken des Archives.");
+						template.printTemplateFooter();
+						return;
 					}
 					if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 						submission.setLastModified(new Date());
@@ -487,6 +451,44 @@ public class SubmitSolution extends HttpServlet {
 			tx.commit();
 			PrintWriter out = response.getWriter();
 			out.println("Problem: Keine Abgabedaten gefunden.");
+		}
+	}
+
+	public static void handleUploadedFile(File submissionPath, Task task, String fileName, FileItem item) throws IOException {
+		if (!"-".equals(task.getArchiveFilenameRegexp()) && (fileName.endsWith(".zip") || fileName.endsWith(".jar"))) {
+			Pattern archivePattern;
+			if (task.getArchiveFilenameRegexp() == null || task.getArchiveFilenameRegexp().isEmpty()) {
+				archivePattern = Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?([a-zA-Z0-9_ .-]+))$");
+			} else if (task.getArchiveFilenameRegexp().startsWith("^")) {
+				archivePattern = Pattern.compile("^(" + task.getArchiveFilenameRegexp().substring(1) + ")$");
+			} else {
+				archivePattern = Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?(" + task.getArchiveFilenameRegexp() + "))$");
+			}
+			ZipInputStream zipFile = new ZipInputStream(item.getInputStream());
+			ZipEntry entry = null;
+			while ((entry = zipFile.getNextEntry()) != null) {
+				if (entry.getName().contains("..") || entry.isDirectory()) {
+					System.err.println("Ignored entry: " + entry.getName() + "; contains \"..\" or is directory");
+					continue;
+				}
+				StringBuffer archivedFileName = new StringBuffer(entry.getName().replace("\\", "/"));
+				if (!archivePattern.matcher(archivedFileName).matches()) {
+					System.err.println("Ignored entry: " + archivedFileName + ";" + archivePattern.pattern());
+					continue;
+				}
+				if (!entry.getName().toLowerCase().endsWith(".class")) {
+					Util.lowerCaseExtension(archivedFileName);
+					// TODO: relocate java-files from jar/zip archives?
+					File fileToCreate = new File(submissionPath, archivedFileName.toString());
+					if (!fileToCreate.getParentFile().exists()) {
+						fileToCreate.getParentFile().mkdirs();
+					}
+					Util.copyInputStreamAndClose(zipFile, new BufferedOutputStream(new FileOutputStream(fileToCreate)));
+				}
+			}
+			zipFile.close();
+		} else {
+			Util.saveAndRelocateJavaFile(item, submissionPath, fileName);
 		}
 	}
 }

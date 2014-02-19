@@ -18,17 +18,13 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -185,52 +181,17 @@ public class PerformTest extends HttpServlet {
 					return;
 				}
 				String fileName = m.group(1);
-				if (!"-".equals(task.getArchiveFilenameRegexp()) && (fileName.endsWith(".zip") || fileName.endsWith(".jar"))) {
-					ZipInputStream zipFile;
-					Pattern archivePattern;
-					if (task.getArchiveFilenameRegexp() == null || task.getArchiveFilenameRegexp().isEmpty()) {
-						archivePattern = Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?([a-zA-Z0-9_ .-]+))$");
-					} else if (task.getArchiveFilenameRegexp().startsWith("^")) {
-						archivePattern = Pattern.compile("^(" + task.getArchiveFilenameRegexp().substring(1) + ")$");
-					} else {
-						archivePattern = Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?(" + task.getArchiveFilenameRegexp() + "))$");
-					}
-					try {
-						zipFile = new ZipInputStream(item.getInputStream());
-						ZipEntry entry = null;
-						while ((entry = zipFile.getNextEntry()) != null) {
-							if (entry.getName().contains("..") || entry.isDirectory()) {
-								System.err.println("Ignored entry: " + entry.getName() + "; contains \"..\" or is directory");
-								continue;
-							}
-							StringBuffer archivedFileName = new StringBuffer(entry.getName().replace("\\", "/"));
-							if (!archivePattern.matcher(archivedFileName).matches()) {
-								System.err.println("Ignored entry: " + archivedFileName + ";" + archivePattern.pattern());
-								continue;
-							}
-							if (!entry.getName().toLowerCase().endsWith(".class")) {
-								Util.lowerCaseExtension(archivedFileName);
-								// TODO: relocate java-files from jar/zip archives?
-								File fileToCreate = new File(path, archivedFileName.toString());
-								if (!fileToCreate.getParentFile().exists()) {
-									fileToCreate.getParentFile().mkdirs();
-								}
-								Util.copyInputStreamAndClose(zipFile, new BufferedOutputStream(new FileOutputStream(fileToCreate)));
-							}
-						}
-						zipFile.close();
-					} catch (IOException e) {
-						System.err.println("SubmitSolutionProblem1");
-						System.err.println(e.getMessage());
-						e.printStackTrace();
-						template.printTemplateHeader("Ungültige Anfrage");
-						PrintWriter out = response.getWriter();
-						out.println("Problem beim Entpacken des Archives.");
-						template.printTemplateFooter();
-						return;
-					}
-				} else {
-					Util.saveAndRelocateJavaFile(item, path, fileName);
+				try {
+					SubmitSolution.handleUploadedFile(path, task, fileName, item);
+				} catch (IOException e) {
+					System.err.println("SubmitSolutionProblem1");
+					System.err.println(e.getMessage());
+					e.printStackTrace();
+					template.printTemplateHeader("Ungültige Anfrage");
+					PrintWriter out = response.getWriter();
+					out.println("Problem beim Entpacken des Archives.");
+					template.printTemplateFooter();
+					return;
 				}
 
 				Test test = DAOFactory.TestDAOIf(session).getTest(testId);
@@ -252,7 +213,7 @@ public class PerformTest extends HttpServlet {
 				testTask.performTaskInFolder(test, contextAdapter.getDataPath(), path, testResult);
 
 				Util.recursiveDelete(path);
-				
+
 				request.setAttribute("testresult", testResult);
 				request.getRequestDispatcher("PerformTestResultView").forward(request, response);
 				return;
