@@ -168,19 +168,21 @@ public class PerformTest extends HttpServlet {
 
 			// Process a file upload
 			if (!item.isFormField()) {
-				Pattern pattern = Pattern.compile("^(?:.*?[\\\\/])?(" + task.getFilenameRegexp() + ")$");
 				StringBuffer submittedFileName = new StringBuffer(item.getName());
 				Util.lowerCaseExtension(submittedFileName);
-				Matcher m = pattern.matcher(submittedFileName);
-				if (!m.matches()) {
-					template.printTemplateHeader("Ungültige Anfrage");
-					PrintWriter out = response.getWriter();
-					out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
-					out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
-					template.printTemplateFooter();
-					return;
+				String fileName = null;
+				for (Pattern pattern : SubmitSolution.getTaskFileNamePatterns(task, false)) {
+					Matcher m = pattern.matcher(submittedFileName);
+					if (!m.matches()) {
+						template.printTemplateHeader("Ungültige Anfrage");
+						PrintWriter out = response.getWriter();
+						out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
+						out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
+						template.printTemplateFooter();
+						return;
+					}
+					fileName = m.group(1);
 				}
-				String fileName = m.group(1);
 				try {
 					SubmitSolution.handleUploadedFile(path, task, fileName, item);
 				} catch (IOException e) {

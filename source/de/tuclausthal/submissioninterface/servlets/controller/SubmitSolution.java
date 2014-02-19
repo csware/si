@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -344,32 +345,29 @@ public class SubmitSolution extends HttpServlet {
 
 				// Process a file upload
 				if (!item.isFormField()) {
-					Pattern pattern;
-					if (task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty() || uploadFor > 0) {
-						pattern = Pattern.compile("^(?:.*?[\\\\/])?([a-zA-Z0-9_. -]+)$");
-					} else {
-						pattern = Pattern.compile("^(?:.*?[\\\\/])?(" + task.getFilenameRegexp() + ")$");
-					}
 					StringBuffer submittedFileName = new StringBuffer(item.getName());
 					Util.lowerCaseExtension(submittedFileName);
-					Matcher m = pattern.matcher(submittedFileName);
-					if (!m.matches()) {
-						if (!submissionDAO.deleteIfNoFiles(submission, path)) {
-							submission.setLastModified(new Date());
-							submissionDAO.saveSubmission(submission);
+					String fileName = null;
+					for (Pattern pattern : getTaskFileNamePatterns(task, uploadFor > 0)) {
+						Matcher m = pattern.matcher(submittedFileName);
+						if (!m.matches()) {
+							if (!submissionDAO.deleteIfNoFiles(submission, path)) {
+								submission.setLastModified(new Date());
+								submissionDAO.saveSubmission(submission);
+							}
+							System.err.println("SubmitSolutionProblem2: " + item.getName() + ";" + submittedFileName + ";" + pattern.pattern());
+							tx.commit();
+							template.printTemplateHeader("Ungültige Anfrage");
+							PrintWriter out = response.getWriter();
+							out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
+							if (uploadFor > 0) {
+								out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
+							}
+							template.printTemplateFooter();
+							return;
 						}
-						System.err.println("SubmitSolutionProblem2: " + item.getName() + ";" + submittedFileName + ";" + pattern.pattern());
-						tx.commit();
-						template.printTemplateHeader("Ungültige Anfrage");
-						PrintWriter out = response.getWriter();
-						out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
-						if (uploadFor > 0) {
-							out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
-						}
-						template.printTemplateFooter();
-						return;
+						fileName = m.group(1);
 					}
-					String fileName = m.group(1);
 					try {
 						handleUploadedFile(path, task, fileName, item);
 					} catch (IOException e) {
@@ -454,16 +452,31 @@ public class SubmitSolution extends HttpServlet {
 		}
 	}
 
+	public static Vector<Pattern> getTaskFileNamePatterns(Task task, boolean ignoreTaskPattern) {
+		Vector<Pattern> patterns = new Vector<Pattern>(2);
+		patterns.add(Pattern.compile("^(?:.*?[\\\\/])?([a-zA-Z0-9_. -]+)$"));
+		if (!(task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty() || ignoreTaskPattern)) {
+			patterns.add(Pattern.compile("^(?:.*?[\\\\/])?(" + task.getFilenameRegexp() + ")$"));
+		}
+		return patterns;
+	}
+
+	private static Vector<Pattern> getArchiveFileNamePatterns(Task task) {
+		Vector<Pattern> patterns = new Vector<Pattern>(2);
+		patterns.add(Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?([a-zA-Z0-9_ .-]+))$"));
+		if (task.getArchiveFilenameRegexp() != null && !task.getArchiveFilenameRegexp().isEmpty()) {
+			if (task.getArchiveFilenameRegexp().startsWith("^")) {
+				patterns.add(Pattern.compile("^(" + task.getArchiveFilenameRegexp().substring(1) + ")$"));
+			} else {
+				patterns.add(Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?(" + task.getArchiveFilenameRegexp() + "))$"));
+			}
+		}
+		return patterns;
+	}
+
 	public static void handleUploadedFile(File submissionPath, Task task, String fileName, FileItem item) throws IOException {
 		if (!"-".equals(task.getArchiveFilenameRegexp()) && (fileName.endsWith(".zip") || fileName.endsWith(".jar"))) {
-			Pattern archivePattern;
-			if (task.getArchiveFilenameRegexp() == null || task.getArchiveFilenameRegexp().isEmpty()) {
-				archivePattern = Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?([a-zA-Z0-9_ .-]+))$");
-			} else if (task.getArchiveFilenameRegexp().startsWith("^")) {
-				archivePattern = Pattern.compile("^(" + task.getArchiveFilenameRegexp().substring(1) + ")$");
-			} else {
-				archivePattern = Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?(" + task.getArchiveFilenameRegexp() + "))$");
-			}
+			Vector<Pattern> patterns = getArchiveFileNamePatterns(task);
 			ZipInputStream zipFile = new ZipInputStream(item.getInputStream());
 			ZipEntry entry = null;
 			while ((entry = zipFile.getNextEntry()) != null) {
@@ -472,9 +485,11 @@ public class SubmitSolution extends HttpServlet {
 					continue;
 				}
 				StringBuffer archivedFileName = new StringBuffer(entry.getName().replace("\\", "/"));
-				if (!archivePattern.matcher(archivedFileName).matches()) {
-					System.err.println("Ignored entry: " + archivedFileName + ";" + archivePattern.pattern());
-					continue;
+				for (Pattern pattern : patterns) {
+					if (!pattern.matcher(archivedFileName).matches()) {
+						System.err.println("Ignored entry: " + archivedFileName + ";" + pattern.pattern());
+						continue;
+					}
 				}
 				if (!entry.getName().toLowerCase().endsWith(".class")) {
 					Util.lowerCaseExtension(archivedFileName);
