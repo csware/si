@@ -397,7 +397,7 @@ public class SubmitSolution extends HttpServlet {
 									System.err.println("Ignored entry: " + archivedFileName + ";" + archivePattern.pattern());
 									continue;
 								}
-								if (entry.isDirectory() == false && !entry.getName().toLowerCase().endsWith(".class")) {
+								if (!entry.getName().toLowerCase().endsWith(".class")) {
 									if (archivedFileName.lastIndexOf(".") > 0) {
 										int lastDot = archivedFileName.lastIndexOf(".");
 										archivedFileName.replace(lastDot, archivedFileName.length(), archivedFileName.subSequence(lastDot, archivedFileName.length()).toString().toLowerCase());
