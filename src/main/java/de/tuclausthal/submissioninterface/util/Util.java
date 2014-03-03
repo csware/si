@@ -478,7 +478,10 @@ public final class Util {
 			if (destFile.exists() && destFile.isFile()) {
 				destFile.delete();
 			}
-			uploadedFile.renameTo(destFile);
+			if (!uploadedFile.renameTo(destFile)) { // renameTo does not work across different filesystems
+				Util.recursiveCopy(uploadedFile, destFile);
+				uploadedFile.delete();
+			}
 		}
 	}
 
