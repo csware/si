@@ -50,6 +50,13 @@
   <listener>
     <listener-class>de.tuclausthal.submissioninterface.util.HibernateListener</listener-class>
   </listener>
+  <context-param>
+    <param-name>testframework-cores</param-name>
+    <param-value>4</param-value>
+  </context-param>
+  <listener>
+    <listener-class>de.tuclausthal.submissioninterface.testframework.executor.impl.LocalExecutorStartUp</listener-class>
+  </listener>
   <welcome-file-list>
     <welcome-file>Redirect</welcome-file>
   </welcome-file-list>
@@ -93,15 +100,6 @@
     <filter-name>AuthenticationFilter</filter-name>
     <url-pattern>/servlets/*</url-pattern>
   </filter-mapping>
-  <servlet>
-    <servlet-name>LocalExecutor</servlet-name>
-    <servlet-class>de.tuclausthal.submissioninterface.testframework.executor.impl.LocalExecutorStartUp</servlet-class>
-    <init-param>
-      <param-name>cores</param-name>
-      <param-value>4</param-value>
-    </init-param>
-    <load-on-startup></load-on-startup>
-  </servlet>
   <servlet>
     <servlet-name>Redirect</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.Redirect</servlet-class>

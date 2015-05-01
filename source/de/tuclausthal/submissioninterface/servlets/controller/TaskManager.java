@@ -18,13 +18,14 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,12 +34,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
-import org.apache.tomcat.util.http.fileupload.DiskFileUpload;
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.FileUpload;
-import org.apache.tomcat.util.http.fileupload.FileUploadBase;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -232,59 +229,38 @@ public class TaskManager extends HttpServlet {
 				request.setAttribute("title", "Aufgabe nicht gefunden");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 			}
-			if (FileUpload.isMultipartContent(request)) {
-				ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+			ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
 
-				File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"));
-				if (path.exists() == false) {
-					path.mkdirs();
-				}
-				List<FileItem> items = null;
-				// Create a new file upload handler
-				FileUploadBase upload = new DiskFileUpload();
-
-				// Parse the request
-				try {
-					items = upload.parseRequest(request);
-				} catch (FileUploadException e) {
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-					return;
-				}
-
-				// Process the uploaded items
-				Iterator<FileItem> iter = items.iterator();
-				while (iter.hasNext()) {
-					FileItem item = iter.next();
-
-					// Process a file upload
-					if (!item.isFormField()) {
-						Pattern pattern = Pattern.compile("^(?:.*?[\\\\/])?([a-zA-Z0-9_. -]+)$");
-						StringBuffer submittedFileName = new StringBuffer(item.getName());
-						Util.lowerCaseExtension(submittedFileName);
-						Matcher m = pattern.matcher(submittedFileName);
-						if (!m.matches()) {
-							System.out.println("SubmitSolutionProblem2: " + item.getName() + ";" + submittedFileName + ";" + pattern.pattern());
-							template.printTemplateHeader("Ungültige Anfrage");
-							out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
-							template.printTemplateFooter();
-							return;
-						}
-						String fileName = m.group(1);
-
-						File uploadedFile = new File(path, fileName);
-						try {
-							item.write(uploadedFile);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				}
-
-				response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid()));
-				return;
-			} else {
-				// error
+			File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"));
+			if (path.exists() == false) {
+				path.mkdirs();
 			}
+
+			Part file = request.getPart("file");
+			if (file == null) {
+				request.setAttribute("title", "Keine Datei gefunden.");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				session.getTransaction().rollback();
+				return;
+			}
+			// Process a file upload
+			Pattern pattern = Pattern.compile("^(?:.*?[\\\\/])?([a-zA-Z0-9_. -]+)$");
+			StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
+			Util.lowerCaseExtension(submittedFileName);
+			Matcher m = pattern.matcher(submittedFileName);
+			if (!m.matches()) {
+				System.out.println("SubmitSolutionProblem2: file;" + submittedFileName + ";" + pattern.pattern());
+				template.printTemplateHeader("Ungültige Anfrage");
+				out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
+				template.printTemplateFooter();
+				return;
+			}
+			String fileName = m.group(1);
+
+			File uploadedFile = new File(path, fileName);
+			Util.copyInputStreamAndClose(file.getInputStream(), new BufferedOutputStream(new FileOutputStream(uploadedFile)));
+
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid()));
 		} else if ((("editTaskGroup".equals(request.getParameter("action")) && request.getParameter("taskgroupid") != null) || (request.getParameter("action").equals("newTaskGroup") && request.getParameter("lecture") != null))) {
 			boolean editTaskGroup = request.getParameter("action").equals("editTaskGroup");
 			TaskGroup taskGroup;

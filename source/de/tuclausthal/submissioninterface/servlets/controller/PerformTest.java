@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2014 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2015 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -21,21 +21,16 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Iterator;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
-import org.apache.tomcat.util.http.fileupload.DiskFileUpload;
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.FileUpload;
-import org.apache.tomcat.util.http.fileupload.FileUploadBase;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -57,6 +52,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for performing a test (tutor or advisor)
  * @author Sven Strickroth
  */
+@MultipartConfig
 public class PerformTest extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -105,11 +101,6 @@ public class PerformTest extends HttpServlet {
 			return;
 		}
 
-		//http://commons.apache.org/fileupload/using.html
-
-		// Check that we have a file upload request
-		boolean isMultipart = FileUpload.isMultipartContent(request);
-
 		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
 			template.printTemplateHeader("Ungültige Anfrage");
 			PrintWriter out = response.getWriter();
@@ -124,34 +115,13 @@ public class PerformTest extends HttpServlet {
 			template.printTemplateFooter();
 			return;
 		}
-		if (!isMultipart) {
+		if (request.getPart("file") == null) {
 			template.printTemplateHeader("Invalid request");
 			template.printTemplateFooter();
 			return;
 		}
 
-		// Create a new file upload handler
-		FileUploadBase upload = new DiskFileUpload();
-
-		List<FileItem> items = null;
-		// Parse the request
-		try {
-			items = upload.parseRequest(request);
-		} catch (FileUploadException e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-			return;
-		}
-
-		int testId = -1;
-
-		// Process the uploaded items
-		Iterator<FileItem> iter = items.iterator();
-		while (iter.hasNext()) {
-			FileItem item = iter.next();
-			if (item.isFormField() && "testid".equals(item.getFieldName())) {
-				testId = Util.parseInteger(item.getString(), 0);
-			}
-		}
+		int testId = Util.parseInteger(request.getParameter("testid"), 0);
 
 		File path = Util.createTemporaryDirectory("tutortest", null);
 		if (path == null) {
@@ -161,14 +131,9 @@ public class PerformTest extends HttpServlet {
 			path.mkdirs();
 		}
 
-		// Process the uploaded items
-		iter = items.iterator();
-		while (iter.hasNext()) {
-			FileItem item = iter.next();
-
-			// Process a file upload
-			if (!item.isFormField()) {
-				StringBuffer submittedFileName = new StringBuffer(item.getName());
+		// Process the uploaded item
+		Part file = request.getPart("file");
+				StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
 				Util.lowerCaseExtension(submittedFileName);
 				String fileName = null;
 				for (Pattern pattern : SubmitSolution.getTaskFileNamePatterns(task, false)) {
@@ -184,7 +149,7 @@ public class PerformTest extends HttpServlet {
 					fileName = m.group(1);
 				}
 				try {
-					SubmitSolution.handleUploadedFile(path, task, fileName, item);
+					SubmitSolution.handleUploadedFile(path, task, fileName, file);
 				} catch (IOException e) {
 					System.err.println("SubmitSolutionProblem1");
 					System.err.println(e.getMessage());
@@ -219,11 +184,5 @@ public class PerformTest extends HttpServlet {
 				request.setAttribute("testresult", testResult);
 				request.getRequestDispatcher("PerformTestResultView").forward(request, response);
 				return;
-			}
-		}
-		System.err.println("SubmitSolutionProblem3");
-		System.err.println("Problem: Keine Abgabedaten gefunden.");
-		PrintWriter out = response.getWriter();
-		out.println("Problem: Keine Abgabedaten gefunden.");
 	}
 }

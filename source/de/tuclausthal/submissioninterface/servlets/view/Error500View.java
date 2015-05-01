@@ -21,12 +21,11 @@ package de.tuclausthal.submissioninterface.servlets.view;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.catalina.Globals;
 
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -55,9 +54,13 @@ public class Error500View extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		Throwable throwable = (Throwable) request.getAttribute(Globals.EXCEPTION_ATTR);
+		Throwable throwable = (Throwable) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 
-		out.println("Das Skript, auf das Sie versuchen zuzugreifen, hat einen schweren Fehler verursacht (" + Util.escapeHTML(throwable.toString()) + ").<br>");
+		if (throwable != null) {
+			out.println("Das Skript, auf das Sie versuchen zuzugreifen, hat einen schweren Fehler verursacht (" + Util.escapeHTML(throwable.toString()) + ").<br>");
+		} else {
+			out.println("Das Skript, auf das Sie versuchen zuzugreifen, hat einen schweren Fehler verursacht.<br>");
+		}
 
 		out.println("<br>");
 		out.println("<b>Sollte dieser Fehler öfter auftreten, wenden Sie sich bitte mit der o.g. Fehlermeldung, der Adresse und Informationen, was Sie gerade versucht haben durchzuführen, an den <a href=\"mailto:" + new ContextAdapter(getServletContext()).getAdminMail() + "\">Webmaster</a>.</b><br>");

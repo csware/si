@@ -18,10 +18,12 @@
 
 package de.tuclausthal.submissioninterface.util;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -32,12 +34,17 @@ import java.text.NumberFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.tomcat.util.http.fileupload.FileItem;
+import javax.servlet.http.Part;
+
+import org.apache.tomcat.util.http.fileupload.FileUploadBase;
+import org.apache.tomcat.util.http.fileupload.ParameterParser;
 
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerIf;
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
@@ -162,11 +169,11 @@ public final class Util {
 		}
 
 		if (in instanceof ZipInputStream) {
-			((ZipInputStream)in).closeEntry();
+			((ZipInputStream) in).closeEntry();
 		} else
 			in.close();
 		if (out instanceof ZipOutputStream) {
-			((ZipOutputStream)out).closeEntry();
+			((ZipOutputStream) out).closeEntry();
 		} else
 			out.close();
 	}
@@ -434,23 +441,46 @@ public final class Util {
 		return title;
 	}
 
+	// taken from Apache::Commons::FileUpload, FileUploadBase
+	public static String getUploadFileName(Part part) {
+		String pContentDisposition = part.getHeader(FileUploadBase.CONTENT_DISPOSITION);
+		String fileName = null;
+		if (pContentDisposition != null) {
+			String cdl = pContentDisposition.toLowerCase(Locale.ENGLISH);
+			if (cdl.startsWith(FileUploadBase.FORM_DATA) || cdl.startsWith(FileUploadBase.ATTACHMENT)) {
+				ParameterParser parser = new ParameterParser();
+				parser.setLowerCaseNames(true);
+				// Parameter parser can handle null input
+				Map<String, String> params = parser.parse(pContentDisposition, ';');
+				if (params.containsKey("filename")) {
+					fileName = params.get("filename");
+					if (fileName != null) {
+						fileName = fileName.trim();
+					} else {
+						// Even if there is no value, the parameter is present,
+						// so we return an empty file name rather than no file
+						// name.
+						fileName = "";
+					}
+				}
+			}
+		}
+		return fileName;
+	}
+
 	/**
 	 * Saves a POST-submitted file (item) with filename fileName
 	 * * if the file is a Java-file (i.e. ends with .java) parse the package and create the package subfolders below path
 	 * * else it directly saves the file to path
 	 * @throws IOException 
 	 */
-	public static void saveAndRelocateJavaFile(FileItem item, File path, String fileName) throws IOException {
+	public static void saveAndRelocateJavaFile(Part item, File path, String fileName) throws IOException {
 		File uploadedFile = new File(path, fileName);
 		// handle .java-files differently in order to extract package and move it to the correct folder
 		if (fileName.toLowerCase().endsWith(".java")) {
 			uploadedFile = File.createTempFile("upload", null, path);
 		}
-		try {
-			item.write(uploadedFile);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		copyInputStreamAndClose(item.getInputStream(), new BufferedOutputStream(new FileOutputStream(uploadedFile)));
 		// extract defined package in java-files
 		if (fileName.toLowerCase().endsWith(".java")) {
 			NormalizerIf stripComments = new StripCommentsNormalizer();

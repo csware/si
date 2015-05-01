@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012, 2015 Sven Strickroth <email@cs-ware.de>
  * 
  * Copyright 2011 Joachim Schramm
  * 
@@ -20,22 +20,20 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
-import org.apache.tomcat.util.http.fileupload.DiskFileUpload;
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.FileUploadBase;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -59,6 +57,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for managing (add, edit, remove) function tests by advisors
  * @author Sven Strickroth
  */
+@MultipartConfig
 public class TestManager extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -92,76 +91,35 @@ public class TestManager extends HttpServlet {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			UMLConstraintTest test = testDAO.createUMLConstraintTest(task);
 
-			if (FileUploadBase.isMultipartContent(request)) {
-				// Create a new file upload handler
-				FileUploadBase upload = new DiskFileUpload();
-
-				// Parse the request
-				List<FileItem> items = null;
-				try {
-					items = upload.parseRequest(request);
-				} catch (FileUploadException e) {
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "filename invalid");
-					session.getTransaction().rollback();
-					return;
-				}
-
-				File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
-				if (path.exists() == false) {
-					path.mkdirs();
-				}
-				int timesRunnableByStudents = 0;
-				int timeout = 15;
-				boolean tutortest = false;
-				String title = "";
-				String description = "";
-				// Process the uploaded items
-				Iterator<FileItem> iter = items.iterator();
-				while (iter.hasNext()) {
-					FileItem item = iter.next();
-
-					// Process a file upload
-					if (!item.isFormField()) {
-						if (!item.getName().endsWith(".xmi")) {
-							request.setAttribute("title", "Dateiname ungültig.");
-							request.getRequestDispatcher("MessageView").forward(request, response);
-							session.getTransaction().rollback();
-							return;
-						}
-						File uploadedFile = new File(path, "musterloesung" + test.getId() + ".xmi");
-						try {
-							item.write(uploadedFile);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					} else {
-						if ("timesRunnableByStudents".equals(item.getFieldName())) {
-							timesRunnableByStudents = Util.parseInteger(item.getString(), 0);
-						} else if ("title".equals(item.getFieldName())) {
-							title = item.getString();
-						} else if ("description".equals(item.getFieldName())) {
-							description = item.getString();
-						} else if ("tutortest".equals(item.getFieldName())) {
-							tutortest = true;
-						} else if ("timeout".equals(item.getFieldName())) {
-							timeout = Util.parseInteger(item.getString(), 15);
-						}
-					}
-				}
-
-				test.setTimesRunnableByStudents(timesRunnableByStudents);
-				test.setForTutors(tutortest);
-				test.setTestTitle(title);
-				test.setTestDescription(description);
-				test.setTimeout(timeout);
-				test.setGiveDetailsToStudents(true);
-				testDAO.saveTest(test);
-				session.getTransaction().commit();
-				response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
-			} else {
-				request.setAttribute("title", "Ungültiger Aufruf");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+			File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
+			if (path.exists() == false) {
+				path.mkdirs();
 			}
+			int timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
+			int timeout = Util.parseInteger(request.getParameter("timeout"), 15);
+			boolean tutortest = request.getParameter("tutortest") != null;
+			String title = request.getParameter("title");
+			String description = request.getParameter("description");
+
+			Part file = request.getPart("testcase");
+			if (file == null || !Util.getUploadFileName(file).endsWith(".xmi")) {
+				request.setAttribute("title", "Dateiname ungültig.");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				session.getTransaction().rollback();
+				return;
+			}
+			File uploadedFile = new File(path, "musterloesung" + test.getId() + ".xmi");
+			Util.copyInputStreamAndClose(file.getInputStream(), new BufferedOutputStream(new FileOutputStream(uploadedFile)));
+
+			test.setTimesRunnableByStudents(timesRunnableByStudents);
+			test.setForTutors(tutortest);
+			test.setTestTitle(title);
+			test.setTestDescription(description);
+			test.setTimeout(timeout);
+			test.setGiveDetailsToStudents(true);
+			testDAO.saveTest(test);
+			session.getTransaction().commit();
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
 
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "junit".equals(request.getParameter("type"))) {
 			// Check that we have a file upload request
@@ -170,83 +128,39 @@ public class TestManager extends HttpServlet {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			JUnitTest test = testDAO.createJUnitTest(task);
 
-			if (FileUploadBase.isMultipartContent(request)) {
-				// Create a new file upload handler
-				FileUploadBase upload = new DiskFileUpload();
-
-				// Parse the request
-				List<FileItem> items = null;
-				try {
-					items = upload.parseRequest(request);
-				} catch (FileUploadException e) {
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST, "filename invalid");
-					session.getTransaction().rollback();
-					return;
-				}
-
-				File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
-				if (path.exists() == false) {
-					path.mkdirs();
-				}
-				int timesRunnableByStudents = 0;
-				boolean giveDetailsToStudents = false;
-				int timeout = 15;
-				boolean tutortest = false;
-				String title = "";
-				String description = "";
-				String mainclass = "AllTests";
-				// Process the uploaded items
-				Iterator<FileItem> iter = items.iterator();
-				while (iter.hasNext()) {
-					FileItem item = iter.next();
-
-					// Process a file upload
-					if (!item.isFormField()) {
-						if (!item.getName().endsWith(".jar")) {
-							request.setAttribute("title", "Dateiname ungültig.");
-							request.getRequestDispatcher("MessageView").forward(request, response);
-							session.getTransaction().rollback();
-							return;
-						}
-						File uploadedFile = new File(path, "junittest" + test.getId() + ".jar");
-						try {
-							item.write(uploadedFile);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					} else {
-						if ("timesRunnableByStudents".equals(item.getFieldName())) {
-							timesRunnableByStudents = Util.parseInteger(item.getString(), 0);
-						} else if ("title".equals(item.getFieldName())) {
-							title = item.getString();
-						} else if ("description".equals(item.getFieldName())) {
-							description = item.getString();
-						} else if ("tutortest".equals(item.getFieldName())) {
-							tutortest = true;
-						} else if ("timeout".equals(item.getFieldName())) {
-							timeout = Util.parseInteger(item.getString(), 15);
-						} else if ("giveDetailsToStudents".equals(item.getFieldName())) {
-							giveDetailsToStudents = true;
-						} else if ("mainclass".equals(item.getFieldName())) {
-							mainclass = item.getString();
-						}
-					}
-				}
-
-				test.setTimesRunnableByStudents(timesRunnableByStudents);
-				test.setMainClass(mainclass);
-				test.setForTutors(tutortest);
-				test.setTestTitle(title);
-				test.setTestDescription(description);
-				test.setGiveDetailsToStudents(giveDetailsToStudents);
-				test.setTimeout(timeout);
-				testDAO.saveTest(test);
-				session.getTransaction().commit();
-				response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
-			} else {
-				request.setAttribute("title", "Ungültiger Aufruf");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+			File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
+			if (path.exists() == false) {
+				path.mkdirs();
 			}
+			int timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
+			boolean giveDetailsToStudents = request.getParameter("giveDetailsToStudents") != null;
+			int timeout = Util.parseInteger(request.getParameter("timeout"), 15);
+			boolean tutortest = request.getParameter("tutortest") != null;
+			String title = request.getParameter("title");
+			String description = request.getParameter("description");
+			String mainclass = request.getParameter("mainclass") == null ? "AllTests" : request.getParameter("mainclass");
+
+			Part file = request.getPart("testcase");
+			if (file == null || !Util.getUploadFileName(file).endsWith(".jar")) {
+				request.setAttribute("title", "Dateiname ungültig.");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				session.getTransaction().rollback();
+				return;
+			}
+			File uploadedFile = new File(path, "junittest" + test.getId() + ".jar");
+			Util.copyInputStreamAndClose(file.getInputStream(), new BufferedOutputStream(new FileOutputStream(uploadedFile)));
+
+			test.setTimesRunnableByStudents(timesRunnableByStudents);
+			test.setMainClass(mainclass);
+			test.setForTutors(tutortest);
+			test.setTestTitle(title);
+			test.setTestDescription(description);
+			test.setGiveDetailsToStudents(giveDetailsToStudents);
+			test.setTimeout(timeout);
+			testDAO.saveTest(test);
+			session.getTransaction().commit();
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
+
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "regexp".equals(request.getParameter("type"))) {
 			//check regexp
 			try {

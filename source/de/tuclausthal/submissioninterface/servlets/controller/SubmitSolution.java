@@ -27,9 +27,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,15 +37,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
-import org.apache.tomcat.util.http.fileupload.DiskFileUpload;
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.apache.tomcat.util.http.fileupload.FileUploadBase;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -71,6 +69,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for the submission of files
  * @author Sven Strickroth
  */
+@MultipartConfig
 public class SubmitSolution extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -181,49 +180,28 @@ public class SubmitSolution extends HttpServlet {
 			return;
 		}
 
-		//http://commons.apache.org/fileupload/using.html
-
-		// Check that we have a file upload request
-		boolean isMultipart = FileUpload.isMultipartContent(request);
-
 		List<Integer> partnerIDs = new LinkedList<Integer>();
-		int uploadFor = 0;
-		List<FileItem> items = null;
-		if (!isMultipart) {
-			if (request.getParameterValues("partnerid") != null) {
-				for (String partnerIdParameter : request.getParameterValues("partnerid")) {
-					int partnerID = Util.parseInteger(partnerIdParameter, 0);
-					if (partnerID > 0) {
-						partnerIDs.add(partnerID);
-					}
+		int uploadFor = Util.parseInteger(request.getParameter("uploadFor"), 0);
+
+		if (request.getParameterValues("partnerid") != null) {
+			for (String partnerIdParameter : request.getParameterValues("partnerid")) {
+				int partnerID = Util.parseInteger(partnerIdParameter, 0);
+				if (partnerID > 0) {
+					partnerIDs.add(partnerID);
 				}
 			}
-		} else {
-			// Create a new file upload handler
-			FileUploadBase upload = new DiskFileUpload();
-			upload.setSizeMax(task.getMaxsize());
+		}
 
-			// Parse the request
-			try {
-				items = upload.parseRequest(request);
-			} catch (FileUploadException e) {
-				response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-				return;
-			}
-
-			// Process the uploaded items
-			Iterator<FileItem> iter = items.iterator();
-			while (iter.hasNext()) {
-				FileItem item = iter.next();
-				if (item.isFormField() && "partnerid".equals(item.getFieldName())) {
-					int partnerID = Util.parseInteger(item.getString(), 0);
-					if (partnerID > 0) {
-						partnerIDs.add(partnerID);
-					}
-				} else if (item.isFormField() && "uploadFor".equals(item.getFieldName())) {
-					uploadFor = Util.parseInteger(item.getString(), 0);
-				}
-			}
+		Part file = null;
+		String contentType = request.getContentType();
+		if (contentType.toLowerCase(Locale.ENGLISH).startsWith(FileUploadBase.MULTIPART)) {
+			file = request.getPart("file");
+		}
+		if (file != null && file.getSize() > task.getMaxsize()) {
+			request.setAttribute("title", "Datei ist zu groß (maximum sind " + task.getMaxsize() + " Bytes)");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			session.getTransaction().rollback();
+			return;
 		}
 
 		if (uploadFor > 0) {
@@ -276,13 +254,13 @@ public class SubmitSolution extends HttpServlet {
 				template.printTemplateFooter();
 				return;
 			}
-			if (isMultipart && "-".equals(task.getFilenameRegexp())) {
+			if (file != null && "-".equals(task.getFilenameRegexp())) {
 				template.printTemplateHeader("Ungültige Anfrage");
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Dateiupload ist für diese Aufgabe deaktiviert.</div>");
 				template.printTemplateFooter();
 				return;
-			} else if (!isMultipart && !task.isShowTextArea()) {
+			} else if (file == null && !task.isShowTextArea()) {
 				template.printTemplateHeader("Ungültige Anfrage");
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Textlösungen sind für diese Aufgabe deaktiviert.</div>");
@@ -337,82 +315,64 @@ public class SubmitSolution extends HttpServlet {
 			path.mkdirs();
 		}
 
-		if (isMultipart) {
-			// Process the uploaded items
-			Iterator<FileItem> iter = items.iterator();
-			while (iter.hasNext()) {
-				FileItem item = iter.next();
-
-				// Process a file upload
-				if (!item.isFormField()) {
-					StringBuffer submittedFileName = new StringBuffer(item.getName());
-					Util.lowerCaseExtension(submittedFileName);
-					String fileName = null;
-					for (Pattern pattern : getTaskFileNamePatterns(task, uploadFor > 0)) {
-						Matcher m = pattern.matcher(submittedFileName);
-						if (!m.matches()) {
-							if (!submissionDAO.deleteIfNoFiles(submission, path)) {
-								submission.setLastModified(new Date());
-								submissionDAO.saveSubmission(submission);
-							}
-							System.err.println("SubmitSolutionProblem2: " + item.getName() + ";" + submittedFileName + ";" + pattern.pattern());
-							tx.commit();
-							template.printTemplateHeader("Ungültige Anfrage");
-							PrintWriter out = response.getWriter();
-							out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
-							if (uploadFor > 0) {
-								out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
-							}
-							template.printTemplateFooter();
-							return;
-						}
-						fileName = m.group(1);
-					}
-					try {
-						handleUploadedFile(path, task, fileName, item);
-					} catch (IOException e) {
-						if (!submissionDAO.deleteIfNoFiles(submission, path)) {
-							submission.setLastModified(new Date());
-							submissionDAO.saveSubmission(submission);
-						}
-						System.err.println("SubmitSolutionProblem1");
-						tx.commit();
-						System.err.println(e.getMessage());
-						e.printStackTrace();
-						template.printTemplateHeader("Ungültige Anfrage");
-						PrintWriter out = response.getWriter();
-						out.println("Problem beim Entpacken des Archives.");
-						template.printTemplateFooter();
-						return;
-					}
+		if (file != null) {
+			StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
+			Util.lowerCaseExtension(submittedFileName);
+			String fileName = null;
+			for (Pattern pattern : getTaskFileNamePatterns(task, uploadFor > 0)) {
+				Matcher m = pattern.matcher(submittedFileName);
+				if (!m.matches()) {
 					if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 						submission.setLastModified(new Date());
 						submissionDAO.saveSubmission(submission);
 					}
+					System.err.println("SubmitSolutionProblem2: file;" + submittedFileName + ";" + pattern.pattern());
 					tx.commit();
-					new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, LogAction.UPLOAD, null, null);
-					response.addIntHeader("SID", submission.getSubmissionid());
-
-					for (Test test : task.getTests()) {
-						if (test instanceof UMLConstraintTest && test.getTimesRunnableByStudents() > 0) {
-							response.addIntHeader("TID", test.getId());
-							break;
-						}
+					template.printTemplateHeader("Ungültige Anfrage");
+					PrintWriter out = response.getWriter();
+					out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
+					if (uploadFor > 0) {
+						out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
 					}
-
-					response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
+					template.printTemplateFooter();
 					return;
 				}
+				fileName = m.group(1);
+			}
+			try {
+				handleUploadedFile(path, task, fileName, file);
+			} catch (IOException e) {
+				if (!submissionDAO.deleteIfNoFiles(submission, path)) {
+					submission.setLastModified(new Date());
+					submissionDAO.saveSubmission(submission);
+				}
+				System.err.println("SubmitSolutionProblem1");
+				tx.commit();
+				System.err.println(e.getMessage());
+				e.printStackTrace();
+				template.printTemplateHeader("Ungültige Anfrage");
+				PrintWriter out = response.getWriter();
+				out.println("Problem beim Entpacken des Archives.");
+				template.printTemplateFooter();
+				return;
 			}
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 				submission.setLastModified(new Date());
 				submissionDAO.saveSubmission(submission);
 			}
-			System.err.println("SubmitSolutionProblem3");
-			System.err.println("Problem: Keine Abgabedaten gefunden.");
 			tx.commit();
-			PrintWriter out = response.getWriter();
-			out.println("Problem: Keine Abgabedaten gefunden.");
+			new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, LogAction.UPLOAD, null, null);
+			response.addIntHeader("SID", submission.getSubmissionid());
+
+			for (Test test : task.getTests()) {
+				if (test instanceof UMLConstraintTest && test.getTimesRunnableByStudents() > 0) {
+					response.addIntHeader("TID", test.getId());
+					break;
+				}
+			}
+
+			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
+			return;
 		} else if (request.getParameter("textsolution") != null) {
 			if (task.isADynamicTask()) {
 				int numberOfFields = task.getDynamicTaskStrategie(session).getNumberOfResultFields();
@@ -474,7 +434,7 @@ public class SubmitSolution extends HttpServlet {
 		return patterns;
 	}
 
-	public static void handleUploadedFile(File submissionPath, Task task, String fileName, FileItem item) throws IOException {
+	public static void handleUploadedFile(File submissionPath, Task task, String fileName, Part item) throws IOException {
 		if (!"-".equals(task.getArchiveFilenameRegexp()) && (fileName.endsWith(".zip") || fileName.endsWith(".jar"))) {
 			Vector<Pattern> patterns = getArchiveFileNamePatterns(task);
 			ZipInputStream zipFile = new ZipInputStream(item.getInputStream());

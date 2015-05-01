@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010, 2013 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010, 2013, 2015 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -43,6 +43,7 @@ public class Configuration {
 	private String mailDomain;
 	private boolean matrikelNoAvailableToTutors;
 	private boolean matrikelNumberMustBeEnteredManuallyIfMissing;
+	private int testFrameworkCores;
 
 	private Configuration() {}
 
@@ -62,6 +63,7 @@ public class Configuration {
 		instance.mailDomain = context.getInitParameter("mail-users-domain");
 		instance.matrikelNoAvailableToTutors = parseBooleanValue(context.getInitParameter("show-matrikelno-to-tutors"), false);
 		instance.matrikelNumberMustBeEnteredManuallyIfMissing = parseBooleanValue(context.getInitParameter("matrikelno-must-be-enterend-manually-if-missing"), false);
+		instance.testFrameworkCores = Util.parseInteger(context.getInitParameter("testframework-cores"), 2);
 
 		instance.fillDatapath(context);
 		instance.fillServletspath(context);
@@ -173,5 +175,9 @@ public class Configuration {
 
 	public boolean isMatrikelNumberMustBeEnteredManuallyIfMissing() {
 		return matrikelNumberMustBeEnteredManuallyIfMissing;
+	}
+
+	public int getTestframeworkCores() {
+		return testFrameworkCores;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010, 2015 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,21 +18,25 @@
 
 package de.tuclausthal.submissioninterface.testframework.executor.impl;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
-import de.tuclausthal.submissioninterface.util.ContextAdapter;
-import de.tuclausthal.submissioninterface.util.Util;
+import de.tuclausthal.submissioninterface.util.Configuration;
 
 /**
  * Startup-wrapper for initiating the LocalExecuter.
  * @author Sven Strickroth
  */
-public class LocalExecutorStartUp extends HttpServlet {
+public class LocalExecutorStartUp implements ServletContextListener {
 	@Override
-	public void init(ServletConfig config) {
-		LocalExecutor.CORES = Util.parseInteger(config.getInitParameter("cores"), 2);
-		LocalExecutor.dataPath = new ContextAdapter(config.getServletContext()).getDataPath();
+	public void contextInitialized(ServletContextEvent arg0) {
+		LocalExecutor.CORES = Configuration.getInstance().getTestframeworkCores();
+		LocalExecutor.dataPath = Configuration.getInstance().getDataPath();
 		LocalExecutor.getInstance();
+	}
+
+	@Override
+	synchronized public void contextDestroyed(ServletContextEvent arg0) {
+		LocalExecutor.getInstance().shutdown();
 	}
 }
