@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2012,2015 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -132,6 +132,12 @@ public class StripCodeNormalizerTest {
 	public void testNormalizeOnlyWithMultilineComment() {
 		StringBuffer stringBuffer = new StringBuffer("/**/");
 		assertEquals("", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeFunnyLookingMultilineComment() {
+		StringBuffer stringBuffer = new StringBuffer("/*/something*/");
+		assertEquals("/something", b.normalize(stringBuffer).toString());
 	}
 
 	@Test

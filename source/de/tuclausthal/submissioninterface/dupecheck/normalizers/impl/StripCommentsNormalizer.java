@@ -1,5 +1,5 @@
 /*
- * Copyright 2009,2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009,2012,2015 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -39,6 +39,8 @@ public class StripCommentsNormalizer implements NormalizerIf {
 				}
 			}
 			if (i < stringBuffer.length() - 1 && "/*".equals(stringBuffer.substring(i, i + 2))) {
+				stringBuffer.deleteCharAt(i);
+				stringBuffer.deleteCharAt(i);
 				while (i < stringBuffer.length()) {
 					if (i < stringBuffer.length() - 1 && "*/".equals(stringBuffer.substring(i, i + 2))) {
 						stringBuffer.deleteCharAt(i);
