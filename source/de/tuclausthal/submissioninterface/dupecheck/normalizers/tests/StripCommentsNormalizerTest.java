@@ -1,5 +1,5 @@
 /*
- * Copyright 2012,2015 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -186,5 +186,149 @@ public class StripCommentsNormalizerTest {
 	public void testNormalizeStartWithMultilineCommentAndNewline() {
 		StringBuffer stringBuffer = new StringBuffer("/**/\nsomething");
 		assertEquals("\nsomething", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeQuote() {
+		StringBuffer stringBuffer = new StringBuffer("\"");
+		assertEquals("\"", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeQuoteAtEnd() {
+		StringBuffer stringBuffer = new StringBuffer("some\"");
+		assertEquals("some\"", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeBrokenQuoteEscapedQuote() {
+		StringBuffer stringBuffer = new StringBuffer("\"\\\"");
+		assertEquals("\"\\\"", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeQuoteBackslash() {
+		StringBuffer stringBuffer = new StringBuffer("\"\\\\\"");
+		assertEquals("\"\\\\\"", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeBrokenQuote() {
+		StringBuffer stringBuffer = new StringBuffer("\"some\nthing");
+		assertEquals("\"some\nthing", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeBrokenQuoteSingleBackslash() {
+		StringBuffer stringBuffer = new StringBuffer("\"some\\");
+		assertEquals("\"some\\", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeBrokenQuoteBackslash() {
+		StringBuffer stringBuffer = new StringBuffer("\"some\\\\");
+		assertEquals("\"some\\\\", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeBrokenQuoteNextLineComment() {
+		StringBuffer stringBuffer = new StringBuffer("\"some\n//thing");
+		assertEquals("\"some\n", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeQuotes() {
+		StringBuffer stringBuffer = new StringBuffer("\"\"");
+		assertEquals("\"\"", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeQuotesWithLineComment() {
+		StringBuffer stringBuffer = new StringBuffer("\"\"//some\nthing");
+		assertEquals("\"\"\nthing", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeQuoteInQuotes() {
+		StringBuffer stringBuffer = new StringBuffer("\"\\\"\"");
+		assertEquals("\"\\\"\"", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeLineCommentInQuotes() {
+		StringBuffer stringBuffer = new StringBuffer("\"//something\"");
+		assertEquals("\"//something\"", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeMultiLineCommentInQuotes() {
+		StringBuffer stringBuffer = new StringBuffer("\"/*\"");
+		assertEquals("\"/*\"", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeLineCommentInQuotesWithEscapedQuote() {
+		StringBuffer stringBuffer = new StringBuffer("\"\\\"//something\"");
+		assertEquals("\"\\\"//something\"", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeLineCommentWithQuotes() {
+		StringBuffer stringBuffer = new StringBuffer("//something\"\nnew line");
+		assertEquals("\nnew line", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeMultilineCommentWithQuote() {
+		StringBuffer stringBuffer = new StringBuffer("/* something \"*/");
+		assertEquals("", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeBrokenSingleQuote() {
+		StringBuffer stringBuffer = new StringBuffer("'");
+		assertEquals("'", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeBrokenSingleQuoteAtEnd() {
+		StringBuffer stringBuffer = new StringBuffer("some'");
+		assertEquals("some'", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeBrokenSingleQuotes() {
+		StringBuffer stringBuffer = new StringBuffer("''");
+		assertEquals("''", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeBrokenSingleQuotesWithString() {
+		StringBuffer stringBuffer = new StringBuffer("'df'");
+		assertEquals("'df'", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeQuoteInSingleQuotes() {
+		StringBuffer stringBuffer = new StringBuffer("'\"'");
+		assertEquals("'\"'", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeSingleQuoteInSingleQuotes() {
+		StringBuffer stringBuffer = new StringBuffer("'\''");
+		assertEquals("'\''", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeQuoteInSingleQuotesLineComment() {
+		StringBuffer stringBuffer = new StringBuffer("'\"'//some");
+		assertEquals("'\"'", b.normalize(stringBuffer).toString());
+	}
+
+	@Test
+	public void testNormalizeBrokenQuoteInSingleQuotesLineComment() {
+		StringBuffer stringBuffer = new StringBuffer("'\"//some");
+		assertEquals("'\"//some", b.normalize(stringBuffer).toString());
 	}
 }

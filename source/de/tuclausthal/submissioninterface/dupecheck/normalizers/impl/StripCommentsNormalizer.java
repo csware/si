@@ -29,6 +29,36 @@ public class StripCommentsNormalizer implements NormalizerIf {
 	public StringBuffer normalize(StringBuffer stringBuffer) {
 		int i = 0;
 		while (i < stringBuffer.length() - 1) {
+			if (stringBuffer.charAt(i) == '"') {
+				++i;
+				while (i < stringBuffer.length()) {
+					if (stringBuffer.charAt(i) == '\\') {
+						i += 2;
+						continue;
+					}
+					if (stringBuffer.charAt(i) == '"' || stringBuffer.charAt(i) == '\n') {
+						++i;
+						break;
+					}
+					++i;
+				}
+				continue;
+			}
+			if (stringBuffer.charAt(i) == '\'') {
+				++i;
+				while (i < stringBuffer.length()) {
+					if (stringBuffer.charAt(i) == '\\') {
+						i += 2;
+						continue;
+					}
+					if (stringBuffer.charAt(i) == '\'' || stringBuffer.charAt(i) == '\n') {
+						++i;
+						break;
+					}
+					++i;
+				}
+				continue;
+			}
 			if ("//".equals(stringBuffer.substring(i, i + 2))) {
 				while (i < stringBuffer.length()) {
 					if (stringBuffer.charAt(i) != '\n') {

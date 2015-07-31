@@ -29,6 +29,42 @@ public class StripCodeNormalizer implements NormalizerIf {
 	public StringBuffer normalize(StringBuffer stringBuffer) {
 		int i = 0;
 		while (i < stringBuffer.length()) {
+			if (stringBuffer.charAt(i) == '"') {
+				stringBuffer.deleteCharAt(i);
+				while (i < stringBuffer.length()) {
+					if (stringBuffer.charAt(i) == '\\') {
+						stringBuffer.deleteCharAt(i);
+						if (i < stringBuffer.length()) {
+							stringBuffer.deleteCharAt(i);
+						}
+						continue;
+					}
+					if (stringBuffer.charAt(i) == '"' || stringBuffer.charAt(i) == '\n') {
+						stringBuffer.deleteCharAt(i);
+						break;
+					}
+					stringBuffer.deleteCharAt(i);
+				}
+				continue;
+			}
+			if (stringBuffer.charAt(i) == '\'') {
+				stringBuffer.deleteCharAt(i);
+				while (i < stringBuffer.length()) {
+					if (stringBuffer.charAt(i) == '\\') {
+						stringBuffer.deleteCharAt(i);
+						if (i < stringBuffer.length()) {
+							stringBuffer.deleteCharAt(i);
+						}
+						continue;
+					}
+					if (stringBuffer.charAt(i) == '\'' || stringBuffer.charAt(i) == '\n') {
+						stringBuffer.deleteCharAt(i);
+						break;
+					}
+					stringBuffer.deleteCharAt(i);
+				}
+				continue;
+			}
 			if (i < stringBuffer.length() - 1 && "//".equals(stringBuffer.substring(i, i + 2))) {
 				stringBuffer.deleteCharAt(i);
 				stringBuffer.deleteCharAt(i);
