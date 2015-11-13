@@ -31,6 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,6 +65,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for managing (add, edit, remove) tasks by advisors
  * @author Sven Strickroth
  */
+@MultipartConfig
 public class TaskManager extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -240,7 +242,6 @@ public class TaskManager extends HttpServlet {
 			if (file == null) {
 				request.setAttribute("title", "Keine Datei gefunden.");
 				request.getRequestDispatcher("MessageView").forward(request, response);
-				session.getTransaction().rollback();
 				return;
 			}
 			// Process a file upload
