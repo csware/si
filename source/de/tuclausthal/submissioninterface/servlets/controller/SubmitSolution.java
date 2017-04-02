@@ -86,7 +86,7 @@ public class SubmitSolution extends HttpServlet {
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
 		if (participation == null) {
-			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
 

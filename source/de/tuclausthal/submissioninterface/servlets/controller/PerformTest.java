@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2015 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2015, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -69,7 +69,7 @@ public class PerformTest extends HttpServlet {
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
 		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
-			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
 
@@ -97,7 +97,7 @@ public class PerformTest extends HttpServlet {
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
 		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
-			((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
 

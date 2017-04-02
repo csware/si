@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -55,7 +55,7 @@ public class RequestAdapter {
 	}
 
 	public static User getUser(HttpServletRequest request) {
-		return (User) getSessionAdapter(request).getUser();
+		return getSessionAdapter(request).getUser();
 	}
 
 	/**

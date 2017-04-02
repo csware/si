@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Giselle Rodriguez
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -45,7 +45,7 @@ public class RandomNumber {
 				str = str.replaceFirst("0", "");
 			}
 		} else {
-			double zahl = (double) (Math.random() * Integer.parseInt(before));
+			double zahl = Math.random() * Integer.parseInt(before);
 			str = String.valueOf(Math.round(zahl));
 			if (randomParam[2] > 0) {
 				String after = "##0.";
