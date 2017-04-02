@@ -14,7 +14,7 @@ import de.tuclausthal.submissioninterface.template.Template;
  * @author Sven Strickroth
  */
 public class HUTemplate extends Template {
-	public HUTemplate(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
+	public HUTemplate(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
 		super(servletRequest, servletResponse);
 	}
 

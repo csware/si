@@ -14,7 +14,7 @@ import de.tuclausthal.submissioninterface.template.Template;
  * @author Sven Strickroth
  */
 public class TUCTemplate extends Template {
-	public TUCTemplate(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
+	public TUCTemplate(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
 		super(servletRequest, servletResponse);
 	}
 

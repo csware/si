@@ -43,7 +43,7 @@ public abstract class Template {
 	protected String prefix;
 	private List<String> headers = new LinkedList<>();
 
-	public Template(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
+	public Template(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
 		this.servletResponse = servletResponse;
 		prefix = servletRequest.getContextPath();
 		requestAdapter = new RequestAdapter(servletRequest);
