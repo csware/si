@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,7 +20,6 @@ package de.tuclausthal.submissioninterface.testframework.tests;
 
 import java.io.File;
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 

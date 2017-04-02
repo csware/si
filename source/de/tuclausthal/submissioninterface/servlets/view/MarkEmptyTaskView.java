@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -27,13 +27,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.Session;
-
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -46,8 +43,6 @@ public class MarkEmptyTaskView extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
-
-		Session session = RequestAdapter.getSession(request);
 
 		List<Participation> participations = (List<Participation>) request.getAttribute("participations");
 		Task task = (Task) request.getAttribute("task");

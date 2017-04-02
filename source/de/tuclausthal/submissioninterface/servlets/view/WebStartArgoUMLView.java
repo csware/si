@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * Copyright 2011 Joachim Schramm
  * 
  * This file is part of the SubmissionInterface.
@@ -28,9 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.template.Template;
-import de.tuclausthal.submissioninterface.template.TemplateFactory;
-import de.tuclausthal.submissioninterface.util.ContextAdapter;
 
 /**
  * View-Servlet für den ArgoUML Webstart
