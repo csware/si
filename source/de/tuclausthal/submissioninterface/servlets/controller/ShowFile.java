@@ -130,6 +130,7 @@ public class ShowFile extends HttpServlet {
 
 		// Check for BOM
 		if (len == 3 && (bomBuffer[0] & 0xFF) == 0xEF && (bomBuffer[1] & 0xFF) == 0xBB & (bomBuffer[2] & 0xFF) == 0xBF) {
+			in.close();
 			return true;
 		}
 
@@ -149,17 +150,20 @@ public class ShowFile extends HttpServlet {
 				length = 3;
 			} else {
 				// Java only supports BMP so 3 is max
+				in.close();
 				return false;
 			}
 
 			for (int i = 0; i < length; i++) {
 				if ((octet = in.read()) == -1 || (octet & 0xC0) != 0x80) {
 					// Not a valid trailing byte
+					in.close();
 					return false;
 				}
 			}
 		}
 
+		in.close();
 		return true;
 	}
 
