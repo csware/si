@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -140,7 +140,7 @@ public abstract class UMLDiagramm {
 
 	static protected class UMLNameSpaceContext implements NamespaceContext {
 		@Override
-		public Iterator getPrefixes(String namespaceURI) {
+		public Iterator<?> getPrefixes(String namespaceURI) {
 			throw new UnsupportedOperationException();
 		}
 

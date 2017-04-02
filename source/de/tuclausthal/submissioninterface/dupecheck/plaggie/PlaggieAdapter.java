@@ -1,6 +1,6 @@
 /* 
  *  Copyright (C) 2006 Aleksi Ahtiainen, Mikko Rahikainen.
- *  Copyright (C) 2009 - 2010 Sven Strickroth <email@cs-ware.de> 
+ *  Copyright (C) 2009-2010, 2017 Sven Strickroth <email@cs-ware.de> 
  * 
  *  This file is part of the homework submission interface.
  *
@@ -100,8 +100,8 @@ public class PlaggieAdapter extends DupeCheck {
 
 			// -- Read and create the submissions, if the results are not
 			// -- read from a file
-			ArrayList detResults = null;
-			ArrayList submissions = null;
+			ArrayList<SubmissionDetectionResult> detResults = null;
+			ArrayList<DirectorySubmission> submissions = null;
 
 			// Create the submissions
 			submissions = getDirectorySubmissions(file1);
@@ -130,12 +130,12 @@ public class PlaggieAdapter extends DupeCheck {
 	 * returned list, they are filtered out according to some
 	 * configuration parameters.
 	 */
-	private ArrayList generateDetectionResults(ArrayList submissions) throws Exception {
+	private ArrayList<SubmissionDetectionResult> generateDetectionResults(ArrayList<DirectorySubmission> submissions) throws Exception {
 
-		ArrayList detResults = null;
+		ArrayList<SubmissionDetectionResult> detResults = null;
 
 		// Generate the black list
-		HashMap blacklist = new HashMap();
+		HashMap<String, Integer> blacklist = new HashMap<>();
 		if (!(config.blacklistFile == null || config.blacklistFile.equals(""))) {
 			try {
 				BufferedReader bin = new BufferedReader(new FileReader(config.blacklistFile));
@@ -152,7 +152,7 @@ public class PlaggieAdapter extends DupeCheck {
 		}
 
 		// Create the code excluder
-		ArrayList codeExcluders = new ArrayList();
+		ArrayList<CodeExcluder> codeExcluders = new ArrayList<>();
 
 		if (config.excludeInterfaces) {
 			codeExcluders.add(new InterfaceCodeExcluder());
@@ -180,12 +180,12 @@ public class PlaggieAdapter extends DupeCheck {
 
 		// Generate all the submission detection results
 
-		detResults = new ArrayList();
+		detResults = new ArrayList<>();
 
 		for (int i = 0; i < submissions.size(); i++) {
 			for (int j = 0; j < i; j++) {
-				Submission subA = (Submission) submissions.get(i);
-				Submission subB = (Submission) submissions.get(j);
+				Submission subA = submissions.get(i);
+				Submission subB = submissions.get(j);
 				SubmissionDetectionResult detResult = new SubmissionDetectionResult(subA, subB, checker, config.minimumFileSimilarityValueToReport);
 
 				boolean onBlacklist = false;
@@ -223,9 +223,9 @@ public class PlaggieAdapter extends DupeCheck {
 	 * hierarchy depends on the configuration, especially parameter
 	 * severalSubmissionDirectories.
 	 */
-	private ArrayList getDirectorySubmissions(File directory) throws Exception {
+	private ArrayList<DirectorySubmission> getDirectorySubmissions(File directory) throws Exception {
 		File[] files = directory.listFiles();
-		ArrayList submissions = new ArrayList();
+		ArrayList<DirectorySubmission> submissions = new ArrayList<>();
 
 		FilenameFilter filter = generateFilenameFilter();
 
@@ -250,7 +250,7 @@ public class PlaggieAdapter extends DupeCheck {
 	private FilenameFilter generateFilenameFilter() throws Exception {
 
 		// Generate the filename filter
-		ArrayList filters = new ArrayList();
+		ArrayList<FilenameFilter> filters = new ArrayList<>();
 
 		filters.add((FilenameFilter) Class.forName(config.filenameFilter).newInstance());
 
