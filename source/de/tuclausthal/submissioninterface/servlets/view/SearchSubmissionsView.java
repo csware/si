@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -63,7 +63,7 @@ public class SearchSubmissionsView extends HttpServlet {
 		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 			out.println("<option value=\"publiccomments\" selected>Öffentliche Bewertungs-Kommentare</option>");
 			out.println("<option value=\"privatecomments\" selected>Interne Bewertungs-Kommentare</option>");
-			if (task.getTests().size() >= 0) {
+			if (!task.getTests().isEmpty()) {
 				out.println("<option value=\"testresults\" selected>Testergebnisse</option>");
 			}
 		}
