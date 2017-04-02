@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -72,7 +72,7 @@ public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamic
 	@Override
 	public List<String> getCorrectResults(List<TaskNumber> numbers, boolean includePartialSolutions) {
 		double result = Double.parseDouble(numbers.get(0).getOrigNumber()) * Double.parseDouble(numbers.get(1).getOrigNumber());
-		List<String> results = new LinkedList<String>();
+		List<String> results = new LinkedList<>();
 		if (includePartialSolutions) {
 			results.add(String.valueOf(result));
 		}
@@ -93,7 +93,7 @@ public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamic
 
 	@Override
 	protected List<TaskNumber> createTaskNumbers(Participation participation) {
-		List<TaskNumber> numbers = new LinkedList<TaskNumber>();
+		List<TaskNumber> numbers = new LinkedList<>();
 		String[] floatNumbers = RandomNumber.getFloatBitsTruncated(RandomNumber.getFloat(true));
 		while (floatNumbers[0].endsWith(".0")) {
 			floatNumbers = RandomNumber.getFloatBitsTruncated(RandomNumber.getFloat(true));

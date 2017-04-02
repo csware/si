@@ -81,7 +81,7 @@ public class ComplexDataTypeSizeDynamicTaskStrategie extends AbstractDynamicTask
 			bitBetrag = (int) Math.ceil(Math.log(-minBetrag) / Math.log(2)) + 1; // + 1 für VZ-bit
 		}
 
-		List<String> results = new LinkedList<String>();
+		List<String> results = new LinkedList<>();
 		if (includePartialSolutions) {
 			results.add(String.valueOf(bitsLfndNr));
 			results.add(String.valueOf(bitVerwZweck));
@@ -98,7 +98,7 @@ public class ComplexDataTypeSizeDynamicTaskStrategie extends AbstractDynamicTask
 
 	@Override
 	protected List<TaskNumber> createTaskNumbers(Participation participation) {
-		List<TaskNumber> numbers = new LinkedList<TaskNumber>();
+		List<TaskNumber> numbers = new LinkedList<>();
 
 		int lfndnr = 100000 * (int) (Math.random() * 1000 + 1);
 		int maxVerwZweck = 5 * (int) (Math.random() * 47 + 20);

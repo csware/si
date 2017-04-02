@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -59,7 +59,7 @@ public class ShowMarkHistoryView extends HttpServlet {
 		out.println("<th>Hinzugefügt</th>");
 		out.println("</tr>");
 
-		LinkedList<PointHistory> ph = new LinkedList<PointHistory>();
+		LinkedList<PointHistory> ph = new LinkedList<>();
 		for (PointHistory pointHistory : data) {
 			if (ph.size() > 0) {
 				if (!pointHistory.getDate().equals(ph.getLast().getDate())) {

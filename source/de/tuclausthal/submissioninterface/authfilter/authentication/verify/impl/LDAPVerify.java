@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -68,7 +68,7 @@ public class LDAPVerify implements VerifyIf {
 		}
 
 		// Set up environment for creating initial context
-		Hashtable<String, String> env = new Hashtable<String, String>(5);
+		Hashtable<String, String> env = new Hashtable<>(5);
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 		env.put(Context.SECURITY_AUTHENTICATION, securityAuthentication);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -42,7 +42,7 @@ public abstract class AbstractNumberConversionDynamicTaskStrategie extends Abstr
 
 	@Override
 	final public List<String> getCorrectResults(List<TaskNumber> taskNumbers, boolean includePartialSolutions) {
-		List<String> results = new LinkedList<String>();
+		List<String> results = new LinkedList<>();
 		results.add(taskNumbers.get(0).getOrigNumber());
 		return results;
 	}

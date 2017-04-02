@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2014 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2014, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -180,7 +180,7 @@ public class SubmitSolution extends HttpServlet {
 			return;
 		}
 
-		List<Integer> partnerIDs = new LinkedList<Integer>();
+		List<Integer> partnerIDs = new LinkedList<>();
 		int uploadFor = Util.parseInteger(request.getParameter("uploadFor"), 0);
 
 		if (request.getParameterValues("partnerid") != null) {
@@ -376,7 +376,7 @@ public class SubmitSolution extends HttpServlet {
 		} else if (request.getParameter("textsolution") != null) {
 			if (task.isADynamicTask()) {
 				int numberOfFields = task.getDynamicTaskStrategie(session).getNumberOfResultFields();
-				List<String> results = new LinkedList<String>();
+				List<String> results = new LinkedList<>();
 				for (int i = 0; i < numberOfFields; i++) {
 					String result = request.getParameter("dynamicresult" + i);
 					if (result == null) {
@@ -413,7 +413,7 @@ public class SubmitSolution extends HttpServlet {
 	}
 
 	public static Vector<Pattern> getTaskFileNamePatterns(Task task, boolean ignoreTaskPattern) {
-		Vector<Pattern> patterns = new Vector<Pattern>(2);
+		Vector<Pattern> patterns = new Vector<>(2);
 		patterns.add(Pattern.compile("^(?:.*?[\\\\/])?([a-zA-Z0-9_. -]+)$"));
 		if (!(task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty() || ignoreTaskPattern)) {
 			patterns.add(Pattern.compile("^(?:.*?[\\\\/])?(" + task.getFilenameRegexp() + ")$"));
@@ -422,7 +422,7 @@ public class SubmitSolution extends HttpServlet {
 	}
 
 	private static Vector<Pattern> getArchiveFileNamePatterns(Task task) {
-		Vector<Pattern> patterns = new Vector<Pattern>(2);
+		Vector<Pattern> patterns = new Vector<>(2);
 		patterns.add(Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?([a-zA-Z0-9_ .-]+))$"));
 		if (task.getArchiveFilenameRegexp() != null && !task.getArchiveFilenameRegexp().isEmpty()) {
 			if (task.getArchiveFilenameRegexp().startsWith("^")) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -45,7 +45,7 @@ public class JavaSyntaxTest extends TempDirTest {
 		try {
 			ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
 
-			List<String> javaFiles = new LinkedList<String>();
+			List<String> javaFiles = new LinkedList<>();
 			getRecursivelyAllJavaFiles(javaDir, javaFiles);
 
 			if (javaFiles.size() > 0) {

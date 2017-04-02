@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -27,7 +27,7 @@ import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerIf;
  * @author Sven Strickroth
  */
 public class NormalizerStack implements NormalizerIf {
-	private Stack<NormalizerIf> normalizersStack = new Stack<NormalizerIf>();
+	private Stack<NormalizerIf> normalizersStack = new Stack<>();
 
 	/**
 	 * Adds a normalizer to the stack (on the top)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -116,7 +116,7 @@ public class MassMail extends HttpServlet {
 			return;
 		}
 
-		Set<String> receipients = new LinkedHashSet<String>();
+		Set<String> receipients = new LinkedHashSet<>();
 		if (request.getParameterValues("toall") != null) {
 			for (Participation lectureParticipation : lecture.getParticipants()) {
 				receipients.add(lectureParticipation.getUser().getFullEmail());

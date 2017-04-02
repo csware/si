@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
- * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -59,20 +59,20 @@ public class ClassDiagramm extends UMLDiagramm {
 	private int numberOfAbstractions = 0;
 	private int numberOfInterfaces = 0;
 
-	private Vector<String> classes = new Vector<String>();
-	private Vector<String> attributes = new Vector<String>();
-	private Vector<String> methods = new Vector<String>();
-	private Vector<String> associations = new Vector<String>();
-	private Vector<String> interfaces = new Vector<String>();
+	private Vector<String> classes = new Vector<>();
+	private Vector<String> attributes = new Vector<>();
+	private Vector<String> methods = new Vector<>();
+	private Vector<String> associations = new Vector<>();
+	private Vector<String> interfaces = new Vector<>();
 
-	private Vector<String> allocationOfAssociations = new Vector<String>();
+	private Vector<String> allocationOfAssociations = new Vector<>();
 
-	private HashMap<String, Vector<String>> m2c = new HashMap<String, Vector<String>>();
-	private HashMap<String, Vector<String>> a2c = new HashMap<String, Vector<String>>();
-	private HashMap<String, Vector<String>> m2i = new HashMap<String, Vector<String>>();
+	private HashMap<String, Vector<String>> m2c = new HashMap<>();
+	private HashMap<String, Vector<String>> a2c = new HashMap<>();
+	private HashMap<String, Vector<String>> m2i = new HashMap<>();
 	private String as2c;
 
-	private HashMap<String, String> IDs = new HashMap<String, String>();
+	private HashMap<String, String> IDs = new HashMap<>();
 
 	public int getNumberOfClasses() {
 		return numberOfClasses;
@@ -252,8 +252,8 @@ public class ClassDiagramm extends UMLDiagramm {
 			}
 			AttributesMethods attributesMethods = extractAttributesMethods(node);
 			if (!name.getNodeValue().isEmpty()) {
-				a2c.put(name.getNodeValue(), new Vector<String>(attributesMethods.attributes));
-				m2c.put(name.getNodeValue(), new Vector<String>(attributesMethods.methods));
+				a2c.put(name.getNodeValue(), new Vector<>(attributesMethods.attributes));
+				m2c.put(name.getNodeValue(), new Vector<>(attributesMethods.methods));
 			}
 		}
 	}
@@ -269,7 +269,7 @@ public class ClassDiagramm extends UMLDiagramm {
 			}
 			AttributesMethods attributesMethods = extractAttributesMethods(node);
 			if (!name.getNodeValue().isEmpty()) {
-				m2i.put(name.getNodeValue(), new Vector<String>(attributesMethods.methods));
+				m2i.put(name.getNodeValue(), new Vector<>(attributesMethods.methods));
 			}
 		}
 	}
@@ -325,8 +325,8 @@ public class ClassDiagramm extends UMLDiagramm {
 	}
 
 	private static class AttributesMethods {
-		public List<String> attributes = new LinkedList<String>();
-		public List<String> methods = new LinkedList<String>();
+		public List<String> attributes = new LinkedList<>();
+		public List<String> methods = new LinkedList<>();
 	}
 
 	public ClassDiagrammConstraint compare(ClassDiagramm diagramm) {

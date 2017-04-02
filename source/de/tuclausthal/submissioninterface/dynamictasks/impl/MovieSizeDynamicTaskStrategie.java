@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -83,7 +83,7 @@ public class MovieSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie 
 		long byteProMinute = byteProSecond * 60;
 		long bytes = byteProMinute * dauer;
 
-		List<String> results = new LinkedList<String>();
+		List<String> results = new LinkedList<>();
 		if (includePartialSolutions) {
 			results.add(String.valueOf(pixels));
 			results.add(String.valueOf(byteVideoProFrame));
@@ -105,7 +105,7 @@ public class MovieSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie 
 
 	@Override
 	protected List<TaskNumber> createTaskNumbers(Participation participation) {
-		List<TaskNumber> numbers = new LinkedList<TaskNumber>();
+		List<TaskNumber> numbers = new LinkedList<>();
 
 		int rnd = (int) (Math.random() * RESOLUTIONS.length);
 		if (rnd == RESOLUTIONS.length) {

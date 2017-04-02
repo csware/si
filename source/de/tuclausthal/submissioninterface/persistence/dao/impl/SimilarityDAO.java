@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -74,7 +74,7 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 	public List<Similarity> getUsersWithMaxSimilarity(SimilarityTest similarityTest, Submission submission) {
 		int maxSimilarity = getMaxSimilarity(similarityTest, submission);
 		if (maxSimilarity == 0) {
-			return new LinkedList<Similarity>();
+			return new LinkedList<>();
 		} else {
 			return getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).add(Restrictions.eq("percentage", maxSimilarity)).list();
 		}

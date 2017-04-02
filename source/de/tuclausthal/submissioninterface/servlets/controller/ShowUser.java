@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010, 2013 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2013, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -48,7 +48,7 @@ public class ShowUser extends HttpServlet {
 
 		Boolean isAtLeastAdvisorOnce = false;
 
-		List<Lecture> lectures = new LinkedList<Lecture>();
+		List<Lecture> lectures = new LinkedList<>();
 		for (Participation participation : RequestAdapter.getUser(request).getLectureParticipant()) {
 			if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 				lectures.add(participation.getLecture());

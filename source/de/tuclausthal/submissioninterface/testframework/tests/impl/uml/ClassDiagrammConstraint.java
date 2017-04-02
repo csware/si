@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -143,8 +143,8 @@ public class ClassDiagrammConstraint {
 	}
 
 	public String checkNamesOfClassesAndAttributes() {
-		Vector<String> result1 = new Vector<String>();
-		Vector<String> result2 = new Vector<String>();
+		Vector<String> result1 = new Vector<>();
+		Vector<String> result2 = new Vector<>();
 		for (int i = 0; i < cd1.getClassNames().size(); i++) {
 			result1.add(cd1.getClassNames().elementAt(i));
 		}
@@ -220,9 +220,9 @@ public class ClassDiagrammConstraint {
 			Vector<String> v1 = cd1.getAllocationOfAssociation();
 			Vector<String> v2 = cd2.getAllocationOfAssociation();
 
-			HashMap<Integer, String> h1 = new HashMap<Integer, String>();
-			HashMap<Integer, String> h2a = new HashMap<Integer, String>();
-			HashMap<Integer, String> h2b = new HashMap<Integer, String>();
+			HashMap<Integer, String> h1 = new HashMap<>();
+			HashMap<Integer, String> h2a = new HashMap<>();
+			HashMap<Integer, String> h2b = new HashMap<>();
 
 			for (int i = 0; i < v1.size(); i = i + 2) {
 				h1.put(i, v1.get(i) + " " + v1.get(i + 1));

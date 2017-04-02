@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -42,7 +42,7 @@ public class ResultDAO extends AbstractDAO implements ResultDAOIf {
 	@Override
 	public List<String> getResultsForSubmission(Submission submission) {
 		Session session = getSession();
-		List<String> results = new LinkedList<String>();
+		List<String> results = new LinkedList<>();
 		for (Result result : (List<Result>) session.createCriteria(Result.class).add(Restrictions.eq("submission", submission)).addOrder(Order.asc("resultid")).list()) {
 			results.add(result.getResult());
 		}

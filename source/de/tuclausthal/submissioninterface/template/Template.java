@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -41,7 +41,7 @@ public abstract class Template {
 	protected HttpServletResponse servletResponse;
 	protected RequestAdapter requestAdapter;
 	protected String prefix;
-	private List<String> headers = new LinkedList<String>();
+	private List<String> headers = new LinkedList<>();
 
 	public Template(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
 		this.servletResponse = servletResponse;

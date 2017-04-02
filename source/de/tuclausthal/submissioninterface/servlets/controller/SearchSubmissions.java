@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -99,7 +99,7 @@ public class SearchSubmissions extends HttpServlet {
 			return;
 		}
 
-		Set<Submission> foundSubmissions = new LinkedHashSet<Submission>();
+		Set<Submission> foundSubmissions = new LinkedHashSet<>();
 
 		if (task.isADynamicTask()) {
 			DynamicTaskStrategieIf dynamicTask = task.getDynamicTaskStrategie(session);

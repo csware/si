@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -71,7 +71,7 @@ public class ComplexDataTypeSizeWithFloatDynamicTaskStrategie extends AbstractDy
 
 		int bitBetrag = 32;
 
-		List<String> results = new LinkedList<String>();
+		List<String> results = new LinkedList<>();
 		if (includePartialSolutions) {
 			results.add(String.valueOf(bitsLfndNr));
 			results.add(String.valueOf(bitVerwZweck));
@@ -88,7 +88,7 @@ public class ComplexDataTypeSizeWithFloatDynamicTaskStrategie extends AbstractDy
 
 	@Override
 	protected List<TaskNumber> createTaskNumbers(Participation participation) {
-		List<TaskNumber> numbers = new LinkedList<TaskNumber>();
+		List<TaskNumber> numbers = new LinkedList<>();
 
 		int lfndnr = 100000 * (int) (Math.random() * 1000 + 1);
 		int maxVerwZweck = 5 * (int) (Math.random() * 47 + 20);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -45,7 +45,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class Submission implements Serializable {
 	private int submissionid;
 	private Task task;
-	private Set<Participation> submitters = new HashSet<Participation>();
+	private Set<Participation> submitters = new HashSet<>();
 	private Points points;
 	private Set<TestResult> testResults;
 	private Set<Similarity> similarSubmissions;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -65,11 +65,11 @@ public abstract class DupeCheck {
 			Task task = similarityTest.getTask();
 			File taskPath = new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
 			normalizerCache = new NormalizerCache(taskPath, similarityTest.getNormalizer());
-			List<Submission> submissions = new LinkedList<Submission>(task.getSubmissions());
+			List<Submission> submissions = new LinkedList<>(task.getSubmissions());
 			List<String> excludedFileNames = Arrays.asList(similarityTest.getExcludeFiles().split(","));
 			// go through all submission of submission i
 			for (int i = 0; i < submissions.size(); i++) {
-				List<StringBuffer> javaFiles = new LinkedList<StringBuffer>();
+				List<StringBuffer> javaFiles = new LinkedList<>();
 				for (String javaFile : Util.listFilesAsRelativeStringList(new File(taskPath, submissions.get(i).getSubmissionid() + ""), excludedFileNames)) {
 					// cache the files we use more than once
 					javaFiles.add(normalizerCache.normalize(submissions.get(i).getSubmissionid() + System.getProperty("file.separator") + javaFile));

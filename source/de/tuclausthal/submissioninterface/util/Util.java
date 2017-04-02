@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2014 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2014, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -207,7 +207,7 @@ public final class Util {
 	}
 
 	public static List<String> listFilesAsRelativeStringList(File path) {
-		List<String> submittedFiles = new LinkedList<String>();
+		List<String> submittedFiles = new LinkedList<>();
 		if (path.exists() && path.listFiles() != null) {
 			listFilesAsRelativeStringList(submittedFiles, path, "");
 		}
@@ -225,7 +225,7 @@ public final class Util {
 	}
 
 	public static List<String> listFilesAsRelativeStringList(File path, List<String> excludedFileNames) {
-		List<String> submittedFiles = new LinkedList<String>();
+		List<String> submittedFiles = new LinkedList<>();
 		if (path.exists() && path.listFiles() != null) {
 			listFilesAsRelativeStringList(submittedFiles, path, "", excludedFileNames);
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -35,7 +35,7 @@ public class Dec2BinDynamicTaskStrategie extends AbstractNumberConversionDynamic
 
 	@Override
 	protected List<TaskNumber> createTaskNumbers(Participation participation) {
-		List<TaskNumber> numbers = new LinkedList<TaskNumber>();
+		List<TaskNumber> numbers = new LinkedList<>();
 		String origNumber = RandomNumber.getRandomNumber(RandomNumber.getRandomParam('B'));
 		String number = RandomNumber.getNumber(origNumber, RandomNumber.getRandomParam('B'));
 		numbers.add(new TaskNumber(getTask(), participation, origNumber, number));

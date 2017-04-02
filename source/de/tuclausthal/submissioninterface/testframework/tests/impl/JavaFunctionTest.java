@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -58,11 +58,11 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			policyFileWriter.write("};\n");
 			policyFileWriter.close();
 
-			List<String> additionalParams = new LinkedList<String>();
+			List<String> additionalParams = new LinkedList<>();
 			populateParameters(test, basePath, tempDir, additionalParams);
 
 			// check what kind of test it is
-			List<String> params = new LinkedList<String>();
+			List<String> params = new LinkedList<>();
 			params.add("java");
 			// we have no frontend
 			params.add("-Djava.awt.headless=true");
