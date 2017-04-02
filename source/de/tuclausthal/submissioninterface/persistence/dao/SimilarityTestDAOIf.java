@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -73,6 +73,7 @@ public interface SimilarityTestDAOIf {
 	/**
 	 * Marks a test as finished
 	 * ATTENTION: this method starts it's own transaction!
+	 * @param similarityTest 
 	 */
 	public void finish(SimilarityTest similarityTest);
 }

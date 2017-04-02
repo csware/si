@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -37,6 +37,7 @@ public interface LectureDAOIf {
 	/**
 	 * Creates a new lecture and stores it in the DB
 	 * @param name the lecture-name
+	 * @param requiresAbhnahme 
 	 * @param groupWiseGrading grading is done groupwise
 	 * @return the new lecture
 	 */
