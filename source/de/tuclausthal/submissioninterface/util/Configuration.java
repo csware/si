@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010, 2013, 2015 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2013, 2015, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -97,9 +97,8 @@ public class Configuration {
 		}
 		if (Integer.parseInt(normalized) == 0) {
 			return false;
-		} else {
-			return true;
 		}
+		return true;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -263,35 +263,34 @@ public class SimilarityTest implements Serializable {
 	public String toString() {
 		if ("plaggie".equals(getType())) {
 			return "Plaggie-Test, min. Übereinstimmung: " + getMinimumDifferenceInPercent() + "%";
-		} else {
-			String string;
-			if ("compression".equals(getType())) {
-				string = "Kolmogorov Komplexität";
-			} else if ("levenshtein".equals(getType())) {
-				string = "Levenshtein";
-			} else {
-				string = "unbekannter Typ";
-			}
-			string += ", min. Übereinstimmung: " + getMinimumDifferenceInPercent() + "%, ";
-			if ("code".equals(getBasis())) {
-				string += "nur Code-Basis, ";
-			} else if ("comments".equals(getBasis())) {
-				string += "nur Kommentar-Basis, ";
-			}
-			if (isNormalizeCapitalization()) {
-				string += "case-insensitive, ";
-			}
-			if ("newlines".equals(getTabsSpacesNewlinesNormalization())) {
-				string += "Newline Normalisierung";
-			} else if ("spacestabs".equals(getTabsSpacesNewlinesNormalization())) {
-				string += "Spaces/Tabs Normalisierung";
-			} else if ("all".equals(getTabsSpacesNewlinesNormalization())) {
-				string += "komplette Normalisierung";
-			} else {
-				string += "ohne Normalisierung";
-			}
-			return string;
 		}
+		String string;
+		if ("compression".equals(getType())) {
+			string = "Kolmogorov Komplexität";
+		} else if ("levenshtein".equals(getType())) {
+			string = "Levenshtein";
+		} else {
+			string = "unbekannter Typ";
+		}
+		string += ", min. Übereinstimmung: " + getMinimumDifferenceInPercent() + "%, ";
+		if ("code".equals(getBasis())) {
+			string += "nur Code-Basis, ";
+		} else if ("comments".equals(getBasis())) {
+			string += "nur Kommentar-Basis, ";
+		}
+		if (isNormalizeCapitalization()) {
+			string += "case-insensitive, ";
+		}
+		if ("newlines".equals(getTabsSpacesNewlinesNormalization())) {
+			string += "Newline Normalisierung";
+		} else if ("spacestabs".equals(getTabsSpacesNewlinesNormalization())) {
+			string += "Spaces/Tabs Normalisierung";
+		} else if ("all".equals(getTabsSpacesNewlinesNormalization())) {
+			string += "komplette Normalisierung";
+		} else {
+			string += "ohne Normalisierung";
+		}
+		return string;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -39,9 +39,8 @@ public class JavaIORegexpTest extends JavaFunctionTest {
 		if (!testMatcher.matches()) {
 			processOutput.insert(0, "Ausgabe stimmt nicht mit erwarteter Ausgabe überein. Ausgabe folgt (StdIn zuerst):\n");
 			return false;
-		} else {
-			return exitedCleanly;
 		}
+		return exitedCleanly;
 	}
 
 	@Override

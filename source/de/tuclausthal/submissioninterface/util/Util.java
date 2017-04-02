@@ -316,9 +316,8 @@ public final class Util {
 		if (date.getMonth() > 7) {
 			// winter lecture
 			return date.getYear() * 10 + 19001;
-		} else {
-			return date.getYear() * 10 + 19000;
 		}
+		return date.getYear() * 10 + 19000;
 	}
 
 	/**
@@ -416,9 +415,8 @@ public final class Util {
 		int points = convertToPoints(parameter);
 		if (points % minPointStep == 0) {
 			return points;
-		} else {
-			return (points / minPointStep) * minPointStep;
 		}
+		return (points / minPointStep) * minPointStep;
 	}
 
 	public static String getPointsCSSClass(Points points) {

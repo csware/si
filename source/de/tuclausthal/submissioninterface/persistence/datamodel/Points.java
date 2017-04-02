@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -50,9 +50,8 @@ public class Points implements Serializable {
 	public Integer getPointsByStatus(int minPointStep) {
 		if (pointStatus <= PointStatus.ABGENOMMEN_FAILED.ordinal()) {
 			return 0;
-		} else {
-			return getPlagiarismPoints(minPointStep);
 		}
+		return getPlagiarismPoints(minPointStep);
 	}
 
 	/**

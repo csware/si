@@ -48,9 +48,8 @@ public class ClassDiagrammConstraint {
 		} else {
 			if (cd1.getNumberOfClasses() == cd2.getNumberOfClasses()) {
 				return "Anzahl der Klassen und Attribute okay";
-			} else {
-				return "Die Anzahl der Klassen und Attribute ist zufriedenstellend, aber es gibt eine bessere Modellierung.";
 			}
+			return "Die Anzahl der Klassen und Attribute ist zufriedenstellend, aber es gibt eine bessere Modellierung.";
 		}
 	}
 
@@ -95,10 +94,8 @@ public class ClassDiagrammConstraint {
 		} else {
 			if ((cd1.getNumberOfAssociations()) > cd2.getNumberOfAssociations()) {
 				return "Achtung es fehlen Assoziationen.";
-			} else {
-				return "";
 			}
-
+			return "";
 		}
 	}
 
@@ -159,60 +156,52 @@ public class ClassDiagrammConstraint {
 		}
 		if (result2.containsAll(result1)) {
 			return "Klassennamen und Attributsnamen okay";
-		} else {
-			return "Überprüfe die Namen der Klassen und Attribute deiner Lösung noch einmal mit der in der Aufgabenstellung.";
 		}
+		return "Überprüfe die Namen der Klassen und Attribute deiner Lösung noch einmal mit der in der Aufgabenstellung.";
 	}
 
 	public String checkNamesOfMethods() {
 
 		if (cd2.getMethodsNames().containsAll(cd1.getMethodsNames())) {
 			return "Methodennamen okay";
-		} else {
-			return "Überprüfe die Namen der Methoden deiner Lösung noch einmal mit der in der Aufgabenstellung.";
 		}
+		return "Überprüfe die Namen der Methoden deiner Lösung noch einmal mit der in der Aufgabenstellung.";
 	}
 
 	public String checkNamesOfInterfaces() {
 
 		if (cd2.getInterfaceNames().containsAll(cd1.getInterfaceNames())) {
 			return "Schnittstellennamen okay";
-		} else {
-			return "Überprüfe die Namen der Schnittstellen deiner Lösung noch einmal mit der in der Aufgabenstellung.";
 		}
+		return "Überprüfe die Namen der Schnittstellen deiner Lösung noch einmal mit der in der Aufgabenstellung.";
 	}
 
 	public String checkM2C() {
 
 		if (cd1.getM2C().equals(cd2.getM2C())) {
 			return "Zuordnung von Methoden zu Klassen okay";
-		} else {
-			return "Überprüfe die Zuordnung deiner Methoden zu Klassen in deiner Lösung.";
 		}
+		return "Überprüfe die Zuordnung deiner Methoden zu Klassen in deiner Lösung.";
 	}
 
 	public String checkA2C() {
 		if (cd1.getNumberOfAttributes() == cd2.getNumberOfAttributes() && cd1.getNumberOfClasses() == cd2.getNumberOfClasses()) {
 			if (cd1.getA2C().equals(cd2.getA2C())) {
 				return "Zuordnung von Attributen zu Klassen okay";
-			} else {
-				return "Überprüfe die Zuordnung deiner Attribute zu Klassen in deiner Lösung.";
 			}
-		} else {
-			return "";
+			return "Überprüfe die Zuordnung deiner Attribute zu Klassen in deiner Lösung.";
 		}
+		return "";
 	}
 
 	public String checkM2I() {
 		if (cd1.getNumberOfMethods() == cd2.getNumberOfMethods() && cd1.getNumberOfInterfaces() == cd2.getNumberOfInterfaces()) {
 			if (cd1.getM2I().equals(cd2.getM2I())) {
 				return "Zuordnung von Methoden zu Interfaces okay";
-			} else {
-				return "Überprüfe die Zuordnung deiner Methoden zu Interfaces in deiner Lösung.";
 			}
-		} else {
-			return "";
+			return "Überprüfe die Zuordnung deiner Methoden zu Interfaces in deiner Lösung.";
 		}
+		return "";
 	}
 
 	public String checkPairsOfAssociations() {
@@ -240,8 +229,7 @@ public class ClassDiagrammConstraint {
 			}
 
 			return "Zuordnung der Assoziationen okay";
-		} else {
-			return "";
 		}
+		return "";
 	}
 }

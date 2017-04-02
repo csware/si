@@ -46,9 +46,8 @@ public class MovieSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie 
 	public String[] getResultFields(boolean includePartialSolutions) {
 		if (includePartialSolutions) {
 			return RESULT_FIELDS_WITH_PARTIAL;
-		} else {
-			return RESULT_FIELDS;
 		}
+		return RESULT_FIELDS;
 	}
 
 	@Override

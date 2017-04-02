@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -152,8 +152,7 @@ public class User implements Serializable {
 	public String getFullName() {
 		if (getFirstName().isEmpty()) {
 			return getLastName();
-		} else {
-			return getLastName() + ", " + getFirstName();
 		}
+		return getLastName() + ", " + getFirstName();
 	}
 }

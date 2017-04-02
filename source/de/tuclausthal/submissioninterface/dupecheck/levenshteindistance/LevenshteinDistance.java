@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -38,8 +38,7 @@ public class LevenshteinDistance extends DupeCheck {
 		if (Math.abs((double) Math.abs(fileOne.length() - fileTwo.length())) / maxLength * 100.0 <= maximumDifferenceInPercent) {
 			double distance = (1 - (double) Levenshtein.getLevenshteinDistance(fileOne, fileTwo, (int) (maximumDifferenceInPercent / 100.0 * maxLength)) / maxLength) * 100.0;
 			return (int) distance;
-		} else {
-			return 0;
 		}
+		return 0;
 	}
 }

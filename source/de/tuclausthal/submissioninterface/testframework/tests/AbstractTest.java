@@ -44,9 +44,8 @@ public abstract class AbstractTest {
 	final protected String mkPath(String absolutePath) {
 		if (System.getProperty("file.separator").equals("\\")) {
 			return absolutePath.replace("\\", "\\\\");
-		} else {
-			return absolutePath;
 		}
+		return absolutePath;
 	}
 
 }

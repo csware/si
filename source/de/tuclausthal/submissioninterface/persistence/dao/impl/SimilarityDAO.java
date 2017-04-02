@@ -65,9 +65,8 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 		Object result = query.uniqueResult();
 		if (result == null) {
 			return 0;
-		} else {
-			return (Integer) result;
 		}
+		return (Integer) result;
 	}
 
 	@Override
@@ -75,9 +74,8 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 		int maxSimilarity = getMaxSimilarity(similarityTest, submission);
 		if (maxSimilarity == 0) {
 			return new LinkedList<>();
-		} else {
-			return getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).add(Restrictions.eq("percentage", maxSimilarity)).list();
 		}
+		return getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).add(Restrictions.eq("percentage", maxSimilarity)).list();
 	}
 
 	@Override

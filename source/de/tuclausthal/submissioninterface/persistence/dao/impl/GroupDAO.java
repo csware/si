@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -83,8 +83,7 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 	public List<Group> getJoinAbleGroups(Lecture lecture, Group participationGroup) {
 		if (participationGroup == null) {
 			return getSession().createCriteria(Group.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("allowStudentsToSignup", true)).add(Restrictions.sqlRestriction("(select count(*) from participations where groupid={alias}.gid) < this_.maxStudents")).list();
-		} else {
-			return getSession().createCriteria(Group.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("allowStudentsToSignup", true)).add(Restrictions.sqlRestriction("(select count(*) from participations where groupid={alias}.gid) < this_.maxStudents")).add(Restrictions.not(Restrictions.eq("gid", participationGroup.getGid()))).list();
 		}
+		return getSession().createCriteria(Group.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("allowStudentsToSignup", true)).add(Restrictions.sqlRestriction("(select count(*) from participations where groupid={alias}.gid) < this_.maxStudents")).add(Restrictions.not(Restrictions.eq("gid", participationGroup.getGid()))).list();
 	}
 }

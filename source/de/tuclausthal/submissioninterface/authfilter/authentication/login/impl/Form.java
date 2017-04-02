@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010,2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -88,9 +88,8 @@ public class Form implements LoginIf {
 	public LoginData getLoginData(HttpServletRequest request) {
 		if (request.getParameter("username") != null && !request.getParameter("username").isEmpty() && request.getParameter("password") != null && !request.getParameter("password").isEmpty()) {
 			return new LoginData(request.getParameter("username"), request.getParameter("password"));
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	@Override

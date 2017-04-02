@@ -133,9 +133,8 @@ public abstract class UMLDiagramm {
 
 		if (diagrammType.equals(ActivityDiagramm.TYPE)) {
 			return new ActivityDiagramm(file, result);
-		} else {
-			return new ClassDiagramm(file, result.getParentNode());
 		}
+		return new ClassDiagramm(file, result.getParentNode());
 	}
 
 	static protected class UMLNameSpaceContext implements NamespaceContext {

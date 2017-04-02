@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -93,9 +93,8 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 		Object result = query.uniqueResult();
 		if (result == null) {
 			return 0;
-		} else {
-			return ((Long) result).intValue();
 		}
+		return ((Long) result).intValue();
 	}
 
 	@Override
@@ -106,8 +105,7 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 		Object result = query.uniqueResult();
 		if (result == null) {
 			return 0;
-		} else {
-			return ((Long) result).intValue();
 		}
+		return ((Long) result).intValue();
 	}
 }

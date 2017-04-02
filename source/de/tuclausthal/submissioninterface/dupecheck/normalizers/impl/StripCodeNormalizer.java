@@ -1,5 +1,5 @@
 /*
- * Copyright 2009,2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2012, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -83,9 +83,8 @@ public class StripCodeNormalizer implements NormalizerIf {
 						stringBuffer.deleteCharAt(i);
 						stringBuffer.deleteCharAt(i);
 						break;
-					} else {
-						i++;
 					}
+					++i;
 				}
 			} else {
 				stringBuffer.deleteCharAt(i);

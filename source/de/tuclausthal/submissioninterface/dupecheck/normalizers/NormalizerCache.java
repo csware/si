@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -59,14 +59,13 @@ public class NormalizerCache {
 		File tempFile = new File(cacheDirectoty.getPath(), file);
 		if (tempFile.exists()) {
 			return Util.loadFile(tempFile);
-		} else {
-			StringBuffer stringBuffer = normalizer.normalize(Util.loadFile(new File(pathToTask, file)));
-			tempFile.getParentFile().mkdirs();
-			BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile));
-			bw.write(stringBuffer.toString());
-			bw.close();
-			return stringBuffer;
 		}
+		StringBuffer stringBuffer = normalizer.normalize(Util.loadFile(new File(pathToTask, file)));
+		tempFile.getParentFile().mkdirs();
+		BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile));
+		bw.write(stringBuffer.toString());
+		bw.close();
+		return stringBuffer;
 	}
 
 	/**
