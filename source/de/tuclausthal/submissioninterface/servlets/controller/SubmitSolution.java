@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2014, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2014, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -200,7 +200,6 @@ public class SubmitSolution extends HttpServlet {
 		if (file != null && file.getSize() > task.getMaxsize()) {
 			request.setAttribute("title", "Datei ist zu groﬂ (maximum sind " + task.getMaxsize() + " Bytes)");
 			request.getRequestDispatcher("MessageView").forward(request, response);
-			session.getTransaction().rollback();
 			return;
 		}
 
