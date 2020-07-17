@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -79,7 +80,8 @@ public class ShowSubmissionView extends HttpServlet {
 		StringBuffer javaScript = new StringBuffer();
 
 		if (submission.getLastModified() != null) {
-			out.println("<p>Letzte Änderung: " + Util.escapeHTML(submission.getLastModified().toLocaleString()) + "</p>");
+			SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+			out.println("<p>Letzte Änderung: " + Util.escapeHTML(dateFormatter.format(submission.getLastModified())) + "</p>");
 		}
 
 		for (Participation participation : submission.getSubmitters()) {

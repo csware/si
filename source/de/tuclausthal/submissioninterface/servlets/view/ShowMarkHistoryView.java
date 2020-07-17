@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,6 +40,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class ShowMarkHistoryView extends HttpServlet {
+	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
@@ -80,7 +83,7 @@ public class ShowMarkHistoryView extends HttpServlet {
 			out.println("<tr>");
 			if (isFirst) {
 				out.println("<td valign=top rowspan=" + ph.size() + "><a href=\"mailto:" + Util.escapeHTML(entry.getWho().getUser().getFullEmail()) + "\">" + Util.escapeHTML(entry.getWho().getUser().getFullName()) + "</a></td>");
-				out.println("<td valign=top rowspan=" + ph.size() + ">" + Util.escapeHTML(entry.getDate().toLocaleString()) + "</td>");
+				out.println("<td valign=top rowspan=" + ph.size() + ">" + Util.escapeHTML(dateFormatter.format(entry.getDate())) + "</td>");
 				isFirst = false;
 			}
 			out.println("<td valign=top>" + Util.escapeHTML(entry.getField()) + "</td>");

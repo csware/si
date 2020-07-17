@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -69,13 +70,14 @@ public class ShowTaskStudentView extends HttpServlet {
 		out.println("<th>Beschreibung:</th>");
 		out.println("<td id=taskdescription>" + Util.makeCleanHTML(task.getDescription()) + "</td>");
 		out.println("</tr>");
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");
-		out.println("<td>" + Util.escapeHTML(task.getStart().toLocaleString()) + "</td>");
+		out.println("<td>" + Util.escapeHTML(dateFormatter.format(task.getStart())) + "</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Enddatum:</th>");
-		out.println("<td>" + Util.escapeHTML(task.getDeadline().toLocaleString()));
+		out.println("<td>" + Util.escapeHTML(dateFormatter.format(task.getDeadline())));
 		out.println("</td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -110,7 +112,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<tr>");
 				out.println("<th>Letzte Änderung:</th>");
 				out.println("<td>");
-				out.println(Util.escapeHTML(submission.getLastModified().toLocaleString()));
+				out.println(Util.escapeHTML(dateFormatter.format(submission.getLastModified())));
 				out.println("</td>");
 				out.println("</tr>");
 			}
