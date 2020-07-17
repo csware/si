@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -40,6 +40,7 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 	@Override
 	public void storeTestResult(Test test, Submission submission, TestExecutorTestResult testExecutorTestResult) {
 		Session session = getSession();
+		session.lock(test, LockMode.UPGRADE);
 		TestResult testResult = getResultLocked(test, submission);
 		if (testResult == null) {
 			testResult = new TestResult();
