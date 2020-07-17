@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -32,7 +32,7 @@ import javax.mail.internet.MimeUtility;
 public class MailSender {
 	public static void sendMail(String to, String subject, String messageText) {
 		MimeMessage msg;
-		Properties props = System.getProperties();
+		Properties props = new Properties();
 		props.put("mail.smtp.host", Configuration.getInstance().getMailServer());
 
 		Session session = Session.getDefaultInstance(props, null);
