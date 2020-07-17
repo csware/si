@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorIf;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
@@ -58,5 +59,12 @@ public class LocalExecutor implements TestExecutorIf {
 
 	public void shutdown() {
 		executorService.shutdown();
+		try {
+			while (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+				System.out.println(executorService.toString());
+			}
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
 	}
 }
