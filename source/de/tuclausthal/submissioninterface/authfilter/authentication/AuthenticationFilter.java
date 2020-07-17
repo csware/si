@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -66,6 +66,7 @@ public class AuthenticationFilter implements Filter {
 			LoginData logindata = login.getLoginData(request);
 			if (logindata == null) {
 				login.failNoData(request, response);
+				session.close();
 				return;
 			}
 			User user = null;
@@ -77,6 +78,7 @@ public class AuthenticationFilter implements Filter {
 			}
 			if (user == null) {
 				login.failNoData("Login fehlgeschlagen! Bitte versuchen Sie es erneut.", request, response);
+				session.close();
 				return;
 			}
 			// fix against session fixtures
@@ -85,14 +87,20 @@ public class AuthenticationFilter implements Filter {
 			sa.setUser(user);
 			if (login.redirectAfterLogin() == true) {
 				performRedirect(request, response);
+				session.close();
 				return;
 			}
 		} else if (login.redirectAfterLogin() && login.isSubsequentAuthRequest(request)) {
 			performRedirect(request, response);
+			session.close();
 			return;
 		}
 		request.setAttribute("username", sa.getUser().getEmail());
-		chain.doFilter(request, response);
+		try {
+			chain.doFilter(request, response);
+		} finally {
+			session.close();
+		}
 	}
 
 	private void performRedirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
