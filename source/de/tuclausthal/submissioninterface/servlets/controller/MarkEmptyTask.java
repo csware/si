@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -38,6 +38,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStat
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -97,9 +98,9 @@ public class MarkEmptyTask extends HttpServlet {
 			}
 			// attention: quite similar code in ShowSubmission
 			if (task.getPointCategories().size() > 0) {
-				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, null);
+				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, null, new ContextAdapter(request.getServletContext()));
 			} else {
-				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, null);
+				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, null, new ContextAdapter(request.getServletContext()));
 			}
 			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL("MarkEmptyTask?taskid=" + task.getTaskid()));

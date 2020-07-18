@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2013, 2015, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2013, 2015, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -35,6 +35,8 @@ public class Configuration {
 	static private Configuration instance = null;
 	private Constructor<Template> templateConstructor;
 	private String dataPath;
+	private String serverName;
+	private String fullServerURI;
 	private String servletsPath;
 	private String adminMail;
 	private String mailServer;
@@ -138,6 +140,11 @@ public class Configuration {
 		if (servletsPath == null) {
 			throw new RuntimeException("servletspath not specified");
 		}
+		serverName = context.getInitParameter("servername");
+		if (serverName == null) {
+			throw new RuntimeException("servername not specified");
+		}
+		fullServerURI = "https://" + serverName + context.getContextPath() + "/" + getServletsPath();
 	}
 
 	/**
@@ -178,5 +185,13 @@ public class Configuration {
 
 	public int getTestframeworkCores() {
 		return testFrameworkCores;
+	}
+
+	/*
+	 * Returns the absolute URI up to the servlets path
+	 * @return absolute URI up to the servlets path
+	 */
+	public String getFullServletsURI() {
+		return fullServerURI;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -38,6 +38,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.MailSender;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -105,11 +106,11 @@ public class PublishGrades extends HttpServlet {
 		Transaction tx = session.beginTransaction();
 		session.lock(task, LockMode.UPGRADE);
 		if (request.getParameter("mail") != null) {
+			String baseURI = Configuration.getInstance().getFullServletsURI();
 			for (Submission submission : task.getSubmissions()) {
 				for (Participation submitterParticipation : submission.getSubmitters()) {
 					if (submission.getPoints() != null && submission.getPoints().getPointsOk()) {
-						// HACK hardcoded URL
-						MailSender.sendMail(submitterParticipation.getUser().getFullEmail(), "Bewertung erfolgt", "Hallo " + submitterParticipation.getUser().getFullName() + ",\n\neine Ihrer Abgaben wurde bewertet.\n\nEinsehen: <https://si.in.tu-clausthal.de/submissionsystem/servlets/ShowTask?taskid=" + task.getTaskid() + ">.\n\n-- \nReply is not possible.");
+						MailSender.sendMail(submitterParticipation.getUser().getFullEmail(), "Bewertung erfolgt", "Hallo " + submitterParticipation.getUser().getFullName() + ",\n\neine Ihrer Abgaben wurde bewertet.\n\nEinsehen: <"+ baseURI + "/ShowTask?taskid=" + task.getTaskid() + ">.\n\n-- \nReply is not possible.");
 					}
 				}
 			}

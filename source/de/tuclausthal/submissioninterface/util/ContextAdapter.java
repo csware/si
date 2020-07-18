@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010, 2013 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2013, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -56,5 +56,13 @@ public class ContextAdapter {
 
 	public boolean isMatrikelNoAvailableToTutors() {
 		return Configuration.getInstance().isMatrikelNoAvailableToTutors();
+	}
+
+	/*
+	 * Returns the absolute URI up to the servlets path starting with https://
+	 * @return absolute URI up to the servlets path
+	 */
+	public String getFullServletsURI() {
+		return Configuration.getInstance().getFullServletsURI();
 	}
 }

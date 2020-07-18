@@ -13,6 +13,10 @@
     <param-value>c:\submissionsystem</param-value>
   </context-param>
   <context-param>
+    <param-name>servername</param-name>
+    <param-value>si.in.tu-clausthal.de</param-value>
+  </context-param>
+  <context-param>
     <param-name>servletspath</param-name>
     <param-value>servlets</param-value>
   </context-param>
