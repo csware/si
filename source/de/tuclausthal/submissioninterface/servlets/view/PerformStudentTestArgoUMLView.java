@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * Copyright 2011 Joachim Schramm
  * 
  * This file is part of the SubmissionInterface.
@@ -40,10 +40,10 @@ public class PerformStudentTestArgoUMLView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		out.println("<html>");
-		out.println("<b>Titel:</b> " + Util.makeCleanHTML(test.getTestTitle()) + "<br>");
+		out.println("<b>Titel:</b> " + Util.escapeHTML(test.getTestTitle()) + "<br>");
 		out.println("<b>Beschreibung:</b><br>" + Util.escapeHTML(test.getTestDescription()) + "<br>");
 		if (!testResult.getTestOutput().isEmpty()) {
-			out.println("<b>Ausgabe:</b><br><pre>" + Util.makeCleanHTML(testResult.getTestOutput()) + "</pre>");
+			out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
 		}
 		out.println("</html>");
 	}
