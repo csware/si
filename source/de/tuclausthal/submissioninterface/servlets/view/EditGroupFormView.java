@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -74,7 +74,7 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Abgabegruppe:</th>");
-		out.println("<td><input type=checkbox name=submissionGroup " + (group.isSubmissionGroup() ? "checked" : "") + " " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "disabled") + "> <a href=\"#\" onclick=\"$('#submissiongrouphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=submissiongrouphelp><b>Hilfe:</b><br>Wird dieses Flag gesetzt, werden alle Mitglieder dieser Gruppe bei der ersten Abgabe als Partner hinzugefügt.</span></td>");
+		out.println("<td><input type=checkbox name=submissionGroup " + (group.isSubmissionGroup() ? "checked" : "") + " " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "disabled") + "> <a href=\"#\" onclick=\"$('#submissiongrouphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=submissiongrouphelp><b>Hilfe:</b><br>Wird dieses Flag gesetzt, werden alle Mitglieder dieser Gruppe bei der ersten Abgabe automatisch als PartnerInnen hinzugefügt, sofern keine Einzelabgabe bei einer Aufgabe gefordert wird. Zudem können Studierende dieser Gruppe bzw. andere Studierende mit Studierenden dieser Gruppe, selbst wenn gruppenübergreifenden Partnerabgaben bei einer Aufgabe erlaubt sind, keine beliebigen Partnerschaften bilden.</span></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Teilnehmer hinzufügen:</th>");

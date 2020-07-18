@@ -113,7 +113,7 @@ public class ShowSubmission extends HttpServlet {
 		if (Util.parseInteger(request.getParameter("partnerid"), 0) > 0) {
 			Transaction tx = session.beginTransaction();
 			Participation partnerParticipation = participationDAO.getParticipation(Util.parseInteger(request.getParameter("partnerid"), 0));
-			if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
+			if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getRoleType().equals(ParticipationRole.NORMAL) && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && ((task.isAllowSubmittersAcrossGroups() && (partnerParticipation.getGroup() == null || !partnerParticipation.getGroup().isSubmissionGroup())) || (!task.isAllowSubmittersAcrossGroups() && partnerParticipation.getGroup() != null && submission.getSubmitters().iterator().next().getGroup() != null && partnerParticipation.getGroup().getGid() == submission.getSubmitters().iterator().next().getGroup().getGid())) && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
 				submission.getSubmitters().add(partnerParticipation);
 				session.update(submission);
 				tx.commit();

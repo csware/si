@@ -40,6 +40,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
@@ -92,7 +93,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<h2>Gruppe: " + submission.getSubmitters().iterator().next().getGroup().getName() + "</h2>");
 		}
 
-		if ((task.isAllowSubmittersAcrossGroups() || submission.getSubmitters().iterator().next().getGroup() != null) && task.getMaxSubmitters() > 1 && submission.getSubmitters().size() < task.getMaxSubmitters()) {
+		if (task.getMaxSubmitters() > 1 && submission.getSubmitters().size() < task.getMaxSubmitters() && (task.isAllowSubmittersAcrossGroups() || submission.getSubmitters().iterator().next().getGroup() != null)) {
 			StringBuffer setWithUser = new StringBuffer();
 			setWithUser.append("<form action=\"?\" method=post>");
 			setWithUser.append("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
@@ -108,7 +109,7 @@ public class ShowSubmissionView extends HttpServlet {
 				participations = participation.getGroup().getMembers();
 			}
 			for (Participation part : participations) {
-				if (submissionDAO.getSubmission(task, part.getUser()) == null) {
+				if (part.getRoleType().equals(ParticipationRole.NORMAL) && (!task.isAllowSubmittersAcrossGroups() || part.getGroup() == null || !part.getGroup().isSubmissionGroup()) && submissionDAO.getSubmission(task, part.getUser()) == null) {
 					cnt++;
 					setWithUser.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getFullName()) + "</option>");
 				}

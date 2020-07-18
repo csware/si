@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -42,6 +42,7 @@ import org.w3c.dom.Element;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
@@ -87,7 +88,8 @@ public class SubmitSolutionPossiblePartnersView extends HttpServlet {
 				}
 				int cnt = 0;
 				for (Participation part : participations) {
-					if (part.getId() != participation.getId() && submissionDAO.getSubmission(task, part.getUser()) == null) {
+					// filter out students which already have a submission and users which are in a submissiongroup (otherwise the other participants of the submissiongroup cannot submit a solution any more)
+					if (part.getId() != participation.getId() && part.getRoleType().equals(ParticipationRole.NORMAL) && (!task.isAllowSubmittersAcrossGroups() || part.getGroup() == null || !part.getGroup().isSubmissionGroup()) && submissionDAO.getSubmission(task, part.getUser()) == null) {
 						Element partner = document.createElement("partner");
 						partner.setTextContent(Util.escapeHTML(part.getUser().getFullName()));
 						partner.setAttribute("id", String.valueOf(part.getId()));
@@ -97,7 +99,15 @@ public class SubmitSolutionPossiblePartnersView extends HttpServlet {
 				}
 				if (cnt == 0) {
 					Element info = document.createElement("info");
-					info.setTextContent("Sie können im Moment keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, müssen von Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol>");
+					StringBuffer setWithUser = new StringBuffer("Sie können im Moment keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie die folgenden Voraussetzungen erfüllen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li>");
+					setWithUser.append("<li>Ihr Partner darf noch keine eigene Abgabe vorgenommen haben.</li>");
+					if (!task.isAllowSubmittersAcrossGroups()) {
+						setWithUser.append("<li>Sie, als auch Ihr Partner, müssen von Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li>");
+					} else {
+						setWithUser.append("<li>Ihr Partner darf keiner Gruppe angehören, die für Gruppenabgaben konfiguriert ist.</li>");
+					}
+					setWithUser.append("</ol>");
+					info.setTextContent(setWithUser.toString());
 					rootElement.appendChild(info);
 				} else {
 					partners.setAttribute("maxPartners", String.valueOf(task.getMaxSubmitters() - 1));

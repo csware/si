@@ -273,8 +273,8 @@ public class SubmitSolution extends HttpServlet {
 		Transaction tx = session.beginTransaction();
 		Submission submission = submissionDAO.createSubmission(task, studentParticipation);
 
-		if (studentParticipation.getGroup() != null && task.getMaxSubmitters() > 1) {
-			if (studentParticipation.getGroup().isSubmissionGroup()) {
+		if (task.getMaxSubmitters() > 1 && (task.isAllowSubmittersAcrossGroups() || studentParticipation.getGroup() != null)) {
+			if (studentParticipation.getGroup() != null && studentParticipation.getGroup().isSubmissionGroup()) {
 				for (Participation partnerParticipation : studentParticipation.getGroup().getMembers()) {
 					Submission partnerSubmission = submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser());
 					if (partnerSubmission == null) {
@@ -292,14 +292,14 @@ public class SubmitSolution extends HttpServlet {
 			} else {
 				for (int partnerID : partnerIDs) {
 					Participation partnerParticipation = participationDAO.getParticipation(partnerID);
-					if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && (task.isAllowSubmittersAcrossGroups() || (partnerParticipation.getGroup() != null && partnerParticipation.getGroup().getGid() == studentParticipation.getGroup().getGid())) && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
+					if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getRoleType().equals(ParticipationRole.NORMAL) && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && ((task.isAllowSubmittersAcrossGroups() && (partnerParticipation.getGroup() == null || !partnerParticipation.getGroup().isSubmissionGroup())) || (!task.isAllowSubmittersAcrossGroups() && partnerParticipation.getGroup() != null && studentParticipation.getGroup() != null && partnerParticipation.getGroup().getGid() == studentParticipation.getGroup().getGid())) && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
 						submission.getSubmitters().add(partnerParticipation);
 						session.update(submission);
 					} else {
 						tx.rollback();
 						template.printTemplateHeader("Ungültige Anfrage");
 						PrintWriter out = response.getWriter();
-						out.println("<div class=mid>Ein ausgewählter Partner hat bereits eine eigene Abgabe initiiert oder Sie haben bereits die maximale Anzahl von Partnern ausgewählt.</div>");
+						out.println("<div class=mid>Ein ausgewählter Partner hat bereits eine eigene Abgabe initiiert, Sie haben bereits die maximale Anzahl von Partnern ausgewählt oder einen nicht verfügbaren Partner ausgewählt.</div>");
 						template.printTemplateFooter();
 						return;
 					}
