@@ -100,6 +100,9 @@ public class AuthenticationFilter implements Filter {
 		try {
 			chain.doFilter(request, response);
 		} finally {
+			if (session.getTransaction() != null && session.getTransaction().isActive()) {
+				session.getTransaction().rollback();
+			}
 			session.close();
 		}
 	}
