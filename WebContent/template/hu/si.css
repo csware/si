@@ -14,7 +14,10 @@ table.border th, table.border td {
 
 th { background-color:#003366; color:white; }
 
-textarea { white-space:nowrap; }
+textarea {
+	white-space: pre;
+	overflow-x: scroll;
+}
 
 table,.mid {
 	margin-left: auto; margin-right: auto;
