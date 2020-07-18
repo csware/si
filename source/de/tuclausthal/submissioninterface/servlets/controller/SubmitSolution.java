@@ -142,6 +142,13 @@ public class SubmitSolution extends HttpServlet {
 							textsolution = sb.toString();
 							bufferedReader.close();
 						}
+						if (task.isADynamicTask()) {
+							task.setDescription(task.getDynamicTaskStrategie(session).getTranslatedDescription(submission));
+						}
+					} else {
+						if (task.isADynamicTask()) {
+							task.setDescription(task.getDynamicTaskStrategie(session).getTranslatedDescription(participation));
+						}
 					}
 					request.setAttribute("textsolution", textsolution);
 				}

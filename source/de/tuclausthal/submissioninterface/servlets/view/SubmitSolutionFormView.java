@@ -106,6 +106,15 @@ public class SubmitSolutionFormView extends HttpServlet {
 			}
 		}
 
+		if (task.isShowTextArea()) {
+			out.println("<table class=border>");
+			out.println("<tr>");
+			out.println("<th>Beschreibung:</th>");
+			out.println("<td id=taskdescription>" + Util.makeCleanHTML(task.getDescription()) + "</td>");
+			out.println("</tr>");
+			out.println("</table>");
+		}
+
 		if (!"-".equals(task.getFilenameRegexp())) {
 			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 			out.println(setWithUser.toString());
