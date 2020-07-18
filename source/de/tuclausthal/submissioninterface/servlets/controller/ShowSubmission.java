@@ -123,8 +123,8 @@ public class ShowSubmission extends HttpServlet {
 			tx.rollback();
 			PrintWriter out = response.getWriter();
 			Template template = TemplateFactory.getTemplate(request, response);
-			template.printTemplateHeader("Ungültige Anfrage");
-			out.println("<div class=mid>Der ausgewählte Partner hat bereits eine eigene Abgabe initiiert oder es wurden insgesamt zu viele Partner ausgewählt.</div>");
+			template.printTemplateHeader("UngÃ¼ltige Anfrage");
+			out.println("<div class=mid>Der ausgewÃ¤hlte Partner hat bereits eine eigene Abgabe initiiert oder es wurden insgesamt zu viele Partner ausgewÃ¤hlt.</div>");
 			template.printTemplateFooter();
 			return;
 		}

@@ -74,7 +74,7 @@ public class SubmitSolutionPossiblePartnersView extends HttpServlet {
 		if (task.getMaxSubmitters() > 1 && submission == null) {
 			if (participation.getGroup() != null && participation.getGroup().isSubmissionGroup()) {
 				Element info = document.createElement("info");
-				info.setTextContent("Diese Abgabe wird automatisch für alle Studenten in Ihrer Gruppe durchgeführt.");
+				info.setTextContent("Diese Abgabe wird automatisch fÃ¼r alle Studenten in Ihrer Gruppe durchgefÃ¼hrt.");
 				rootElement.appendChild(info);
 			} else if (task.isAllowSubmittersAcrossGroups() || participation.getGroup() != null) {
 				Element partners = document.createElement("partners");
@@ -97,16 +97,16 @@ public class SubmitSolutionPossiblePartnersView extends HttpServlet {
 				}
 				if (cnt == 0) {
 					Element info = document.createElement("info");
-					info.setTextContent("Sie können im Moment keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, müssen von Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol>");
+					info.setTextContent("Sie kÃ¶nnen im Moment keinen Partner fÃ¼r Ihre Abgabe auswÃ¤hlen. Um dies zu erreichen mÃ¼ssen Sie zwei Voraussetzungen erfÃ¼llen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, mÃ¼ssen von Ihrem Tutor in die gleiche Ãœbungsgruppe aufgenommen worden sein.</li></ol>");
 					rootElement.appendChild(info);
 				} else {
 					partners.setAttribute("maxPartners", String.valueOf(task.getMaxSubmitters() - 1));
-					partners.setAttribute("info", "Haben Sie diese Aufgabe zusammen mit einem Partner gelöst? Dann bitte hier auswählen:");
+					partners.setAttribute("info", "Haben Sie diese Aufgabe zusammen mit einem Partner gelÃ¶st? Dann bitte hier auswÃ¤hlen:");
 					rootElement.appendChild(partners);
 				}
 			} else if (participation.getGroup() == null) {
 				Element info = document.createElement("info");
-				info.setTextContent("Sie können im Moment keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, müssen von Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol>");
+				info.setTextContent("Sie kÃ¶nnen im Moment keinen Partner fÃ¼r Ihre Abgabe auswÃ¤hlen. Um dies zu erreichen mÃ¼ssen Sie zwei Voraussetzungen erfÃ¼llen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, mÃ¼ssen von Ihrem Tutor in die gleiche Ãœbungsgruppe aufgenommen worden sein.</li></ol>");
 				rootElement.appendChild(info);
 			}
 		}

@@ -33,9 +33,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
  * @author Sven Strickroth
  */
 public class MovieSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie implements DynamicTaskStrategieIf {
-	private static final String[] RESULT_FIELDS = { "Größe der Videodatei in Bytes", "Größe der Videodatei in Mebibyte" };
-	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Pixel (width x height", "-Video: Byte pro Frame", "-Video Byte pro Sekunde", "-Video Byte pro Minute", "-Sound Byte pro Sekunde", "-Byte pro Sekunde", "-Byte pro Minute", "Größe der Videodatei in Bytes", "Größe der Videodatei in Mebibyte" };
-	private static final String[] VARIABLES = { "FP/s", "Auflösung", "Dauer", "Ton durchschnittlich pro Sekunde (KBit/s)" };
+	private static final String[] RESULT_FIELDS = { "GrÃ¶ÃŸe der Videodatei in Bytes", "GrÃ¶ÃŸe der Videodatei in Mebibyte" };
+	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Pixel (width x height", "-Video: Byte pro Frame", "-Video Byte pro Sekunde", "-Video Byte pro Minute", "-Sound Byte pro Sekunde", "-Byte pro Sekunde", "-Byte pro Minute", "GrÃ¶ÃŸe der Videodatei in Bytes", "GrÃ¶ÃŸe der Videodatei in Mebibyte" };
+	private static final String[] VARIABLES = { "FP/s", "AuflÃ¶sung", "Dauer", "Ton durchschnittlich pro Sekunde (KBit/s)" };
 	private static final String[] RESOLUTIONS = { "960x540", "640x480", "1440x1080", "720x480", "1280x720", "352x480", "1024x576", "352x756", "480x756" };
 
 	public MovieSizeDynamicTaskStrategie(Session session, Task task) {
@@ -122,6 +122,6 @@ public class MovieSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie 
 
 	@Override
 	public String getExampleTaskDescription() {
-		return "Ein Video soll gespeichert werden. Dafür werden einfach alle Bilder einzeln und dazu der Ton gespeichert. Berechnen Sie den benötigten Speicherbedarf in Byte.<br><br>Gegeben sind:<ul><li>$Var0$ Bilder pro Sekunde</li> <li>Das Video hat eine $Var1$ Auflösung in RGB True Color</li><li>das Video ist $Var2$ Minuten lang</li><li>Die Tonspur hat $Var3$ Kbit/Sekunde</li></ul>";
+		return "Ein Video soll gespeichert werden. DafÃ¼r werden einfach alle Bilder einzeln und dazu der Ton gespeichert. Berechnen Sie den benÃ¶tigten Speicherbedarf in Byte.<br><br>Gegeben sind:<ul><li>$Var0$ Bilder pro Sekunde</li> <li>Das Video hat eine $Var1$ AuflÃ¶sung in RGB True Color</li><li>das Video ist $Var2$ Minuten lang</li><li>Die Tonspur hat $Var3$ Kbit/Sekunde</li></ul>";
 	}
 }

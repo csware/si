@@ -24,7 +24,7 @@ import java.util.Vector;
 
 /**
  * Diese Klasse vergleicht die XMI Datei mit Klassendiagramminhalt
- * der Musterlösung mit der Studentenlösungen 
+ * der MusterlÃ¶sung mit der StudentenlÃ¶sungen 
  * @author Joachim Schramm
  * @author Sven Strickroth
  */
@@ -44,7 +44,7 @@ public class ClassDiagrammConstraint {
 		if (cd1.getNumberOfClasses() + cd1.getNumberOfAttributes() > cd2.getNumberOfClasses() + cd2.getNumberOfAttributes()) {
 			return "Achtung! Es fehlt/fehlen " + (cd1.getNumberOfClasses() + cd1.getNumberOfAttributes() - cd2.getNumberOfClasses() - cd2.getNumberOfAttributes()) + " Klasse(n) oder Attribut(e)";
 		} else if (cd1.getNumberOfClasses() + cd1.getNumberOfAttributes() < cd2.getNumberOfClasses() + cd2.getNumberOfAttributes()) {
-			return "Es wurde(n) " + (cd2.getNumberOfClasses() + cd2.getNumberOfAttributes() - cd1.getNumberOfClasses() - cd1.getNumberOfAttributes()) + " Klasse(n) und/oder Attribut(e) mehr modelliert als gefordert. Möglicherweise müssen überflüssige Klassen oder Attribute aus dem ArgoUML Strukturbaum gelöscht werden.";
+			return "Es wurde(n) " + (cd2.getNumberOfClasses() + cd2.getNumberOfAttributes() - cd1.getNumberOfClasses() - cd1.getNumberOfAttributes()) + " Klasse(n) und/oder Attribut(e) mehr modelliert als gefordert. MÃ¶glicherweise mÃ¼ssen Ã¼berflÃ¼ssige Klassen oder Attribute aus dem ArgoUML Strukturbaum gelÃ¶scht werden.";
 		} else {
 			if (cd1.getNumberOfClasses() == cd2.getNumberOfClasses()) {
 				return "Anzahl der Klassen und Attribute okay";
@@ -59,7 +59,7 @@ public class ClassDiagrammConstraint {
 		} else if (cd1.getNumberOfInterfaces() == cd2.getNumberOfInterfaces()) {
 			return "Anzahl Schnittstellen okay";
 		} else {
-			return "Es wurde(n) " + (cd2.getNumberOfInterfaces() - cd1.getNumberOfInterfaces()) + " Schnittstelle(n) mehr modelliert als gefordert. Möglicherweise müssen überflüssige Schnittstellen aus dem ArgoUML Strukturbaum gelöscht werden.";
+			return "Es wurde(n) " + (cd2.getNumberOfInterfaces() - cd1.getNumberOfInterfaces()) + " Schnittstelle(n) mehr modelliert als gefordert. MÃ¶glicherweise mÃ¼ssen Ã¼berflÃ¼ssige Schnittstellen aus dem ArgoUML Strukturbaum gelÃ¶scht werden.";
 		}
 	}
 
@@ -69,7 +69,7 @@ public class ClassDiagrammConstraint {
 		} else if (cd1.getNumberOfMethods() == cd2.getNumberOfMethods()) {
 			return "Anzahl Methoden okay";
 		} else {
-			return "Es wurde(n) " + (cd2.getNumberOfMethods() - cd1.getNumberOfMethods()) + " Methode(n) mehr modelliert als gefordert. Möglicherweise müssen überflüssige Methoden aus dem ArgoUML Strukturbaum gelöscht werden.";
+			return "Es wurde(n) " + (cd2.getNumberOfMethods() - cd1.getNumberOfMethods()) + " Methode(n) mehr modelliert als gefordert. MÃ¶glicherweise mÃ¼ssen Ã¼berflÃ¼ssige Methoden aus dem ArgoUML Strukturbaum gelÃ¶scht werden.";
 		}
 	}
 
@@ -81,7 +81,7 @@ public class ClassDiagrammConstraint {
 			} else if ((cd1.getNumberOfAssociations() - difference) > cd2.getNumberOfAssociations()) {
 				return "Achtung! Es fehlen Assoziationen";
 			} else {
-				return "Es wurden mehr Assoziationen modelliert als gefordert. Möglicherweise müssen überflüssige Assoziationen aus dem ArgoUML Strukturbaum gelöscht werden.";
+				return "Es wurden mehr Assoziationen modelliert als gefordert. MÃ¶glicherweise mÃ¼ssen Ã¼berflÃ¼ssige Assoziationen aus dem ArgoUML Strukturbaum gelÃ¶scht werden.";
 			}
 		} else if (cd2.getNumberOfAttributes() == cd1.getNumberOfAttributes()) {
 			if ((cd1.getNumberOfAssociations()) == cd2.getNumberOfAssociations()) {
@@ -89,7 +89,7 @@ public class ClassDiagrammConstraint {
 			} else if ((cd1.getNumberOfAssociations()) > cd2.getNumberOfAssociations()) {
 				return "Achtung! Es fehlt/fehlen " + (cd1.getNumberOfAssociations() - cd2.getNumberOfAssociations()) + " Assoziation(en)";
 			} else {
-				return "Es wurde(n) " + (cd2.getNumberOfAssociations() - cd1.getNumberOfAssociations()) + " Assoziation(en) mehr modelliert als gefordert. Möglicherweise müssen überflüssige Assoziationen aus dem ArgoUML Strukturbaum gelöscht werden.";
+				return "Es wurde(n) " + (cd2.getNumberOfAssociations() - cd1.getNumberOfAssociations()) + " Assoziation(en) mehr modelliert als gefordert. MÃ¶glicherweise mÃ¼ssen Ã¼berflÃ¼ssige Assoziationen aus dem ArgoUML Strukturbaum gelÃ¶scht werden.";
 			}
 		} else {
 			if ((cd1.getNumberOfAssociations()) > cd2.getNumberOfAssociations()) {
@@ -105,7 +105,7 @@ public class ClassDiagrammConstraint {
 		} else if (cd1.getNumberOfGeneralizations() == cd2.getNumberOfGeneralizations()) {
 			return "Anzahl Generalisierungen okay";
 		} else {
-			return "Es wurde(n) " + (cd2.getNumberOfGeneralizations() - cd1.getNumberOfGeneralizations()) + " Vererbungsbeziehung(en) mehr modelliert als gefordert. Möglicherweise müssen überflüssige Methoden aus dem ArgoUML Strukturbaum gelöscht werden.";
+			return "Es wurde(n) " + (cd2.getNumberOfGeneralizations() - cd1.getNumberOfGeneralizations()) + " Vererbungsbeziehung(en) mehr modelliert als gefordert. MÃ¶glicherweise mÃ¼ssen Ã¼berflÃ¼ssige Methoden aus dem ArgoUML Strukturbaum gelÃ¶scht werden.";
 		}
 	}
 
@@ -115,7 +115,7 @@ public class ClassDiagrammConstraint {
 		} else if (cd1.getNumberOfAbstractions() == cd2.getNumberOfAbstractions()) {
 			return "Anzahl Schnittstellenrealisierungen okay";
 		} else {
-			return "Es wurde(n) " + (cd2.getNumberOfAbstractions() - cd1.getNumberOfAbstractions()) + "  Schnittstellenrealisierung(en) mehr modelliert als gefordert. Möglicherweise müssen überflüssige Schnittstellenrealisierungen aus dem ArgoUML Strukturbaum gelöscht werden.";
+			return "Es wurde(n) " + (cd2.getNumberOfAbstractions() - cd1.getNumberOfAbstractions()) + "  Schnittstellenrealisierung(en) mehr modelliert als gefordert. MÃ¶glicherweise mÃ¼ssen Ã¼berflÃ¼ssige Schnittstellenrealisierungen aus dem ArgoUML Strukturbaum gelÃ¶scht werden.";
 		}
 	}
 
@@ -125,7 +125,7 @@ public class ClassDiagrammConstraint {
 		} else if (cd1.getNumberOfAggregates() == cd2.getNumberOfAggregates()) {
 			return "Anzahl Aggregationen okay";
 		} else {
-			return "Es wurde(n) " + (cd2.getNumberOfAggregates() - cd1.getNumberOfAggregates()) + " Aggregation(en) mehr modelliert als gefordert. Möglicherweise müssen überflüssige Aggregationen aus dem ArgoUML Strukturbaum gelöscht werden.";
+			return "Es wurde(n) " + (cd2.getNumberOfAggregates() - cd1.getNumberOfAggregates()) + " Aggregation(en) mehr modelliert als gefordert. MÃ¶glicherweise mÃ¼ssen Ã¼berflÃ¼ssige Aggregationen aus dem ArgoUML Strukturbaum gelÃ¶scht werden.";
 		}
 	}
 
@@ -135,7 +135,7 @@ public class ClassDiagrammConstraint {
 		} else if (cd1.getNumberOfComposites() == cd2.getNumberOfComposites()) {
 			return "Anzahl Kompositionen okay";
 		} else {
-			return "Es wurde(n) " + (cd2.getNumberOfComposites() - cd1.getNumberOfComposites()) + " Komposition(en) mehr modelliert als gefordert. Möglicherweise müssen überflüssige Kompositionen aus dem ArgoUML Strukturbaum gelöscht werden.";
+			return "Es wurde(n) " + (cd2.getNumberOfComposites() - cd1.getNumberOfComposites()) + " Komposition(en) mehr modelliert als gefordert. MÃ¶glicherweise mÃ¼ssen Ã¼berflÃ¼ssige Kompositionen aus dem ArgoUML Strukturbaum gelÃ¶scht werden.";
 		}
 	}
 
@@ -157,7 +157,7 @@ public class ClassDiagrammConstraint {
 		if (result2.containsAll(result1)) {
 			return "Klassennamen und Attributsnamen okay";
 		}
-		return "Überprüfe die Namen der Klassen und Attribute deiner Lösung noch einmal mit der in der Aufgabenstellung.";
+		return "ÃœberprÃ¼fe die Namen der Klassen und Attribute deiner LÃ¶sung noch einmal mit der in der Aufgabenstellung.";
 	}
 
 	public String checkNamesOfMethods() {
@@ -165,7 +165,7 @@ public class ClassDiagrammConstraint {
 		if (cd2.getMethodsNames().containsAll(cd1.getMethodsNames())) {
 			return "Methodennamen okay";
 		}
-		return "Überprüfe die Namen der Methoden deiner Lösung noch einmal mit der in der Aufgabenstellung.";
+		return "ÃœberprÃ¼fe die Namen der Methoden deiner LÃ¶sung noch einmal mit der in der Aufgabenstellung.";
 	}
 
 	public String checkNamesOfInterfaces() {
@@ -173,7 +173,7 @@ public class ClassDiagrammConstraint {
 		if (cd2.getInterfaceNames().containsAll(cd1.getInterfaceNames())) {
 			return "Schnittstellennamen okay";
 		}
-		return "Überprüfe die Namen der Schnittstellen deiner Lösung noch einmal mit der in der Aufgabenstellung.";
+		return "ÃœberprÃ¼fe die Namen der Schnittstellen deiner LÃ¶sung noch einmal mit der in der Aufgabenstellung.";
 	}
 
 	public String checkM2C() {
@@ -181,7 +181,7 @@ public class ClassDiagrammConstraint {
 		if (cd1.getM2C().equals(cd2.getM2C())) {
 			return "Zuordnung von Methoden zu Klassen okay";
 		}
-		return "Überprüfe die Zuordnung deiner Methoden zu Klassen in deiner Lösung.";
+		return "ÃœberprÃ¼fe die Zuordnung deiner Methoden zu Klassen in deiner LÃ¶sung.";
 	}
 
 	public String checkA2C() {
@@ -189,7 +189,7 @@ public class ClassDiagrammConstraint {
 			if (cd1.getA2C().equals(cd2.getA2C())) {
 				return "Zuordnung von Attributen zu Klassen okay";
 			}
-			return "Überprüfe die Zuordnung deiner Attribute zu Klassen in deiner Lösung.";
+			return "ÃœberprÃ¼fe die Zuordnung deiner Attribute zu Klassen in deiner LÃ¶sung.";
 		}
 		return "";
 	}
@@ -199,7 +199,7 @@ public class ClassDiagrammConstraint {
 			if (cd1.getM2I().equals(cd2.getM2I())) {
 				return "Zuordnung von Methoden zu Interfaces okay";
 			}
-			return "Überprüfe die Zuordnung deiner Methoden zu Interfaces in deiner Lösung.";
+			return "ÃœberprÃ¼fe die Zuordnung deiner Methoden zu Interfaces in deiner LÃ¶sung.";
 		}
 		return "";
 	}
@@ -224,7 +224,7 @@ public class ClassDiagrammConstraint {
 
 			for (int i = 0; i <= cd1.getNumberOfAssociations() * 2 - 2; i = i + 2) {
 				if (!(h2a.containsValue(h1.get(i)) || h2b.containsValue(h1.get(i)))) {
-					return "Überprüfe die Zuordnung deiner Assoziationen in deiner Lösung.";
+					return "ÃœberprÃ¼fe die Zuordnung deiner Assoziationen in deiner LÃ¶sung.";
 				}
 			}
 

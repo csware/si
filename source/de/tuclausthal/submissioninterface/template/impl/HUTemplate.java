@@ -21,13 +21,12 @@ public class HUTemplate extends Template {
 	@Override
 	public void printTemplateHeader(String title, String breadCrum) throws IOException {
 		servletResponse.setContentType("text/html");
-		servletResponse.setCharacterEncoding("iso-8859-1");
+		servletResponse.setCharacterEncoding("UTF-8");
 		PrintWriter out = servletResponse.getWriter();
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
 		out.println("<html lang=\"de\">");
 		out.println("<head>");
 		printStyleSheets(out);
-		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">");
 		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + prefix + "/scripts.js\"></script>");
 		out.println("<title>GATE: " + title + "</title>");
 		getHeads();
@@ -47,13 +46,13 @@ public class HUTemplate extends Template {
 		}
 		out.println("<div id=\"top\">");
 		out.println("<div id=\"picture\"><a href=\"http://www.hu-berlin.de\"><img src=\"" + prefix + "/template/hu/hu-mainbuilding.jpg\" alt=\"\" width=\"360\" height=\"110\" border=\"0\"></a></div>");
-		out.println("<div id=\"logo\"><a href=\"http://www.hu-berlin.de\"><img src=\"" + prefix + "/template/hu/logo.jpg\" alt=\"Humbold-Universität zu Berlin\" width=\"450\" height=\"90\" border=\"0\"></a></div>");
+		out.println("<div id=\"logo\"><a href=\"http://www.hu-berlin.de\"><img src=\"" + prefix + "/template/hu/logo.jpg\" alt=\"Humbold-UniversitÃ¤t zu Berlin\" width=\"450\" height=\"90\" border=\"0\"></a></div>");
 		out.println("<div id=\"location\">");
 		User user = requestAdapter.getUser();
 		if (user != null) {
 			out.println("Benutzer: " + user.getEmail());
 			if (user.isSuperUser()) {
-				out.println(" <span class=\"menu-divider\">|</span> <a href=\"" + servletResponse.encodeURL("AdminMenue") + "\">Admin-Menü</a>");
+				out.println(" <span class=\"menu-divider\">|</span> <a href=\"" + servletResponse.encodeURL("AdminMenue") + "\">Admin-MenÃ¼</a>");
 			}
 			if (requestAdapter.isPrivacyMode()) {
 				out.println(" <span class=\"menu-divider\">|</span> Privacy-Mode");

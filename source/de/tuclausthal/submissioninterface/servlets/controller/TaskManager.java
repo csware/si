@@ -251,8 +251,8 @@ public class TaskManager extends HttpServlet {
 			Matcher m = pattern.matcher(submittedFileName);
 			if (!m.matches()) {
 				System.out.println("SubmitSolutionProblem2: file;" + submittedFileName + ";" + pattern.pattern());
-				template.printTemplateHeader("Ungültige Anfrage");
-				out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
+				template.printTemplateHeader("UngÃ¼ltige Anfrage");
+				out.println("Dateiname ungÃ¼ltig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heiÃŸen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
 				template.printTemplateFooter();
 				return;
 			}
@@ -350,12 +350,12 @@ public class TaskManager extends HttpServlet {
 				tx.commit();
 				response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid()));
 			} else {
-				request.setAttribute("title", "Punkte ungültig.");
+				request.setAttribute("title", "Punkte ungÃ¼ltig.");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 			}
 			return;
 		} else {
-			request.setAttribute("title", "Ungültiger Aufruf");
+			request.setAttribute("title", "UngÃ¼ltiger Aufruf");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 
 		}
@@ -408,7 +408,7 @@ public class TaskManager extends HttpServlet {
 			return;
 		} else if ("dynamictaskhints".equals(request.getParameter("action"))) {
 			response.setContentType("text/html");
-			response.setCharacterEncoding("ISO-8859-1");
+			response.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			DynamicTaskStrategieIf dts = DynamicTaskStrategieFactory.createDynamicTaskStrategie(null, request.getParameter("dynamicTask"), null);
 			if (dts == null) {
@@ -428,7 +428,7 @@ public class TaskManager extends HttpServlet {
 				}
 				out.println("</dd>");
 
-				out.println("<dt><b>Lösungsfelder:</b></dt>");
+				out.println("<dt><b>LÃ¶sungsfelder:</b></dt>");
 				out.println("<dd>");
 				for (String resultField : dts.getResultFields(false)) {
 					out.println(Util.escapeHTML(resultField) + "<br>");

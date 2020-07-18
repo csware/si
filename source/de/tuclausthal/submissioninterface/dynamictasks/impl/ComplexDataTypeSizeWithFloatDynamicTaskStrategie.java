@@ -33,9 +33,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
  * @author Sven Strickroth
  */
 public class ComplexDataTypeSizeWithFloatDynamicTaskStrategie extends AbstractDynamicTaskStrategie implements DynamicTaskStrategieIf {
-	private static final String[] RESULT_FIELDS = { "Größe des Datentyps in Bits" };
-	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Bits für Lfnd. Nr.", "-Bits für Verwendungszweck", "-Bits für Betrag", "Größe des Datentyps in Bits" };
-	private static final String[] VARIABLES = { "Max. Lfnd. Nr.", "Länge Verwendungszweck", "Min. Betrag", "Max. Betrag" };
+	private static final String[] RESULT_FIELDS = { "GrÃ¶ÃŸe des Datentyps in Bits" };
+	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Bits fÃ¼r Lfnd. Nr.", "-Bits fÃ¼r Verwendungszweck", "-Bits fÃ¼r Betrag", "GrÃ¶ÃŸe des Datentyps in Bits" };
+	private static final String[] VARIABLES = { "Max. Lfnd. Nr.", "LÃ¤nge Verwendungszweck", "Min. Betrag", "Max. Betrag" };
 
 	public ComplexDataTypeSizeWithFloatDynamicTaskStrategie(Session session, Task task) {
 		super(session, task);
@@ -62,7 +62,7 @@ public class ComplexDataTypeSizeWithFloatDynamicTaskStrategie extends AbstractDy
 		int lfndNr = Integer.parseInt(numbers.get(0).getNumber());
 		int maxVerwZweck = Integer.parseInt(numbers.get(1).getNumber());
 
-		int bitsLfndNr = (int) Math.ceil(Math.log(lfndNr) / Math.log(2)); // + 1 für VZ-bit
+		int bitsLfndNr = (int) Math.ceil(Math.log(lfndNr) / Math.log(2)); // + 1 fÃ¼r VZ-bit
 
 		int bitDatum = 10 * 8;
 
@@ -102,6 +102,6 @@ public class ComplexDataTypeSizeWithFloatDynamicTaskStrategie extends AbstractDy
 
 	@Override
 	public String getExampleTaskDescription() {
-		return "Für ein Buchführungsprogramm sollen Einträge platzsparend gespeichert werden.<br><br>Diese Einträge sollen folgende Daten enthalten:<ul><li>eine laufende Nummer die mit 1 beginnt und maximal $Var0$ groß ist.</li><li>ein Verwendungszweck mit $Var1$ Zeichen mit Unicode-32 codiert.</li><li>der Betrag (gespeichert als Kommazahl), der zwischen $Var3$ und $Var2$ liegt.</li><li>das Datum mit 10 ASCII-Zeichen codiert.</li></ul>Wie viele Bit werden mindestens benötigt um diese Werte zu speichern?";
+		return "FÃ¼r ein BuchfÃ¼hrungsprogramm sollen EintrÃ¤ge platzsparend gespeichert werden.<br><br>Diese EintrÃ¤ge sollen folgende Daten enthalten:<ul><li>eine laufende Nummer die mit 1 beginnt und maximal $Var0$ groÃŸ ist.</li><li>ein Verwendungszweck mit $Var1$ Zeichen mit Unicode-32 codiert.</li><li>der Betrag (gespeichert als Kommazahl), der zwischen $Var3$ und $Var2$ liegt.</li><li>das Datum mit 10 ASCII-Zeichen codiert.</li></ul>Wie viele Bit werden mindestens benÃ¶tigt um diese Werte zu speichern?";
 	}
 }

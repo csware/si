@@ -57,11 +57,11 @@ public class SearchSubmissionsView extends HttpServlet {
 		out.println("<td><select multiple size=15 name=search>");
 		if (task.isADynamicTask()) {
 			out.println("<option value=\"dyntaskdescription\" selected>Dynamische Daten der Aufgabenstellung</option>");
-			out.println("<option value=\"dyntasksolution\" selected>Dynamische Daten der Lösung</option>");
+			out.println("<option value=\"dyntasksolution\" selected>Dynamische Daten der LÃ¶sung</option>");
 		}
 		out.println("<option value=\"files\" selected>Abgegebene Dateien</option>");
 		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
-			out.println("<option value=\"publiccomments\" selected>Öffentliche Bewertungs-Kommentare</option>");
+			out.println("<option value=\"publiccomments\" selected>Ã–ffentliche Bewertungs-Kommentare</option>");
 			out.println("<option value=\"privatecomments\" selected>Interne Bewertungs-Kommentare</option>");
 			if (!task.getTests().isEmpty()) {
 				out.println("<option value=\"testresults\" selected>Testergebnisse</option>");

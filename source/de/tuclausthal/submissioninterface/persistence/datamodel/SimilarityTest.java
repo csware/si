@@ -262,17 +262,17 @@ public class SimilarityTest implements Serializable {
 	@Override
 	public String toString() {
 		if ("plaggie".equals(getType())) {
-			return "Plaggie-Test, min. ‹bereinstimmung: " + getMinimumDifferenceInPercent() + "%";
+			return "Plaggie-Test, min. √úbereinstimmung: " + getMinimumDifferenceInPercent() + "%";
 		}
 		String string;
 		if ("compression".equals(getType())) {
-			string = "Kolmogorov Komplexit‰t";
+			string = "Kolmogorov Komplexit√§t";
 		} else if ("levenshtein".equals(getType())) {
 			string = "Levenshtein";
 		} else {
 			string = "unbekannter Typ";
 		}
-		string += ", min. ‹bereinstimmung: " + getMinimumDifferenceInPercent() + "%, ";
+		string += ", min. √úbereinstimmung: " + getMinimumDifferenceInPercent() + "%, ";
 		if ("code".equals(getBasis())) {
 			string += "nur Code-Basis, ";
 		} else if ("comments".equals(getBasis())) {

@@ -41,18 +41,18 @@ public class MailSender {
 
 		try {
 			// Im folgenden werden die Absenderadresse, der direkte
-			// Empfänger, das Absendedatum, der Betreff kodiert in
+			// EmpfÃ¤nger, das Absendedatum, der Betreff kodiert in
 			// US-ASCII Zeichen und der Headereintrag "X-Mailer" gesetzt
 			msg.setFrom(new InternetAddress(Configuration.getInstance().getMailFrom()));
 			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, false));
 			msg.setSentDate(new Date());
 			subject = subject.replace("\r", " ");
 			subject = subject.replace("\n", " ");
-			msg.setSubject(MimeUtility.encodeText(Configuration.getInstance().getMailSubjectPrefix() + subject, "iso-8859-1", "Q"));
+			msg.setSubject(MimeUtility.encodeText(Configuration.getInstance().getMailSubjectPrefix() + subject, "UTF-8", "Q"));
 			msg.setHeader("X-Mailer", "GATE");
 
-			// kein Anhang, Mailtext wird direkt der Mail hinzugefügt.
-			msg.setText(messageText, "iso-8859-1");
+			// kein Anhang, Mailtext wird direkt der Mail hinzugefÃ¼gt.
+			msg.setText(messageText, "UTF-8");
 
 			Transport.send(msg);
 		} catch (java.io.UnsupportedEncodingException e) {

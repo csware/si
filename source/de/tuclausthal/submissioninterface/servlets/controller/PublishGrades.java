@@ -67,7 +67,7 @@ public class PublishGrades extends HttpServlet {
 		}
 
 		if (task.getDeadline().after(Util.correctTimezone(new Date())) || task.getShowPoints() != null) {
-			request.setAttribute("title", "Ungültige Anfrage");
+			request.setAttribute("title", "UngÃ¼ltige Anfrage");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
@@ -97,7 +97,7 @@ public class PublishGrades extends HttpServlet {
 		}
 
 		if (task.getDeadline().after(Util.correctTimezone(new Date())) || task.getShowPoints() != null) {
-			request.setAttribute("title", "Ungültige Anfrage");
+			request.setAttribute("title", "UngÃ¼ltige Anfrage");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}

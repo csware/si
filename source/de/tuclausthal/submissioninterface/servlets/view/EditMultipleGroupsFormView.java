@@ -49,11 +49,11 @@ public class EditMultipleGroupsFormView extends HttpServlet {
 		out.println("<form action=\"" + response.encodeURL("?lecture=" + lecture.getId()) + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");
-		out.println("<th>Studenten können sich eintragen:</th>");
+		out.println("<th>Studenten kÃ¶nnen sich eintragen:</th>");
 		out.println("<td><input type=checkbox name=allowStudentsToSignup></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Studenten können wechseln:</th>");
+		out.println("<th>Studenten kÃ¶nnen wechseln:</th>");
 		out.println("<td><input type=checkbox name=allowStudentsToQuit></td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -65,7 +65,7 @@ public class EditMultipleGroupsFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=submissionGroup></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Setzen für:</th>");
+		out.println("<th>Setzen fÃ¼r:</th>");
 		out.println("<td><select multiple size=15 name=gids>");
 		for (Group group : lecture.getGroups()) {
 			out.println("<option value=" + group.getGid() + ">" + Util.escapeHTML(group.getName()) + "</option>");

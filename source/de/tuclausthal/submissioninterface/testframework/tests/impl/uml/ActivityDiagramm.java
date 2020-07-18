@@ -31,8 +31,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Diese Klasse liesst die XMI Datei mit Aktivit‰tsdiagramminhalt ein
- * und speichert die Elemente des Aktivit‰tsdiagramm
+ * Diese Klasse liesst die XMI Datei mit Aktivit√§tsdiagramminhalt ein
+ * und speichert die Elemente des Aktivit√§tsdiagramm
  * @author Joachim Schramm
  * @author Sven Strickroth
  */
@@ -79,7 +79,7 @@ public class ActivityDiagramm extends UMLDiagramm {
 		return numberOfJunctions;
 	}
 
-	//Endzust‰nde
+	//Endzust√§nde
 	public int getNumberOfFinalStates() {
 		return numberOfFinalStates;
 	}
@@ -270,10 +270,10 @@ public class ActivityDiagramm extends UMLDiagramm {
 	@Override
 	public String toString() {
 		String output = "";
-		output = output + "Endzust‰nde: " + getNumberOfFinalStates() + "\n";
+		output = output + "Endzust√§nde: " + getNumberOfFinalStates() + "\n";
 		output = output + "Transitionen: " + getNumberOfTransitions() + "\n";
-		output = output + "Aktivit‰ten: " + getNumberOfActionStates() + "\n";
-		output = output + "Startzust‰nde: " + getNumberOfInitials() + "\n";
+		output = output + "Aktivit√§ten: " + getNumberOfActionStates() + "\n";
+		output = output + "Startzust√§nde: " + getNumberOfInitials() + "\n";
 		output = output + "Vereinigungen: " + getNumberOfJoins() + "\n";
 		output = output + "Gabelungen: " + getNumberOfForks() + "\n";
 		output = output + "Kreuzungen: " + getNumberOfJunctions() + "\n";

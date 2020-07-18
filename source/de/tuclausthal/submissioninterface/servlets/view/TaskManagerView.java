@@ -153,15 +153,15 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Abgaben mit max. Partnern:</th>");
-		out.println("<td><input type=text size=5 id=maxSubmitters name=\"maxSubmitters\" value=\"" + task.getMaxSubmitters() + "\" onkeyup=\"if ($('#maxSubmitters').val()>1) {$('#submitteracrossgroups').show();} else {$('#submitteracrossgroups').hide();}return true;\"><span id=submitteracrossgroups" + (task.getMaxSubmitters() > 1 ? "" : " style=\"display:none;\"") + ">, <input type=checkbox name=allowSubmittersAcrossGroups " + (task.isAllowSubmittersAcrossGroups() ? "checked" : "") + "> über Gruppengrenzen hinweg</span> <a href=\"#\" onclick=\"$('#maxsubmittershelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=maxsubmittershelp><b>Hilfe:</b><br>Sofern &quot;über Gruppengrenzen hinweg&quot; nicht gesetzt ist, müssen die Studenten in Gruppen eingeteilt sein und können auch nur Partner wählen, die in der gleichen Gruppe sind. Die Zahl wird als Gesamtanzahl der Studenten, die eine Aufgabe gemeinsam bearbeiten dürfen angesehen. Bei Abgabegruppen wird die maximale Anzahl bei &gt; 1 (1 für Einzelabgaben) ignoriert (es werden alle Studenten der Gruppe bei der ersten Abgabe hinzugefügt, ist der abgebende Student in keiner Gruppe ist es eine Einzelabgabe).</span></td>");
+		out.println("<td><input type=text size=5 id=maxSubmitters name=\"maxSubmitters\" value=\"" + task.getMaxSubmitters() + "\" onkeyup=\"if ($('#maxSubmitters').val()>1) {$('#submitteracrossgroups').show();} else {$('#submitteracrossgroups').hide();}return true;\"><span id=submitteracrossgroups" + (task.getMaxSubmitters() > 1 ? "" : " style=\"display:none;\"") + ">, <input type=checkbox name=allowSubmittersAcrossGroups " + (task.isAllowSubmittersAcrossGroups() ? "checked" : "") + "> Ã¼ber Gruppengrenzen hinweg</span> <a href=\"#\" onclick=\"$('#maxsubmittershelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=maxsubmittershelp><b>Hilfe:</b><br>Sofern &quot;Ã¼ber Gruppengrenzen hinweg&quot; nicht gesetzt ist, mÃ¼ssen die Studenten in Gruppen eingeteilt sein und kÃ¶nnen auch nur Partner wÃ¤hlen, die in der gleichen Gruppe sind. Die Zahl wird als Gesamtanzahl der Studenten, die eine Aufgabe gemeinsam bearbeiten dÃ¼rfen angesehen. Bei Abgabegruppen wird die maximale Anzahl bei &gt; 1 (1 fÃ¼r Einzelabgaben) ignoriert (es werden alle Studenten der Gruppe bei der ersten Abgabe hinzugefÃ¼gt, ist der abgebende Student in keiner Gruppe ist es eine Einzelabgabe).</span></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Filename Regexp:</th>");
-		out.println("<td><input type=text size=100 required=required id=\"filenameregexp\" name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#fileregexphelp').toggle(); return false;\">(?)</a><br><div style=\"display:none;\" id=fileregexphelp><b>Hilfe:</b><br>Dateinamen, die von Studenten hochgeladen werden, werden mit diesem regulären Ausdruck überprüft, bevor diese verarbeitet werden.<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot;<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>ARGOUml: &quot;loesung\\.(xmi|zargo|png)&quot;<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = Dateiupload nicht anbieten bzw. verbieten<p><b>Dateinamen testen:</b><br><input type=\"text\" id=\"regexptest\" name=\"regexptest\"> <button onclick=\"checkRegexp(); return false;\">Testen</button></div></td>");
+		out.println("<td><input type=text size=100 required=required id=\"filenameregexp\" name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#fileregexphelp').toggle(); return false;\">(?)</a><br><div style=\"display:none;\" id=fileregexphelp><b>Hilfe:</b><br>Dateinamen, die von Studenten hochgeladen werden, werden mit diesem regulÃ¤ren Ausdruck Ã¼berprÃ¼ft, bevor diese verarbeitet werden.<br><br><b>Beispiele (ohne AnfÃ¼hrungszeichen):</b><br>FÃ¼r Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>fÃ¼r alle Dateien: &quot;[A-Za-z0-9. _-]+&quot;<br>fÃ¼r DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthÃ¤lt nicht docx!)<br>ARGOUml: &quot;loesung\\.(xmi|zargo|png)&quot;<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = Dateiupload nicht anbieten bzw. verbieten<p><b>Dateinamen testen:</b><br><input type=\"text\" id=\"regexptest\" name=\"regexptest\"> <button onclick=\"checkRegexp(); return false;\">Testen</button></div></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Archiv-Filename Regexp:</th>");
-		out.println("<td><input type=text size=100 required=required name=archivefilenameregexp value=\"" + Util.escapeHTML(task.getArchiveFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#archivefileregexphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=archivefileregexphelp><b>Hilfe:</b><br>Das Hochladen von Archiven (.zip und .jar) muss im o.g. regulären Ausdruck erlaubt werden, um diese Funktion nutzen zu können. Mit diesem regulären Ausdruck werden die Dateien im Archiv geprüft und nur diese extrahiert, andere werden ignoriert. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot;<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = Archive nicht automatisch entpacken</span></td>");
+		out.println("<td><input type=text size=100 required=required name=archivefilenameregexp value=\"" + Util.escapeHTML(task.getArchiveFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#archivefileregexphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=archivefileregexphelp><b>Hilfe:</b><br>Das Hochladen von Archiven (.zip und .jar) muss im o.g. regulÃ¤ren Ausdruck erlaubt werden, um diese Funktion nutzen zu kÃ¶nnen. Mit diesem regulÃ¤ren Ausdruck werden die Dateien im Archiv geprÃ¼ft und nur diese extrahiert, andere werden ignoriert. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne AnfÃ¼hrungszeichen):</b><br>FÃ¼r Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>fÃ¼r alle Dateien: &quot;[A-Za-z0-9. _-]+&quot;<br>fÃ¼r DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthÃ¤lt nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = Archive nicht automatisch entpacken</span></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Text-Eingabefeld:</th>");
@@ -169,10 +169,10 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Dateien bei Tutor aufklappen:</th>");
-		out.println("<td><input type=text name=featuredfiles size=100 value=\"" + Util.escapeHTML(task.getFeaturedFiles()) + "\"> <a href=\"#\" onclick=\"$('#featuredfileshelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=featuredfileshelp><b>Hilfe:</b><br>Dieser reguläre Ausdruck bestimmt welche Dateien bei den Tutoren automatisch aufgeklappt sind. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = keine Dateien aufklappen</span></td>");
+		out.println("<td><input type=text name=featuredfiles size=100 value=\"" + Util.escapeHTML(task.getFeaturedFiles()) + "\"> <a href=\"#\" onclick=\"$('#featuredfileshelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=featuredfileshelp><b>Hilfe:</b><br>Dieser regulÃ¤re Ausdruck bestimmt welche Dateien bei den Tutoren automatisch aufgeklappt sind. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne AnfÃ¼hrungszeichen):</b><br>FÃ¼r Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>fÃ¼r alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>fÃ¼r DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthÃ¤lt nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = keine Dateien aufklappen</span></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Tutoren dürfen Dateien für Studenten hochladen:</th>");
+		out.println("<th>Tutoren dÃ¼rfen Dateien fÃ¼r Studenten hochladen:</th>");
 		out.println("<td><input type=checkbox name=tutorsCanUploadFiles " + (task.isTutorsCanUploadFiles() ? "checked" : "") + "></td>");
 		out.println("</tr>");
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -194,12 +194,12 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Min. Punkt-Schrittweite:</th>");
-		out.println("<td><input type=text size=5 name=minpointstep value=\"" + Util.showPoints(task.getMinPointStep()) + "\"> <b>bei Änderung bereits vergebene Pkts. prüfen!</b></td>");
+		out.println("<td><input type=text size=5 name=minpointstep value=\"" + Util.showPoints(task.getMinPointStep()) + "\"> <b>bei Ã„nderung bereits vergebene Pkts. prÃ¼fen!</b></td>");
 		out.println("</tr>");
 		if (task.getPointCategories() == null || task.getPointCategories().size() == 0) {
 			out.println("<tr>");
 			out.println("<th>Max. Punkte:</th>");
-			out.println("<td><input type=text size=5 name=maxpoints value=\"" + Util.showPoints(task.getMaxPoints()) + "\"> <b>bei Änderung bereits vergebene Pkts. prüfen!</b></td>");
+			out.println("<td><input type=text size=5 name=maxpoints value=\"" + Util.showPoints(task.getMaxPoints()) + "\"> <b>bei Ã„nderung bereits vergebene Pkts. prÃ¼fen!</b></td>");
 			out.println("</tr>");
 		} else {
 			out.println("<tr>");
@@ -221,11 +221,11 @@ public class TaskManagerView extends HttpServlet {
 
 		if (task.getTaskid() != 0) {
 			out.println("<h2>Punkte</h2>");
-			out.println("<p>Werden hier Kriterien angelegt, so wird den Tutoren eine differenzierte Bewertung ermöglicht (für " + Util.showPoints(task.getMinPointStep()) + " Punkte wird eine Checkbox angezeigt, für &gt; " + Util.showPoints(task.getMinPointStep()) + " Punkte erscheint ein Texteingabefeld).</p>");
+			out.println("<p>Werden hier Kriterien angelegt, so wird den Tutoren eine differenzierte Bewertung ermÃ¶glicht (fÃ¼r " + Util.showPoints(task.getMinPointStep()) + " Punkte wird eine Checkbox angezeigt, fÃ¼r &gt; " + Util.showPoints(task.getMinPointStep()) + " Punkte erscheint ein Texteingabefeld).</p>");
 			if (task.getPointCategories().size() > 0) {
 				out.println("<ul>");
 				for (PointCategory category : task.getPointCategories()) {
-					out.println("<li>" + Util.escapeHTML(category.getDescription()) + "; " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? ", optional" : "") + " (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deletePointCategory&amp;pointCategoryId=" + category.getPointcatid()) + "\">del</a>)</li>");
+					out.println("<li>" + Util.escapeHTML(category.getDescription()) + "; " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? ", optional" : "") + " (<a onclick=\"return confirmLink('Wirklich lÃ¶schen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deletePointCategory&amp;pointCategoryId=" + category.getPointcatid()) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
@@ -235,7 +235,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
 			out.println("Kriteria: <input type=text name=description required=required style=\"width:90%\"><br>");
 			out.println("Punkte: <input size=5 type=text name=points value=\"" + Util.showPoints(task.getMinPointStep()) + "\"><br>");
-			out.println("Optional: <input type=checkbox name=optional> (für Bonuspunkte)<br>");
+			out.println("Optional: <input type=checkbox name=optional> (fÃ¼r Bonuspunkte)<br>");
 			out.println("<input type=submit value=speichern>");
 			out.println("</form>");
 
@@ -244,12 +244,12 @@ public class TaskManagerView extends HttpServlet {
 				out.println("<ul>");
 				for (String file : advisorFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
-					out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?action=delete&taskid=" + task.getTaskid()) + "\">del</a>)</li>");
+					out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich lÃ¶schen?')\" href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?action=delete&taskid=" + task.getTaskid()) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
 			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadTaskFile&amp;lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid()) + "\">");
-			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie den Studenten zur Verfügung stellen möchten:</p>");
+			out.println("<p>Bitte wÃ¤hlen Sie eine Datei aus, die Sie den Studenten zur VerfÃ¼gung stellen mÃ¶chten:</p>");
 			out.println("<INPUT TYPE=file NAME=file required=required>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
 			out.println("</FORM>");
@@ -257,7 +257,7 @@ public class TaskManagerView extends HttpServlet {
 
 		// don't show for new tasks
 		if (task.getTaskid() != 0 && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
-			out.println("<h2>Ähnlichkeitsprüfungen</h2>");
+			out.println("<h2>Ã„hnlichkeitsprÃ¼fungen</h2>");
 			if (task.getSimularityTests().size() > 0) {
 				out.println("<ul>");
 				for (SimilarityTest similarityTest : task.getSimularityTests()) {
@@ -265,26 +265,26 @@ public class TaskManagerView extends HttpServlet {
 					out.println("Ignored Files: " + Util.escapeHTML(similarityTest.getExcludeFiles()) + "<br>");
 					out.print("Status: ");
 					if (similarityTest.getStatus() == 1) {
-						out.println("in Queue, noch nicht ausgeführt<br>");
+						out.println("in Queue, noch nicht ausgefÃ¼hrt<br>");
 					} else if (similarityTest.getStatus() == 2) {
-						out.println("in Ausführung<br>");
+						out.println("in AusfÃ¼hrung<br>");
 					} else {
-						out.println("bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("DupeCheck?action=rerunSimilarityTest&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
+						out.println("bereits ausgefÃ¼hrt - <a onclick=\"return confirmLink('Wirklich erneut ausfÃ¼hren?')\" href=\"" + response.encodeURL("DupeCheck?action=rerunSimilarityTest&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausfÃ¼hren</a><br>");
 					}
-					out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DupeCheck?action=deleteSimilarityTest&amp;taskid=" + task.getTaskid() + "&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "\">löschen</a></li>");
+					out.println("<a onclick=\"return confirmLink('Wirklich lÃ¶schen?')\" href=\"" + response.encodeURL("DupeCheck?action=deleteSimilarityTest&amp;taskid=" + task.getTaskid() + "&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "\">lÃ¶schen</a></li>");
 				}
 				out.println("</ul>");
 			}
-			out.println("<p class=mid><a href=\"" + response.encodeURL("DupeCheck?taskid=" + task.getTaskid()) + "\">Ähnlichkeitsprüfung hinzufügen</a><p>");
+			out.println("<p class=mid><a href=\"" + response.encodeURL("DupeCheck?taskid=" + task.getTaskid()) + "\">Ã„hnlichkeitsprÃ¼fung hinzufÃ¼gen</a><p>");
 			out.println("<h2>Funktionstests der Abgaben</h2>");
-			out.println("<p class=mid><a href=\"" + response.encodeURL("TestManager?action=newTest&amp;taskid=" + task.getTaskid()) + "\">Test hinzufügen</a></p>");
+			out.println("<p class=mid><a href=\"" + response.encodeURL("TestManager?action=newTest&amp;taskid=" + task.getTaskid()) + "\">Test hinzufÃ¼gen</a></p>");
 			if (task.getTests().size() > 0) {
 				out.println("<ul>");
 				for (Test test : task.getTests()) {
 					out.println("<li>&quot;" + Util.escapeHTML(test.getTestTitle()) + "&quot;: ");
 					if (test instanceof RegExpTest) {
 						RegExpTest regexptest = (RegExpTest) test;
-						out.println("RegExp-Test:<br>Prüfpattern: " + Util.escapeHTML(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.escapeHTML(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.escapeHTML(regexptest.getMainClass()) + "<br>");
+						out.println("RegExp-Test:<br>PrÃ¼fpattern: " + Util.escapeHTML(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.escapeHTML(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.escapeHTML(regexptest.getMainClass()) + "<br>");
 					} else if (test instanceof CompileTest) {
 						out.println("Compile-Test<br>");
 					} else if (test instanceof JUnitTest) {
@@ -294,17 +294,17 @@ public class TaskManagerView extends HttpServlet {
 					} else {
 						out.println("unknown<br>");
 					}
-					out.println("# Ausführbar für Studenten: " + test.getTimesRunnableByStudents() + " (" + (test.isGiveDetailsToStudents() ? "mit" : "ohne") + " Details)<br>");
+					out.println("# AusfÃ¼hrbar fÃ¼r Studenten: " + test.getTimesRunnableByStudents() + " (" + (test.isGiveDetailsToStudents() ? "mit" : "ohne") + " Details)<br>");
 					out.println("Tutortest: " + test.isForTutors() + "<br>");
 					if (test.isForTutors()) {
 						out.print("Status: ");
 						if (test.isNeedsToRun()) {
-							out.println("in Queue, noch nicht ausgeführt<br>");
+							out.println("in Queue, noch nicht ausgefÃ¼hrt<br>");
 						} else {
-							out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("TestManager?action=rerunTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
+							out.println("in AusfÃ¼hrung bzw. bereits ausgefÃ¼hrt - <a onclick=\"return confirmLink('Wirklich erneut ausfÃ¼hren?')\" href=\"" + response.encodeURL("TestManager?action=rerunTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausfÃ¼hren</a><br>");
 						}
 					}
-					out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">Test löschen</a>");
+					out.println("<a onclick=\"return confirmLink('Wirklich lÃ¶schen?')\" href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">Test lÃ¶schen</a>");
 					out.println("</li>");
 				}
 				out.println("</ul>");

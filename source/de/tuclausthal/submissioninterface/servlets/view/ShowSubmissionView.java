@@ -81,7 +81,7 @@ public class ShowSubmissionView extends HttpServlet {
 
 		if (submission.getLastModified() != null) {
 			SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-			out.println("<p>Letzte Änderung: " + Util.escapeHTML(dateFormatter.format(submission.getLastModified())) + "</p>");
+			out.println("<p>Letzte Ã„nderung: " + Util.escapeHTML(dateFormatter.format(submission.getLastModified())) + "</p>");
 		}
 
 		for (Participation participation : submission.getSubmitters()) {
@@ -113,7 +113,7 @@ public class ShowSubmissionView extends HttpServlet {
 					setWithUser.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getFullName()) + "</option>");
 				}
 			}
-			setWithUser.append("</select> <input type=submit value= \"Hinzufügen\"></p></form>");
+			setWithUser.append("</select> <input type=submit value= \"HinzufÃ¼gen\"></p></form>");
 			if (cnt > 0) {
 				out.println(setWithUser.toString());
 			}
@@ -197,7 +197,7 @@ public class ShowSubmissionView extends HttpServlet {
 			} else {
 				out.println("<b>Punkte:</b> <input type=text class=\"" + pointsClass + "\" name=points size=3 value=\"" + Util.showPoints(points) + "\"> (max. " + Util.showPoints(task.getMaxPoints()) + ")" + pointsGivenBy + "<br>");
 			}
-			out.println("<b>Öffentlicher Kommentar:</b><br><textarea cols=80 rows=8 name=publiccomment>" + Util.escapeHTML(oldPublicComment) + "</textarea><br>");
+			out.println("<b>Ã–ffentlicher Kommentar:</b><br><textarea cols=80 rows=8 name=publiccomment>" + Util.escapeHTML(oldPublicComment) + "</textarea><br>");
 			out.println("<b>Interner Kommentar:</b>");
 			if (requestAdapter.isPrivacyMode()) {
 				out.print(" <a id=\"\" href=\"#\" onclick=\"$('#stateInternalComment').toggle(); return false;\">(+/-)</a><br>");
@@ -213,7 +213,7 @@ public class ShowSubmissionView extends HttpServlet {
 			}
 			out.println("<b>Best&auml;tigtes Plagiat:</b> <input type=checkbox id=isdupe name=isdupe " + (isDupe ? "checked" : "") + " onclick=\"if (!$('#isdupe').attr('checked')) {$('#duplicatespan').hide();} else {$('#duplicatespan').show();}return true;\"><span id=duplicatespan " + (isDupe ? "" : " style=\"display:none;\"") + ">, wenn ja: <input type=text size=3 name=duplicate id=duplicate value=\"" + duplicate + "\"> (0 = keine Punkte, 2 = 1/2 Punktzahl, 3 = 1/3 Punktzahl, ...)</span><br>");
 			out.println("<b><label for=\"nbewertet\">Nicht fertig bewertet:</label></b> <input id=\"nbewertet\" type=radio name=pointsstatus value=\"nbewertet\"" + (pointsBewertet ? " checked" : "") + ">, <b><label for=\"nabgen\">Nicht abgenommen:</label></b> <input id=\"nabgen\" type=radio name=pointsstatus value=\"nabgen\"" + (!pointsBewertet && !(pointsOk || pointsFailed) ? "checked" : "") + ">, <b><label for=\"abgen\">Abgenommen (ok):</label></b> <input id=\"abgen\" type=radio name=pointsstatus value=\"ok\"" + (pointsOk ? "checked" : "") + ">, <b><label for=\"failed\">Abnahme nicht bestanden:</label></b> <input id=\"failed\" type=radio name=pointsstatus value=\"failed\" " + (pointsFailed ? "checked" : "") + "><a href=\"#\" onclick=\"$('#statehelp').toggle(); return false;\">(?)</a><br>");
-			out.println("<br><div style=\"display:none;\" id=statehelp><b>Hilfe:</b><br><dl><dt>Nicht fertig bewertet</dt><dd>Zeigt diese Abgabe in allen Listen als &quot;n/a&quot; bzw. &quot;noch unbenotet&quot; an (auch den Studenten).</dd><dt>Nicht abgenommen</dt><dd>Wird in den Listen eingeklammert angezeigt, Punkte werden nicht gezählt, bei Studenten steht &quot;0, nicht abgenommen&quot;</dd><dt>Abgenommen (ok)</dt><dd>Aufgabe wurde abschließend bewertet, Punkte werden regulär gezählt (sofern kein Plagiat; ggf. wird dem Studenten &quot;Plagiat&quot; angezeigt)</dd><dt>Abnahme nicht bestanden</dt><dd>Aufgabe wurde abschließend bewertet, aber es werden keine Punkte gezählt (dem Studenten wird &quot;0, Abnahme nicht bestanden&quot; angezeigt, überschreibt die Plagiat Option).</dd></dl></div>");
+			out.println("<br><div style=\"display:none;\" id=statehelp><b>Hilfe:</b><br><dl><dt>Nicht fertig bewertet</dt><dd>Zeigt diese Abgabe in allen Listen als &quot;n/a&quot; bzw. &quot;noch unbenotet&quot; an (auch den Studenten).</dd><dt>Nicht abgenommen</dt><dd>Wird in den Listen eingeklammert angezeigt, Punkte werden nicht gezÃ¤hlt, bei Studenten steht &quot;0, nicht abgenommen&quot;</dd><dt>Abgenommen (ok)</dt><dd>Aufgabe wurde abschlieÃŸend bewertet, Punkte werden regulÃ¤r gezÃ¤hlt (sofern kein Plagiat; ggf. wird dem Studenten &quot;Plagiat&quot; angezeigt)</dd><dt>Abnahme nicht bestanden</dt><dd>Aufgabe wurde abschlieÃŸend bewertet, aber es werden keine Punkte gezÃ¤hlt (dem Studenten wird &quot;0, Abnahme nicht bestanden&quot; angezeigt, Ã¼berschreibt die Plagiat Option).</dd></dl></div>");
 			out.println("<input type=submit value=Speichern>");
 			if (!requestAdapter.isPrivacyMode() && submission.getPoints() != null) {
 				out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
@@ -221,7 +221,7 @@ public class ShowSubmissionView extends HttpServlet {
 				if (request.getParameter("groupid") != null && Util.parseInteger(request.getParameter("groupid"), 0) > 0) {
 					groupAdding = "&amp;groupid=" + Util.parseInteger(request.getParameter("groupid"), 0);
 				}
-				out.println("- <a href=\"" + response.encodeURL("GotoNextUngradedSubmission?sid=" + submission.getSubmissionid() + "&amp;taskid=" + task.getTaskid() + groupAdding) + "\">nächste</a>");
+				out.println("- <a href=\"" + response.encodeURL("GotoNextUngradedSubmission?sid=" + submission.getSubmissionid() + "&amp;taskid=" + task.getTaskid() + groupAdding) + "\">nÃ¤chste</a>");
 			}
 			out.println("</form>");
 			out.println("</td>");
@@ -232,7 +232,7 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		if (submission.getSimilarSubmissions().size() > 0) {
-			out.println("<h2>Ähnliche Abgaben: <a href=\"#\" onclick=\"$('#similarSubmissions').toggle(); return false;\">(+/-)</a></h2>");
+			out.println("<h2>Ã„hnliche Abgaben: <a href=\"#\" onclick=\"$('#similarSubmissions').toggle(); return false;\">(+/-)</a></h2>");
 			if (requestAdapter.isPrivacyMode()) {
 				out.println("<table id=similarSubmissions style=\"display:none;\">");
 			} else {
@@ -240,7 +240,7 @@ public class ShowSubmissionView extends HttpServlet {
 			}
 			out.println("<tr>");
 			for (SimilarityTest similarityTest : task.getSimularityTests()) {
-				out.println("<th><span title=\"Ähnlichkeit zu\">" + similarityTest + "</span></th>");
+				out.println("<th><span title=\"Ã„hnlichkeit zu\">" + similarityTest + "</span></th>");
 			}
 			out.println("</tr>");
 			out.println("<tr>");
@@ -249,7 +249,7 @@ public class ShowSubmissionView extends HttpServlet {
 				out.println("<table class=border>");
 				out.println("<tr>");
 				out.println("<th>Student</th>");
-				out.println("<th>Ähnlichkeit</th>");
+				out.println("<th>Ã„hnlichkeit</th>");
 				out.println("</tr>");
 				for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(similarityTest, submission)) {
 					out.println("<tr>");
@@ -294,7 +294,7 @@ public class ShowSubmissionView extends HttpServlet {
 				variableCounter++;
 			}
 			out.println("</li>");
-			out.println("<li><b>Lösung:</b><br>");
+			out.println("<li><b>LÃ¶sung:</b><br>");
 			List<String> correctResults = dynamicTask.getCorrectResults(submission, true);
 			List<String> studentResults = dynamicTask.getUserResults(submission);
 			String[] resultFields = dynamicTask.getResultFields(true);

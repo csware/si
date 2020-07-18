@@ -20,8 +20,8 @@
 package de.tuclausthal.submissioninterface.testframework.tests.impl.uml;
 
 /**
- * Diese Klasse vergleicht die XMI Datei mit Aktivit‰tsdiagramminhalt
- * der Musterlˆsung mit der Studentenlˆsungen 
+ * Diese Klasse vergleicht die XMI Datei mit Aktivit√§tsdiagramminhalt
+ * der Musterl√∂sung mit der Studentenl√∂sungen 
  * @author Joachim Schramm
  * @author Sven Strickroth
  */
@@ -41,7 +41,7 @@ public class ActivityDiagrammConstraint {
 		if (ad1.getNumberOfActionStates() > ad2.getNumberOfActionStates()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfActionStates() - ad2.getNumberOfActionStates()) + " Aktion(en)";
 		} else if (ad1.getNumberOfActionStates() < ad2.getNumberOfActionStates()) {
-			return "Es wurde(n) " + (ad2.getNumberOfActionStates() - ad1.getNumberOfActionStates()) + "  Aktion(en) mehr modelliert als gefordert. Mˆglicherweise m¸ssen ¸berfl¸ssige Aktionen aus dem ArgoUML Strukturbaum gelˆscht werden.";
+			return "Es wurde(n) " + (ad2.getNumberOfActionStates() - ad1.getNumberOfActionStates()) + "  Aktion(en) mehr modelliert als gefordert. M√∂glicherweise m√ºssen √ºberfl√ºssige Aktionen aus dem ArgoUML Strukturbaum gel√∂scht werden.";
 		} else {
 			return "Anzahl Aktionen okay";
 		}
@@ -51,7 +51,7 @@ public class ActivityDiagrammConstraint {
 		if (ad1.getNumberOfTransitions() > ad2.getNumberOfTransitions()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfTransitions() - ad2.getNumberOfTransitions()) + " Transition(en)";
 		} else if (ad1.getNumberOfTransitions() < ad2.getNumberOfTransitions()) {
-			return "Es wurde(n) " + (ad2.getNumberOfTransitions() - ad1.getNumberOfTransitions()) + "  Transition(en) mehr modelliert als gefordert. Mˆglicherweise m¸ssen ¸berfl¸ssige Transitionen aus dem ArgoUML Strukturbaum gelˆscht werden.";
+			return "Es wurde(n) " + (ad2.getNumberOfTransitions() - ad1.getNumberOfTransitions()) + "  Transition(en) mehr modelliert als gefordert. M√∂glicherweise m√ºssen √ºberfl√ºssige Transitionen aus dem ArgoUML Strukturbaum gel√∂scht werden.";
 		} else {
 			return "Anzahl Transitionen okay";
 		}
@@ -59,21 +59,21 @@ public class ActivityDiagrammConstraint {
 
 	public String checkNumberOfInitials() {
 		if (ad1.getNumberOfInitials() > ad2.getNumberOfInitials()) {
-			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfInitials() - ad2.getNumberOfInitials()) + " Startzustand/Startzust‰nde";
+			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfInitials() - ad2.getNumberOfInitials()) + " Startzustand/Startzust√§nde";
 		} else if (ad1.getNumberOfInitials() < ad2.getNumberOfInitials()) {
-			return "Es wurde(n) " + (ad2.getNumberOfInitials() - ad1.getNumberOfInitials()) + "  Startzustand/Startzust‰nde mehr modelliert als gefordert. Mˆglicherweise m¸ssen ¸berfl¸ssige Startzust‰nde aus dem ArgoUML Strukturbaum gelˆscht werden.";
+			return "Es wurde(n) " + (ad2.getNumberOfInitials() - ad1.getNumberOfInitials()) + "  Startzustand/Startzust√§nde mehr modelliert als gefordert. M√∂glicherweise m√ºssen √ºberfl√ºssige Startzust√§nde aus dem ArgoUML Strukturbaum gel√∂scht werden.";
 		} else {
-			return "Anzahl Startzust‰nde okay";
+			return "Anzahl Startzust√§nde okay";
 		}
 	}
 
 	public String checkNumberOfFinals() {
 		if (ad1.getNumberOfFinalStates() > ad2.getNumberOfFinalStates()) {
-			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfFinalStates() - ad2.getNumberOfFinalStates()) + " Endzustand/Endzust‰nde";
+			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfFinalStates() - ad2.getNumberOfFinalStates()) + " Endzustand/Endzust√§nde";
 		} else if (ad1.getNumberOfFinalStates() < ad2.getNumberOfFinalStates()) {
-			return "Es wurde(n) " + (ad2.getNumberOfFinalStates() - ad1.getNumberOfFinalStates()) + " Endzustand/Endzust‰nde mehr modelliert als gefordert. Mˆglicherweise m¸ssen ¸berfl¸ssige Endzust‰nde aus dem ArgoUML Strukturbaum gelˆscht werden.";
+			return "Es wurde(n) " + (ad2.getNumberOfFinalStates() - ad1.getNumberOfFinalStates()) + " Endzustand/Endzust√§nde mehr modelliert als gefordert. M√∂glicherweise m√ºssen √ºberfl√ºssige Endzust√§nde aus dem ArgoUML Strukturbaum gel√∂scht werden.";
 		} else {
-			return "Anzahl Endzust‰nde okay";
+			return "Anzahl Endzust√§nde okay";
 		}
 	}
 
@@ -81,7 +81,7 @@ public class ActivityDiagrammConstraint {
 		if (ad1.getNumberOfForks() > ad2.getNumberOfForks()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfForks() - ad2.getNumberOfForks()) + " Gabelung(en)";
 		} else if (ad1.getNumberOfForks() < ad2.getNumberOfForks()) {
-			return "Es wurde(n) " + (ad2.getNumberOfForks() - ad1.getNumberOfForks()) + "  Gabelung(en) mehr modelliert als gefordert. Mˆglicherweise m¸ssen ¸berfl¸ssige Gabelungen aus dem ArgoUML Strukturbaum gelˆscht werden.";
+			return "Es wurde(n) " + (ad2.getNumberOfForks() - ad1.getNumberOfForks()) + "  Gabelung(en) mehr modelliert als gefordert. M√∂glicherweise m√ºssen √ºberfl√ºssige Gabelungen aus dem ArgoUML Strukturbaum gel√∂scht werden.";
 		} else {
 			return "Anzahl Gabelungen okay";
 		}
@@ -91,7 +91,7 @@ public class ActivityDiagrammConstraint {
 		if (ad1.getNumberOfJoins() > ad2.getNumberOfJoins()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfJoins() - ad2.getNumberOfJoins()) + " Vereinigung(en)";
 		} else if (ad1.getNumberOfJoins() < ad2.getNumberOfJoins()) {
-			return "Es wurde(n) " + (ad2.getNumberOfJoins() - ad1.getNumberOfJoins()) + "  Vereinigung(en) mehr modelliert als gefordert. Mˆglicherweise m¸ssen ¸berfl¸ssige Vereinigungen aus dem ArgoUML Strukturbaum gelˆscht werden.";
+			return "Es wurde(n) " + (ad2.getNumberOfJoins() - ad1.getNumberOfJoins()) + "  Vereinigung(en) mehr modelliert als gefordert. M√∂glicherweise m√ºssen √ºberfl√ºssige Vereinigungen aus dem ArgoUML Strukturbaum gel√∂scht werden.";
 		} else {
 			return "Anzahl Vereinigungen okay";
 		}
@@ -101,7 +101,7 @@ public class ActivityDiagrammConstraint {
 		if (ad1.getNumberOfJunctions() > ad2.getNumberOfJunctions()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfJunctions() - ad2.getNumberOfJunctions()) + " Kreuzung(en)";
 		} else if (ad1.getNumberOfJunctions() < ad2.getNumberOfJunctions()) {
-			return "Es wurde(n) " + (ad2.getNumberOfJunctions() - ad1.getNumberOfJunctions()) + " Kreuzung(en) mehr modelliert als gefordert. Mˆglicherweise m¸ssen ¸berfl¸ssige Kreuzungen aus dem ArgoUML Strukturbaum gelˆscht werden.";
+			return "Es wurde(n) " + (ad2.getNumberOfJunctions() - ad1.getNumberOfJunctions()) + " Kreuzung(en) mehr modelliert als gefordert. M√∂glicherweise m√ºssen √ºberfl√ºssige Kreuzungen aus dem ArgoUML Strukturbaum gel√∂scht werden.";
 		} else {
 			return "Anzahl Kreuzungen okay";
 		}
@@ -111,7 +111,7 @@ public class ActivityDiagrammConstraint {
 		if (ad1.getNumberOfSignalEvents() > ad2.getNumberOfSignalEvents()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfSignalEvents() - ad2.getNumberOfSignalEvents()) + " Bedingung(en)";
 		} else if (ad1.getNumberOfSignalEvents() < ad2.getNumberOfSignalEvents()) {
-			return "Es wurde(n) " + (ad2.getNumberOfSignalEvents() - ad1.getNumberOfSignalEvents()) + " Bedingung(en) mehr modelliert als gefordert. Mˆglicherweise m¸ssen ¸berfl¸ssige Bedingungen aus dem ArgoUML Strukturbaum gelˆscht werden.";
+			return "Es wurde(n) " + (ad2.getNumberOfSignalEvents() - ad1.getNumberOfSignalEvents()) + " Bedingung(en) mehr modelliert als gefordert. M√∂glicherweise m√ºssen √ºberfl√ºssige Bedingungen aus dem ArgoUML Strukturbaum gel√∂scht werden.";
 		} else {
 			return "Anzahl Bedingungen okay";
 		}
@@ -121,7 +121,7 @@ public class ActivityDiagrammConstraint {
 		if (ad1.getNumberOfRepeats() > ad2.getNumberOfRepeats()) {
 			return "Achtung! Es fehlt/fehlen " + (ad1.getNumberOfRepeats() - ad2.getNumberOfRepeats()) + " Schleife(n)";
 		} else if (ad1.getNumberOfRepeats() < ad2.getNumberOfRepeats()) {
-			return "Es wurde(n) " + (ad2.getNumberOfRepeats() - ad1.getNumberOfRepeats()) + " Schleife(n) mehr modelliert als gefordert. Mˆglicherweise m¸ssen ¸berfl¸ssige Schleifen aus dem ArgoUML Strukturbaum gelˆscht werden.";
+			return "Es wurde(n) " + (ad2.getNumberOfRepeats() - ad1.getNumberOfRepeats()) + " Schleife(n) mehr modelliert als gefordert. M√∂glicherweise m√ºssen √ºberfl√ºssige Schleifen aus dem ArgoUML Strukturbaum gel√∂scht werden.";
 		} else {
 			return "Anzahl Schleifen okay";
 		}

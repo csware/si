@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2014, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2014, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -327,22 +327,7 @@ public final class Util {
 	 * @throws IOException
 	 */
 	public static StringBuffer loadFile(File file) throws IOException {
-		return loadFile(file, false);
-	}
-
-	/**
-	 * Opens the specified file and returns it's contents as string buffer
-	 * @param file the file to open
-	 * @param isUTF8
-	 * @return the file contents
-	 * @throws IOException
-	 */
-	public static StringBuffer loadFile(File file, boolean isUTF8) throws IOException {
-		BufferedReader br;
-		if (isUTF8)
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-		else
-			br = new BufferedReader(new FileReader(file));
+		BufferedReader br = new BufferedReader(new FileReader(file));
 		StringBuffer sb = new StringBuffer((int) file.length());
 		String line;
 		while ((line = br.readLine()) != null) {

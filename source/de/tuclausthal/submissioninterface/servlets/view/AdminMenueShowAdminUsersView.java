@@ -43,7 +43,7 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		template.printTemplateHeader("Super User", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"" + response.encodeURL("AdminMenue") + "\">Admin-Menü</a> &gt; Super User");
+		template.printTemplateHeader("Super User", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"" + response.encodeURL("AdminMenue") + "\">Admin-MenÃ¼</a> &gt; Super User");
 		PrintWriter out = response.getWriter();
 
 		Iterator<User> userIterator = ((List<User>) request.getAttribute("superusers")).iterator();
@@ -72,13 +72,13 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 			}
 		}
 		out.println("</select>");
-		out.println("<input type=submit value=\"hinzufügen\">");
+		out.println("<input type=submit value=\"hinzufÃ¼gen\">");
 		out.println("</form>");
 		out.println("</td>");
 		out.println("</tr>");
 		out.println("</table><p>");
 
-		out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
+		out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Ãœbersicht</a></div>");
 		template.printTemplateFooter();
 	}
 }

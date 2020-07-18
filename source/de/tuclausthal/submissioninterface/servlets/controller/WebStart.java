@@ -35,7 +35,7 @@ import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * Controller-Servlet für den ArgoUML WebStart
+ * Controller-Servlet fÃ¼r den ArgoUML WebStart
  */
 public class WebStart extends HttpServlet {
 	@Override

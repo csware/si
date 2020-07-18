@@ -37,7 +37,7 @@ public class JavaIORegexpTest extends JavaFunctionTest {
 		Pattern testPattern = Pattern.compile(((RegExpTest) test).getRegularExpression());
 		Matcher testMatcher = testPattern.matcher(processOutput.toString().trim());
 		if (!testMatcher.matches()) {
-			processOutput.insert(0, "Ausgabe stimmt nicht mit erwarteter Ausgabe überein. Ausgabe folgt (StdIn zuerst):\n");
+			processOutput.insert(0, "Ausgabe stimmt nicht mit erwarteter Ausgabe Ã¼berein. Ausgabe folgt (StdIn zuerst):\n");
 			return false;
 		}
 		return exitedCleanly;

@@ -21,13 +21,12 @@ public class TUC2013Template extends Template {
 	@Override
 	public void printTemplateHeader(String title, String breadCrum) throws IOException {
 		servletResponse.setContentType("text/html");
-		servletResponse.setCharacterEncoding("iso-8859-1");
+		servletResponse.setCharacterEncoding("UTF-8");
 		PrintWriter out = servletResponse.getWriter();
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Strict//EN\">");
 		out.println("<html lang=\"de\">");
 		out.println("<head>");
 		printStyleSheets(out);
-		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">");
 		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + prefix + "/scripts.js\"></script>");
 		out.println("<title>GATE: " + title + "</title>");
 		getHeads();
@@ -44,7 +43,7 @@ public class TUC2013Template extends Template {
 		if (user != null) {
 			out.println("Benutzer: " + user.getEmail());
 			if (user.isSuperUser()) {
-				out.println(" - <a href=\"" + servletResponse.encodeURL("AdminMenue") + "\">Admin-Menü</a>");
+				out.println(" - <a href=\"" + servletResponse.encodeURL("AdminMenue") + "\">Admin-MenÃ¼</a>");
 			}
 			if (requestAdapter.isPrivacyMode()) {
 				out.println(" - Privacy-Mode");
@@ -57,7 +56,7 @@ public class TUC2013Template extends Template {
 		}
 		out.println("</div>");
 		out.println("<div id=\"institut\">");
-		out.println("<h2><a href=\"http://www.in.tu-clausthal.de/\">Institut für Informatik</a></h2>");
+		out.println("<h2><a href=\"http://www.in.tu-clausthal.de/\">Institut fÃ¼r Informatik</a></h2>");
 		out.println("</div>");
 		out.println("<hr class=\"hide\" />");
 		out.println("</div>");

@@ -61,11 +61,11 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("<td><input type=text name=title required=required value=\"" + Util.escapeHTML(group.getName()) + "\" " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "readonly") + "></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Studenten können sich eintragen:</th>");
+		out.println("<th>Studenten kÃ¶nnen sich eintragen:</th>");
 		out.println("<td><input type=checkbox name=allowStudentsToSignup " + (group.isAllowStudentsToSignup() ? "checked" : "") + " " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "disabled") + "></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Studenten können wechseln:</th>");
+		out.println("<th>Studenten kÃ¶nnen wechseln:</th>");
 		out.println("<td><input type=checkbox name=allowStudentsToQuit " + (group.isAllowStudentsToQuit() ? "checked" : "") + " " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "disabled") + "></td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -74,10 +74,10 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Abgabegruppe:</th>");
-		out.println("<td><input type=checkbox name=submissionGroup " + (group.isSubmissionGroup() ? "checked" : "") + " " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "disabled") + "> <a href=\"#\" onclick=\"$('#submissiongrouphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=submissiongrouphelp><b>Hilfe:</b><br>Wird dieses Flag gesetzt, werden alle Mitglieder dieser Gruppe bei der ersten Abgabe als Partner hinzugefügt.</span></td>");
+		out.println("<td><input type=checkbox name=submissionGroup " + (group.isSubmissionGroup() ? "checked" : "") + " " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "disabled") + "> <a href=\"#\" onclick=\"$('#submissiongrouphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=submissiongrouphelp><b>Hilfe:</b><br>Wird dieses Flag gesetzt, werden alle Mitglieder dieser Gruppe bei der ersten Abgabe als Partner hinzugefÃ¼gt.</span></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Teilnehmer hinzufügen:</th>");
+		out.println("<th>Teilnehmer hinzufÃ¼gen:</th>");
 		out.println("<td><select multiple name=members>");
 		Iterator<Participation> participationIterator = DAOFactory.ParticipationDAOIf(RequestAdapter.getSession(request)).getParticipationsWithoutGroup(group.getLecture()).iterator();
 		while (participationIterator.hasNext()) {
@@ -90,7 +90,7 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("</tr>");
 		if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
 			out.println("<tr>");
-			out.println("<th>Verantwortliche Tutoren hinzufügen:</th>");
+			out.println("<th>Verantwortliche Tutoren hinzufÃ¼gen:</th>");
 			out.println("<td><select multiple name=tutors>");
 			participationIterator = DAOFactory.ParticipationDAOIf(RequestAdapter.getSession(request)).getMarkersAvailableParticipations(group).iterator();
 			while (participationIterator.hasNext()) {
@@ -108,7 +108,7 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("</table>");
 		out.println("</form>");
 		if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
-			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("AddGroup?lecture=" + group.getLecture().getId() + "&amp;action=deleteGroup&amp;gid=" + group.getGid()) + "\">Gruppe löschen</a></td>");
+			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich lÃ¶schen?')\" href=\"" + response.encodeURL("AddGroup?lecture=" + group.getLecture().getId() + "&amp;action=deleteGroup&amp;gid=" + group.getGid()) + "\">Gruppe lÃ¶schen</a></td>");
 		}
 		template.printTemplateFooter();
 	}

@@ -59,7 +59,7 @@ public class RequestAdapter {
 	}
 
 	/**
-	 * Gibt eine Hibernation-Datenbank-Sitzung zurück
+	 * Gibt eine Hibernation-Datenbank-Sitzung zurÃ¼ck
 	 * @return Hibernate Session
 	 * @throws HibernateException
 	 */

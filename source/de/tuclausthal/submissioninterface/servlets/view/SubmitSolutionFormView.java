@@ -64,10 +64,10 @@ public class SubmitSolutionFormView extends HttpServlet {
 		StringBuffer setWithUser = new StringBuffer();
 		if (task.getMaxSubmitters() > 1 && submission == null) {
 			if (participation.getGroup() != null && participation.getGroup().isSubmissionGroup()) {
-				setWithUser = new StringBuffer("<p>Diese Abgabe wird automatisch für alle Studenten in Ihrer Gruppe durchgeführt.</p>");
+				setWithUser = new StringBuffer("<p>Diese Abgabe wird automatisch fÃ¼r alle Studenten in Ihrer Gruppe durchgefÃ¼hrt.</p>");
 			} else if (task.isAllowSubmittersAcrossGroups() || participation.getGroup() != null) {
 				StringBuffer partnerField = new StringBuffer();
-				setWithUser.append("<p>Haben Sie diese Aufgabe zusammen mit einem Partner gelöst? Dann bitte hier auswählen:<br>");
+				setWithUser.append("<p>Haben Sie diese Aufgabe zusammen mit einem Partner gelÃ¶st? Dann bitte hier auswÃ¤hlen:<br>");
 				partnerField.append("<select name=partnerid size=1>");
 				int cnt = 0;
 				partnerField.append("<option value=0>-</option>");
@@ -85,7 +85,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 				}
 				partnerField.append("</select><br>");
 				if (cnt == 0) {
-					setWithUser = new StringBuffer("<p>Sie können im Moment keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, müssen von Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol></p><hr>");
+					setWithUser = new StringBuffer("<p>Sie kÃ¶nnen im Moment keinen Partner fÃ¼r Ihre Abgabe auswÃ¤hlen. Um dies zu erreichen mÃ¼ssen Sie zwei Voraussetzungen erfÃ¼llen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, mÃ¼ssen von Ihrem Tutor in die gleiche Ãœbungsgruppe aufgenommen worden sein.</li></ol></p><hr>");
 				} else {
 					for (int i = 0; i < task.getMaxSubmitters() - 1; i++) {
 						setWithUser.append(partnerField);
@@ -93,17 +93,17 @@ public class SubmitSolutionFormView extends HttpServlet {
 					setWithUser.append("<br>");
 				}
 			} else if (participation.getGroup() == null) {
-				setWithUser = new StringBuffer("<p>Sie können im Moment keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, müssen von Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol></p><hr>");
+				setWithUser = new StringBuffer("<p>Sie kÃ¶nnen im Moment keinen Partner fÃ¼r Ihre Abgabe auswÃ¤hlen. Um dies zu erreichen mÃ¼ssen Sie zwei Voraussetzungen erfÃ¼llen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, mÃ¼ssen von Ihrem Tutor in die gleiche Ãœbungsgruppe aufgenommen worden sein.</li></ol></p><hr>");
 			}
 		}
 
 		if (!"-".equals(task.getFilenameRegexp())) {
 			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 			out.println(setWithUser.toString());
-			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie einsenden möchten.</p>");
+			out.println("<p>Bitte wÃ¤hlen Sie eine Datei aus, die Sie einsenden mÃ¶chten.</p>");
 			out.println("<INPUT TYPE=file NAME=file required=required>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
-			out.println("<p>Hinweis: Bestehende Dateien werde überschrieben.</p>");
+			out.println("<p>Hinweis: Bestehende Dateien werde Ã¼berschrieben.</p>");
 			out.println("</FORM>");
 			if (task.isShowTextArea()) {
 				out.println("<p><hr>");
@@ -121,14 +121,14 @@ public class SubmitSolutionFormView extends HttpServlet {
 				for (int i = 0; i < resultFields.length; i++) {
 					out.println("<p>" + resultFields[i] + ": <input type=text name=\"dynamicresult" + i + "\" size=35 autocomplete=\"off\" value=\"" + Util.escapeHTML(studentResults.get(i)) + "\"></p>");
 				}
-				out.println("<p>Bitte füllen Sie das Textfeld mit dem Rechnenweg zu Ihrer Lösung:</p>");
+				out.println("<p>Bitte fÃ¼llen Sie das Textfeld mit dem Rechnenweg zu Ihrer LÃ¶sung:</p>");
 			} else {
-				out.println("<p>Bitte füllen Sie das Textfeld mit Ihrer Lösung:</p>");
+				out.println("<p>Bitte fÃ¼llen Sie das Textfeld mit Ihrer LÃ¶sung:</p>");
 			}
 			out.println("<p><textarea cols=60 rows=10 name=textsolution>" + Util.escapeHTML((String) request.getAttribute("textsolution")) + "</textarea></p>");
 			out.println("<INPUT TYPE=submit VALUE=speichern>");
 			out.println("</FORM>");
-			out.println("<p class=mid><b>Achtung:</b> Bitte beachten Sie, dass Sie nach 5 Minuten Inaktivität automatisch ausgeloggt werden. Kopieren Sie den Text vor dem Absenden sicherheitshalber in die Zwischenablage, wenn Sie nicht sicher sind, ob Sie die Zeit überschritten haben.</p>");
+			out.println("<p class=mid><b>Achtung:</b> Bitte beachten Sie, dass Sie nach 5 Minuten InaktivitÃ¤t automatisch ausgeloggt werden. Kopieren Sie den Text vor dem Absenden sicherheitshalber in die Zwischenablage, wenn Sie nicht sicher sind, ob Sie die Zeit Ã¼berschritten haben.</p>");
 		}
 
 		template.printTemplateFooter();

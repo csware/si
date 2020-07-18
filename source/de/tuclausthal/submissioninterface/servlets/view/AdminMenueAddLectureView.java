@@ -40,7 +40,7 @@ public class AdminMenueAddLectureView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		template.printTemplateHeader("neue Veranstaltung", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"AdminMenue\">Admin-Menü</a> &gt; neue Veranstaltung");
+		template.printTemplateHeader("neue Veranstaltung", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"AdminMenue\">Admin-MenÃ¼</a> &gt; neue Veranstaltung");
 		PrintWriter out = response.getWriter();
 
 		Lecture dummyLecture = new Lecture();
@@ -52,7 +52,7 @@ public class AdminMenueAddLectureView extends HttpServlet {
 		out.println("<td><input type=text name=name required=required></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Lösungen müssen abgenommen werden:</th>");
+		out.println("<th>LÃ¶sungen mÃ¼ssen abgenommen werden:</th>");
 		out.println("<td><input type=checkbox name=requiresAbhnahme></td>");
 		out.println("</tr>");
 		out.println("<tr>");

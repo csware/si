@@ -68,7 +68,7 @@ public class MarkEmptyTask extends HttpServlet {
 		if (Util.isInteger(request.getParameter("pid"))) {
 			Participation studentParticipation = DAOFactory.ParticipationDAOIf(session).getParticipation(Util.parseInteger(request.getParameter("pid"), 0));
 			if (studentParticipation == null || studentParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) != 0) {
-				request.setAttribute("title", "Gewählte Person ist kein normaler Teilnehmer der Vorlesung.");
+				request.setAttribute("title", "GewÃ¤hlte Person ist kein normaler Teilnehmer der Vorlesung.");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 				return;
 			}
@@ -77,7 +77,7 @@ public class MarkEmptyTask extends HttpServlet {
 			Submission submission = submissionDAO.getSubmissionLocked(task, studentParticipation.getUser());
 			if (submission != null) {
 				tx.commit();
-				request.setAttribute("title", "Es existiert bereits eine Bewertung für diesen Studenten: < href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">zur Bewertung</a>");
+				request.setAttribute("title", "Es existiert bereits eine Bewertung fÃ¼r diesen Studenten: < href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">zur Bewertung</a>");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 				return;
 			}

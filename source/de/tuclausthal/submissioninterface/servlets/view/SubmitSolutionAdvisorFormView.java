@@ -44,11 +44,11 @@ public class SubmitSolutionAdvisorFormView extends HttpServlet {
 
 		Task task = (Task) request.getAttribute("task");
 
-		template.printTemplateHeader("Abgabe für Studenten starten", task);
+		template.printTemplateHeader("Abgabe fÃ¼r Studenten starten", task);
 		PrintWriter out = response.getWriter();
 
 		StringBuffer setWithUser = new StringBuffer();
-		setWithUser.append("<p>Abgabe erstellen für: <select name=uploadFor size=1 required=required>");
+		setWithUser.append("<p>Abgabe erstellen fÃ¼r: <select name=uploadFor size=1 required=required>");
 		for (Participation part : task.getTaskGroup().getLecture().getParticipants()) {
 			if (part.getRoleType().equals(ParticipationRole.NORMAL)) {
 				setWithUser.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getFullName()) + "</option>");
@@ -57,11 +57,11 @@ public class SubmitSolutionAdvisorFormView extends HttpServlet {
 		setWithUser.append("</select><p>");
 
 		if (task.getMaxSubmitters() > 1) {
-			out.println("<p>Partner können im zweiten Schritt bei der Abgabe eingestellt werden.</p>");
+			out.println("<p>Partner kÃ¶nnen im zweiten Schritt bei der Abgabe eingestellt werden.</p>");
 		}
 		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 		out.println(setWithUser.toString());
-		out.println("<p>Bitte wählen Sie eine Datei aus, die Sie einsenden möchten.</p>");
+		out.println("<p>Bitte wÃ¤hlen Sie eine Datei aus, die Sie einsenden mÃ¶chten.</p>");
 		out.println("<INPUT TYPE=file NAME=file required=required>");
 		out.println("<INPUT TYPE=submit VALUE=upload>");
 		out.println("</FORM>");

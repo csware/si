@@ -81,7 +81,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		out.println("<th>Enddatum:</th>");
 		out.println("<td>" + Util.escapeHTML(dateFormatter.format(task.getDeadline())));
 		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
-			out.println(" Keine Abgabe mehr möglich");
+			out.println(" Keine Abgabe mehr mÃ¶glich");
 		}
 		out.println("</td>");
 		out.println("</tr>");
@@ -114,17 +114,17 @@ public class ShowTaskTutorView extends HttpServlet {
 
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=editTask") + "\">Aufgabe bearbeiten</a></div>");
-			out.println("<p><div class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deleteTask") + "\">Aufgabe löschen</a></div>");
+			out.println("<p><div class=mid><a onclick=\"return confirmLink('Wirklich lÃ¶schen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deleteTask") + "\">Aufgabe lÃ¶schen</a></div>");
 		}
 
 		if ((participation.getRoleType() == ParticipationRole.ADVISOR || task.isTutorsCanUploadFiles()) && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
-			out.println("<p><div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe für Studenten durchführen</a> (Achtung wenn Duplikatstest bereits gelaufen ist)</div>");
+			out.println("<p><div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe fÃ¼r Studenten durchfÃ¼hren</a> (Achtung wenn Duplikatstest bereits gelaufen ist)</div>");
 		}
 
 		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("MarkEmptyTask?taskid=" + task.getTaskid()) + "\">Punkte vergeben</a></div>");
 		} else if (task.getTests().size() > 0) {
-			out.println("<p><div class=mid><a href=\"" + response.encodeURL("PerformTest?taskid=" + task.getTaskid()) + "\">Test (manuell) durchführen</a></div>");
+			out.println("<p><div class=mid><a href=\"" + response.encodeURL("PerformTest?taskid=" + task.getTaskid()) + "\">Test (manuell) durchfÃ¼hren</a></div>");
 		}
 
 		if (task.getSubmissions() != null && task.getSubmissions().size() > 0) {
@@ -216,9 +216,9 @@ public class ShowTaskTutorView extends HttpServlet {
 							String hint = "";
 							if (similarityTest.getStatus() > 0) {
 								color = "red";
-								hint = " (läuft)";
+								hint = " (lÃ¤uft)";
 							}
-							out.println("<th><span class=" + color + " title=\"Max. Ähnlichkeit\">" + similarityTest + hint + "</span></th>");
+							out.println("<th><span class=" + color + " title=\"Max. Ã„hnlichkeit\">" + similarityTest + hint + "</span></th>");
 						}
 						out.println("<th>Punkte</th>");
 						out.println("<th>Abnehmen</th>");

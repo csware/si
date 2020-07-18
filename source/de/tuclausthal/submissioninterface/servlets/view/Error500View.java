@@ -63,7 +63,7 @@ public class Error500View extends HttpServlet {
 		}
 
 		out.println("<br>");
-		out.println("<b>Sollte dieser Fehler öfter auftreten, wenden Sie sich bitte mit der o.g. Fehlermeldung, der Adresse und Informationen, was Sie gerade versucht haben durchzuführen, an den <a href=\"mailto:" + new ContextAdapter(getServletContext()).getAdminMail() + "\">Webmaster</a>.</b><br>");
+		out.println("<b>Sollte dieser Fehler Ã¶fter auftreten, wenden Sie sich bitte mit der o.g. Fehlermeldung, der Adresse und Informationen, was Sie gerade versucht haben durchzufÃ¼hren, an den <a href=\"mailto:" + new ContextAdapter(getServletContext()).getAdminMail() + "\">Webmaster</a>.</b><br>");
 
 		if (template != null) {
 			template.printTemplateFooter();

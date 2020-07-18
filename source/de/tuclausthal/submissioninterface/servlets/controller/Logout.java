@@ -47,7 +47,7 @@ public class Logout extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.printTemplateHeader("Logged out");
 		PrintWriter out = response.getWriter();
-		out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
+		out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Ãœbersicht</a></div>");
 		template.printTemplateFooter();
 	}
 }

@@ -53,7 +53,7 @@ public class MassMail extends HttpServlet {
 		Group group = null;
 
 		if (request.getParameter("groupid") == null && request.getParameter("lectureid") == null) {
-			request.setAttribute("title", "ungültiger Aufruf");
+			request.setAttribute("title", "ungÃ¼ltiger Aufruf");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
@@ -95,7 +95,7 @@ public class MassMail extends HttpServlet {
 		Session session = RequestAdapter.getSession(request);
 
 		if (request.getParameter("subject") == null && request.getParameter("message") == null) {
-			request.setAttribute("title", "ungültiger Aufruf");
+			request.setAttribute("title", "ungÃ¼ltiger Aufruf");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
@@ -142,7 +142,7 @@ public class MassMail extends HttpServlet {
 			}
 		}
 		if (receipients.size() == 0) {
-			request.setAttribute("title", "Keine Empfänger ausgewählt");
+			request.setAttribute("title", "Keine EmpfÃ¤nger ausgewÃ¤hlt");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}

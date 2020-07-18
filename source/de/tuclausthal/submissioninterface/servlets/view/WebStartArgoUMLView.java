@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 
 /**
- * View-Servlet für den ArgoUML Webstart
+ * View-Servlet fÃ¼r den ArgoUML Webstart
  * Es wird eine dynamische jnlp Datei erzeugt
  * @author Sven Strickroth
  * @author Joachim Schramm
@@ -116,7 +116,7 @@ public class WebStartArgoUMLView extends HttpServlet {
 		out.println("    <jar href=\"" + urlprefix + "jmi.jar\"/>");
 		out.println("    <jar href=\"" + urlprefix + "jmiutils.jar\"/>");
 		out.println("    <jar href=\"" + urlprefix + "argouml-umlpropertypanels.jar\"/>");
-		//Jars für den Http upload
+		// Jars for den http upload
 		out.println("    <jar href=\"" + urlprefix + "commons-codec-1.4.jar\"/>");
 		out.println("    <jar href=\"" + urlprefix + "commons-fileupload-1.2.2.jar\"/>");
 		out.println("    <jar href=\"" + urlprefix + "commons-logging-1.1.1.jar\"/>");

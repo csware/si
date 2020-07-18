@@ -35,7 +35,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
  */
 public class DynamicTaskStrategieFactory {
 	public static final String[] STRATEGIES = { "dec2bin", "bin2dec", "hexfloat2hexfloatandbin", "harddiskfillstatecalculation", "harddiskfillstatecalculation2", "videocalculation", "complexdatatypesize", "complexdatatypesizewithfloat" };
-	public static final String[] NAMES = { "Integer-Dezimal2Bin‰r", "Integer-Bin‰r2Decimal", "32-bit HEX-Float2Hex- und Bin‰r-Float", "Hard-Disk Space Calculator", "Hard-Disk Space Calculator 2", "Video-Size Berechnung", "ComplexDataType-Size Berechnung mit 2er Komplement", "ComplexDataType-Size Berechnung mit Float" };
+	public static final String[] NAMES = { "Integer-Dezimal2Bin√§r", "Integer-Bin√§r2Decimal", "32-bit HEX-Float2Hex- und Bin√§r-Float", "Hard-Disk Space Calculator", "Hard-Disk Space Calculator 2", "Video-Size Berechnung", "ComplexDataType-Size Berechnung mit 2er Komplement", "ComplexDataType-Size Berechnung mit Float" };
 
 	public static boolean IsValidStrategieName(String dynamicTask) {
 		for (String strategie : STRATEGIES) {

@@ -43,7 +43,7 @@ public class PerformTestTutorFormView extends HttpServlet {
 
 		Task task = (Task) request.getAttribute("task");
 
-		template.printTemplateHeader("Test durchführen", task);
+		template.printTemplateHeader("Test durchfÃ¼hren", task);
 		PrintWriter out = response.getWriter();
 		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 		out.println("<p>Test: <select name=\"testid\" size=1 required=required>");
@@ -51,7 +51,7 @@ public class PerformTestTutorFormView extends HttpServlet {
 			out.println("<option value=\"" + test.getId() + "\">" + Util.escapeHTML(test.getTestTitle()) + (test.isForTutors() ? " (Tutortest)" : "") + "</option>");
 		}
 		out.println("</select></p>");
-		out.println("<p>Bitte wählen Sie eine Datei aus, die Sie testen möchten.</p>");
+		out.println("<p>Bitte wÃ¤hlen Sie eine Datei aus, die Sie testen mÃ¶chten.</p>");
 		out.println("<INPUT TYPE=file NAME=file required=required>");
 		out.println("<INPUT TYPE=submit VALUE=upload>");
 		out.println("</FORM>");

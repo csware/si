@@ -42,7 +42,7 @@ public class JavaUMLConstraintTest extends AbstractTest {
 		UMLDiagramm diagrammMusterLoesung = UMLDiagramm.getDiagramm(musterLoesung);
 
 		if (diagrammMusterLoesung == null) {
-			testResult.setTestOutput("Musterlösung defekt.");
+			testResult.setTestOutput("MusterlÃ¶sung defekt.");
 			testResult.setTestPassed(false);
 			return;
 		}
@@ -60,14 +60,14 @@ public class JavaUMLConstraintTest extends AbstractTest {
 		}
 
 		/*
-		output += "Musterlösung:"+"\n";
+		output += "MusterlÃ¶sung:"+"\n";
 		output += "\n";
 
 		output += diagrammMusterLoesung();
 
 		output += "\n";
 		*/
-		output += "Studentenlösung:\n";
+		output += "StudentenlÃ¶sung:\n";
 		output += "\n";
 
 		output += diagramm.toString();

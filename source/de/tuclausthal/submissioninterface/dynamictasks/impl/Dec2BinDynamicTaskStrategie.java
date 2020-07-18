@@ -44,6 +44,6 @@ public class Dec2BinDynamicTaskStrategie extends AbstractNumberConversionDynamic
 
 	@Override
 	public String getExampleTaskDescription() {
-		return "Berechnen Sie die Bin‰rdarstellung des Dezimal-Wertes $Var0$.";
+		return "Berechnen Sie die Bin√§rdarstellung des Dezimal-Wertes $Var0$.";
 	}
 }

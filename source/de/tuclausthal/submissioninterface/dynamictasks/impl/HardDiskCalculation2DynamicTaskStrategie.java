@@ -33,9 +33,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
  * @author Sven Strickroth
  */
 public class HardDiskCalculation2DynamicTaskStrategie extends AbstractDynamicTaskStrategie implements DynamicTaskStrategieIf {
-	private static final String[] RESULT_FIELDS = { "Lösung in Terrabyte", "Lösung in Tebibyte", "Anzahl benötigter Blue-Rays" };
-	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Summe der Videos (GB)", "-Summe der Videos (bytes)", "-Summe der Audio-Files (Mebibytes)", "-Summe der Audio-Files (bytes)", "-Lösung in Bytes", "Lösung in Terrabyte", "Lösung in Tebibyte", "Anzahl benötigter Blue-Rays (25 GB)" };
-	private static final String[] VARIABLES = { "Anzahl Videos", "Größe der Videos (in GB)", "Anzahl Audio-Dateien", "Größe der Audiodateien (MiB)" };
+	private static final String[] RESULT_FIELDS = { "LÃ¶sung in Terrabyte", "LÃ¶sung in Tebibyte", "Anzahl benÃ¶tigter Blue-Rays" };
+	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Summe der Videos (GB)", "-Summe der Videos (bytes)", "-Summe der Audio-Files (Mebibytes)", "-Summe der Audio-Files (bytes)", "-LÃ¶sung in Bytes", "LÃ¶sung in Terrabyte", "LÃ¶sung in Tebibyte", "Anzahl benÃ¶tigter Blue-Rays (25 GB)" };
+	private static final String[] VARIABLES = { "Anzahl Videos", "GrÃ¶ÃŸe der Videos (in GB)", "Anzahl Audio-Dateien", "GrÃ¶ÃŸe der Audiodateien (MiB)" };
 
 	public HardDiskCalculation2DynamicTaskStrategie(Session session, Task task) {
 		super(session, task);
@@ -118,6 +118,6 @@ public class HardDiskCalculation2DynamicTaskStrategie extends AbstractDynamicTas
 
 	@Override
 	public String getExampleTaskDescription() {
-		return "Bei einer Usability-Studie wurden Videos in hoher Qualität aufgenommen. Die Videos haben jeweils eine Größe von $Var1$ Gigabyte. Es wurden $Var0$ Videos aufgenommen. Ebenfalls sind bei der Studie $Var2$ Audio-Dateien mit einer jeweiligen Größe von $Var3$ Mebibyte entstanden.<br><br>Wie viel Terabyte und wie viel Tebibyte benötigt man?<br>Angenommen, die Aufzeichnungen sollen für weitere Analysen auf Blu-Ray Discs mit einer Speichergröße von jeweils 25GB gebrannt werden. Wie viele single-layer Blu-Ray Discs sind notwendig?";
+		return "Bei einer Usability-Studie wurden Videos in hoher QualitÃ¤t aufgenommen. Die Videos haben jeweils eine GrÃ¶ÃŸe von $Var1$ Gigabyte. Es wurden $Var0$ Videos aufgenommen. Ebenfalls sind bei der Studie $Var2$ Audio-Dateien mit einer jeweiligen GrÃ¶ÃŸe von $Var3$ Mebibyte entstanden.<br><br>Wie viel Terabyte und wie viel Tebibyte benÃ¶tigt man?<br>Angenommen, die Aufzeichnungen sollen fÃ¼r weitere Analysen auf Blu-Ray Discs mit einer SpeichergrÃ¶ÃŸe von jeweils 25GB gebrannt werden. Wie viele single-layer Blu-Ray Discs sind notwendig?";
 	}
 }

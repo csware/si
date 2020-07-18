@@ -83,7 +83,7 @@ public class TestManager extends HttpServlet {
 			request.setAttribute("task", task);
 			request.getRequestDispatcher("TestManagerAddTestFormView").forward(request, response);
 
-			//Controlleranpassung für den UML Constraint Test
+			//Controlleranpassung fÃ¼r den UML Constraint Test
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "umlConstraint".equals(request.getParameter("type"))) {
 			// Check that we have a file upload request
 
@@ -103,7 +103,7 @@ public class TestManager extends HttpServlet {
 
 			Part file = request.getPart("testcase");
 			if (file == null || !Util.getUploadFileName(file).endsWith(".xmi")) {
-				request.setAttribute("title", "Dateiname ungültig.");
+				request.setAttribute("title", "Dateiname ungÃ¼ltig.");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 				session.getTransaction().rollback();
 				return;
@@ -142,7 +142,7 @@ public class TestManager extends HttpServlet {
 
 			Part file = request.getPart("testcase");
 			if (file == null || !Util.getUploadFileName(file).endsWith(".jar")) {
-				request.setAttribute("title", "Dateiname ungültig.");
+				request.setAttribute("title", "Dateiname ungÃ¼ltig.");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 				session.getTransaction().rollback();
 				return;
@@ -166,7 +166,7 @@ public class TestManager extends HttpServlet {
 			try {
 				Pattern.compile(request.getParameter("regexp"));
 			} catch (PatternSyntaxException e) {
-				request.setAttribute("title", "Ungültiger regulärer Ausdruck");
+				request.setAttribute("title", "UngÃ¼ltiger regulÃ¤rer Ausdruck");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 				return;
 			}
@@ -240,7 +240,7 @@ public class TestManager extends HttpServlet {
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
 			return;
 		} else {
-			request.setAttribute("title", "Ungültiger Aufruf");
+			request.setAttribute("title", "UngÃ¼ltiger Aufruf");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 
 		}

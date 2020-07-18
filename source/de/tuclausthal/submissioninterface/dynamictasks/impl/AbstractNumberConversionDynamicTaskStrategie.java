@@ -28,7 +28,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 
 public abstract class AbstractNumberConversionDynamicTaskStrategie extends AbstractDynamicTaskStrategie {
-	private static final String[] RESULT_FIELDS = { "Lösung der Umrechnung" };
+	private static final String[] RESULT_FIELDS = { "LÃ¶sung der Umrechnung" };
 	private static final String[] VARIABLES = { "Wert" };
 
 	public AbstractNumberConversionDynamicTaskStrategie(Session session, Task task) {

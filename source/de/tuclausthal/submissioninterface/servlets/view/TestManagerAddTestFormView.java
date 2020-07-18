@@ -63,7 +63,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=tutortest></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th># Ausführbar für Studenten:</th>");
+		out.println("<th># AusfÃ¼hrbar fÃ¼r Studenten:</th>");
 		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -103,7 +103,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=tutortest></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th># Ausführbar für Studenten:</th>");
+		out.println("<th># AusfÃ¼hrbar fÃ¼r Studenten:</th>");
 		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -149,7 +149,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=tutortest></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th># Ausführbar für Studenten:</th>");
+		out.println("<th># AusfÃ¼hrbar fÃ¼r Studenten:</th>");
 		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -191,7 +191,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=tutortest></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th># Ausführbar für Studenten:</th>");
+		out.println("<th># AusfÃ¼hrbar fÃ¼r Studenten:</th>");
 		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -232,7 +232,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=tutortest></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th># Ausführbar für Studenten:</th>");
+		out.println("<th># AusfÃ¼hrbar fÃ¼r Studenten:</th>");
 		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");

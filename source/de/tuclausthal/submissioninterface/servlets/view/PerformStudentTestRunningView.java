@@ -50,7 +50,7 @@ public class PerformStudentTestRunningView extends HttpServlet {
 		template.printTemplateHeader("Testen...", task);
 
 		PrintWriter out = response.getWriter();
-		out.println("Der Test wird im Hintergrund ausgeführt. Bitte warten.<br>");
+		out.println("Der Test wird im Hintergrund ausgefÃ¼hrt. Bitte warten.<br>");
 		out.println("Sollte diese Seite nicht innerhalb von " + redirectTime + " Sekunden neu geladen werden, <a href=\"" + response.encodeURL(url) + "\">hier</a> gehts weiter.");
 
 		template.printTemplateFooter();

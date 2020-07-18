@@ -41,7 +41,7 @@ public class DupeCheckFormView extends HttpServlet {
 
 		Task task = (Task) request.getAttribute("task");
 
-		template.printTemplateHeader("Ähnlichkeitsprüfung", task);
+		template.printTemplateHeader("Ã„hnlichkeitsprÃ¼fung", task);
 		PrintWriter out = response.getWriter();
 		out.println("<h2>Plaggie Test</h2>");
 		out.println("<form action=\"" + response.encodeURL("?action=savesimilaritytest") + "\" method=post>");
@@ -53,11 +53,11 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("<input type=hidden name=normalizer3 value=\"\">");
 		out.println("<table class=border>");
 		out.println("<tr>");
-		out.println("<th>Minimale Ähnlichkeit:</th>");
+		out.println("<th>Minimale Ã„hnlichkeit:</th>");
 		out.println("<td><input size=5 type=text value=80 name=minsimilarity> %</td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Dateien ausschließen:</th>");
+		out.println("<th>Dateien ausschlieÃŸen:</th>");
 		out.println("<td><input size=100 type=text name=excludeFiles><br>(Dateinamen durch Komma getrennt)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -77,7 +77,7 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("<th>Typ:</th>");
 		out.println("<td><select size=1 name=type>");
 		out.println("<option value=\"levenshtein\">Levenshtein</option>");
-		out.println("<option value=\"compression\">Kolmogorov Komplexität</option>");
+		out.println("<option value=\"compression\">Kolmogorov KomplexitÃ¤t</option>");
 		out.println("</select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -91,7 +91,7 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Schreibweise:</th>");
 		out.println("<td><select size=1 name=normalizer2>");
-		out.println("<option value=\"lc\">Groß- und Kleinschreibung ignorieren</option>");
+		out.println("<option value=\"lc\">GroÃŸ- und Kleinschreibung ignorieren</option>");
 		out.println("<option value=\"none\">nicht ignorieren</option>");
 		out.println("</select></td>");
 		out.println("</tr>");
@@ -105,11 +105,11 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("</select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Minimale Ähnlichkeit:</th>");
+		out.println("<th>Minimale Ã„hnlichkeit:</th>");
 		out.println("<td><input size=5 type=text value=80 name=minsimilarity> %</td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Dateien ausschließen:</th>");
+		out.println("<th>Dateien ausschlieÃŸen:</th>");
 		out.println("<td><input size=100 type=text name=excludeFiles value=\".classpath,.project,META-INF,.settings\"><br>(Dateinamen durch Komma getrennt)</td>");
 		out.println("</tr>");
 		out.println("<tr>");

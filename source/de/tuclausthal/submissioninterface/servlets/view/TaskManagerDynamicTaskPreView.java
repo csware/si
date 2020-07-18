@@ -67,7 +67,7 @@ public class TaskManagerDynamicTaskPreView extends HttpServlet {
 		}
 		out.println("</dd>");
 
-		out.println("<dt><b>Lösung:</b></dt>");
+		out.println("<dt><b>LÃ¶sung:</b></dt>");
 		out.println("<dd>");
 		int resultCounter = 0;
 		for (String result : correctResults) {

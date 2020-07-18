@@ -52,11 +52,11 @@ public class AddGroupFormView extends HttpServlet {
 		out.println("<td><input type=text required=required name=name></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Studenten können sich eintragen:</th>");
+		out.println("<th>Studenten kÃ¶nnen sich eintragen:</th>");
 		out.println("<td><input type=checkbox name=allowStudentsToSignup></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Studenten können wechseln:</th>");
+		out.println("<th>Studenten kÃ¶nnen wechseln:</th>");
 		out.println("<td><input type=checkbox name=allowStudentsToQuit></td>");
 		out.println("</tr>");
 		out.println("<tr>");

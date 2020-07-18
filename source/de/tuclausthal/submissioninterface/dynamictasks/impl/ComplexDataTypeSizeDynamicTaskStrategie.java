@@ -33,9 +33,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
  * @author Sven Strickroth
  */
 public class ComplexDataTypeSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie implements DynamicTaskStrategieIf {
-	private static final String[] RESULT_FIELDS = { "Größe des Datentyps in Bits" };
-	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Bits für Lfnd. Nr.", "-Bits für Verwendungszweck", "-Bits für Betrag", "Größe des Datentyps in Bits" };
-	private static final String[] VARIABLES = { "Max. Lfnd. Nr.", "Länge Verwendungszweck", "Min. Betrag", "Max. Betrag" };
+	private static final String[] RESULT_FIELDS = { "GrÃ¶ÃŸe des Datentyps in Bits" };
+	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Bits fÃ¼r Lfnd. Nr.", "-Bits fÃ¼r Verwendungszweck", "-Bits fÃ¼r Betrag", "GrÃ¶ÃŸe des Datentyps in Bits" };
+	private static final String[] VARIABLES = { "Max. Lfnd. Nr.", "LÃ¤nge Verwendungszweck", "Min. Betrag", "Max. Betrag" };
 
 	public ComplexDataTypeSizeDynamicTaskStrategie(Session session, Task task) {
 		super(session, task);
@@ -64,20 +64,20 @@ public class ComplexDataTypeSizeDynamicTaskStrategie extends AbstractDynamicTask
 		int maxBetrag = Integer.parseInt(numbers.get(2).getNumber());
 		int minBetrag = Integer.parseInt(numbers.get(3).getNumber());
 
-		int bitsLfndNr = (int) Math.ceil(Math.log(lfndNr) / Math.log(2)); // + 1 für VZ-bit
+		int bitsLfndNr = (int) Math.ceil(Math.log(lfndNr) / Math.log(2)); // + 1 fÃ¼r VZ-bit
 
 		int bitDatum = 10 * 8;
 
 		int bitVerwZweck = 32 * maxVerwZweck; // * 32, weil Unicode-32
 
-		// Wenn der größere Betrag positiv ist, bzw, wenn der positive betrag gleich dem negativen ist, dann muss man auf basis des positiven Betrages den Wert berechnen;
-		// Wenn der größere Betrag negativ ist muss man auf basis des negativen berechnen, dabei muss bedacht werden, dass im negativen Bereich eine Zahl mehr abgebildet werden kann
-		// Für positive Werte log_2(max+1) gibt Anzahl der Bits an; max+1, weil 0 im positiven Bereich fällt 
+		// Wenn der grÃ¶ÃŸere Betrag positiv ist, bzw, wenn der positive betrag gleich dem negativen ist, dann muss man auf basis des positiven Betrages den Wert berechnen;
+		// Wenn der grÃ¶ÃŸere Betrag negativ ist muss man auf basis des negativen berechnen, dabei muss bedacht werden, dass im negativen Bereich eine Zahl mehr abgebildet werden kann
+		// FÃ¼r positive Werte log_2(max+1) gibt Anzahl der Bits an; max+1, weil 0 im positiven Bereich fÃ¤llt 
 		int bitBetrag;
 		if (maxBetrag >= -minBetrag) {
-			bitBetrag = (int) Math.ceil(Math.log(maxBetrag + 1) / Math.log(2)) + 1; // + 1 für VZ-bit
+			bitBetrag = (int) Math.ceil(Math.log(maxBetrag + 1) / Math.log(2)) + 1; // + 1 fÃ¼r VZ-bit
 		} else {
-			bitBetrag = (int) Math.ceil(Math.log(-minBetrag) / Math.log(2)) + 1; // + 1 für VZ-bit
+			bitBetrag = (int) Math.ceil(Math.log(-minBetrag) / Math.log(2)) + 1; // + 1 fÃ¼r VZ-bit
 		}
 
 		List<String> results = new LinkedList<>();
@@ -112,6 +112,6 @@ public class ComplexDataTypeSizeDynamicTaskStrategie extends AbstractDynamicTask
 
 	@Override
 	public String getExampleTaskDescription() {
-		return "Für ein Buchführungsprogramm sollen Einträge platzsparend gespeichert werden.<br><br>Diese Einträge sollen folgende Daten enthalten:<ul><li>eine laufende Nummer die mit 1 beginnt und maximal $Var0$ groß ist.</li><li>ein Verwendungszweck mit $Var1$ Zeichen mit Unicode-32 codiert.</li><li>der Betrag (gespeichert als ganze Cent), der zwischen $Var3$ und $Var2$ liegt (2er Komplement). Es soll hier der Betrag 0 auch auf 0 abgebildet werden (also keine Verschiebung des Werteraumes).</li><li>das Datum mit 10 ASCII-Zeichen codiert.</li></ul>Wie viele Bit werden mindestens benötigt um diese Werte zu speichern?";
+		return "FÃ¼r ein BuchfÃ¼hrungsprogramm sollen EintrÃ¤ge platzsparend gespeichert werden.<br><br>Diese EintrÃ¤ge sollen folgende Daten enthalten:<ul><li>eine laufende Nummer die mit 1 beginnt und maximal $Var0$ groÃŸ ist.</li><li>ein Verwendungszweck mit $Var1$ Zeichen mit Unicode-32 codiert.</li><li>der Betrag (gespeichert als ganze Cent), der zwischen $Var3$ und $Var2$ liegt (2er Komplement). Es soll hier der Betrag 0 auch auf 0 abgebildet werden (also keine Verschiebung des Werteraumes).</li><li>das Datum mit 10 ASCII-Zeichen codiert.</li></ul>Wie viele Bit werden mindestens benÃ¶tigt um diese Werte zu speichern?";
 	}
 }

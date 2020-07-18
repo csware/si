@@ -70,7 +70,7 @@ public class DownloadTaskFile extends HttpServlet {
 		}
 
 		if (request.getPathInfo() == null) {
-			request.setAttribute("title", "Ungültige Anfrage");
+			request.setAttribute("title", "UngÃ¼ltige Anfrage");
 			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 			return;
 		}

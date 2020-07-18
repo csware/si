@@ -110,7 +110,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			}
 			if (submission.getLastModified() != null) {
 				out.println("<tr>");
-				out.println("<th>Letzte Änderung:</th>");
+				out.println("<th>Letzte Ã„nderung:</th>");
 				out.println("<td>");
 				out.println(Util.escapeHTML(dateFormatter.format(submission.getLastModified())));
 				out.println("</td>");
@@ -124,7 +124,7 @@ public class ShowTaskStudentView extends HttpServlet {
 					file = file.replace(System.getProperty("file.separator"), "/");
 					out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">" + Util.escapeHTML(file) + "</a>");
 					if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
-						out.println(" (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DeleteFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)");
+						out.println(" (<a onclick=\"return confirmLink('Wirklich lÃ¶schen?')\" href=\"" + response.encodeURL("DeleteFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">lÃ¶schen</a>)");
 					}
 					out.println("<br>");
 				}
@@ -133,7 +133,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			}
 			if (task.isADynamicTask()) {
 				out.println("<tr>");
-				out.println("<th>Berechnete Lösung(en):</th>");
+				out.println("<th>Berechnete LÃ¶sung(en):</th>");
 				out.println("<td>");
 				DynamicTaskStrategieIf dynamicTask = task.getDynamicTaskStrategie(session);
 				String[] resultFields = dynamicTask.getResultFields(false);
@@ -206,12 +206,12 @@ public class ShowTaskStudentView extends HttpServlet {
 
 			out.println("<p>");
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
-				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
-				out.println("<script type=\"javascript\">if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
+				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML Ã¶ffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML Ã¶ffnen</a></div>");
+				out.println("<script type=\"javascript\">if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benÃ¶tigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu kÃ¶nnen. <a href=\"http://www.java.com/\">Download</a>\");</script>");
 			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false) {
-				out.println("<div class=mid>Keine Abgabe möglich.</div>");
+				out.println("<div class=mid>Keine Abgabe mÃ¶glich.</div>");
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
-				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
+				out.println("<div class=mid>Keine Abgabe mehr mÃ¶glich.</div>");
 			} else {
 				if (submittedFiles.size() > 0) {
 					out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe erweitern</a></div>");
@@ -223,7 +223,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			List<Test> tests = DAOFactory.TestDAOIf(session).getStudentTests(task);
 			TestCountDAOIf testCountDAO = DAOFactory.TestCountDAOIf(session);
 			if (submittedFiles.size() > 0 && tests.size() > 0 && task.getDeadline().after(Util.correctTimezone(new Date()))) {
-				out.println("<p><h2>Mögliche Tests:</h2>");
+				out.println("<p><h2>MÃ¶gliche Tests:</h2>");
 				out.println("<table class=border>");
 				for (Test test : tests) {
 					out.println("<tr>");
@@ -233,7 +233,7 @@ public class ShowTaskStudentView extends HttpServlet {
 					out.println("</td>");
 					out.println("<td>");
 					if (testCountDAO.canStillRunXTimes(test, submission) > 0) {
-						out.println("<a href=\"" + response.encodeURL("PerformStudentTest?sid=" + submission.getSubmissionid() + "&amp;testid=" + test.getId()) + "\">Test ausführen</a>");
+						out.println("<a href=\"" + response.encodeURL("PerformStudentTest?sid=" + submission.getSubmissionid() + "&amp;testid=" + test.getId()) + "\">Test ausfÃ¼hren</a>");
 					} else {
 						out.println("Limit erreicht");
 					}
@@ -245,12 +245,12 @@ public class ShowTaskStudentView extends HttpServlet {
 		} else {
 			out.println("<p>");
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
-				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
-				out.println("<script type=\"javascript\">if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
+				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML Ã¶ffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML Ã¶ffnen</a></div>");
+				out.println("<script type=\"javascript\">if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benÃ¶tigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu kÃ¶nnen. <a href=\"http://www.java.com/\">Download</a>\");</script>");
 			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false) {
-				out.println("<div class=mid>Keine Abgabe möglich.</div>");
+				out.println("<div class=mid>Keine Abgabe mÃ¶glich.</div>");
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
-				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
+				out.println("<div class=mid>Keine Abgabe mehr mÃ¶glich.</div>");
 			} else {
 				out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div>");
 			}

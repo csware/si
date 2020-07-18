@@ -34,8 +34,8 @@ import de.tuclausthal.submissioninterface.util.RandomNumber;
  * @author Sven Strickroth
  */
 public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamicTaskStrategie implements DynamicTaskStrategieIf {
-	private static final String[] RESULT_FIELDS = { "Lösung der Berechnung (binär)", "Lösung der Berechnung (hex)", "Fehler der Lösung" };
-	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Lösung der Berechnung (decimal)", "Lösung der Berechnung (binär)", "Lösung der Berechnung (hex)", "-Float-Ergebnis", "Fehler der Lösung" };
+	private static final String[] RESULT_FIELDS = { "LÃ¶sung der Berechnung (binÃ¤r)", "LÃ¶sung der Berechnung (hex)", "Fehler der LÃ¶sung" };
+	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-LÃ¶sung der Berechnung (decimal)", "LÃ¶sung der Berechnung (binÃ¤r)", "LÃ¶sung der Berechnung (hex)", "-Float-Ergebnis", "Fehler der LÃ¶sung" };
 	private static final String[] VARIABLES = { "Wert 1", "Wert 2" };
 
 	public HexFloatMultiplikationDynamkicTaskStrategie(Session session, Task task) {
@@ -108,6 +108,6 @@ public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamic
 
 	@Override
 	public String getExampleTaskDescription() {
-		return "Gegeben sind die zwei Zahlen $Var0$ und $Var1$ als Hexadezimaldarstellung einer Fließkommazahl nach IEEE 754.<br><br>Berechnen Sie die Dezimaldarstellung, dann multiplizieren Sie die Zahlen. Codieren Sie das Ergebnis neu als Fließkommazahl. Falls die Umrechnung zurück einen Rundungsfehler beinhaltet, muss der auch angegeben werden.<br><br>Wie sieht die Fließkommazahl als Binärfolge aus? Wie ist die Hexadezimaldarstellung dieser Binärfolge?";
+		return "Gegeben sind die zwei Zahlen $Var0$ und $Var1$ als Hexadezimaldarstellung einer FlieÃŸkommazahl nach IEEE 754.<br><br>Berechnen Sie die Dezimaldarstellung, dann multiplizieren Sie die Zahlen. Codieren Sie das Ergebnis neu als FlieÃŸkommazahl. Falls die Umrechnung zurÃ¼ck einen Rundungsfehler beinhaltet, muss der auch angegeben werden.<br><br>Wie sieht die FlieÃŸkommazahl als BinÃ¤rfolge aus? Wie ist die Hexadezimaldarstellung dieser BinÃ¤rfolge?";
 	}
 }

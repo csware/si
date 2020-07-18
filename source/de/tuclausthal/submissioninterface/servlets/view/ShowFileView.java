@@ -47,7 +47,7 @@ public class ShowFileView extends HttpServlet {
 		StringBuffer code = (StringBuffer) request.getAttribute("code");
 
 		response.setContentType("text/html");
-		response.setCharacterEncoding("iso-8859-1");
+		response.setCharacterEncoding("UTF-8");
 
 		PrintWriter out = response.getWriter();
 
@@ -78,7 +78,6 @@ public class ShowFileView extends HttpServlet {
 		out.println("<head>");
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.printStyleSheets(out);
-		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />");
 		out.println("<title>" + Util.escapeHTML(fileName) + "</title>");
 		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + request.getContextPath() + "/scripts.js\"></script>");
 		out.println("</head>");
@@ -112,6 +111,6 @@ public class ShowFileView extends HttpServlet {
 
 	private void showWithRenderer(StringBuffer renderedCode, String fileName, StringBuffer code, String renderertype) throws IOException {
 		Renderer renderer = XhtmlRendererFactory.getRenderer(renderertype);
-		renderedCode.append("<code>" + renderer.highlight(fileName, code.toString(), "iso-8859-1", true) + "</code>");
+		renderedCode.append("<code>" + renderer.highlight(fileName, code.toString(), "UTF-8", true) + "</code>");
 	}
 }

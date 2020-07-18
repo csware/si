@@ -61,6 +61,7 @@ public class AuthenticationFilter implements Filter {
 		SessionAdapter sa = RequestAdapter.getSessionAdapter(request);
 		response.addHeader("Strict-Transport-Security", "max-age=31536000");
 		response.addHeader("X-Frame-Options", "SAMEORIGIN");
+		request.setCharacterEncoding("UTF-8"); // set character encoding here, because Eclipse has a bug with web.xml, cf. https://bugs.eclipse.org/bugs/show_bug.cgi?id=543377
 		if (sa.getUser() == null || (bindToIP && !sa.isIPCorrect(request.getRemoteAddr()))) {
 			response.addHeader("LoggedIn", "false");
 			LoginData logindata = login.getLoginData(request);

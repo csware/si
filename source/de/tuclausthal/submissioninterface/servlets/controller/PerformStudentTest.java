@@ -76,7 +76,7 @@ public class PerformStudentTest extends HttpServlet {
 		}
 
 		if (task.getDeadline().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
-			request.setAttribute("title", "Testen nicht mehr möglich");
+			request.setAttribute("title", "Testen nicht mehr mÃ¶glich");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
@@ -90,7 +90,7 @@ public class PerformStudentTest extends HttpServlet {
 
 		if (test instanceof UMLConstraintTest && request.getParameter("argouml") != null) {
 			if (testCountDAO.canStillRunXTimes(test, submission) == 0) {
-				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
+				request.setAttribute("title", "Dieser Test kann nicht mehr ausgefÃ¼hrt werden. Limit erreicht.");
 				request.getRequestDispatcher("MessageArgoUMLView").forward(request, response);
 				return;
 			}
@@ -114,7 +114,7 @@ public class PerformStudentTest extends HttpServlet {
 
 			if (!testCountDAO.canSeeResultAndIncrementCounter(test, submission)) {
 				sa.setQueuedTest(null);
-				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
+				request.setAttribute("title", "Dieser Test kann nicht mehr ausgefÃ¼hrt werden. Limit erreicht.");
 				request.getRequestDispatcher("MessageArgoUMLView").forward(request, response);
 				return;
 			}
@@ -132,7 +132,7 @@ public class PerformStudentTest extends HttpServlet {
 				// prevent user from redo a test by mistake
 
 				if (testCountDAO.canStillRunXTimes(test, submission) == 0) {
-					request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
+					request.setAttribute("title", "Dieser Test kann nicht mehr ausgefÃ¼hrt werden. Limit erreicht.");
 					request.getRequestDispatcher("MessageView").forward(request, response);
 					return;
 				}
@@ -140,7 +140,7 @@ public class PerformStudentTest extends HttpServlet {
 				sa.setQueuedTest(TestExecutor.executeTask(new TestTask(test, submission)));
 				gotoWaitingView(request, response, "sid=" + submission.getSubmissionid() + "&testid=" + test.getId());
 			} else {
-				request.setAttribute("title", "Ungültige Anfrage");
+				request.setAttribute("title", "UngÃ¼ltige Anfrage");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 			}
 		} else {
@@ -156,7 +156,7 @@ public class PerformStudentTest extends HttpServlet {
 
 				if (!testCountDAO.canSeeResultAndIncrementCounter(test, submission)) {
 					sa.setQueuedTest(null);
-					request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
+					request.setAttribute("title", "Dieser Test kann nicht mehr ausgefÃ¼hrt werden. Limit erreicht.");
 					request.getRequestDispatcher("MessageView").forward(request, response);
 					return;
 				}

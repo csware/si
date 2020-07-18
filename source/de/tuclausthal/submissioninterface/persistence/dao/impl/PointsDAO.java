@@ -106,7 +106,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 			}
 			if (changed && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid()) {
 				// HACK hardcoded URL
-				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <https://si.in.tu-clausthal.de/submissionsystem/servlets/ShowSubmission?sid=" + submission.getSubmissionid() + "> ver‰ndert.\n\n-- \nReply is not possible.");
+				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <https://si.in.tu-clausthal.de/submissionsystem/servlets/ShowSubmission?sid=" + submission.getSubmissionid() + "> ver√§ndert.\n\n-- \nReply is not possible.");
 			}
 		} else {
 			if (points.getPointStatus() != null) {
@@ -235,7 +235,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 			}
 			if (changed && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid()) {
 				// HACK hardcoded URL
-				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <https://si.in.tu-clausthal.de/submissionsystem/servlets/ShowSubmission?sid=" + submission.getSubmissionid() + "> ver‰ndert.\n\n-- \nReply is not possible.");
+				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <https://si.in.tu-clausthal.de/submissionsystem/servlets/ShowSubmission?sid=" + submission.getSubmissionid() + "> ver√§ndert.\n\n-- \nReply is not possible.");
 			}
 		} else {
 			if (points.getPointStatus() != null) {

@@ -62,7 +62,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		boolean showMatNo = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) || new ContextAdapter(getServletContext()).isMatrikelNoAvailableToTutors();
 
 		// list all tasks for a lecture
-		template.printTemplateHeader("Gesamtübersicht", lecture);
+		template.printTemplateHeader("GesamtÃ¼bersicht", lecture);
 		PrintWriter out = response.getWriter();
 
 		List<TaskGroup> taskGroupList = lecture.getTaskGroups();

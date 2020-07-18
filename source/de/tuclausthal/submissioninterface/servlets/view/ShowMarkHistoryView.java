@@ -49,17 +49,17 @@ public class ShowMarkHistoryView extends HttpServlet {
 		Submission submission = (Submission) request.getAttribute("submission");
 		List<PointHistory> data = (List<PointHistory>) request.getAttribute("data");
 
-		template.printTemplateHeader("Aktivit‰tslog", submission);
+		template.printTemplateHeader("Aktivit√§tslog", submission);
 		PrintWriter out = response.getWriter();
 
-		out.println("<h1>Aktivit‰tslog</h1>");
+		out.println("<h1>Aktivit√§tslog</h1>");
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Wer</th>");
 		out.println("<th>Wann</th>");
 		out.println("<th>Feld</th>");
 		out.println("<th>Entfernt</th>");
-		out.println("<th>Hinzugef¸gt</th>");
+		out.println("<th>Hinzugef√ºgt</th>");
 		out.println("</tr>");
 
 		LinkedList<PointHistory> ph = new LinkedList<>();

@@ -80,13 +80,13 @@ public class DeleteFile extends HttpServlet {
 		}
 
 		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
-			request.setAttribute("title", "Abgabe nicht mehr möglich");
+			request.setAttribute("title", "Abgabe nicht mehr mÃ¶glich");
 			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 			return;
 		}
 
 		if (request.getPathInfo() == null) {
-			request.setAttribute("title", "Ungültige Anfrage");
+			request.setAttribute("title", "UngÃ¼ltige Anfrage");
 			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 			return;
 		}

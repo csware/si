@@ -33,9 +33,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
  * @author Sven Strickroth
  */
 public class HardDiskCalculationDynamicTaskStrategie extends AbstractDynamicTaskStrategie implements DynamicTaskStrategieIf {
-	private static final String[] RESULT_FIELDS = { "Lösung in Terrabyte", "Lösung in Tebibyte" };
-	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Summe der Blue-Rays (bytes)", "-Summe der Audio-Files (bytes)", "-Lösung in Bytes", "Lösung in Terrabyte", "Lösung in Tebibyte" };
-	private static final String[] VARIABLES = { "Anzahl Blue-Rays", "Größe der Blue-Rays", "Anzahl Musikstücke", "Durchschnittliche Größe der Musikstücke" };
+	private static final String[] RESULT_FIELDS = { "LÃ¶sung in Terrabyte", "LÃ¶sung in Tebibyte" };
+	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Summe der Blue-Rays (bytes)", "-Summe der Audio-Files (bytes)", "-LÃ¶sung in Bytes", "LÃ¶sung in Terrabyte", "LÃ¶sung in Tebibyte" };
+	private static final String[] VARIABLES = { "Anzahl Blue-Rays", "GrÃ¶ÃŸe der Blue-Rays", "Anzahl MusikstÃ¼cke", "Durchschnittliche GrÃ¶ÃŸe der MusikstÃ¼cke" };
 
 	public HardDiskCalculationDynamicTaskStrategie(Session session, Task task) {
 		super(session, task);
@@ -109,6 +109,6 @@ public class HardDiskCalculationDynamicTaskStrategie extends AbstractDynamicTask
 
 	@Override
 	public String getExampleTaskDescription() {
-		return "Für $Var0$ Blue-Ray Discs mit der Größe $Var1$ Gigabyte und $Var2$ MP3-Musikdateien mit der Größe $Var3$ Byte soll der Speicherplatz berechnet werden.<br><br>Wie viel Terabyte und wie viel Tebibyte benötigt man?";
+		return "FÃ¼r $Var0$ Blue-Ray Discs mit der GrÃ¶ÃŸe $Var1$ Gigabyte und $Var2$ MP3-Musikdateien mit der GrÃ¶ÃŸe $Var3$ Byte soll der Speicherplatz berechnet werden.<br><br>Wie viel Terabyte und wie viel Tebibyte benÃ¶tigt man?";
 	}
 }
