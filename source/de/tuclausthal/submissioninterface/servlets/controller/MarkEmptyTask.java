@@ -78,7 +78,7 @@ public class MarkEmptyTask extends HttpServlet {
 			Submission submission = submissionDAO.getSubmissionLocked(task, studentParticipation.getUser());
 			if (submission != null) {
 				tx.commit();
-				request.setAttribute("title", "Es existiert bereits eine Bewertung für diesen Studenten: < href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">zur Bewertung</a>");
+				request.setAttribute("title", "Es existiert bereits eine Bewertung für diesen Studierenden: < href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">zur Bewertung</a>");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 				return;
 			}

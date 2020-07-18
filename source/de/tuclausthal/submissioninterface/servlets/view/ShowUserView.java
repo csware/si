@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2013 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -60,7 +60,7 @@ public class ShowUserView extends HttpServlet {
 		Boolean isAtLeastAdvisorOnce = (Boolean) request.getAttribute("isAtLeastAdvisorOnce");
 		Session session = RequestAdapter.getSession(request);
 
-		template.printTemplateHeader("Benutzer \"" + Util.escapeHTML(user.getFullName()) + "\"");
+		template.printTemplateHeader("BenutzerIn \"" + Util.escapeHTML(user.getFullName()) + "\"");
 		PrintWriter out = response.getWriter();
 		out.println("<p><a href=\"mailto:" + Util.escapeHTML(user.getFullEmail()) + "\">" + Util.escapeHTML(user.getFullEmail()) + "</a></p>");
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2013 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -124,7 +124,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			return;
 		}
 		out.println("<p>");
-		out.println("<h2>Teilnehmer</h2>");
+		out.println("<h2>Teilnehmende</h2>");
 		if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
 			out.println("<h3>Ohne Gruppe</h3>");
 			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, showMatNo, requestAdapter);
@@ -188,7 +188,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			if (showMatNo) {
 				out.println("<th>MatNo</th>");
 			}
-			out.println("<th>Teilnehmer</th>");
+			out.println("<th>TeilnehmerIn</th>");
 			out.println("<th>Rolle</th>");
 			out.println("<th>Punkte</th>");
 			out.println("</tr>");

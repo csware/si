@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012, 2014 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2014, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -252,7 +252,7 @@ public class TaskManager extends HttpServlet {
 			if (!m.matches()) {
 				System.out.println("SubmitSolutionProblem2: file;" + submittedFileName + ";" + pattern.pattern());
 				template.printTemplateHeader("Ungültige Anfrage");
-				out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
+				out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Zudem müssen Dateinamen für Java-Klassen in der Regel mit einem Großbuchstaben beginnen.");
 				template.printTemplateFooter();
 				return;
 			}

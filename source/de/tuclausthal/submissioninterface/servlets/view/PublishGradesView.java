@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -62,7 +62,7 @@ public class PublishGradesView extends HttpServlet {
 		if (nichtAbgenommen > 0) {
 			out.println("<p class=red>" + nichtAbgenommen + " nicht abgenommene Abgaben.</p>");
 		}
-		out.println("<p><input type=checkbox name=mail> Hinweismail an Studenten senden</p>");
+		out.println("<p><input type=checkbox name=mail> Hinweismail an Studierende senden</p>");
 		out.println("<input type=submit value= \"Punkte freischalten\"></p></form>");
 
 		template.printTemplateFooter();

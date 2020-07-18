@@ -118,7 +118,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		}
 
 		if ((participation.getRoleType() == ParticipationRole.ADVISOR || task.isTutorsCanUploadFiles()) && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
-			out.println("<p><div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe für Studenten durchführen</a> (Achtung wenn Duplikatstest bereits gelaufen ist)</div>");
+			out.println("<p><div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe für Studierenden durchführen</a> (Achtung wenn Duplikatstest bereits gelaufen ist)</div>");
 		}
 
 		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
@@ -203,7 +203,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("<form method=post action=\"" + response.encodeURL("MarkApproved?taskid=" + task.getTaskid()) + "\">");
 					out.println("<table class=border>");
 					out.println("<tr>");
-					out.println("<th>Benutzer</th>");
+					out.println("<th>Abgabe von</th>");
 					if (showAllColumns) {
 						if (task.isADynamicTask()) {
 							out.println("<th>Berechnung</th>");

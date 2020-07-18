@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -49,15 +49,15 @@ public class EditMultipleGroupsFormView extends HttpServlet {
 		out.println("<form action=\"" + response.encodeURL("?lecture=" + lecture.getId()) + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");
-		out.println("<th>Studenten können sich eintragen:</th>");
+		out.println("<th>Studierende können sich eintragen:</th>");
 		out.println("<td><input type=checkbox name=allowStudentsToSignup></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Studenten können wechseln:</th>");
+		out.println("<th>Studierende können wechseln:</th>");
 		out.println("<td><input type=checkbox name=allowStudentsToQuit></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Max. Studenten:</th>");
+		out.println("<th>Max. Studierende:</th>");
 		out.println("<td><input type=text name=maxStudents> (leer: keine Speicherung)</td>");
 		out.println("</tr>");
 		out.println("<tr>");

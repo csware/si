@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010, 2013 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2013, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -50,7 +50,7 @@ public class AlterUser extends HttpServlet {
 
 		User user = userDAO.getUser(RequestAdapter.getUser(request).getUid());
 		if (user == null) {
-			request.setAttribute("title", "Benutzer nicht gefunden");
+			request.setAttribute("title", "BenutzerIn nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}

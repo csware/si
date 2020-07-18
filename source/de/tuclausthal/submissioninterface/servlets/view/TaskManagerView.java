@@ -152,12 +152,12 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Abgaben mit max. Partnern:</th>");
+		out.println("<th>Abgaben mit max. PartnerInnen:</th>");
 		out.println("<td><input type=text size=5 id=maxSubmitters name=\"maxSubmitters\" value=\"" + task.getMaxSubmitters() + "\" onkeyup=\"if ($('#maxSubmitters').val()>1) {$('#submitteracrossgroups').show();} else {$('#submitteracrossgroups').hide();}return true;\"><span id=submitteracrossgroups" + (task.getMaxSubmitters() > 1 ? "" : " style=\"display:none;\"") + ">, <input type=checkbox name=allowSubmittersAcrossGroups " + (task.isAllowSubmittersAcrossGroups() ? "checked" : "") + "> über Gruppengrenzen hinweg</span> <a href=\"#\" onclick=\"$('#maxsubmittershelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=maxsubmittershelp><b>Hilfe:</b><br>Sofern &quot;über Gruppengrenzen hinweg&quot; nicht gesetzt ist, müssen die Studierenden in Gruppen eingeteilt sein und können auch nur Studierende wählen, die in der gleichen Gruppe sind. Die Zahl wird als Gesamtanzahl der Studierenden, die eine Aufgabe gemeinsam bearbeiten dürfen, angesehen. Sind bei der Veranstaltung Abgabegruppen defininert und wird eine Zahl &gt; 1 angegeben, werden immer alle Studierenden der Gruppe bei der ersten Abgabe automatisch hinzugefügt (auch wenn mehr Studierende in der Gruppe sind; ist der abgebende Studierende in keiner Gruppe ist es automatisch eine Einzelabgabe, wenn gruppenübergreifende PartnerInnen verboten sind); die Angabe von &quot;1&quot; erlaubt auch bei Abgabegruppen Individualabgaben. Im Fall von Abgabegrupopen können Studierende, die in einer Abgabegruppe sind, keine gruppenübergreifenden oder beliebigen Partnerabgaben durchführen (auch nicht, wenn gruppenübergreifende Partnerschaften erlaubt sind).</span></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Filename Regexp:</th>");
-		out.println("<td><input type=text size=100 required=required id=\"filenameregexp\" name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#fileregexphelp').toggle(); return false;\">(?)</a><br><div style=\"display:none;\" id=fileregexphelp><b>Hilfe:</b><br>Dateinamen, die von Studenten hochgeladen werden, werden mit diesem regulären Ausdruck überprüft, bevor diese verarbeitet werden.<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot;<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>ARGOUml: &quot;loesung\\.(xmi|zargo|png)&quot;<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = Dateiupload nicht anbieten bzw. verbieten<p><b>Dateinamen testen:</b><br><input type=\"text\" id=\"regexptest\" name=\"regexptest\"> <button onclick=\"checkRegexp(); return false;\">Testen</button></div></td>");
+		out.println("<td><input type=text size=100 required=required id=\"filenameregexp\" name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#fileregexphelp').toggle(); return false;\">(?)</a><br><div style=\"display:none;\" id=fileregexphelp><b>Hilfe:</b><br>Dateinamen, die von Studierende hochgeladen werden, werden mit diesem regulären Ausdruck überprüft, bevor diese verarbeitet werden.<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot;<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>ARGOUml: &quot;loesung\\.(xmi|zargo|png)&quot;<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = Dateiupload nicht anbieten bzw. verbieten<p><b>Dateinamen testen:</b><br><input type=\"text\" id=\"regexptest\" name=\"regexptest\"> <button onclick=\"checkRegexp(); return false;\">Testen</button></div></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Archiv-Filename Regexp:</th>");
@@ -168,11 +168,11 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<td><input type=checkbox name=showtextarea " + (task.isShowTextArea() ? "checked" : "") + "> (wird als textloesung.txt gespeichert)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Dateien bei Tutor aufklappen:</th>");
+		out.println("<th>Dateien bei TutorInnen aufklappen:</th>");
 		out.println("<td><input type=text name=featuredfiles size=100 value=\"" + Util.escapeHTML(task.getFeaturedFiles()) + "\"> <a href=\"#\" onclick=\"$('#featuredfileshelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=featuredfileshelp><b>Hilfe:</b><br>Dieser reguläre Ausdruck bestimmt welche Dateien bei den Tutoren automatisch aufgeklappt sind. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = keine Dateien aufklappen</span></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Tutoren dürfen Dateien für Studenten hochladen:</th>");
+		out.println("<th>TutorInnen dürfen Dateien für Studierende hochladen:</th>");
 		out.println("<td><input type=checkbox name=tutorsCanUploadFiles " + (task.isTutorsCanUploadFiles() ? "checked" : "") + "></td>");
 		out.println("</tr>");
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -249,7 +249,7 @@ public class TaskManagerView extends HttpServlet {
 				out.println("</ul>");
 			}
 			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadTaskFile&amp;lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid()) + "\">");
-			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie den Studenten zur Verfügung stellen möchten:</p>");
+			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie den Studierenden zur Verfügung stellen möchten:</p>");
 			out.println("<INPUT TYPE=file NAME=file required=required>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
 			out.println("</FORM>");
@@ -294,7 +294,7 @@ public class TaskManagerView extends HttpServlet {
 					} else {
 						out.println("unknown<br>");
 					}
-					out.println("# Ausführbar für Studenten: " + test.getTimesRunnableByStudents() + " (" + (test.isGiveDetailsToStudents() ? "mit" : "ohne") + " Details)<br>");
+					out.println("# ausführbar für Studierende: " + test.getTimesRunnableByStudents() + " (" + (test.isGiveDetailsToStudents() ? "mit" : "ohne") + " Details)<br>");
 					out.println("Tutortest: " + test.isForTutors() + "<br>");
 					if (test.isForTutors()) {
 						out.print("Status: ");

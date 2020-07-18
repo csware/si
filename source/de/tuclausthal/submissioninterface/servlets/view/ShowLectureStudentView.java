@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -66,9 +66,9 @@ public class ShowLectureStudentView extends HttpServlet {
 			out.println("Meine Gruppe: " + Util.escapeHTML(participation.getGroup().getName()));
 			if (participation.getGroup().getTutors() != null && participation.getGroup().getTutors().size() > 0) {
 				if (participation.getGroup().getTutors().size() > 1) {
-					out.println("<br>Meine Tutoren: ");
+					out.println("<br>Meine TutorInnen: ");
 				} else {
-					out.println("<br>Mein Tutor: ");
+					out.println("<br>Mein(e) TutorIn: ");
 				}
 				boolean isFirst = true;
 				for (Participation tutor : participation.getGroup().getTutors()) {

@@ -95,7 +95,7 @@ public class SubmitSolution extends HttpServlet {
 		// if session-user is not a tutor (with rights to upload for students) or advisor: check dates
 		if (!canUploadForStudents) {
 			if (participation.getRoleType() == ParticipationRole.TUTOR) {
-				request.setAttribute("title", "Tutoren können keine eigenen Lösungen einsenden.");
+				request.setAttribute("title", "TutorInnen können keine eigenen Lösungen einsenden.");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 				return;
 			}
@@ -181,7 +181,7 @@ public class SubmitSolution extends HttpServlet {
 		if (studentParticipation == null) {
 			template.printTemplateHeader("Ungültige Anfrage");
 			PrintWriter out = response.getWriter();
-			out.println("<div class=mid>Sie sind kein Teilnehmer dieser Veranstaltung.</div>");
+			out.println("<div class=mid>Sie nehmen an dieser Veranstaltung nicht teil.</div>");
 			out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
 			template.printTemplateFooter();
 			return;
@@ -216,7 +216,7 @@ public class SubmitSolution extends HttpServlet {
 			if (!(studentParticipation.getRoleType() == ParticipationRole.ADVISOR || (task.isTutorsCanUploadFiles() && studentParticipation.getRoleType() == ParticipationRole.TUTOR))) {
 				template.printTemplateHeader("Ungültige Anfrage");
 				PrintWriter out = response.getWriter();
-				out.println("<div class=mid>Sie sind nicht berechtigt bei dieser Veranstaltung Dateien für Studenten hochzuladen.</div>");
+				out.println("<div class=mid>Sie sind nicht berechtigt bei dieser Veranstaltung Dateien für Studierende hochzuladen.</div>");
 				out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
 				template.printTemplateFooter();
 				return;
@@ -225,7 +225,7 @@ public class SubmitSolution extends HttpServlet {
 			if (studentParticipation == null || studentParticipation.getLecture().getId() != task.getTaskGroup().getLecture().getId()) {
 				template.printTemplateHeader("Ungültige Anfrage");
 				PrintWriter out = response.getWriter();
-				out.println("<div class=mid>Der gewählte Student ist kein Teilnehmer dieser Veranstaltung.</div>");
+				out.println("<div class=mid>Der gewählte Studierende ist keine Teilnehemerin bzw. kein Teilnehmer dieser Veranstaltung.</div>");
 				out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
 				template.printTemplateFooter();
 				return;
@@ -241,7 +241,7 @@ public class SubmitSolution extends HttpServlet {
 			if (studentParticipation.getRoleType() == ParticipationRole.ADVISOR || studentParticipation.getRoleType() == ParticipationRole.TUTOR) {
 				template.printTemplateHeader("Ungültige Anfrage");
 				PrintWriter out = response.getWriter();
-				out.println("<div class=mid>Betreuer und Tutoren können keine eigenen Lösungen einsenden.</div>");
+				out.println("<div class=mid>BetreuerInnen und TutorInnen können keine eigenen Lösungen einsenden.</div>");
 				template.printTemplateFooter();
 				return;
 			}
@@ -291,7 +291,7 @@ public class SubmitSolution extends HttpServlet {
 						tx.rollback();
 						template.printTemplateHeader("Ungültige Anfrage");
 						PrintWriter out = response.getWriter();
-						out.println("<div class=mid>Ein Gruppenpartner hat bereits eine Gruppen-Abgabe initiiert.</div>");
+						out.println("<div class=mid>Es wurde bereits eine Gruppen-Abgabe initiiert.</div>");
 						template.printTemplateFooter();
 						return;
 					}
@@ -306,7 +306,7 @@ public class SubmitSolution extends HttpServlet {
 						tx.rollback();
 						template.printTemplateHeader("Ungültige Anfrage");
 						PrintWriter out = response.getWriter();
-						out.println("<div class=mid>Ein ausgewählter Partner hat bereits eine eigene Abgabe initiiert, Sie haben bereits die maximale Anzahl von Partnern ausgewählt oder einen nicht verfügbaren Partner ausgewählt.</div>");
+						out.println("<div class=mid>Ein ausgewählter Studierender hat bereits eine eigene Abgabe initiiert, Sie haben bereits die maximale Anzahl von Studierenden überschritten oder einen nicht verfügbaren Studierenden ausgewählt.</div>");
 						template.printTemplateFooter();
 						return;
 					}

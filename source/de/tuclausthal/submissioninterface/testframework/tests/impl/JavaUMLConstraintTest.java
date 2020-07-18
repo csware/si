@@ -67,7 +67,7 @@ public class JavaUMLConstraintTest extends AbstractTest {
 
 		output += "\n";
 		*/
-		output += "Studentenlösung:\n";
+		output += "Studierendenlösung:\n";
 		output += "\n";
 
 		output += diagramm.toString();

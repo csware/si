@@ -65,10 +65,10 @@ public class SubmitSolutionFormView extends HttpServlet {
 		StringBuffer setWithUser = new StringBuffer();
 		if (task.getMaxSubmitters() > 1 && submission == null) {
 			if (participation.getGroup() != null && participation.getGroup().isSubmissionGroup()) {
-				setWithUser = new StringBuffer("<p>Diese Abgabe wird automatisch für alle Studenten in Ihrer Gruppe durchgeführt.</p>");
+				setWithUser = new StringBuffer("<p>Diese Abgabe wird automatisch für alle Studierenden in Ihrer Gruppe durchgeführt.</p>");
 			} else if (task.isAllowSubmittersAcrossGroups() || participation.getGroup() != null) {
 				StringBuffer partnerField = new StringBuffer();
-				setWithUser.append("<p>Haben Sie diese Aufgabe zusammen mit einem Partner gelöst? Dann bitte hier auswählen:<br>");
+				setWithUser.append("<p>Haben Sie diese Aufgabe zusammen mit einer Partnerin oder einem Partner gelöst? Dann bitte hier auswählen:<br>");
 				partnerField.append("<select name=partnerid size=1>");
 				int cnt = 0;
 				partnerField.append("<option value=0>-</option>");
@@ -87,12 +87,12 @@ public class SubmitSolutionFormView extends HttpServlet {
 				}
 				partnerField.append("</select><br>");
 				if (cnt == 0) {
-					setWithUser = new StringBuffer("<p>Sie können im Moment keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie die folgenden Voraussetzungen erfüllen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li>");
+					setWithUser = new StringBuffer("<p>Sie können im Moment keine Partnerin und keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie die folgenden Voraussetzungen erfüllen:<ol><li>Ihre Partnerin bzw. Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li>");
 					setWithUser.append("<li>Ihr Partner darf noch keine eigene Abgabe vorgenommen haben.</li>");
 					if (!task.isAllowSubmittersAcrossGroups()) {
-						setWithUser.append("<li>Sie, als auch Ihr Partner, müssen von Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li>");
+						setWithUser.append("<li>Sie, als auch Ihre Partnerin bzw. Ihr Partner, müssen von Ihrer Tutorin bzw. Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li>");
 					} else {
-						setWithUser.append("<li>Ihr Partner darf keiner Gruppe angehören, die für Gruppenabgaben konfiguriert ist.</li>");
+						setWithUser.append("<li>Ihre Partnerin bzw. Ihr Partner darf keiner Gruppe angehören, die für Gruppenabgaben konfiguriert ist.</li>");
 					}
 					setWithUser.append("</ol></p><hr>");
 				} else {
@@ -102,7 +102,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 					setWithUser.append("<br>");
 				}
 			} else if (participation.getGroup() == null) {
-				setWithUser = new StringBuffer("<p>Sie können im Moment keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihr Partner, müssen von Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol></p><hr>");
+				setWithUser = new StringBuffer("<p>Sie können im Moment Partnerin und keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihre Partnerin bzw. Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihre Partnerin bzw. Ihr Partner, müssen von Ihrer Tutorin bzw. Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol></p><hr>");
 			}
 		}
 

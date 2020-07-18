@@ -98,7 +98,7 @@ public class ShowSubmissionView extends HttpServlet {
 			setWithUser.append("<form action=\"?\" method=post>");
 			setWithUser.append("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
-			setWithUser.append("<p>Fehlt ein Partner: <select name=partnerid size=1 required=required>");
+			setWithUser.append("<p>Fehlt ein(e) PartnerIn: <select name=partnerid size=1 required=required>");
 			setWithUser.append("<option value=''></option>");
 			int cnt = 0;
 			Set<Participation> participations = null;
@@ -214,7 +214,7 @@ public class ShowSubmissionView extends HttpServlet {
 			}
 			out.println("<b>Best&auml;tigtes Plagiat:</b> <input type=checkbox id=isdupe name=isdupe " + (isDupe ? "checked" : "") + " onclick=\"if (!$('#isdupe').attr('checked')) {$('#duplicatespan').hide();} else {$('#duplicatespan').show();}return true;\"><span id=duplicatespan " + (isDupe ? "" : " style=\"display:none;\"") + ">, wenn ja: <input type=text size=3 name=duplicate id=duplicate value=\"" + duplicate + "\"> (0 = keine Punkte, 2 = 1/2 Punktzahl, 3 = 1/3 Punktzahl, ...)</span><br>");
 			out.println("<b><label for=\"nbewertet\">Nicht fertig bewertet:</label></b> <input id=\"nbewertet\" type=radio name=pointsstatus value=\"nbewertet\"" + (pointsBewertet ? " checked" : "") + ">, <b><label for=\"nabgen\">Nicht abgenommen:</label></b> <input id=\"nabgen\" type=radio name=pointsstatus value=\"nabgen\"" + (!pointsBewertet && !(pointsOk || pointsFailed) ? "checked" : "") + ">, <b><label for=\"abgen\">Abgenommen (ok):</label></b> <input id=\"abgen\" type=radio name=pointsstatus value=\"ok\"" + (pointsOk ? "checked" : "") + ">, <b><label for=\"failed\">Abnahme nicht bestanden:</label></b> <input id=\"failed\" type=radio name=pointsstatus value=\"failed\" " + (pointsFailed ? "checked" : "") + "><a href=\"#\" onclick=\"$('#statehelp').toggle(); return false;\">(?)</a><br>");
-			out.println("<br><div style=\"display:none;\" id=statehelp><b>Hilfe:</b><br><dl><dt>Nicht fertig bewertet</dt><dd>Zeigt diese Abgabe in allen Listen als &quot;n/a&quot; bzw. &quot;noch unbenotet&quot; an (auch den Studenten).</dd><dt>Nicht abgenommen</dt><dd>Wird in den Listen eingeklammert angezeigt, Punkte werden nicht gezählt, bei Studenten steht &quot;0, nicht abgenommen&quot;</dd><dt>Abgenommen (ok)</dt><dd>Aufgabe wurde abschließend bewertet, Punkte werden regulär gezählt (sofern kein Plagiat; ggf. wird dem Studenten &quot;Plagiat&quot; angezeigt)</dd><dt>Abnahme nicht bestanden</dt><dd>Aufgabe wurde abschließend bewertet, aber es werden keine Punkte gezählt (dem Studenten wird &quot;0, Abnahme nicht bestanden&quot; angezeigt, überschreibt die Plagiat Option).</dd></dl></div>");
+			out.println("<br><div style=\"display:none;\" id=statehelp><b>Hilfe:</b><br><dl><dt>Nicht fertig bewertet</dt><dd>Zeigt diese Abgabe in allen Listen als &quot;n/a&quot; bzw. &quot;noch unbenotet&quot; an (auch den Studierenden).</dd><dt>Nicht abgenommen</dt><dd>Wird in den Listen eingeklammert angezeigt, Punkte werden nicht gezählt, bei Studierendem steht &quot;0, nicht abgenommen&quot;</dd><dt>Abgenommen (ok)</dt><dd>Aufgabe wurde abschließend bewertet, Punkte werden regulär gezählt (sofern kein Plagiat; ggf. wird dem Studierenden &quot;Plagiat&quot; angezeigt)</dd><dt>Abnahme nicht bestanden</dt><dd>Aufgabe wurde abschließend bewertet, aber es werden keine Punkte gezählt (dem Studierenden wird &quot;0, Abnahme nicht bestanden&quot; angezeigt, überschreibt die Plagiat Option).</dd></dl></div>");
 			out.println("<input type=submit value=Speichern>");
 			if (!requestAdapter.isPrivacyMode() && submission.getPoints() != null) {
 				out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
@@ -249,7 +249,7 @@ public class ShowSubmissionView extends HttpServlet {
 				out.println("<td>");
 				out.println("<table class=border>");
 				out.println("<tr>");
-				out.println("<th>Student</th>");
+				out.println("<th>Abgabe von</th>");
 				out.println("<th>Ähnlichkeit</th>");
 				out.println("</tr>");
 				for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(similarityTest, submission)) {

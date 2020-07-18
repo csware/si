@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2013, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2013, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -65,7 +65,7 @@ public class ShowUser extends HttpServlet {
 
 		User user = DAOFactory.UserDAOIf(session).getUser(Util.parseInteger(request.getParameter("uid"), 0));
 		if (user == null) {
-			request.setAttribute("title", "Benutzer nicht gefunden");
+			request.setAttribute("title", "BenutzerIn nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010,2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -49,7 +49,7 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 		Iterator<User> userIterator = ((List<User>) request.getAttribute("superusers")).iterator();
 		out.println("<table class=border>");
 		out.println("<tr>");
-		out.println("<th>Benutzer</th>");
+		out.println("<th>BenutzerInnen</th>");
 		out.println("<th>Entfernen</th>");
 		out.println("</tr>");
 		while (userIterator.hasNext()) {

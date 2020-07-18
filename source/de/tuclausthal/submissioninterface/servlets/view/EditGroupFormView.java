@@ -61,15 +61,15 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("<td><input type=text name=title required=required value=\"" + Util.escapeHTML(group.getName()) + "\" " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "readonly") + "></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Studenten können sich eintragen:</th>");
+		out.println("<th>Studierende können sich eintragen:</th>");
 		out.println("<td><input type=checkbox name=allowStudentsToSignup " + (group.isAllowStudentsToSignup() ? "checked" : "") + " " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "disabled") + "></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Studenten können wechseln:</th>");
+		out.println("<th>Studierende können wechseln:</th>");
 		out.println("<td><input type=checkbox name=allowStudentsToQuit " + (group.isAllowStudentsToQuit() ? "checked" : "") + " " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "disabled") + "></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Max. Studenten:</th>");
+		out.println("<th>Max. Studierende:</th>");
 		out.println("<td><input type=text name=maxStudents value=\"" + group.getMaxStudents() + "\" " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "readonly") + "></td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -77,7 +77,7 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=submissionGroup " + (group.isSubmissionGroup() ? "checked" : "") + " " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "disabled") + "> <a href=\"#\" onclick=\"$('#submissiongrouphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=submissiongrouphelp><b>Hilfe:</b><br>Wird dieses Flag gesetzt, werden alle Mitglieder dieser Gruppe bei der ersten Abgabe automatisch als PartnerInnen hinzugefügt, sofern keine Einzelabgabe bei einer Aufgabe gefordert wird. Zudem können Studierende dieser Gruppe bzw. andere Studierende mit Studierenden dieser Gruppe, selbst wenn gruppenübergreifenden Partnerabgaben bei einer Aufgabe erlaubt sind, keine beliebigen Partnerschaften bilden.</span></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Teilnehmer hinzufügen:</th>");
+		out.println("<th>Studierende hinzufügen:</th>");
 		out.println("<td><select multiple name=members>");
 		Iterator<Participation> participationIterator = DAOFactory.ParticipationDAOIf(RequestAdapter.getSession(request)).getParticipationsWithoutGroup(group.getLecture()).iterator();
 		while (participationIterator.hasNext()) {
@@ -90,7 +90,7 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("</tr>");
 		if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
 			out.println("<tr>");
-			out.println("<th>Verantwortliche Tutoren hinzufügen:</th>");
+			out.println("<th>Verantwortliche TutorInnen hinzufügen:</th>");
 			out.println("<td><select multiple name=tutors>");
 			participationIterator = DAOFactory.ParticipationDAOIf(RequestAdapter.getSession(request)).getMarkersAvailableParticipations(group).iterator();
 			while (participationIterator.hasNext()) {

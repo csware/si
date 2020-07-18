@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -63,11 +63,11 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=tutortest></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th># Ausführbar für Studenten:</th>");
+		out.println("<th># ausführbar für Studierende:</th>");
 		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Studenten Test-Details anzeigen:</th>");
+		out.println("<th>Studierenden Test-Details anzeigen:</th>");
 		out.println("<td><input type=checkbox name=giveDetailsToStudents></td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -103,7 +103,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=tutortest></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th># Ausführbar für Studenten:</th>");
+		out.println("<th># ausführbar für Studierende:</th>");
 		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -149,11 +149,11 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=tutortest></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th># Ausführbar für Studenten:</th>");
+		out.println("<th># ausführbar für Studierende:</th>");
 		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Studenten Test-Details anzeigen:</th>");
+		out.println("<th>Studierenden Test-Details anzeigen:</th>");
 		out.println("<td><input type=checkbox name=giveDetailsToStudents></td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -191,11 +191,11 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=tutortest></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th># Ausführbar für Studenten:</th>");
+		out.println("<th># ausführbar für Studierende:</th>");
 		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Studenten Test-Details anzeigen:</th>");
+		out.println("<th>Studierenden Test-Details anzeigen:</th>");
 		out.println("<td><input type=checkbox name=giveDetailsToStudents></td>");
 		out.println("</tr>");
 		out.println("<tr>");
@@ -232,11 +232,11 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=tutortest></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th># Ausführbar für Studenten:</th>");
+		out.println("<th># ausführbar für Studierende:</th>");
 		out.println("<td><input size=5 type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Studenten Test-Details anzeigen:</th>");
+		out.println("<th>Studierenden Test-Details anzeigen:</th>");
 		out.println("<td><input type=checkbox name=giveDetailsToStudents></td>");
 		out.println("</tr>");
 		out.println("<tr>");

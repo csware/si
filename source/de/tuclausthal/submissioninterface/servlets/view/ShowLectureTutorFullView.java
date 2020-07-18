@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2013 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -125,7 +125,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 							out.println("<td><span title=\"nicht bewertet\">n.b.</span></td>");
 						}
 					} else {
-						out.println("<td><span title=\"keine Abgabe vom Studenten\">k.A.</span></td>");
+						out.println("<td><span title=\"keine Abgabe des Studierenden\">k.A.</span></td>");
 					}
 				}
 			}

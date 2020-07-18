@@ -124,7 +124,7 @@ public class ShowSubmission extends HttpServlet {
 			PrintWriter out = response.getWriter();
 			Template template = TemplateFactory.getTemplate(request, response);
 			template.printTemplateHeader("Ungültige Anfrage");
-			out.println("<div class=mid>Der ausgewählte Partner hat bereits eine eigene Abgabe initiiert oder es wurden insgesamt zu viele Partner ausgewählt.</div>");
+			out.println("<div class=mid>Der ausgewählte Studierende hat bereits eine eigene Abgabe initiiert, es wurde die maximale Anzahl von Studierenden überschritten oder es wurde eine nicht verfügbarer Studierender ausgewählt.</div>");
 			template.printTemplateFooter();
 			return;
 		}
