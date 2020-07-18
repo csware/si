@@ -43,7 +43,7 @@ public class DupeCheckFormView extends HttpServlet {
 
 		template.printTemplateHeader("Ähnlichkeitsprüfung", task);
 		PrintWriter out = response.getWriter();
-		out.println("<h2>Plaggie Test</h2>");
+		out.println("<h2>Plaggie Test (Java <= 1.6)</h2>");
 		out.println("<form action=\"" + response.encodeURL("?action=savesimilaritytest") + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		out.println("<input type=hidden name=action value=performCheck>");

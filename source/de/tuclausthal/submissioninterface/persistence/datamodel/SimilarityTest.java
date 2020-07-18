@@ -262,7 +262,7 @@ public class SimilarityTest implements Serializable {
 	@Override
 	public String toString() {
 		if ("plaggie".equals(getType())) {
-			return "Plaggie-Test, min. Übereinstimmung: " + getMinimumDifferenceInPercent() + "%";
+			return "Plaggie-Test (java <= 1.6), min. Übereinstimmung: " + getMinimumDifferenceInPercent() + "%";
 		}
 		String string;
 		if ("compression".equals(getType())) {
