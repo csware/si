@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
@@ -27,42 +28,29 @@ import java.io.InputStreamReader;
  * @author Sven Strickroth
  */
 public class ReadOutputThread extends Thread {
-	private BufferedReader stdOutInputStream;
-	private StringBuffer stdOutStringBuffer = new StringBuffer();
-	private BufferedReader stdErrInputStream;
-	private StringBuffer stdErrStringBuffer = new StringBuffer();
+	final private BufferedReader streamReader;
+	final private StringBuffer stringBuffer = new StringBuffer();
 
-	public ReadOutputThread(Process process) {
-		stdOutInputStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
-		stdErrInputStream = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+	public ReadOutputThread(InputStream is) {
+		streamReader = new BufferedReader(new InputStreamReader(is));
 	}
 
-	public StringBuffer getStdOut() {
-		return stdOutStringBuffer;
-	}
-
-	public StringBuffer getStdErr() {
-		return stdErrStringBuffer;
+	public StringBuffer getBuffer() {
+		return stringBuffer;
 	}
 
 	@Override
 	public void run() {
-		while (!interrupted()) {
+		try {
 			String line;
-			try {
-				while ((line = stdOutInputStream.readLine()) != null) {
-					stdOutStringBuffer.append(line + "\n");
-				}
-				while ((line = stdErrInputStream.readLine()) != null) {
-					stdErrStringBuffer.append(line + "\n");
-				}
-			} catch (IOException e) {
+			while ((line = streamReader.readLine()) != null) {
+				stringBuffer.append(line);
 			}
+		} catch (IOException e) {
+		} finally {
 			try {
-				// don't cycle too fast
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				interrupt();
+				streamReader.close();
+			} catch (IOException e) {
 			}
 		}
 	}

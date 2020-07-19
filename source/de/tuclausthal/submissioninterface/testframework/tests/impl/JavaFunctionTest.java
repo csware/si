@@ -76,8 +76,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			ProcessBuilder pb = new ProcessBuilder(params);
 			pb.directory(tempDir);
 			Process process = pb.start();
-			ReadOutputThread readOutputThread = new ReadOutputThread(process);
-			readOutputThread.start();
+			ProcessOutputGrabber outputGrapper = new ProcessOutputGrabber(process);
 			TimeoutThread checkTread = new TimeoutThread(process, test.getTimeout());
 			checkTread.start();
 			int exitValue = -1;
@@ -89,15 +88,15 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 				aborted = true;
 			}
 			checkTread.interrupt();
-			readOutputThread.interrupt();
+			outputGrapper.waitFor();
 
 			boolean exitedCleanly = (exitValue == 0);
-			StringBuffer processOutput = readOutputThread.getStdOut();
+			StringBuffer processOutput = outputGrapper.getStdOutBuffer();
 			testResult.setTestPassed(calculateTestResult(test, exitedCleanly, processOutput));
 			// append STDERR
-			if (readOutputThread.getStdErr().length() > 0) {
+			if (outputGrapper.getStdErrBuffer().length() > 0) {
 				processOutput.append("\nFehlerausgabe (StdErr)\n");
-				processOutput.append(readOutputThread.getStdErr());
+				processOutput.append(outputGrapper.getStdErrBuffer());
 			}
 			if (aborted) {
 				processOutput.insert(0, "Student-program aborted due to too long execution time.\n\n");
