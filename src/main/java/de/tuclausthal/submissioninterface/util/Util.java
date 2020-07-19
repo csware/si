@@ -41,8 +41,8 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.Part;
 
-import org.apache.tomcat.util.http.fileupload.FileUploadBase;
-import org.apache.tomcat.util.http.fileupload.ParameterParser;
+import org.apache.commons.fileupload.FileUploadBase;
+import org.apache.commons.fileupload.ParameterParser;
 
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerIf;
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;

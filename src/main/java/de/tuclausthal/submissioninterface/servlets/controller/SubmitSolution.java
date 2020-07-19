@@ -44,7 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-import org.apache.tomcat.util.http.fileupload.FileUploadBase;
+import org.apache.commons.fileupload.FileUploadBase;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
