@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -37,9 +37,13 @@ public class LogDAO extends AbstractDAO {
 	}
 
 	public void createLogEntry(User user, Test test, Task task, LogAction logAction, Boolean result, String testOutput) {
+		createLogEntry(user, test, task, logAction, result, testOutput, null, null);
+	}
+
+	public void createLogEntry(User user, Test test, Task task, LogAction logAction, Boolean result, String testOutput, String filename, byte[] upload) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		LogEntry logEntry = new LogEntry(user, test, task, logAction, result, testOutput);
+		LogEntry logEntry = new LogEntry(user, test, task, logAction, result, testOutput, filename, upload);
 		session.save(logEntry);
 		tx.commit();
 	}

@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -345,8 +346,12 @@ public class SubmitSolution extends HttpServlet {
 				}
 				fileName = m.group(1);
 			}
+			byte[] upload = null;
 			try {
 				handleUploadedFile(path, task, fileName, file);
+				ByteArrayOutputStream os = new ByteArrayOutputStream((int)file.getSize());
+				Util.copyInputStreamAndClose(file.getInputStream(), os);
+				upload = os.toByteArray();
 			} catch (IOException e) {
 				if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 					submission.setLastModified(new Date());
@@ -367,7 +372,7 @@ public class SubmitSolution extends HttpServlet {
 				submissionDAO.saveSubmission(submission);
 			}
 			tx.commit();
-			new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, LogAction.UPLOAD, null, null);
+			new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null, null, fileName, upload);
 			response.addIntHeader("SID", submission.getSubmissionid());
 
 			for (Test test : task.getTests()) {
@@ -380,6 +385,7 @@ public class SubmitSolution extends HttpServlet {
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 			return;
 		} else if (request.getParameter("textsolution") != null) {
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			if (task.isADynamicTask()) {
 				int numberOfFields = task.getDynamicTaskStrategie(session).getNumberOfResultFields();
 				List<String> results = new LinkedList<>();
@@ -389,9 +395,12 @@ public class SubmitSolution extends HttpServlet {
 						result = "";
 					}
 					results.add(result);
+					os.write(result.getBytes());
+					os.write("||".getBytes());
 				}
 				DAOFactory.ResultDAOIf(session).createResults(submission, results);
 				DAOFactory.TaskNumberDAOIf(session).assignTaskNumbersToSubmission(submission, studentParticipation);
+				os.write("\n".getBytes());
 			}
 
 			File uploadedFile = new File(path, "textloesung.txt");
@@ -404,7 +413,8 @@ public class SubmitSolution extends HttpServlet {
 			submission.setLastModified(new Date());
 			submissionDAO.saveSubmission(submission);
 			tx.commit();
-
+			os.write(request.getParameter("textsolution").getBytes());
+			new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null, null, "!textsolution!", os.toByteArray());
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 		} else {
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {

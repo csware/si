@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -24,6 +24,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -37,10 +38,12 @@ public class LogEntry implements Serializable {
 	private int action;
 	private Boolean result;
 	private String testOutput;
+	private String uploadFilename;
+	private byte[] upload;
 
 	public LogEntry() {}
 
-	public LogEntry(User user, Test test, Task task, LogAction logAction, Boolean result, String testOutput) {
+	public LogEntry(User user, Test test, Task task, LogAction logAction, Boolean result, String testOutput, String uploadFilename, byte[] upload) {
 		action = logAction.ordinal();
 		if (logAction.compareTo(LogAction.PERFORMED_TEST) == 0) {
 			this.result = result;
@@ -52,6 +55,8 @@ public class LogEntry implements Serializable {
 		} else {
 			this.testId = null;
 		}
+		this.upload = upload;
+		this.uploadFilename = uploadFilename;
 		this.taskId = task.getTaskid();
 	}
 
@@ -65,7 +70,7 @@ public class LogEntry implements Serializable {
 	}
 
 	public static enum LogAction {
-		UPLOAD, PERFORMED_TEST, DELETE_FILE, UPLOAD_TRY
+		UPLOAD, PERFORMED_TEST, DELETE_FILE, UPLOAD_ADMIN
 	}
 
 	/**
@@ -171,5 +176,34 @@ public class LogEntry implements Serializable {
 	 */
 	public void setTaskId(int taskId) {
 		this.taskId = taskId;
+	}
+
+	/**
+	 * @return the upload
+	 */
+	@Lob
+	public byte[] getUpload() {
+		return upload;
+	}
+
+	/**
+	 * @param upload the upload to set
+	 */
+	public void setUpload(byte[] upload) {
+		this.upload = upload;
+	}
+
+	/**
+	 * @return the uploadFilename
+	 */
+	public String getUploadFilename() {
+		return uploadFilename;
+	}
+
+	/**
+	 * @param uploadFilename the uploadFilename to set
+	 */
+	public void setUploadFilename(String uploadFilename) {
+		this.uploadFilename = uploadFilename;
 	}
 }

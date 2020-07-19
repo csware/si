@@ -76,6 +76,8 @@ CREATE TABLE IF NOT EXISTS `logs` (
   `taskId` int(11) NOT NULL,
   `testId` int(11) DEFAULT NULL,
   `userId` int(11) NOT NULL,
+  `uploadfilename` VARCHAR(255) NULL,
+  `upload` MEDIUMBLOB NULL,
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`),
   KEY `testId` (`testId`),
