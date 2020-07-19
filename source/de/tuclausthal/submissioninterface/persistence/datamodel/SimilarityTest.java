@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -32,6 +32,7 @@ import javax.persistence.Transient;
 
 import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
 import de.tuclausthal.submissioninterface.dupecheck.compressiondistance.CompressionDistance;
+import de.tuclausthal.submissioninterface.dupecheck.jplag.JPlagAdapter;
 import de.tuclausthal.submissioninterface.dupecheck.levenshteindistance.LevenshteinDistance;
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerIf;
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.CapitalizationNormalizer;
@@ -212,6 +213,8 @@ public class SimilarityTest implements Serializable {
 	public DupeCheck getDupeCheck(File path) {
 		if ("plaggie".equals(getType())) {
 			return new PlaggieAdapter(path);
+		} else if ("jplag".equals(getType())) {
+				return new JPlagAdapter(path);
 		} else if ("compression".equals(getType())) {
 			return new CompressionDistance(path);
 		} else if ("levenshtein".equals(getType())) {
@@ -261,6 +264,9 @@ public class SimilarityTest implements Serializable {
 	 */
 	@Override
 	public String toString() {
+		if ("jplag".equals(getType())) {
+			return "JPlag-Test, min. Übereinstimmung: " + getMinimumDifferenceInPercent() + "%";
+		}
 		if ("plaggie".equals(getType())) {
 			return "Plaggie-Test (java <= 1.6), min. Übereinstimmung: " + getMinimumDifferenceInPercent() + "%";
 		}

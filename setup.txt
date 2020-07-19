@@ -6,6 +6,7 @@ How to setup the submission interface
 2b. Copy all .class files to the webapps\[contextname]\WEB-INF/classes folder
 3. Create a path where all submission should be stored (e.g. "c:\abgabesystem")
 4. Copy submissiondir/*, CraftedJOptionpage/craftedjoptionpane.jar and SecurityManager/NoExitSecurityManager.jar to that folder
+4a. If you want to use the JPlag plagiarism system (https://github.com/jplag/jplag), compile it into a single .jar (using the maven goal "assembly:assembly" inside the jplad directory and copy the final .jar (from the target folder) as "jplag.jar" into the root of the submissions folder.
 5. Open web.xml in the webapps\[contextname]\WEB-INF-folder
 5a. set the datapath value (context-param)
 5b. If you want to use LDAP or any other login-method, update the filter-init-params of the AuthenticationFilter

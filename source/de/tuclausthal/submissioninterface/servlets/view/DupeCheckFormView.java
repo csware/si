@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.servlets.view;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.Configuration;
 
 /**
  * View-Servlet for displaying a form for adding a new plagiarism test
@@ -43,6 +45,36 @@ public class DupeCheckFormView extends HttpServlet {
 
 		template.printTemplateHeader("Ähnlichkeitsprüfung", task);
 		PrintWriter out = response.getWriter();
+
+		if (new File(Configuration.getInstance().getDataPath(), "jplag.jar").exists()) {
+			out.println("<h2>JPlag Test</h2>");
+			out.println("<form action=\"" + response.encodeURL("?action=savesimilaritytest") + "\" method=post>");
+			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
+			out.println("<input type=hidden name=action value=performCheck>");
+			out.println("<input type=hidden name=type value=jplag>");
+			out.println("<input type=hidden name=normalizer1 value=\"\">");
+			out.println("<input type=hidden name=normalizer2 value=\"\">");
+			out.println("<input type=hidden name=normalizer3 value=\"\">");
+			out.println("<table class=border>");
+			out.println("<tr>");
+			out.println("<th>Minimale Ähnlichkeit:</th>");
+			out.println("<td><input size=5 type=text value=80 name=minsimilarity> %</td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<th>Dateien ausschließen:</th>");
+			out.println("<td><input size=100 type=text name=excludeFiles><br>(Dateinamen durch Komma getrennt)</td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+			out.println(response.encodeURL("TaskManager?taskid=" + task.getTaskid() + "&amp;action=editTask&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
+			out.println("\">Abbrechen</a></td>");
+			out.println("</tr>");
+			out.println("</table>");
+			out.println("</form>");
+		}else {
+			out.println("<p>(JPlag-Tests sind nicht verfügbar, da JPlag nicht gefunden wurde.)</p>");
+		}
+
 		out.println("<h2>Plaggie Test (Java <= 1.6)</h2>");
 		out.println("<form action=\"" + response.encodeURL("?action=savesimilaritytest") + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
