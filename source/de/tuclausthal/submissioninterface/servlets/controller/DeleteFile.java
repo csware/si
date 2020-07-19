@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -94,7 +94,7 @@ public class DeleteFile extends HttpServlet {
 		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 		File file = new File(path, request.getPathInfo().substring(1));
 		if (file.exists() && file.isFile() && file.delete()) {
-			new LogDAO(session).createLogEntry(participation.getUser(), null, submission.getTask(), LogAction.DELETE_FILE, null, null);
+			new LogDAO(session).createLogEntry(participation.getUser(), null, submission.getTask(), LogAction.DELETE_FILE, null, null, request.getPathInfo().substring(1), null);
 			Transaction tx = session.beginTransaction();
 			session.lock(submission, LockMode.UPGRADE);
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
