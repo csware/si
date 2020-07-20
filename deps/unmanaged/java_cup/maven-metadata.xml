@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>unmanaged</groupId>
+  <artifactId>java_cup</artifactId>
+  <versioning>
+    <release>0.10j</release>
+    <versions>
+      <version>0.10j</version>
+    </versions>
+    <lastUpdated>20200721145835</lastUpdated>
+  </versioning>
+</metadata>

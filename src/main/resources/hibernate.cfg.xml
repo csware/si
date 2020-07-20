@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+          "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+<session-factory>
+	<property name="connection.url">jdbc:mysql://localhost/abgabesystem</property>
+	<property name="connection.characterEncoding">UTF-8</property>
+	<property name="connection.username">root</property>
+	<property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+	<property name="dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+	<property name="connection.password"></property>
+
+        <!-- Disable second-level cache. -->
+        <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+        <property name="cache.use_query_cache">false</property>
+        <property name="cache.use_minimal_puts">false</property>
+        <property name="max_fetch_depth">3</property>
+
+        <!-- Use the C3P0 connection pool. -->
+        <property name="c3p0.min_size">3</property>
+        <property name="c3p0.max_size">5</property>
+        <property name="c3p0.timeout">1800</property>
+
+ <property name="transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+    <!--  thread is the short name for
+      org.hibernate.context.ThreadLocalSessionContext
+      and let Hibernate bind the session automatically to the thread
+    -->
+    <property name="current_session_context_class">thread</property>
+    <!-- this will show us all sql statements -->
+    <property name="hibernate.show_sql">true</property>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.User"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Student"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Task"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Similarity"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Submission"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Lecture"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Participation"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Points"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Group"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TestResult"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Test"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TestCount"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Result"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber"/>
+ </session-factory>
+</hibernate-configuration>
