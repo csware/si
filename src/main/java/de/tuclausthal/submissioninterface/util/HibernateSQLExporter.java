@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -28,6 +28,7 @@ import org.hibernate.tool.hbm2ddl.SchemaExport;
 public class HibernateSQLExporter {
 	public static void main(String[] fdf) {
 		SchemaExport bla = new SchemaExport(new AnnotationConfiguration().configure());
+		bla.setDelimiter(";");
 		bla.setOutputFile("1.sql");
 		bla.execute(false, false, false, false);
 	}
