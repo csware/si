@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -71,7 +71,6 @@ public class Similarity implements Serializable {
 	/**
 	 * @return the percentage
 	 */
-	@Column(nullable = false)
 	public int getPercentage() {
 		return percentage;
 	}

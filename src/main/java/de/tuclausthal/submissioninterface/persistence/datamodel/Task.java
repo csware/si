@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -145,7 +145,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the maxPoints
 	 */
-	@Column(nullable = false)
 	public int getMaxPoints() {
 		return maxPoints;
 	}
@@ -304,7 +303,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the showTextArea
 	 */
-	@Column(nullable = false)
 	public boolean isShowTextArea() {
 		return showTextArea;
 	}
@@ -353,7 +351,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the tutorsCanUploadFiles
 	 */
-	@Column(nullable = false)
 	public boolean isTutorsCanUploadFiles() {
 		return tutorsCanUploadFiles;
 	}

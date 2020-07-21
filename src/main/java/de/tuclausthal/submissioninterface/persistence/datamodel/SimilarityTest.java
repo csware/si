@@ -159,7 +159,6 @@ public class SimilarityTest implements Serializable {
 	/**
 	 * @return the normalizeCapitalization
 	 */
-	@Column(nullable = false)
 	public boolean isNormalizeCapitalization() {
 		return normalizeCapitalization;
 	}

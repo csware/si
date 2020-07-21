@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,7 +20,6 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -51,7 +50,6 @@ public abstract class Test implements Serializable {
 	/**
 	 * @return the visibleToStudents
 	 */
-	@Column(nullable = false)
 	public int getTimesRunnableByStudents() {
 		return timesRunnableByStudents;
 	}
@@ -112,7 +110,6 @@ public abstract class Test implements Serializable {
 	/**
 	 * @return the forTutors
 	 */
-	@Column(nullable = false)
 	public boolean isForTutors() {
 		return forTutors;
 	}
