@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -50,11 +51,12 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			PrintWriter out = response.getWriter();
 			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 		} else {
+			List<Participation> participants = (List<Participation>) request.getAttribute("participants");
 			template.printTemplateHeader("Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"AdminMenue\">Admin-Menü</a> &gt; Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten");
 			PrintWriter out = response.getWriter();
 			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("?action=deleteLecture&amp;lecture=" + lecture.getId()) + "\">Veranstaltung löschen</a></p>");
 			out.println("<h2>BetreuerInnen</h2>");
-			Iterator<Participation> advisorIterator = lecture.getParticipants().iterator();
+			Iterator<Participation> advisorIterator = participants.iterator();
 			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>BenutzerInnen</th>");
@@ -78,7 +80,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			out.println("</table><p>");
 
 			out.println("<h2>TutorInnen</h2>");
-			Iterator<Participation> tutorIterator = lecture.getParticipants().iterator();
+			Iterator<Participation> tutorIterator = participants.iterator();
 			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>BenutzerInnen</th>");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011, 2013 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2013, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -78,7 +78,7 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 		}
 		out.println("Gesamt");
 
-		for (Participation lectureParticipation : lecture.getParticipants()) {
+		for (Participation lectureParticipation : DAOFactory.ParticipationDAOIf(session).getLectureParticipations(lecture)) {
 			out.print(lectureParticipation.getRoleType().toString() + ";");
 			if (lectureParticipation.getUser() instanceof Student) {
 				if (showMatNo) {

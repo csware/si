@@ -93,7 +93,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		}
 		out.println("</tr>");
 
-		for (Participation lectureParticipation : lecture.getParticipants()) {
+		for (Participation lectureParticipation : DAOFactory.ParticipationDAOIf(session).getLectureParticipations(lecture)) {
 			out.println("<tr>");
 			if (lectureParticipation.getUser() instanceof Student) {
 				if (showMatNo) {

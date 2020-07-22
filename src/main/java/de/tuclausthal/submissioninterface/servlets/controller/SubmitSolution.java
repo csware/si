@@ -123,6 +123,7 @@ public class SubmitSolution extends HttpServlet {
 		request.setAttribute("task", task);
 
 		if (canUploadForStudents) {
+			request.setAttribute("participants", DAOFactory.ParticipationDAOIf(session).getLectureParticipations(task.getTaskGroup().getLecture()));
 			request.getRequestDispatcher("SubmitSolutionAdvisorFormView").forward(request, response);
 		} else {
 			request.setAttribute("participation", participation);

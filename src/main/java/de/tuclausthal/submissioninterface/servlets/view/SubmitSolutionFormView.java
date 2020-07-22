@@ -21,7 +21,6 @@ package de.tuclausthal.submissioninterface.servlets.view;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -72,11 +71,11 @@ public class SubmitSolutionFormView extends HttpServlet {
 				partnerField.append("<select name=partnerid size=1>");
 				int cnt = 0;
 				partnerField.append("<option value=0>-</option>");
-				Set<Participation> participations = null;
+				List<Participation> participations;
 				if (task.isAllowSubmittersAcrossGroups()) {
-					participations = task.getTaskGroup().getLecture().getParticipants();
+					participations = DAOFactory.ParticipationDAOIf(session).getLectureParticipations(task.getTaskGroup().getLecture());
 				} else {
-					participations = participation.getGroup().getMembers();
+					participations = DAOFactory.ParticipationDAOIf(session).getParticipationsOfGroup(participation.getGroup());
 				}
 				for (Participation part : participations) {
 					// filter out students which already have a submission and users which are in a submissiongroup (otherwise the other participants of the submissiongroup cannot submit a solution any more)

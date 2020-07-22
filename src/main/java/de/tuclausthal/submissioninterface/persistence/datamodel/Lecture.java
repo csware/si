@@ -95,10 +95,8 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the participants
 	 */
-	@OneToMany(mappedBy = "lecture")
+	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	// TODO: HACK!
-	@OrderBy(clause = "user3_.lastname,user3_.firstname")
 	public Set<Participation> getParticipants() {
 		return participants;
 	}

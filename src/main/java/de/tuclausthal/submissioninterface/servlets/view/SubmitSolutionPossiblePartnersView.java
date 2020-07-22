@@ -19,7 +19,7 @@
 package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -80,11 +80,11 @@ public class SubmitSolutionPossiblePartnersView extends HttpServlet {
 			} else if (task.isAllowSubmittersAcrossGroups() || participation.getGroup() != null) {
 				Element partners = document.createElement("partners");
 
-				Set<Participation> participations = null;
+				List<Participation> participations;
 				if (task.isAllowSubmittersAcrossGroups()) {
-					participations = task.getTaskGroup().getLecture().getParticipants();
+					participations = DAOFactory.ParticipationDAOIf(session).getLectureParticipations(task.getTaskGroup().getLecture());
 				} else {
-					participations = participation.getGroup().getMembers();
+					participations = DAOFactory.ParticipationDAOIf(session).getParticipationsOfGroup(participation.getGroup());
 				}
 				int cnt = 0;
 				for (Participation part : participations) {

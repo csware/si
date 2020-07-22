@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -128,5 +128,10 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 			return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.or(Restrictions.eq("role", ParticipationRole.TUTOR.toString()), Restrictions.eq("role", ParticipationRole.ADVISOR.toString()))).add(Restrictions.not(Restrictions.in("id", ids))).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 		}
 		return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.or(Restrictions.eq("role", ParticipationRole.TUTOR.toString()), Restrictions.eq("role", ParticipationRole.ADVISOR.toString()))).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+	}
+
+	@Override
+	public List<Participation> getLectureParticipations(Lecture lecture) {
+		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).createAlias("user", "user").addOrder(Order.asc("user.lastName")).addOrder(Order.asc("user.firstName")).list();
 	}
 }
