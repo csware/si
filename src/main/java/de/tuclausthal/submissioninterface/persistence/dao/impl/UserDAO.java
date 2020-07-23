@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -54,7 +54,7 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 	public User createUser(String email, String firstName, String lastName) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("email", email)).setLockMode(LockMode.UPGRADE).setMaxResults(1).uniqueResult();
+		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("email", email)).setLockMode(LockMode.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
 		if (user == null) {
 			user = new User();
 			user.setFirstName(firstName);
@@ -70,7 +70,7 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 	public User createUser(String email, String firstName, String lastName, int matrikelno) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("email", email)).setLockMode(LockMode.UPGRADE).setMaxResults(1).uniqueResult();
+		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("email", email)).setLockMode(LockMode.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
 		if (user == null) {
 			Student student = new Student();
 			student.setEmail(email);

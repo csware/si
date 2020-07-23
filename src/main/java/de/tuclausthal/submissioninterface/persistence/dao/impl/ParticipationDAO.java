@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 import java.util.List;
 
 import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -74,13 +75,13 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 
 	@Override
 	public Participation getParticipationLocked(User user, Lecture lecture) {
-		return (Participation) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).setLockMode(LockMode.UPGRADE).uniqueResult();
+		return (Participation) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).setLockMode(LockMode.PESSIMISTIC_WRITE).uniqueResult();
 	}
 
 	@Override
 	public void deleteParticipation(User user, Lecture lecture) {
 		Session session = getSession();
-		Participation participation = (Participation) session.createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).setLockMode(LockMode.UPGRADE).uniqueResult();
+		Participation participation = (Participation) session.createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).setLockMode(LockMode.PESSIMISTIC_WRITE).uniqueResult();
 		if (participation != null) {
 			session.delete(participation);
 		}
@@ -103,7 +104,7 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 
 	@Override
 	public Participation getParticipationLocked(int participationid) {
-		return (Participation) getSession().get(Participation.class, participationid, LockMode.UPGRADE);
+		return (Participation) getSession().get(Participation.class, participationid, LockOptions.UPGRADE);
 	}
 
 	@Override

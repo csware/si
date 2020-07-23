@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -40,7 +41,7 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 	@Override
 	public void storeTestResult(Test test, Submission submission, TestExecutorTestResult testExecutorTestResult) {
 		Session session = getSession();
-		session.lock(test, LockMode.UPGRADE);
+		session.buildLockRequest(LockOptions.UPGRADE).lock(test);
 		TestResult testResult = getResultLocked(test, submission);
 		if (testResult == null) {
 			testResult = new TestResult();
@@ -69,6 +70,6 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 
 	@Override
 	public TestResult getResultLocked(Test test, Submission submission) {
-		return (TestResult) getSession().createCriteria(TestResult.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("submission", submission)).setLockMode(LockMode.UPGRADE).uniqueResult();
+		return (TestResult) getSession().createCriteria(TestResult.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("submission", submission)).setLockMode(LockMode.PESSIMISTIC_WRITE).uniqueResult();
 	}
 }

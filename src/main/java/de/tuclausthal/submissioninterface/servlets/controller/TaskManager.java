@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -293,7 +293,7 @@ public class TaskManager extends HttpServlet {
 				Transaction tx = session.beginTransaction();
 				// TODO make nice! and use DAOs
 				Task task = pointCategory.getTask();
-				session.lock(task, LockMode.UPGRADE);
+				session.buildLockRequest(LockOptions.UPGRADE).lock(task);
 				pointCategoryDAO.deletePointCategory(pointCategory);
 				task.setMaxPoints(pointCategoryDAO.countPoints(task));
 				session.update(task);
@@ -312,7 +312,7 @@ public class TaskManager extends HttpServlet {
 			if (Util.convertToPoints(request.getParameter("points"), task.getMinPointStep()) > 0) {
 				// TODO make nice! and use DAOs
 				Transaction tx = session.beginTransaction();
-				session.lock(task, LockMode.UPGRADE);
+				session.buildLockRequest(LockOptions.UPGRADE).lock(task);
 				pointCategoryDAO.newPointCategory(task, Util.convertToPoints(request.getParameter("points")), request.getParameter("description"), request.getParameter("optional") != null);
 				task.setMaxPoints(pointCategoryDAO.countPoints(task));
 				session.update(task);
@@ -333,7 +333,7 @@ public class TaskManager extends HttpServlet {
 			}
 
 			Transaction tx = session.beginTransaction();
-			session.lock(task, LockMode.UPGRADE);
+			session.buildLockRequest(LockOptions.UPGRADE).lock(task);
 			task.setModelSolutionProvisionType(ModelSolutionProvisionType.valueOf(request.getParameter("modelsolutiontype")));
 			session.update(task);
 			tx.commit();

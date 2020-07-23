@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
@@ -93,7 +94,7 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 
 	@Override
 	public Test getTestLocked(int testId) {
-		return (Test) getSession().get(Test.class, testId, LockMode.UPGRADE);
+		return (Test) getSession().get(Test.class, testId, LockOptions.UPGRADE);
 	}
 
 	@Override
@@ -109,7 +110,7 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 	public Test takeTest() {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		Test test = (Test) session.createCriteria(Test.class).add(Restrictions.eq("forTutors", true)).add(Restrictions.eq("needsToRun", true)).setLockMode(LockMode.UPGRADE).createCriteria("task").add(Restrictions.le("deadline", Util.correctTimezone(new Date()))).setMaxResults(1).uniqueResult();
+		Test test = (Test) session.createCriteria(Test.class).add(Restrictions.eq("forTutors", true)).add(Restrictions.eq("needsToRun", true)).setLockMode(LockMode.PESSIMISTIC_WRITE).createCriteria("task").add(Restrictions.le("deadline", Util.correctTimezone(new Date()))).setMaxResults(1).uniqueResult();
 		if (test != null) {
 			test.setNeedsToRun(false);
 			session.save(test);

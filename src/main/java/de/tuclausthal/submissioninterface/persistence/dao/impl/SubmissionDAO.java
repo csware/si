@@ -21,7 +21,7 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 import java.io.File;
 import java.util.List;
 
-import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -49,7 +49,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 	}
 
 	public Submission getSubmissionLocked(int submissionid) {
-		return (Submission) getSession().get(Submission.class, submissionid, LockMode.UPGRADE);
+		return (Submission) getSession().get(Submission.class, submissionid, LockOptions.UPGRADE);
 	}
 
 	@Override
@@ -61,13 +61,13 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 	public Submission createSubmission(Task task, Participation submitter) {
 		Session session = getSession();
 		// lock participation, because locking of not-existing entries in InnoDB might lock the whole table (submissions AND tasks) causing a strict serialization of ALL requests
-		session.lock(submitter, LockMode.UPGRADE);
+		session.buildLockRequest(LockOptions.UPGRADE).lock(submitter);
 		Submission submission = getSubmission(task, submitter.getUser());
 		if (submission == null) {
 			submission = new Submission(task, submitter);
 			session.save(submission);
 		} else {
-			session.lock(submission, LockMode.UPGRADE);
+			session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
 		}
 		return submission;
 	}
@@ -86,7 +86,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 	@Override
 	public boolean deleteIfNoFiles(Submission submission, File submissionPath) {
 		Session session = getSession();
-		session.lock(submission, LockMode.UPGRADE);
+		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
 		boolean result = false;
 		Util.recursiveDeleteEmptySubDirectories(submissionPath);
 		if (submissionPath.listFiles().length == 0 && submissionPath.delete()) {

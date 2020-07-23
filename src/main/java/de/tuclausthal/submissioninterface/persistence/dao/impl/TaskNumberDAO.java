@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -47,7 +47,7 @@ public class TaskNumberDAO extends AbstractDAO implements TaskNumberDAOIf {
 
 	@Override
 	public List<TaskNumber> getTaskNumbersForTaskLocked(Task task, Participation participation) {
-		return getSession().createCriteria(TaskNumber.class).add(Restrictions.eq("task", task)).add(Restrictions.eq("participation", participation)).addOrder(Order.asc("tasknumberid")).setLockMode(LockMode.UPGRADE).list();
+		return getSession().createCriteria(TaskNumber.class).add(Restrictions.eq("task", task)).add(Restrictions.eq("participation", participation)).addOrder(Order.asc("tasknumberid")).setLockMode(LockMode.PESSIMISTIC_WRITE).list();
 	}
 
 	@Override

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -51,8 +52,8 @@ public class ResultDAO extends AbstractDAO implements ResultDAOIf {
 
 	@Override
 	public void createResults(Submission submission, List<String> results) {
-		session.lock(submission, LockMode.UPGRADE);
-		for (Result result : (List<Result>) session.createCriteria(Result.class).add(Restrictions.eq("submission", submission)).setLockMode(LockMode.UPGRADE).list()) {
+		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
+		for (Result result : (List<Result>) session.createCriteria(Result.class).add(Restrictions.eq("submission", submission)).setLockMode(LockMode.PESSIMISTIC_WRITE).list()) {
 			session.delete(result);
 		}
 		for (String stringResult : results) {
