@@ -51,7 +51,7 @@ public class Task implements Serializable {
 	private int taskid;
 	private String title = "";
 	private int maxSubmitters = 1;
-	private long maxsize = 10485760;
+	private int maxsize = 10485760;
 	private int maxPoints = 0;
 	private int minPointStep = 50;
 	private Date start;
@@ -463,7 +463,7 @@ public class Task implements Serializable {
 	 * Returns the maximum upload size in bytes
 	 * @return the maxsize
 	 */
-	public long getMaxsize() {
+	public int getMaxsize() {
 		return maxsize;
 	}
 
@@ -471,7 +471,7 @@ public class Task implements Serializable {
 	 * Sets the maximum upload size for this task in bytes
 	 * @param maxsize the maxsize to set
 	 */
-	public void setMaxsize(long maxsize) {
+	public void setMaxsize(int maxsize) {
 		this.maxsize = maxsize;
 	}
 }
