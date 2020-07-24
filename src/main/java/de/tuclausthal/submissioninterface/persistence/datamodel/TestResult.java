@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -33,20 +34,20 @@ public class TestResult implements Serializable {
 	private int id;
 	private Test test;
 	private Submission submission;
-	private Boolean passedTest = null;
+	private boolean passedTest;
 	private String testOutput = "no output available yet";
 
 	/**
 	 * @return the passedTest
 	 */
-	public Boolean getPassedTest() {
+	public boolean getPassedTest() {
 		return passedTest;
 	}
 
 	/**
 	 * @param passedTest the passedTest to set
 	 */
-	public void setPassedTest(Boolean passedTest) {
+	public void setPassedTest(boolean passedTest) {
 		this.passedTest = passedTest;
 	}
 
@@ -54,6 +55,7 @@ public class TestResult implements Serializable {
 	 * @return the testOutput
 	 */
 	@Lob
+	@Column(nullable = false)
 	public String getTestOutput() {
 		return testOutput;
 	}
@@ -68,7 +70,7 @@ public class TestResult implements Serializable {
 	/**
 	 * @return the test
 	 */
-	@ManyToOne
+	@ManyToOne(optional = false)
 	public Test getTest() {
 		return test;
 	}
@@ -83,7 +85,7 @@ public class TestResult implements Serializable {
 	/**
 	 * @return the submission
 	 */
-	@ManyToOne
+	@ManyToOne(optional = false)
 	public Submission getSubmission() {
 		return submission;
 	}

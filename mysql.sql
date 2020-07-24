@@ -19,7 +19,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 DROP TABLE IF EXISTS `groups`;
 CREATE TABLE IF NOT EXISTS `groups` (
   `gid` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_german2_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_german2_ci NOT NULL,
   `lectureid` int(11) NOT NULL,
   `allowStudentsToSignup` bit(1) NOT NULL,
   `allowStudentsToQuit` bit(1) NOT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `groups_tutors` (
 DROP TABLE IF EXISTS `lectures`;
 CREATE TABLE IF NOT EXISTS `lectures` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_german2_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_german2_ci NOT NULL,
   `semester` int(11) NOT NULL,
   `requiresAbhnahme` bit(1) NOT NULL,
   `gradingMethod` varchar(25) CHARACTER SET latin1 COLLATE latin1_german2_ci NOT NULL DEFAULT '',
@@ -279,7 +279,7 @@ CREATE TABLE IF NOT EXISTS `submissions_tasknumbers` (
 DROP TABLE IF EXISTS `taskgroups`;
 CREATE TABLE IF NOT EXISTS `taskgroups` (
   `taskgroupid` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) DEFAULT NULL,
+  `title` varchar(255) NOT NULL,
   `lectureid` int(11) NOT NULL,
   PRIMARY KEY (`taskgroupid`),
   KEY `FK5BD51799AF18EDD1` (`lectureid`)
@@ -295,9 +295,9 @@ DROP TABLE IF EXISTS `tasks`;
 CREATE TABLE IF NOT EXISTS `tasks` (
   `taskid` int(11) NOT NULL AUTO_INCREMENT,
   `deadline` datetime NOT NULL,
-  `description` longtext,
-  `filenameRegexp` varchar(255) DEFAULT NULL,
-  `archiveFilenameRegexp` varchar(255) DEFAULT NULL,
+  `description` longtext NOT NULL,
+  `filenameRegexp` varchar(255) NOT NULL,
+  `archiveFilenameRegexp` varchar(255) NOT NULL,
   `maxPoints` int(11) NOT NULL,
   `minPointStep` int(11) NOT NULL,
   `maxSubmitters` int(11) NOT NULL,
@@ -305,7 +305,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `showPoints` datetime DEFAULT NULL,
   `showTextArea` bit(1) NOT NULL,
   `start` datetime NOT NULL,
-  `title` varchar(255) DEFAULT NULL,
+  `title` varchar(255) NOT NULL,
   `taskgroupid` int(11) NOT NULL,
   `featuredFiles` text NOT NULL,
   `tutorsCanUploadFiles` bit(1) NOT NULL,
@@ -324,10 +324,10 @@ CREATE TABLE IF NOT EXISTS `tasks` (
 DROP TABLE IF EXISTS `testresults`;
 CREATE TABLE IF NOT EXISTS `testresults` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `passedTest` bit(1) DEFAULT NULL,
-  `testOutput` longtext,
-  `submission_submissionid` int(11) DEFAULT NULL,
-  `test_id` int(11) DEFAULT NULL,
+  `passedTest` bit(1) NOT NULL,
+  `testOutput` longtext NOT NULL,
+  `submission_submissionid` int(11) NOT NULL,
+  `test_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FKC6CC0F246B74DB4C` (`submission_submissionid`),
   KEY `FKC6CC0F248DBEBD80` (`test_id`)

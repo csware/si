@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -63,6 +64,7 @@ public class Group implements Serializable {
 	/**
 	 * @return the name
 	 */
+	@Column(nullable = false)
 	public String getName() {
 		return name;
 	}

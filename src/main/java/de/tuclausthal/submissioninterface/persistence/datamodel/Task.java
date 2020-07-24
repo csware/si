@@ -131,6 +131,7 @@ public class Task implements Serializable {
 	/**
 	 * @return the title
 	 */
+	@Column(nullable = false)
 	public String getTitle() {
 		return title;
 	}
@@ -190,6 +191,7 @@ public class Task implements Serializable {
 	 * @return the description
 	 */
 	@Lob
+	@Column(nullable = false)
 	public String getDescription() {
 		return description;
 	}
@@ -284,6 +286,7 @@ public class Task implements Serializable {
 	/**
 	 * @return the filenameRegexp
 	 */
+	@Column(nullable = false)
 	public String getFilenameRegexp() {
 		return filenameRegexp;
 	}
@@ -382,6 +385,7 @@ public class Task implements Serializable {
 	/**
 	 * @return the archiveFilenameRegexp
 	 */
+	@Column(nullable = false)
 	public String getArchiveFilenameRegexp() {
 		return archiveFilenameRegexp;
 	}

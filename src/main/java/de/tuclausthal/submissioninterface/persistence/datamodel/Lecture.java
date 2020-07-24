@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -49,6 +50,7 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the name
 	 */
+	@Column(nullable = false)
 	public String getName() {
 		return name;
 	}
@@ -175,6 +177,7 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the gradingMethod
 	 */
+	@Column(nullable = false)
 	public String getGradingMethod() {
 		return gradingMethod;
 	}

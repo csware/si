@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Giselle Rodriguez
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -120,6 +121,7 @@ public class TaskNumber implements Serializable {
 	/**
 	 * @return the number
 	 */
+	@Column(nullable = false)
 	public String getNumber() {
 		return number;
 	}
@@ -134,6 +136,7 @@ public class TaskNumber implements Serializable {
 	/**
 	 * @param origNumber the origNumber to set
 	 */
+	@Column(nullable = false)
 	public void setOrigNumber(String origNumber) {
 		this.origNumber = origNumber;
 	}
