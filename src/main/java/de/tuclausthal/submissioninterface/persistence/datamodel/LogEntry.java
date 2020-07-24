@@ -112,6 +112,7 @@ public class LogEntry implements Serializable {
 	/**
 	 * @return the testOutput
 	 */
+	@Lob
 	public String getTestOutput() {
 		return testOutput;
 	}

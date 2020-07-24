@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
@@ -150,6 +151,7 @@ public class Points implements Serializable {
 	/**
 	 * @return the pointStatus
 	 */
+	@Column(columnDefinition="TINYINT")
 	public Integer getPointStatus() {
 		return pointStatus;
 	}
