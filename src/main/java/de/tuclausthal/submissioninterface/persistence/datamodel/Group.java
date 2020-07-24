@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -34,7 +34,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "groups")
 public class Group implements Serializable {
-	private Integer gid;
+	private int gid;
 	private String name;
 	private Lecture lecture;
 	private Set<Participation> members;
@@ -49,14 +49,14 @@ public class Group implements Serializable {
 	 */
 	@Id
 	@GeneratedValue
-	public Integer getGid() {
+	public int getGid() {
 		return gid;
 	}
 
 	/**
 	 * @param gid the gid to set
 	 */
-	public void setGid(Integer gid) {
+	public void setGid(int gid) {
 		this.gid = gid;
 	}
 

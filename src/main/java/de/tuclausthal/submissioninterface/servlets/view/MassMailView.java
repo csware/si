@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -63,7 +63,7 @@ public class MassMailView extends HttpServlet {
 		out.println("<option value=\"nogroup\">ohne Gruppe</option>");
 		for (Group theGroup : lecture.getGroups()) {
 			String selected = "";
-			if (group != null && group.getGid() == theGroup.getGid().intValue()) {
+			if (group != null && group.getGid() == theGroup.getGid()) {
 				selected = " selected";
 			}
 			out.println("<option value=" + theGroup.getGid() + selected + ">" + Util.escapeHTML(theGroup.getName()) + "</option>");
