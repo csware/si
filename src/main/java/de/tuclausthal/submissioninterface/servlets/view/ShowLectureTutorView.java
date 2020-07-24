@@ -84,15 +84,13 @@ public class ShowLectureTutorView extends HttpServlet {
 						out.println("<th>Max. Punkte</th>");
 						out.println("</tr>");
 					}
-					if (isStartedTable && (taskGroup.getTitle() != null || isAdvisor)) {
-						out.println("<tr>");
-						String editLink = "";
-						if (isAdvisor) {
-							editLink = " (<a href=\"" + response.encodeURL("TaskManager?lecture=" + lecture.getId() + "&amp;action=editTaskGroup&amp;taskgroupid=" + taskGroup.getTaskGroupId()) + "\">edit</a>)";
-						}
-						out.println("<th colspan=2>Aufgabengruppe " + Util.escapeHTML(taskGroup.getTitle()) + editLink + "</th>");
-						out.println("</tr>");
+					out.println("<tr>");
+					String editLink = "";
+					if (isAdvisor) {
+						editLink = " (<a href=\"" + response.encodeURL("TaskManager?lecture=" + lecture.getId() + "&amp;action=editTaskGroup&amp;taskgroupid=" + taskGroup.getTaskGroupId()) + "\">edit</a>)";
 					}
+					out.println("<th colspan=2>Aufgabengruppe " + Util.escapeHTML(taskGroup.getTitle()) + editLink + "</th>");
+					out.println("</tr>");
 					while (taskIterator.hasNext()) {
 						Task task = taskIterator.next();
 						if (task.getStart().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {

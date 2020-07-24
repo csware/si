@@ -106,7 +106,7 @@ public class ShowUserView extends HttpServlet {
 										out.println("<th>Meine Punkte</th>");
 										out.println("</tr>");
 									}
-									if (!isStartedTaskgroup && taskGroup.getTitle() != null) {
+									if (!isStartedTaskgroup) {
 										isStartedTaskgroup = true;
 										out.println("<tr>");
 										out.println("<th colspan=3>Aufgabengruppe " + Util.escapeHTML(taskGroup.getTitle()) + "</th>");
