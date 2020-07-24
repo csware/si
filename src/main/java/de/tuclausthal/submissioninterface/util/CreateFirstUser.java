@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,6 +20,10 @@ package de.tuclausthal.submissioninterface.util;
 
 import java.io.IOException;
 
+import org.hibernate.classic.Session;
+
+import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
+
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
@@ -34,10 +38,14 @@ public class CreateFirstUser {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		UserDAOIf userDAOIf = DAOFactory.UserDAOIf(HibernateSessionHelper.getSessionFactory().openSession());
+		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		UserDAOIf userDAOIf = DAOFactory.UserDAOIf(session);
 		User user = userDAOIf.createUser(args[0], args[1], args[2]);
 		user.setSuperUser(true);
 		userDAOIf.saveUser(user);
 		System.out.println("User created.");
+		session.close();
+		HibernateSessionHelper.getSessionFactory().close();
+		AbandonedConnectionCleanupThread.uncheckedShutdown();
 	}
 }

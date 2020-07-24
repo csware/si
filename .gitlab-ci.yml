@@ -1,7 +1,15 @@
 # General info: https://docs.gitlab.com/ee/ci/yaml/
 # Building maven: https://docs.gitlab.com/ee/user/project/packages/maven_repository.html
 
+services:
+  - mysql:5.7
+
 variables:
+  # Configure mysql environment variables (https://hub.docker.com/_/mysql/)
+  MYSQL_DATABASE: "root"
+  MYSQL_ROOT_PASSWORD: ""
+  MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
   # This will suppress any download for dependencies and plugins or upload messages which would clutter the console log.
   # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
   MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
@@ -20,10 +28,19 @@ cache:
 
 compile:
   stage: build
+  before_script:
+    - apt-get update
+    - apt-get install -y mariadb-client
+    - perl -pi -e 's|localhost/[a-zA-Z0-9]+|mysql/abgabesystem|g' src/main/resources/hibernate.cfg.xml
   script:
     - 'mvn $MAVEN_CLI_OPTS verify'
+    - mysql -u root -h mysql -e 'create database abgabesystem CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin;'
+    - mysql -u root -h mysql abgabesystem < mysql.sql
+    - mvn exec:java -Dexec.mainClass="de.tuclausthal.submissioninterface.util.CreateFirstUser" -Dexec.args="admin Firstname Lastname"
+    - mvn exec:java -Dexec.mainClass="de.tuclausthal.submissioninterface.util.HibernateSQLExporter"
   # keep built artifacts
   artifacts:
     paths:
       - target/*.war
+      - 1.sql
     expire_in: 1 week
