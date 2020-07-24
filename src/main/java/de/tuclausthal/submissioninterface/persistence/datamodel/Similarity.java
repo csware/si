@@ -27,6 +27,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 @Table(name = "similarities")
 public class Similarity implements Serializable {
@@ -86,6 +89,7 @@ public class Similarity implements Serializable {
 	 * @return the submissionOne
 	 */
 	@ManyToOne(optional = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Submission getSubmissionOne() {
 		return submissionOne;
 	}
@@ -94,6 +98,7 @@ public class Similarity implements Serializable {
 	 * @return the submissionTwo
 	 */
 	@ManyToOne(optional = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Submission getSubmissionTwo() {
 		return submissionTwo;
 	}
@@ -116,6 +121,7 @@ public class Similarity implements Serializable {
 	 * @return the similarityTest
 	 */
 	@ManyToOne(optional = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	public SimilarityTest getSimilarityTest() {
 		return similarityTest;
 	}

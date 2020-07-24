@@ -28,6 +28,9 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 @Table(name = "testresults")
 public class TestResult implements Serializable {
@@ -71,6 +74,7 @@ public class TestResult implements Serializable {
 	 * @return the test
 	 */
 	@ManyToOne(optional = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Test getTest() {
 		return test;
 	}

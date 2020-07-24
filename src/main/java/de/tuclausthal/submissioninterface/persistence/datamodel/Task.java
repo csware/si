@@ -240,6 +240,7 @@ public class Task implements Serializable {
 	 * @return the test
 	 */
 	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OrderBy(clause = "id asc")
 	public Set<Test> getTests() {
 		return tests;

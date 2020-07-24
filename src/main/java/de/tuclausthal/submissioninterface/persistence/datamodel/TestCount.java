@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -25,6 +25,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 /**
  * Function test
@@ -58,6 +61,7 @@ public class TestCount implements Serializable {
 	 * @return the test
 	 */
 	@ManyToOne
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Test getTest() {
 		return test;
 	}
@@ -73,6 +77,7 @@ public class TestCount implements Serializable {
 	 * @return the user
 	 */
 	@ManyToOne
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	public User getUser() {
 		return user;
 	}

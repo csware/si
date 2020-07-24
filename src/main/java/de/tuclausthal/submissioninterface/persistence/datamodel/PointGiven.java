@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -26,6 +26,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "pointgiven")
@@ -65,6 +68,7 @@ public class PointGiven implements Serializable {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "submissionid", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Submission getSubmission() {
 		return submission;
 	}
@@ -95,6 +99,7 @@ public class PointGiven implements Serializable {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "categoryid", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	public PointCategory getCategory() {
 		return category;
 	}

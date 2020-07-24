@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Giselle Rodriguez
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -28,6 +28,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "submissions_results")
@@ -84,6 +87,7 @@ public class Result implements Serializable {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "submissionid", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Submission getSubmission() {
 		return submission;
 	}

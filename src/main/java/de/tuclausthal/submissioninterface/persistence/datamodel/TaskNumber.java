@@ -29,6 +29,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 @Table(name = "submissions_tasknumbers")
 public class TaskNumber implements Serializable {
@@ -75,6 +78,7 @@ public class TaskNumber implements Serializable {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "taskid", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Task getTask() {
 		return task;
 	}
@@ -106,7 +110,7 @@ public class TaskNumber implements Serializable {
 	 * @return the submission
 	 */
 	@ManyToOne
-	@JoinColumn(name = "submissionid")
+	@JoinColumn(name = "submissionid") // on delete: set NULL
 	public Submission getSubmission() {
 		return submission;
 	}

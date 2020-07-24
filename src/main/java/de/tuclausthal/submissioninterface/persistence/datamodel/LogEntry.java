@@ -24,16 +24,21 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "logs")
 public class LogEntry implements Serializable {
 	private int id;
-	private int userId;
-	private Integer testId;
-	private int taskId;
+	private User user;
+	private Test test;
+	private Task task;
 	private Date timeStamp = new Date();
 	private int action;
 	private Boolean result;
@@ -49,15 +54,11 @@ public class LogEntry implements Serializable {
 			this.result = result;
 			this.testOutput = testOutput;
 		}
-		this.userId = user.getUid();
-		if (test != null) {
-			this.testId = test.getId();
-		} else {
-			this.testId = null;
-		}
+		this.user = user;
+		this.test = test;
 		this.upload = upload;
 		this.uploadFilename = uploadFilename;
-		this.taskId = task.getTaskid();
+		this.task = task;
 	}
 
 	/**
@@ -139,43 +140,52 @@ public class LogEntry implements Serializable {
 	/**
 	 * @return the userId
 	 */
-	public int getUserId() {
-		return userId;
+	@ManyToOne
+	@JoinColumn(name = "userId", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	public User getUser() {
+		return user;
 	}
 
 	/**
-	 * @param userId the userId to set
+	 * @param user the user to set
 	 */
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	/**
-	 * @return the testId
+	 * @return the test
 	 */
-	public Integer getTestId() {
-		return testId;
+	@ManyToOne
+	@JoinColumn(name = "testId", nullable = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	public Test getTest() {
+		return test;
 	}
 
 	/**
-	 * @param testId the testId to set
+	 * @param test the test to set
 	 */
-	public void setTestId(Integer testId) {
-		this.testId = testId;
+	public void setTest(Test test) {
+		this.test = test;
 	}
 
 	/**
-	 * @return the taskId
+	 * @return the task
 	 */
-	public int getTaskId() {
-		return taskId;
+	@ManyToOne
+	@JoinColumn(name = "taskId", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	public Task getTask() {
+		return task;
 	}
 
 	/**
-	 * @param taskId the taskId to set
+	 * @param task the task to set
 	 */
-	public void setTaskId(int taskId) {
-		this.taskId = taskId;
+	public void setTask(Task task) {
+		this.task = task;
 	}
 
 	/**
