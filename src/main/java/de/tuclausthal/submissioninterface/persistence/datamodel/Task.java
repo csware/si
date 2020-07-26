@@ -78,37 +78,25 @@ public class Task implements Serializable {
 	/**
 	 * @param title
 	 * @param maxPoints
-	 * @param minPointStep
 	 * @param start
 	 * @param deadline
 	 * @param description
 	 * @param taskGroup
 	 * @param showPoints 
-	 * @param filenameRegexp 
-	 * @param archiveFilenameRegexp 
-	 * @param showTextArea 
-	 * @param featuredFiles 
-	 * @param tutorsCanUploadFiles 
 	 * @param maxSubmitters 
 	 * @param allowSubmittersAcrossGroups 
 	 * @param taskType 
 	 * @param dynamicTask 
 	 * @param showPointsDate 
 	 */
-	public Task(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, Date showPointsDate) {
+	public Task(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints,int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, Date showPointsDate) {
 		this.title = title;
 		this.maxPoints = maxPoints;
-		this.minPointStep = minPointStep;
 		this.start = start;
 		this.deadline = deadline;
 		this.description = description;
 		this.taskGroup = taskGroup;
 		this.showPoints = showPoints;
-		this.setFilenameRegexp(filenameRegexp);
-		this.setArchiveFilenameRegexp(archiveFilenameRegexp);
-		this.showTextArea = showTextArea;
-		this.featuredFiles = featuredFiles;
-		this.tutorsCanUploadFiles = tutorsCanUploadFiles;
 		this.maxSubmitters = maxSubmitters;
 		this.allowSubmittersAcrossGroups = allowSubmittersAcrossGroups;
 		this.type = taskType;

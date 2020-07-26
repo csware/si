@@ -135,7 +135,9 @@ public class TaskManager extends HttpServlet {
 					request.getRequestDispatcher("MessageView").forward(request, response);
 					return;
 				}
-				task.setMinPointStep(Util.convertToPoints(request.getParameter("minpointstep")));
+				if (!task.isMCTask()) {
+					task.setMinPointStep(Util.convertToPoints(request.getParameter("minpointstep")));
+				}
 				if (task.getPointCategories().size() == 0) {
 					task.setMaxPoints(Util.convertToPoints(request.getParameter("maxpoints"), task.getMinPointStep()));
 				}
@@ -143,11 +145,13 @@ public class TaskManager extends HttpServlet {
 				task.setDescription(request.getParameter("description"));
 				task.setMaxSubmitters(Util.parseInteger(request.getParameter("maxSubmitters"), 1));
 				task.setAllowSubmittersAcrossGroups(request.getParameter("allowSubmittersAcrossGroups") != null);
-				task.setFilenameRegexp(request.getParameter("filenameregexp"));
-				task.setArchiveFilenameRegexp(request.getParameter("archivefilenameregexp"));
-				task.setFeaturedFiles(request.getParameter("featuredfiles"));
-				task.setShowTextArea(request.getParameter("showtextarea") != null);
-				task.setTutorsCanUploadFiles(request.getParameter("tutorsCanUploadFiles") != null);
+				if (!task.isMCTask() && ! task.isADynamicTask()) {
+					task.setFilenameRegexp(request.getParameter("filenameregexp"));
+					task.setArchiveFilenameRegexp(request.getParameter("archivefilenameregexp"));
+					task.setFeaturedFiles(request.getParameter("featuredfiles"));
+					task.setShowTextArea(request.getParameter("showtextarea") != null);
+					task.setTutorsCanUploadFiles(request.getParameter("tutorsCanUploadFiles") != null);
+				}
 				task.setStart(parseDate(request.getParameter("startdate"), new Date()));
 				task.setDeadline(parseDate(request.getParameter("deadline"), new Date()));
 				if (task.getDeadline().before(task.getStart())) {
@@ -194,7 +198,15 @@ public class TaskManager extends HttpServlet {
 						dynamicTask = request.getParameter("dynamicTask");
 					}
 				}
-				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), Util.convertToPoints(request.getParameter("minpointstep"))), Util.convertToPoints(request.getParameter("minpointstep")), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, request.getParameter("filenameregexp"), request.getParameter("archivefilenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, taskType, dynamicTask, pointsdate);
+				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), 50), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, taskType, dynamicTask, pointsdate);
+				if (task.isMCTask()) {
+					task.setFilenameRegexp("-");
+					task.setShowTextArea(false); // be explicit here, it's false by default
+				} else if (task.isADynamicTask()) {
+					task.setFilenameRegexp("-");
+					task.setShowTextArea(true);
+				}
+				taskDAO.saveTask(task);
 				response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask"));
 			}
 			return;

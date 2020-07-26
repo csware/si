@@ -138,19 +138,23 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text size=100 required=required name=title value=\"" + Util.escapeHTML(task.getTitle()) + "\"></td>");
 		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Multiple-Choice-Aufgabe:</th>");
-		out.println("<td><input type=checkbox" + (task.getTaskid() != 0 ? " disabled" : "") + (task.isMCTask() ? " checked" : "") + " name=mctask id=mctask onchange=\"if (document.getElementById('mctask').checked) {document.getElementById('dynamicTask').disabled=true;document.getElementById('dynamicTask').selectedIndex=0} else {document.getElementById('dynamicTask').disabled=false;}return true;\"></td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Aufgabe mit dynamischen Werten:</th>");
-		out.println("<td><select size=1 name=dynamicTask id=dynamicTask " + (task.getTaskid() != 0 ? " disabled" : " onchange=\"if (document.getElementById('dynamicTask').selectedIndex > 0) {document.getElementById('mctask').disabled=true;document.getElementById('mctask').checked=false;} else {document.getElementById('mctask').disabled=false;} getDynamicTaskHints();\"") + ">");
-		out.println("<option value=\"\"" + (task.getDynamicTask() == null ? " selected" : "") + ">-</option>");
-		for (int i = 0; i < DynamicTaskStrategieFactory.STRATEGIES.length; i++) {
-			out.println("<option value=\"" + DynamicTaskStrategieFactory.STRATEGIES[i] + "\"" + (DynamicTaskStrategieFactory.STRATEGIES[i].equals(task.getDynamicTask()) ? " selected" : "") + ">" + DynamicTaskStrategieFactory.NAMES[i] + "</option>");
+		if (!task.isADynamicTask()) {
+			out.println("<tr>");
+			out.println("<th>Multiple-Choice-Aufgabe:</th>");
+			out.println("<td><input type=checkbox" + (task.getTaskid() != 0 ? " disabled" : "") + (task.isMCTask() ? " checked" : "") + " name=mctask id=mctask onchange=\"if (document.getElementById('mctask').checked) {document.getElementById('dynamicTask').disabled=true;document.getElementById('dynamicTask').selectedIndex=0} else {document.getElementById('dynamicTask').disabled=false;}return true;\"></td>");
+			out.println("</tr>");
 		}
-		out.println("</select><div id=dynamictaskhints></div></td>");
-		out.println("</tr>");
+		if (!task.isMCTask()) {
+			out.println("<tr>");
+			out.println("<th>Aufgabe mit dynamischen Werten:</th>");
+			out.println("<td><select size=1 name=dynamicTask id=dynamicTask " + (task.getTaskid() != 0 ? " disabled" : " onchange=\"if (document.getElementById('dynamicTask').selectedIndex > 0) {document.getElementById('mctask').disabled=true;document.getElementById('mctask').checked=false;} else {document.getElementById('mctask').disabled=false;} getDynamicTaskHints();\"") + ">");
+			out.println("<option value=\"\"" + (task.getDynamicTask() == null ? " selected" : "") + ">-</option>");
+			for (int i = 0; i < DynamicTaskStrategieFactory.STRATEGIES.length; i++) {
+				out.println("<option value=\"" + DynamicTaskStrategieFactory.STRATEGIES[i] + "\"" + (DynamicTaskStrategieFactory.STRATEGIES[i].equals(task.getDynamicTask()) ? " selected" : "") + ">" + DynamicTaskStrategieFactory.NAMES[i] + "</option>");
+			}
+			out.println("</select><div id=dynamictaskhints></div></td>");
+			out.println("</tr>");
+		}
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
 		out.print("<td><textarea cols=60 rows=20 name=description>" + Util.escapeHTML(task.getDescription()) + "</textarea>");
@@ -163,26 +167,34 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<th>Abgaben mit max. PartnerInnen:</th>");
 		out.println("<td><input type=text size=5 id=maxSubmitters name=\"maxSubmitters\" value=\"" + task.getMaxSubmitters() + "\" onkeyup=\"if ($('#maxSubmitters').val()>1) {$('#submitteracrossgroups').show();} else {$('#submitteracrossgroups').hide();}return true;\"><span id=submitteracrossgroups" + (task.getMaxSubmitters() > 1 ? "" : " style=\"display:none;\"") + ">, <input type=checkbox name=allowSubmittersAcrossGroups " + (task.isAllowSubmittersAcrossGroups() ? "checked" : "") + "> über Gruppengrenzen hinweg</span> <a href=\"#\" onclick=\"$('#maxsubmittershelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=maxsubmittershelp><b>Hilfe:</b><br>Sofern &quot;über Gruppengrenzen hinweg&quot; nicht gesetzt ist, müssen die Studierenden in Gruppen eingeteilt sein und können auch nur Studierende wählen, die in der gleichen Gruppe sind. Die Zahl wird als Gesamtanzahl der Studierenden, die eine Aufgabe gemeinsam bearbeiten dürfen, angesehen. Sind bei der Veranstaltung Abgabegruppen defininert und wird eine Zahl &gt; 1 angegeben, werden immer alle Studierenden der Gruppe bei der ersten Abgabe automatisch hinzugefügt (auch wenn mehr Studierende in der Gruppe sind; ist der abgebende Studierende in keiner Gruppe ist es automatisch eine Einzelabgabe, wenn gruppenübergreifende PartnerInnen verboten sind); die Angabe von &quot;1&quot; erlaubt auch bei Abgabegruppen Individualabgaben. Im Fall von Abgabegrupopen können Studierende, die in einer Abgabegruppe sind, keine gruppenübergreifenden oder beliebigen Partnerabgaben durchführen (auch nicht, wenn gruppenübergreifende Partnerschaften erlaubt sind).</span></td>");
 		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Filename Regexp:</th>");
-		out.println("<td><input type=text size=100 required=required id=\"filenameregexp\" name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#fileregexphelp').toggle(); return false;\">(?)</a><br><div style=\"display:none;\" id=fileregexphelp><b>Hilfe:</b><br>Dateinamen, die von Studierende hochgeladen werden, werden mit diesem regulären Ausdruck überprüft, bevor diese verarbeitet werden.<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot;<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>ARGOUml: &quot;loesung\\.(xmi|zargo|png)&quot;<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = Dateiupload nicht anbieten bzw. verbieten<p><b>Dateinamen testen:</b><br><input type=\"text\" id=\"regexptest\" name=\"regexptest\"> <button onclick=\"checkRegexp(); return false;\">Testen</button></div></td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Archiv-Filename Regexp:</th>");
-		out.println("<td><input type=text size=100 required=required name=archivefilenameregexp value=\"" + Util.escapeHTML(task.getArchiveFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#archivefileregexphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=archivefileregexphelp><b>Hilfe:</b><br>Das Hochladen von Archiven (.zip und .jar) muss im o.g. regulären Ausdruck erlaubt werden, um diese Funktion nutzen zu können. Mit diesem regulären Ausdruck werden die Dateien im Archiv geprüft und nur diese extrahiert, andere werden ignoriert. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot;<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = Archive nicht automatisch entpacken</span></td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Text-Eingabefeld:</th>");
-		out.println("<td><input type=checkbox name=showtextarea " + (task.isShowTextArea() ? "checked" : "") + "> (wird als textloesung.txt gespeichert)</td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Dateien bei TutorInnen aufklappen:</th>");
-		out.println("<td><input type=text name=featuredfiles size=100 value=\"" + Util.escapeHTML(task.getFeaturedFiles()) + "\"> <a href=\"#\" onclick=\"$('#featuredfileshelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=featuredfileshelp><b>Hilfe:</b><br>Dieser reguläre Ausdruck bestimmt welche Dateien bei den Tutoren automatisch aufgeklappt sind. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = keine Dateien aufklappen</span></td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>TutorInnen dürfen Dateien für Studierende hochladen:</th>");
-		out.println("<td><input type=checkbox name=tutorsCanUploadFiles " + (task.isTutorsCanUploadFiles() ? "checked" : "") + "></td>");
-		out.println("</tr>");
+		if (task.getTaskid() != 0) {
+			out.println("<tr>");
+			out.println("<th>Filename Regexp:</th>");
+			out.println("<td><input type=text size=100 required=required" + (task.isMCTask() || task.isADynamicTask() ? " disabled" : "") + " id=\"filenameregexp\" name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#fileregexphelp').toggle(); return false;\">(?)</a><br><div style=\"display:none;\" id=fileregexphelp><b>Hilfe:</b><br>Dateinamen, die von Studierende hochgeladen werden, werden mit diesem regulären Ausdruck überprüft, bevor diese verarbeitet werden.<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot;<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>ARGOUml: &quot;loesung\\.(xmi|zargo|png)&quot;<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = Dateiupload nicht anbieten bzw. verbieten<p><b>Dateinamen testen:</b><br><input type=\"text\" id=\"regexptest\" name=\"regexptest\"> <button onclick=\"checkRegexp(); return false;\">Testen</button></div></td>");
+			out.println("</tr>");
+			if (!task.isADynamicTask() && !task.isMCTask()) {
+				out.println("<tr>");
+				out.println("<th>Archiv-Filename Regexp:</th>");
+				out.println("<td><input type=text size=100 required=required name=archivefilenameregexp value=\"" + Util.escapeHTML(task.getArchiveFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#archivefileregexphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=archivefileregexphelp><b>Hilfe:</b><br>Das Hochladen von Archiven (.zip und .jar) muss im o.g. regulären Ausdruck erlaubt werden, um diese Funktion nutzen zu können. Mit diesem regulären Ausdruck werden die Dateien im Archiv geprüft und nur diese extrahiert, andere werden ignoriert. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot;<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = Archive nicht automatisch entpacken</span></td>");
+				out.println("</tr>");
+			}
+			out.println("<tr>");
+			out.println("<th>Text-Eingabefeld:</th>");
+			out.println("<td><input type=checkbox name=showtextarea" + (task.isADynamicTask() || task.isMCTask() ? " disabled" : "") + (task.isShowTextArea() ? " checked" : "") + "> (wird als textloesung.txt gespeichert)</td>");
+			out.println("</tr>");
+			if (!task.isADynamicTask() && !task.isMCTask()) {
+				out.println("<tr>");
+				out.println("<th>Dateien bei TutorInnen aufklappen:</th>");
+				out.println("<td><input type=text name=featuredfiles size=100 value=\"" + Util.escapeHTML(task.getFeaturedFiles()) + "\"> <a href=\"#\" onclick=\"$('#featuredfileshelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=featuredfileshelp><b>Hilfe:</b><br>Dieser reguläre Ausdruck bestimmt welche Dateien bei den Tutoren automatisch aufgeklappt sind. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = keine Dateien aufklappen</span></td>");
+				out.println("</tr>");
+			}
+		}
+		if (task.getTaskid() != 0) {
+			out.println("<tr>");
+			out.println("<th>TutorInnen dürfen Dateien für Studierende hochladen:</th>");
+			out.println("<td><input type=checkbox name=tutorsCanUploadFiles" + (task.isMCTask() ? " disabled" : "") + (task.isTutorsCanUploadFiles() ? " checked" : "") + "></td>");
+			out.println("</tr>");
+		}
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");
@@ -200,14 +212,16 @@ public class TaskManagerView extends HttpServlet {
 		}
 		out.println("<td><input type=checkbox name=pointsmanual " + (task.getShowPoints() == null ? "checked" : "") + "> manuell freischalten oder <input type=text name=pointsdate pattern=\"([012][1-9]|[123][01])\\.[01][0-9]\\.[0-9]{4}( ([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])?\" value=\"" + pointsDate + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Min. Punkt-Schrittweite:</th>");
-		out.println("<td><input type=text size=5 name=minpointstep value=\"" + Util.showPoints(task.getMinPointStep()) + "\"> <b>bei Änderung bereits vergebene Pkts. prüfen!</b></td>");
-		out.println("</tr>");
+		if (task.getTaskid() != 0 && !task.isMCTask()) {
+			out.println("<tr>");
+			out.println("<th>Min. Punkt-Schrittweite:</th>");
+			out.println("<td><input type=text size=5 name=minpointstep value=\"" + Util.showPoints(task.getMinPointStep()) + "\"> <b>bei Änderung bereits vergebene Pkts. prüfen!</b></td>");
+			out.println("</tr>");
+		}
 		if (task.getPointCategories() == null || task.getPointCategories().size() == 0) {
 			out.println("<tr>");
 			out.println("<th>Max. Punkte:</th>");
-			out.println("<td><input type=text size=5 name=maxpoints value=\"" + Util.showPoints(task.getMaxPoints()) + "\"> <b>bei Änderung bereits vergebene Pkts. prüfen!</b></td>");
+			out.println("<td><input type=text size=5 name=maxpoints value=\"" + Util.showPoints(task.getMaxPoints()) + "\">" + (task.getTaskid() != 0 ? " <b>bei Änderung bereits vergebene Pkts. prüfen!</b>" : "") + "</td>");
 			out.println("</tr>");
 		} else {
 			out.println("<tr>");
@@ -277,7 +291,7 @@ public class TaskManagerView extends HttpServlet {
 				out.println("</ul>");
 			}
 			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadTaskFile&amp;lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid()) + "\">");
-			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie den Studierenden zur Verfügung stellen möchten:</p>");
+			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie den Studierenden zum Lösen der Aufgabe zur Verfügung stellen möchten:</p>");
 			out.println("<INPUT TYPE=file NAME=file required=required>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
 			out.println("</FORM>");
@@ -330,44 +344,47 @@ public class TaskManagerView extends HttpServlet {
 				out.println("</ul>");
 			}
 			out.println("<p class=mid><a href=\"" + response.encodeURL("DupeCheck?taskid=" + task.getTaskid()) + "\">Ähnlichkeitsprüfung hinzufügen</a><p>");
-			out.println("<h2>Funktionstests der Abgaben</h2>");
-			out.println("<p class=mid><a href=\"" + response.encodeURL("TestManager?action=newTest&amp;taskid=" + task.getTaskid()) + "\">Test hinzufügen</a></p>");
-			if (task.getTests().size() > 0) {
-				out.println("<ul>");
-				for (Test test : task.getTests()) {
-					out.println("<li>&quot;" + Util.escapeHTML(test.getTestTitle()) + "&quot;: ");
-					if (test instanceof RegExpTest) {
-						RegExpTest regexptest = (RegExpTest) test;
-						out.println("RegExp-Test:<br>Prüfpattern: " + Util.escapeHTML(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.escapeHTML(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.escapeHTML(regexptest.getMainClass()) + "<br>");
-					} else if (test instanceof CompileTest) {
-						out.println("Compile-Test<br>");
-					} else if (test instanceof JUnitTest) {
-						out.println("JUnit-Test<br>");
-					} else if (test instanceof CommentsMetricTest) {
-						out.println("Kommentar-Metrik-Test<br>");
-					} else if (test instanceof JavaAdvancedIOTest) {
-						out.println("Erweiterer Java-IO-Test<br>");
-					} else {
-						out.println("unknown<br>");
-					}
-					out.println("# ausführbar für Studierende: " + test.getTimesRunnableByStudents() + " (" + (test.isGiveDetailsToStudents() ? "mit" : "ohne") + " Details)<br>");
-					out.println("Tutortest: " + test.isForTutors() + "<br>");
-					if (test.isForTutors()) {
-						out.print("Status: ");
-						if (test.isNeedsToRun()) {
-							out.println("in Queue, noch nicht ausgeführt<br>");
+
+			if (!task.isADynamicTask()) {
+				out.println("<h2>Funktionstests der Abgaben</h2>");
+				out.println("<p class=mid><a href=\"" + response.encodeURL("TestManager?action=newTest&amp;taskid=" + task.getTaskid()) + "\">Test hinzufügen</a></p>");
+				if (task.getTests().size() > 0) {
+					out.println("<ul>");
+					for (Test test : task.getTests()) {
+						out.println("<li>&quot;" + Util.escapeHTML(test.getTestTitle()) + "&quot;: ");
+						if (test instanceof RegExpTest) {
+							RegExpTest regexptest = (RegExpTest) test;
+							out.println("RegExp-Test:<br>Prüfpattern: " + Util.escapeHTML(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.escapeHTML(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.escapeHTML(regexptest.getMainClass()) + "<br>");
+						} else if (test instanceof CompileTest) {
+							out.println("Compile-Test<br>");
+						} else if (test instanceof JUnitTest) {
+							out.println("JUnit-Test<br>");
+						} else if (test instanceof CommentsMetricTest) {
+							out.println("Kommentar-Metrik-Test<br>");
+						} else if (test instanceof JavaAdvancedIOTest) {
+							out.println("Erweiterer Java-IO-Test<br>");
 						} else {
-							out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("TestManager?action=rerunTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
+							out.println("unknown<br>");
 						}
+						out.println("# ausführbar für Studierende: " + test.getTimesRunnableByStudents() + " (" + (test.isGiveDetailsToStudents() ? "mit" : "ohne") + " Details)<br>");
+						out.println("Tutortest: " + test.isForTutors() + "<br>");
+						if (test.isForTutors()) {
+							out.print("Status: ");
+							if (test.isNeedsToRun()) {
+								out.println("in Queue, noch nicht ausgeführt<br>");
+							} else {
+								out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("TestManager?action=rerunTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
+							}
+						}
+						if (test instanceof JavaAdvancedIOTest) {
+							out.println("Bestehend aus " + ((JavaAdvancedIOTest) test).getTestSteps().size() + " Schritten<br>");
+							out.println("<a href=\"" + response.encodeURL("JavaAdvancedIOTestManager?testid=" + test.getId()) + "\">Test bearbeiten</a><br>");
+						}
+						out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">Test löschen</a>");
+						out.println("</li>");
 					}
-					if (test instanceof JavaAdvancedIOTest) {
-						out.println("Bestehend aus " + ((JavaAdvancedIOTest)test).getTestSteps().size() + " Schritten<br>");
-						out.println("<a href=\"" + response.encodeURL("JavaAdvancedIOTestManager?testid=" + test.getId()) + "\">Test bearbeiten</a><br>");
-					}
-					out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">Test löschen</a>");
-					out.println("</li>");
+					out.println("</ul>");
 				}
-				out.println("</ul>");
 			}
 		}
 		template.printTemplateFooter();
