@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -39,6 +40,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
@@ -59,6 +61,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * View-Servlet for displaying a submission to a tutor
+ * 
  * @author Sven Strickroth
  */
 public class ShowSubmissionView extends HttpServlet {
@@ -121,7 +124,7 @@ public class ShowSubmissionView extends HttpServlet {
 			}
 		}
 
-		if (task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()))) {
+		if (task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isMCTask())) {
 			out.println("<h2>Bewertung: <a href=\"#\" onclick=\"$('#mark').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<table id=mark class=border>");
 			String oldPublicComment = "";
@@ -144,7 +147,12 @@ public class ShowSubmissionView extends HttpServlet {
 				}
 				pointsOk = submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN.ordinal();
 				pointsFailed = submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal();
-				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte  vergeben von: <a href=\"mailto:" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>, <a href=\"" + response.encodeURL("ShowMarkHistory?sid=" + submission.getSubmissionid()) + "\">History</a>)";
+				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte vergeben von: ";
+				if (submission.getPoints().getIssuedBy() == null) {
+					pointsGivenBy += "GATE, <a href=\"" + response.encodeURL("ShowMarkHistory?sid=" + submission.getSubmissionid()) + "\">History</a>)";
+				} else {
+					pointsGivenBy += "<a href=\"mailto:" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>, <a href=\"" + response.encodeURL("ShowMarkHistory?sid=" + submission.getSubmissionid()) + "\">History</a>)";
+				}
 				pointsClass = Util.getPointsCSSClass(submission.getPoints());
 				if (submission.getPoints().getPointStatus() == PointStatus.NICHT_BEWERTET.ordinal()) {
 					out.println("<tr bgcolor=\"lightgrey\">");
@@ -286,7 +294,28 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("</ul>");
 		}
 
-		if (task.isADynamicTask()) {
+		if (task.isMCTask()) {
+			out.println("<h2>Multiple Choice: <a href=\"#\" onclick=\"$('#mctask').toggle(); return false;\">(+/-)</a></h2>");
+			out.println("<ul id=mctask>");
+			out.println("<li>Optionen:<ul>");
+			List<Integer> selected = new ArrayList<>();
+			for (String checked : DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission)) {
+				selected.add(Integer.parseInt(checked));
+			}
+			List<MCOption> options = DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task);
+			boolean allCorrect = true;
+			int i = 0;
+			for (MCOption option : options) {
+				boolean optionSelected = selected.contains(option.getId());
+				boolean correct = (option.isCorrect() && optionSelected) || (!option.isCorrect() && !optionSelected);
+				allCorrect &= correct;
+				out.println("<li><input disabled type=checkbox " + (optionSelected ? "checked" : "") + " name=\"check" + i + "\" id=\"check" + i + "\"> <label for=\"check" + i + "\" class=" + (correct ? "mccorrect" : "mcwrong") + ">" + Util.escapeHTML(option.getTitle()) + "</label></li>");
+				++i;
+			}
+			out.println("</ul></li>");
+			out.println("<li>Gesamtbewertung korrekt: " + Util.boolToHTML(allCorrect) + "</li>");
+			out.println("</ul>");
+		} else if (task.isADynamicTask()) {
 			out.println("<h2>Dynamische Aufgabe: <a href=\"#\" onclick=\"$('#dynamictask').toggle(); return false;\">(+/-)</a></h2>");
 			DynamicTaskStrategieIf dynamicTask = task.getDynamicTaskStrategie(session);
 			out.println("<ul id=dynamictask>");

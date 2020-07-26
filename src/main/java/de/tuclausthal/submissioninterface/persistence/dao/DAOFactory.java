@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -22,6 +22,7 @@ import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.impl.GroupDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LectureDAO;
+import de.tuclausthal.submissioninterface.persistence.dao.impl.MCOptionDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.ParticipationDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.PointCategoryDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.PointGivenDAO;
@@ -164,5 +165,9 @@ public class DAOFactory {
 
 	public static TaskNumberDAOIf TaskNumberDAOIf(Session session) {
 		return new TaskNumberDAO(session);
+	}
+
+	public static MCOptionDAOIf MCOptionDAOIf(Session session) {
+		return new MCOptionDAO(session);
 	}
 }

@@ -20,7 +20,10 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,7 +34,9 @@ import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.MCOptionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
@@ -105,13 +110,51 @@ public class SubmitSolutionFormView extends HttpServlet {
 			}
 		}
 
-		if (task.isShowTextArea()) {
+		if (task.isMCTask()) {
+			out.println("<FORM ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
+			out.println(setWithUser.toString());
+		}
+
+		if (task.isShowTextArea() || task.isMCTask()) {
 			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>Beschreibung:</th>");
 			out.println("<td id=taskdescription>" + Util.makeCleanHTML(task.getDescription()) + "</td>");
 			out.println("</tr>");
-			out.println("</table>");
+
+			if (task.isMCTask()) {
+				out.println("<tr>");
+				out.println("<th>Antwort:</th>");
+				out.println("<td>");
+
+				List<Integer> selected = new ArrayList<>();
+				if (submission != null) {
+					for (String checked : DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission)) {
+						selected.add(Integer.parseInt(checked));
+					}
+				}
+
+				MCOptionDAOIf mcOptionDAO = DAOFactory.MCOptionDAOIf(session);
+				List<MCOption> options = mcOptionDAO.getMCOptionsForTask(task);
+				Collections.shuffle(options, new Random(participation.getId()));
+				int i = 0;
+				for (MCOption option : options) {
+					out.println("<input type=checkbox " + (selected.contains(option.getId()) ? "checked" : "") + " name=\"check" + i + "\" id=\"check" + i + "\"> <label for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + "</label><br>");
+					++i;
+				}
+
+				out.println("<br>");
+				out.println("<INPUT TYPE=submit VALUE=speichern>");
+				out.println("</td>");
+				out.println("</tr>");
+
+				out.println("</table>");
+				out.println("</FORM>");
+				template.printTemplateFooter();
+				return;
+			} else {
+				out.println("</table>");
+			}
 		}
 
 		if (!"-".equals(task.getFilenameRegexp())) {

@@ -71,6 +71,7 @@ public class Task implements Serializable {
 	private boolean allowSubmittersAcrossGroups = false;
 	private String dynamicTask = null;
 	private String modelSolutionProvision = null;
+	private String type = "";
 
 	public Task() {}
 
@@ -90,10 +91,11 @@ public class Task implements Serializable {
 	 * @param tutorsCanUploadFiles 
 	 * @param maxSubmitters 
 	 * @param allowSubmittersAcrossGroups 
+	 * @param taskType 
 	 * @param dynamicTask 
 	 * @param showPointsDate 
 	 */
-	public Task(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups, String dynamicTask, Date showPointsDate) {
+	public Task(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, Date showPointsDate) {
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.minPointStep = minPointStep;
@@ -109,6 +111,7 @@ public class Task implements Serializable {
 		this.tutorsCanUploadFiles = tutorsCanUploadFiles;
 		this.maxSubmitters = maxSubmitters;
 		this.allowSubmittersAcrossGroups = allowSubmittersAcrossGroups;
+		this.type = taskType;
 		this.dynamicTask = dynamicTask;
 		this.showPoints = showPointsDate;
 	}
@@ -506,5 +509,28 @@ public class Task implements Serializable {
 	@Transient
 	public void setModelSolutionProvisionType(ModelSolutionProvisionType type) {
 		setModelSolutionProvision(type.toString());
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * @param taskType the type to set
+	 */
+	public void setType(String taskType) {
+		this.type = taskType;
+	}
+
+	/**
+	 * Checks if the task is a multiple choice task
+	 * @return true/false
+	 */
+	@Transient
+	public boolean isMCTask() {
+		return "mc".equals(getType());
 	}
 }

@@ -105,7 +105,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 				storeInHistory(submission, "publicComment", oldPoints.getPublicComment(), points.getPublicComment(), participation);
 				changed = true;
 			}
-			if (changed && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid()) {
+			if (changed && oldPoints.getIssuedBy() != null && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid()) {
 				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <" + contextAdapter.getFullServletsURI() + "/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
 			}
 		} else {
@@ -233,7 +233,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 				storeInHistory(submission, "publicComment", oldPoints.getPublicComment(), points.getPublicComment(), participation);
 				changed = true;
 			}
-			if (changed && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid()) {
+			if (changed && oldPoints.getIssuedBy() != null && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid()) {
 				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <" + contextAdapter.getFullServletsURI() + "/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
 			}
 		} else {
@@ -253,6 +253,29 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 				storeInHistory(submission, "publicComment", "", points.getPublicComment(), participation);
 			}
 		}
+		return points;
+	}
+
+	@Override
+	public Points createMCPoints(int issuedPoints, Submission submission, String publicComment, PointStatus pointStatus) {
+		Session session = getSession();
+		if (issuedPoints % submission.getTask().getMinPointStep() != 0) {
+			issuedPoints = (issuedPoints / submission.getTask().getMinPointStep()) * submission.getTask().getMinPointStep();
+		}
+		if (issuedPoints < 0) {
+			issuedPoints = 0;
+		} else if (issuedPoints > submission.getTask().getMaxPoints()) {
+			issuedPoints = submission.getTask().getMaxPoints();
+		}
+		Points points = new Points();
+		points.setPoints(issuedPoints);
+		points.setPointStatus(pointStatus);
+		points.setDuplicate(null);
+		points.setIssuedBy(null);
+		submission.setPoints(points);
+		points.setPublicComment(publicComment);
+		points.setInternalComment("");
+		session.save(submission);
 		return points;
 	}
 }

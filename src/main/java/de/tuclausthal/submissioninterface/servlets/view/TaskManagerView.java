@@ -34,6 +34,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
+import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ModelSolutionProvisionType;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
@@ -138,8 +139,12 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<td><input type=text size=100 required=required name=title value=\"" + Util.escapeHTML(task.getTitle()) + "\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Multiple-Choice-Aufgabe:</th>");
+		out.println("<td><input type=checkbox" + (task.getTaskid() != 0 ? " disabled" : "") + (task.isMCTask() ? " checked" : "") + " name=mctask id=mctask onchange=\"if (document.getElementById('mctask').checked) {document.getElementById('dynamicTask').disabled=true;document.getElementById('dynamicTask').selectedIndex=0} else {document.getElementById('dynamicTask').disabled=false;}return true;\"></td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<th>Aufgabe mit dynamischen Werten:</th>");
-		out.println("<td><select size=1 name=dynamicTask id=dynamicTask " + (task.getTaskid() != 0 ? " disabled" : " onchange=\"getDynamicTaskHints();\"") + ">");
+		out.println("<td><select size=1 name=dynamicTask id=dynamicTask " + (task.getTaskid() != 0 ? " disabled" : " onchange=\"if (document.getElementById('dynamicTask').selectedIndex > 0) {document.getElementById('mctask').disabled=true;document.getElementById('mctask').checked=false;} else {document.getElementById('mctask').disabled=false;} getDynamicTaskHints();\"") + ">");
 		out.println("<option value=\"\"" + (task.getDynamicTask() == null ? " selected" : "") + ">-</option>");
 		for (int i = 0; i < DynamicTaskStrategieFactory.STRATEGIES.length; i++) {
 			out.println("<option value=\"" + DynamicTaskStrategieFactory.STRATEGIES[i] + "\"" + (DynamicTaskStrategieFactory.STRATEGIES[i].equals(task.getDynamicTask()) ? " selected" : "") + ">" + DynamicTaskStrategieFactory.NAMES[i] + "</option>");
@@ -222,7 +227,25 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</table>");
 		out.println("</form>");
 
-		if (task.getTaskid() != 0) {
+		if (task.isMCTask()) {
+			out.println("<h2>Multiple Choice-Optionen</h2>");
+			List<MCOption> options = (List<MCOption>) request.getAttribute("mcOptions");
+			if (!options.isEmpty()) {
+				out.println("<ul>");
+				for (MCOption option : options) {
+					out.println("<li>" + Util.escapeHTML(option.getTitle()) + " (" + (option.isCorrect() ? "korrekt, " : "") + "<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deleteMCOption&amp;optionId=" + option.getId()) + "\">del</a>)</li>");
+				}
+				out.println("</ul>");
+			}
+			out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+			out.println("<input type=hidden name=action value=\"newMCOption\">");
+			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
+			out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
+			out.println("Option: <input type=text name=option maxlength=250 required=required style=\"width:90%\"><br>");
+			out.println("Korrekt: <input type=checkbox name=correkt><br>");
+			out.println("<input type=submit value=hinzufügen>");
+			out.println("</form>");
+		} else if (task.getTaskid() != 0) {
 			out.println("<h2>Punkte</h2>");
 			out.println("<p>Werden hier Kriterien angelegt, so wird den Tutoren eine differenzierte Bewertung ermöglicht (für " + Util.showPoints(task.getMinPointStep()) + " Punkte wird eine Checkbox angezeigt, für &gt; " + Util.showPoints(task.getMinPointStep()) + " Punkte erscheint ein Texteingabefeld).</p>");
 			if (task.getPointCategories().size() > 0) {
@@ -241,7 +264,9 @@ public class TaskManagerView extends HttpServlet {
 			out.println("Optional: <input type=checkbox name=optional> (für Bonuspunkte)<br>");
 			out.println("<input type=submit value=speichern>");
 			out.println("</form>");
+		}
 
+		if (task.getTaskid() != 0) {
 			out.println("<h2>Dateien hinterlegen</h2>");
 			if (advisorFiles.size() > 0) {
 				out.println("<ul>");

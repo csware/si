@@ -40,9 +40,12 @@ public interface PointsDAOIf {
 	 * @param internalComment 
 	 * @param pointStatus 
 	 * @param duplicate see definition in Points class
+	 * @param contextAdapter 
 	 * @return the (new or updated) points instance
 	 */
 	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate, ContextAdapter contextAdapter);
 
 	public Points createPoints(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate, ContextAdapter contextAdapter);
+
+	Points createMCPoints(int issuedPoints, Submission submission, String publicComment, PointStatus pointStatus);
 }

@@ -57,3 +57,15 @@ CREATE TABLE IF NOT EXISTS `javaadvancedioteststep` (
   KEY `FK1DB21A80AE3F26C5` (`testid`)
 ) ENGINE=InnoDB;
 ALTER TABLE `javaadvancedioteststep` ADD CONSTRAINT `FK1DB21A80AE3F26C5` FOREIGN KEY (`testid`) REFERENCES `tests` (`id`) ON DELETE CASCADE;
+
+-- Add support for multiple choice questions
+ALTER TABLE `tasks` ADD `type` VARCHAR(255) NOT NULL AFTER `tutorsCanUploadFiles`;
+CREATE TABLE IF NOT EXISTS `mcoptions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `correct` bit(1) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `taskid` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK2BE2448AE0697EB` (`taskid`)
+) ENGINE=InnoDB;
+ALTER TABLE `mcoptions` ADD CONSTRAINT `FK2BE2448AE0697EB` FOREIGN KEY (`taskid`) REFERENCES `tasks` (`taskid`) ON DELETE CASCADE;

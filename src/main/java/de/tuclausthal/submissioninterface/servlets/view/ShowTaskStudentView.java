@@ -21,9 +21,12 @@ package de.tuclausthal.submissioninterface.servlets.view;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -34,8 +37,11 @@ import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.MCOptionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
@@ -49,6 +55,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * View-Servlet for displaying a task in student view
+ * 
  * @author Sven Strickroth
  */
 public class ShowTaskStudentView extends HttpServlet {
@@ -60,6 +67,7 @@ public class ShowTaskStudentView extends HttpServlet {
 
 		Task task = (Task) request.getAttribute("task");
 		Submission submission = (Submission) request.getAttribute("submission");
+		Participation participation = (Participation) request.getAttribute("participation");
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
 		List<String> modelSolutionFiles = (List<String>) request.getAttribute("modelSolutionFiles");
@@ -145,6 +153,37 @@ public class ShowTaskStudentView extends HttpServlet {
 				}
 				out.println("</td>");
 				out.println("</tr>");
+			} else if (task.isMCTask()) {
+				out.println("<tr>");
+				out.println("<th>Antwort:</th>");
+				out.println("<td>");
+
+				List<Integer> selected = new ArrayList<>();
+				for (String checked : DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission)) {
+					selected.add(Integer.parseInt(checked));
+				}
+
+				boolean showResults = task.getDeadline() != null && task.getDeadline().before(Util.correctTimezone(new Date()));
+				MCOptionDAOIf mcOptionDAO = DAOFactory.MCOptionDAOIf(session);
+				List<MCOption> options = mcOptionDAO.getMCOptionsForTask(task);
+				Collections.shuffle(options, new Random(participation.getId()));
+				int i = 0;
+				for (MCOption option : options) {
+					String resultState = "";
+					boolean optionSelected = selected.contains(option.getId());
+					if (showResults) {
+						if ((option.isCorrect() && optionSelected) || (!option.isCorrect() && !optionSelected)) {
+							resultState = "class=mccorrect";
+						} else {
+							resultState = "class=mcwrong";
+						}
+					}
+					out.println("<input disabled type=checkbox " + (optionSelected ? "checked" : "") + " name=\"check" + i + "\" id=\"check" + i + "\"> <label " + resultState + " for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + "</label><br>");
+					++i;
+				}
+
+				out.println("</td>");
+				out.println("</tr>");
 			}
 			if (submission.isPointsVisibleToStudents()) {
 				out.println("<tr>");
@@ -191,7 +230,13 @@ public class ShowTaskStudentView extends HttpServlet {
 				} else {
 					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", nicht abgenommen");
 				}
-				out.println("<p>Vergeben von: <a href=\"mailto:" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a></p>");
+				String marker;
+				if (submission.getPoints().getIssuedBy() == null) {
+					marker = "GATE";
+				} else {
+					marker = "<a href=\"mailto:" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>";
+				}
+				out.println("<p>Vergeben von: " + marker + "</p>");
 				out.println("</td>");
 				out.println("</tr>");
 				if (submission.getPoints().getPublicComment() != null && !"".equals(submission.getPoints().getPublicComment())) {
@@ -209,10 +254,12 @@ public class ShowTaskStudentView extends HttpServlet {
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
 				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
 				out.println("<script type=\"javascript\">if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
-			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false) {
+			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isMCTask()) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
+			} else if (task.isMCTask()) {
+				out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe bearbeiten</a></div>");
 			} else {
 				if (submittedFiles.size() > 0) {
 					out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe erweitern</a></div>");
@@ -248,7 +295,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
 				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
 				out.println("<script type=\"javascript\">if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
-			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false) {
+			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isMCTask()) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");

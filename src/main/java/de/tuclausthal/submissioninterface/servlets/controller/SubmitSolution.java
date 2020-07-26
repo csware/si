@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,13 +52,16 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.MCOptionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LogDAO;
 import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
+import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
@@ -69,7 +73,7 @@ import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * Controller-Servlet for the submission of files
+ * Controller-Servlet for the submission of files/solutions
  * @author Sven Strickroth
  */
 @MultipartConfig
@@ -114,7 +118,7 @@ public class SubmitSolution extends HttpServlet {
 			}
 		}
 
-		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
+		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isMCTask()) {
 			request.setAttribute("title", "Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
@@ -235,7 +239,7 @@ public class SubmitSolution extends HttpServlet {
 				template.printTemplateFooter();
 				return;
 			}
-			if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
+			if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isMCTask()) {
 				template.printTemplateHeader("Ungültige Anfrage");
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.</div>");
@@ -271,7 +275,7 @@ public class SubmitSolution extends HttpServlet {
 				out.println("<div class=mid>Dateiupload ist für diese Aufgabe deaktiviert.</div>");
 				template.printTemplateFooter();
 				return;
-			} else if (file == null && !task.isShowTextArea()) {
+			} else if (file == null && !task.isShowTextArea() && !task.isMCTask()) {
 				template.printTemplateHeader("Ungültige Anfrage");
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Textlösungen sind für diese Aufgabe deaktiviert.</div>");
@@ -394,6 +398,40 @@ public class SubmitSolution extends HttpServlet {
 
 			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 			return;
+		} else if (task.isMCTask()) {
+			MCOptionDAOIf mcOptionDAO = DAOFactory.MCOptionDAOIf(session);
+			List<MCOption> options = mcOptionDAO.getMCOptionsForTask(task);
+			Collections.shuffle(options, new Random(studentParticipation.getId()));
+			boolean allCorrect = true;
+			List<Integer> resultIDs = new ArrayList<>();
+			int i = 0;
+			for (MCOption option : options) {
+				if (request.getParameter("check" + i) != null) {
+					resultIDs.add(option.getId());
+					allCorrect &= option.isCorrect();
+				} else {
+					allCorrect &= !option.isCorrect();
+				}
+				++i;
+			}
+			Collections.sort(resultIDs);
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			List<String> results = new ArrayList<>();
+			for (i = 0; i < resultIDs.size(); ++i) {
+				String result = String.valueOf(resultIDs.get(i));
+				results.add(result);
+				os.write(result.getBytes());
+				os.write("||".getBytes());
+			}
+			DAOFactory.ResultDAOIf(session).createResults(submission, results);
+
+			DAOFactory.PointsDAOIf(session).createMCPoints(allCorrect ? task.getMaxPoints() : 0, submission, "", task.getTaskGroup().getLecture().isRequiresAbhnahme() ? PointStatus.NICHT_ABGENOMMEN : PointStatus.ABGENOMMEN);
+
+			submission.setLastModified(new Date());
+			submissionDAO.saveSubmission(submission);
+			tx.commit();
+			new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null, null, "!mc!", os.toByteArray());
+			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
 		} else if (request.getParameter("textsolution") != null) {
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			if (task.isADynamicTask()) {

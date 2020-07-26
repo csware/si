@@ -106,6 +106,22 @@ CREATE TABLE IF NOT EXISTS `logs` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `mcoptions`
+--
+
+DROP TABLE IF EXISTS `mcoptions`;
+CREATE TABLE IF NOT EXISTS `mcoptions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `correct` bit(1) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `taskid` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK2BE2448AE0697EB` (`taskid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `participations`
 --
 
@@ -328,6 +344,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `showPoints` datetime DEFAULT NULL,
   `showTextArea` bit(1) NOT NULL,
   `start` datetime NOT NULL,
+  `type` VARCHAR(255) NOT NULL,
   `title` varchar(255) NOT NULL,
   `tutorsCanUploadFiles` bit(1) NOT NULL,
   `taskgroupid` int(11) NOT NULL,
@@ -448,6 +465,12 @@ ALTER TABLE `logs`
   ADD CONSTRAINT `FK32C5AFAE0697EB` FOREIGN KEY (`taskId`) REFERENCES `tasks` (`taskid`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK32C5AFAE3F26C5` FOREIGN KEY (`testId`) REFERENCES `tests` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK32C5AFB0B38AF7` FOREIGN KEY (`userId`) REFERENCES `users` (`uid`) ON DELETE CASCADE;
+
+--
+-- Constraints der Tabelle `mcoptions`
+--
+ALTER TABLE `mcoptions`
+  ADD CONSTRAINT `FK2BE2448AE0697EB` FOREIGN KEY (`taskid`) REFERENCES `tasks` (`taskid`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `participations`

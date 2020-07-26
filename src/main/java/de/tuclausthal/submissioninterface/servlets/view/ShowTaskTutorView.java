@@ -35,6 +35,7 @@ import org.hibernate.Session;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.TestResultDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
+import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
@@ -111,6 +112,16 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("</ul></td>");
 			out.println("</tr>");
 		}
+		if (task.isMCTask()) {
+			out.println("<tr>");
+			out.println("<th>MC-Antworten:</th>");
+			out.println("<td><ul>");
+			for (MCOption option : DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task)) {
+				out.println("<li>" + Util.escapeHTML(option.getTitle()) + (option.isCorrect() ? " (korrekt)" : "") + "</li>");
+			}
+			out.println("</ul></td>");
+			out.println("</tr>");
+		}
 		out.println("</table>");
 
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
@@ -118,7 +129,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<p><div class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deleteTask") + "\">Aufgabe löschen</a></div>");
 		}
 
-		if ((participation.getRoleType() == ParticipationRole.ADVISOR || task.isTutorsCanUploadFiles()) && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
+		if (!task.isMCTask() && (participation.getRoleType() == ParticipationRole.ADVISOR || task.isTutorsCanUploadFiles()) && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe für Studierenden durchführen</a> (Achtung wenn Duplikatstest bereits gelaufen ist)</div>");
 		}
 
@@ -139,7 +150,9 @@ public class ShowTaskTutorView extends HttpServlet {
 
 		if (task.getSubmissions() != null && task.getSubmissions().size() > 0) {
 			out.println("<p><h2>Abgaben</h2><p>");
-			out.println("<p><div class=mid><a href=\"" + response.encodeURL("SearchSubmissions?taskid=" + task.getTaskid()) + "\">Suchen...</a></div>");
+			if (!task.isMCTask()) {
+				out.println("<p><div class=mid><a href=\"" + response.encodeURL("SearchSubmissions?taskid=" + task.getTaskid()) + "\">Suchen...</a></div>");
+			}
 			Iterator<Submission> submissionIterator = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task).iterator();
 			Group lastGroup = null;
 			boolean first = true;

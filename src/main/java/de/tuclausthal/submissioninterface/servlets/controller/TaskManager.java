@@ -49,6 +49,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.PointCategoryDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskGroupDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
+import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ModelSolutionProvisionType;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
@@ -95,6 +96,9 @@ public class TaskManager extends HttpServlet {
 					request.setAttribute("title", "Aufgabe nicht gefunden");
 					request.getRequestDispatcher("MessageView").forward(request, response);
 					return;
+				}
+				if (task.isMCTask()) {
+					request.setAttribute("mcOptions", DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task));
 				}
 			} else {
 				if (lecture.getTaskGroups().size() == 0) {
@@ -180,11 +184,17 @@ public class TaskManager extends HttpServlet {
 				} else if (pointsdate.before(deadline)) {
 					pointsdate = deadline;
 				}
+				String taskType = "";
 				String dynamicTask = null;
-				if (DynamicTaskStrategieFactory.IsValidStrategieName(request.getParameter("dynamicTask"))) {
-					dynamicTask = request.getParameter("dynamicTask");
+				if (request.getParameter("mctask") != null) {
+					taskType = "mc";
+				} else {
+					if (DynamicTaskStrategieFactory.IsValidStrategieName(request.getParameter("dynamicTask"))) {
+						taskType = "dynamicTask";
+						dynamicTask = request.getParameter("dynamicTask");
+					}
 				}
-				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), Util.convertToPoints(request.getParameter("minpointstep"))), Util.convertToPoints(request.getParameter("minpointstep")), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, request.getParameter("filenameregexp"), request.getParameter("archivefilenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, dynamicTask, pointsdate);
+				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), Util.convertToPoints(request.getParameter("minpointstep"))), Util.convertToPoints(request.getParameter("minpointstep")), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, request.getParameter("filenameregexp"), request.getParameter("archivefilenameregexp"), request.getParameter("showtextarea") != null, request.getParameter("featuredfiles"), request.getParameter("tutorsCanUploadFiles") != null, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, taskType, dynamicTask, pointsdate);
 				response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask"));
 			}
 			return;
@@ -338,6 +348,29 @@ public class TaskManager extends HttpServlet {
 			session.update(task);
 			tx.commit();
 
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid()));
+		} else if ("newMCOption".equals(request.getParameter("action"))) {
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+			if (task == null) {
+				request.setAttribute("title", "Aufgabe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+			}
+			DAOFactory.MCOptionDAOIf(session).createMCOption(task, request.getParameter("option"), request.getParameter("correkt") != null);
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid()));
+		} else if ("deleteMCOption".equals(request.getParameter("action"))) {
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+			if (task == null) {
+				request.setAttribute("title", "Aufgabe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+			}
+			for (MCOption option : DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task)) {
+				if (option.getId() == Util.parseInteger(request.getParameter("optionId"), -1)) {
+					DAOFactory.MCOptionDAOIf(session).deleteMCOption(option);
+					break;
+				}
+			}
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid()));
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
