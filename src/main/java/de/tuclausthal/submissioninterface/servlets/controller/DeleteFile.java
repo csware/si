@@ -93,19 +93,20 @@ public class DeleteFile extends HttpServlet {
 
 		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 		File file = new File(path, request.getPathInfo().substring(1));
+		Transaction tx = session.beginTransaction();
+		session.lock(submission, LockMode.UPGRADE);
 		if (file.exists() && file.isFile() && file.delete()) {
-			new LogDAO(session).createLogEntry(participation.getUser(), null, submission.getTask(), LogAction.DELETE_FILE, null, null, request.getPathInfo().substring(1), null);
-			Transaction tx = session.beginTransaction();
-			session.lock(submission, LockMode.UPGRADE);
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 				submission.setLastModified(new Date());
 				submissionDAO.saveSubmission(submission);
 			}
 			tx.commit();
+			new LogDAO(session).createLogEntry(participation.getUser(), null, submission.getTask(), LogAction.DELETE_FILE, null, null, request.getPathInfo().substring(1), null);
 
 			response.sendRedirect(response.encodeRedirectURL(request.getContextPath() + "/" + contextAdapter.getServletsPath() + "/ShowTask?taskid=" + task.getTaskid()));
 			return;
 		}
+		tx.rollback();
 
 		request.setAttribute("title", "Datei nicht gefunden");
 		request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
