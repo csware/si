@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -68,6 +68,8 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			params.add("-Djava.awt.headless=true");
 			// JOptionpane-Hack
 			params.add("-Xbootclasspath/p:" + basePath.getAbsolutePath() + System.getProperty("file.separator") + "joptionpane.jar" + File.pathSeparator + basePath.getAbsolutePath() + System.getProperty("file.separator") + "NoExitSecurityManager.jar");
+			// limit memory usage
+			params.add("-Xmx128m");
 			// for security reasons, so that students cannot access the server
 			params.add("-Djava.security.manager=secmgr.NoExitSecurityManager");
 			params.add("-Djava.security.policy=" + policyFile.getAbsolutePath());
