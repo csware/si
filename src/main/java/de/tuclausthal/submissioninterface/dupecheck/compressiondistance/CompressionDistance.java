@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -31,7 +31,7 @@ import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
  * @author Sven Strickroth
  */
 public class CompressionDistance extends DupeCheck {
-	private static Encoder encoder = new Encoder();
+	private static ThreadLocal<Encoder> encoder = new ThreadLocal<>();
 
 	public CompressionDistance(File path) {
 		super(path);
@@ -39,6 +39,9 @@ public class CompressionDistance extends DupeCheck {
 
 	@Override
 	protected int calculateSimilarity(StringBuffer fileOne, StringBuffer fileTwo, int maximumDifferenceInPercent) throws IOException {
+		if (encoder.get() == null) {
+			encoder.set(new Encoder());
+		}
 		return compressionDistance(fileOne, fileTwo);
 	}
 
@@ -51,7 +54,7 @@ public class CompressionDistance extends DupeCheck {
 	private int compress(StringBuffer sb) throws IOException {
 		ByteArrayInputStream errorInputStream = new ByteArrayInputStream(sb.toString().getBytes());
 		ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
-		encoder.Code(errorInputStream, errorOutputStream, -1, -1, null);
+		encoder.get().Code(errorInputStream, errorOutputStream, -1, -1, null);
 		return errorOutputStream.size();
 	}
 

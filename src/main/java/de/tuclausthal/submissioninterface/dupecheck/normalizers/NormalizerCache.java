@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -55,7 +55,7 @@ public class NormalizerCache {
 	 * @return the (cached) normalized string
 	 * @throws IOException
 	 */
-	public StringBuffer normalize(String file) throws IOException {
+	synchronized public StringBuffer normalize(String file) throws IOException {
 		File tempFile = new File(cacheDirectoty.getPath(), file);
 		if (tempFile.exists()) {
 			return Util.loadFile(tempFile);

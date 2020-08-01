@@ -23,6 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.hibernate.Session;
 
@@ -40,6 +43,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public abstract class DupeCheck {
+	public static int CORES = 1;
+
 	protected File path;
 
 	/**
@@ -58,53 +63,82 @@ public abstract class DupeCheck {
 	 */
 	public void performDupeCheck(SimilarityTest similarityTest) {
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
-		SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf(session);
 		DAOFactory.SimilarityTestDAOIf(session).resetSimilarityTest(similarityTest);
+		Task task = similarityTest.getTask();
+		File taskPath = new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
 		NormalizerCache normalizerCache = null;
 		try {
-			Task task = similarityTest.getTask();
-			File taskPath = new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
 			normalizerCache = new NormalizerCache(taskPath, similarityTest.getNormalizer());
-			List<Submission> submissions = new ArrayList<>(task.getSubmissions());
-			List<String> excludedFileNames = Arrays.asList(similarityTest.getExcludeFiles().split(","));
-			// go through all submission of submission i
-			for (int i = 0; i < submissions.size(); i++) {
-				List<StringBuffer> javaFiles = new ArrayList<>();
-				for (String javaFile : Util.listFilesAsRelativeStringList(new File(taskPath, submissions.get(i).getSubmissionid() + ""), excludedFileNames)) {
-					// cache the files we use more than once
-					javaFiles.add(normalizerCache.normalize(submissions.get(i).getSubmissionid() + System.getProperty("file.separator") + javaFile));
-				}
-				// the similariy matrix is symmetric, so it's sufficient
-				// to only calculate the upper triangular matrix entries
-				for (int j = i + 1; j < submissions.size(); j++) {
-					int maxSimilarity = 0;
-					// go through all submitted files of submission j
-					for (String javaFile : Util.listFilesAsRelativeStringList(new File(taskPath, submissions.get(j).getSubmissionid() + ""), excludedFileNames)) {
-						// compare all files, file by file
-						for (StringBuffer fileOne : javaFiles) {
-							StringBuffer fileTwo = normalizerCache.normalize(submissions.get(j).getSubmissionid() + System.getProperty("file.separator") + javaFile);
-							maxSimilarity = Math.max(maxSimilarity, calculateSimilarity(fileOne, fileTwo, 100 - similarityTest.getMinimumDifferenceInPercent()));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			// if we get an error here, don't mark run as completed
+			return;
+		}
+		List<Submission> submissions = new ArrayList<>(task.getSubmissions());
+		List<String> excludedFileNames = Arrays.asList(similarityTest.getExcludeFiles().split(","));
+
+		ExecutorService executorService = Executors.newFixedThreadPool(CORES);
+		// go through all submissions
+		for (int outerI = 0; outerI < submissions.size(); ++outerI) {
+			final NormalizerCache cache = normalizerCache;
+			final int i = outerI;
+			executorService.execute(new Runnable() {
+				@Override
+				public void run() {
+					Session session = HibernateSessionHelper.getSessionFactory().openSession();
+					SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf(session);
+					List<StringBuffer> javaFiles = new ArrayList<>();
+					for (String javaFile : Util.listFilesAsRelativeStringList(new File(taskPath, String.valueOf(submissions.get(i).getSubmissionid())), excludedFileNames)) {
+						// cache the files we use more than once
+						try {
+							javaFiles.add(cache.normalize(submissions.get(i).getSubmissionid() + System.getProperty("file.separator") + javaFile));
+						} catch (IOException e) {
+							// skip single file
+							e.printStackTrace();
+						}
+					}
+					// the similariy matrix is symmetric, so it's sufficient
+					// to only calculate the upper triangular matrix entries
+					for (int j = i + 1; j < submissions.size(); ++j) {
+						int maxSimilarity = 0;
+						// go through all submitted files of submission j
+						for (String javaFile : Util.listFilesAsRelativeStringList(new File(taskPath, String.valueOf(submissions.get(j).getSubmissionid())), excludedFileNames)) {
+							// compare all files, file by file
+							for (StringBuffer fileOne : javaFiles) {
+								StringBuffer fileTwo = null;
+								try {
+									fileTwo = cache.normalize(submissions.get(j).getSubmissionid() + System.getProperty("file.separator") + javaFile);
+									maxSimilarity = Math.max(maxSimilarity, calculateSimilarity(fileOne, fileTwo, 100 - similarityTest.getMinimumDifferenceInPercent()));
+								} catch (IOException e) {
+									// skip single file
+									e.printStackTrace();
+								}
+								if (maxSimilarity == 100) {
+									break;
+								}
+							}
 							if (maxSimilarity == 100) {
 								break;
 							}
 						}
-						if (maxSimilarity == 100) {
-							break;
+						if (similarityTest.getMinimumDifferenceInPercent() <= maxSimilarity) {
+							similarityDAO.addSimilarityResult(similarityTest, submissions.get(i), submissions.get(j), maxSimilarity);
 						}
 					}
-					if (similarityTest.getMinimumDifferenceInPercent() <= maxSimilarity) {
-						similarityDAO.addSimilarityResult(similarityTest, submissions.get(i), submissions.get(j), maxSimilarity);
-					}
 				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			DAOFactory.SimilarityTestDAOIf(session).finish(similarityTest);
-			if (normalizerCache != null) {
-				normalizerCache.cleanUp();
-			}
+			});
 		}
+		System.out.println(executorService.toString());
+		executorService.shutdown();
+		try {
+			while (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
+				System.out.println(executorService.toString());
+			}
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
+		DAOFactory.SimilarityTestDAOIf(session).finish(similarityTest);
+		normalizerCache.cleanUp();
 	}
 
 	/**

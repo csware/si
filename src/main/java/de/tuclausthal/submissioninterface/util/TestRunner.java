@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -45,6 +45,7 @@ public class TestRunner {
 			System.out.println("first parameter must point to the submission directory");
 			System.exit(1);
 		}
+		DupeCheck.CORES = 2;
 		File dataPath = new File(args[0]);
 		SimilarityTest similarityTest;
 		while ((similarityTest = DAOFactory.SimilarityTestDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).takeSimilarityTest()) != null) {
