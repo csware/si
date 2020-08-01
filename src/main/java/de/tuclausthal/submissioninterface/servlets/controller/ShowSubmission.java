@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -37,9 +38,9 @@ import de.tuclausthal.submissioninterface.persistence.dao.PointsDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -112,8 +113,9 @@ public class ShowSubmission extends HttpServlet {
 
 		if (Util.parseInteger(request.getParameter("partnerid"), 0) > 0) {
 			Transaction tx = session.beginTransaction();
-			Participation partnerParticipation = participationDAO.getParticipation(Util.parseInteger(request.getParameter("partnerid"), 0));
-			if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getRoleType().equals(ParticipationRole.NORMAL) && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && ((task.isAllowSubmittersAcrossGroups() && (partnerParticipation.getGroup() == null || !partnerParticipation.getGroup().isSubmissionGroup())) || (!task.isAllowSubmittersAcrossGroups() && partnerParticipation.getGroup() != null && submission.getSubmitters().iterator().next().getGroup() != null && partnerParticipation.getGroup().getGid() == submission.getSubmitters().iterator().next().getGroup().getGid())) && submissionDAO.getSubmissionLocked(task, partnerParticipation.getUser()) == null) {
+			Participation partnerParticipation = participationDAO.getParticipationLocked(Util.parseInteger(request.getParameter("partnerid"), 0));
+			session.lock(submission, LockMode.UPGRADE);
+			if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getRoleType().equals(ParticipationRole.NORMAL) && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && ((task.isAllowSubmittersAcrossGroups() && (partnerParticipation.getGroup() == null || !partnerParticipation.getGroup().isSubmissionGroup())) || (!task.isAllowSubmittersAcrossGroups() && partnerParticipation.getGroup() != null && submission.getSubmitters().iterator().next().getGroup() != null && partnerParticipation.getGroup().getGid() == submission.getSubmitters().iterator().next().getGroup().getGid())) && submissionDAO.getSubmission(task, partnerParticipation.getUser()) == null) {
 				submission.getSubmitters().add(partnerParticipation);
 				session.update(submission);
 				tx.commit();

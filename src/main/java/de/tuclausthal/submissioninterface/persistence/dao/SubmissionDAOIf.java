@@ -50,14 +50,6 @@ public interface SubmissionDAOIf {
 	public Submission getSubmission(Task task, User user);
 
 	/**
-	 * Fetch a submission based on the task-user-association
-	 * @param task the task to which the submission is associated to
-	 * @param user the user who submitted the submission
-	 * @return the submission or null
-	 */
-	public Submission getSubmissionLocked(Task task, User user);
-
-	/**
 	 * Create and store a new submission in the DB
 	 * @param task the task to associate the submission to
 	 * @param submitter the participation of the submitter

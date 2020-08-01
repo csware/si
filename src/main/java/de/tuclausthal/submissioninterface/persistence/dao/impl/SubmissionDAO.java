@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -58,17 +58,16 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 	}
 
 	@Override
-	public Submission getSubmissionLocked(Task task, User user) {
-		return (Submission) getSession().createCriteria(Submission.class).add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.eq("user", user)).setLockMode(LockMode.UPGRADE).uniqueResult();
-	}
-
-	@Override
 	public Submission createSubmission(Task task, Participation submitter) {
 		Session session = getSession();
-		Submission submission = getSubmissionLocked(task, submitter.getUser());
+		// lock participation, because locking of not-existing entries in InnoDB might lock the whole table (submissions AND tasks) causing a strict serialization of ALL requests
+		session.lock(submitter, LockMode.UPGRADE);
+		Submission submission = getSubmission(task, submitter.getUser());
 		if (submission == null) {
 			submission = new Submission(task, submitter);
 			session.save(submission);
+		} else {
+			session.lock(submission, LockMode.UPGRADE);
 		}
 		return submission;
 	}

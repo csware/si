@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -74,8 +75,9 @@ public class MarkEmptyTask extends HttpServlet {
 				return;
 			}
 			Transaction tx = session.beginTransaction();
+			session.lock(studentParticipation, LockMode.UPGRADE);
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
-			Submission submission = submissionDAO.getSubmissionLocked(task, studentParticipation.getUser());
+			Submission submission = submissionDAO.getSubmission(task, studentParticipation.getUser());
 			if (submission != null) {
 				tx.commit();
 				request.setAttribute("title", "Es existiert bereits eine Bewertung für diesen Studierenden: < href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">zur Bewertung</a>");
