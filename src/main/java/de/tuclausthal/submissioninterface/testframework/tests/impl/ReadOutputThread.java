@@ -53,9 +53,9 @@ public class ReadOutputThread extends Thread {
 					streamReader.skip(Long.MAX_VALUE);
 					continue;
 				}
-				if (read >= MAX_LENGTH) {
+				if (stringBuffer.length() + read >= MAX_LENGTH) {
 					truncated = true;
-					read = MAX_LENGTH;
+					read = MAX_LENGTH - stringBuffer.length();
 				}
 				stringBuffer.append(buffer, 0, read);
 			}
