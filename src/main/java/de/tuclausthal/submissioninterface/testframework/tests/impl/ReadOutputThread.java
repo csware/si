@@ -69,6 +69,8 @@ public class ReadOutputThread extends Thread {
 		if (truncated) {
 			stringBuffer.append("\n\nOUTPUT TOO LONG: TRUNCATED HERE");
 		}
-		stringBuffer.append("\n");
+		if (stringBuffer.length() != 0 && stringBuffer.charAt(stringBuffer.length() - 1) != '\n') {
+			stringBuffer.append("\n");
+		}
 	}
 }
