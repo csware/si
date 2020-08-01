@@ -29,8 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -205,7 +205,7 @@ public final class Util {
 	}
 
 	public static List<String> listFilesAsRelativeStringList(File path) {
-		List<String> submittedFiles = new LinkedList<>();
+		List<String> submittedFiles = new ArrayList<>();
 		if (path.exists() && path.listFiles() != null) {
 			listFilesAsRelativeStringList(submittedFiles, path, "");
 		}
@@ -223,7 +223,7 @@ public final class Util {
 	}
 
 	public static List<String> listFilesAsRelativeStringList(File path, List<String> excludedFileNames) {
-		List<String> submittedFiles = new LinkedList<>();
+		List<String> submittedFiles = new ArrayList<>();
 		if (path.exists() && path.listFiles() != null) {
 			listFilesAsRelativeStringList(submittedFiles, path, "", excludedFileNames);
 		}

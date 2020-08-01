@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.LockMode;
@@ -42,7 +42,7 @@ public class ResultDAO extends AbstractDAO implements ResultDAOIf {
 	@Override
 	public List<String> getResultsForSubmission(Submission submission) {
 		Session session = getSession();
-		List<String> results = new LinkedList<>();
+		List<String> results = new ArrayList<>();
 		for (Result result : (List<Result>) session.createCriteria(Result.class).add(Restrictions.eq("submission", submission)).addOrder(Order.asc("resultid")).list()) {
 			results.add(result.getResult());
 		}

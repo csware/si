@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,7 +20,7 @@ package de.tuclausthal.submissioninterface.template;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +41,7 @@ public abstract class Template {
 	protected HttpServletResponse servletResponse;
 	protected RequestAdapter requestAdapter;
 	protected String prefix;
-	private List<String> headers = new LinkedList<>();
+	private List<String> headers = new ArrayList<>();
 
 	public Template(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
 		this.servletResponse = servletResponse;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -73,7 +73,7 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 	public List<Similarity> getUsersWithMaxSimilarity(SimilarityTest similarityTest, Submission submission) {
 		int maxSimilarity = getMaxSimilarity(similarityTest, submission);
 		if (maxSimilarity == 0) {
-			return new LinkedList<>();
+			return new ArrayList<>();
 		}
 		return getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).add(Restrictions.eq("percentage", maxSimilarity)).list();
 	}

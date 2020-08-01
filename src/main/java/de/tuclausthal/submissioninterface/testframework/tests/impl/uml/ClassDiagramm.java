@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
- * Copyright 2011-2012, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,9 +20,9 @@
 package de.tuclausthal.submissioninterface.testframework.tests.impl.uml;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -325,8 +325,8 @@ public class ClassDiagramm extends UMLDiagramm {
 	}
 
 	private static class AttributesMethods {
-		public List<String> attributes = new LinkedList<>();
-		public List<String> methods = new LinkedList<>();
+		public List<String> attributes = new ArrayList<>();
+		public List<String> methods = new ArrayList<>();
 	}
 
 	public ClassDiagrammConstraint compare(ClassDiagramm diagramm) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2013, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2013, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.dynamictasks.impl;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -79,7 +79,7 @@ public class HardDiskCalculation2DynamicTaskStrategie extends AbstractDynamicTas
 		double terabytes = bytes / 1000.0 / 1000.0 / 1000.0 / 1000.0;
 		double teribytes = bytes / 1024.0 / 1024.0 / 1024.0 / 1024.0;
 
-		List<String> results = new LinkedList<>();
+		List<String> results = new ArrayList<>();
 		if (includePartialSolutions) {
 			results.add(String.valueOf(gbVideos));
 			results.add(String.valueOf(bytesVideos));
@@ -104,7 +104,7 @@ public class HardDiskCalculation2DynamicTaskStrategie extends AbstractDynamicTas
 
 	@Override
 	protected List<TaskNumber> createTaskNumbers(Participation participation) {
-		List<TaskNumber> numbers = new LinkedList<>();
+		List<TaskNumber> numbers = new ArrayList<>();
 		int videos = (int) (Math.random() * 30 + 1);
 		int videogroesseInGigaByte = 30 + (int) (Math.random() * 35);
 		int audiofiles = (int) (Math.random() * 3000 + 10);

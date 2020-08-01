@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,8 +20,8 @@ package de.tuclausthal.submissioninterface.dupecheck;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -65,11 +65,11 @@ public abstract class DupeCheck {
 			Task task = similarityTest.getTask();
 			File taskPath = new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
 			normalizerCache = new NormalizerCache(taskPath, similarityTest.getNormalizer());
-			List<Submission> submissions = new LinkedList<>(task.getSubmissions());
+			List<Submission> submissions = new ArrayList<>(task.getSubmissions());
 			List<String> excludedFileNames = Arrays.asList(similarityTest.getExcludeFiles().split(","));
 			// go through all submission of submission i
 			for (int i = 0; i < submissions.size(); i++) {
-				List<StringBuffer> javaFiles = new LinkedList<>();
+				List<StringBuffer> javaFiles = new ArrayList<>();
 				for (String javaFile : Util.listFilesAsRelativeStringList(new File(taskPath, submissions.get(i).getSubmissionid() + ""), excludedFileNames)) {
 					// cache the files we use more than once
 					javaFiles.add(normalizerCache.normalize(submissions.get(i).getSubmissionid() + System.getProperty("file.separator") + javaFile));

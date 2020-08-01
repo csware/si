@@ -21,7 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -62,10 +62,10 @@ public class ShowMarkHistoryView extends HttpServlet {
 		out.println("<th>Hinzugefügt</th>");
 		out.println("</tr>");
 
-		LinkedList<PointHistory> ph = new LinkedList<>();
+		List<PointHistory> ph = new ArrayList<>();
 		for (PointHistory pointHistory : data) {
 			if (ph.size() > 0) {
-				if (!pointHistory.getDate().equals(ph.getLast().getDate())) {
+				if (!pointHistory.getDate().equals(ph.get(ph.size() - 1).getDate())) {
 					printRow(out, ph);
 				}
 			}
@@ -77,7 +77,7 @@ public class ShowMarkHistoryView extends HttpServlet {
 		template.printTemplateFooter();
 	}
 
-	private void printRow(PrintWriter out, LinkedList<PointHistory> ph) {
+	private void printRow(PrintWriter out, List<PointHistory> ph) {
 		boolean isFirst = true;
 		for (PointHistory entry : ph) {
 			out.println("<tr>");

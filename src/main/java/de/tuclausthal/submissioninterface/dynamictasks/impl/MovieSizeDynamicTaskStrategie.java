@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.dynamictasks.impl;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -82,7 +82,7 @@ public class MovieSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie 
 		long byteProMinute = byteProSecond * 60;
 		long bytes = byteProMinute * dauer;
 
-		List<String> results = new LinkedList<>();
+		List<String> results = new ArrayList<>();
 		if (includePartialSolutions) {
 			results.add(String.valueOf(pixels));
 			results.add(String.valueOf(byteVideoProFrame));
@@ -104,7 +104,7 @@ public class MovieSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie 
 
 	@Override
 	protected List<TaskNumber> createTaskNumbers(Participation participation) {
-		List<TaskNumber> numbers = new LinkedList<>();
+		List<TaskNumber> numbers = new ArrayList<>();
 
 		int rnd = (int) (Math.random() * RESOLUTIONS.length);
 		if (rnd == RESOLUTIONS.length) {

@@ -19,7 +19,7 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -48,7 +48,7 @@ public class ShowUser extends HttpServlet {
 
 		Boolean isAtLeastAdvisorOnce = false;
 
-		List<Lecture> lectures = new LinkedList<>();
+		List<Lecture> lectures = new ArrayList<>();
 		for (Participation participation : RequestAdapter.getUser(request).getLectureParticipant()) {
 			if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 				lectures.add(participation.getLecture());

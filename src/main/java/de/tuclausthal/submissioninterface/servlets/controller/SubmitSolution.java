@@ -27,9 +27,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
@@ -190,7 +190,7 @@ public class SubmitSolution extends HttpServlet {
 			return;
 		}
 
-		List<Integer> partnerIDs = new LinkedList<>();
+		List<Integer> partnerIDs = new ArrayList<>();
 		int uploadFor = Util.parseInteger(request.getParameter("uploadFor"), 0);
 
 		if (request.getParameterValues("partnerid") != null) {
@@ -393,7 +393,7 @@ public class SubmitSolution extends HttpServlet {
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			if (task.isADynamicTask()) {
 				int numberOfFields = task.getDynamicTaskStrategie(session).getNumberOfResultFields();
-				List<String> results = new LinkedList<>();
+				List<String> results = new ArrayList<>();
 				for (int i = 0; i < numberOfFields; i++) {
 					String result = request.getParameter("dynamicresult" + i);
 					if (result == null) {

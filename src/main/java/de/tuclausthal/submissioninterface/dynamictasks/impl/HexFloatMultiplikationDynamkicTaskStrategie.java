@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.dynamictasks.impl;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -71,7 +71,7 @@ public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamic
 	@Override
 	public List<String> getCorrectResults(List<TaskNumber> numbers, boolean includePartialSolutions) {
 		double result = Double.parseDouble(numbers.get(0).getOrigNumber()) * Double.parseDouble(numbers.get(1).getOrigNumber());
-		List<String> results = new LinkedList<>();
+		List<String> results = new ArrayList<>();
 		if (includePartialSolutions) {
 			results.add(String.valueOf(result));
 		}
@@ -92,7 +92,7 @@ public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamic
 
 	@Override
 	protected List<TaskNumber> createTaskNumbers(Participation participation) {
-		List<TaskNumber> numbers = new LinkedList<>();
+		List<TaskNumber> numbers = new ArrayList<>();
 		String[] floatNumbers = RandomNumber.getFloatBitsTruncated(RandomNumber.getFloat(true));
 		while (floatNumbers[0].endsWith(".0")) {
 			floatNumbers = RandomNumber.getFloatBitsTruncated(RandomNumber.getFloat(true));

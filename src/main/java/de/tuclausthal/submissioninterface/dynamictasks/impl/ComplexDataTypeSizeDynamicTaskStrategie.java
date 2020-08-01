@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.dynamictasks.impl;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -80,7 +80,7 @@ public class ComplexDataTypeSizeDynamicTaskStrategie extends AbstractDynamicTask
 			bitBetrag = (int) Math.ceil(Math.log(-minBetrag) / Math.log(2)) + 1; // + 1 für VZ-bit
 		}
 
-		List<String> results = new LinkedList<>();
+		List<String> results = new ArrayList<>();
 		if (includePartialSolutions) {
 			results.add(String.valueOf(bitsLfndNr));
 			results.add(String.valueOf(bitVerwZweck));
@@ -97,7 +97,7 @@ public class ComplexDataTypeSizeDynamicTaskStrategie extends AbstractDynamicTask
 
 	@Override
 	protected List<TaskNumber> createTaskNumbers(Participation participation) {
-		List<TaskNumber> numbers = new LinkedList<>();
+		List<TaskNumber> numbers = new ArrayList<>();
 
 		int lfndnr = 100000 * (int) (Math.random() * 1000 + 1);
 		int maxVerwZweck = 5 * (int) (Math.random() * 47 + 20);

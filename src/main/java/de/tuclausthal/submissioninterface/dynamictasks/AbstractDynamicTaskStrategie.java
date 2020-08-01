@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.dynamictasks;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -127,7 +127,7 @@ public abstract class AbstractDynamicTaskStrategie implements DynamicTaskStrateg
 	final public List<String> getUserResults(Submission submission) {
 		List<String> results = DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission);
 		if (results.size() == 0) {
-			results = new LinkedList<>();
+			results = new ArrayList<>();
 			for (int i = 0; i < getNumberOfResultFields(); i++) {
 				results.add("");
 			}

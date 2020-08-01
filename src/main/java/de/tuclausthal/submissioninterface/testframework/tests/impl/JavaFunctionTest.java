@@ -21,7 +21,7 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
@@ -58,11 +58,11 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			policyFileWriter.write("};\n");
 			policyFileWriter.close();
 
-			List<String> additionalParams = new LinkedList<>();
+			List<String> additionalParams = new ArrayList<>();
 			populateParameters(test, basePath, tempDir, additionalParams);
 
 			// check what kind of test it is
-			List<String> params = new LinkedList<>();
+			List<String> params = new ArrayList<>();
 			params.add("java");
 			// we have no frontend
 			params.add("-Djava.awt.headless=true");

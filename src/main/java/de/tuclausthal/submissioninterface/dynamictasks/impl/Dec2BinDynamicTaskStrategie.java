@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.dynamictasks.impl;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -35,7 +35,7 @@ public class Dec2BinDynamicTaskStrategie extends AbstractNumberConversionDynamic
 
 	@Override
 	protected List<TaskNumber> createTaskNumbers(Participation participation) {
-		List<TaskNumber> numbers = new LinkedList<>();
+		List<TaskNumber> numbers = new ArrayList<>();
 		String origNumber = RandomNumber.getRandomNumber(RandomNumber.getRandomParam('B'));
 		String number = RandomNumber.getNumber(origNumber, RandomNumber.getRandomParam('B'));
 		numbers.add(new TaskNumber(getTask(), participation, origNumber, number));
