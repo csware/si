@@ -30,6 +30,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
@@ -131,6 +132,15 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 	public CommentsMetricTest createCommentsMetricTest(Task task) {
 		Session session = getSession();
 		CommentsMetricTest test = new CommentsMetricTest();
+		test.setTask(task);
+		session.save(test);
+		return test;
+	}
+
+	@Override
+	public JavaAdvancedIOTest createJavaAdvancedIOTest(Task task) {
+		Session session = getSession();
+		JavaAdvancedIOTest test = new JavaAdvancedIOTest();
 		test.setTask(task);
 		session.save(test);
 		return test;

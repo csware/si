@@ -48,6 +48,24 @@ CREATE TABLE IF NOT EXISTS `groups_tutors` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `javaadvancedioteststep`
+--
+
+DROP TABLE IF EXISTS `javaadvancedioteststep`;
+CREATE TABLE IF NOT EXISTS `javaadvancedioteststep` (
+  `teststepid` int(11) NOT NULL AUTO_INCREMENT,
+  `expect` longtext NOT NULL,
+  `testcode` longtext NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `testid` int(11) NOT NULL,
+  PRIMARY KEY (`teststepid`),
+  KEY `FK1DB21A80AE3F26C5` (`testid`),
+  KEY `FK1DB21A80DB681CA1` (`testid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `lectures`
 --
 
@@ -415,6 +433,13 @@ ALTER TABLE `groups`
 ALTER TABLE `groups_tutors`
   ADD CONSTRAINT `FK8EAE7CC842D82B98` FOREIGN KEY (`tutors_id`) REFERENCES `participations` (`id`),
   ADD CONSTRAINT `FK8EAE7CC8BB3EB910` FOREIGN KEY (`groups_gid`) REFERENCES `groups` (`gid`);
+
+--
+-- Constraints der Tabelle `javaadvancedioteststep`
+--
+ALTER TABLE `javaadvancedioteststep`
+  ADD CONSTRAINT `FK1DB21A80AE3F26C5` FOREIGN KEY (`testid`) REFERENCES `tests` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK1DB21A80DB681CA1` FOREIGN KEY (`testid`) REFERENCES `tests` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `logs`

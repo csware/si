@@ -488,4 +488,14 @@ public final class Util {
 			filename.replace(lastDot, filename.length(), filename.subSequence(lastDot, filename.length()).toString().toLowerCase());
 		}
 	}
+
+	public static void cleanCrLf(StringBuffer stringBuffer) {
+		for (int i = 1; i < stringBuffer.length();) {
+			if (stringBuffer.charAt(i - 1) == '\r' && stringBuffer.charAt(i) == '\n') {
+				stringBuffer.deleteCharAt(i - 1);
+				continue;
+			}
+			++i;
+		}
+	}
 }

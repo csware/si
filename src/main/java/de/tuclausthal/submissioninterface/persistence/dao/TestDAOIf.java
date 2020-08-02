@@ -23,6 +23,7 @@ import java.util.List;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
@@ -60,6 +61,8 @@ public interface TestDAOIf {
 	 * @return the created test
 	 */
 	public CompileTest createCompileTest(Task task);
+
+	public JavaAdvancedIOTest createJavaAdvancedIOTest(Task task);
 
 	public CommentsMetricTest createCommentsMetricTest(Task task);
 

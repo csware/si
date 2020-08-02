@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import de.tuclausthal.submissioninterface.util.Util;
+
 /**
  * Thread for reading output from the process
  * @author Sven Strickroth
@@ -69,6 +71,7 @@ public class ReadOutputThread extends Thread {
 		if (truncated) {
 			stringBuffer.append("\n\nOUTPUT TOO LONG: TRUNCATED HERE");
 		}
+		Util.cleanCrLf(stringBuffer);
 		if (stringBuffer.length() != 0 && stringBuffer.charAt(stringBuffer.length() - 1) != '\n') {
 			stringBuffer.append("\n");
 		}

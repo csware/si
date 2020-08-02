@@ -39,6 +39,7 @@ import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
@@ -52,6 +53,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowFile;
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowJavaAdvancedIOTestResult;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -272,8 +274,13 @@ public class ShowSubmissionView extends HttpServlet {
 				out.println("<li>" + testResult.getTest().getTestTitle() + "<br>");
 				out.println("Erfolgreich: " + Util.boolToHTML(testResult.getPassedTest()));
 				if (!testResult.getTestOutput().isEmpty()) {
-					out.println("<br><textarea id=\"testresult" + testResult.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(testResult.getTestOutput()) + "</textarea>");
-					javaScript.append("testResultSetup('" + testResult.getId() + "');");
+					if (testResult.getTest() instanceof JavaAdvancedIOTest) {
+						out.println("<br>");
+						ShowJavaAdvancedIOTestResult.printTestResults(out, (JavaAdvancedIOTest) testResult.getTest(), testResult.getTestOutput(), false, javaScript);
+					} else {
+						out.println("<br><textarea id=\"testresult" + testResult.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(testResult.getTestOutput()) + "</textarea>");
+						javaScript.append("testResultSetup('" + testResult.getId() + "');");
+					}
 				}
 				out.println("</li>");
 			}

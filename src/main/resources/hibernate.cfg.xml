@@ -56,5 +56,7 @@
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Result"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTestStep"/>
  </session-factory>
 </hibernate-configuration>

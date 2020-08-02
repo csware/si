@@ -756,4 +756,20 @@
     <servlet-name>DownloadModelSolutionFile</servlet-name>
     <url-pattern>/servlets/DownloadModelSolutionFile/*</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>JavaAdvancedIOTestManager</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.JavaAdvancedIOTestManager</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>JavaAdvancedIOTestManager</servlet-name>
+    <url-pattern>/servlets/JavaAdvancedIOTestManager</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>JavaAdvancedIOTestManagerOverView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.JavaAdvancedIOTestManagerOverView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>JavaAdvancedIOTestManagerOverView</servlet-name>
+    <url-pattern>/servlets/JavaAdvancedIOTestManagerOverView</url-pattern>
+  </servlet-mapping>
 </web-app>

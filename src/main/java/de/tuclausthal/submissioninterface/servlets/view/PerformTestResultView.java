@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -26,7 +26,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowJavaAdvancedIOTestResult;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
@@ -51,7 +53,11 @@ public class PerformTestResultView extends HttpServlet {
 		out.println("<b>Beschreibung:</b><br>" + Util.textToHTML(test.getTestDescription()) + "<br>");
 		out.println("<b>Bestanden:</b> " + Util.boolToHTML(testResult.isTestPassed()) + "<br>");
 		if (!testResult.getTestOutput().isEmpty()) {
-			out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
+			if (test instanceof JavaAdvancedIOTest) {
+				ShowJavaAdvancedIOTestResult.printTestResults(out, (JavaAdvancedIOTest) test, testResult.getTestOutput(), true, null);
+			} else {
+				out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
+			}
 		}
 
 		template.printTemplateFooter();

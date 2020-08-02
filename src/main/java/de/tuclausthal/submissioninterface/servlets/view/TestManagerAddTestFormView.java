@@ -78,6 +78,39 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</table>");
 		out.println("</form>");
 
+		out.println("<h2>Erweiterer Java-IO-Test</h2>");
+		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
+		out.println("<input type=hidden name=action value=saveNewTest>");
+		out.println("<input type=hidden name=type value=advancedjavaio>");
+		out.println("<table class=border>");
+		out.println("<tr>");
+		out.println("<th>Titel:</th>");
+		out.println("<td><input type=text name=title value=\"Testen\" required=required></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Tutorentest:</th>");
+		out.println("<td><input type=checkbox name=tutortest></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th># ausführbar für Studierende:</th>");
+		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Studierenden Test-Details anzeigen:</th>");
+		out.println("<td><input type=checkbox name=giveDetailsToStudents></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<td colspan=2 class=mid>Weitere Einstelungen auf zweiter Seite...</td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.println(response.encodeURL("ShowTask?taskid=" + task.getTaskid()));
+		out.println("\">Abbrechen</a></td>");
+		out.println("</tr>");
+		out.println("</table>");
+		out.println("</form>");
+
 		//Formular um UML Constraint Test anzulegen
 		out.println("<p><h2>UML Constraint Test</h2>");
 		out.println("<form ENCTYPE=\"multipart/form-data\" action=\"" + response.encodeURL("?taskid=" + task.getTaskid() + "&amp;action=saveNewTest&amp;type=umlConstraint") + "\" method=post>");

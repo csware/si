@@ -45,3 +45,15 @@ ALTER TABLE `logs` ADD `uploadFilename` varchar(255) DEFAULT NULL AFTER `userId`
 
 -- Allow to upload model solution and provide it to students
 ALTER TABLE `tasks` ADD `modelSolutionProvision` VARCHAR(255) AFTER `taskgroupid`;
+
+-- Add new advanced Java IO tests
+CREATE TABLE IF NOT EXISTS `javaadvancedioteststep` (
+  `teststepid` int(11) NOT NULL AUTO_INCREMENT,
+  `expect` longtext NOT NULL,
+  `testcode` longtext NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `testid` int(11) NOT NULL,
+  PRIMARY KEY (`teststepid`),
+  KEY `FK1DB21A80AE3F26C5` (`testid`)
+) ENGINE=InnoDB;
+ALTER TABLE `javaadvancedioteststep` ADD CONSTRAINT `FK1DB21A80AE3F26C5` FOREIGN KEY (`testid`) REFERENCES `tests` (`id`) ON DELETE CASCADE;

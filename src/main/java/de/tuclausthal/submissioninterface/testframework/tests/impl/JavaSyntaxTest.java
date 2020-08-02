@@ -38,7 +38,7 @@ public class JavaSyntaxTest extends TempDirTest {
 		compileJava(tempDir, testResult);
 	}
 
-	final protected boolean compileJava(File javaDir, TestExecutorTestResult testResult) throws Exception {
+	static final public boolean compileJava(File javaDir, TestExecutorTestResult testResult) throws Exception {
 		// http://forums.java.net/jive/message.jspa?messageID=325269
 		int compiles = 1;
 		JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
@@ -62,7 +62,7 @@ public class JavaSyntaxTest extends TempDirTest {
 		return (compiles == 0);
 	}
 
-	final protected void getRecursivelyAllJavaFiles(File path, List<String> javaFiles) {
+	static final public void getRecursivelyAllJavaFiles(File path, List<String> javaFiles) {
 		for (File file : path.listFiles()) {
 			if (file.isFile()) {
 				if (file.getName().toLowerCase().endsWith(".java")) {

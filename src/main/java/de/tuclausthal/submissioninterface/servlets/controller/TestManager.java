@@ -43,6 +43,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
@@ -84,6 +85,26 @@ public class TestManager extends HttpServlet {
 			request.getRequestDispatcher("TestManagerAddTestFormView").forward(request, response);
 
 			//Controlleranpassung für den UML Constraint Test
+		} else if ("saveNewTest".equals(request.getParameter("action")) && "advancedjavaio".equals(request.getParameter("type"))) {
+			session.beginTransaction();
+			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
+			JavaAdvancedIOTest test = testDAO.createJavaAdvancedIOTest(task);
+
+			int timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
+			int timeout = Util.parseInteger(request.getParameter("timeout"), 15);
+			boolean tutortest = request.getParameter("tutortest") != null;
+			String title = request.getParameter("title");
+			String description = request.getParameter("description");
+
+			test.setTimesRunnableByStudents(timesRunnableByStudents);
+			test.setForTutors(tutortest);
+			test.setTestTitle(title);
+			test.setTestDescription(description);
+			test.setTimeout(timeout);
+			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
+			testDAO.saveTest(test);
+			session.getTransaction().commit();
+			response.sendRedirect(response.encodeRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId()));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "umlConstraint".equals(request.getParameter("type"))) {
 			// Check that we have a file upload request
 
@@ -120,7 +141,6 @@ public class TestManager extends HttpServlet {
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
-
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "junit".equals(request.getParameter("type"))) {
 			// Check that we have a file upload request
 

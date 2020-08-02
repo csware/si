@@ -30,7 +30,15 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 public class JavaJUnitTest extends JavaFunctionTest {
 	@Override
-	protected boolean calculateTestResult(Test test, boolean exitedCleanly, StringBuffer processOutput) {
+	protected boolean calculateTestResult(Test test, boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted) {
+		// append STDERR
+		if (stdErr.length() > 0) {
+			processOutput.append("\nFehlerausgabe (StdErr)\n");
+			processOutput.append(stdErr);
+		}
+		if (aborted) {
+			processOutput.insert(0, "Student-program aborted due to too long execution time.\n\n");
+		}
 		return exitedCleanly;
 	}
 

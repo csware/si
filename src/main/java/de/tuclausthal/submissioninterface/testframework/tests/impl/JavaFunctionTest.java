@@ -34,7 +34,10 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 	@Override
 	final protected void performTestInTempDir(Test test, File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {
 		compileJava(tempDir, null);
+		runJava(test, basePath, tempDir, testResult);
+	}
 
+	protected void runJava(Test test, File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {
 		File policyFile = null;
 		try {
 			// prepare policy file
@@ -92,17 +95,8 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			outputGrapper.waitFor();
 
 			boolean exitedCleanly = (exitValue == 0);
-			StringBuffer processOutput = outputGrapper.getStdOutBuffer();
-			testResult.setTestPassed(calculateTestResult(test, exitedCleanly, processOutput));
-			// append STDERR
-			if (outputGrapper.getStdErrBuffer().length() > 0) {
-				processOutput.append("\nFehlerausgabe (StdErr)\n");
-				processOutput.append(outputGrapper.getStdErrBuffer());
-			}
-			if (aborted) {
-				processOutput.insert(0, "Student-program aborted due to too long execution time.\n\n");
-			}
-			testResult.setTestOutput(processOutput.toString());
+			testResult.setTestPassed(calculateTestResult(test, exitedCleanly, outputGrapper.getStdOutBuffer(), outputGrapper.getStdErrBuffer(), aborted));
+			testResult.setTestOutput(outputGrapper.getStdOutBuffer().toString());
 		} finally {
 			if (policyFile != null) {
 				policyFile.delete();
@@ -110,7 +104,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 		}
 	}
 
-	abstract protected boolean calculateTestResult(Test test, boolean exitedCleanly, StringBuffer processOutput);
+	abstract protected boolean calculateTestResult(Test test, boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted);
 
 	abstract void populateParameters(Test test, File basePath, File tempDir, List<String> params);
 }

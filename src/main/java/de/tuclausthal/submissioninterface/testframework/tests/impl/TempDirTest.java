@@ -31,8 +31,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 public abstract class TempDirTest extends AbstractTest {
 	@Override
-	final public void performTest(Test test, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
-		// check if we are already in an tempdir
+	public void performTest(Test test, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
+		// check if we are already in an tempdir, i.e., we're executing a student test as Tutor
 		File checkPath = submissionPath;
 		boolean isAlreadyTempDir = true;
 		while (checkPath != null) {

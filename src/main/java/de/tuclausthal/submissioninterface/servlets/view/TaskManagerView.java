@@ -32,6 +32,7 @@ import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieFacto
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ModelSolutionProvisionType;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
@@ -319,6 +320,8 @@ public class TaskManagerView extends HttpServlet {
 						out.println("JUnit-Test<br>");
 					} else if (test instanceof CommentsMetricTest) {
 						out.println("Kommentar-Metrik-Test<br>");
+					} else if (test instanceof JavaAdvancedIOTest) {
+						out.println("Erweiterer Java-IO-Test<br>");
 					} else {
 						out.println("unknown<br>");
 					}
@@ -331,6 +334,10 @@ public class TaskManagerView extends HttpServlet {
 						} else {
 							out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("TestManager?action=rerunTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
 						}
+					}
+					if (test instanceof JavaAdvancedIOTest) {
+						out.println("Bestehend aus " + ((JavaAdvancedIOTest)test).getTestSteps().size() + " Schritten<br>");
+						out.println("<a href=\"" + response.encodeURL("JavaAdvancedIOTestManager?testid=" + test.getId()) + "\">Test bearbeiten</a><br>");
 					}
 					out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">Test löschen</a>");
 					out.println("</li>");
