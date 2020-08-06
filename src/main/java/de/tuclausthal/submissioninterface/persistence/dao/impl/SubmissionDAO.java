@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 import java.io.File;
 import java.util.List;
 
+import org.hibernate.FetchMode;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -80,7 +81,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 
 	@Override
 	public List<Submission> getSubmissionsForTaskOrdered(Task task) {
-		return getSession().createCriteria(Submission.class, "sub").add(Restrictions.eq("task", task)).createCriteria("submitters").addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).list();
+		return getSession().createCriteria(Submission.class, "sub").add(Restrictions.eq("task", task)).setFetchMode("submitters", FetchMode.JOIN).createCriteria("submitters").setFetchMode("group", FetchMode.JOIN).setFetchMode("user", FetchMode.JOIN).addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).list();
 	}
 
 	@Override
