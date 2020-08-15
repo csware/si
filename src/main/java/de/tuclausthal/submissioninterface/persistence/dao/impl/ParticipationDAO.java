@@ -101,12 +101,12 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 
 	@Override
 	public Participation getParticipation(int participationid) {
-		return (Participation) getSession().get(Participation.class, participationid);
+		return getSession().get(Participation.class, participationid);
 	}
 
 	@Override
 	public Participation getParticipationLocked(int participationid) {
-		return (Participation) getSession().get(Participation.class, participationid, LockOptions.UPGRADE);
+		return getSession().get(Participation.class, participationid, LockOptions.UPGRADE);
 	}
 
 	@Override

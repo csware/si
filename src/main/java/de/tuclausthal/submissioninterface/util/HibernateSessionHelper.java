@@ -19,8 +19,10 @@
 package de.tuclausthal.submissioninterface.util;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
-import org.slf4j.LoggerFactory;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 /**
  * Hibernate Session Helper Singleton+Facade
@@ -31,14 +33,9 @@ public class HibernateSessionHelper {
 	private static final SessionFactory sessionFactory;
 
 	static {
-		try {
-			// Create the SessionFactory from hibernate.cfg.xml
-			sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-		} catch (Throwable ex) {
-			// Make sure you log the exception, as it might be swallowed
-			LoggerFactory.getLogger(HibernateSessionHelper.class).error("Initial SessionFactory creation failed.", ex);
-			throw new ExceptionInInitializerError(ex);
-		}
+		StandardServiceRegistry standardRegistry = new StandardServiceRegistryBuilder().configure().build();
+		Metadata metadata = new MetadataSources(standardRegistry).getMetadataBuilder().build();
+		sessionFactory = metadata.getSessionFactoryBuilder().build();
 	}
 
 	public static SessionFactory getSessionFactory() {

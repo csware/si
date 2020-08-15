@@ -20,7 +20,7 @@ package de.tuclausthal.submissioninterface.util;
 
 import java.io.IOException;
 
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 

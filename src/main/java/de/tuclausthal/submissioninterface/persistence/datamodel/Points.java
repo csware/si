@@ -22,11 +22,10 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-
-import org.hibernate.annotations.ForeignKey;
 
 @Embeddable
 public class Points implements Serializable {
@@ -69,7 +68,7 @@ public class Points implements Serializable {
 	 * @return the issuedBy
 	 */
 	@ManyToOne
-	@ForeignKey(name = "issuedby")
+	@JoinColumn(name = "issuedby_id")
 	public Participation getIssuedBy() {
 		return issuedBy;
 	}

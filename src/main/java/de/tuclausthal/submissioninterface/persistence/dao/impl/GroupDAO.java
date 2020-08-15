@@ -65,12 +65,12 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 
 	@Override
 	public Group getGroup(int groupid) {
-		return (Group) getSession().get(Group.class, groupid);
+		return getSession().get(Group.class, groupid);
 	}
 
 	@Override
 	public Group getGroupLocked(int groupid) {
-		return (Group) getSession().get(Group.class, groupid, LockOptions.UPGRADE);
+		return getSession().get(Group.class, groupid, LockOptions.UPGRADE);
 	}
 
 	@Override

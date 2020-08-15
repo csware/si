@@ -52,7 +52,7 @@ public class PointCategoryDAO extends AbstractDAO implements PointCategoryDAOIf 
 
 	@Override
 	public PointCategory getPointCategory(int id) {
-		return (PointCategory) getSession().get(PointCategory.class, id);
+		return getSession().get(PointCategory.class, id);
 	}
 
 	@Override

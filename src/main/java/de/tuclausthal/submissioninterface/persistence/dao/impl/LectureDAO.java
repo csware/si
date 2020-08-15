@@ -63,7 +63,7 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 
 	@Override
 	public Lecture getLecture(int lectureId) {
-		return (Lecture) getSession().get(Lecture.class, lectureId);
+		return getSession().get(Lecture.class, lectureId);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -21,7 +21,7 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
@@ -60,14 +60,14 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 	@Override
 	public int getMaxSimilarity(SimilarityTest similarityTest, Submission submission) {
 		Session session = getSession();
-		Query query = session.createQuery("select max(similarity.percentage) from Similarity similarity inner join similarity.similarityTest as similaritytest where similarity.submissionOne=:SUBMISSION and similaritytest.similarityTestId=:SIMID group by similarity.submissionOne");
+		Query<Integer> query = session.createQuery("select max(similarity.percentage) from Similarity similarity inner join similarity.similarityTest as similaritytest where similarity.submissionOne=:SUBMISSION and similaritytest.similarityTestId=:SIMID group by similarity.submissionOne", Integer.class);
 		query.setEntity("SIMID", similarityTest);
 		query.setEntity("SUBMISSION", submission);
-		Object result = query.uniqueResult();
+		Integer result = query.uniqueResult();
 		if (result == null) {
 			return 0;
 		}
-		return (Integer) result;
+		return result;
 	}
 
 	@SuppressWarnings("unchecked")

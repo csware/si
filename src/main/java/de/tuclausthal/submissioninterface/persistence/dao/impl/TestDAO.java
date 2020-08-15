@@ -89,12 +89,12 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 
 	@Override
 	public Test getTest(int testId) {
-		return (Test) getSession().get(Test.class, testId);
+		return getSession().get(Test.class, testId);
 	}
 
 	@Override
 	public Test getTestLocked(int testId) {
-		return (Test) getSession().get(Test.class, testId, LockOptions.UPGRADE);
+		return getSession().get(Test.class, testId, LockOptions.UPGRADE);
 	}
 
 	@Override

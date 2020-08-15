@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE hibernate-configuration PUBLIC
           "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+          "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 <session-factory>
 	<property name="connection.url">jdbc:mysql://localhost/abgabesystem</property>
@@ -25,7 +25,8 @@
         <property name="hibernate.c3p0.idle_test_period">900</property>
         <!-- <property name="hibernate.c3p0.testConnectionOnCheckout">true</property> -->
 
- <property name="transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+    <property name="hibernate.transaction.coordinator_class">jdbc</property>
+    <property name="physical_naming_strategy">de.tuclausthal.submissioninterface.persistence.PhysicalNamingStrategy</property>
     <!--  thread is the short name for
       org.hibernate.context.ThreadLocalSessionContext
       and let Hibernate bind the session automatically to the thread

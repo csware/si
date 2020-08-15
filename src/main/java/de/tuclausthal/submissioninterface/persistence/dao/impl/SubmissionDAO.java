@@ -24,12 +24,12 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
-import org.hibernate.Hibernate;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
 
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
@@ -50,12 +50,12 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 
 	@Override
 	public Submission getSubmission(int submissionid) {
-		return (Submission) getSession().get(Submission.class, submissionid);
+		return getSession().get(Submission.class, submissionid);
 	}
 
 	@Override
 	public Submission getSubmissionLocked(int submissionid) {
-		return (Submission) getSession().get(Submission.class, submissionid, LockOptions.UPGRADE);
+		return getSession().get(Submission.class, submissionid, LockOptions.UPGRADE);
 	}
 
 	@Override
@@ -148,7 +148,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 			restrictions = combineCriterionsWithOR(restrictions, Restrictions.like("points.internalComment", "%" + searchString + "%"));
 		}
 		if (testResults) {
-			restrictions = combineCriterionsWithOR(restrictions, Restrictions.sqlRestriction("submissionid in (select submission_submissionid from testresults where testOutput like ?)", "%" + searchString + "%", Hibernate.STRING));
+			restrictions = combineCriterionsWithOR(restrictions, Restrictions.sqlRestriction("submissionid in (select submission_submissionid from testresults where testOutput like ?)", "%" + searchString + "%", StandardBasicTypes.STRING));
 		}
 		return criteria.add(restrictions).list();
 	}

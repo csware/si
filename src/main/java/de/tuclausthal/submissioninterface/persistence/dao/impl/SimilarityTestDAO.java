@@ -22,7 +22,7 @@ import java.util.Date;
 
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
@@ -65,12 +65,12 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 
 	@Override
 	public SimilarityTest getSimilarityTest(int similarityTestId) {
-		return (SimilarityTest) getSession().get(SimilarityTest.class, similarityTestId);
+		return getSession().get(SimilarityTest.class, similarityTestId);
 	}
 
 	@Override
 	public SimilarityTest getSimilarityTestLocked(int similarityTestId) {
-		return (SimilarityTest) getSession().get(SimilarityTest.class, similarityTestId, LockOptions.UPGRADE);
+		return getSession().get(SimilarityTest.class, similarityTestId, LockOptions.UPGRADE);
 	}
 
 	@Override
