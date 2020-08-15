@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.query.Query;
+import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
@@ -61,8 +62,8 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 	public int getMaxSimilarity(SimilarityTest similarityTest, Submission submission) {
 		Session session = getSession();
 		Query<Integer> query = session.createQuery("select max(similarity.percentage) from Similarity similarity inner join similarity.similarityTest as similaritytest where similarity.submissionOne=:SUBMISSION and similaritytest.similarityTestId=:SIMID group by similarity.submissionOne", Integer.class);
-		query.setEntity("SIMID", similarityTest);
-		query.setEntity("SUBMISSION", submission);
+		query.setParameter("SIMID", similarityTest.getSimilarityTestId(), StandardBasicTypes.INTEGER);
+		query.setParameter("SUBMISSION", submission.getSubmissionid(), StandardBasicTypes.INTEGER);
 		Integer result = query.uniqueResult();
 		if (result == null) {
 			return 0;

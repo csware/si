@@ -25,6 +25,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
 
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
@@ -91,7 +92,7 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 	@Override
 	public void makeUserStudent(int uid, int matrikelno) {
 		Transaction tx = getSession().beginTransaction();
-		getSession().createSQLQuery("update users set matrikelno = :matrikelno where uid = :uid").setInteger("matrikelno", matrikelno).setInteger("uid", uid).executeUpdate();
+		getSession().createSQLQuery("update users set matrikelno = :matrikelno where uid = :uid").setParameter("matrikelno", matrikelno, StandardBasicTypes.INTEGER).setParameter("uid", uid, StandardBasicTypes.INTEGER).executeUpdate();
 		tx.commit();
 	}
 

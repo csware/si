@@ -23,6 +23,7 @@ import java.util.Date;
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.hibernate.query.Query;
+import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
@@ -58,7 +59,7 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		Query query = session.createQuery("delete from Similarity similarity where similarity.similarityTest=:SIMTEST");
-		query.setEntity("SIMTEST", similarityTest);
+		query.setParameter("SIMTEST", similarityTest.getSimilarityTestId(), StandardBasicTypes.INTEGER);
 		query.executeUpdate();
 		tx.commit();
 	}
