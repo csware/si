@@ -155,7 +155,11 @@ public class ShowLectureTutorView extends HttpServlet {
 			if (group.getTutors().size() > 0) {
 				out.println("<table class=border>");
 				out.println("<tr>");
-				out.println("<th>Tutor</th>");
+				if (group.getTutors().size() > 1) {
+					out.println("<th>TutorInnen</th>");
+				} else {
+					out.println("<th>TutorIn</th>");
+				}
 				out.println("</tr>");
 				for (Participation tutorParticipation : group.getTutors()) {
 					out.println("<tr>");

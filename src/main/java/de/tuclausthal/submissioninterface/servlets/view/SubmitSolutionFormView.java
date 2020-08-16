@@ -102,7 +102,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 					setWithUser.append("<br>");
 				}
 			} else if (participation.getGroup() == null) {
-				setWithUser = new StringBuffer("<p>Sie können im Moment Partnerin und keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihre Partnerin bzw. Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihre Partnerin bzw. Ihr Partner, müssen von Ihrer Tutorin bzw. Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol></p><hr>");
+				setWithUser = new StringBuffer("<p>Sie können im Moment keine Partnerin und keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie zwei Voraussetzungen erfüllen:<ol><li>Ihre Partnerin bzw. Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li><li>Sie, als auch Ihre Partnerin bzw. Ihr Partner, müssen von Ihrer Tutorin bzw. Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li></ol></p><hr>");
 			}
 		}
 
