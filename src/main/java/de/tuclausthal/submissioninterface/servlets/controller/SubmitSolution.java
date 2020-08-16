@@ -288,6 +288,9 @@ public class SubmitSolution extends HttpServlet {
 			if (studentParticipation.getGroup() != null && studentParticipation.getGroup().isSubmissionGroup()) {
 				for (Participation partnerParticipation : studentParticipation.getGroup().getMembers()) {
 					session.lock(partnerParticipation, LockMode.UPGRADE); // creating submissions is serialized by locking the participation, see above
+					if (partnerParticipation.getRoleType().ordinal() >= ParticipationRole.TUTOR.ordinal()) {
+						continue;
+					}
 					Submission partnerSubmission = submissionDAO.getSubmission(task, partnerParticipation.getUser());
 					if (partnerSubmission == null) {
 						submission.getSubmitters().add(partnerParticipation);
