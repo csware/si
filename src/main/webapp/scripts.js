@@ -1,3 +1,22 @@
+/*
+ * Copyright 2010-2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2019 Dustin Reineke <dustin.reineke@tu-clausthal.de>
+ *
+ * This file is part of the SubmissionInterface.
+ *
+ * SubmissionInterface is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * SubmissionInterface is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with SubmissionInterface. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 function confirmLink(msg) {
     if (typeof(window.opera) != 'undefined') {
         return true;
@@ -60,4 +79,26 @@ function kaAjax(url)
   var ser = Math.round(Math.random()*1000000); // Anti-caching random number
   kaHttpRequest.open('GET', url + '?random=' + ser, true);
   kaHttpRequest.send(null);
+}
+
+function checkInternalComment() {
+    var checkBox = document.getElementById('isdupe');
+    var internalComment = document.getElementById('internalcomment');
+    var submitButton = document.getElementById('submit');
+
+    if (checkBox.checked)
+    {
+        if (internalComment.value.length >= 10)
+        {
+            submitButton.disabled = false;
+        }
+        else
+        {
+            submitButton.disabled = true;
+        }
+    }
+    else
+    {
+        submitButton.disabled = false;
+    }
 }
