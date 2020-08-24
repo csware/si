@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2011, 2020 Sven Strickroth <email@cs-ware.de>
  * Copyright 2019 Dustin Reineke <dustin.reineke@tu-clausthal.de>
  *
  * This file is part of the SubmissionInterface.
@@ -85,6 +85,7 @@ function checkInternalComment() {
     var checkBox = document.getElementById('isdupe');
     var internalComment = document.getElementById('internalcomment');
     var submitButton = document.getElementById('submit');
+    var duplicateTextbox = document.getElementById('duplicate');
 
     if (checkBox.checked)
     {
@@ -96,9 +97,11 @@ function checkInternalComment() {
         {
             submitButton.disabled = true;
         }
+        duplicateTextbox.required = true;
     }
     else
     {
         submitButton.disabled = false;
+        duplicateTextbox.required = false;
     }
 }
