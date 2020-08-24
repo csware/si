@@ -313,6 +313,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `title` varchar(255) NOT NULL,
   `tutorsCanUploadFiles` bit(1) NOT NULL,
   `taskgroupid` int(11) NOT NULL,
+  `modelSolutionProvision` varchar(255),
   PRIMARY KEY (`taskid`),
   KEY `FK6907B8E1B0B1D69` (`taskgroupid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

@@ -49,6 +49,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.PointCategoryDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskGroupDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ModelSolutionProvisionType;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
@@ -110,7 +111,10 @@ public class TaskManager extends HttpServlet {
 			}
 
 			request.setAttribute("task", task);
-			request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"))));
+			File taskPath = new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+			request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "advisorfiles" + System.getProperty("file.separator"))));
+			request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
+
 			request.getRequestDispatcher("TaskManagerView").forward(request, response);
 		} else if (request.getParameter("action") != null && (request.getParameter("action").equals("saveNewTask") || request.getParameter("action").equals("saveTask"))) {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
@@ -222,46 +226,11 @@ public class TaskManager extends HttpServlet {
 
 			request.getRequestDispatcher("TaskManagerDynamicTaskPreView").forward(request, response);
 		} else if ("uploadTaskFile".equals(request.getParameter("action"))) {
-			Template template = TemplateFactory.getTemplate(request, response);
-			PrintWriter out = response.getWriter();
-
-			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
-			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
-			if (task == null) {
-				request.setAttribute("title", "Aufgabe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-			}
-			ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
-
-			File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"));
-			if (path.exists() == false) {
-				path.mkdirs();
-			}
-
-			Part file = request.getPart("file");
-			if (file == null) {
-				request.setAttribute("title", "Keine Datei gefunden.");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-				return;
-			}
-			// Process a file upload
-			Pattern pattern = Pattern.compile("^(?:.*?[\\\\/])?([a-zA-Z0-9_. -]+)$");
-			StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
-			Util.lowerCaseExtension(submittedFileName);
-			Matcher m = pattern.matcher(submittedFileName);
-			if (!m.matches()) {
-				System.out.println("SubmitSolutionProblem2: file;" + submittedFileName + ";" + pattern.pattern());
-				template.printTemplateHeader("Ungültige Anfrage");
-				out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Zudem müssen Dateinamen für Java-Klassen in der Regel mit einem Großbuchstaben beginnen.");
-				template.printTemplateFooter();
-				return;
-			}
-			String fileName = m.group(1);
-
-			File uploadedFile = new File(path, fileName);
-			Util.copyInputStreamAndClose(file.getInputStream(), new BufferedOutputStream(new FileOutputStream(uploadedFile)));
-
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid()));
+			handleUploadedFiles("advisorfiles", request, response, session);
+			return;
+		} else if ("uploadModelSolutionFile".equals(request.getParameter("action"))) {
+			handleUploadedFiles("modelsolutionfiles", request, response, session);
+			return;
 		} else if ((("editTaskGroup".equals(request.getParameter("action")) && request.getParameter("taskgroupid") != null) || (request.getParameter("action").equals("newTaskGroup") && request.getParameter("lecture") != null))) {
 			boolean editTaskGroup = request.getParameter("action").equals("editTaskGroup");
 			TaskGroup taskGroup;
@@ -354,11 +323,69 @@ public class TaskManager extends HttpServlet {
 				request.getRequestDispatcher("MessageView").forward(request, response);
 			}
 			return;
+		} else if ("provideModelSolutionToStudents".equals(request.getParameter("action"))) {
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+			if (task == null) {
+				request.setAttribute("title", "Aufgabe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
+
+			Transaction tx = session.beginTransaction();
+			session.lock(task, LockMode.UPGRADE);
+			task.setModelSolutionProvisionType(ModelSolutionProvisionType.valueOf(request.getParameter("modelsolutiontype")));
+			session.update(task);
+			tx.commit();
+
+			response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid()));
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
 			request.getRequestDispatcher("MessageView").forward(request, response);
-
 		}
+	}
+
+	private void handleUploadedFiles(String foldername, HttpServletRequest request, HttpServletResponse response, Session session) throws IOException, ServletException {
+		Template template = TemplateFactory.getTemplate(request, response);
+		PrintWriter out = response.getWriter();
+
+		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+		if (task == null) {
+			request.setAttribute("title", "Aufgabe nicht gefunden");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+		}
+		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+
+		File path = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + foldername + System.getProperty("file.separator"));
+		if (path.exists() == false) {
+			path.mkdirs();
+		}
+
+		Part file = request.getPart("file");
+		if (file == null) {
+			request.setAttribute("title", "Keine Datei gefunden.");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+		// Process a file upload
+		Pattern pattern = Pattern.compile("^(?:.*?[\\\\/])?([a-zA-Z0-9_. -]+)$");
+		StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
+		Util.lowerCaseExtension(submittedFileName);
+		Matcher m = pattern.matcher(submittedFileName);
+		if (!m.matches()) {
+			System.out.println("SubmitSolutionProblem2: file;" + submittedFileName + ";" + pattern.pattern());
+			template.printTemplateHeader("Ungültige Anfrage");
+			out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
+			template.printTemplateFooter();
+			return;
+		}
+		String fileName = m.group(1);
+
+		File uploadedFile = new File(path, fileName);
+		Util.copyInputStreamAndClose(file.getInputStream(), new BufferedOutputStream(new FileOutputStream(uploadedFile)));
+
+		response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid()));
 	}
 
 	/**

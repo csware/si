@@ -70,6 +70,7 @@ public class Task implements Serializable {
 	private boolean tutorsCanUploadFiles = false;
 	private boolean allowSubmittersAcrossGroups = false;
 	private String dynamicTask = null;
+	private String modelSolutionProvision = null;
 
 	public Task() {}
 
@@ -478,5 +479,32 @@ public class Task implements Serializable {
 	 */
 	public void setMaxsize(int maxsize) {
 		this.maxsize = maxsize;
+	}
+
+	/**
+	 * @return the modelSolutionProvision
+	 */
+	public String getModelSolutionProvision() {
+		return modelSolutionProvision;
+	}
+
+	/**
+	 * @param modelSolutionProvision the modelSolutionProvision to set
+	 */
+	public void setModelSolutionProvision(String modelSolutionProvision) {
+		this.modelSolutionProvision = modelSolutionProvision;
+	}
+
+	@Transient
+	public ModelSolutionProvisionType getModelSolutionProvisionType() {
+		if (getModelSolutionProvision() == null) {
+			return ModelSolutionProvisionType.INTERNAL;
+		}
+		return ModelSolutionProvisionType.valueOf(getModelSolutionProvision());
+	}
+
+	@Transient
+	public void setModelSolutionProvisionType(ModelSolutionProvisionType type) {
+		setModelSolutionProvision(type.toString());
 	}
 }

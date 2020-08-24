@@ -33,6 +33,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTe
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ModelSolutionProvisionType;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
@@ -55,6 +56,7 @@ public class TaskManagerView extends HttpServlet {
 		Task task = (Task) request.getAttribute("task");
 		Lecture lecture = task.getTaskGroup().getLecture();
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
+		List<String> modelSolutionFiles = (List<String>) request.getAttribute("modelSolutionFiles");
 
 		template.addJQuery();
 		template.addKeepAlive();
@@ -250,6 +252,32 @@ public class TaskManagerView extends HttpServlet {
 			}
 			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadTaskFile&amp;lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid()) + "\">");
 			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie den Studierenden zur Verfügung stellen möchten:</p>");
+			out.println("<INPUT TYPE=file NAME=file required=required>");
+			out.println("<INPUT TYPE=submit VALUE=upload>");
+			out.println("</FORM>");
+
+			out.println("<h2>Musterlösung hinterlegen</h2>");
+			if (modelSolutionFiles.size() > 0) {
+				out.println("<p><form action=\"" + response.encodeURL("?") + "\" method=post>");
+				out.println("<input type=hidden name=action value=\"provideModelSolutionToStudents\">");
+				out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
+				out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
+				out.println("Downloadbar für: <select size=1 name=modelsolutiontype>");
+				for (int i = 0; i < ModelSolutionProvisionType.values().length; i++) {
+					out.println("<option value=\"" + ModelSolutionProvisionType.values()[i] + "\"" + (ModelSolutionProvisionType.values()[i].equals(task.getModelSolutionProvisionType()) ? " selected" : "") + ">" + ModelSolutionProvisionType.values()[i].getInfo() + "</option>");
+				}
+				out.println("</select> <input type=submit value=speichern>");
+				out.println("</form></p>");
+
+				out.println("<ul>");
+				for (String file : modelSolutionFiles) {
+					file = file.replace(System.getProperty("file.separator"), "/");
+					out.println("<li><a href=\"" + response.encodeURL("DownloadModelSolutionFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DownloadModelSolutionFile/" + file + "?action=delete&taskid=" + task.getTaskid()) + "\">del</a>)</li>");
+				}
+				out.println("</ul>");
+			}
+			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadModelSolutionFile&amp;lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid()) + "\">");
+			out.println("<p>Bitte wählen Sie eine Datei aus, die zur Musterlösung gehört bzw. diese darstellt:</p>");
 			out.println("<INPUT TYPE=file NAME=file required=required>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
 			out.println("</FORM>");

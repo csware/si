@@ -64,6 +64,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		Task task = (Task) request.getAttribute("task");
 		Participation participation = (Participation) request.getAttribute("participation");
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
+		List<String> modelSolutionFiles = (List<String>) request.getAttribute("modelSolutionFiles");
 
 		template.printTemplateHeader(task);
 		PrintWriter out = response.getWriter();
@@ -125,6 +126,15 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("MarkEmptyTask?taskid=" + task.getTaskid()) + "\">Punkte vergeben</a></div>");
 		} else if (task.getTests().size() > 0) {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("PerformTest?taskid=" + task.getTaskid()) + "\">Test (manuell) durchführen</a></div>");
+		}
+
+		if (modelSolutionFiles.size() > 0) {
+			out.println("<h2>Musterlösung:</h2>");
+			out.println("<ul>");
+			for (String file : modelSolutionFiles) {
+				out.println("<li><a href=\"" + response.encodeURL("DownloadModelSolutionFile/" + file + "?taskid=" + task.getTaskid()) + "\">" + file + "</a></li>");
+			}
+			out.println("</ul>");
 		}
 
 		if (task.getSubmissions() != null && task.getSubmissions().size() > 0) {

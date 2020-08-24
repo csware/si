@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -34,6 +34,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ModelSolutionProvisionType;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
@@ -75,7 +76,8 @@ public class ShowTask extends HttpServlet {
 
 		request.setAttribute("participation", participation);
 
-		request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator"))));
+		final File taskPath = new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+		request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "advisorfiles" + System.getProperty("file.separator"))));
 		request.setAttribute("task", task);
 		if (request.getParameter("onlydescription") != null) {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
@@ -90,13 +92,14 @@ public class ShowTask extends HttpServlet {
 				request.setAttribute("group", group);
 				request.getRequestDispatcher("ShowTaskTutorPrintView").forward(request, response);
 			} else {
+				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
 				request.getRequestDispatcher("ShowTaskTutorView").forward(request, response);
 			}
 		} else {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 			Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
 			if (submission != null) {
-				File path = new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
+				File path = new File(taskPath, submission.getSubmissionid() + System.getProperty("file.separator"));
 				request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringList(path));
 				if (task.isADynamicTask()) {
 					task.setDescription(task.getDynamicTaskStrategie(session).getTranslatedDescription(submission));
@@ -105,6 +108,9 @@ public class ShowTask extends HttpServlet {
 				if (task.isADynamicTask()) {
 					task.setDescription(task.getDynamicTaskStrategie(session).getTranslatedDescription(participation));
 				}
+			}
+			if (ModelSolutionProvisionType.canStudentAccessModelSolution(task, submission, null, null)) {
+				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
 			}
 
 			request.setAttribute("submission", submission);

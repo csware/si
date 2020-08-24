@@ -748,4 +748,12 @@
     <servlet-name>TaskManagerDynamicTaskPreView</servlet-name>
     <url-pattern>/servlets/TaskManagerDynamicTaskPreView</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>DownloadModelSolutionFile</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.DownloadModelSolutionFile</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DownloadModelSolutionFile</servlet-name>
+    <url-pattern>/servlets/DownloadModelSolutionFile/*</url-pattern>
+  </servlet-mapping>
 </web-app>

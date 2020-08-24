@@ -62,6 +62,7 @@ public class ShowTaskStudentView extends HttpServlet {
 		Submission submission = (Submission) request.getAttribute("submission");
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
+		List<String> modelSolutionFiles = (List<String>) request.getAttribute("modelSolutionFiles");
 
 		template.printTemplateHeader(task);
 		PrintWriter out = response.getWriter();
@@ -255,6 +256,17 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div>");
 			}
 		}
+
+		if (modelSolutionFiles != null && modelSolutionFiles.size() > 0) {
+			out.println("<h2>Musterlösung:</h2>");
+			out.println("<p>Für diese Aufgabe werden Ihnen folgende Dateien als Musterlösung zur Verfügung gestellt:</p>");
+			out.println("<ul>");
+			for (String file : modelSolutionFiles) {
+				out.println("<li><a href=\"" + response.encodeURL("DownloadModelSolutionFile/" + file + "?taskid=" + task.getTaskid()) + "\">" + file + "</a></li>");
+			}
+			out.println("</ul>");
+		}
+
 		template.printTemplateFooter();
 	}
 }
