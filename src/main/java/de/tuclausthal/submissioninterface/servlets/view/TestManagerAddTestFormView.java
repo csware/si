@@ -72,7 +72,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("ShowTask?taskid=" + task.getTaskid()));
+		out.println(response.encodeURL("TaskManager?action=editTask&amp;taskid=" + task.getTaskid() + "&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
@@ -105,14 +105,14 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("ShowTask?taskid=" + task.getTaskid()));
+		out.println(response.encodeURL("TaskManager?action=editTask&amp;taskid=" + task.getTaskid() + "&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
 
 		//Formular um UML Constraint Test anzulegen
-		out.println("<p><h2>UML Constraint Test</h2>");
+		out.println("<h2>UML Constraint Test</h2>");
 		out.println("<form ENCTYPE=\"multipart/form-data\" action=\"" + response.encodeURL("?taskid=" + task.getTaskid() + "&amp;action=saveNewTest&amp;type=umlConstraint") + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");
@@ -141,7 +141,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("ShowTask?taskid=" + task.getTaskid()));
+		out.println(response.encodeURL("TaskManager?action=editTask&amp;taskid=" + task.getTaskid() + "&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
@@ -196,7 +196,8 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
-		out.println("<p><h2>JUnit. Test</h2>");
+
+		out.println("<h2>JUnit Test</h2>");
 		out.println("<form ENCTYPE=\"multipart/form-data\" action=\"" + response.encodeURL("?taskid=" + task.getTaskid() + "&amp;action=saveNewTest&amp;type=junit") + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");
@@ -233,11 +234,12 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("ShowTask?taskid=" + task.getTaskid()));
+		out.println(response.encodeURL("TaskManager?action=editTask&amp;taskid=" + task.getTaskid() + "&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
+
 		out.println("<h2>Kommentar-Metrik-Test</h2>");
 		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
@@ -274,7 +276,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("ShowTask?taskid=" + task.getTaskid()));
+		out.println(response.encodeURL("TaskManager?action=editTask&amp;taskid=" + task.getTaskid() + "&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
