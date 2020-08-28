@@ -78,7 +78,11 @@ public class TestTask implements Serializable {
 				try {
 					DAOFactory.TestResultDAOIf(session).storeTestResult(test, submission, testResult);
 				} finally {
-					tx.commit();
+					try {
+						tx.commit();
+					} catch (Exception e) {
+						tx.rollback();
+					}
 				}
 			} else {
 				tx.commit(); // we did not do anything, just close the transaction
