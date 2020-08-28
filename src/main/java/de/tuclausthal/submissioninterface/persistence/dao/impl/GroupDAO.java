@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,7 +20,7 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -54,7 +54,7 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 	@Override
 	public void deleteGroup(Group group) {
 		Session session = getSession();
-		session.lock(group, LockMode.UPGRADE);
+		session.buildLockRequest(LockOptions.UPGRADE).lock(group);
 		for (Participation participation : group.getMembers()) {
 			participation.setGroup(null);
 			session.update(participation);
@@ -70,7 +70,7 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 
 	@Override
 	public Group getGroupLocked(int groupid) {
-		return (Group) getSession().get(Group.class, groupid, LockMode.UPGRADE);
+		return (Group) getSession().get(Group.class, groupid, LockOptions.UPGRADE);
 	}
 
 	@Override

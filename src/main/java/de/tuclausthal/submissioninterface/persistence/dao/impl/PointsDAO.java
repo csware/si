@@ -21,7 +21,7 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -51,8 +51,8 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate, de.tuclausthal.submissioninterface.util.ContextAdapter contextAdapter) {
 		Session session = getSession();
 
-		session.lock(submission, LockMode.UPGRADE);
-		session.lock(submission.getTask(), LockMode.UPGRADE);
+		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
+		session.buildLockRequest(LockOptions.UPGRADE).lock(submission.getTask());
 		if (issuedPoints % submission.getTask().getMinPointStep() != 0) {
 			issuedPoints = (issuedPoints / submission.getTask().getMinPointStep()) * submission.getTask().getMinPointStep();
 		}
@@ -137,8 +137,8 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	public Points createPoints(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate, ContextAdapter contextAdapter) {
 		Session session = getSession();
 
-		session.lock(submission, LockMode.UPGRADE);
-		session.lock(submission.getTask(), LockMode.UPGRADE);
+		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
+		session.buildLockRequest(LockOptions.UPGRADE).lock(submission.getTask());
 
 		boolean changed = false;
 

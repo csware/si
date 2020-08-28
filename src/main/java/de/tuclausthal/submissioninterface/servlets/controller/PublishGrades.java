@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -104,7 +104,7 @@ public class PublishGrades extends HttpServlet {
 		}
 
 		Transaction tx = session.beginTransaction();
-		session.lock(task, LockMode.UPGRADE);
+		session.buildLockRequest(LockOptions.UPGRADE).lock(task);
 		if (request.getParameter("mail") != null) {
 			String baseURI = Configuration.getInstance().getFullServletsURI();
 			for (Submission submission : task.getSubmissions()) {

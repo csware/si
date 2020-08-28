@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010,2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -76,7 +76,7 @@ public class EditGroup extends HttpServlet {
 		} else if ("removeTutorFromGroup".equals(request.getParameter("action"))) {
 			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
 				Transaction tx = session.beginTransaction();
-				session.lock(group, LockMode.UPGRADE);
+				session.buildLockRequest(LockOptions.UPGRADE).lock(group);
 				Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(request.getParameter("participationid"), 0));
 				if (memberParticipation != null) {
 					group.getTutors().remove(memberParticipation);
@@ -90,8 +90,8 @@ public class EditGroup extends HttpServlet {
 			return;
 		} else if ("editGroup".equals(request.getParameter("action"))) { // add member or edit group
 			Transaction tx = session.beginTransaction();
-			session.lock(group, LockMode.UPGRADE);
-			session.lock(participation, LockMode.UPGRADE);
+			session.buildLockRequest(LockOptions.UPGRADE).lock(group);
+			session.buildLockRequest(LockOptions.UPGRADE).lock(participation);
 			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
 				group.setName(request.getParameter("title"));
 				group.setAllowStudentsToSignup(request.getParameter("allowStudentsToSignup") != null);

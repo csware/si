@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 import java.util.List;
 
 import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -74,13 +75,13 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 
 	@Override
 	public Participation getParticipationLocked(User user, Lecture lecture) {
-		return (Participation) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).setLockMode(LockMode.UPGRADE).uniqueResult();
+		return (Participation) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).setLockMode(LockMode.PESSIMISTIC_WRITE).uniqueResult();
 	}
 
 	@Override
 	public void deleteParticipation(User user, Lecture lecture) {
 		Session session = getSession();
-		Participation participation = (Participation) session.createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).setLockMode(LockMode.UPGRADE).uniqueResult();
+		Participation participation = (Participation) session.createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).setLockMode(LockMode.PESSIMISTIC_WRITE).uniqueResult();
 		if (participation != null) {
 			session.delete(participation);
 		}
@@ -103,7 +104,7 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 
 	@Override
 	public Participation getParticipationLocked(int participationid) {
-		return (Participation) getSession().get(Participation.class, participationid, LockMode.UPGRADE);
+		return (Participation) getSession().get(Participation.class, participationid, LockOptions.UPGRADE);
 	}
 
 	@Override
@@ -128,5 +129,10 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 			return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.or(Restrictions.eq("role", ParticipationRole.TUTOR.toString()), Restrictions.eq("role", ParticipationRole.ADVISOR.toString()))).add(Restrictions.not(Restrictions.in("id", ids))).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 		}
 		return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.or(Restrictions.eq("role", ParticipationRole.TUTOR.toString()), Restrictions.eq("role", ParticipationRole.ADVISOR.toString()))).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+	}
+
+	@Override
+	public List<Participation> getLectureParticipations(Lecture lecture) {
+		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).createAlias("user", "user").addOrder(Order.asc("user.lastName")).addOrder(Order.asc("user.firstName")).list();
 	}
 }

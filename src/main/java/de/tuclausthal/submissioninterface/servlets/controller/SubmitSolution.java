@@ -46,7 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import org.apache.commons.fileupload.FileUploadBase;
-import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -123,6 +123,7 @@ public class SubmitSolution extends HttpServlet {
 		request.setAttribute("task", task);
 
 		if (canUploadForStudents) {
+			request.setAttribute("participants", DAOFactory.ParticipationDAOIf(session).getLectureParticipations(task.getTaskGroup().getLecture()));
 			request.getRequestDispatcher("SubmitSolutionAdvisorFormView").forward(request, response);
 		} else {
 			request.setAttribute("participation", participation);
@@ -284,10 +285,11 @@ public class SubmitSolution extends HttpServlet {
 		Transaction tx = session.beginTransaction();
 		// lock participation (in createSubmission), because locking of not-existing entries in InnoDB might lock the whole table (submissions AND tasks) causing a strict serialization of ALL requests
 		Submission submission = submissionDAO.createSubmission(task, studentParticipation);
+
 		if (task.getMaxSubmitters() > 1 && (task.isAllowSubmittersAcrossGroups() || studentParticipation.getGroup() != null)) {
 			if (studentParticipation.getGroup() != null && studentParticipation.getGroup().isSubmissionGroup()) {
 				for (Participation partnerParticipation : studentParticipation.getGroup().getMembers()) {
-					session.lock(partnerParticipation, LockMode.UPGRADE); // creating submissions is serialized by locking the participation, see above
+					session.buildLockRequest(LockOptions.UPGRADE).lock(partnerParticipation); // creating submissions is serialized by locking the participation, see above
 					if (partnerParticipation.getRoleType().ordinal() >= ParticipationRole.TUTOR.ordinal()) {
 						continue;
 					}
@@ -307,7 +309,7 @@ public class SubmitSolution extends HttpServlet {
 			} else {
 				for (int partnerID : partnerIDs) {
 					Participation partnerParticipation = participationDAO.getParticipation(partnerID);
-					session.lock(partnerParticipation, LockMode.UPGRADE); // creating submissions is serialized by locking the participation, see above
+					session.buildLockRequest(LockOptions.UPGRADE).lock(partnerParticipation); // creating submissions is serialized by locking the participation, see above
 					if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getRoleType().equals(ParticipationRole.NORMAL) && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && ((task.isAllowSubmittersAcrossGroups() && (partnerParticipation.getGroup() == null || !partnerParticipation.getGroup().isSubmissionGroup())) || (!task.isAllowSubmittersAcrossGroups() && partnerParticipation.getGroup() != null && studentParticipation.getGroup() != null && partnerParticipation.getGroup().getGid() == studentParticipation.getGroup().getGid())) && submissionDAO.getSubmission(task, partnerParticipation.getUser()) == null) {
 						submission.getSubmitters().add(partnerParticipation);
 						session.update(submission);

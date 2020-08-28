@@ -24,7 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -103,12 +102,12 @@ public class ShowSubmissionView extends HttpServlet {
 			setWithUser.append("<p>Fehlt ein(e) PartnerIn: <select name=partnerid size=1 required=required>");
 			setWithUser.append("<option value=''></option>");
 			int cnt = 0;
-			Set<Participation> participations = null;
+			List<Participation> participations;
 			if (task.isAllowSubmittersAcrossGroups()) {
-				participations = task.getTaskGroup().getLecture().getParticipants();
+				participations = DAOFactory.ParticipationDAOIf(session).getLectureParticipations(task.getTaskGroup().getLecture());
 			} else {
 				Participation participation = submission.getSubmitters().iterator().next();
-				participations = participation.getGroup().getMembers();
+				participations = DAOFactory.ParticipationDAOIf(session).getParticipationsOfGroup(participation.getGroup());
 			}
 			for (Participation part : participations) {
 				if (part.getRoleType().equals(ParticipationRole.NORMAL) && (!task.isAllowSubmittersAcrossGroups() || part.getGroup() == null || !part.getGroup().isSubmissionGroup()) && submissionDAO.getSubmission(task, part.getUser()) == null) {

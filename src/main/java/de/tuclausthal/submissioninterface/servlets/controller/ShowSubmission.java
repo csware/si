@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -114,7 +114,7 @@ public class ShowSubmission extends HttpServlet {
 		if (Util.parseInteger(request.getParameter("partnerid"), 0) > 0) {
 			Transaction tx = session.beginTransaction();
 			Participation partnerParticipation = participationDAO.getParticipationLocked(Util.parseInteger(request.getParameter("partnerid"), 0));
-			session.lock(submission, LockMode.UPGRADE);
+			session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
 			if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getRoleType().equals(ParticipationRole.NORMAL) && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && ((task.isAllowSubmittersAcrossGroups() && (partnerParticipation.getGroup() == null || !partnerParticipation.getGroup().isSubmissionGroup())) || (!task.isAllowSubmittersAcrossGroups() && partnerParticipation.getGroup() != null && submission.getSubmitters().iterator().next().getGroup() != null && partnerParticipation.getGroup().getGid() == submission.getSubmitters().iterator().next().getGroup().getGid())) && submissionDAO.getSubmission(task, partnerParticipation.getUser()) == null) {
 				submission.getSubmitters().add(partnerParticipation);
 				session.update(submission);

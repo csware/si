@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 import java.util.Date;
 
 import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -69,14 +70,14 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 
 	@Override
 	public SimilarityTest getSimilarityTestLocked(int similarityTestId) {
-		return (SimilarityTest) getSession().get(SimilarityTest.class, similarityTestId, LockMode.UPGRADE);
+		return (SimilarityTest) getSession().get(SimilarityTest.class, similarityTestId, LockOptions.UPGRADE);
 	}
 
 	@Override
 	public SimilarityTest takeSimilarityTest() {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		SimilarityTest similarityTest = (SimilarityTest) session.createCriteria(SimilarityTest.class).add(Restrictions.eq("status", 1)).setLockMode(LockMode.UPGRADE).createCriteria("task").add(Restrictions.le("deadline", Util.correctTimezone(new Date()))).setMaxResults(1).uniqueResult();
+		SimilarityTest similarityTest = (SimilarityTest) session.createCriteria(SimilarityTest.class).add(Restrictions.eq("status", 1)).setLockMode(LockMode.PESSIMISTIC_WRITE).createCriteria("task").add(Restrictions.le("deadline", Util.correctTimezone(new Date()))).setMaxResults(1).uniqueResult();
 		if (similarityTest != null) {
 			similarityTest.setStatus(2);
 			session.save(similarityTest);

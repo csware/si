@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -43,7 +43,7 @@ public class TestCountDAO extends AbstractDAO implements TestCountDAOIf {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		for (Participation participation : submission.getSubmitters()) {
-			TestCount testCount = (TestCount) session.createCriteria(TestCount.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("user", participation.getUser())).setLockMode(LockMode.UPGRADE).setMaxResults(1).uniqueResult();
+			TestCount testCount = (TestCount) session.createCriteria(TestCount.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("user", participation.getUser())).setLockMode(LockMode.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
 			if (testCount == null) {
 				testCount = new TestCount();
 				testCount.setUser(participation.getUser());

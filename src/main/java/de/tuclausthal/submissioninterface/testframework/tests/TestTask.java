@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -65,7 +65,7 @@ public class TestTask implements Serializable {
 		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(submissionid);
 		if (test != null && submission != null) {
 			Transaction tx = session.beginTransaction();
-			//session.lock(submission, LockMode.UPGRADE);
+			//session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
 			Task task = submission.getTask();
 
 			testResult.setTestID(testId);
