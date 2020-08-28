@@ -66,11 +66,10 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			params.add("java");
 			// we have no frontend
 			params.add("-Djava.awt.headless=true");
-			// JOptionpane-Hack
-			params.add("-Xbootclasspath/p:" + basePath.getAbsolutePath() + System.getProperty("file.separator") + "joptionpane.jar" + File.pathSeparator + basePath.getAbsolutePath() + System.getProperty("file.separator") + "NoExitSecurityManager.jar");
 			// limit memory usage
 			params.add("-Xmx128m");
 			// for security reasons, so that students cannot access the server
+			params.add("-Xbootclasspath/a:" + basePath.getAbsolutePath() + System.getProperty("file.separator") + "NoExitSecurityManager.jar");
 			params.add("-Djava.security.manager=secmgr.NoExitSecurityManager");
 			params.add("-Djava.security.policy=" + policyFile.getAbsolutePath());
 			params.addAll(additionalParams);
