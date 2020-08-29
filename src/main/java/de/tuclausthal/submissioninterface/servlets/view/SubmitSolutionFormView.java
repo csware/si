@@ -174,7 +174,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 			out.println("<FORM class=mid method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
 			out.println(setWithUser.toString());
 			if (task.isADynamicTask()) {
-				out.println("<p>Benutzen Sie bitte einen Punkt statt ein Komma zur Trennung der Dezimal-Stellen.</p>");
+				out.println("<p>Benutzen Sie bitte einen Punkt statt ein Komma zur Trennung von Dezimal-Stellen.</p>");
 				DynamicTaskStrategieIf dynamicTask = task.getDynamicTaskStrategie(session);
 				String[] resultFields = dynamicTask.getResultFields(false);
 				List<String> studentResults = dynamicTask.getUserResults(submission);
