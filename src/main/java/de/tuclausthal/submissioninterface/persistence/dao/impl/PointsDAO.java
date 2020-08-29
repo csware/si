@@ -34,6 +34,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.MailSender;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -105,7 +106,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 				storeInHistory(submission, "publicComment", oldPoints.getPublicComment(), points.getPublicComment(), participation);
 				changed = true;
 			}
-			if (changed && oldPoints.getIssuedBy() != null && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid()) {
+			if (changed && oldPoints.getIssuedBy() != null && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid() && Configuration.getInstance().isMailLastGradingTutorOnGradeChange()) {
 				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <" + contextAdapter.getFullServletsURI() + "/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
 			}
 		} else {
@@ -233,7 +234,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 				storeInHistory(submission, "publicComment", oldPoints.getPublicComment(), points.getPublicComment(), participation);
 				changed = true;
 			}
-			if (changed && oldPoints.getIssuedBy() != null && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid()) {
+			if (changed && oldPoints.getIssuedBy() != null && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid() && Configuration.getInstance().isMailLastGradingTutorOnGradeChange()) {
 				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <" + contextAdapter.getFullServletsURI() + "/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
 			}
 		} else {

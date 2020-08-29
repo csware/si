@@ -45,6 +45,7 @@ public class Configuration {
 	private String mailDomain;
 	private boolean matrikelNoAvailableToTutors;
 	private boolean matrikelNumberMustBeEnteredManuallyIfMissing;
+	private boolean mailLastGradingTutorOnGradeChange;
 	private int testFrameworkCores;
 
 	private Configuration() {}
@@ -66,6 +67,7 @@ public class Configuration {
 		instance.matrikelNoAvailableToTutors = parseBooleanValue(context.getInitParameter("show-matrikelno-to-tutors"), false);
 		instance.matrikelNumberMustBeEnteredManuallyIfMissing = parseBooleanValue(context.getInitParameter("matrikelno-must-be-enterend-manually-if-missing"), false);
 		instance.testFrameworkCores = Util.parseInteger(context.getInitParameter("testframework-cores"), 2);
+		instance.mailLastGradingTutorOnGradeChange = parseBooleanValue(context.getInitParameter("mail-last-grading-tutor-on-grade-change"), true);
 
 		instance.fillDatapath(context);
 		instance.fillServletspath(context);
@@ -193,5 +195,9 @@ public class Configuration {
 	 */
 	public String getFullServletsURI() {
 		return fullServerURI;
+	}
+
+	public boolean isMailLastGradingTutorOnGradeChange() {
+		return mailLastGradingTutorOnGradeChange;
 	}
 }

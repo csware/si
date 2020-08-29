@@ -25,6 +25,10 @@
     <param-value>sstri@tu-clausthal.de</param-value>
   </context-param>
   <context-param>
+    <param-name>mail-last-grading-tutor-on-grade-change</param-name>
+    <param-value>yes</param-value>
+  </context-param>
+  <context-param>
     <param-name>mail-server</param-name>
     <param-value>127.0.0.1</param-value>
   </context-param>
