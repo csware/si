@@ -75,7 +75,7 @@ public class PerformStudentTest extends HttpServlet {
 			return;
 		}
 
-		if (task.getDeadline().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+		if ((task.getDeadline().before(Util.correctTimezone(new Date())) && !(task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 			request.setAttribute("title", "Testen nicht mehr möglich");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;

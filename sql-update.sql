@@ -69,3 +69,8 @@ CREATE TABLE IF NOT EXISTS `mcoptions` (
   KEY `FK2BE2448AE0697EB` (`taskid`)
 ) ENGINE=InnoDB;
 ALTER TABLE `mcoptions` ADD CONSTRAINT `FK2BE2448AE0697EB` FOREIGN KEY (`taskid`) REFERENCES `tasks` (`taskid`) ON DELETE CASCADE;
+
+-- Allow to prematurely close submissions
+ALTER TABLE `tasks` ADD `allowPrematureSubmissionClosing` BIT NOT NULL AFTER `modelSolutionProvision`; 
+ALTER TABLE `submissions` ADD `closedTime` DATETIME NULL AFTER `taskid`, ADD `closedBy` INT NULL AFTER `closedTime`, ADD INDEX `FK2912EA71ED6A9BE` (`closedBy`); 
+ALTER TABLE `submissions` ADD CONSTRAINT `FK2912EA71ED6A9BE` FOREIGN KEY (`closedBy`) REFERENCES `participations` (`id`);

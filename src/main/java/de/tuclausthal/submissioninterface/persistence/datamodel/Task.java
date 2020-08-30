@@ -72,6 +72,7 @@ public class Task implements Serializable {
 	private String dynamicTask = null;
 	private String modelSolutionProvision = null;
 	private String type = "";
+	private boolean allowPrematureSubmissionClosing = false;
 
 	public Task() {}
 
@@ -88,8 +89,9 @@ public class Task implements Serializable {
 	 * @param taskType 
 	 * @param dynamicTask 
 	 * @param showPointsDate 
+	 * @param allowPrematureSubmissionClosing 
 	 */
-	public Task(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints,int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, Date showPointsDate) {
+	public Task(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, Date showPointsDate, boolean allowPrematureSubmissionClosing) {
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.start = start;
@@ -102,6 +104,7 @@ public class Task implements Serializable {
 		this.type = taskType;
 		this.dynamicTask = dynamicTask;
 		this.showPoints = showPointsDate;
+		this.allowPrematureSubmissionClosing = allowPrematureSubmissionClosing;
 	}
 
 	/**
@@ -520,5 +523,23 @@ public class Task implements Serializable {
 	@Transient
 	public boolean isMCTask() {
 		return "mc".equals(getType());
+	}
+
+	/**
+	 * Returns the flag whether the task has the close submission before deadline feature enabled
+	 *
+	 * @return the live submission flag
+	 */
+	public boolean isAllowPrematureSubmissionClosing() {
+		return allowPrematureSubmissionClosing;
+	}
+
+	/**
+	 * Sets the close submission before deadline submission flag fot the task
+	 *
+	 * @param allowPrematureSubmissionClosing 
+	 */
+	public void setAllowPrematureSubmissionClosing(boolean allowPrematureSubmissionClosing) {
+		this.allowPrematureSubmissionClosing = allowPrematureSubmissionClosing;
 	}
 }

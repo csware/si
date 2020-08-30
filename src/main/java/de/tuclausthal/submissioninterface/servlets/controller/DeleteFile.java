@@ -79,8 +79,8 @@ public class DeleteFile extends HttpServlet {
 			return;
 		}
 
-		if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
-			request.setAttribute("title", "Abgabe nicht mehr möglich");
+		if (task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
+			request.setAttribute("title", "Es sind keine Veränderungen an dieser Abgabe mehr möglich.");
 			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 			return;
 		}

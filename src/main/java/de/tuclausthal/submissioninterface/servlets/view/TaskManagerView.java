@@ -230,6 +230,10 @@ public class TaskManagerView extends HttpServlet {
 			out.println("</tr>");
 		}
 		out.println("<tr>");
+		out.println("<th>Vorzeitige finale Abgabe:</th>");
+		out.println("<td><input type=checkbox name=prematureClosing" + (task.isAllowPrematureSubmissionClosing() ? " checked" : "") + "> Aufgabe kann vor der Deadline durch die Studierenden als abgeschlossen markiert werden</td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
 		if (task.getTaskid() != 0) {
 			out.print(response.encodeURL("ShowTask?taskid=" + task.getTaskid()));

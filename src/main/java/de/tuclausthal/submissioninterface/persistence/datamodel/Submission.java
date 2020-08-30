@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -50,6 +50,8 @@ public class Submission implements Serializable {
 	private Set<TestResult> testResults;
 	private Set<Similarity> similarSubmissions;
 	private Date lastModified = null;
+	private Date closedTime = null;
+	private Participation closedBy= null;
 
 	// for Hibernate
 	private Submission() {}
@@ -187,5 +189,53 @@ public class Submission implements Serializable {
 	 */
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
+	}
+
+	/**
+	 * Returns the time, when the students closed the solution as final.
+	 *
+	 * @return time of the final submission
+	 */
+	public Date getClosedTime() {
+		return closedTime;
+	}
+
+	/**
+	 * Sets the time, when the submission was closed by the students.
+	 *
+	 * @param closedTime time
+	 */
+	public void setClosedTime(Date closedTime) {
+		this.closedTime = closedTime;
+	}
+
+	/**
+	 * Returns the user id of the student who close the submission.
+	 *
+	 * @return user id of the student
+	 */
+	@ManyToOne
+	@JoinColumn(name="closedBy")
+	public Participation getClosedBy() {
+		return closedBy;
+	}
+
+	/**
+	 * Sets the user, who finally closed the submission.
+	 *
+	 * @param closedBy user participation
+	 */
+	public void setClosedBy(Participation closedBy) {
+		this.closedBy = closedBy;
+	}
+
+	/**
+	 * Returns the flag, if the submission is prematurely closed by the students
+	 *
+	 * @return final submission flag
+	 */
+	@Transient
+	public boolean isClosed() {
+		return getClosedBy() != null;
 	}
 }

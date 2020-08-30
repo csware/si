@@ -243,15 +243,18 @@ CREATE TABLE IF NOT EXISTS `similaritytests` (
 DROP TABLE IF EXISTS `submissions`;
 CREATE TABLE IF NOT EXISTS `submissions` (
   `submissionid` int(11) NOT NULL AUTO_INCREMENT,
+  `closedTime` datetime DEFAULT NULL,
   `lastModified` datetime DEFAULT NULL,
   `duplicate` int(11) DEFAULT NULL,
   `internalComment` longtext DEFAULT NULL,
   `pointStatus` tinyint(4) DEFAULT NULL,
   `points` int(11) DEFAULT NULL,
   `publicComment` longtext DEFAULT NULL,
+  `closedBy` int(11) DEFAULT NULL,
   `issuedBy_id` int(11) DEFAULT NULL,
   `taskid` int(11) NOT NULL,
   PRIMARY KEY (`submissionid`),
+  KEY `FK2912EA71ED6A9BE` (`closedBy`),
   KEY `issuedby` (`issuedBy_id`),
   KEY `FK2912EA7AE0697EB` (`taskid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
@@ -330,6 +333,7 @@ CREATE TABLE IF NOT EXISTS `taskgroups` (
 DROP TABLE IF EXISTS `tasks`;
 CREATE TABLE IF NOT EXISTS `tasks` (
   `taskid` int(11) NOT NULL AUTO_INCREMENT,
+  `allowPrematureSubmissionClosing` bit(1) NOT NULL,
   `allowSubmittersAcrossGroups` bit(1) NOT NULL,
   `archiveFilenameRegexp` varchar(255) NOT NULL,
   `deadline` datetime NOT NULL,
@@ -519,6 +523,7 @@ ALTER TABLE `similaritytests`
 -- Constraints der Tabelle `submissions`
 --
 ALTER TABLE `submissions`
+  ADD CONSTRAINT `FK2912EA71ED6A9BE` FOREIGN KEY (`closedBy`) REFERENCES `participations` (`id`),
   ADD CONSTRAINT `FK2912EA7AE0697EB` FOREIGN KEY (`taskid`) REFERENCES `tasks` (`taskid`) ON DELETE CASCADE,
   ADD CONSTRAINT `issuedby` FOREIGN KEY (`issuedBy_id`) REFERENCES `participations` (`id`);
 

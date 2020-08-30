@@ -784,4 +784,12 @@
     <servlet-name>DownloadSubmissionsByGroup</servlet-name>
     <url-pattern>/servlets/DownloadSubmissionsByGroup</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>CloseSubmissionByStudent</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.CloseSubmissionByStudent</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CloseSubmissionByStudent</servlet-name>
+    <url-pattern>/servlets/CloseSubmissionByStudent</url-pattern>
+  </servlet-mapping>
 </web-app>

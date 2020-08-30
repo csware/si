@@ -66,6 +66,12 @@ public class SubmitSolutionFormView extends HttpServlet {
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 		Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
 
+		if (submission != null && task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
+			request.setAttribute("title", "Die Abgabe wurde bereits als endgültig abgeschlossen markiert. Eine Veränderung ist daher nicht mehr möglich.");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
 		StringBuffer setWithUser = new StringBuffer();
 		if (task.getMaxSubmitters() > 1 && submission == null) {
 			if (participation.getGroup() != null && participation.getGroup().isSubmissionGroup()) {

@@ -73,7 +73,7 @@ public class ShowSubmission extends HttpServlet {
 			return;
 		}
 
-		if ((task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()))) && request.getParameter("points") != null) {
+		if (((task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()))) && request.getParameter("points") != null) {
 			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf(session);
 			String publicComment = "";
 			if (request.getParameter("publiccomment") != null) {

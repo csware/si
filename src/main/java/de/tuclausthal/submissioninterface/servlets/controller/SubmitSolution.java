@@ -290,6 +290,12 @@ public class SubmitSolution extends HttpServlet {
 		// lock participation (in createSubmission), because locking of not-existing entries in InnoDB might lock the whole table (submissions AND tasks) causing a strict serialization of ALL requests
 		Submission submission = submissionDAO.createSubmission(task, studentParticipation);
 
+		if (task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
+			request.setAttribute("title", "Die Abgabe wurde bereits als endgültig abgeschlossen markiert. Eine Veränderung ist daher nicht mehr möglich.");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
 		if (task.getMaxSubmitters() > 1 && (task.isAllowSubmittersAcrossGroups() || studentParticipation.getGroup() != null)) {
 			if (studentParticipation.getGroup() != null && studentParticipation.getGroup().isSubmissionGroup()) {
 				for (Participation partnerParticipation : studentParticipation.getGroup().getMembers()) {

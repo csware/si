@@ -42,9 +42,10 @@ public interface TaskDAOIf {
 	 * @param taskType 
 	 * @param dynamicTask task with dynamic nubmers and a special result field for calculated solution
 	 * @param showPointsDate if != null show points automatically after that date, otherwise manuel intervention is required
+	 * @param allowPrematureSubmissionClosing set the flag to enable the feature that students can close the submission before the deadline ends to allow tutors grading the task
 	 * @return a new Task
 	 */
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, Date showPointsDate);
+	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, Date showPointsDate, boolean allowPrematureSubmissionClosing);
 
 	/**
 	 * Fetch a task based on it's id

@@ -84,9 +84,12 @@ public class ShowSubmissionView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		StringBuffer javaScript = new StringBuffer();
 
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		if (submission.getLastModified() != null) {
-			SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 			out.println("<p>Letzte Änderung: " + Util.escapeHTML(dateFormatter.format(submission.getLastModified())) + "</p>");
+		}
+		if (task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
+			out.println("<p>Abgabe endgültig eingereicht: " + Util.escapeHTML(dateFormatter.format(submission.getClosedTime())) + " von " + submission.getClosedBy().getUser().getFullName() + "</p>");
 		}
 
 		for (Participation participation : submission.getSubmitters()) {
@@ -124,7 +127,7 @@ public class ShowSubmissionView extends HttpServlet {
 			}
 		}
 
-		if (task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isMCTask())) {
+		if ((task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isMCTask())) {
 			out.println("<h2>Bewertung: <a href=\"#\" onclick=\"$('#mark').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<table id=mark class=border>");
 			String oldPublicComment = "";
@@ -167,6 +170,9 @@ public class ShowSubmissionView extends HttpServlet {
 				}
 			}
 			out.println("<td>");
+			if (!task.getSimularityTests().isEmpty() && (task.getDeadline().after(Util.correctTimezone(new Date())) || task.getSimularityTests().stream().anyMatch(test -> test.getStatus() > 0))) {
+				out.println("<p class=\"bmid\" style=\"color: #8C1C00\">Achtung: Eine Ähnlichkeitsprüfung wurde noch nicht durchgeführt bzw. ist noch nicht vollständig abgeschlossen.</p>");
+			}
 			out.println("<form action=\"?\" method=post>");
 			out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
 			// attention: quite similar code in MarkEmptyTaskView
