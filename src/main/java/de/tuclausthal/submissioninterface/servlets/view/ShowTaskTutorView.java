@@ -214,6 +214,9 @@ public class ShowTaskTutorView extends HttpServlet {
 						out.println("<h3>Ohne Gruppe</h3>");
 						out.println("<div id=\"contentgroup0\">");
 						out.println("<div class=mid><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid() + "&amp;action=grouplist") + "\" target=\"_blank\">Druckbare Liste</a></div>");
+						if (!task.isADynamicTask() && !task.isMCTask()) {
+							out.println("<div class=mid><a href=\"" + response.encodeURL("DownloadSubmissionsByGroup?taskid=" + task.getTaskid()) + "\">Alle Abgaben der Gruppe herunterladen (ZIP-Archiv)</a></div>");
+						}
 					} else {
 						out.println("<h3>Gruppe: " + Util.escapeHTML(group.getName()) + " <a href=\"#\" onclick=\"$('#contentgroup" + group.getGid() + "').toggle(); return false;\">(+/-)</a></h3>");
 						String defaultState = "";
@@ -222,6 +225,9 @@ public class ShowTaskTutorView extends HttpServlet {
 						}
 						out.println("<div " + defaultState + " id=\"contentgroup" + group.getGid() + "\">");
 						out.println("<div class=mid><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid() + "&amp;action=grouplist&amp;groupid=" + group.getGid()) + "\" target=\"_blank\">Druckbare Liste</a></div>");
+						if (!task.isADynamicTask() && !task.isMCTask()) {
+							out.println("<div class=mid><a href=\"" + response.encodeURL("DownloadSubmissionsByGroup?taskid=" + task.getTaskid() + "&amp;groupid=" + group.getGid()) + "\">Alle Abgaben der Gruppe herunterladen (ZIP-Archiv)</a></div>");
+						}
 					}
 					out.println("<form method=post action=\"" + response.encodeURL("MarkApproved?taskid=" + task.getTaskid()) + "\">");
 					out.println("<table class=border>");

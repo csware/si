@@ -776,4 +776,12 @@
     <servlet-name>JavaAdvancedIOTestManagerOverView</servlet-name>
     <url-pattern>/servlets/JavaAdvancedIOTestManagerOverView</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>DownloadSubmissionsByGroup</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.DownloadSubmissionsByGroup</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DownloadSubmissionsByGroup</servlet-name>
+    <url-pattern>/servlets/DownloadSubmissionsByGroup</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -22,6 +22,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -36,6 +37,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -302,6 +304,30 @@ public final class Util {
 			}
 			in.close();
 			out.close();
+		}
+	}
+
+	/**
+	 * method to recursively adding files from the base directory to a zip archive
+	 *
+	 * @param out ZipOutputStream
+	 * @param path Path of the current directory
+	 * @param relativePath relative path of the 'next' directory
+	 */
+	public static void recursivelyZip(ZipOutputStream out, File path, String relativePath) {
+		for (File file : path.listFiles()) {
+			try {
+				if (file.isFile()) {
+					out.putNextEntry(new ZipEntry(relativePath + file.getName()));
+					Util.copyInputStreamAndClose(new FileInputStream(file), out);
+				} else {
+					recursivelyZip(out, file, relativePath + file.getName() + System.getProperty("file.separator"));
+				}
+			} catch (Exception e) {
+				// ignore ;)
+				System.out.println("Err: " + e.getMessage());
+				e.printStackTrace();
+			}
 		}
 	}
 
