@@ -68,13 +68,7 @@ public class DeleteFile extends HttpServlet {
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
-		if (participation == null) {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
-			return;
-		}
-
-		Submission checkSubmission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
-		if (checkSubmission == null || submission.getSubmissionid() != checkSubmission.getSubmissionid()) {
+		if (participation == null || !submission.getSubmitters().contains(participation)) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
