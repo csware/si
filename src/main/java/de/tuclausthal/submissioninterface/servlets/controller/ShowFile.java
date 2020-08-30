@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import javax.mail.internet.MimeUtility;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -104,7 +105,7 @@ public class ShowFile extends HttpServlet {
 					response.setContentType("image/svg+xml");
 				} else {
 					response.setContentType("application/x-download");
-					response.setHeader("Content-Disposition", "attachment; filename=" + file.getName()); // TODO: escape!?, if good regexps for filenames are used, not necessary
+					response.setHeader("Content-Disposition", "attachment; filename=\"" + MimeUtility.encodeWord(file.getName()) + "\"");
 				}
 				OutputStream out = response.getOutputStream();
 				byte[] buffer = new byte[8000]; // should be equal to the Tomcat buffersize

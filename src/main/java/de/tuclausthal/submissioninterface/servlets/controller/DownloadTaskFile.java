@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import javax.mail.internet.MimeUtility;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -87,7 +88,7 @@ public class DownloadTaskFile extends HttpServlet {
 				}
 			}
 			response.setContentType("application/x-download");
-			response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\""); // TODO: escape!?, if good regexps for filenames are used, not necessary
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + MimeUtility.encodeWord(file.getName()) + "\"");
 			OutputStream out = response.getOutputStream();
 			byte[] buffer = new byte[8000]; // should be equal to the Tomcat buffersize
 			BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
