@@ -57,10 +57,10 @@ public class PointCategoryDAO extends AbstractDAO implements PointCategoryDAOIf 
 
 	@Override
 	public int countPoints(Task task) {
-		Integer ret = (Integer) session.createCriteria(PointCategory.class).add(Restrictions.eq("task", task)).add(Restrictions.eq("optional", false)).setProjection(Projections.sum("points")).uniqueResult();
+		Long ret = (Long) session.createCriteria(PointCategory.class).add(Restrictions.eq("task", task)).add(Restrictions.eq("optional", false)).setProjection(Projections.sum("points")).uniqueResult();
 		if (ret == null) {
 			return 0;
 		}
-		return ret;
+		return ret.intValue();
 	}
 }
