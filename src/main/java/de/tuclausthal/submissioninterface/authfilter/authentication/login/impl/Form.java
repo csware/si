@@ -72,6 +72,7 @@ public class Form implements LoginIf {
 		out.println("<td>");
 		out.println("<input type=password size=20 name=password required=required>");
 		out.println("</td>");
+		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid>");
 		out.println("<input type=submit value=\"Log in\">");
