@@ -18,6 +18,7 @@ How to setup the submission interface
 8. Execute "util.CreateFirstUser" with parameters loginname, firtsname, lastname for creating a superuser-account.
 9. Make sure the JAVA_HOME environment-variable points to the jre directory in a Java 1.6 JDK directory (required if you want to use the compile-tests)
 10. Insert a scheduler entry for "util.DupeCheckRunner" (with the path to the submissions as the first parameter) whichs runs at certain times (with only one active instance) for automatically start the plagiarism check
-11. Restart tomcat.
+11. On Debian-based systems, Tomcat might be sandboxed by systemd. Create a file /etc/systemd/system/tomcat9.service.d/gate.gate.conf containing: [Service], ReadWritePaths=/srv/submissioninterface/ (afterwards, issue systemctl daemon-reload)
+12. Restart tomcat.
 
 Done
