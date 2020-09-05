@@ -62,7 +62,7 @@ public class ShowUserView extends HttpServlet {
 
 		template.printTemplateHeader("BenutzerIn \"" + Util.escapeHTML(user.getFullName()) + "\"");
 		PrintWriter out = response.getWriter();
-		out.println("<p><a href=\"mailto:" + Util.escapeHTML(user.getFullEmail()) + "\">" + Util.escapeHTML(user.getFullEmail()) + "</a></p>");
+		out.println("<p><a href=\"mailto:" + Util.escapeHTML(user.getEmail()) + "\">" + Util.escapeHTML(user.getEmail()) + "</a></p>");
 
 		if (user instanceof Student) {
 			if (isAtLeastAdvisorOnce) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -33,14 +33,13 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.DiscriminatorFormula;
 import org.hibernate.annotations.OrderBy;
 
-import de.tuclausthal.submissioninterface.util.Configuration;
-
 @Entity
 @Table(name = "users")
 @DiscriminatorFormula("case when matrikelno is null then 0 else 1 end")
 @DiscriminatorValue("0")
 public class User implements Serializable {
 	private int uid;
+	private String username;
 	private String email;
 	private String lastName = "";
 	private String firstName = "";
@@ -50,14 +49,9 @@ public class User implements Serializable {
 	/**
 	 * @return the email
 	 */
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	public String getEmail() {
 		return email;
-	}
-
-	@Transient
-	public String getFullEmail() {
-		return getEmail() + "@" + Configuration.getInstance().getMailDomain();
 	}
 
 	/**
@@ -154,5 +148,20 @@ public class User implements Serializable {
 			return getLastName();
 		}
 		return getLastName() + ", " + getFirstName();
+	}
+
+	/**
+	 * @return the username
+	 */
+	@Column(nullable = false, unique = true)
+	public String getUsername() {
+		return username;
+	}
+
+	/**
+	 * @param username the username to set
+	 */
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }

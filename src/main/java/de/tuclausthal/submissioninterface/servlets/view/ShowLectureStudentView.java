@@ -76,7 +76,7 @@ public class ShowLectureStudentView extends HttpServlet {
 						out.print(", ");
 					}
 					isFirst = false;
-					out.print("<a href=\"mailto:" + Util.escapeHTML(tutor.getUser().getFullEmail()) + "\">" + Util.escapeHTML(tutor.getUser().getFullName()) + "</a>");
+					out.print("<a href=\"mailto:" + Util.escapeHTML(tutor.getUser().getEmail()) + "\">" + Util.escapeHTML(tutor.getUser().getFullName()) + "</a>");
 				}
 			}
 		} else if (canJoinGroup) {

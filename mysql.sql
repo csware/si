@@ -428,6 +428,7 @@ CREATE TABLE IF NOT EXISTS `testscounts` (
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `firstName` varchar(255) NOT NULL,
   `lastName` varchar(255) NOT NULL,
@@ -435,7 +436,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `matrikelno` int(11) DEFAULT NULL,
   `studiengang` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`uid`),
-  UNIQUE KEY `email` (`email`)
+  UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 --

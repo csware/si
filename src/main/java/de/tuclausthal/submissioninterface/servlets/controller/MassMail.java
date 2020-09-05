@@ -119,23 +119,23 @@ public class MassMail extends HttpServlet {
 		Set<String> receipients = new LinkedHashSet<>();
 		if (request.getParameterValues("toall") != null) {
 			for (Participation lectureParticipation : lecture.getParticipants()) {
-				receipients.add(lectureParticipation.getUser().getFullEmail());
+				receipients.add(lectureParticipation.getUser().getEmail());
 			}
 		} else if (request.getParameterValues("gids") != null && request.getParameterValues("gids").length > 0) {
 			GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
 			for (String gid : request.getParameterValues("gids")) {
 				if ("nogroup".equals(gid)) {
 					for (Participation noGroupParticipation : participationDAO.getParticipationsWithoutGroup(lecture)) {
-						receipients.add(noGroupParticipation.getUser().getFullEmail());
+						receipients.add(noGroupParticipation.getUser().getEmail());
 					}
 				} else {
 					Group group = groupDAO.getGroup(Util.parseInteger(gid, 0));
 					if (group != null && group.getLecture().getId() == lecture.getId()) {
 						for (Participation groupParticipation : group.getMembers()) {
-							receipients.add(groupParticipation.getUser().getFullEmail());
+							receipients.add(groupParticipation.getUser().getEmail());
 						}
 						for (Participation groupTutorParticipation : group.getTutors()) {
-							receipients.add(groupTutorParticipation.getUser().getFullEmail());
+							receipients.add(groupTutorParticipation.getUser().getEmail());
 						}
 					}
 				}
@@ -147,7 +147,7 @@ public class MassMail extends HttpServlet {
 			return;
 		}
 		for (String receipient : receipients) {
-			MailSender.sendMail(receipient, request.getParameter("subject"), request.getParameter("message").trim() + "\n\n-- \nGesendet von: " + participation.getUser().getFullName() + " <" + participation.getUser().getFullEmail() + ">\nDirect reply is not possible.");
+			MailSender.sendMail(receipient, request.getParameter("subject"), request.getParameter("message").trim() + "\n\n-- \nGesendet von: " + participation.getUser().getFullName() + " <" + participation.getUser().getEmail() + ">\nDirect reply is not possible.");
 		}
 		request.setAttribute("title", "Mail gesendet");
 		request.getRequestDispatcher("MessageView").forward(request, response);

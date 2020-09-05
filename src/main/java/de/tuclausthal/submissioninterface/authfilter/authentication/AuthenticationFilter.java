@@ -75,7 +75,7 @@ public class AuthenticationFilter implements Filter {
 			if (login.requiresVerification()) {
 				user = verify.checkCredentials(session, logindata);
 			} else {
-				user = DAOFactory.UserDAOIf(session).getUser(logindata.getUsername());
+				user = DAOFactory.UserDAOIf(session).getUserByUsername(logindata.getUsername());
 			}
 			if (user == null) {
 				login.failNoData("Login fehlgeschlagen! Bitte versuchen Sie es erneut.", request, response);
@@ -96,7 +96,7 @@ public class AuthenticationFilter implements Filter {
 			session.close();
 			return;
 		}
-		request.setAttribute("username", sa.getUser().getEmail());
+		request.setAttribute("username", sa.getUser().getUsername());
 		try {
 			chain.doFilter(request, response);
 		} finally {

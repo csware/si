@@ -110,7 +110,7 @@ public class PublishGrades extends HttpServlet {
 			for (Submission submission : task.getSubmissions()) {
 				for (Participation submitterParticipation : submission.getSubmitters()) {
 					if (submission.getPoints() != null && submission.getPoints().getPointsOk()) {
-						MailSender.sendMail(submitterParticipation.getUser().getFullEmail(), "Bewertung erfolgt", "Hallo " + submitterParticipation.getUser().getFullName() + ",\n\neine Ihrer Abgaben wurde bewertet.\n\nEinsehen: <"+ baseURI + "/ShowTask?taskid=" + task.getTaskid() + ">.\n\n-- \nReply is not possible.");
+						MailSender.sendMail(submitterParticipation.getUser().getEmail(), "Bewertung erfolgt", "Hallo " + submitterParticipation.getUser().getFullName() + ",\n\neine Ihrer Abgaben wurde bewertet.\n\nEinsehen: <"+ baseURI + "/ShowTask?taskid=" + task.getTaskid() + ">.\n\n-- \nReply is not possible.");
 					}
 				}
 			}

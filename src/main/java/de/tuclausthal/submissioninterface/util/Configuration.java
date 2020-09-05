@@ -42,7 +42,6 @@ public class Configuration {
 	private String mailServer;
 	private String mailFrom;
 	private String mailSubjectPrefix;
-	private String mailDomain;
 	private boolean matrikelNoAvailableToTutors;
 	private boolean matrikelNumberMustBeEnteredManuallyIfMissing;
 	private boolean mailLastGradingTutorOnGradeChange;
@@ -63,7 +62,6 @@ public class Configuration {
 		instance.mailServer = context.getInitParameter("mail-server");
 		instance.mailFrom = context.getInitParameter("mail-from");
 		instance.mailSubjectPrefix = context.getInitParameter("mail-subject-prefix");
-		instance.mailDomain = context.getInitParameter("mail-users-domain");
 		instance.matrikelNoAvailableToTutors = parseBooleanValue(context.getInitParameter("show-matrikelno-to-tutors"), false);
 		instance.matrikelNumberMustBeEnteredManuallyIfMissing = parseBooleanValue(context.getInitParameter("matrikelno-must-be-enterend-manually-if-missing"), false);
 		instance.testFrameworkCores = Util.parseInteger(context.getInitParameter("testframework-cores"), 2);
@@ -171,10 +169,6 @@ public class Configuration {
 
 	public String getMailSubjectPrefix() {
 		return mailSubjectPrefix;
-	}
-
-	public String getMailDomain() {
-		return mailDomain;
 	}
 
 	public Constructor<Template> getTemplateConstructor() {

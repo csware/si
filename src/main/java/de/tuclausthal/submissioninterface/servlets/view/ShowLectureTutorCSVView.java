@@ -93,7 +93,7 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 			}
 			out.print(Util.csvQuote(lectureParticipation.getUser().getLastName()) + ";");
 			out.print(Util.csvQuote(lectureParticipation.getUser().getFirstName()) + ";");
-			out.print(Util.csvQuote(lectureParticipation.getUser().getFullEmail()));
+			out.print(Util.csvQuote(lectureParticipation.getUser().getEmail()));
 			if (taskGroupList.size() > 0) {
 				out.print(";");
 			}

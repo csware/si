@@ -38,7 +38,7 @@ public class FakeVerify implements VerifyIf {
 	@Override
 	public User checkCredentials(Session session, LoginData logindata) {
 		UserDAOIf userdao = DAOFactory.UserDAOIf(session);
-		User user = userdao.getUser(logindata.getUsername());
+		User user = userdao.getUserByUsername(logindata.getUsername());
 		return user;
 	}
 }

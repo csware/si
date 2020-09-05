@@ -41,10 +41,6 @@
     <param-value>[GATE] </param-value>
   </context-param>
   <context-param>
-    <param-name>mail-users-domain</param-name>
-    <param-value>localhost</param-value>
-  </context-param>
-  <context-param>
     <param-name>show-matrikelno-to-tutors</param-name>
     <param-value>no</param-value>
   </context-param>

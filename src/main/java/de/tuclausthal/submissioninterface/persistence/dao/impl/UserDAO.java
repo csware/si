@@ -46,17 +46,18 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 	}
 
 	@Override
-	public User getUser(String email) {
-		return (User) getSession().createCriteria(User.class).add(Restrictions.eq("email", email)).setMaxResults(1).uniqueResult();
+	public User getUserByUsername(String username) {
+		return (User) getSession().createCriteria(User.class).add(Restrictions.eq("username", username)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
-	public User createUser(String email, String firstName, String lastName) {
+	public User createUser(String username, String email, String firstName, String lastName) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("email", email)).setLockMode(LockMode.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
+		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("username", username)).setLockMode(LockMode.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
 		if (user == null) {
 			user = new User();
+			user.setUsername(username);
 			user.setFirstName(firstName);
 			user.setLastName(lastName);
 			user.setEmail(email);
@@ -67,12 +68,13 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 	}
 
 	@Override
-	public User createUser(String email, String firstName, String lastName, int matrikelno) {
+	public User createUser(String username, String email, String firstName, String lastName, int matrikelno) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("email", email)).setLockMode(LockMode.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
+		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("username", username)).setLockMode(LockMode.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
 		if (user == null) {
 			Student student = new Student();
+			student.setUsername(username);
 			student.setEmail(email);
 			student.setFirstName(firstName);
 			student.setLastName(lastName);

@@ -74,3 +74,9 @@ ALTER TABLE `mcoptions` ADD CONSTRAINT `FK2BE2448AE0697EB` FOREIGN KEY (`taskid`
 ALTER TABLE `tasks` ADD `allowPrematureSubmissionClosing` BIT NOT NULL AFTER `modelSolutionProvision`; 
 ALTER TABLE `submissions` ADD `closedTime` DATETIME NULL AFTER `taskid`, ADD `closedBy` INT NULL AFTER `closedTime`, ADD INDEX `FK2912EA71ED6A9BE` (`closedBy`); 
 ALTER TABLE `submissions` ADD CONSTRAINT `FK2912EA71ED6A9BE` FOREIGN KEY (`closedBy`) REFERENCES `participations` (`id`);
+
+-- Extra username
+ALTER TABLE `users` ADD `username` varchar(255) NOT NULL AFTER `uid`;
+UPDATE `users` SET `username`=`email`,`email`=concat(`email`,"@tu-clausthal.de");
+ALTER TABLE `users` ADD UNIQUE KEY `username` (`username`);
+ALTER TABLE `users` DROP KEY `email`;

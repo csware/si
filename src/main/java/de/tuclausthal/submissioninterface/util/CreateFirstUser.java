@@ -34,13 +34,13 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.User;
  */
 public class CreateFirstUser {
 	/**
-	 * @param args loginname, firstname, lastname
+	 * @param args loginname, mailaddress, firstname, lastname
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
 		UserDAOIf userDAOIf = DAOFactory.UserDAOIf(session);
-		User user = userDAOIf.createUser(args[0], args[1], args[2]);
+		User user = userDAOIf.createUser(args[0], args[1], args[2], args[3]);
 		user.setSuperUser(true);
 		userDAOIf.saveUser(user);
 		System.out.println("User created.");

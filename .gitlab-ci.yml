@@ -34,7 +34,7 @@ cache:
     - 'mvn $MAVEN_CLI_OPTS verify'
     - mysql -u root -h mysql -e 'create database abgabesystem CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin;'
     - mysql -u root -h mysql abgabesystem < mysql.sql
-    - mvn exec:java -Dexec.mainClass="de.tuclausthal.submissioninterface.util.CreateFirstUser" -Dexec.args="admin Firstname Lastname"
+    - mvn exec:java -Dexec.mainClass="de.tuclausthal.submissioninterface.util.CreateFirstUser" -Dexec.args="admin admin@localhost Firstname Lastname"
     - mvn exec:java -Dexec.mainClass="de.tuclausthal.submissioninterface.util.HibernateSQLExporter"
   # keep built artifacts
   artifacts:

@@ -107,7 +107,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 				changed = true;
 			}
 			if (changed && oldPoints.getIssuedBy() != null && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid() && Configuration.getInstance().isMailLastGradingTutorOnGradeChange()) {
-				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <" + contextAdapter.getFullServletsURI() + "/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
+				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <" + contextAdapter.getFullServletsURI() + "/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
 			}
 		} else {
 			if (points.getPointStatus() != null) {
@@ -235,7 +235,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 				changed = true;
 			}
 			if (changed && oldPoints.getIssuedBy() != null && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid() && Configuration.getInstance().isMailLastGradingTutorOnGradeChange()) {
-				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getFullEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <" + contextAdapter.getFullServletsURI() + "/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
+				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <" + contextAdapter.getFullServletsURI() + "/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
 			}
 		} else {
 			if (points.getPointStatus() != null) {

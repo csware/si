@@ -241,7 +241,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				if (submission.getPoints().getIssuedBy() == null) {
 					marker = "GATE";
 				} else {
-					marker = "<a href=\"mailto:" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullEmail()) + "\">" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>";
+					marker = "<a href=\"mailto:" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getEmail()) + "\">" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>";
 				}
 				out.println("<p>Vergeben von: " + marker + "</p>");
 				out.println("</td>");

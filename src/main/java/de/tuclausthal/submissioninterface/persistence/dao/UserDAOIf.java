@@ -35,30 +35,32 @@ public interface UserDAOIf {
 	public User getUser(int uid);
 
 	/**
-	 * Fetch a user based on the username/email-address
-	 * @param email the username/email-address of the user
+	 * Fetch a user based on the username
+	 * @param username the username of the user
 	 * @return the user or null
 	 */
-	public User getUser(String email);
+	public User getUserByUsername(String username);
 
 	/**
 	 * Create and store a new user with the username/email-address email in the DB
+	 * @param username the username of the user
 	 * @param email the email-address/username of the new user
 	 * @param firstName
 	 * @param lastName
 	 * @return the new user
 	 */
-	public User createUser(String email, String firstName, String lastName);
+	public User createUser(String username, String email, String firstName, String lastName);
 
 	/**
 	 * Create and store a new user with the username/email-address email in the DB
+	 * @param username the username of the user
 	 * @param email the email-address/username of the new user
 	 * @param firstName
 	 * @param lastName
 	 * @param matrikelno the matrikelnumber of the new user
 	 * @return the new user
 	 */
-	public User createUser(String email, String firstName, String lastName, int matrikelno);
+	public User createUser(String username, String email, String firstName, String lastName, int matrikelno);
 
 	/**
 	 * Get all users from the DB
