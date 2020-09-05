@@ -78,7 +78,6 @@ public class Form implements LoginIf {
 		out.println("</td>");
 		out.println("</tr>");
 		out.println("</table>");
-		out.println("<script type=\"text/javascript\"><!--\ndocument.login.username.focus();\n// --></script>");
 		out.println("</form>");
 		template.printTemplateFooter();
 		out.close();
