@@ -79,6 +79,8 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 
 			ProcessBuilder pb = new ProcessBuilder(params);
 			pb.directory(tempDir);
+			/* only forward explicitly specified environment variables to test processes */
+			pb.environment().keySet().removeIf(key -> !("PATH".equalsIgnoreCase(key) || "USER".equalsIgnoreCase(key) || "JAVA_HOME".equalsIgnoreCase(key) || "LANG".equalsIgnoreCase(key)));
 			Process process = pb.start();
 			ProcessOutputGrabber outputGrapper = new ProcessOutputGrabber(process);
 			TimeoutThread checkTread = new TimeoutThread(process, test.getTimeout());
