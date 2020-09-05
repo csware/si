@@ -48,6 +48,10 @@
     <param-name>matrikelno-must-be-enterend-manually-if-missing</param-name>
     <param-value>no</param-value>
   </context-param>
+  <context-param>
+    <param-name>intranetPrefixes</param-name>
+    <param-value>192.168.0.;127.0.0.1;0:0:0:0:0:0:0:1</param-value>
+  </context-param>
   <listener> <!-- must be the first listener! -->
     <listener-class>de.tuclausthal.submissioninterface.util.ContextConfigurationListener</listener-class>
   </listener>

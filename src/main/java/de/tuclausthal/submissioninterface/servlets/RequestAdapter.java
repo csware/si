@@ -26,6 +26,7 @@ import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 
 /**
@@ -42,8 +43,8 @@ public class RequestAdapter {
 	/**
 	 * @return if the requestee is within the TUC net
 	 */
-	public boolean isInTUCNet() {
-		return request.getRemoteAddr().startsWith("139.174.");
+	public boolean isIntranet() {
+		return Configuration.getInstance().getIntranetPrefixes().stream().anyMatch(prefix -> request.getRemoteAddr().startsWith(prefix));
 	}
 
 	/**

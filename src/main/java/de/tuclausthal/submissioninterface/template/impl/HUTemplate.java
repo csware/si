@@ -56,7 +56,7 @@ public class HUTemplate extends Template {
 			}
 			if (requestAdapter.isPrivacyMode()) {
 				out.println(" <span class=\"menu-divider\">|</span> Privacy-Mode");
-			} else if (requestAdapter.isInTUCNet()) {
+			} else if (requestAdapter.isIntranet()) {
 				out.println(" <span class=\"menu-divider\">|</span> <a href=\"" + servletResponse.encodeURL("SwitchLogin?uid=" + user.getUid()) + "\">Tutor Login</a>");
 			}
 			out.println(" <span class=\"menu-divider\">|</span> <a href=\"" + servletResponse.encodeURL("Logout") + "\">LogOut</a>");

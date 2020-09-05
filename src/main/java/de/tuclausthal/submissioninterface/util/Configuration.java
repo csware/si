@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.util;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +47,7 @@ public class Configuration {
 	private boolean matrikelNumberMustBeEnteredManuallyIfMissing;
 	private boolean mailLastGradingTutorOnGradeChange;
 	private int testFrameworkCores;
+	private ArrayList<String> intranetPrefixes = new ArrayList<>();
 
 	private Configuration() {}
 
@@ -66,6 +68,12 @@ public class Configuration {
 		instance.matrikelNumberMustBeEnteredManuallyIfMissing = parseBooleanValue(context.getInitParameter("matrikelno-must-be-enterend-manually-if-missing"), false);
 		instance.testFrameworkCores = Util.parseInteger(context.getInitParameter("testframework-cores"), 2);
 		instance.mailLastGradingTutorOnGradeChange = parseBooleanValue(context.getInitParameter("mail-last-grading-tutor-on-grade-change"), true);
+
+		if (context.getInitParameter("intranetPrefixes") != null) {
+			for (String prefix : context.getInitParameter("intranetPrefixes").split(";")) {
+				instance.intranetPrefixes.add(prefix);
+			}
+		}
 
 		instance.fillDatapath(context);
 		instance.fillServletspath(context);
@@ -193,5 +201,12 @@ public class Configuration {
 
 	public boolean isMailLastGradingTutorOnGradeChange() {
 		return mailLastGradingTutorOnGradeChange;
+	}
+
+	/**
+	 * @return the intranetPrefixes
+	 */
+	public ArrayList<String> getIntranetPrefixes() {
+		return intranetPrefixes;
 	}
 }

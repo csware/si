@@ -47,7 +47,7 @@ public class TUC2013Template extends Template {
 			}
 			if (requestAdapter.isPrivacyMode()) {
 				out.println(" - Privacy-Mode");
-			} else if (requestAdapter.isInTUCNet()) {
+			} else if (requestAdapter.isIntranet()) {
 				out.println(" - <a href=\"" + servletResponse.encodeURL("SwitchLogin?uid=" + user.getUid()) + "\">Tutor Login</a>");
 			}
 			out.println(" - <a href=\"" + servletResponse.encodeURL("Logout") + "\">LogOut</a>");
