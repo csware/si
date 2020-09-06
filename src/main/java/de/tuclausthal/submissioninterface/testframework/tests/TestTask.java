@@ -88,6 +88,7 @@ public class TestTask implements Serializable {
 				tx.commit(); // we did not do anything, just close the transaction
 			}
 		}
+		session.close();
 	}
 
 	/**

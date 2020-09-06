@@ -40,7 +40,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.ProcessOutputGrabber;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -54,8 +53,7 @@ public class JPlagAdapter extends DupeCheck {
 	}
 
 	@Override
-	public void performDupeCheck(SimilarityTest similarityTest) {
-		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+	public void performDupeCheck(SimilarityTest similarityTest, Session session) {
 		SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf(session);
 		Task task = similarityTest.getTask();
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);

@@ -60,9 +60,9 @@ public abstract class DupeCheck {
 	 * If not overridden, it iterates over all submissions and calls
 	 * calculateSimilarity for similarity calculation
 	 * @param similarityTest test to perform
+	 * @param session 
 	 */
-	public void performDupeCheck(SimilarityTest similarityTest) {
-		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+	public void performDupeCheck(SimilarityTest similarityTest, Session session) {
 		DAOFactory.SimilarityTestDAOIf(session).resetSimilarityTest(similarityTest);
 		Task task = similarityTest.getTask();
 		File taskPath = new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
@@ -125,6 +125,7 @@ public abstract class DupeCheck {
 							similarityDAO.addSimilarityResult(similarityTest, submissions.get(i), submissions.get(j), maxSimilarity);
 						}
 					}
+					session.close();
 				}
 			});
 		}

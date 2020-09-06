@@ -1,6 +1,6 @@
 /* 
  *  Copyright (C) 2006 Aleksi Ahtiainen, Mikko Rahikainen.
- *  Copyright (C) 2009-2010, 2017 Sven Strickroth <email@cs-ware.de> 
+ *  Copyright (C) 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de> 
  * 
  *  This file is part of the homework submission interface.
  *
@@ -60,7 +60,6 @@ import de.tuclausthal.submissioninterface.persistence.dao.SimilarityDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -77,8 +76,7 @@ public class PlaggieAdapter extends DupeCheck {
 	private CodeTokenizer codeTokenizer = null;
 
 	@Override
-	public void performDupeCheck(SimilarityTest similarityTest) {
-		Session session = HibernateSessionHelper.getSessionFactory().openSession();
+	public void performDupeCheck(SimilarityTest similarityTest, Session session) {
 		SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf(session);
 		Task task = similarityTest.getTask();
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);

@@ -21,6 +21,8 @@ package de.tuclausthal.submissioninterface.util;
 import java.io.File;
 import java.io.IOException;
 
+import org.hibernate.Session;
+
 import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
@@ -47,20 +49,24 @@ public class TestRunner {
 		}
 		DupeCheck.CORES = 2;
 		File dataPath = new File(args[0]);
+		Session session = HibernateSessionHelper.getSessionFactory().openSession();
 		SimilarityTest similarityTest;
-		while ((similarityTest = DAOFactory.SimilarityTestDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).takeSimilarityTest()) != null) {
+		while ((similarityTest = DAOFactory.SimilarityTestDAOIf(session).takeSimilarityTest()) != null) {
 			DupeCheck dupeCheck = similarityTest.getDupeCheck(dataPath);
-			dupeCheck.performDupeCheck(similarityTest);
+			dupeCheck.performDupeCheck(similarityTest, session);
 		}
+		session.close();
 		LocalExecutor.CORES = 2;
 		LocalExecutor.dataPath = dataPath;
 		LocalExecutor.getInstance();
+		session = HibernateSessionHelper.getSessionFactory().openSession();
 		Test test;
-		while ((test = DAOFactory.TestDAOIf(HibernateSessionHelper.getSessionFactory().openSession()).takeTest()) != null) {
+		while ((test = DAOFactory.TestDAOIf(session).takeTest()) != null) {
 			for (Submission submission : test.getTask().getSubmissions()) {
 				TestExecutor.executeTask(new TestTask(test, submission, true));
 			}
 		}
+		session.close();
 		TestExecutor.shutdown();
 	}
 }
