@@ -117,7 +117,7 @@ public class AuthenticationFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		if ("true".equals(filterConfig.getInitParameter("bindToIP")) || "yes".equals(filterConfig.getInitParameter("bindToIP")) || "1".equals(filterConfig.getInitParameter("bindToIP"))) {
+		if ("true".equalsIgnoreCase(filterConfig.getInitParameter("bindToIP")) || "yes".equalsIgnoreCase(filterConfig.getInitParameter("bindToIP")) || "1".equalsIgnoreCase(filterConfig.getInitParameter("bindToIP"))) {
 			bindToIP = true;
 		}
 		try {
