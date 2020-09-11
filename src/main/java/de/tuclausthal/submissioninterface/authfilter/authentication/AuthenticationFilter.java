@@ -71,7 +71,9 @@ public class AuthenticationFilter implements Filter {
 			LoginData logindata = login.getLoginData(request);
 			if (logindata == null) {
 				login.failNoData(request, response);
-				session.close();
+				if (session.isOpen()) {
+					session.close();
+				}
 				return;
 			}
 			User user = null;
@@ -83,7 +85,9 @@ public class AuthenticationFilter implements Filter {
 			}
 			if (user == null) {
 				login.failNoData("Login fehlgeschlagen! Bitte versuchen Sie es erneut.", request, response);
-				session.close();
+				if (session.isOpen()) {
+					session.close();
+				}
 				return;
 			}
 			// fix against session fixtures
@@ -92,12 +96,16 @@ public class AuthenticationFilter implements Filter {
 			sa.setUser(user);
 			if (login.redirectAfterLogin() == true) {
 				performRedirect(request, response);
-				session.close();
+				if (session.isOpen()) {
+					session.close();
+				}
 				return;
 			}
 		} else if (login.redirectAfterLogin() && login.isSubsequentAuthRequest(request)) {
 			performRedirect(request, response);
-			session.close();
+			if (session.isOpen()) {
+				session.close();
+			}
 			return;
 		}
 		request.setAttribute("username", sa.getUser().getUsername());
@@ -107,7 +115,9 @@ public class AuthenticationFilter implements Filter {
 			if (session.getTransaction() != null && session.getTransaction().isActive()) {
 				session.getTransaction().rollback();
 			}
-			session.close();
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 	}
 
