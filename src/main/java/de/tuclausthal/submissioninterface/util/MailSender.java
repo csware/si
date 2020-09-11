@@ -29,7 +29,14 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.tuclausthal.submissioninterface.servlets.controller.DownloadAsZip;
+
 public class MailSender {
+	final private static Logger log = LoggerFactory.getLogger(DownloadAsZip.class);
+
 	public static void sendMail(String to, String subject, String messageText) {
 		MimeMessage msg;
 		Properties props = new Properties();
@@ -56,11 +63,9 @@ public class MailSender {
 
 			Transport.send(msg);
 		} catch (java.io.UnsupportedEncodingException e) {
-			System.out.println("Fehler UnsupportedEncodingException in MailSender: " + e.getMessage());
-			e.printStackTrace();
+			log.error("Fehler UnsupportedEncodingException in MailSender: ", e);
 		} catch (MessagingException e) {
-			System.out.println("Fehler MessagingException in MailSender: " + e.getMessage());
-			e.printStackTrace();
+			log.error("Fehler MessagingException in MailSender: ", e);
 		}
 	}
 }

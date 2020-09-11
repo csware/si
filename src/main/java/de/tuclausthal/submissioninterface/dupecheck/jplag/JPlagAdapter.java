@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -48,6 +50,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  *
  */
 public class JPlagAdapter extends DupeCheck {
+	final private Logger log = LoggerFactory.getLogger(JPlagAdapter.class);
+
 	public JPlagAdapter(File path) {
 		super(path);
 	}
@@ -130,7 +134,7 @@ public class JPlagAdapter extends DupeCheck {
 					while ((line = resultsFile.readLine()) != null) {
 						String[] results = line.split(";");
 						if (results.length < 4 || (results.length - 1) % 3 != 0) {
-							System.err.println("invalid line in JPlag results file: " + line);
+							log.error("invalid line in JPlag results file: " + line);
 							continue;
 						}
 						Submission submissionOne = submissionDAO.getSubmission(Integer.parseInt(results[0]));
@@ -142,11 +146,11 @@ public class JPlagAdapter extends DupeCheck {
 					DAOFactory.SimilarityTestDAOIf(session).finish(similarityTest);
 				}
 			} else {
-				System.err.println("Executing \"" + new File(path, "jplag.jar").toString() + "\" failed: Exit code: " + exitValue);
-				System.err.println(outputGrapper.getStdErrBuffer().toString());
+				log.error("Executing \"" + new File(path, "jplag.jar").toString() + "\" failed: Exit code: " + exitValue);
+				log.error(outputGrapper.getStdErrBuffer().toString());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Error executing JPlag", e);
 		} finally {
 			if (tempDir != null) {
 				Util.recursiveDelete(tempDir);

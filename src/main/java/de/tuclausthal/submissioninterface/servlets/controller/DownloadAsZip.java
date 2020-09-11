@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2014 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2014, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
@@ -46,6 +48,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  *
  */
 public class DownloadAsZip extends HttpServlet {
+	final private Logger log = LoggerFactory.getLogger(DownloadAsZip.class);
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);

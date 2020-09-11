@@ -34,6 +34,8 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import plag.parser.CachingSimpleSubmissionSimilarityChecker;
 import plag.parser.CodeExcluder;
@@ -68,6 +70,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  *
  */
 public class PlaggieAdapter extends DupeCheck {
+	final private Logger log = LoggerFactory.getLogger(PlaggieAdapter.class);
+
 	public PlaggieAdapter(File path) {
 		super(path);
 	}
@@ -116,7 +120,7 @@ public class PlaggieAdapter extends DupeCheck {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Plaggy failed", e);
 		} finally {
 			DAOFactory.SimilarityTestDAOIf(session).finish(similarityTest);
 		}

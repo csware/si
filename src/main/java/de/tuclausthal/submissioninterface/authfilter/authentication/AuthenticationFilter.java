@@ -30,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginData;
@@ -44,6 +46,8 @@ import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
  * @author Sven Strickroth
  */
 public class AuthenticationFilter implements Filter {
+	final private Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
+
 	private boolean bindToIP = false;
 	private LoginIf login;
 	private VerifyIf verify;
@@ -124,7 +128,7 @@ public class AuthenticationFilter implements Filter {
 			login = (LoginIf) Class.forName(filterConfig.getInitParameter("login")).getDeclaredConstructor(FilterConfig.class).newInstance(filterConfig);
 			verify = (VerifyIf) Class.forName(filterConfig.getInitParameter("verify")).getDeclaredConstructor(FilterConfig.class).newInstance(filterConfig);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Could not initialize Login or Verify interface", e);
 			throw new ServletException(e.getMessage());
 		}
 	}

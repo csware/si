@@ -24,6 +24,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorIf;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
@@ -37,6 +40,8 @@ public class LocalExecutor implements TestExecutorIf {
 	private ExecutorService executorService = Executors.newFixedThreadPool(CORES);
 	public static int CORES = 1;
 	public static File dataPath;
+
+	final private Logger log = LoggerFactory.getLogger(LocalExecutor.class);
 
 	private LocalExecutor() {}
 
@@ -61,7 +66,7 @@ public class LocalExecutor implements TestExecutorIf {
 		executorService.shutdown();
 		try {
 			while (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
-				System.out.println(executorService.toString());
+				log.debug("Waiting for all checks to finish: " + executorService.toString());
 			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();

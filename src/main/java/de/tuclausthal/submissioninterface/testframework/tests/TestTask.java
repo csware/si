@@ -23,6 +23,7 @@ import java.io.Serializable;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
@@ -81,6 +82,7 @@ public class TestTask implements Serializable {
 					try {
 						tx.commit();
 					} catch (Exception e) {
+						LoggerFactory.getLogger(TestTask.class).error("Saving Testresult failed.", e);
 						tx.rollback();
 					}
 				}
@@ -107,7 +109,7 @@ public class TestTask implements Serializable {
 		try {
 			testImpl.performTest(test, basePath, path, testResult);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.getLogger(TestTask.class).error("Performing test failed.", e);
 			testResult.setTestOutput(e.getMessage());
 		}
 	}

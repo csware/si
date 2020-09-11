@@ -50,6 +50,8 @@ import org.apache.commons.fileupload.FileUploadBase;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.MCOptionDAOIf;
@@ -78,6 +80,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 @MultipartConfig
 public class SubmitSolution extends HttpServlet {
+	final private Logger log = LoggerFactory.getLogger(SubmitSolution.class);
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
@@ -353,7 +357,7 @@ public class SubmitSolution extends HttpServlet {
 						submission.setLastModified(new Date());
 						submissionDAO.saveSubmission(submission);
 					}
-					System.err.println("SubmitSolutionProblem2: file;" + submittedFileName + ";" + pattern.pattern());
+					log.debug("File does not match pattern: file;" + submittedFileName + ";" + pattern.pattern());
 					tx.commit();
 					template.printTemplateHeader("Ungültige Anfrage");
 					PrintWriter out = response.getWriter();
@@ -368,7 +372,7 @@ public class SubmitSolution extends HttpServlet {
 			}
 			byte[] upload = null;
 			try {
-				handleUploadedFile(path, task, fileName, file);
+				handleUploadedFile(log, path, task, fileName, file);
 				ByteArrayOutputStream os = new ByteArrayOutputStream((int)file.getSize());
 				Util.copyInputStreamAndClose(file.getInputStream(), os);
 				upload = os.toByteArray();
@@ -377,10 +381,8 @@ public class SubmitSolution extends HttpServlet {
 					submission.setLastModified(new Date());
 					submissionDAO.saveSubmission(submission);
 				}
-				System.err.println("SubmitSolutionProblem1");
+				log.error("Problem on processing uploaded file", e);
 				tx.commit();
-				System.err.println(e.getMessage());
-				e.printStackTrace();
 				template.printTemplateHeader("Ungültige Anfrage");
 				PrintWriter out = response.getWriter();
 				out.println("Problem beim Entpacken des Archives.");
@@ -475,7 +477,7 @@ public class SubmitSolution extends HttpServlet {
 				submission.setLastModified(new Date());
 				submissionDAO.saveSubmission(submission);
 			}
-			System.out.println("SubmitSolutionProblem4");
+			log.error("Found no data on upload.");
 			tx.commit();
 			PrintWriter out = response.getWriter();
 			out.println("Problem: Keine Abgabedaten gefunden.");
@@ -504,7 +506,7 @@ public class SubmitSolution extends HttpServlet {
 		return patterns;
 	}
 
-	public static void handleUploadedFile(File submissionPath, Task task, String fileName, Part item) throws IOException {
+	public static void handleUploadedFile(Logger log, File submissionPath, Task task, String fileName, Part item) throws IOException {
 		if (!"-".equals(task.getArchiveFilenameRegexp()) && (fileName.endsWith(".zip") || fileName.endsWith(".jar"))) {
 			Vector<Pattern> patterns = getArchiveFileNamePatterns(task);
 			ZipInputStream zipFile = new ZipInputStream(item.getInputStream());
@@ -516,13 +518,13 @@ public class SubmitSolution extends HttpServlet {
 				StringBuffer archivedFileName = new StringBuffer(entry.getName().replace("\\", "/"));
 				for (Pattern pattern : patterns) {
 					if (!pattern.matcher(archivedFileName).matches()) {
-						System.err.println("Ignored entry: " + archivedFileName + ";" + pattern.pattern());
+						log.debug("Ignored entry: " + archivedFileName + ";" + pattern.pattern());
 						continue;
 					}
 				}
 				try {
 					if (!new File(submissionPath, archivedFileName.toString()).getCanonicalPath().startsWith(submissionPath.getCanonicalPath())) {
-						System.err.println("Ignored entry: " + archivedFileName + "; tries to escape submissiondir");
+						log.debug("Ignored entry: " + archivedFileName + "; tries to escape submissiondir");
 						continue;
 					}
 				} catch (IOException e) {

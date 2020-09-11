@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -53,6 +55,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class PerformStudentTest extends HttpServlet {
+	final private Logger log = LoggerFactory.getLogger(PerformStudentTest.class);
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
@@ -99,17 +103,16 @@ public class PerformStudentTest extends HttpServlet {
 				try {
 					Thread.sleep(250);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.warn("Was interrupted while waiting for test to finish", e);
 				}
 			}
 			TestExecutorTestResult result = null;
 			try {
 				result = sa.getQueuedTest().get();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				log.warn("Was interrupted while waiting for test to finish", e);
 			} catch (ExecutionException e) {
-				e.printStackTrace();
+				log.error("Got ExecutionException while accessing test result", e);
 			}
 
 			if (!testCountDAO.canSeeResultAndIncrementCounter(test, submission)) {
@@ -149,9 +152,9 @@ public class PerformStudentTest extends HttpServlet {
 				try {
 					result = sa.getQueuedTest().get();
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					log.warn("Was interrupted while waiting for test to finish", e);
 				} catch (ExecutionException e) {
-					e.printStackTrace();
+					log.error("Got ExecutionException while accessing test result", e);
 				}
 
 				if (!testCountDAO.canSeeResultAndIncrementCounter(test, submission)) {

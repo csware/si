@@ -28,6 +28,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerCache;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -46,6 +48,8 @@ public abstract class DupeCheck {
 	public static int CORES = 1;
 
 	protected File path;
+
+	final private Logger log = LoggerFactory.getLogger(DupeCheck.class);
 
 	/**
 	 * Creates a new DupeCheck instance
@@ -69,8 +73,8 @@ public abstract class DupeCheck {
 		NormalizerCache normalizerCache = null;
 		try {
 			normalizerCache = new NormalizerCache(taskPath, similarityTest.getNormalizer());
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		} catch (IOException ex) {
+			log.error("Could not initialize normalizer cache", ex);
 			// if we get an error here, don't mark run as completed
 			return;
 		}
@@ -94,7 +98,7 @@ public abstract class DupeCheck {
 							javaFiles.add(cache.normalize(submissions.get(i).getSubmissionid() + System.getProperty("file.separator") + javaFile));
 						} catch (IOException e) {
 							// skip single file
-							e.printStackTrace();
+							log.error("Skipping file", e);
 						}
 					}
 					// the similariy matrix is symmetric, so it's sufficient
@@ -111,7 +115,7 @@ public abstract class DupeCheck {
 									maxSimilarity = Math.max(maxSimilarity, calculateSimilarity(fileOne, fileTwo, 100 - similarityTest.getMinimumDifferenceInPercent()));
 								} catch (IOException e) {
 									// skip single file
-									e.printStackTrace();
+									log.error("Skipping file", e);
 								}
 								if (maxSimilarity == 100) {
 									break;
@@ -129,11 +133,10 @@ public abstract class DupeCheck {
 				}
 			});
 		}
-		System.out.println(executorService.toString());
 		executorService.shutdown();
 		try {
 			while (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
-				System.out.println(executorService.toString());
+				log.debug("Waiting for all analyses to finish: " + executorService.toString());
 			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();

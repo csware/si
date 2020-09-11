@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.util;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
+import org.slf4j.LoggerFactory;
 
 /**
  * Hibernate Session Helper Singleton+Facade
@@ -35,7 +36,7 @@ public class HibernateSessionHelper {
 			sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
 		} catch (Throwable ex) {
 			// Make sure you log the exception, as it might be swallowed
-			System.err.println("Initial SessionFactory creation failed." + ex);
+			LoggerFactory.getLogger(HibernateSessionHelper.class).error("Initial SessionFactory creation failed.", ex);
 			throw new ExceptionInInitializerError(ex);
 		}
 	}

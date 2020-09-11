@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2015, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2015, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -32,6 +32,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
@@ -54,6 +56,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 @MultipartConfig
 public class PerformTest extends HttpServlet {
+	final private Logger log = LoggerFactory.getLogger(PerformTest.class);
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
@@ -149,11 +153,9 @@ public class PerformTest extends HttpServlet {
 					fileName = m.group(1);
 				}
 				try {
-					SubmitSolution.handleUploadedFile(path, task, fileName, file);
+					SubmitSolution.handleUploadedFile(log, path, task, fileName, file);
 				} catch (IOException e) {
-					System.err.println("SubmitSolutionProblem1");
-					System.err.println(e.getMessage());
-					e.printStackTrace();
+					log.error("Problem on processing uploaded file.", e);
 					template.printTemplateHeader("Ungültige Anfrage");
 					PrintWriter out = response.getWriter();
 					out.println("Problem beim Entpacken des Archives.");

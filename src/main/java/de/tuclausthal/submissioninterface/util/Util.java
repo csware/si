@@ -45,6 +45,8 @@ import javax.servlet.http.Part;
 
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.ParameterParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerIf;
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
@@ -56,6 +58,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStat
  * @author Sven Strickroth
  */
 public final class Util {
+	final private static Logger log = LoggerFactory.getLogger(Util.class);
+
 	/**
 	 * Escapes HTML sequences
 	 * @param message
@@ -325,8 +329,7 @@ public final class Util {
 				}
 			} catch (Exception e) {
 				// ignore ;)
-				System.out.println("Err: " + e.getMessage());
-				e.printStackTrace();
+				log.error("Error creating zip file", e);
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -29,6 +29,8 @@ import javax.naming.ldap.LdapContext;
 import javax.servlet.FilterConfig;
 
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginData;
 import de.tuclausthal.submissioninterface.authfilter.authentication.verify.VerifyIf;
@@ -42,6 +44,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class LDAPVerify implements VerifyIf {
+	final private Logger log = LoggerFactory.getLogger(LDAPVerify.class);
+
 	private String[] providerURLs;
 	private String securityAuthentication;
 	private String securityPrincipal;
@@ -105,7 +109,7 @@ public class LDAPVerify implements VerifyIf {
 				// ignore authentication errors
 				break;
 			} catch (NamingException e) {
-				e.printStackTrace();
+				log.error("Could not reach LDAP server \"" + providerURL + "\"", e);
 			}
 		}
 		return user;

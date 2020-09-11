@@ -40,6 +40,8 @@ import javax.servlet.http.Part;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieFactory;
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
@@ -69,6 +71,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 @MultipartConfig
 public class TaskManager extends HttpServlet {
+	final private Logger log = LoggerFactory.getLogger(TaskManager.class);
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
@@ -420,7 +424,7 @@ public class TaskManager extends HttpServlet {
 		Util.lowerCaseExtension(submittedFileName);
 		Matcher m = pattern.matcher(submittedFileName);
 		if (!m.matches()) {
-			System.out.println("SubmitSolutionProblem2: file;" + submittedFileName + ";" + pattern.pattern());
+			log.debug("Filename did not match pattern: file;" + submittedFileName + ";" + pattern.pattern());
 			template.printTemplateHeader("Ungültige Anfrage");
 			out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
 			template.printTemplateFooter();

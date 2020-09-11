@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2013 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2013, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -23,6 +23,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.LoggerFactory;
+
 import de.tuclausthal.submissioninterface.util.Configuration;
 
 /**
@@ -42,7 +44,7 @@ public class TemplateFactory {
 		try {
 			return Configuration.getInstance().getTemplateConstructor().newInstance(servletRequest, servletResponse);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.getLogger(TemplateFactory.class).error("Could not instantiate template", e);
 			throw new RuntimeException("Could not instantiate template");
 		}
 	}
