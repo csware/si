@@ -97,8 +97,10 @@ public class AdminMenue extends HttpServlet {
 			}
 			response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?"));
 		} else if ("saveLecture".equals(request.getParameter("action")) && request.getParameter("name") != null && !request.getParameter("name").trim().isEmpty()) {
+			Transaction tx = session.beginTransaction();
 			Lecture newLecture = DAOFactory.LectureDAOIf(session).newLecture(request.getParameter("name").trim(), request.getParameter("requiresAbhnahme") != null, request.getParameter("groupWise") != null);
-			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
+			DAOFactory.ParticipationDAOIf(session).createParticipation(RequestAdapter.getUser(request), newLecture, ParticipationRole.ADVISOR);
+			tx.commit();
 			response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?action=showLecture&lecture=" + newLecture.getId()));
 		} else if ("deleteLecture".equals(request.getParameter("action")) && request.getParameter("lecture") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
