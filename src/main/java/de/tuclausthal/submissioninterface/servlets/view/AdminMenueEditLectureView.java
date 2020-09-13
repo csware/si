@@ -74,7 +74,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			}
 			out.println("<tr>");
 			out.println("<td colspan=2>");
-			printAddUserForm(out, lecture, "advisor");
+			printAddUserForm(out, lecture, participants, "advisor");
 			out.println("</td>");
 			out.println("</tr>");
 			out.println("</table><p>");
@@ -98,7 +98,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			}
 			out.println("<tr>");
 			out.println("<td colspan=2>");
-			printAddUserForm(out, lecture, "tutor");
+			printAddUserForm(out, lecture, participants, "tutor");
 			out.println("</td>");
 			out.println("</tr>");
 			out.println("</table><p>");
@@ -107,8 +107,8 @@ public class AdminMenueEditLectureView extends HttpServlet {
 		template.printTemplateFooter();
 	}
 
-	public void printAddUserForm(PrintWriter out, Lecture lecture, String type) {
-		Iterator<Participation> iterator = lecture.getParticipants().iterator();
+	public void printAddUserForm(PrintWriter out, Lecture lecture, List<Participation> participants, String type) {
+		Iterator<Participation> iterator = participants.iterator();
 		out.println("<form action=\"?\">");
 		out.println("<input type=hidden name=action value=addUser>");
 		out.println("<input type=hidden name=type value=" + type + ">");
