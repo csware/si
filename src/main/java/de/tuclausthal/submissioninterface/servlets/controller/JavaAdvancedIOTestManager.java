@@ -66,8 +66,6 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 			return;
 		}
 
-		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
-
 		if ("addNewStep".equals(request.getParameter("action"))) {
 			String title = request.getParameter("title");
 			String testCode = request.getParameter("testcode");
