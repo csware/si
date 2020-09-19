@@ -23,7 +23,7 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
  * It is important to read both at the same time to prevent the executed program from blocking if a system buffer is full.
  * @author Sven Strickroth
  */
-public class ProcessOutputGrabber {
+public final class ProcessOutputGrabber {
 	private final ReadOutputThread readStdOutThread;
 	private final ReadOutputThread readStdErrThread;
 
