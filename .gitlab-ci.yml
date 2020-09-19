@@ -27,8 +27,10 @@ cache:
 .compile:
   stage: build
   before_script:
-    - apt-get update
-    - apt-get install -y mariadb-client
+    - echo -e "section_start:`date +%s`:install_packages[collapsed=true]\r\e[0K\e[1;96mInstalling packages\e[0m"
+    - apt-get update -qq
+    - apt-get install -qq -y mariadb-client
+    - echo -e "section_end:`date +%s`:install_packages\r\e[0K"
     - perl -pi -e 's|localhost/[a-zA-Z0-9]+|mariadb/abgabesystem|g' src/main/resources/hibernate.cfg.xml
   script:
     - 'mvn $MAVEN_CLI_OPTS verify'
