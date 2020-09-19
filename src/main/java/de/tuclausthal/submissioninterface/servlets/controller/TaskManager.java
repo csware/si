@@ -316,16 +316,17 @@ public class TaskManager extends HttpServlet {
 			if (pointCategory == null) {
 				request.setAttribute("title", "Punktkategorie nicht gefunden");
 				request.getRequestDispatcher("MessageView").forward(request, response);
-			} else {
-				Transaction tx = session.beginTransaction();
-				// TODO make nice! and use DAOs
-				Task task = pointCategory.getTask();
-				session.buildLockRequest(LockOptions.UPGRADE).lock(task);
-				pointCategoryDAO.deletePointCategory(pointCategory);
-				task.setMaxPoints(pointCategoryDAO.countPoints(task));
-				session.update(task);
-				tx.commit();
+				return;
 			}
+			Transaction tx = session.beginTransaction();
+			// TODO make nice! and use DAOs
+			Task task = pointCategory.getTask();
+			session.buildLockRequest(LockOptions.UPGRADE).lock(task);
+			pointCategoryDAO.deletePointCategory(pointCategory);
+			task.setMaxPoints(pointCategoryDAO.countPoints(task));
+			session.update(task);
+			tx.commit();
+
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + pointCategory.getTask().getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + pointCategory.getTask().getTaskid()));
 			return;
 		} else if ("newPointCategory".equals(request.getParameter("action"))) {
@@ -335,6 +336,7 @@ public class TaskManager extends HttpServlet {
 			if (task == null) {
 				request.setAttribute("title", "Aufgabe nicht gefunden");
 				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
 			}
 			if (Util.convertToPoints(request.getParameter("points"), task.getMinPointStep()) > 0) {
 				// TODO make nice! and use DAOs
@@ -372,6 +374,7 @@ public class TaskManager extends HttpServlet {
 			if (task == null) {
 				request.setAttribute("title", "Aufgabe nicht gefunden");
 				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
 			}
 			DAOFactory.MCOptionDAOIf(session).createMCOption(task, request.getParameter("option"), request.getParameter("correkt") != null);
 			response.sendRedirect(response.encodeRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid()));
@@ -381,6 +384,7 @@ public class TaskManager extends HttpServlet {
 			if (task == null) {
 				request.setAttribute("title", "Aufgabe nicht gefunden");
 				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
 			}
 			for (MCOption option : DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task)) {
 				if (option.getId() == Util.parseInteger(request.getParameter("optionId"), -1)) {
@@ -404,6 +408,7 @@ public class TaskManager extends HttpServlet {
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
 		}
 		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
 
