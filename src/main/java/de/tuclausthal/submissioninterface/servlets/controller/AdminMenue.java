@@ -152,7 +152,7 @@ public class AdminMenue extends HttpServlet {
 		} else if ("su".equals(request.getParameter("action")) && request.getParameter("userid") != null) {
 			User user = DAOFactory.UserDAOIf(session).getUser(Util.parseInteger(request.getParameter("userid"), 0));
 			if (user != null) {
-				RequestAdapter.getSessionAdapter(request).setUser(user);
+				RequestAdapter.getSessionAdapter(request).setUser(user, request.getRemoteAddr());
 				response.sendRedirect(response.encodeRedirectURL("Overview"));
 			} else {
 				response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?"));

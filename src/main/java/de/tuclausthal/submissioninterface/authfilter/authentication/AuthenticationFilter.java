@@ -90,10 +90,8 @@ public class AuthenticationFilter implements Filter {
 				}
 				return;
 			}
-			// fix against session fixtures
-			sa.startNewSession(request);
 
-			sa.setUser(user);
+			sa.setUser(user, request.getRemoteAddr());
 			if (login.redirectAfterLogin() == true) {
 				performRedirect(request, response);
 				if (session.isOpen()) {

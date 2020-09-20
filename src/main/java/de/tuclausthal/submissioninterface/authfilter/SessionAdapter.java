@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -36,18 +36,10 @@ public class SessionAdapter {
 	private HttpSession session = null;
 	private User user = null;
 
-	public void startNewSession(HttpServletRequest request) {
-		//migrate session contents
-		Object userID = session.getAttribute("userID");
-		Object queuedTest = session.getAttribute("queuedTest");
-		session.invalidate();
-		session = request.getSession(true);
-		session.setAttribute("userID", userID);
-		session.setAttribute("queuedTest", queuedTest);
-		session.setAttribute("ip", request.getRemoteAddr());
-	}
-
 	public SessionAdapter(HttpServletRequest request) {
+		if (request.isRequestedSessionIdFromURL()) {
+			throw new RuntimeException("Got session ID from URL! Session fixation attacks possible!");
+		}
 		session = request.getSession(true);
 		if (session.getAttribute("userID") != null) {
 			user = DAOFactory.UserDAOIf(RequestAdapter.getSession(request)).getUser((Integer) session.getAttribute("userID"));
@@ -62,10 +54,11 @@ public class SessionAdapter {
 	 * Binds the user to the session
 	 * @param user
 	 */
-	public void setUser(User user) {
+	public void setUser(User user, String remoteIP) {
 		this.user = user;
 		if (user != null) {
 			session.setAttribute("userID", user.getUid());
+			session.setAttribute("ip", remoteIP);
 		} else {
 			session.invalidate();
 		}
