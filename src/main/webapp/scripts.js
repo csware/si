@@ -37,16 +37,16 @@ function selectAll(divId) {
 }
 
 // KeepAlive based on http://www.808.dk/?code-ajax-session-keepalive
-var kaHttpRequest = false;
+var kaInterval = false;
 
 function keepAlive(url,interval)
 {
-  setInterval("kaAjax('"+url+"')", interval * 1000);
+  kaInterval = setInterval("kaAjax('"+url+"')", interval * 1000);
 }
 
 function kaAjax(url)
 {
-  kaHttpRequest = false;
+  var kaHttpRequest = false;
   if (window.XMLHttpRequest)
   { // For Mozilla, Safari, Opera, IE7+
     kaHttpRequest = new XMLHttpRequest();
@@ -78,6 +78,19 @@ function kaAjax(url)
   }
   var ser = Math.round(Math.random()*1000000); // Anti-caching random number
   kaHttpRequest.open('GET', url + '?random=' + ser, true);
+  kaHttpRequest.onload = function () {
+    if (kaHttpRequest.readyState === kaHttpRequest.DONE) {
+      if (!(kaHttpRequest.status === 200 && kaHttpRequest.responseText == "still logged in"))
+      {
+        alert("Ihre Sitzung scheint nicht mehr aktiv zu sein. Bitte sichern Sie Ihren eingegebene Antwort z.B. in der Zwischenablage und melden sich erneut am GATE-System an (z.B. in einem neuen Tab)!");
+        if (kaInterval)
+        {
+          clearInterval(kaInterval);
+          kaInterval = false;
+        }
+      }
+    }
+  };
   kaHttpRequest.send(null);
 }
 
