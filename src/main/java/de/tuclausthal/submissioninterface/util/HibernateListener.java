@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -21,6 +21,8 @@ package de.tuclausthal.submissioninterface.util;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
+
 public class HibernateListener implements ServletContextListener {
 
 	public void contextInitialized(ServletContextEvent event) {
@@ -29,5 +31,6 @@ public class HibernateListener implements ServletContextListener {
 
 	public void contextDestroyed(ServletContextEvent event) {
 		HibernateSessionHelper.getSessionFactory().close(); // Free all resources
+		AbandonedConnectionCleanupThread.checkedShutdown();
 	}
 }
