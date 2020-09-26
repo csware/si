@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012, 2015 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2015, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * Copyright 2011 Joachim Schramm
  * 
@@ -58,7 +58,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for managing (add, edit, remove) function tests by advisors
  * @author Sven Strickroth
  */
-@MultipartConfig
+@MultipartConfig(maxFileSize = 100 * 1024 * 1024)
 public class TestManager extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

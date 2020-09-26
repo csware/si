@@ -78,7 +78,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for the submission of files/solutions
  * @author Sven Strickroth
  */
-@MultipartConfig
+@MultipartConfig(maxFileSize = 100 * 1024 * 1024)
 public class SubmitSolution extends HttpServlet {
 	final private Logger log = LoggerFactory.getLogger(SubmitSolution.class);
 

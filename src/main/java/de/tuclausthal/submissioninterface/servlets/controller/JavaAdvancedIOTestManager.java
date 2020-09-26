@@ -45,7 +45,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for managing (add, edit, remove) advanced Java IO tests steps by advisors
  * @author Sven Strickroth
  */
-@MultipartConfig
+@MultipartConfig(maxFileSize = 100 * 1024 * 1024)
 public class JavaAdvancedIOTestManager extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

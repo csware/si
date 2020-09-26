@@ -69,7 +69,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for managing (add, edit, remove) tasks by advisors
  * @author Sven Strickroth
  */
-@MultipartConfig
+@MultipartConfig(maxFileSize = 100 * 1024 * 1024)
 public class TaskManager extends HttpServlet {
 	final private Logger log = LoggerFactory.getLogger(TaskManager.class);
 
