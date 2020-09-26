@@ -80,3 +80,6 @@ ALTER TABLE `users` ADD `username` varchar(255) NOT NULL AFTER `uid`;
 UPDATE `users` SET `username`=`email`,`email`=concat(`email`,"@tu-clausthal.de");
 ALTER TABLE `users` ADD UNIQUE KEY `username` (`username`);
 ALTER TABLE `users` DROP KEY `email`;
+
+-- store last logged in time
+ALTER TABLE `users` ADD `lastLoggedIn` DATETIME NULL AFTER `studiengang`;

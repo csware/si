@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.authfilter.authentication;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,6 +93,10 @@ public class AuthenticationFilter implements Filter {
 				return;
 			}
 
+			Transaction tx = session.beginTransaction();
+			user.setLastLoggedIn(new Date());
+			DAOFactory.UserDAOIf(session).saveUser(user);
+			tx.commit();
 			sa.setUser(user, request.getRemoteAddr());
 			if (login.redirectAfterLogin() == true) {
 				performRedirect(request, response);

@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -45,6 +46,7 @@ public class User implements Serializable {
 	private String firstName = "";
 	private boolean superUser = false;
 	private Set<Participation> lectureParticipant;
+	private Date lastLoggedIn;
 
 	/**
 	 * @return the email
@@ -163,5 +165,19 @@ public class User implements Serializable {
 	 */
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	/**
+	 * @return the lastLoggedIn
+	 */
+	public Date getLastLoggedIn() {
+		return lastLoggedIn;
+	}
+
+	/**
+	 * @param lastLoggedIn the lastLoggedIn to set
+	 */
+	public void setLastLoggedIn(Date lastLoggedIn) {
+		this.lastLoggedIn = lastLoggedIn;
 	}
 }
