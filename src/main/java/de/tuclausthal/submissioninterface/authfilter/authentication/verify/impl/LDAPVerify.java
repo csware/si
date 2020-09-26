@@ -89,16 +89,20 @@ public class LDAPVerify implements VerifyIf {
 				UserDAOIf userdao = DAOFactory.UserDAOIf(session);
 				user = userdao.getUserByUsername(username);
 
+				String lastName = (String) ctx.getAttributes(userAttribute + "=" + username).get("sn").get();
+				String firstName = (String) ctx.getAttributes(userAttribute + "=" + username).get("cn").get();
+				firstName = firstName.substring(0, firstName.lastIndexOf(lastName) - 1);
+				String mail = (String) ctx.getAttributes(userAttribute + "=" + username).get("mail").get();
 				if (user == null) {
-					String lastName = (String) ctx.getAttributes(userAttribute + "=" + username).get("sn").get();
-					String firstName = (String) ctx.getAttributes(userAttribute + "=" + username).get("cn").get();
-					firstName = firstName.substring(0, firstName.lastIndexOf(lastName) - 1);
-					String mail = (String) ctx.getAttributes(userAttribute + "=" + username).get("mail").get();
 					if (matrikelNumberAttribute != null && ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute) != null && Util.isInteger((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get())) {
 						user = userdao.createUser(username, mail, firstName, lastName, Integer.parseInt((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get()));
 					} else {
 						user = userdao.createUser(username, mail, firstName, lastName);
 					}
+				} else {
+					user.setFirstName(firstName);
+					user.setLastName(lastName);
+					user.setEmail(mail);
 				}
 
 				// Close the context when we're done
