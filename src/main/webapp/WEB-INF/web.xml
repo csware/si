@@ -18,7 +18,7 @@
   </context-param>
   <context-param>
     <param-name>servername</param-name>
-    <param-value>si.in.tu-clausthal.de</param-value>
+    <param-value>localhost</param-value>
   </context-param>
   <context-param>
     <param-name>servletspath</param-name>
@@ -26,7 +26,7 @@
   </context-param>
   <context-param>
     <param-name>adminmail</param-name>
-    <param-value>sstri@tu-clausthal.de</param-value>
+    <param-value>admin@localhost</param-value>
   </context-param>
   <context-param>
     <param-name>mail-last-grading-tutor-on-grade-change</param-name>
