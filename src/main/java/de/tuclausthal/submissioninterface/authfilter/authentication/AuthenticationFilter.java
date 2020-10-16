@@ -39,8 +39,8 @@ import de.tuclausthal.submissioninterface.authfilter.SessionAdapter;
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginData;
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginIf;
 import de.tuclausthal.submissioninterface.authfilter.authentication.verify.VerifyIf;
+import de.tuclausthal.submissioninterface.authfilter.authentication.verify.VerifyResult;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 
 /**
@@ -69,35 +69,50 @@ public class AuthenticationFilter implements Filter {
 		response.addHeader("X-Frame-Options", "SAMEORIGIN");
 		request.setCharacterEncoding("UTF-8"); // set character encoding here, because Eclipse has a bug with web.xml, cf. https://bugs.eclipse.org/bugs/show_bug.cgi?id=543377
 		if (sa.getUser() == null || (bindToIP && !sa.isIPCorrect(request.getRemoteAddr()))) {
-			response.addHeader("LoggedIn", "false");
 			LoginData logindata = login.getLoginData(request);
 			if (logindata == null) {
+				response.addHeader("LoggedIn", "false");
 				login.failNoData(request, response);
 				if (session.isOpen()) {
 					session.close();
 				}
 				return;
 			}
-			User user = null;
+			VerifyResult verifyResult = null;
 			// if login requires no verification we load the user named in logindata
 			if (login.requiresVerification()) {
-				user = verify.checkCredentials(session, logindata);
+				verifyResult = verify.checkCredentials(session, logindata);
 			} else {
-				user = DAOFactory.UserDAOIf(session).getUserByUsername(logindata.getUsername());
+				verifyResult = new VerifyResult(DAOFactory.UserDAOIf(session).getUserByUsername(logindata.getUsername()));
 			}
-			if (user == null) {
+			if (verifyResult == null || !verifyResult.wasLoginSuccessful()) {
+				response.addHeader("LoggedIn", "false");
 				login.failNoData("Login fehlgeschlagen! Bitte versuchen Sie es erneut.", request, response);
 				if (session.isOpen()) {
 					session.close();
 				}
 				return;
 			}
+			if (verifyResult.wasLoginSuccessful() && verifyResult.verifiedUser == null) {
+				// need to create user
+				if (verifyResult.matrikelNumber != null) {
+					verifyResult.verifiedUser = DAOFactory.UserDAOIf(session).createUser(verifyResult.username, verifyResult.mail, verifyResult.firstName, verifyResult.lastName, verifyResult.matrikelNumber);
+				} else {
+					verifyResult.verifiedUser = DAOFactory.UserDAOIf(session).createUser(verifyResult.username, verifyResult.mail, verifyResult.firstName, verifyResult.lastName);
+				}
+				if (verifyResult.verifiedUser == null) {
+					log.error("Creating new user failed!");
+					login.failNoData("Anlegen des neuen Nutzers fehlgeschlagen. Bitte versuchen Sie es erneut.", request, response);
+					session.close();
+					return;
+				}
+			}
 
 			Transaction tx = session.beginTransaction();
-			user.setLastLoggedIn(new Date());
-			DAOFactory.UserDAOIf(session).saveUser(user);
+			verifyResult.verifiedUser.setLastLoggedIn(new Date());
+			DAOFactory.UserDAOIf(session).saveUser(verifyResult.verifiedUser);
 			tx.commit();
-			sa.setUser(user, request.getRemoteAddr());
+			sa.setUser(verifyResult.verifiedUser, request.getRemoteAddr());
 			if (login.redirectAfterLogin() == true) {
 				performRedirect(request, response);
 				if (session.isOpen()) {
