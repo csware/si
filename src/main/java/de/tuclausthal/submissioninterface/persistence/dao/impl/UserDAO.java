@@ -62,6 +62,7 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 			user.setLastName(lastName);
 			user.setEmail(email);
 			session.save(user);
+			session.refresh(user); // make sure all fields are populated from DB
 		}
 		tx.commit();
 		return user;
@@ -80,6 +81,7 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 			student.setLastName(lastName);
 			student.setMatrikelno(matrikelno);
 			session.save(student);
+			session.refresh(student); // make sure all fields are populated from DB
 			user = student;
 		}
 		tx.commit();
