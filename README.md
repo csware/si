@@ -19,6 +19,29 @@ Please read the whole procedure in advance to executing it.
 - Install MariaDB (recommended on *nix) or MySQL (on Windows, <https://dev.mysql.com/downloads/mysql/>)
   - For a development machine on Windows [XAMPP](https://www.apachefriends.org/) is recommended which comes with [phpMyAdmin](https://www.phpmyadmin.net/) a nice administration interface for MySQL
 - For production use, it is recommended to run Apache Tomcat behind Apache httpd, connecting Tomcat using [mod_proxy_ajp](https://httpd.apache.org/docs/2.4/mod/mod_proxy_ajp.html), terminte SSL/TLS in httpd and propably use Shibboleth for Single-Sign on.
+  - Configure the VHost with mod_proxy_ajp:
+    ```
+    ProxyPreserveHost On
+    ProxyStatus On
+
+    ProxyPass /Shibboleth.sso/ !
+    ProxyPass /Shibboleth/ !
+    ProxyPass /shibboleth-sp/ !
+
+    ProxyPass / ajp://localhost:8009/
+    ```
+    - Make sure Tomcat is not accessible directly (e.g., ports 8080, 8009, 8443); e.g. make port `8009` listen on `::1` only and comment all other `Connector`s in `server.xml`.
+  - How to configure Shibboleth:
+    - Install shibd and configure it (cf. https://www.switch.ch/aai/guides/sp/installation/), make sure the `ApplicationDefault` configuration in `shibboleth2.xml` contains `attributePrefix="AJP_"` (cf. <https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPJavaInstall>; please also make sure the `AJP` connector in Tomcat `server.xml` does not block the Shibboleth request attributes, e.g. by setting `allowedRequestAttributesPattern=".*"`) and `uid` for the `REMOTE_USER` (must match `userAttribute`, see below); also make sure `/Shibboleth.sso/Logout` can be used for logout (cf. `src/main/java/de/tuclausthal/submissioninterface/servlets/controller/Logout.java`)
+    - Enable Shibboleth protection for the `Overview` servlet:
+     ```
+     <Location /gate/servlets/Overview>
+        AuthType shibboleth
+        hibRequireSession On
+        require valid-user
+    </Location>
+    ```
+   - For debugging: Please not that the Shibboleth attributes passes to Tomcat don't show up when iterating over the request variables. They need to be explicitly named (e.g., `uid` or `Shib-Identity-Provider`).
 - For building the whole package you need [maven](https://maven.apache.org/) (also often available as a package on *nix systems)
 - For running the cron task regularly with the predefined script `submissiondir/runtests.sh` you need the `lockfile` tools (usually part of the `procmail` package on *nix systems)
 
@@ -42,6 +65,7 @@ ReadWritePaths=/srv/submissioninterface/
   - For production use:
     - Check the other configuration options, especially the mail related ones
     - For LDAP authentication set `login` to `de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Form` and `verify` to `de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.LDAPVerify`, configure LDAP related settings for the `AuthenticationFilter` (e.g. `PROVIDER_URL`, `SECURITY_AUTHENTICATION`, `SECURITY_PRINCIPAL`, and `userAttribute`), please also look at `src/main/java/de/tuclausthal/submissioninterface/authfilter/authentication/verify/impl/LDAPVerify.java` whether special adjustmens are needed (e.g. first and last name generation)
+    - For Shibboleth set `login` to `de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Shibboleth` and `verify` to `de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.ShibbolethVerify`, configure Shibboleth related settings for the `AuthenticationFilter` (`userAttribute` and (optional) `matrikelNumberAttribute`); required fields from the Identity-Provider are `sn`, `givenName`, `mail`, and the configured `userAttribute` (usually `uid`).
  - `submissiondir/runtests.sh` for adjusting the paths
  - `src/main/webapp/studiengaenge.js`
 

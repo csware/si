@@ -27,6 +27,7 @@ import javax.naming.NamingException;
 import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
 import javax.servlet.FilterConfig;
+import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.Session;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginData;
 import de.tuclausthal.submissioninterface.authfilter.authentication.verify.VerifyIf;
+import de.tuclausthal.submissioninterface.authfilter.authentication.verify.VerifyResult;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
@@ -61,7 +63,7 @@ public class LDAPVerify implements VerifyIf {
 	}
 
 	@Override
-	public User checkCredentials(Session session, LoginData logindata) {
+	public VerifyResult checkCredentials(Session session, LoginData logindata, HttpServletRequest request) {
 		User user = null;
 		String username = logindata.getUsername();
 		String password = logindata.getPassword();
@@ -79,6 +81,7 @@ public class LDAPVerify implements VerifyIf {
 		env.put(Context.SECURITY_PRINCIPAL, MessageFormat.format(securityPrincipal, new Object[] { username }));
 		env.put(Context.SECURITY_CREDENTIALS, password);
 
+		VerifyResult result = null;
 		for (String providerURL : providerURLs) {
 			env.put(Context.PROVIDER_URL, providerURL);
 			try {
@@ -93,16 +96,20 @@ public class LDAPVerify implements VerifyIf {
 				String firstName = (String) ctx.getAttributes(userAttribute + "=" + username).get("cn").get();
 				firstName = firstName.substring(0, firstName.lastIndexOf(lastName) - 1);
 				String mail = (String) ctx.getAttributes(userAttribute + "=" + username).get("mail").get();
-				if (user == null) {
-					if (matrikelNumberAttribute != null && ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute) != null && Util.isInteger((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get())) {
-						user = userdao.createUser(username, mail, firstName, lastName, Integer.parseInt((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get()));
-					} else {
-						user = userdao.createUser(username, mail, firstName, lastName);
-					}
-				} else {
+				if (user != null) {
+					result = new VerifyResult(user);
 					user.setFirstName(firstName);
 					user.setLastName(lastName);
 					user.setEmail(mail);
+				} else {
+					result = new VerifyResult();
+					result.username = username;
+					result.lastName = lastName;
+					result.firstName = firstName;
+					result.mail = mail;
+					if (matrikelNumberAttribute != null && ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute) != null && Util.isInteger((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get())) {
+						result.matrikelNumber = Integer.parseInt((String) ctx.getAttributes(userAttribute + "=" + username).get(matrikelNumberAttribute).get());
+					}
 				}
 
 				// Close the context when we're done
@@ -116,6 +123,6 @@ public class LDAPVerify implements VerifyIf {
 				log.error("Could not reach LDAP server \"" + providerURL + "\"", e);
 			}
 		}
-		return user;
+		return result;
 	}
 }

@@ -94,6 +94,9 @@ public class RequestAdapter {
 	 * @return privacy mode is on
 	 */
 	public boolean isPrivacyMode() {
+		if (request.getCookies() == null) {
+			return false;
+		}
 		for (Cookie cookie : request.getCookies()) {
 			if ("privacy".equals(cookie.getName())) {
 				return true;
