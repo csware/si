@@ -18,6 +18,8 @@
 
 package de.tuclausthal.submissioninterface.authfilter.authentication.verify;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginData;
@@ -31,7 +33,8 @@ public interface VerifyIf {
 	 * Checks the credentials provided in logindata
 	 * @param session
 	 * @param logindata
+	 * @param request
 	 * @return the user or null if authentication failed
 	 */
-	public VerifyResult checkCredentials(Session session, LoginData logindata);
+	public VerifyResult checkCredentials(Session session, LoginData logindata, HttpServletRequest request);
 }

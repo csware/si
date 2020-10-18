@@ -81,7 +81,7 @@ public class AuthenticationFilter implements Filter {
 			VerifyResult verifyResult = null;
 			// if login requires no verification we load the user named in logindata
 			if (login.requiresVerification()) {
-				verifyResult = verify.checkCredentials(session, logindata);
+				verifyResult = verify.checkCredentials(session, logindata, request);
 			} else {
 				verifyResult = new VerifyResult(DAOFactory.UserDAOIf(session).getUserByUsername(logindata.getUsername()));
 			}

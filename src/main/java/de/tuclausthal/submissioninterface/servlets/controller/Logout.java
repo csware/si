@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Shibboleth;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -39,11 +40,16 @@ import de.tuclausthal.submissioninterface.template.TemplateFactory;
 public class Logout extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		boolean wasShibbolethLogin = request.getSession().getAttribute(Shibboleth.SHIBBOLETH_LOGIN_KEY) != null;
 		RequestAdapter.getSessionAdapter(request).setUser(null, null);
 		request.getSession().invalidate();
 		Cookie privacyCookie = new Cookie("privacy", "0");
 		privacyCookie.setMaxAge(0);
 		response.addCookie(privacyCookie);
+		if (wasShibbolethLogin) {
+			response.sendRedirect("/Shibboleth.sso/Logout");
+			return;
+		}
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.printTemplateHeader("Logged out");
 		PrintWriter out = response.getWriter();

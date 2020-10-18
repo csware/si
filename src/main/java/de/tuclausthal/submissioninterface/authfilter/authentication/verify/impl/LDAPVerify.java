@@ -27,6 +27,7 @@ import javax.naming.NamingException;
 import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
 import javax.servlet.FilterConfig;
+import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.Session;
 import org.slf4j.Logger;
@@ -62,7 +63,7 @@ public class LDAPVerify implements VerifyIf {
 	}
 
 	@Override
-	public VerifyResult checkCredentials(Session session, LoginData logindata) {
+	public VerifyResult checkCredentials(Session session, LoginData logindata, HttpServletRequest request) {
 		User user = null;
 		String username = logindata.getUsername();
 		String password = logindata.getPassword();

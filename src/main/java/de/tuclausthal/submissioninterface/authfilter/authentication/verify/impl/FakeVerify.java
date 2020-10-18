@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl;
 
 import javax.servlet.FilterConfig;
+import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.Session;
 
@@ -37,7 +38,7 @@ public class FakeVerify implements VerifyIf {
 	public FakeVerify(FilterConfig filterConfig) {}
 
 	@Override
-	public VerifyResult checkCredentials(Session session, LoginData logindata) {
+	public VerifyResult checkCredentials(Session session, LoginData logindata, HttpServletRequest request) {
 		UserDAOIf userdao = DAOFactory.UserDAOIf(session);
 		User user = userdao.getUserByUsername(logindata.getUsername());
 		return new VerifyResult(user);
