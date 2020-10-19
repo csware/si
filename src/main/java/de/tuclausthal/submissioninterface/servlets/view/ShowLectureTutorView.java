@@ -245,7 +245,7 @@ public class ShowLectureTutorView extends HttpServlet {
 				out.println("</tr>");
 			} else {
 				out.println("<tr>");
-				out.println("<td colspan=3>Anzahl:</td>");
+				out.println("<td colspan=" + (2 + (showMatNo ? 1 : 0)) + ">Anzahl:</td>");
 				out.println("<td class=points>" + usersCount + "</td>");
 				out.println("</tr>");
 			}
