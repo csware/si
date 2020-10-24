@@ -98,7 +98,7 @@ public class PlaggieAdapter extends DupeCheck {
 			File file1 = new File(path + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
 
 			// -- Create the code tokenizer object for parsing the source code files
-			codeTokenizer = (CodeTokenizer) Class.forName(config.codeTokenizer).newInstance();
+			codeTokenizer = (CodeTokenizer) Class.forName(config.codeTokenizer).getDeclaredConstructor().newInstance();
 
 			// -- Read and create the submissions, if the results are not
 			// -- read from a file
@@ -254,7 +254,7 @@ public class PlaggieAdapter extends DupeCheck {
 		// Generate the filename filter
 		ArrayList<FilenameFilter> filters = new ArrayList<>();
 
-		filters.add((FilenameFilter) Class.forName(config.filenameFilter).newInstance());
+		filters.add((FilenameFilter) Class.forName(config.filenameFilter).getDeclaredConstructor().newInstance());
 
 		filters.add(new ExcludeFilenameFilter(config.excludeFiles));
 		filters.add(new SubdirectoryFilter(config.excludeSubdirectories));
