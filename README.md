@@ -12,13 +12,14 @@ Please read the whole procedure in advance to executing it.
 
 - Install Java
   - On *nix (such as Debian) use the `openjdk-11-jdk-headless` package
-  - On Windows you can use [Liberica OpenJDK](https://bell-sw.com/pages/downloads/)
+  - On Windows you can use [Liberica OpenJDK 11](https://bell-sw.com/pages/downloads/)
 - Install [Apache Tomcat](https://tomcat.apache.org) (on *nix use the `tomcat-9` package)
   - After installation Tomcat usually listens on locahost:8080
   - For development it is recommended to integrate Tomcat into the used IDE, e.g. into Eclipse.
 - Install MariaDB (recommended on *nix) or MySQL (on Windows, <https://dev.mysql.com/downloads/mysql/>)
   - For a development machine on Windows [XAMPP](https://www.apachefriends.org/) is recommended which comes with [phpMyAdmin](https://www.phpmyadmin.net/) a nice administration interface for MySQL
-- For production use, it is recommended to run Apache Tomcat behind Apache httpd, connecting Tomcat using [mod_proxy_ajp](https://httpd.apache.org/docs/2.4/mod/mod_proxy_ajp.html), terminte SSL/TLS in httpd and propably use Shibboleth for Single-Sign on.
+- For development [Eclipse](https://www.eclipse.org/downloads/packages/) (IDE for Enterprise Java Developers) is recommended.
+- For production use, it is recommended to run Apache Tomcat behind Apache httpd, connecting Tomcat using [mod_proxy_ajp](https://httpd.apache.org/docs/2.4/mod/mod_proxy_ajp.html), terminate SSL/TLS in httpd and propably use Shibboleth for Single-Sign on.
   - Configure the VHost with mod_proxy_ajp:
     ```
     ProxyPreserveHost On
@@ -64,10 +65,10 @@ ReadWritePaths=/srv/submissioninterface/
     - Adjust `verify` to `de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.FakeVerify` to disable any authentication
   - For production use:
     - Check the other configuration options, especially the mail related ones
-    - For LDAP authentication set `login` to `de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Form` and `verify` to `de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.LDAPVerify`, configure LDAP related settings for the `AuthenticationFilter` (e.g. `PROVIDER_URL`, `SECURITY_AUTHENTICATION`, `SECURITY_PRINCIPAL`, and `userAttribute`), please also look at `src/main/java/de/tuclausthal/submissioninterface/authfilter/authentication/verify/impl/LDAPVerify.java` whether special adjustmens are needed (e.g. first and last name generation)
+    - For LDAP authentication set `login` to `de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Form` and `verify` to `de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.LDAPVerify`, configure LDAP related settings for the `AuthenticationFilter` (`PROVIDER_URL`, `SECURITY_AUTHENTICATION`, `SECURITY_PRINCIPAL`, `matrikelNumberAttribute` (optional), and `userAttribute`), please also look at `src/main/java/de/tuclausthal/submissioninterface/authfilter/authentication/verify/impl/LDAPVerify.java` whether special adjustmens are needed (e.g. first and last name generation)
     - For Shibboleth set `login` to `de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Shibboleth` and `verify` to `de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.ShibbolethVerify`, configure Shibboleth related settings for the `AuthenticationFilter` (`userAttribute` and (optional) `matrikelNumberAttribute`); required fields from the Identity-Provider are `sn`, `givenName`, `mail`, and the configured `userAttribute` (usually `uid`).
  - `submissiondir/runtests.sh` for adjusting the paths
- - `src/main/webapp/studiengaenge.js`
+ - `src/main/webapp/studiengaenge.js` for updating the list of study programs that are used for auto completion for the users of GATE
 
 ### Building GATE for deploying to Tomcat
 
@@ -80,9 +81,9 @@ Alternatively you can also use GitLab CI/CD functionality and download the build
 
 ### Installation steps for GATE
 
-- Prepate the `datadir` in which the submissions will be stored (see the "Configuration files" section above)
+- Prepate the `datapath` in which the submissions will be stored (see the "Configuration files" section above)
   - Copy `submissiondir/*` and `SecurityManager/NoExitSecurityManager.jar` to that folder
-  - If you want to use the [JPlag plagiarism system](https://github.com/jplag/jplag), compile it into a single .jar (using the maven goal `assembly:assembly` inside the `jplag` directory and copy the final `.jar` (from the target folder) as `jplag.jar` into the root of the `datadir`
+  - If you want to use the [JPlag plagiarism system](https://github.com/jplag/jplag), compile it into a single .jar (using the maven goal `assembly:assembly` inside the `jplag` directory and copy the final `.jar` (from the target folder) as `jplag.jar` into the root of the `datapath`
 - On Windows: Make sure the `JAVA_HOME` environment variable is set and points to the JDK directory (e.g. `C:\Program Files\BellSoft\LibericaJDK-11\`)
 - Prepare Tomcat
   - Rename the build `.war` file to e.g. `gate`, because the name is then used to build the URL under which GATE will be accessible using Tomcat
@@ -90,7 +91,7 @@ Alternatively you can also use GitLab CI/CD functionality and download the build
   - New versions of GATE can be easily deployed by just overriding the `.war` file in the `webapps` folder
 - Create first user with superuser permissions: Execute `util.CreateFirstUser` with parameters: `loginname emailaddress firtsname lastname`. Alternatively you can also manually insert a new row into the `users` table.
 - Set up the cron task that performs regular tasks such as automatically start the plagiarism check in background
-  - You can use the shipped script `submissiondir/runtests.sh` which should be in `datadir` and configure `/etc/crontab`: `*/10 * * * *   tomcat   /srv/submissioninterface/runtests.sh`
+  - You can use the shipped script `submissiondir/runtests.sh` which should be in `datapath` and configure `/etc/crontab`: `*/10 * * * *   tomcat   /srv/submissioninterface/runtests.sh`
   - Please make sure that you receive mails for the tomcat user in order to get errors of the cron task runner
 - Restart Tomcat
 
