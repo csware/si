@@ -31,6 +31,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "pointcategories")
 public class PointCategory implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int pointcatid;
 	private Task task;
 	private int points;

@@ -35,6 +35,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Table(name = "submissions_results")
 public class Result implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int resultid;
 	private Submission submission;
 	private String result;

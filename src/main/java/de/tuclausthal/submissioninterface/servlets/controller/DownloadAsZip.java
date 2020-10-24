@@ -48,6 +48,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  *
  */
 public class DownloadAsZip extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 	final private Logger log = LoggerFactory.getLogger(DownloadAsZip.class);
 
 	@Override

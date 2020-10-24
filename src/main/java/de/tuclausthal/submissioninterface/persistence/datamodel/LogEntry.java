@@ -35,6 +35,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Table(name = "logs")
 public class LogEntry implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int id;
 	private User user;
 	private Test test;

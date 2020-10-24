@@ -1,4 +1,5 @@
 /*
+ * Copyright 2020 Sven Strickroth <email@cs-ware.de>
  * Copyright 2011 Joachim Schramm
  * 
  * This file is part of the SubmissionInterface.
@@ -26,6 +27,8 @@ import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaUMLConstr
 
 @Entity
 public class UMLConstraintTest extends Test {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	@Transient
 	public AbstractTest getTestImpl() {

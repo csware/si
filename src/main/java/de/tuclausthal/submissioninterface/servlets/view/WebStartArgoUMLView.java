@@ -36,6 +36,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
  * @author Joachim Schramm
  */
 public class WebStartArgoUMLView extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		response.setContentType("application/x-java-jnlp-file");

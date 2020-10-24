@@ -40,6 +40,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class ShowMarkHistoryView extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
 	@Override

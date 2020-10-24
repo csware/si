@@ -55,6 +55,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class PerformStudentTest extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 	final private Logger log = LoggerFactory.getLogger(PerformStudentTest.class);
 
 	@Override

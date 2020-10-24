@@ -38,6 +38,8 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "participations", uniqueConstraints = { @UniqueConstraint(columnNames = { "lectureid", "uid" }) })
 public class Participation implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int id;
 	private User user;
 	private Group group;

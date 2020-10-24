@@ -36,6 +36,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Table(name = "testscounts")
 public class TestCount implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int id;
 	private Test test;
 	private User user;

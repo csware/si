@@ -39,6 +39,8 @@ import org.hibernate.annotations.OrderBy;
 @DiscriminatorFormula("case when matrikelno is null then 0 else 1 end")
 @DiscriminatorValue("0")
 public class User implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int uid;
 	private String username;
 	private String email;

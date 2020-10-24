@@ -43,6 +43,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  * options for the tutors and advisors.
  */
 public class CloseSubmissionByStudent extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		RequestAdapter requestAdapter = new RequestAdapter(request);

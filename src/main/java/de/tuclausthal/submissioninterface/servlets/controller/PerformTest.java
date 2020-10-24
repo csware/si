@@ -56,6 +56,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 @MultipartConfig(maxFileSize = 100 * 1024 * 1024)
 public class PerformTest extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 	final private Logger log = LoggerFactory.getLogger(PerformTest.class);
 
 	@Override

@@ -32,6 +32,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "javaadvancedioteststep")
 public class JavaAdvancedIOTestStep implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int teststepid;
 	private JavaAdvancedIOTest test;
 	private String title;

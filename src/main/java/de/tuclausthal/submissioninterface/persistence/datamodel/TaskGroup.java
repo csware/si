@@ -37,6 +37,8 @@ import org.hibernate.annotations.OrderBy;
 @Entity
 @Table(name = "taskgroups")
 public class TaskGroup implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int taskGroupId;
 	private String title = "";
 	private List<Task> tasks;

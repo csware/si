@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -30,6 +30,8 @@ import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaSyntaxTes
  */
 @Entity
 public class CompileTest extends Test {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	@Transient
 	public AbstractTest getTestImpl() {

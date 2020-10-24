@@ -37,6 +37,8 @@ import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 @Entity
 @Table(name = "tests")
 public abstract class Test implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int id;
 	private int timesRunnableByStudents = 0;
 	private boolean forTutors = false;

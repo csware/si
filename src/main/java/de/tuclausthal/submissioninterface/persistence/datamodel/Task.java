@@ -48,6 +48,8 @@ import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 @Entity
 @Table(name = "tasks")
 public class Task implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int taskid;
 	private String title = "";
 	private int maxSubmitters = 1;

@@ -47,6 +47,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  * controller servlet to download all submissions of a group as a zip file
  */
 public class DownloadSubmissionsByGroup extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		RequestAdapter requestAdapter = new RequestAdapter(request);

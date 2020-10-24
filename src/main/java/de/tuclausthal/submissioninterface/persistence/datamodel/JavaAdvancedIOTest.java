@@ -36,6 +36,8 @@ import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
  */
 @Entity
 public class JavaAdvancedIOTest extends Test {
+	private static final long serialVersionUID = 1L;
+
 	private List<JavaAdvancedIOTestStep> testSteps;
 
 	@Override

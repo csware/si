@@ -35,6 +35,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Table(name = "submissions_tasknumbers")
 public class TaskNumber implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int tasknumberid;
 	private Task task;
 	private Participation participation;

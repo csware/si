@@ -38,6 +38,8 @@ import de.tuclausthal.submissioninterface.template.TemplateFactory;
  *
  */
 public class Logout extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		boolean wasShibbolethLogin = request.getSession().getAttribute(Shibboleth.SHIBBOLETH_LOGIN_KEY) != null;

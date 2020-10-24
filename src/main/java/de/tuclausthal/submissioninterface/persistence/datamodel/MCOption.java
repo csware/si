@@ -38,6 +38,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Table(name = "mcoptions")
 public class MCOption implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int id;
 	private String title = "";
 	private boolean correct = false;
