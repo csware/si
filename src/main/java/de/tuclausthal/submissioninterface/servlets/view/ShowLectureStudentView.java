@@ -47,12 +47,15 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class ShowLectureStudentView extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		Participation participation = (Participation) request.getAttribute("participation");
 		Lecture lecture = participation.getLecture();
+		@SuppressWarnings("unchecked")
 		List<Group> joinAbleGroups = (List<Group>) request.getAttribute("joinAbleGroups");
 
 		// list all tasks for a lecture

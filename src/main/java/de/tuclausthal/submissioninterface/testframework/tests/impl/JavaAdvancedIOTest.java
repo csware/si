@@ -98,6 +98,7 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 		}
 	}
 
+	@Override
 	protected boolean calculateTestResult(Test test, boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted) {
 		de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest jtt = (de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest) test;
 
@@ -145,6 +146,7 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 		return exitedCleanly;
 	}
 
+	@Override
 	void populateParameters(Test test, File basePath, File tempDir, List<String> params) {
 		params.add("Tester");
 	}

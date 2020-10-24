@@ -65,6 +65,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class ShowSubmissionView extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
@@ -77,6 +79,7 @@ public class ShowSubmissionView extends HttpServlet {
 		Session session = requestAdapter.getSession();
 
 		Submission submission = (Submission) request.getAttribute("submission");
+		@SuppressWarnings("unchecked")
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
 		Task task = submission.getTask();
 

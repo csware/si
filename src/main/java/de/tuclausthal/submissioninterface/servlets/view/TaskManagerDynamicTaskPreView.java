@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -38,14 +38,18 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class TaskManagerDynamicTaskPreView extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		Task task = (Task) request.getAttribute("task");
+		@SuppressWarnings("unchecked")
 		List<String> correctResults = (List<String>) request.getAttribute("correctResults");
 		String[] resultFields = (String[]) request.getAttribute("resultFields");
 		String[] variableNames = (String[]) request.getAttribute("variableNames");
+		@SuppressWarnings("unchecked")
 		List<TaskNumber> taskNumbers = (List<TaskNumber>) request.getAttribute("taskNumbers");
 
 		template.printTemplateHeader("Vorschau", task);

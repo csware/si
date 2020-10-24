@@ -51,6 +51,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class SubmitSolutionFormView extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
@@ -158,9 +160,8 @@ public class SubmitSolutionFormView extends HttpServlet {
 				out.println("</FORM>");
 				template.printTemplateFooter();
 				return;
-			} else {
-				out.println("</table>");
 			}
+			out.println("</table>");
 		}
 
 		if (!"-".equals(task.getFilenameRegexp())) {

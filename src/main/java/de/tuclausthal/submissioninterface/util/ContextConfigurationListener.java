@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2013, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -26,9 +26,11 @@ import javax.servlet.ServletContextListener;
  * @author Sven Strickroth
  */
 public class ContextConfigurationListener implements ServletContextListener {
+	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		Configuration.fillConfiguration(event.getServletContext());
 	}
 
+	@Override
 	public void contextDestroyed(ServletContextEvent event) {}
 }

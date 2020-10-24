@@ -39,6 +39,8 @@ import de.tuclausthal.submissioninterface.template.TemplateFactory;
  * @author Sven Strickroth
  */
 public class AdminMenueShowAdminUsersView extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
@@ -46,6 +48,7 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 		template.printTemplateHeader("Super User", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"" + response.encodeURL("AdminMenue") + "\">Admin-Menü</a> &gt; Super User");
 		PrintWriter out = response.getWriter();
 
+		@SuppressWarnings("unchecked")
 		Iterator<User> userIterator = ((List<User>) request.getAttribute("superusers")).iterator();
 		out.println("<table class=border>");
 		out.println("<tr>");

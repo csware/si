@@ -80,6 +80,7 @@ public class RequestAdapter {
 	}
 
 	/**
+	 * @param request 
 	 * @return the sessionAdapter
 	 */
 	public static SessionAdapter getSessionAdapter(HttpServletRequest request) {

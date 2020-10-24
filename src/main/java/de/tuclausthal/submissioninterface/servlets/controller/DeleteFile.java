@@ -49,6 +49,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  *
  */
 public class DeleteFile extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);

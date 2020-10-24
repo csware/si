@@ -53,6 +53,7 @@ public class SessionAdapter {
 	/**
 	 * Binds the user to the session
 	 * @param user
+	 * @param remoteIP 
 	 */
 	public void setUser(User user, String remoteIP) {
 		this.user = user;
@@ -72,6 +73,7 @@ public class SessionAdapter {
 		return user;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Future<TestExecutorTestResult> getQueuedTest() {
 		return (Future<TestExecutorTestResult>) session.getAttribute("queuedTest");
 	}

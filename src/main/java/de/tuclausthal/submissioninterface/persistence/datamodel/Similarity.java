@@ -32,6 +32,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Table(name = "similarities")
 public class Similarity implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int similarityid;
 	private Submission submissionOne;
 	private Submission submissionTwo;

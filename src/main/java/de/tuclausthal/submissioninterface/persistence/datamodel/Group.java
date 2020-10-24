@@ -35,6 +35,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "groups")
 public class Group implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int gid;
 	private String name;
 	private Lecture lecture;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -38,11 +38,14 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class SearchSubmissionsResultView extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		Task task = (Task) request.getAttribute("task");
+		@SuppressWarnings("unchecked")
 		Set<Submission> foundSubmissions = (Set<Submission>) request.getAttribute("results");
 
 		template.printTemplateHeader("Suchergebnisse", task);

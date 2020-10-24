@@ -33,6 +33,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Table(name = "pointgiven")
 public class PointGiven implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int pointgivenid;
 	private PointCategory category;
 	private Submission submission;

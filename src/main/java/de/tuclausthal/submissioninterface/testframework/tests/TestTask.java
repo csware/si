@@ -37,6 +37,8 @@ import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
  * @author Sven Strickroth
  */
 public class TestTask implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int testId;
 	private int submissionid;
 	private boolean saveTestResult = false;

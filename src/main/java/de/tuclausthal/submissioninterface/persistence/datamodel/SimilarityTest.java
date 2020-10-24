@@ -47,6 +47,8 @@ import de.tuclausthal.submissioninterface.dupecheck.plaggie.PlaggieAdapter;
 @Entity
 @Table(name = "similaritytests")
 public class SimilarityTest implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int similarityTestId;
 	private Task task;
 	private int minimumDifferenceInPercent = 50;

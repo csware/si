@@ -30,6 +30,8 @@ import org.hibernate.annotations.ForeignKey;
 
 @Embeddable
 public class Points implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private Integer points;
 	private Integer pointStatus; // 0 = ungraded, 1 = nicht abgenommen, 2 = abnahme nicht bestanden, 3 = abgenommen
 	private Participation issuedBy;
@@ -45,6 +47,7 @@ public class Points implements Serializable {
 	}
 
 	/**
+	 * @param minPointStep 
 	 * @return the points
 	 */
 	@Transient
@@ -151,7 +154,7 @@ public class Points implements Serializable {
 	/**
 	 * @return the pointStatus
 	 */
-	@Column(columnDefinition="TINYINT")
+	@Column(columnDefinition = "TINYINT")
 	public Integer getPointStatus() {
 		return pointStatus;
 	}

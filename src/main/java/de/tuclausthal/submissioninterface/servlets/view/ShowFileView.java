@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2011,2013 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2013, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -40,6 +40,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class ShowFileView extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Submission submission = (Submission) request.getAttribute("submission");

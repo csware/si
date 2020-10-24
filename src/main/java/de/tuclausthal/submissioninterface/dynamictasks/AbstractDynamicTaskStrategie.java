@@ -115,6 +115,7 @@ public abstract class AbstractDynamicTaskStrategie implements DynamicTaskStrateg
 		return getTranslatedDescription(getVariables(submission));
 	}
 
+	@Override
 	final public String getTranslatedDescription(List<TaskNumber> variables) {
 		String description = task.getDescription();
 		for (int i = 0; i < variables.size(); i++) {

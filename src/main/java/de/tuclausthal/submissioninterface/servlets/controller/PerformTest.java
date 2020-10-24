@@ -56,6 +56,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 @MultipartConfig(maxFileSize = 100 * 1024 * 1024)
 public class PerformTest extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 	final private Logger log = LoggerFactory.getLogger(PerformTest.class);
 
 	@Override
@@ -137,54 +138,54 @@ public class PerformTest extends HttpServlet {
 
 		// Process the uploaded item
 		Part file = request.getPart("file");
-				StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
-				Util.lowerCaseExtension(submittedFileName);
-				String fileName = null;
-				for (Pattern pattern : SubmitSolution.getTaskFileNamePatterns(task, false)) {
-					Matcher m = pattern.matcher(submittedFileName);
-					if (!m.matches()) {
-						template.printTemplateHeader("Ungültige Anfrage");
-						PrintWriter out = response.getWriter();
-						out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
-						out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
-						template.printTemplateFooter();
-						return;
-					}
-					fileName = m.group(1);
-				}
-				try {
-					SubmitSolution.handleUploadedFile(log, path, task, fileName, file);
-				} catch (IOException e) {
-					log.error("Problem on processing uploaded file.", e);
-					template.printTemplateHeader("Ungültige Anfrage");
-					PrintWriter out = response.getWriter();
-					out.println("Problem beim Entpacken des Archives.");
-					template.printTemplateFooter();
-					return;
-				}
-
-				Test test = DAOFactory.TestDAOIf(session).getTest(testId);
-				if (test == null) {
-					template.printTemplateHeader("Ungültige Anfrage");
-					PrintWriter out = response.getWriter();
-					out.println("Test nicht gefunden.");
-					template.printTemplateFooter();
-					return;
-				}
-
-				request.setAttribute("task", test.getTask());
-				request.setAttribute("test", test);
-
-				ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
-
-				TestTask testTask = new TestTask(test);
-				TestExecutorTestResult testResult = new TestExecutorTestResult();
-				testTask.performTaskInFolder(test, contextAdapter.getDataPath(), path, testResult);
-
-				Util.recursiveDelete(path);
-
-				request.setAttribute("testresult", testResult);
-				request.getRequestDispatcher("PerformTestResultView").forward(request, response);
+		StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
+		Util.lowerCaseExtension(submittedFileName);
+		String fileName = null;
+		for (Pattern pattern : SubmitSolution.getTaskFileNamePatterns(task, false)) {
+			Matcher m = pattern.matcher(submittedFileName);
+			if (!m.matches()) {
+				template.printTemplateHeader("Ungültige Anfrage");
+				PrintWriter out = response.getWriter();
+				out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
+				out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
+				template.printTemplateFooter();
 				return;
+			}
+			fileName = m.group(1);
+		}
+		try {
+			SubmitSolution.handleUploadedFile(log, path, task, fileName, file);
+		} catch (IOException e) {
+			log.error("Problem on processing uploaded file.", e);
+			template.printTemplateHeader("Ungültige Anfrage");
+			PrintWriter out = response.getWriter();
+			out.println("Problem beim Entpacken des Archives.");
+			template.printTemplateFooter();
+			return;
+		}
+
+		Test test = DAOFactory.TestDAOIf(session).getTest(testId);
+		if (test == null) {
+			template.printTemplateHeader("Ungültige Anfrage");
+			PrintWriter out = response.getWriter();
+			out.println("Test nicht gefunden.");
+			template.printTemplateFooter();
+			return;
+		}
+
+		request.setAttribute("task", test.getTask());
+		request.setAttribute("test", test);
+
+		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
+
+		TestTask testTask = new TestTask(test);
+		TestExecutorTestResult testResult = new TestExecutorTestResult();
+		testTask.performTaskInFolder(test, contextAdapter.getDataPath(), path, testResult);
+
+		Util.recursiveDelete(path);
+
+		request.setAttribute("testresult", testResult);
+		request.getRequestDispatcher("PerformTestResultView").forward(request, response);
+		return;
 	}
 }

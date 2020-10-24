@@ -54,6 +54,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class ShowTaskTutorView extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
@@ -64,7 +66,9 @@ public class ShowTaskTutorView extends HttpServlet {
 
 		Task task = (Task) request.getAttribute("task");
 		Participation participation = (Participation) request.getAttribute("participation");
+		@SuppressWarnings("unchecked")
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
+		@SuppressWarnings("unchecked")
 		List<String> modelSolutionFiles = (List<String>) request.getAttribute("modelSolutionFiles");
 
 		template.printTemplateHeader(task);

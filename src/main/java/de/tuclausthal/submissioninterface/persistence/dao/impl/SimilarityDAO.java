@@ -38,6 +38,7 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 		super(session);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void addSimilarityResult(SimilarityTest similarityTest, Submission submissionOne, Submission submissionTwo, int percentage) {
 		// TODO: check in plaggie that only submissiondirectories are considered
@@ -69,6 +70,7 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 		return (Integer) result;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Similarity> getUsersWithMaxSimilarity(SimilarityTest similarityTest, Submission submission) {
 		int maxSimilarity = getMaxSimilarity(similarityTest, submission);
@@ -78,6 +80,7 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 		return getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).add(Restrictions.eq("percentage", maxSimilarity)).list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Similarity> getUsersWithSimilarity(SimilarityTest similarityTest, Submission submission) {
 		return getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).addOrder(Order.desc("percentage")).list();

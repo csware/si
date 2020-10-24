@@ -43,6 +43,8 @@ import de.tuclausthal.submissioninterface.util.Util;
 @Entity
 @Table(name = "submissions")
 public class Submission implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int submissionid;
 	private Task task;
 	private Set<Participation> submitters = new HashSet<>();
