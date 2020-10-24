@@ -160,9 +160,8 @@ public class SubmitSolutionFormView extends HttpServlet {
 				out.println("</FORM>");
 				template.printTemplateFooter();
 				return;
-			} else {
-				out.println("</table>");
 			}
+			out.println("</table>");
 		}
 
 		if (!"-".equals(task.getFilenameRegexp())) {
