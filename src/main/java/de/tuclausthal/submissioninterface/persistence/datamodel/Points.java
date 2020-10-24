@@ -47,6 +47,7 @@ public class Points implements Serializable {
 	}
 
 	/**
+	 * @param minPointStep 
 	 * @return the points
 	 */
 	@Transient
@@ -153,7 +154,7 @@ public class Points implements Serializable {
 	/**
 	 * @return the pointStatus
 	 */
-	@Column(columnDefinition="TINYINT")
+	@Column(columnDefinition = "TINYINT")
 	public Integer getPointStatus() {
 		return pointStatus;
 	}

@@ -482,6 +482,9 @@ public final class Util {
 	 * Saves a POST-submitted file (item) with filename fileName
 	 * * if the file is a Java-file (i.e. ends with .java) parse the package and create the package subfolders below path
 	 * * else it directly saves the file to path
+	 * @param item uploaded file part
+	 * @param path base path to the submission directory
+	 * @param fileName name of the file to handle
 	 * @throws IOException 
 	 */
 	public static void saveAndRelocateJavaFile(Part item, File path, String fileName) throws IOException {

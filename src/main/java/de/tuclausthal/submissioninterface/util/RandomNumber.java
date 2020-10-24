@@ -26,12 +26,6 @@ public class RandomNumber {
 	private static final char[] types = { 'B', 'O', 'D', 'F', 'H', 'L' };
 	private static final int[][] randomParam = { { 2, 2, 0 }, { 8, 2, 0 }, { 10, 2, 0 }, { 10, 2, 2 }, { 16, 3, 0 }, { 10, 8, 0 } };
 
-	/**
-	 * @param type, type of numeral system representation(2 for binary etc)
-	 * @param beforeComa, number of positions before the decimal point
-	 * @param afterComa, number of positions after the decimal point
-	 * @return str, String with the representation of the number
-	 */
 	public static String getRandomNumber(int[] randomParam) {
 		String before = "1";
 		String str = null;
