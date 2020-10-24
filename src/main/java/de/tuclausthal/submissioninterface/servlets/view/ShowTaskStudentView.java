@@ -70,8 +70,11 @@ public class ShowTaskStudentView extends HttpServlet {
 		Task task = (Task) request.getAttribute("task");
 		Submission submission = (Submission) request.getAttribute("submission");
 		Participation participation = (Participation) request.getAttribute("participation");
+		@SuppressWarnings("unchecked")
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
+		@SuppressWarnings("unchecked")
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
+		@SuppressWarnings("unchecked")
 		List<String> modelSolutionFiles = (List<String>) request.getAttribute("modelSolutionFiles");
 
 		template.printTemplateHeader(task);

@@ -79,6 +79,7 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 		session.update(group);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Group> getJoinAbleGroups(Lecture lecture, Group participationGroup) {
 		if (participationGroup == null) {

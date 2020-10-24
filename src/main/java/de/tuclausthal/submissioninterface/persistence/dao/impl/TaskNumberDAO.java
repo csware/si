@@ -40,11 +40,13 @@ public class TaskNumberDAO extends AbstractDAO implements TaskNumberDAOIf {
 		super(session);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<TaskNumber> getTaskNumbersForSubmission(Submission submission) {
 		return getSession().createCriteria(TaskNumber.class).add(Restrictions.eq("submission", submission)).addOrder(Order.asc("tasknumberid")).list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<TaskNumber> getTaskNumbersForTaskLocked(Task task, Participation participation) {
 		return getSession().createCriteria(TaskNumber.class).add(Restrictions.eq("task", task)).add(Restrictions.eq("participation", participation)).addOrder(Order.asc("tasknumberid")).setLockMode(LockMode.PESSIMISTIC_WRITE).list();

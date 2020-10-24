@@ -47,6 +47,7 @@ public class AdminMenueOverView extends HttpServlet {
 		template.printTemplateHeader("Admin-Menü", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - Admin-Menü");
 		PrintWriter out = response.getWriter();
 
+		@SuppressWarnings("unchecked")
 		Iterator<Lecture> lectureIterator = ((List<Lecture>) request.getAttribute("lectures")).iterator();
 		if (lectureIterator.hasNext()) {
 			out.println("<table class=border>");

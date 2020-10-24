@@ -58,6 +58,7 @@ public class ShowUserView extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		User user = (User) request.getAttribute("user");
+		@SuppressWarnings("unchecked")
 		List<Lecture> lectures = (List<Lecture>) request.getAttribute("lectures");
 		Boolean isAtLeastAdvisorOnce = (Boolean) request.getAttribute("isAtLeastAdvisorOnce");
 		Session session = RequestAdapter.getSession(request);

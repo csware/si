@@ -87,11 +87,13 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Participation> getParticipationsWithoutGroup(Lecture lecture) {
 		return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.isNull("group")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Participation> getParticipationsOfGroup(Group group) {
 		return getSession().createCriteria(Participation.class).add(Restrictions.eq("group", group)).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
@@ -113,11 +115,13 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 		session.save(participation);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Participation> getParticipationsWithNoSubmissionToTaskOrdered(Task task) {
 		return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", task.getTaskGroup().getLecture())).add(Restrictions.sqlRestriction("{alias}.id not in (SELECT submitters_id FROM submissions, submissions_participations where submissions.submissionid=submissions_participations.submissions_submissionid and taskid=" + task.getTaskid() + ")")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Participation> getMarkersAvailableParticipations(Group group) {
 		if (group.getTutors().size() > 0) {
@@ -131,8 +135,9 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 		return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.or(Restrictions.eq("role", ParticipationRole.TUTOR.toString()), Restrictions.eq("role", ParticipationRole.ADVISOR.toString()))).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Participation> getLectureParticipations(Lecture lecture) {
-		return (List<Participation>) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).createAlias("user", "user").addOrder(Order.asc("user.lastName")).addOrder(Order.asc("user.firstName")).list();
+		return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).createAlias("user", "user").addOrder(Order.asc("user.lastName")).addOrder(Order.asc("user.firstName")).list();
 	}
 }

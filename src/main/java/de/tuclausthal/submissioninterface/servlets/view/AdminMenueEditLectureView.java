@@ -53,6 +53,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			PrintWriter out = response.getWriter();
 			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
 		} else {
+			@SuppressWarnings("unchecked")
 			List<Participation> participants = (List<Participation>) request.getAttribute("participants");
 			template.printTemplateHeader("Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"AdminMenue\">Admin-Menü</a> &gt; Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten");
 			PrintWriter out = response.getWriter();

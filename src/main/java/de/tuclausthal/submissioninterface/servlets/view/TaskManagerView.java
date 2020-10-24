@@ -59,7 +59,9 @@ public class TaskManagerView extends HttpServlet {
 
 		Task task = (Task) request.getAttribute("task");
 		Lecture lecture = task.getTaskGroup().getLecture();
+		@SuppressWarnings("unchecked")
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
+		@SuppressWarnings("unchecked")
 		List<String> modelSolutionFiles = (List<String>) request.getAttribute("modelSolutionFiles");
 
 		template.addJQuery();
@@ -249,6 +251,7 @@ public class TaskManagerView extends HttpServlet {
 
 		if (task.isMCTask()) {
 			out.println("<h2>Multiple Choice-Optionen</h2>");
+			@SuppressWarnings("unchecked")
 			List<MCOption> options = (List<MCOption>) request.getAttribute("mcOptions");
 			if (!options.isEmpty()) {
 				out.println("<ul>");

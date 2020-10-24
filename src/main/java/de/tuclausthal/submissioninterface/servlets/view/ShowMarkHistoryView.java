@@ -48,6 +48,7 @@ public class ShowMarkHistoryView extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		Submission submission = (Submission) request.getAttribute("submission");
+		@SuppressWarnings("unchecked")
 		List<PointHistory> data = (List<PointHistory>) request.getAttribute("data");
 
 		template.printTemplateHeader("Aktivitätslog", submission);

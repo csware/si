@@ -40,6 +40,7 @@ public class ResultDAO extends AbstractDAO implements ResultDAOIf {
 		super(session);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getResultsForSubmission(Submission submission) {
 		Session session = getSession();
@@ -50,6 +51,7 @@ public class ResultDAO extends AbstractDAO implements ResultDAOIf {
 		return results;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void createResults(Submission submission, List<String> results) {
 		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);

@@ -55,6 +55,7 @@ public class ShowLectureStudentView extends HttpServlet {
 
 		Participation participation = (Participation) request.getAttribute("participation");
 		Lecture lecture = participation.getLecture();
+		@SuppressWarnings("unchecked")
 		List<Group> joinAbleGroups = (List<Group>) request.getAttribute("joinAbleGroups");
 
 		// list all tasks for a lecture

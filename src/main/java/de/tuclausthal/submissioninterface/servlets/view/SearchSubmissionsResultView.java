@@ -45,6 +45,7 @@ public class SearchSubmissionsResultView extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		Task task = (Task) request.getAttribute("task");
+		@SuppressWarnings("unchecked")
 		Set<Submission> foundSubmissions = (Set<Submission>) request.getAttribute("results");
 
 		template.printTemplateHeader("Suchergebnisse", task);

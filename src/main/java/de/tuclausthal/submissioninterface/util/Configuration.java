@@ -80,6 +80,7 @@ public class Configuration {
 		instance.fillTemplateConstructor(context);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void fillTemplateConstructor(ServletContext context) {
 		String className = context.getInitParameter("template-class");
 		if (className == null) {

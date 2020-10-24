@@ -72,6 +72,7 @@ public class SessionAdapter {
 		return user;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Future<TestExecutorTestResult> getQueuedTest() {
 		return (Future<TestExecutorTestResult>) session.getAttribute("queuedTest");
 	}

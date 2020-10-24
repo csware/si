@@ -37,10 +37,11 @@ public class MCOptionDAO extends AbstractDAO implements MCOptionDAOIf {
 		super(session);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<MCOption> getMCOptionsForTask(Task task) {
 		Session session = getSession();
-		return (List<MCOption>) session.createCriteria(MCOption.class).add(Restrictions.eq("task", task)).addOrder(Order.asc("id")).list();
+		return session.createCriteria(MCOption.class).add(Restrictions.eq("task", task)).addOrder(Order.asc("id")).list();
 	}
 
 	@Override

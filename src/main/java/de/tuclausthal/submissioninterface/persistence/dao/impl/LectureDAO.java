@@ -41,6 +41,7 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 		super(session);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Lecture> getLectures() {
 		return getSession().createCriteria(Lecture.class).addOrder(Order.desc("semester")).addOrder(Order.asc("name")).list();
@@ -67,6 +68,7 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 		return (Lecture) getSession().get(Lecture.class, lectureId);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Lecture> getCurrentLecturesWithoutUser(User user) {
 		Session session = getSession();

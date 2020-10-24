@@ -46,6 +46,7 @@ public class SubmitSolutionAdvisorFormView extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		Task task = (Task) request.getAttribute("task");
+		@SuppressWarnings("unchecked")
 		List<Participation> participants = (List<Participation>) request.getAttribute("participants");
 
 		template.printTemplateHeader("Abgabe für Studierenden starten", task);

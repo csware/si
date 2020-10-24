@@ -79,6 +79,7 @@ public class ShowSubmissionView extends HttpServlet {
 		Session session = requestAdapter.getSession();
 
 		Submission submission = (Submission) request.getAttribute("submission");
+		@SuppressWarnings("unchecked")
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
 		Task task = submission.getTask();
 

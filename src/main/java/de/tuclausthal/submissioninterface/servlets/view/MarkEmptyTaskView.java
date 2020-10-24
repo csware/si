@@ -46,6 +46,7 @@ public class MarkEmptyTaskView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
+		@SuppressWarnings("unchecked")
 		List<Participation> participations = (List<Participation>) request.getAttribute("participations");
 		Task task = (Task) request.getAttribute("task");
 

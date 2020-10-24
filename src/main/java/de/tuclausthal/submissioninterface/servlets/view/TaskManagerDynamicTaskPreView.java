@@ -45,9 +45,11 @@ public class TaskManagerDynamicTaskPreView extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		Task task = (Task) request.getAttribute("task");
+		@SuppressWarnings("unchecked")
 		List<String> correctResults = (List<String>) request.getAttribute("correctResults");
 		String[] resultFields = (String[]) request.getAttribute("resultFields");
 		String[] variableNames = (String[]) request.getAttribute("variableNames");
+		@SuppressWarnings("unchecked")
 		List<TaskNumber> taskNumbers = (List<TaskNumber>) request.getAttribute("taskNumbers");
 
 		template.printTemplateHeader("Vorschau", task);

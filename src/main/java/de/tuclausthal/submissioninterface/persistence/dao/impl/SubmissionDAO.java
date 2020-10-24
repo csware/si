@@ -79,6 +79,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 		session.saveOrUpdate(submission);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Submission> getSubmissionsForTaskOrdered(Task task) {
 		return getSession().createCriteria(Submission.class, "sub").add(Restrictions.eq("task", task)).setFetchMode("submitters", FetchMode.JOIN).createCriteria("submitters").setFetchMode("group", FetchMode.JOIN).setFetchMode("user", FetchMode.JOIN).addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).list();
@@ -97,6 +98,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Submission> getSubmissionsForTaskOfGroupOrdered(Task task, Group group) {
 		if (group == null) {

@@ -95,11 +95,13 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 		tx.commit();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUsers() {
 		return getSession().createCriteria(User.class).addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getSuperUsers() {
 		return getSession().createCriteria(User.class).add(Restrictions.eq("superUser", true)).addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();

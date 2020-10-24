@@ -43,6 +43,7 @@ public class SubscribeToLectureView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
+		@SuppressWarnings("unchecked")
 		List<Lecture> lectures = (List<Lecture>) request.getAttribute("lectures");
 
 		template.printTemplateHeader("Veranstaltungen", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> &gt; Veranstaltungen");
