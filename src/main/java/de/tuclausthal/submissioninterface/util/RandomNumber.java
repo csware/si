@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Giselle Rodriguez
- * Copyright 2011, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -27,10 +27,10 @@ public class RandomNumber {
 	private static final int[][] randomParam = { { 2, 2, 0 }, { 8, 2, 0 }, { 10, 2, 0 }, { 10, 2, 2 }, { 16, 3, 0 }, { 10, 8, 0 } };
 
 	public static String getRandomNumber(int[] randomParam) {
-		String before = "1";
+		StringBuilder before = new StringBuilder("1");
 		String str = null;
 		for (int i = 0; i < randomParam[1]; i++) {
-			before = before + "0";
+			before.append("0");
 		}
 		if (randomParam[1] > 6) {
 			str = Double.toString(Math.random()).replace(".", "");
@@ -39,7 +39,7 @@ public class RandomNumber {
 				str = str.replaceFirst("0", "");
 			}
 		} else {
-			double zahl = Math.random() * Integer.parseInt(before);
+			double zahl = Math.random() * Integer.parseInt(before.toString());
 			str = String.valueOf(Math.round(zahl));
 			if (randomParam[2] > 0) {
 				String after = "##0.";
@@ -69,45 +69,45 @@ public class RandomNumber {
 		if (bin.length() % 4 != 0) {
 			return null;
 		}
-		String hex = "";
+		StringBuilder hex = new StringBuilder();
 		for (int i = 0; i * 4 < bin.length(); i++) {
 			if ("0000".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "0";
+				hex.append("0");
 			} else if ("0001".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "1";
+				hex.append("1");
 			} else if ("0010".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "2";
+				hex.append("2");
 			} else if ("0011".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "3";
+				hex.append("3");
 			} else if ("0100".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "4";
+				hex.append("4");
 			} else if ("0101".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "5";
+				hex.append("5");
 			} else if ("0110".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "6";
+				hex.append("6");
 			} else if ("0111".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "7";
+				hex.append("7");
 			} else if ("1000".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "8";
+				hex.append("8");
 			} else if ("1001".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "9";
+				hex.append("9");
 			} else if ("1010".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "A";
+				hex.append("A");
 			} else if ("1011".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "B";
+				hex.append("B");
 			} else if ("1100".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "C";
+				hex.append("C");
 			} else if ("1101".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "D";
+				hex.append("D");
 			} else if ("1110".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "E";
+				hex.append("E");
 			} else if ("1111".equals(bin.substring(i * 4, (i + 1) * 4))) {
-				hex += "F";
+				hex.append("F");
 			} else {
 				return null;
 			}
 		}
-		return hex;
+		return hex.toString();
 	}
 
 	public static String trimLeadingZeros(String str) {
@@ -120,11 +120,11 @@ public class RandomNumber {
 		return str;
 	}
 
-
 	public static String getFloatBits(float randomNumber) {
 		String bits = Integer.toBinaryString(Float.floatToIntBits(randomNumber));
-		while (bits.length() < 32)
+		while (bits.length() < 32) {
 			bits = "0" + bits;
+		}
 		return bits;
 	}
 
