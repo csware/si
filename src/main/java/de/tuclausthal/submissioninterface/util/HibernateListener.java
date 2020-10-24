@@ -25,10 +25,12 @@ import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 
 public class HibernateListener implements ServletContextListener {
 
+	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		HibernateSessionHelper.getSessionFactory(); // Just call the static initializer of that class    
 	}
 
+	@Override
 	public void contextDestroyed(ServletContextEvent event) {
 		HibernateSessionHelper.getSessionFactory().close(); // Free all resources
 		AbandonedConnectionCleanupThread.checkedShutdown();

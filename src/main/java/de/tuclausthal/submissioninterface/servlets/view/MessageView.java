@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -52,6 +52,8 @@ public class MessageView extends HttpServlet {
 		}
 		template.printTemplateFooter();
 	}
+
+	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		doGet(request, response);
 	}
