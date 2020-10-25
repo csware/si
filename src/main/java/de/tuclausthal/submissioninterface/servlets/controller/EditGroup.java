@@ -68,7 +68,7 @@ public class EditGroup extends HttpServlet {
 		if ("removeFromGroup".equals(request.getParameter("action")) && request.getParameter("participationid") != null) {
 			Transaction tx = session.beginTransaction();
 			Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(request.getParameter("participationid"), 0));
-			if (memberParticipation != null && (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0 || memberParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0)) {
+			if (memberParticipation != null && memberParticipation.getGroup() != null && memberParticipation.getGroup().getGid() == group.getGid() && (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0 || memberParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0)) {
 				memberParticipation.setGroup(null);
 				participationDAO.saveParticipation(memberParticipation);
 			}
@@ -106,7 +106,7 @@ public class EditGroup extends HttpServlet {
 				if (request.getParameterValues("tutors") != null && request.getParameterValues("tutors").length > 0) {
 					for (String newMember : request.getParameterValues("tutors")) {
 						Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(newMember, 0));
-						if (memberParticipation != null && memberParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+						if (memberParticipation != null && memberParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0 && memberParticipation.getLecture().getId() == group.getLecture().getId()) {
 							group.getTutors().add(memberParticipation);
 							groupDAO.saveGroup(group);
 						}
@@ -116,7 +116,7 @@ public class EditGroup extends HttpServlet {
 			if (request.getParameterValues("members") != null && request.getParameterValues("members").length > 0) {
 				for (String newMember : request.getParameterValues("members")) {
 					Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(newMember, 0));
-					if (memberParticipation != null && memberParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
+					if (memberParticipation != null && memberParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0 && memberParticipation.getLecture().getId() == group.getLecture().getId()) {
 						memberParticipation.setGroup(group);
 						participationDAO.saveParticipation(memberParticipation);
 					}

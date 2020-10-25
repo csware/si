@@ -72,7 +72,7 @@ public class DownloadSubmissionsByGroup extends HttpServlet {
 		Group group = null;
 		if (request.getParameter("groupid") != null) {
 			group = DAOFactory.GroupDAOIf(session).getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
-			if (group == null) {
+			if (group == null || group.getLecture().getId() != participation.getLecture().getId()) {
 				request.setAttribute("title", "Gruppe nicht gefunden");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 				return;

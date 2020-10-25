@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -73,14 +73,12 @@ public class AddGroup extends HttpServlet {
 		} else if (request.getParameter("action") != null && request.getParameter("action").equals("deleteGroup") && request.getParameter("gid") != null) {
 			GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
 			Group group = groupDAO.getGroup(Util.parseInteger(request.getParameter("gid"), 0));
-			int lectureid = 0;
-			if (group != null) {
-				lectureid = group.getLecture().getId();
+			if (group != null && group.getLecture().getId() == lecture.getId()) {
 				Transaction tx = session.beginTransaction();
 				groupDAO.deleteGroup(group);
 				tx.commit();
 			}
-			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lectureid));
+			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
 			return;
 		} else {
 			request.setAttribute("lecture", DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0)));

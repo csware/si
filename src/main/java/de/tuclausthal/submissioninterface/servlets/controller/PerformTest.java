@@ -88,15 +88,16 @@ public class PerformTest extends HttpServlet {
 		Session session = RequestAdapter.getSession(request);
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
-		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
-		if (task == null) {
-			template.printTemplateHeader("Aufgabe nicht gefunden");
+		Test test = DAOFactory.TestDAOIf(session).getTest(Util.parseInteger(request.getParameter("testid"), 0));
+		if (test == null) {
+			template.printTemplateHeader("Ungültige Anfrage");
 			PrintWriter out = response.getWriter();
-			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
+			out.println("Test nicht gefunden.");
 			template.printTemplateFooter();
 			return;
 		}
+
+		Task task = test.getTask();
 
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
@@ -125,8 +126,6 @@ public class PerformTest extends HttpServlet {
 			template.printTemplateFooter();
 			return;
 		}
-
-		int testId = Util.parseInteger(request.getParameter("testid"), 0);
 
 		File path = Util.createTemporaryDirectory("tutortest", null);
 		if (path == null) {
@@ -160,15 +159,6 @@ public class PerformTest extends HttpServlet {
 			template.printTemplateHeader("Ungültige Anfrage");
 			PrintWriter out = response.getWriter();
 			out.println("Problem beim Entpacken des Archives.");
-			template.printTemplateFooter();
-			return;
-		}
-
-		Test test = DAOFactory.TestDAOIf(session).getTest(testId);
-		if (test == null) {
-			template.printTemplateHeader("Ungültige Anfrage");
-			PrintWriter out = response.getWriter();
-			out.println("Test nicht gefunden.");
 			template.printTemplateFooter();
 			return;
 		}

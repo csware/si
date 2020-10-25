@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -70,7 +70,7 @@ public class DupeCheck extends HttpServlet {
 		if ("deleteSimilarityTest".equals(request.getParameter("action")) && request.getParameter("similaritytestid") != null) {
 			Transaction tx = session.beginTransaction();
 			SimilarityTest similarityTest = semilarityTestDAO.getSimilarityTestLocked(Util.parseInteger(request.getParameter("similaritytestid"), 0));
-			if (similarityTest != null) {
+			if (similarityTest != null && similarityTest.getTask().getTaskid() == task.getTaskid()) {
 				semilarityTestDAO.deleteSimilarityTest(similarityTest);
 			}
 			tx.commit();
@@ -84,7 +84,7 @@ public class DupeCheck extends HttpServlet {
 		} else if ("rerunSimilarityTest".equals(request.getParameter("action")) && request.getParameter("similaritytestid") != null) {
 			Transaction tx = session.beginTransaction();
 			SimilarityTest similarityTest = semilarityTestDAO.getSimilarityTestLocked(Util.parseInteger(request.getParameter("similaritytestid"), 0));
-			if (similarityTest != null) {
+			if (similarityTest != null && similarityTest.getTask().getTaskid() == task.getTaskid()) {
 				similarityTest.setStatus(1);
 				semilarityTestDAO.saveSimilarityTest(similarityTest);
 			}

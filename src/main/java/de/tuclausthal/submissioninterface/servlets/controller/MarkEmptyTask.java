@@ -71,7 +71,7 @@ public class MarkEmptyTask extends HttpServlet {
 
 		if (Util.isInteger(request.getParameter("pid"))) {
 			Participation studentParticipation = DAOFactory.ParticipationDAOIf(session).getParticipation(Util.parseInteger(request.getParameter("pid"), 0));
-			if (studentParticipation == null || studentParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) != 0) {
+			if (studentParticipation == null || studentParticipation.getLecture().getId() != participation.getLecture().getId() || studentParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) != 0) {
 				request.setAttribute("title", "Gewählte Person ist kein normaler Teilnehmer der Vorlesung.");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 				return;

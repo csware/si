@@ -244,7 +244,7 @@ public class TestManager extends HttpServlet {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			session.beginTransaction();
 			Test test = testDAO.getTestLocked(Util.parseInteger(request.getParameter("testid"), 0));
-			if (test != null) {
+			if (test != null && test.getTask().getTaskid() == task.getTaskid()) {
 				testDAO.deleteTest(test);
 			}
 			session.getTransaction().commit();
@@ -254,7 +254,7 @@ public class TestManager extends HttpServlet {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			session.beginTransaction();
 			Test test = testDAO.getTestLocked(Util.parseInteger(request.getParameter("testid"), 0));
-			if (test != null) {
+			if (test != null && test.getTask().getTaskid() == task.getTaskid()) {
 				test.setNeedsToRun(true);
 				testDAO.saveTest(test);
 			}

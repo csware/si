@@ -91,7 +91,9 @@ public class ShowTask extends HttpServlet {
 		} else if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 			if ("grouplist".equals(request.getParameter("action"))) {
 				Group group = DAOFactory.GroupDAOIf(session).getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
-				request.setAttribute("group", group);
+				if (group != null && group.getLecture().getId() == participation.getLecture().getId()) {
+					request.setAttribute("group", group);
+				}
 				request.getRequestDispatcher("ShowTaskTutorPrintView").forward(request, response);
 			} else {
 				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
