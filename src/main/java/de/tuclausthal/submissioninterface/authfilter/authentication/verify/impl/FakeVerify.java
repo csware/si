@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -22,6 +22,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginData;
 import de.tuclausthal.submissioninterface.authfilter.authentication.verify.VerifyIf;
@@ -35,12 +37,18 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.User;
  * @author Sven Strickroth
  */
 public class FakeVerify implements VerifyIf {
-	public FakeVerify(FilterConfig filterConfig) {}
+	final private static Logger LOG = LoggerFactory.getLogger(FakeVerify.class);
+	public FakeVerify(FilterConfig filterConfig) {
+		LOG.warn("Using FakeVerify as authenticator! No passwords will be validated!");
+	}
 
 	@Override
 	public VerifyResult checkCredentials(Session session, LoginData logindata, HttpServletRequest request) {
 		UserDAOIf userdao = DAOFactory.UserDAOIf(session);
 		User user = userdao.getUserByUsername(logindata.getUsername());
+		if (user != null) {
+			LOG.warn("Login using FakeVerify, no password was validated!");
+		}
 		return new VerifyResult(user);
 	}
 }
