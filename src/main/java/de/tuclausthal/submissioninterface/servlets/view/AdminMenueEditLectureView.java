@@ -70,7 +70,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 				if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 					User user = participation.getUser();
 					out.println("<tr>");
-					out.println("<td>" + user.getFullName() + "</td>");
+					out.println("<td>" + Util.escapeHTML(user.getFullName()) + "</td>");
 					out.println("<td><a onclick=\"return confirmLink('Wirklich degradieren?')\" href=\"" + response.encodeURL("?action=removeUser&amp;lecture=" + lecture.getId() + "&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
 					out.println("</tr>");
 				}
@@ -94,7 +94,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 				if (participation.getRoleType() == ParticipationRole.TUTOR) {
 					User user = participation.getUser();
 					out.println("<tr>");
-					out.println("<td>" + user.getFullName() + "</td>");
+					out.println("<td>" + Util.escapeHTML(user.getFullName()) + "</td>");
 					out.println("<td><a onclick=\"return confirmLink('Wirklich degradieren?')\" href=\"" + response.encodeURL("?action=removeUser&amp;lecture=" + lecture.getId() + "&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
 					out.println("</tr>");
 				}
@@ -121,7 +121,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			Participation participation = iterator.next();
 			if (participation.getRoleType() == ParticipationRole.NORMAL) {
 				User user = participation.getUser();
-				out.println("<option value=" + user.getUid() + ">" + user.getFullName());
+				out.println("<option value=" + user.getUid() + ">" + Util.escapeHTML(user.getFullName()));
 			}
 		}
 		out.println("</select>");

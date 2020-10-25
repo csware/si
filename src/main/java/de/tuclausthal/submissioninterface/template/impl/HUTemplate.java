@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.template.Template;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * An template for the HU-Berlin layout
@@ -50,7 +51,7 @@ public class HUTemplate extends Template {
 		out.println("<div id=\"location\">");
 		User user = requestAdapter.getUser();
 		if (user != null) {
-			out.println("Benutzer: " + user.getEmail());
+			out.println("Angemeldet als: " + Util.escapeHTML(user.getUsername()));
 			if (user.isSuperUser()) {
 				out.println(" <span class=\"menu-divider\">|</span> <a href=\"" + servletResponse.encodeURL("AdminMenue") + "\">Admin-Menü</a>");
 			}

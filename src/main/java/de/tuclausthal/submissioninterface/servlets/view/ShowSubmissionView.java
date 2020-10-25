@@ -92,7 +92,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<p>Letzte Änderung: " + Util.escapeHTML(dateFormatter.format(submission.getLastModified())) + "</p>");
 		}
 		if (task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
-			out.println("<p>Abgabe endgültig eingereicht: " + Util.escapeHTML(dateFormatter.format(submission.getClosedTime())) + " von " + submission.getClosedBy().getUser().getFullName() + "</p>");
+			out.println("<p>Abgabe endgültig eingereicht: " + Util.escapeHTML(dateFormatter.format(submission.getClosedTime())) + " von " + Util.escapeHTML(submission.getClosedBy().getUser().getFullName()) + "</p>");
 		}
 
 		for (Participation participation : submission.getSubmitters()) {

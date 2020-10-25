@@ -33,6 +33,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * View-Servlet for displaying the admin users and an add form for new ones
@@ -58,7 +59,7 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 		while (userIterator.hasNext()) {
 			User user = userIterator.next();
 			out.println("<tr>");
-			out.println("<td>" + user.getFullName() + "</td>");
+			out.println("<td>" + Util.escapeHTML(user.getFullName()) + "</td>");
 			out.println("<td><a href=\"" + response.encodeURL("?action=removeSuperUser&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
 			out.println("</tr>");
 		}
@@ -71,7 +72,7 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 		while (userIterator.hasNext()) {
 			User user = userIterator.next();
 			if (!user.isSuperUser()) {
-				out.println("<option value=" + user.getUid() + ">" + user.getFullName());
+				out.println("<option value=" + user.getUid() + ">" + Util.escapeHTML(user.getFullName()));
 			}
 		}
 		out.println("</select>");
