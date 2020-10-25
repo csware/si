@@ -51,7 +51,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class ShowFile extends HttpServlet {
 	private final static long serialVersionUID = 1L;
 	private final static String[] plainTextFiles = new String[] { "xml", "htm", "html", "jsp", "txt", "css", "js", "java", "c", "cpp", "h", "project", "classpath", "patch", "diff", "sql", "php", "pl", "rb", "tex", "log", "bib", "cfg", "sml", "lcirc" };
-	private final static String[] inlineFiles = new String[] { "jpg", "jpeg", "png", "gif", "pdf", "svg", "svgz" };
+	private final static String[] inlineFiles = new String[] { "jpg", "jpeg", "png", "gif", "pdf" };
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -102,8 +102,6 @@ public class ShowFile extends HttpServlet {
 					response.setContentType("image/gif");
 				} else if (file.getName().toLowerCase().endsWith(".png")) {
 					response.setContentType("image/png");
-				} else if (file.getName().toLowerCase().endsWith(".svg") || file.getName().toLowerCase().endsWith(".svgz")) {
-					response.setContentType("image/svg+xml");
 				} else {
 					response.setContentType("application/x-download");
 					response.setHeader("Content-Disposition", "attachment; filename=\"" + MimeUtility.encodeWord(file.getName()) + "\"");
