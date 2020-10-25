@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -26,12 +26,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
-import de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -55,8 +52,7 @@ public class ShowMarkHistory extends HttpServlet {
 		}
 
 		request.setAttribute("submission", submission);
-		// HACK
-		request.setAttribute("data", session.createCriteria(PointHistory.class).add(Restrictions.eq("submission", submission)).addOrder(Order.asc("date")).list());
+		request.setAttribute("data", DAOFactory.PointsDAOIf(session).getPointHistoryForSubmission(submission));
 		request.getRequestDispatcher("ShowMarkHistoryView").forward(request, response);
 	}
 }

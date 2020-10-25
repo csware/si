@@ -19,10 +19,13 @@
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
@@ -278,5 +281,11 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		points.setInternalComment("");
 		session.save(submission);
 		return points;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PointHistory> getPointHistoryForSubmission(Submission submission) {
+		return getSession().createCriteria(PointHistory.class).add(Restrictions.eq("submission", submission)).addOrder(Order.asc("date")).list();
 	}
 }
