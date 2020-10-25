@@ -19,11 +19,15 @@
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -119,5 +123,33 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 			return (Submission) getSession().createCriteria(Submission.class, "sub").add(Restrictions.gt("submissionid", lastSubmissionID)).add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.isNull("group")).add(Restrictions.isNull("sub.points")).addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).setMaxResults(1).uniqueResult();
 		}
 		return (Submission) getSession().createCriteria(Submission.class, "sub").add(Restrictions.gt("submissionid", lastSubmissionID)).add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.eq("group", group)).add(Restrictions.isNull("sub.points")).addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).setMaxResults(1).uniqueResult();
+	}
+
+	static private Criterion combineCriterionsWithOR(Criterion criterion1, Criterion criterion2) {
+		if (criterion1 == null) {
+			return criterion2;
+		}
+		return Restrictions.or(criterion1, criterion2);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Submission> getSubmissionsForSearch(Task task, String searchString, boolean publicComment, boolean privateComment, boolean testResults) {
+		if (!(publicComment || privateComment || testResults)) {
+			return Collections.emptyList();
+		}
+
+		Criteria criteria = session.createCriteria(Submission.class).add(Restrictions.eq("task", task));
+		Criterion restrictions = null;
+		if (publicComment) {
+			restrictions = combineCriterionsWithOR(restrictions, Restrictions.like("points.publicComment", "%" + searchString + "%"));
+		}
+		if (privateComment) {
+			restrictions = combineCriterionsWithOR(restrictions, Restrictions.like("points.internalComment", "%" + searchString + "%"));
+		}
+		if (testResults) {
+			restrictions = combineCriterionsWithOR(restrictions, Restrictions.sqlRestriction("submissionid in (select submission_submissionid from testresults where testOutput like ?)", "%" + searchString + "%", Hibernate.STRING));
+		}
+		return criteria.add(restrictions).list();
 	}
 }

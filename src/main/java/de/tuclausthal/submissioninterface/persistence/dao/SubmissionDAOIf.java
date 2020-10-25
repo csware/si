@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -88,4 +88,6 @@ public interface SubmissionDAOIf {
 
 	public Submission getUngradedSubmission(Task task, int lastSubmissionID);
 	public Submission getUngradedSubmission(Task task, int lastSubmissionID, Group group);
+
+	public List<Submission> getSubmissionsForSearch(Task task, String searchString, boolean publicComment, boolean privateComment, boolean testResults);
 }

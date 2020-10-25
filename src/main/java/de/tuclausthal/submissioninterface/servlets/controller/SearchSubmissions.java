@@ -29,9 +29,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -76,7 +74,6 @@ public class SearchSubmissions extends HttpServlet {
 		request.getRequestDispatcher("SearchSubmissionsView").forward(request, response);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
@@ -149,17 +146,7 @@ public class SearchSubmissions extends HttpServlet {
 			}
 		}
 
-		if (arrayContains(request.getParameterValues("search"), "publiccomments")) {
-			foundSubmissions.addAll(session.createCriteria(Submission.class).add(Restrictions.eq("task", task)).add(Restrictions.like("points.publicComment", "%" + request.getParameter("q") + "%")).list());
-		}
-
-		if (arrayContains(request.getParameterValues("search"), "privatecomments")) {
-			foundSubmissions.addAll(session.createCriteria(Submission.class).add(Restrictions.eq("task", task)).add(Restrictions.like("points.internalComment", "%" + request.getParameter("q") + "%")).list());
-		}
-
-		if (arrayContains(request.getParameterValues("search"), "testresults")) {
-			foundSubmissions.addAll(session.createCriteria(Submission.class).add(Restrictions.eq("task", task)).add(Restrictions.sqlRestriction("submissionid in (select submission_submissionid from testresults where testOutput like ?)", "%" + request.getParameter("q") + "%", Hibernate.STRING)).list());
-		}
+		foundSubmissions.addAll(DAOFactory.SubmissionDAOIf(session).getSubmissionsForSearch(task, request.getParameter("q"), arrayContains(request.getParameterValues("search"), "publiccomments"), arrayContains(request.getParameterValues("search"), "privatecomments"), arrayContains(request.getParameterValues("search"), "testresults")));
 
 		request.setAttribute("task", task);
 		request.setAttribute("results", foundSubmissions);
