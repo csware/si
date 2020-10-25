@@ -48,19 +48,14 @@ public class ShowUser extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
 
-		Boolean isAtLeastAdvisorOnce = false;
-
-		List<Lecture> lectures = new ArrayList<>();
+		List<Lecture> possibleLectures = new ArrayList<>();
 		for (Participation participation : RequestAdapter.getUser(request).getLectureParticipant()) {
 			if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
-				lectures.add(participation.getLecture());
-				if (!isAtLeastAdvisorOnce && participation.getRoleType().compareTo(ParticipationRole.ADVISOR) >= 0) {
-					isAtLeastAdvisorOnce = true;
-				}
+				possibleLectures.add(participation.getLecture());
 			}
 		}
 
-		if (lectures.size() == 0) {
+		if (possibleLectures.size() == 0) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
@@ -72,8 +67,24 @@ public class ShowUser extends HttpServlet {
 			return;
 		}
 
+		List<Participation> participations = new ArrayList<>();
+		Boolean isAtLeastAdvisorOnce = false;
+		for (Participation participation : user.getLectureParticipant()) {
+			if (possibleLectures.contains(participation.getLecture())) {
+				if (!isAtLeastAdvisorOnce && participation.getRoleType().compareTo(ParticipationRole.ADVISOR) >= 0) {
+					isAtLeastAdvisorOnce = true;
+				}
+				participations.add(participation);
+			}
+		}
+
+		if (participations.size() == 0) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
 		request.setAttribute("user", user);
-		request.setAttribute("lectures", lectures);
+		request.setAttribute("participations", participations);
 		request.setAttribute("isAtLeastAdvisorOnce", isAtLeastAdvisorOnce);
 		request.getRequestDispatcher("ShowUserView").forward(request, response);
 	}
