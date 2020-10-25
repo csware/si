@@ -39,7 +39,6 @@ import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LogDAO;
 import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
-import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
@@ -62,15 +61,13 @@ public class PerformStudentTest extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
 		Test test = DAOFactory.TestDAOIf(session).getTest(Util.parseInteger(request.getParameter("testid"), 0));
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
-		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
-		if (submission == null || test == null) {
-			request.setAttribute("title", "Abgabe nicht gefunden");
+		if (test == null) {
+			request.setAttribute("title", "Test nicht gefunden");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
-		Task task = submission.getTask();
+		Task task = test.getTask();
 
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
@@ -80,7 +77,15 @@ public class PerformStudentTest extends HttpServlet {
 			return;
 		}
 
-		if ((task.getDeadline().before(Util.correctTimezone(new Date())) && !(task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+		Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
+		if (submission == null) {
+			request.setAttribute("title", "Abgabe nicht gefunden");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
+		if ((task.getDeadline().before(Util.correctTimezone(new Date())) && !(task.isAllowPrematureSubmissionClosing() && submission.isClosed()))) {
 			request.setAttribute("title", "Testen nicht mehr möglich");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
@@ -142,7 +147,7 @@ public class PerformStudentTest extends HttpServlet {
 				}
 
 				sa.setQueuedTest(TestExecutor.executeTask(new TestTask(test, submission)));
-				gotoWaitingView(request, response, "sid=" + submission.getSubmissionid() + "&testid=" + test.getId());
+				gotoWaitingView(request, response, "testid=" + test.getId());
 			} else {
 				request.setAttribute("title", "Ungültige Anfrage");
 				request.getRequestDispatcher("MessageView").forward(request, response);
@@ -172,7 +177,7 @@ public class PerformStudentTest extends HttpServlet {
 
 				request.getRequestDispatcher("PerformStudentTestResultView").forward(request, response);
 			} else {
-				gotoWaitingView(request, response, "sid=" + submission.getSubmissionid() + "&testid=" + test.getId());
+				gotoWaitingView(request, response, "testid=" + test.getId());
 			}
 		}
 	}
