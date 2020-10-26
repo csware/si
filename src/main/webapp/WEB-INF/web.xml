@@ -70,7 +70,7 @@
     <listener-class>de.tuclausthal.submissioninterface.testframework.executor.impl.LocalExecutorStartUp</listener-class>
   </listener>
   <welcome-file-list>
-    <welcome-file>Redirect</welcome-file>
+    <welcome-file>/index.jsp</welcome-file>
   </welcome-file-list>
   <filter>
     <filter-name>AuthenticationFilter</filter-name>
@@ -112,10 +112,6 @@
     <filter-name>AuthenticationFilter</filter-name>
     <url-pattern>/servlets/*</url-pattern>
   </filter-mapping>
-  <servlet>
-    <servlet-name>Redirect</servlet-name>
-    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.Redirect</servlet-class>
-  </servlet>
   <servlet>
     <servlet-name>PerformStudentTest</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.PerformStudentTest</servlet-class>
@@ -515,10 +511,6 @@
   <servlet-mapping>
     <servlet-name>TestManagerAddTestFormView</servlet-name>
     <url-pattern>/servlets/TestManagerAddTestFormView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Redirect</servlet-name>
-    <url-pattern>/Redirect</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>PerformStudentTestRunningView</servlet-name>

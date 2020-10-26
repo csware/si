@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.template.Template;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -44,14 +45,14 @@ public class TUC2013Template extends Template {
 		if (user != null) {
 			out.println("Angemeldet als: " + Util.escapeHTML(user.getUsername()));
 			if (user.isSuperUser()) {
-				out.println(" - <a href=\"" + servletResponse.encodeURL("AdminMenue") + "\">Admin-Menü</a>");
+				out.println(" - <a href=\"" + servletResponse.encodeURL(prefix + "/" + Configuration.getInstance().getServletsPath() + "/AdminMenue") + "\">Admin-Menü</a>");
 			}
 			if (requestAdapter.isPrivacyMode()) {
 				out.println(" - Privacy-Mode");
 			} else if (requestAdapter.isIntranet()) {
-				out.println(" - <a href=\"" + servletResponse.encodeURL("SwitchLogin?uid=" + user.getUid()) + "\">Tutor Login</a>");
+				out.println(" - <a href=\"" + servletResponse.encodeURL(prefix + "/" + Configuration.getInstance().getServletsPath() + "/SwitchLogin?uid=" + user.getUid()) + "\">Tutor Login</a>");
 			}
-			out.println(" - <a href=\"" + servletResponse.encodeURL("Logout") + "\">LogOut</a>");
+			out.println(" - <a href=\"" + servletResponse.encodeURL(prefix + "/" + Configuration.getInstance().getServletsPath() + "/Logout") + "\">LogOut</a>");
 		} else {
 			out.println("nicht eingeloggt");
 		}
