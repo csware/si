@@ -193,7 +193,7 @@ public class TaskManagerView extends HttpServlet {
 				out.println("</tr>");
 			}
 		}
-		if (task.getTaskid() != 0) {
+		if (task.getTaskid() != 0 && !task.isADynamicTask() && !task.isMCTask()) {
 			out.println("<tr>");
 			out.println("<th>TutorInnen dürfen Dateien für Studierende hochladen:</th>");
 			out.println("<td><input type=checkbox name=tutorsCanUploadFiles" + (task.isMCTask() ? " disabled" : "") + (task.isTutorsCanUploadFiles() ? " checked" : "") + "></td>");
