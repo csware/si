@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -62,13 +62,4 @@ public interface LectureDAOIf {
 	 * @param lecture the lecture to delete
 	 */
 	public void deleteLecture(Lecture lecture);
-
-	/**
-	 * Calculates the average given points of a lecture
-	 * @param lecture
-	 * @return the average points number
-	 */
-	public int getSumOfPoints(Lecture lecture);
-
-	public int getStudentsCount(Lecture lecture);
 }

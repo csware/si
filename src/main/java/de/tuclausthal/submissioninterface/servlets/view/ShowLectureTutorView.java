@@ -123,11 +123,12 @@ public class ShowLectureTutorView extends HttpServlet {
 			template.printTemplateFooter();
 			return;
 		}
+		int[] studentsPoints = new int[2];
 		out.println("<p>");
 		out.println("<h2>Teilnehmende</h2>");
 		if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
 			out.println("<h3>Ohne Gruppe</h3>");
-			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, showMatNo, requestAdapter);
+			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, showMatNo, requestAdapter, studentsPoints);
 			out.println("<p class=mid>");
 			if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 				out.println("<a href=\"" + response.encodeURL("AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a>");
@@ -174,15 +175,15 @@ public class ShowLectureTutorView extends HttpServlet {
 				}
 				out.println("</table><p>");
 			}
-			listMembers(participationDAO.getParticipationsOfGroup(group).iterator(), response, isAdvisor, showMatNo, requestAdapter);
+			listMembers(participationDAO.getParticipationsOfGroup(group).iterator(), response, isAdvisor, showMatNo, requestAdapter, studentsPoints);
 			out.println("</div>");
 		}
-		out.println("<h3>Gesamtdurchschnitt: " + Util.showPoints(((Double) (DAOFactory.LectureDAOIf(session).getSumOfPoints(lecture) / (double) DAOFactory.LectureDAOIf(session).getStudentsCount(lecture))).intValue()) + "</h3>");
+		out.println("<h3>Gesamtdurchschnitt: " + Util.showPoints(((Double) (studentsPoints[1] / (double) studentsPoints[0])).intValue()) + "</h3>");
 		out.println("<p><div class=mid><a href=\"" + response.encodeURL("ShowLecture?lecture=" + lecture.getId() + "&amp;show=list") + "\">Gesamtliste</a> - <a href=\"" + response.encodeURL("ShowLecture?lecture=" + lecture.getId() + "&amp;show=csv") + "\">CSV-Download</a></div>");
 		template.printTemplateFooter();
 	}
 
-	public void listMembers(Iterator<Participation> participationIterator, HttpServletResponse response, boolean isAdvisor, boolean showMatNo, RequestAdapter requestAdapter) throws IOException {
+	public void listMembers(Iterator<Participation> participationIterator, HttpServletResponse response, boolean isAdvisor, boolean showMatNo, RequestAdapter requestAdapter, int[] studentsPoints) throws IOException {
 		if (participationIterator.hasNext()) {
 			PrintWriter out = response.getWriter();
 			int sumOfPoints = 0;
@@ -251,6 +252,8 @@ public class ShowLectureTutorView extends HttpServlet {
 				out.println("<td class=points>" + usersCount + "</td>");
 				out.println("</tr>");
 			}
+			studentsPoints[0] += usersCount;
+			studentsPoints[1] += sumOfPoints;
 			out.println("</table><p>");
 		}
 	}
