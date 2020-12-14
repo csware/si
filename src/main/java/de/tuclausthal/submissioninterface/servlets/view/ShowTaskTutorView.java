@@ -290,10 +290,12 @@ public class ShowTaskTutorView extends HttpServlet {
 							}
 							for (SimilarityTest similarityTest : task.getSimularityTests()) {
 								String users = "";
+								int maxSimilarity = 0;
 								for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(similarityTest, submission)) {
 									users += Util.escapeHTML(similarity.getSubmissionTwo().getSubmitterNames()) + "\n";
+									maxSimilarity = similarity.getPercentage();
 								}
-								out.println("<td align=right><span title=\"" + users + "\">" + DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(similarityTest, submission) + "</span></td>");
+								out.println("<td align=right><span title=\"" + users + "\">" + maxSimilarity + "</span></td>");
 							}
 						}
 						if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
