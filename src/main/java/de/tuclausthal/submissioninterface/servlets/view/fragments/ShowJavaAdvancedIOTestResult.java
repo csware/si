@@ -69,9 +69,9 @@ public class ShowJavaAdvancedIOTestResult {
 					if (foundTest >= 0) {
 						out.println("<tr>");
 						out.println("<td>" + Util.escapeHTML(jtt.getTestSteps().get(foundTest).getTitle()) + "</td>");
-						out.println("<td><pre>" + Util.escapeHTML(stepObject.getString("expected")) + "</pre></td>");
-						out.println("<td><pre>" + Util.escapeHTML(stepObject.getString("got")) + "</pre></td>");
-						out.println("<td>" + Util.boolToHTML(stepObject.getBoolean("ok")) + "</td>");
+						out.println("<td><pre id=\"exp" + jtt.getId() + "-" + i + "\">" + Util.escapeHTML(stepObject.getString("expected")) + "</pre></td>");
+						out.println("<td><pre id=\"got" + jtt.getId() + "-" + i + "\">" + Util.escapeHTML(stepObject.getString("got")) + "</pre><pre id=\"diff" + jtt.getId() + "-" + i + "\" style=\"display:none;\"></pre></td>");
+						out.println("<td>" + Util.boolToHTML(stepObject.getBoolean("ok")) + (stepObject.getBoolean("ok") ? "" : " (<a href=\"javascript:dodiff('" + jtt.getId() + "-" + i + "')\">Diff</a>)") + "</td>");
 						out.println("</tr>");
 					}
 				}

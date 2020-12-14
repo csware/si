@@ -47,7 +47,7 @@ public class PerformTestResultView extends HttpServlet {
 		Test test = (Test) request.getAttribute("test");
 
 		Template template = TemplateFactory.getTemplate(request, response);
-
+		template.addDiffJs();
 		template.printTemplateHeader("Testergebnis", test.getTask());
 
 		PrintWriter out = response.getWriter();

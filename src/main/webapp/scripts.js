@@ -118,3 +118,37 @@ function checkInternalComment() {
         duplicateTextbox.required = false;
     }
 }
+
+function dodiff(id) {
+	const one = document.getElementById('exp' + id).textContent;
+	const other = document.getElementById('got' + id).textContent;
+
+	const diff = Diff.diffChars(one, other);
+	const display = document.getElementById('diff' + id);
+	const fragment = document.createDocumentFragment();
+
+	while (display.firstChild) { display.removeChild(display.firstChild); }
+	for (var i = 0; i < diff.length; ++i) {
+		if (diff[i].added && diff[i + 1] && diff[i + 1].removed) {
+			var swap = diff[i];
+			diff[i] = diff[i + 1];
+			diff[i + 1] = swap;
+		}
+
+		var node;
+		if (diff[i].removed) {
+			node = document.createElement('del');
+			node.appendChild(document.createTextNode(diff[i].value));
+		} else if (diff[i].added) {
+			node = document.createElement('ins');
+			node.appendChild(document.createTextNode(diff[i].value));
+		} else {
+			node = document.createTextNode(diff[i].value);
+		}
+		fragment.appendChild(node);
+	}
+
+	display.appendChild(fragment);
+	$('#got' + id).toggle();
+	$('#diff' + id).toggle();
+}

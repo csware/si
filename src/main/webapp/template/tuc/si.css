@@ -60,6 +60,17 @@ form { padding-bottom: 0px; margin-bottom: 0px; }
 
 .mid,.bmid,.cdrucken { text-align: center; }
 
+del {
+	text-decoration: none;
+	color: #b30000;
+	background: #fadad7;
+}
+ins {
+	background: #eaf2c2;
+	color: #406619;
+	text-decoration: none;
+}
+
 .ui-resizable-helper { border: 2px dotted #008C4F; }
 .ui-resizable-se { bottom: 0px; }
 
