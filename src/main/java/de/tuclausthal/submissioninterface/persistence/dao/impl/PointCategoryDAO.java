@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,12 +18,15 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.PointCategoryDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
+import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 
 /**
@@ -57,10 +60,16 @@ public class PointCategoryDAO extends AbstractDAO implements PointCategoryDAOIf 
 
 	@Override
 	public int countPoints(Task task) {
-		Long ret = (Long) session.createCriteria(PointCategory.class).add(Restrictions.eq("task", task)).add(Restrictions.eq("optional", false)).setProjection(Projections.sum("points")).uniqueResult();
-		if (ret == null) {
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Integer> criteria = builder.createQuery(Integer.class);
+		Root<PointCategory> root = criteria.from(PointCategory.class);
+		criteria.select(builder.sum(root.get(PointCategory_.points)));
+		criteria.where(builder.and(builder.equal(root.get(PointCategory_.task), task), builder.equal(root.get(PointCategory_.optional), false)));
+		Integer result = session.createQuery(criteria).uniqueResult();
+		if (result == null) {
 			return 0;
 		}
-		return ret.intValue();
+		return result.intValue();
 	}
 }

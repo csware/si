@@ -45,7 +45,7 @@ public class Participation implements Serializable {
 	private User user;
 	private Group group;
 	private Lecture lecture;
-	private String role = "normal";
+	private String role = "NORMAL";
 	private Set<Submission> submissions;
 
 	/**

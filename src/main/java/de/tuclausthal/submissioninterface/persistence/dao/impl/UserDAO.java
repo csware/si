@@ -20,16 +20,21 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.LockMode;
+import javax.persistence.LockModeType;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
 import org.hibernate.type.StandardBasicTypes;
 
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Student_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.persistence.datamodel.User_;
 
 /**
  * Data Access Object implementation for the UserDAOIf
@@ -46,16 +51,30 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 		return getSession().get(User.class, uid);
 	}
 
+	private User getUserByUsername(String username, boolean locked) {
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<User> criteria = builder.createQuery(User.class);
+		Root<User> root = criteria.from(User.class);
+		criteria.select(root);
+		criteria.where(builder.equal(root.get(User_.username), username));
+		Query<User> query = session.createQuery(criteria);
+		if (locked) {
+			query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
+		}
+		return query.uniqueResult();
+	}
+
 	@Override
 	public User getUserByUsername(String username) {
-		return (User) getSession().createCriteria(User.class).add(Restrictions.eq("username", username)).setMaxResults(1).uniqueResult();
+		return getUserByUsername(username, false);
 	}
 
 	@Override
 	public User createUser(String username, String email, String firstName, String lastName) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("username", username)).setLockMode(LockMode.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
+		User user = getUserByUsername(username, true);
 		if (user == null) {
 			user = new User();
 			user.setUsername(username);
@@ -73,7 +92,7 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 	public User createUser(String username, String email, String firstName, String lastName, int matrikelno) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		User user = (User) session.createCriteria(User.class).add(Restrictions.eq("username", username)).setLockMode(LockMode.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
+		User user = getUserByUsername(username, true);
 		if (user == null) {
 			Student student = new Student();
 			student.setUsername(username);
@@ -92,20 +111,31 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 	@Override
 	public void makeUserStudent(int uid, int matrikelno) {
 		Transaction tx = getSession().beginTransaction();
-		getSession().createSQLQuery("update users set matrikelno = :matrikelno where uid = :uid").setParameter("matrikelno", matrikelno, StandardBasicTypes.INTEGER).setParameter("uid", uid, StandardBasicTypes.INTEGER).executeUpdate();
+		getSession().createSQLQuery("update users set " + Student_.MATRIKELNO + " = :matrikelno where " + Student_.UID + " = :uid").setParameter("matrikelno", matrikelno, StandardBasicTypes.INTEGER).setParameter("uid", uid, StandardBasicTypes.INTEGER).executeUpdate();
 		tx.commit();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUsers() {
-		return getSession().createCriteria(User.class).addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<User> criteria = builder.createQuery(User.class);
+		Root<User> root = criteria.from(User.class);
+		criteria.select(root);
+		criteria.orderBy(builder.asc(root.get(User_.lastName)), builder.asc(root.get(User_.firstName)));
+		return session.createQuery(criteria).list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getSuperUsers() {
-		return getSession().createCriteria(User.class).add(Restrictions.eq("superUser", true)).addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<User> criteria = builder.createQuery(User.class);
+		Root<User> root = criteria.from(User.class);
+		criteria.select(root);
+		criteria.where(builder.equal(root.get(User_.superUser), true));
+		criteria.orderBy(builder.asc(root.get(User_.lastName)), builder.asc(root.get(User_.firstName)));
+		return session.createQuery(criteria).list();
 	}
 
 	@Override

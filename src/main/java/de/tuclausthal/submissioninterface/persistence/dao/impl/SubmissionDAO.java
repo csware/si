@@ -19,23 +19,30 @@
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.SetJoin;
+import javax.persistence.criteria.Subquery;
+
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.type.StandardBasicTypes;
 
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Participation_;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -60,7 +67,13 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 
 	@Override
 	public Submission getSubmission(Task task, User user) {
-		return (Submission) getSession().createCriteria(Submission.class).add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.eq("user", user)).uniqueResult();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Submission> criteria = builder.createQuery(Submission.class);
+		Root<Submission> root = criteria.from(Submission.class);
+		criteria.select(root);
+		criteria.where(builder.and(builder.equal(root.get(Submission_.task), task), builder.equal(root.join(Submission_.submitters).get(Participation_.user), user)));
+		return session.createQuery(criteria).uniqueResult();
 	}
 
 	@Override
@@ -84,10 +97,16 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 		session.saveOrUpdate(submission);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Submission> getSubmissionsForTaskOrdered(Task task) {
-		return getSession().createCriteria(Submission.class, "sub").add(Restrictions.eq("task", task)).setFetchMode("submitters", FetchMode.JOIN).createCriteria("submitters").setFetchMode("group", FetchMode.JOIN).setFetchMode("user", FetchMode.JOIN).addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Submission> criteria = builder.createQuery(Submission.class);
+		Root<Submission> root = criteria.from(Submission.class);
+		criteria.select(root);
+		criteria.where(builder.equal(root.get(Submission_.task), task));
+		criteria.orderBy(builder.asc(root.join(Submission_.submitters).get(Participation_.group)), builder.asc(root.get(Submission_.submissionid)));
+		return session.createQuery(criteria).list();
 	}
 
 	@Override
@@ -103,53 +122,84 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Submission> getSubmissionsForTaskOfGroupOrdered(Task task, Group group) {
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Submission> criteria = builder.createQuery(Submission.class);
+		Root<Submission> root = criteria.from(Submission.class);
+		criteria.select(root);
+		Predicate where = builder.equal(root.get(Submission_.task), task);
+		SetJoin<Submission, Participation> submittersJoin = root.join(Submission_.submitters);
 		if (group == null) {
-			return getSession().createCriteria(Submission.class, "sub").add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.isNull("group")).addOrder(Order.asc("sub.submissionid")).list();	
+			where = builder.and(where, builder.isNull(submittersJoin.get(Participation_.group)));
+		} else {
+			where = builder.and(where, builder.equal(submittersJoin.get(Participation_.group), group));
 		}
-		return getSession().createCriteria(Submission.class, "sub").add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.eq("group", group)).addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).list();
+		criteria.orderBy(builder.asc(submittersJoin.get(Participation_.group)), builder.asc(root.get(Submission_.submissionid)));
+		criteria.where(where);
+		return session.createQuery(criteria).list();
 	}
 
 	@Override
 	public Submission getUngradedSubmission(Task task, int lastSubmissionID) {
-		return (Submission) getSession().createCriteria(Submission.class, "sub").add(Restrictions.gt("submissionid", lastSubmissionID)).add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.isNull("sub.points")).addOrder(Order.asc("sub.submissionid")).setMaxResults(1).uniqueResult();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Submission> criteria = builder.createQuery(Submission.class);
+		Root<Submission> root = criteria.from(Submission.class);
+		criteria.select(root);
+		criteria.where(builder.and(builder.gt(root.get(Submission_.submissionid), lastSubmissionID), builder.equal(root.get(Submission_.task), task), builder.isNull(root.get(Submission_.points))));
+		criteria.orderBy(builder.asc(root.get(Submission_.submissionid)));
+		return session.createQuery(criteria).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public Submission getUngradedSubmission(Task task, int lastSubmissionID, Group group) {
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Submission> criteria = builder.createQuery(Submission.class);
+		Root<Submission> root = criteria.from(Submission.class);
+		criteria.select(root);
+		Predicate where = builder.and(builder.gt(root.get(Submission_.submissionid), lastSubmissionID), builder.equal(root.get(Submission_.task), task), builder.isNull(root.get(Submission_.points)));
+		SetJoin<Submission, Participation> submittersJoin = root.join(Submission_.submitters);
 		if (group == null) {
-			return (Submission) getSession().createCriteria(Submission.class, "sub").add(Restrictions.gt("submissionid", lastSubmissionID)).add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.isNull("group")).add(Restrictions.isNull("sub.points")).addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).setMaxResults(1).uniqueResult();
+			where = builder.and(where, builder.isNull(submittersJoin.get(Participation_.group)));
+		} else {
+			where = builder.and(where, builder.equal(submittersJoin.get(Participation_.group), group));
 		}
-		return (Submission) getSession().createCriteria(Submission.class, "sub").add(Restrictions.gt("submissionid", lastSubmissionID)).add(Restrictions.eq("task", task)).createCriteria("submitters").add(Restrictions.eq("group", group)).add(Restrictions.isNull("sub.points")).addOrder(Order.asc("group")).addOrder(Order.asc("sub.submissionid")).setMaxResults(1).uniqueResult();
+		criteria.where(where);
+		criteria.orderBy(builder.asc(submittersJoin.get(Participation_.group)), builder.asc(root.get(Submission_.submissionid)));
+		return session.createQuery(criteria).setMaxResults(1).uniqueResult();
 	}
 
-	static private Criterion combineCriterionsWithOR(Criterion criterion1, Criterion criterion2) {
-		if (criterion1 == null) {
-			return criterion2;
-		}
-		return Restrictions.or(criterion1, criterion2);
-	}
-
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Submission> getSubmissionsForSearch(Task task, String searchString, boolean publicComment, boolean privateComment, boolean testResults) {
 		if (!(publicComment || privateComment || testResults)) {
 			return Collections.emptyList();
 		}
 
-		Criteria criteria = session.createCriteria(Submission.class).add(Restrictions.eq("task", task));
-		Criterion restrictions = null;
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Submission> criteria = builder.createQuery(Submission.class);
+		Root<Submission> root = criteria.from(Submission.class);
+		criteria.select(root);
+		Predicate where = builder.equal(root.get(Submission_.task), task);
+
+		ArrayList<Predicate> ors = new ArrayList<>();
 		if (publicComment) {
-			restrictions = combineCriterionsWithOR(restrictions, Restrictions.like("points.publicComment", "%" + searchString + "%"));
+			ors.add(builder.like(root.get(Submission_.points).get(Points_.publicComment), "%" + searchString + "%"));
 		}
 		if (privateComment) {
-			restrictions = combineCriterionsWithOR(restrictions, Restrictions.like("points.internalComment", "%" + searchString + "%"));
+			ors.add(builder.like(root.get(Submission_.points).get(Points_.internalComment), "%" + searchString + "%"));
 		}
 		if (testResults) {
-			restrictions = combineCriterionsWithOR(restrictions, Restrictions.sqlRestriction("submissionid in (select submission_submissionid from testresults where testOutput like ?)", "%" + searchString + "%", StandardBasicTypes.STRING));
+			Subquery<Submission> subQuery = criteria.subquery(Submission.class);
+			Root<TestResult> testResultsRoot = subQuery.from(TestResult.class);
+			subQuery.select(testResultsRoot.get(TestResult_.submission));
+			subQuery.where(builder.like(testResultsRoot.get(TestResult_.testOutput), "%" + searchString + "%"));
+			ors.add(root.in(subQuery));
 		}
-		return criteria.add(restrictions).list();
+		criteria.where(builder.and(where, builder.or(ors.toArray(new Predicate[1]))));
+		return session.createQuery(criteria).list();
 	}
 }

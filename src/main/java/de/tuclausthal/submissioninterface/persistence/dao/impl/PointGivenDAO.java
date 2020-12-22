@@ -20,13 +20,16 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
+import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 
 /**
@@ -46,10 +49,16 @@ public class PointGivenDAO extends AbstractDAO implements PointGivenDAOIf {
 		return pointGiven;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<PointGiven> getPointsGivenOfSubmission(Submission submission) {
-		return getSession().createCriteria(PointGiven.class).add(Restrictions.eq("submission", submission)).addOrder(Order.asc("category")).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<PointGiven> criteria = builder.createQuery(PointGiven.class);
+		Root<PointGiven> root = criteria.from(PointGiven.class);
+		criteria.select(root);
+		criteria.where(builder.equal(root.get(PointGiven_.submission), submission));
+		criteria.orderBy(builder.asc(root.get(PointGiven_.category)));
+		return session.createQuery(criteria).list();
 	}
 
 	@Override

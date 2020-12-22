@@ -20,19 +20,30 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.LockMode;
+import javax.persistence.LockModeType;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
+
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
 
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Participation_;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.persistence.datamodel.User_;
 
 /**
  * Data Access Object implementation for the ParticipationDAOIf
@@ -68,35 +79,66 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 		session.delete(participation);
 	}
 
+	private Participation getParticipation(User user, Lecture lecture, boolean locked) {
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Participation> criteria = builder.createQuery(Participation.class);
+		Root<Participation> root = criteria.from(Participation.class);
+		criteria.select(root);
+		criteria.where(builder.and(builder.equal(root.get(Participation_.user), user), builder.equal(root.get(Participation_.lecture), lecture)));
+		criteria.orderBy(builder.asc(root.get(Participation_.id)));
+		Query<Participation> query = session.createQuery(criteria);
+		if (locked) {
+			query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
+		}
+		return query.uniqueResult();
+	}
+
 	@Override
 	public Participation getParticipation(User user, Lecture lecture) {
-		return (Participation) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).uniqueResult();
+		return getParticipation(user, lecture, false);
 	}
 
 	@Override
 	public Participation getParticipationLocked(User user, Lecture lecture) {
-		return (Participation) getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).setLockMode(LockMode.PESSIMISTIC_WRITE).uniqueResult();
+		return getParticipation(user, lecture, true);
 	}
 
 	@Override
 	public void deleteParticipation(User user, Lecture lecture) {
 		Session session = getSession();
-		Participation participation = (Participation) session.createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("user", user)).setLockMode(LockMode.PESSIMISTIC_WRITE).uniqueResult();
+		Participation participation = getParticipationLocked(user, lecture);
 		if (participation != null) {
 			session.delete(participation);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Participation> getParticipationsWithoutGroup(Lecture lecture) {
-		return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.isNull("group")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Participation> criteria = builder.createQuery(Participation.class);
+		Root<Participation> root = criteria.from(Participation.class);
+		criteria.select(root);
+		@SuppressWarnings("unchecked")
+		Join<Participation, User> userJoin = (Join<Participation, User>) root.fetch(Participation_.user);
+		criteria.where(builder.and(builder.isNull(root.get(Participation_.group)), builder.equal(root.get(Participation_.lecture), lecture)));
+		criteria.orderBy(builder.asc(userJoin.get(User_.lastName)), builder.asc(userJoin.get(User_.firstName)));
+		return session.createQuery(criteria).list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Participation> getParticipationsOfGroup(Group group) {
-		return getSession().createCriteria(Participation.class).add(Restrictions.eq("group", group)).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Participation> criteria = builder.createQuery(Participation.class);
+		Root<Participation> root = criteria.from(Participation.class);
+		criteria.select(root);
+		@SuppressWarnings("unchecked")
+		Join<Participation, User> userJoin = (Join<Participation, User>) root.fetch(Participation_.user);
+		criteria.where(builder.equal(root.get(Participation_.group), group));
+		criteria.orderBy(builder.asc(userJoin.get(User_.lastName)), builder.asc(userJoin.get(User_.firstName)));
+		return session.createQuery(criteria).list();
 	}
 
 	@Override
@@ -115,29 +157,56 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 		session.save(participation);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Participation> getParticipationsWithNoSubmissionToTaskOrdered(Task task) {
-		return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", task.getTaskGroup().getLecture())).add(Restrictions.sqlRestriction("{alias}.id not in (SELECT submitters_id FROM submissions, submissions_participations where submissions.submissionid=submissions_participations.submissions_submissionid and taskid=" + task.getTaskid() + ")")).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Participation> criteria = builder.createQuery(Participation.class);
+		Root<Participation> root = criteria.from(Participation.class);
+		criteria.select(root);
+		@SuppressWarnings("unchecked")
+		Join<Participation, User> userJoin = (Join<Participation, User>) root.fetch(Participation_.user);
+
+		Subquery<Participation> subQuery = criteria.subquery(Participation.class);
+		Root<Submission> lecturesTakingPartIn = subQuery.from(Submission.class);
+		subQuery.select(lecturesTakingPartIn.join(Submission_.submitters));
+		subQuery.where(builder.equal(lecturesTakingPartIn.get(Submission_.task), task));
+
+		criteria.where(builder.and(builder.equal(root.get(Participation_.lecture), task.getTaskGroup().getLecture()), builder.not(root.get(Participation_.id).in(subQuery))));
+		criteria.orderBy(builder.asc(userJoin.get(User_.lastName)), builder.asc(userJoin.get(User_.firstName)));
+		return session.createQuery(criteria).list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Participation> getMarkersAvailableParticipations(Group group) {
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Participation> criteria = builder.createQuery(Participation.class);
+		Root<Participation> root = criteria.from(Participation.class);
+		criteria.select(root);
+		@SuppressWarnings("unchecked")
+		Join<Participation, User> userJoin = (Join<Participation, User>) root.fetch(Participation_.user);
+		Predicate where = builder.and(builder.equal(root.get(Participation_.lecture), group.getLecture()), root.get(Participation_.role).in(ParticipationRole.TUTOR.toString(), ParticipationRole.ADVISOR.toString()));
 		if (group.getTutors().size() > 0) {
-			Integer[] ids = new Integer[group.getTutors().size()];
-			int i = 0;
-			for (Participation participation : group.getTutors()) {
-				ids[i++] = participation.getId();
-			}
-			return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.or(Restrictions.eq("role", ParticipationRole.TUTOR.toString()), Restrictions.eq("role", ParticipationRole.ADVISOR.toString()))).add(Restrictions.not(Restrictions.in("id", ids))).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+			where = builder.and(where, builder.not(root.in(group.getTutors())));
 		}
-		return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", group.getLecture())).add(Restrictions.or(Restrictions.eq("role", ParticipationRole.TUTOR.toString()), Restrictions.eq("role", ParticipationRole.ADVISOR.toString()))).createCriteria("user").addOrder(Order.asc("lastName")).addOrder(Order.asc("firstName")).list();
+		criteria.where(where);
+		criteria.orderBy(builder.asc(userJoin.get(User_.lastName)), builder.asc(userJoin.get(User_.firstName)));
+		return session.createQuery(criteria).list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Participation> getLectureParticipations(Lecture lecture) {
-		return getSession().createCriteria(Participation.class).add(Restrictions.eq("lecture", lecture)).createAlias("user", "user").addOrder(Order.asc("user.lastName")).addOrder(Order.asc("user.firstName")).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Participation> criteria = builder.createQuery(Participation.class);
+		Root<Participation> root = criteria.from(Participation.class);
+		criteria.select(root);
+		@SuppressWarnings("unchecked")
+		Join<Participation, User> userJoin = (Join<Participation, User>) root.fetch(Participation_.user);
+		root.fetch(Participation_.group, JoinType.LEFT);
+		criteria.where(builder.equal(root.get(Participation_.lecture), lecture));
+		criteria.orderBy(builder.asc(userJoin.get(User_.lastName)), builder.asc(userJoin.get(User_.firstName)));
+		return session.createQuery(criteria).list();
 	}
 }

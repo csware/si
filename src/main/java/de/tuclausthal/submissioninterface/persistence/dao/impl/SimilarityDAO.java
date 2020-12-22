@@ -18,19 +18,22 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.query.Query;
-import org.hibernate.type.StandardBasicTypes;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
+
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.SimilarityDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 
 public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
@@ -39,16 +42,19 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 		super(session);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void addSimilarityResult(SimilarityTest similarityTest, Submission submissionOne, Submission submissionTwo, int percentage) {
-		// TODO: check in plaggie that only submissiondirectories are considered
 		if (submissionOne != null && submissionTwo != null) {
 			Session session = getSession();
 			Transaction tx = session.beginTransaction();
-			for (Similarity similarity : (List<Similarity>) session.createCriteria(Similarity.class).add(Restrictions.eq("similarityTest", similarityTest)).add(Restrictions.or(Restrictions.and(Restrictions.eq("submissionOne", submissionOne), Restrictions.eq("submissionTwo", submissionTwo)), Restrictions.and(Restrictions.eq("submissionOne", submissionTwo), Restrictions.eq("submissionTwo", submissionOne)))).list()) {
-				session.delete(similarity);
-			}
+			session.buildLockRequest(LockOptions.UPGRADE).lock(similarityTest);
+
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaDelete<Similarity> criteria = builder.createCriteriaDelete(Similarity.class);
+			Root<Similarity> root = criteria.from(Similarity.class);
+			criteria.where(builder.and(builder.equal(root.get(Similarity_.similarityTest), similarityTest), builder.or(builder.and(builder.equal(root.get(Similarity_.submissionOne), submissionOne), builder.equal(root.get(Similarity_.submissionTwo), submissionTwo)), builder.and(builder.equal(root.get(Similarity_.submissionOne), submissionTwo), builder.equal(root.get(Similarity_.submissionTwo), submissionOne)))));
+			session.createQuery(criteria).executeUpdate();
+
 			Similarity simularity;
 			simularity = new Similarity(similarityTest, submissionOne, submissionTwo, percentage);
 			session.save(simularity);
@@ -59,31 +65,31 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 	}
 
 	@Override
-	public int getMaxSimilarity(SimilarityTest similarityTest, Submission submission) {
-		Session session = getSession();
-		Query<Integer> query = session.createQuery("select max(similarity.percentage) from Similarity similarity inner join similarity.similarityTest as similaritytest where similarity.submissionOne=:SUBMISSION and similaritytest.similarityTestId=:SIMID group by similarity.submissionOne", Integer.class);
-		query.setParameter("SIMID", similarityTest.getSimilarityTestId(), StandardBasicTypes.INTEGER);
-		query.setParameter("SUBMISSION", submission.getSubmissionid(), StandardBasicTypes.INTEGER);
-		Integer result = query.uniqueResult();
-		if (result == null) {
-			return 0;
-		}
-		return result;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
 	public List<Similarity> getUsersWithMaxSimilarity(SimilarityTest similarityTest, Submission submission) {
-		int maxSimilarity = getMaxSimilarity(similarityTest, submission);
-		if (maxSimilarity == 0) {
-			return new ArrayList<>();
-		}
-		return getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).add(Restrictions.eq("percentage", maxSimilarity)).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Similarity> criteria = builder.createQuery(Similarity.class);
+		Root<Similarity> root = criteria.from(Similarity.class);
+		criteria.select(root);
+
+		Subquery<Integer> subQuery = criteria.subquery(Integer.class);
+		Root<Similarity> groupMembersCount = subQuery.from(Similarity.class);
+		subQuery.select(builder.max(groupMembersCount.get(Similarity_.percentage)));
+		subQuery.where(builder.and(builder.equal(groupMembersCount.get(Similarity_.similarityTest), similarityTest), builder.equal(groupMembersCount.get(Similarity_.submissionOne), submission)));
+
+		criteria.where(builder.and(builder.equal(root.get(Similarity_.submissionOne), submission), builder.equal(root.get(Similarity_.similarityTest), similarityTest), builder.equal(root.get(Similarity_.percentage), subQuery)));
+		return session.createQuery(criteria).list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Similarity> getUsersWithSimilarity(SimilarityTest similarityTest, Submission submission) {
-		return getSession().createCriteria(Similarity.class).add(Restrictions.eq("submissionOne", submission)).add(Restrictions.eq("similarityTest", similarityTest)).addOrder(Order.desc("percentage")).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Similarity> criteria = builder.createQuery(Similarity.class);
+		Root<Similarity> root = criteria.from(Similarity.class);
+		criteria.select(root);
+		criteria.where(builder.and(builder.equal(root.get(Similarity_.submissionOne), submission), builder.equal(root.get(Similarity_.similarityTest), similarityTest)));
+		criteria.orderBy(builder.desc(root.get(Similarity_.percentage)));
+		return session.createQuery(criteria).list();
 	}
 }

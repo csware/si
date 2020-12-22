@@ -7,7 +7,7 @@ import org.hibernate.Session;
  *
  */
 public class AbstractDAO {
-	Session session;
+	private Session session;
 
 	public AbstractDAO(Session session) {
 		this.session = session;

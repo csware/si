@@ -39,14 +39,6 @@ public interface SimilarityDAOIf {
 	public void addSimilarityResult(SimilarityTest similarityTest, Submission submissionOne, Submission submissionTwo, int percentage);
 
 	/**
-	 * Returns the maximum similarity in per cent of a submission to any other submissions
-	 * @param similarityTest
-	 * @param submission
-	 * @return maximum similarity in per cent to any other submissions
-	 */
-	public int getMaxSimilarity(SimilarityTest similarityTest, Submission submission);
-
-	/**
 	 * Returns the similarities of a given submission to other submissions
 	 * @param similarityTest
 	 * @param submission

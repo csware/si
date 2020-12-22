@@ -18,16 +18,20 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import org.hibernate.LockMode;
+import javax.persistence.LockModeType;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestCount;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TestCount_;
 
 /**
  * Data Access Object implementation for the TestCountDAOIf
@@ -42,8 +46,13 @@ public class TestCountDAO extends AbstractDAO implements TestCountDAOIf {
 	public boolean canSeeResultAndIncrementCounter(Test test, Submission submission) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
 		for (Participation participation : submission.getSubmitters()) {
-			TestCount testCount = (TestCount) session.createCriteria(TestCount.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("user", participation.getUser())).setLockMode(LockMode.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
+			CriteriaQuery<TestCount> criteria = builder.createQuery(TestCount.class);
+			Root<TestCount> root = criteria.from(TestCount.class);
+			criteria.select(root);
+			criteria.where(builder.and(builder.equal(root.get(TestCount_.test), test), builder.equal(root.get(TestCount_.user), participation.getUser())));
+			TestCount testCount = session.createQuery(criteria).setLockMode(LockModeType.PESSIMISTIC_WRITE).uniqueResult();
 			if (testCount == null) {
 				testCount = new TestCount();
 				testCount.setUser(participation.getUser());
@@ -64,8 +73,13 @@ public class TestCountDAO extends AbstractDAO implements TestCountDAOIf {
 	public int canStillRunXTimes(Test test, Submission submission) {
 		Session session = getSession();
 		int maxExecuted = 0;
+		CriteriaBuilder builder = session.getCriteriaBuilder();
 		for (Participation participation : submission.getSubmitters()) {
-			TestCount testCount = (TestCount) session.createCriteria(TestCount.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("user", participation.getUser())).setMaxResults(1).uniqueResult();
+			CriteriaQuery<TestCount> criteria = builder.createQuery(TestCount.class);
+			Root<TestCount> root = criteria.from(TestCount.class);
+			criteria.select(root);
+			criteria.where(builder.and(builder.equal(root.get(TestCount_.test), test), builder.equal(root.get(TestCount_.user), participation.getUser())));
+			TestCount testCount = session.createQuery(criteria).uniqueResult();
 			if (testCount != null) {
 				maxExecuted = Math.max(maxExecuted, testCount.getTimesExecuted());
 			}

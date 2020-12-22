@@ -37,7 +37,6 @@ class SimilarityDAOIfTest extends BasicTest {
 	void testNoMaxSimilarity() {
 		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(7);
 		SimilarityTest simTest = DAOFactory.SimilarityTestDAOIf(session).getSimilarityTest(3);
-		assertEquals(0, DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(simTest, submission));
 		assertEquals(0, DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(simTest, submission).size());
 		assertEquals(0, DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(simTest, submission).size());
 	}
@@ -46,7 +45,6 @@ class SimilarityDAOIfTest extends BasicTest {
 	void testMaxSimilarityMulti() {
 		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(10);
 		SimilarityTest simTest = DAOFactory.SimilarityTestDAOIf(session).getSimilarityTest(3);
-		assertEquals(100, DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(simTest, submission));
 		List<Similarity> simList = DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(simTest, submission);
 		assertEquals(2, simList.size());
 		assertEquals(100, simList.get(0).getPercentage());
@@ -63,7 +61,6 @@ class SimilarityDAOIfTest extends BasicTest {
 	void testMaxSimilarityAsym() {
 		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(3);
 		SimilarityTest simTest = DAOFactory.SimilarityTestDAOIf(session).getSimilarityTest(3);
-		assertEquals(91, DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(simTest, submission));
 		assertEquals(2, DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(simTest, submission).size());
 		assertEquals(2, DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(simTest, submission).size());
 	}
@@ -79,8 +76,6 @@ class SimilarityDAOIfTest extends BasicTest {
 		session.getTransaction().commit();
 		DAOFactory.SimilarityDAOIf(session).addSimilarityResult(simTest, submission2, submission3, 23);
 		DAOFactory.SimilarityDAOIf(session).addSimilarityResult(simTest, submission4, submission5, 10);
-		assertEquals(23, DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(simTest, submission2));
-		assertEquals(10, DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(simTest, submission4));
 		assertEquals(1, DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(simTest, submission2).size());
 		assertEquals(1, DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(simTest, submission2).size());
 		assertEquals(1, DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(simTest, submission3).size());
@@ -90,8 +85,6 @@ class SimilarityDAOIfTest extends BasicTest {
 		assertEquals(1, DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(simTest, submission5).size());
 		assertEquals(1, DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(simTest, submission5).size());
 		DAOFactory.SimilarityDAOIf(session).addSimilarityResult(simTest, submission2, submission3, 42);
-		assertEquals(42, DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(simTest, submission2));
-		assertEquals(10, DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(simTest, submission4));
 		assertEquals(1, DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(simTest, submission2).size());
 		assertEquals(1, DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(simTest, submission2).size());
 		assertEquals(1, DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(simTest, submission3).size());
@@ -110,7 +103,6 @@ class SimilarityDAOIfTest extends BasicTest {
 		assertEquals(1, DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(simTest, submission5).size());
 		assertEquals(1, DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(simTest, submission5).size());
 		DAOFactory.SimilarityTestDAOIf(session).resetSimilarityTest(simTest);
-		assertEquals(0, DAOFactory.SimilarityDAOIf(session).getMaxSimilarity(simTest, submission2));
 		assertEquals(0, DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(simTest, submission2).size());
 		assertEquals(0, DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(simTest, submission2).size());
 		assertEquals(0, DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(simTest, submission3).size());

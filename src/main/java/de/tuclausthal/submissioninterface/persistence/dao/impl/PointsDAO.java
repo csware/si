@@ -22,10 +22,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
@@ -34,6 +36,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory;
+import de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
@@ -283,9 +286,15 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		return points;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<PointHistory> getPointHistoryForSubmission(Submission submission) {
-		return getSession().createCriteria(PointHistory.class).add(Restrictions.eq("submission", submission)).addOrder(Order.asc("date")).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<PointHistory> criteria = builder.createQuery(PointHistory.class);
+		Root<PointHistory> root = criteria.from(PointHistory.class);
+		criteria.select(root);
+		criteria.where(builder.equal(root.get(PointHistory_.submission), submission));
+		criteria.orderBy(builder.asc(root.get(PointHistory_.date)));
+		return session.createQuery(criteria).list();
 	}
 }

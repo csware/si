@@ -20,14 +20,21 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
+
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.GroupDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Group_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Participation_;
 
 /**
  * Data Access Object implementation for the GroupDAOIf
@@ -79,12 +86,25 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 		session.update(group);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Group> getJoinAbleGroups(Lecture lecture, Group participationGroup) {
-		if (participationGroup == null) {
-			return getSession().createCriteria(Group.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("allowStudentsToSignup", true)).add(Restrictions.sqlRestriction("(select count(*) from participations where groupid={alias}.gid) < this_.maxStudents")).list();
+		Session session = getSession();
+
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Group> criteria = builder.createQuery(Group.class);
+		Root<Group> root = criteria.from(Group.class);
+		criteria.select(root);
+
+		Subquery<Long> subQuery = criteria.subquery(Long.class);
+		Root<Participation> groupMembersCount = subQuery.from(Participation.class);
+		subQuery.select(builder.count(groupMembersCount.get(Participation_.id)));
+		subQuery.where(builder.equal(groupMembersCount.get(Participation_.group), root.get(Group_.gid)));
+
+		Predicate where = builder.and(builder.equal(root.get(Group_.lecture), lecture), builder.equal(root.get(Group_.allowStudentsToSignup), true), builder.lt(subQuery, root.get(Group_.maxStudents)));
+		if (participationGroup != null) {
+			where = builder.and(where, builder.notEqual(root, participationGroup));
 		}
-		return getSession().createCriteria(Group.class).add(Restrictions.eq("lecture", lecture)).add(Restrictions.eq("allowStudentsToSignup", true)).add(Restrictions.sqlRestriction("(select count(*) from participations where groupid={alias}.gid) < this_.maxStudents")).add(Restrictions.not(Restrictions.eq("gid", participationGroup.getGid()))).list();
+		criteria.where(where);
+		return session.createQuery(criteria).list();
 	}
 }

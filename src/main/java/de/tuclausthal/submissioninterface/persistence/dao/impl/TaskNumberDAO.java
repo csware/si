@@ -20,16 +20,19 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.LockMode;
+import javax.persistence.LockModeType;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TaskNumberDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber_;
 
 /**
  * Data Access Object implementation for the TaskNumberDAOIf
@@ -40,16 +43,29 @@ public class TaskNumberDAO extends AbstractDAO implements TaskNumberDAOIf {
 		super(session);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<TaskNumber> getTaskNumbersForSubmission(Submission submission) {
-		return getSession().createCriteria(TaskNumber.class).add(Restrictions.eq("submission", submission)).addOrder(Order.asc("tasknumberid")).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<TaskNumber> criteria = builder.createQuery(TaskNumber.class);
+		Root<TaskNumber> root = criteria.from(TaskNumber.class);
+		criteria.select(root);
+		criteria.where(builder.equal(root.get(TaskNumber_.submission), submission));
+		criteria.orderBy(builder.asc(root.get(TaskNumber_.tasknumberid)));
+		return session.createQuery(criteria).list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<TaskNumber> getTaskNumbersForTaskLocked(Task task, Participation participation) {
-		return getSession().createCriteria(TaskNumber.class).add(Restrictions.eq("task", task)).add(Restrictions.eq("participation", participation)).addOrder(Order.asc("tasknumberid")).setLockMode(LockMode.PESSIMISTIC_WRITE).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<TaskNumber> criteria = builder.createQuery(TaskNumber.class);
+		Root<TaskNumber> root = criteria.from(TaskNumber.class);
+		criteria.select(root);
+		criteria.where(builder.equal(root.get(TaskNumber_.task), task));
+		criteria.where(builder.equal(root.get(TaskNumber_.participation), participation));
+		criteria.orderBy(builder.asc(root.get(TaskNumber_.tasknumberid)));
+		return session.createQuery(criteria).setLockMode(LockModeType.PESSIMISTIC_WRITE).list();
 	}
 
 	@Override
