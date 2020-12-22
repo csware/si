@@ -61,7 +61,7 @@ public class SimilarityTest implements Serializable {
 	private String excludeFiles;
 
 	// for Hibernate
-	private SimilarityTest() {}
+	protected SimilarityTest() {}
 
 	/**
 	 * @param task

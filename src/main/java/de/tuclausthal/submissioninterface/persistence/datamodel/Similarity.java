@@ -42,7 +42,7 @@ public class Similarity implements Serializable {
 	private SimilarityTest similarityTest;
 
 	// for Hibernate
-	private Similarity() {}
+	protected Similarity() {}
 
 	/**
 	 * @param similarityTest 
@@ -108,14 +108,14 @@ public class Similarity implements Serializable {
 	/**
 	 * @param submissionOne the submissionOne to set
 	 */
-	private void setSubmissionOne(Submission submissionOne) {
+	protected void setSubmissionOne(Submission submissionOne) {
 		this.submissionOne = submissionOne;
 	}
 
 	/**
 	 * @param submissionTwo the submissionTwo to set
 	 */
-	private void setSubmissionTwo(Submission submissionTwo) {
+	protected void setSubmissionTwo(Submission submissionTwo) {
 		this.submissionTwo = submissionTwo;
 	}
 

@@ -42,7 +42,7 @@ public class PointGiven implements Serializable {
 	private int points;
 
 	// for Hibernate
-	private PointGiven() {}
+	protected PointGiven() {}
 
 	public PointGiven(int issuedPoints, Submission submission, PointCategory category) {
 		this.points = issuedPoints;

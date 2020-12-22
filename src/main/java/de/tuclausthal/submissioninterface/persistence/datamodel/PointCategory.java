@@ -41,7 +41,7 @@ public class PointCategory implements Serializable {
 	private boolean optional = false;
 
 	// for Hibernate
-	private PointCategory() {}
+	protected PointCategory() {}
 
 	public PointCategory(Task task, int points, String description, boolean optional) {
 		this.task = task;

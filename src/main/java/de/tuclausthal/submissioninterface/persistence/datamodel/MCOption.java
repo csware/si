@@ -47,7 +47,7 @@ public class MCOption implements Serializable {
 	private Task task;
 
 	// for Hibernate
-	private MCOption() {}
+	protected MCOption() {}
 
 	public MCOption(Task task, String option, boolean correct) {
 		this.task = task;

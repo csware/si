@@ -58,7 +58,7 @@ public class Submission implements Serializable {
 	private Participation closedBy= null;
 
 	// for Hibernate
-	private Submission() {}
+	protected Submission() {}
 
 	/**
 	 * @param task

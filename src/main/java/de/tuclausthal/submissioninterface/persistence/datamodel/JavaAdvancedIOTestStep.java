@@ -42,7 +42,7 @@ public class JavaAdvancedIOTestStep implements Serializable {
 	private String expect;
 
 	// for Hibernate
-	private JavaAdvancedIOTestStep() {}
+	protected JavaAdvancedIOTestStep() {}
 
 	public JavaAdvancedIOTestStep(JavaAdvancedIOTest test, String title, String testcode, String expect) {
 		this.test = test;

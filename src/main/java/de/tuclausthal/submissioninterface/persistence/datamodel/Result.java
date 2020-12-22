@@ -43,7 +43,7 @@ public class Result implements Serializable {
 	private String result;
 
 	// for Hibernate
-	private Result() {}
+	protected Result() {}
 
 	/**
 	 * @param submission 
