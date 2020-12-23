@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2012, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -17,9 +17,9 @@
  */
 package de.tuclausthal.submissioninterface.dupecheck.normalizers.tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.SpacesTabsNewlinesNormalizer;
 
