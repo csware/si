@@ -82,6 +82,7 @@ public class DownloadAsZip extends HttpServlet {
 			//out.setMethod(ZipOutputStream.STORED);
 			Util.recursivelyZip(out, path, "");
 			out.close();
+			return;
 		}
 
 		request.setAttribute("title", "No files available to download as zip.");
