@@ -18,7 +18,10 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
@@ -29,12 +32,14 @@ import javax.persistence.criteria.Subquery;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import de.tuclausthal.submissioninterface.persistence.dao.SimilarityDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 
 public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 
@@ -91,5 +96,42 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 		criteria.where(builder.and(builder.equal(root.get(Similarity_.submissionOne), submission), builder.equal(root.get(Similarity_.similarityTest), similarityTest)));
 		criteria.orderBy(builder.desc(root.get(Similarity_.percentage)));
 		return session.createQuery(criteria).list();
+	}
+
+	@Override
+	public Map<Integer, Map<Integer, List<Similarity>>> getMaxSimilarities(Task task) {
+		Map<Integer, Map<Integer, List<Similarity>>> ret = new HashMap<>();
+
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Similarity> criteria = builder.createQuery(Similarity.class);
+		Root<Similarity> root = criteria.from(Similarity.class);
+		criteria.select(root);
+
+		Subquery<Integer> subQuery = criteria.subquery(Integer.class);
+		Root<Similarity> groupMembersCount = subQuery.from(Similarity.class);
+		subQuery.select(builder.max(groupMembersCount.get(Similarity_.percentage)));
+		subQuery.where(builder.and(builder.equal(groupMembersCount.get(Similarity_.similarityTest), root.get(Similarity_.similarityTest)), builder.equal(groupMembersCount.get(Similarity_.submissionOne), root.get(Similarity_.submissionOne))));
+
+		criteria.where(builder.and(builder.equal(root.get(Similarity_.submissionOne).get("task"), task), builder.equal(root.get(Similarity_.percentage), subQuery)));
+		criteria.orderBy(builder.asc(root.get(Similarity_.submissionOne)), builder.asc(root.get(Similarity_.similarityTest)));
+		Query<Similarity> query = session.createQuery(criteria);
+
+		int lastSid = -1;
+		Map<Integer, List<Similarity>> sidMap = null;
+		for (Similarity similarity : query.list()) {
+			if (lastSid != similarity.getSubmissionOne().getSubmissionid()) {
+				lastSid = similarity.getSubmissionOne().getSubmissionid();
+				sidMap = new HashMap<>();
+				ret.put(lastSid, sidMap);
+			}
+			List<Similarity> similarities = sidMap.get(similarity.getSimilarityTest().getSimilarityTestId());
+			if (similarities == null) {
+				similarities = new ArrayList<>();
+				sidMap.put(similarity.getSimilarityTest().getSimilarityTestId(), similarities);
+			}
+			similarities.add(similarity);
+		}
+		return ret;
 	}
 }

@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,7 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.dao.TestResultDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -160,6 +160,8 @@ public class ShowTaskTutorView extends HttpServlet {
 		}
 
 		if (task.getSubmissions() != null && !task.getSubmissions().isEmpty()) {
+			Map<Integer, Map<Integer, Boolean>> testResults = DAOFactory.TestResultDAOIf(session).getResults(task);
+			Map<Integer, Map<Integer, List<Similarity>>> similarities = DAOFactory.SimilarityDAOIf(session).getMaxSimilarities(task);
 			out.println("<p><h2>Abgaben</h2><p>");
 			if (!task.isMCTask()) {
 				out.println("<p><div class=mid><a href=\"" + response.encodeURL("SearchSubmissions?taskid=" + task.getTaskid()) + "\">Suchen...</a></div>");
@@ -173,7 +175,6 @@ public class ShowTaskTutorView extends HttpServlet {
 			int groupSumOfAllSubmissions = 0;
 			int groupSumOfPoints = 0;
 			int lastSID = 0;
-			TestResultDAOIf testResultDAO = DAOFactory.TestResultDAOIf(session);
 			List<Test> tests = DAOFactory.TestDAOIf(session).getTutorTests(task);
 			boolean hasUnapprochedPoints = false;
 			boolean showAllColumns = (task.getDeadline().before(Util.correctTimezone(new Date())) || task.isAllowPrematureSubmissionClosing()) && !requestAdapter.isPrivacyMode();
@@ -282,18 +283,25 @@ public class ShowTaskTutorView extends HttpServlet {
 						// show columns only if the results are in the database after the deadline
 						if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 							for (Test test : tests) {
-								if (testResultDAO.getResult(test, submission) != null) {
-									out.println("<td>" + Util.boolToHTML(testResultDAO.getResult(test, submission).getPassedTest()) + "</td>");
+								Map<Integer, Boolean> testResultsSubmission = testResults.get(submission.getSubmissionid());
+								if (testResultsSubmission != null && testResultsSubmission.containsKey(test.getId())) {
+									out.println("<td>" + Util.boolToHTML(testResultsSubmission.get(test.getId())) + "</td>");
 								} else {
 									out.println("<td>n/a</td>");
 								}
 							}
+							Map<Integer, List<Similarity>> similaritiesSubmission = similarities.get(submission.getSubmissionid());
 							for (SimilarityTest similarityTest : task.getSimularityTests()) {
 								String users = "";
 								int maxSimilarity = 0;
-								for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(similarityTest, submission)) {
-									users += Util.escapeHTML(similarity.getSubmissionTwo().getSubmitterNames()) + "\n";
-									maxSimilarity = similarity.getPercentage();
+								if (similaritiesSubmission != null) {
+									List<Similarity> list = similaritiesSubmission.get(similarityTest.getSimilarityTestId());
+									if (list != null) {
+										for (Similarity similarity : list) {
+											users += Util.escapeHTML(similarity.getSubmissionTwo().getSubmitterNames()) + "\n";
+											maxSimilarity = similarity.getPercentage();
+										}
+									}
 								}
 								out.println("<td align=right><span title=\"" + users + "\">" + maxSimilarity + "</span></td>");
 							}

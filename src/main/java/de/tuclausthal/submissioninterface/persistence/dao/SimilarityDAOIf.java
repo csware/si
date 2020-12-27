@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,10 +19,12 @@
 package de.tuclausthal.submissioninterface.persistence.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 
 /**
  * Data Access Object Interface for the Similarity-class 
@@ -53,4 +55,6 @@ public interface SimilarityDAOIf {
 	 * @return the list of maximum similarities
 	 */
 	public List<Similarity> getUsersWithMaxSimilarity(SimilarityTest similarityTest, Submission submission);
+
+	public Map<Integer, Map<Integer, List<Similarity>>> getMaxSimilarities(Task task);
 }

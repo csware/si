@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -25,6 +25,8 @@ import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
@@ -104,8 +106,11 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 		CriteriaQuery<Submission> criteria = builder.createQuery(Submission.class);
 		Root<Submission> root = criteria.from(Submission.class);
 		criteria.select(root);
+		@SuppressWarnings("unchecked")
+		Join<Submission, Participation> joinSubmitters = (Join<Submission, Participation>) root.fetch(Submission_.submitters, JoinType.LEFT);
+		joinSubmitters.fetch(Participation_.user);
 		criteria.where(builder.equal(root.get(Submission_.task), task));
-		criteria.orderBy(builder.asc(root.join(Submission_.submitters).get(Participation_.group)), builder.asc(root.get(Submission_.submissionid)));
+		criteria.orderBy(builder.asc(joinSubmitters.get(Participation_.group)), builder.asc(root.get(Submission_.submissionid)));
 		return session.createQuery(criteria).list();
 	}
 

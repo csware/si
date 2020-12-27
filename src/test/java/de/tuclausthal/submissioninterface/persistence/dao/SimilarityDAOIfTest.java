@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,8 +19,11 @@
 package de.tuclausthal.submissioninterface.persistence.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -114,5 +117,51 @@ class SimilarityDAOIfTest extends BasicTest {
 		session.getTransaction().begin();
 		DAOFactory.SimilarityTestDAOIf(session).deleteSimilarityTest(simTest);
 		session.getTransaction().commit();
+	}
+
+	@Test
+	void testGetMaxSimilarities() {
+		assertTrue(DAOFactory.SimilarityDAOIf(session).getMaxSimilarities(DAOFactory.TaskDAOIf(session).getTask(1)).isEmpty());
+		assertTrue(DAOFactory.SimilarityDAOIf(session).getMaxSimilarities(DAOFactory.TaskDAOIf(session).getTask(2)).isEmpty());
+
+		Map<Integer, Map<Integer, List<Similarity>>> task3Similarities = DAOFactory.SimilarityDAOIf(session).getMaxSimilarities(DAOFactory.TaskDAOIf(session).getTask(3));
+		assertEquals(4, task3Similarities.size());
+		assertFalse(task3Similarities.containsKey(1));
+
+		assertTrue(task3Similarities.containsKey(7));
+		assertEquals(1, task3Similarities.get(7).size());
+		assertEquals(1, task3Similarities.get(7).get(2).size());
+		assertEquals(42, task3Similarities.get(7).get(2).get(0).getPercentage());
+		assertEquals(2, task3Similarities.get(7).get(2).get(0).getSimilarityTest().getSimilarityTestId());
+		assertEquals(7, task3Similarities.get(7).get(2).get(0).getSubmissionOne().getSubmissionid());
+		assertEquals(10, task3Similarities.get(7).get(2).get(0).getSubmissionTwo().getSubmissionid());
+
+		assertTrue(task3Similarities.containsKey(3));
+		assertEquals(1, task3Similarities.get(3).size());
+		assertEquals(2, task3Similarities.get(3).get(3).size());
+		assertEquals(91, task3Similarities.get(3).get(3).get(0).getPercentage());
+		assertEquals(91, task3Similarities.get(3).get(3).get(1).getPercentage());
+		assertEquals(3, task3Similarities.get(3).get(3).get(0).getSubmissionOne().getSubmissionid());
+		assertEquals(3, task3Similarities.get(3).get(3).get(1).getSubmissionOne().getSubmissionid());
+		assertEquals(10, task3Similarities.get(3).get(3).get(0).getSubmissionTwo().getSubmissionid());
+		assertEquals(12, task3Similarities.get(3).get(3).get(1).getSubmissionTwo().getSubmissionid());
+
+		assertTrue(task3Similarities.containsKey(10));
+		assertEquals(2, task3Similarities.get(10).size());
+		assertEquals(1, task3Similarities.get(10).get(2).size());
+		assertEquals(42, task3Similarities.get(10).get(2).get(0).getPercentage());
+		assertEquals(10, task3Similarities.get(10).get(2).get(0).getSubmissionOne().getSubmissionid());
+		assertEquals(7, task3Similarities.get(10).get(2).get(0).getSubmissionTwo().getSubmissionid());
+		assertEquals(1, task3Similarities.get(10).get(3).size());
+		assertEquals(100, task3Similarities.get(10).get(3).get(0).getPercentage());
+		assertEquals(10, task3Similarities.get(10).get(3).get(0).getSubmissionOne().getSubmissionid());
+		assertEquals(12, task3Similarities.get(10).get(3).get(0).getSubmissionTwo().getSubmissionid());
+
+		assertTrue(task3Similarities.containsKey(12));
+		assertEquals(1, task3Similarities.get(12).size());
+		assertEquals(1, task3Similarities.get(12).get(3).size());
+		assertEquals(100, task3Similarities.get(12).get(3).get(0).getPercentage());
+		assertEquals(12, task3Similarities.get(12).get(3).get(0).getSubmissionOne().getSubmissionid());
+		assertEquals(10, task3Similarities.get(12).get(3).get(0).getSubmissionTwo().getSubmissionid());
 	}
 }

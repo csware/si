@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,7 +18,10 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao;
 
+import java.util.Map;
+
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
@@ -45,4 +48,6 @@ public interface TestResultDAOIf {
 	public TestResult getResult(Test test, Submission submission);
 
 	public TestResult getResultLocked(Test test, Submission submission);
+
+	public Map<Integer, Map<Integer, Boolean>> getResults(Task task);
 }
