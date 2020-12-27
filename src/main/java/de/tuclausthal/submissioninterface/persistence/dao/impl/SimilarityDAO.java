@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -75,7 +75,7 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 		Subquery<Integer> subQuery = criteria.subquery(Integer.class);
 		Root<Similarity> groupMembersCount = subQuery.from(Similarity.class);
 		subQuery.select(builder.max(groupMembersCount.get(Similarity_.percentage)));
-		subQuery.where(builder.and(builder.equal(groupMembersCount.get(Similarity_.similarityTest), similarityTest), builder.equal(groupMembersCount.get(Similarity_.submissionOne), submission)));
+		subQuery.where(builder.and(builder.equal(groupMembersCount.get(Similarity_.similarityTest), root.get(Similarity_.similarityTest)), builder.equal(groupMembersCount.get(Similarity_.submissionOne), root.get(Similarity_.submissionOne))));
 
 		criteria.where(builder.and(builder.equal(root.get(Similarity_.submissionOne), submission), builder.equal(root.get(Similarity_.similarityTest), similarityTest), builder.equal(root.get(Similarity_.percentage), subQuery)));
 		return session.createQuery(criteria).list();
