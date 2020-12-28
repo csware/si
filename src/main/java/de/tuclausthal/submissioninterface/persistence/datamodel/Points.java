@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -137,12 +137,16 @@ public class Points implements Serializable {
 
 	@Transient
 	public int getPlagiarismPoints(int minPointStep) {
+		return getPlagiarismPoints(duplicate, getPoints(), minPointStep);
+	}
+
+	public static int getPlagiarismPoints(Integer duplicate, int points, int minPointStep) {
 		if (duplicate == null) {
-			return getPoints();
+			return points;
 		} else if (duplicate == 0) {
 			return 0;
 		} else {
-			int divided = getPoints() / duplicate;
+			int divided = points / duplicate;
 			if (divided % minPointStep != 0) {
 				return minPointStep * (divided / minPointStep);
 			}

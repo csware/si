@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -37,7 +38,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
@@ -124,11 +124,12 @@ public class ShowLectureTutorView extends HttpServlet {
 			return;
 		}
 		int[] studentsPoints = new int[2];
+		Map<Integer, Integer> allPoints = DAOFactory.PointsDAOIf(session).getAllPointsForLecture(lecture);
 		out.println("<p>");
 		out.println("<h2>Teilnehmende</h2>");
 		if (!participationDAO.getParticipationsWithoutGroup(lecture).isEmpty()) {
 			out.println("<h3>Ohne Gruppe</h3>");
-			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, showMatNo, requestAdapter, studentsPoints);
+			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, showMatNo, requestAdapter, studentsPoints, allPoints);
 			out.println("<p class=mid>");
 			if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 				out.println("<a href=\"" + response.encodeURL("AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a>");
@@ -175,7 +176,7 @@ public class ShowLectureTutorView extends HttpServlet {
 				}
 				out.println("</table><p>");
 			}
-			listMembers(participationDAO.getParticipationsOfGroup(group).iterator(), response, isAdvisor, showMatNo, requestAdapter, studentsPoints);
+			listMembers(participationDAO.getParticipationsOfGroup(group).iterator(), response, isAdvisor, showMatNo, requestAdapter, studentsPoints, allPoints);
 			out.println("</div>");
 		}
 		out.println("<h3>Gesamtdurchschnitt: " + Util.showPoints(((Double) (studentsPoints[1] / (double) studentsPoints[0])).intValue()) + "</h3>");
@@ -183,7 +184,7 @@ public class ShowLectureTutorView extends HttpServlet {
 		template.printTemplateFooter();
 	}
 
-	public void listMembers(Iterator<Participation> participationIterator, HttpServletResponse response, boolean isAdvisor, boolean showMatNo, RequestAdapter requestAdapter, int[] studentsPoints) throws IOException {
+	public void listMembers(Iterator<Participation> participationIterator, HttpServletResponse response, boolean isAdvisor, boolean showMatNo, RequestAdapter requestAdapter, int[] studentsPoints, Map<Integer, Integer> allPoints) throws IOException {
 		if (participationIterator.hasNext()) {
 			PrintWriter out = response.getWriter();
 			int sumOfPoints = 0;
@@ -231,7 +232,10 @@ public class ShowLectureTutorView extends HttpServlet {
 					}
 				}
 				out.println("</td>");
-				int points = getAllPoints(thisParticipation);
+				int points = 0;
+				if (allPoints.containsKey(thisParticipation.getId())) {
+					points = allPoints.get(thisParticipation.getId());
+				}
 				// only count real users. Tutoren and advisors do not have submissions
 				if (thisParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 					usersCount++;
@@ -256,15 +260,5 @@ public class ShowLectureTutorView extends HttpServlet {
 			studentsPoints[1] += sumOfPoints;
 			out.println("</table><p>");
 		}
-	}
-
-	public int getAllPoints(Participation participation) {
-		int points = 0;
-		for (Submission submission : participation.getSubmissions()) {
-			if (submission.getPoints() != null && submission.getPoints().getPointsOk()) {
-				points += submission.getPoints().getPointsByStatus(submission.getTask().getMinPointStep());
-			}
-		}
-		return points;
 	}
 }

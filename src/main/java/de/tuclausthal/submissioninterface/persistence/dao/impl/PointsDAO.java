@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,28 +18,39 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.PointsDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Participation_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission_;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup_;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task_;
+import de.tuclausthal.submissioninterface.persistence.dto.SubmissionPointsDTO;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.MailSender;
@@ -296,5 +307,31 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		criteria.where(builder.equal(root.get(PointHistory_.submission), submission));
 		criteria.orderBy(builder.asc(root.get(PointHistory_.date)));
 		return session.createQuery(criteria).list();
+	}
+
+	@Override
+	public Map<Integer, Integer> getAllPointsForLecture(Lecture lecture) {
+		Map<Integer, Integer> ret = new HashMap<>();
+
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<SubmissionPointsDTO> criteria = builder.createQuery(SubmissionPointsDTO.class);
+		Root<Submission> root = criteria.from(Submission.class);
+		Join<Submission, Task> taskJoin = root.join(Submission_.task);
+		Join<Submission, Participation> submittersJoin = root.join(Submission_.submitters);
+		criteria.select(builder.construct(SubmissionPointsDTO.class, root.get(Submission_.submissionid), submittersJoin.get(Participation_.id), root.get(Submission_.points).get(Points_.points), root.get(Submission_.points).get(Points_.duplicate), taskJoin.get(Task_.minPointStep)));
+		criteria.where(builder.and(builder.isNotNull(root.get(Submission_.points)),builder.gt(root.get(Submission_.points).get(Points_.points), 0), builder.ge(root.get(Submission_.points).get(Points_.pointStatus), PointStatus.ABGENOMMEN.ordinal()), builder.equal(taskJoin.join(Task_.taskGroup).get(TaskGroup_.lecture), lecture)));
+		Query<SubmissionPointsDTO> query = session.createQuery(criteria);
+
+		for (SubmissionPointsDTO submissionPoints : query.list()) {
+			int points = submissionPoints.getPlagiarismPoints(submissionPoints.getMinPointStep());
+			if (points > 0) {
+				if (ret.containsKey(submissionPoints.getParticipationid())) {
+					points += ret.get(submissionPoints.getParticipationid());
+				}
+				ret.put(submissionPoints.getParticipationid(), points);
+			}
+		}
+		return ret;
 	}
 }

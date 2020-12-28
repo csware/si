@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,6 +19,9 @@
 package de.tuclausthal.submissioninterface.persistence.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -34,5 +37,17 @@ class PointsDAOIfTest extends BasicTest {
 		assertEquals(7, DAOFactory.PointsDAOIf(session).getPointHistoryForSubmission(DAOFactory.SubmissionDAOIf(session).getSubmission(3)).size());
 		assertEquals(4, DAOFactory.PointsDAOIf(session).getPointHistoryForSubmission(DAOFactory.SubmissionDAOIf(session).getSubmission(8)).size());
 		assertEquals(8, DAOFactory.PointsDAOIf(session).getPointHistoryForSubmission(DAOFactory.SubmissionDAOIf(session).getSubmission(10)).size());
+	}
+
+	@Test
+	void testGetAllPointsForLecture() {
+		assertTrue(DAOFactory.PointsDAOIf(session).getAllPointsForLecture(DAOFactory.LectureDAOIf(session).getLecture(2)).isEmpty());
+
+		Map<Integer, Integer> lecture1Points = DAOFactory.PointsDAOIf(session).getAllPointsForLecture(DAOFactory.LectureDAOIf(session).getLecture(1));
+		assertEquals(4, lecture1Points.size());
+		assertEquals(150, lecture1Points.get(14));
+		assertEquals(250, lecture1Points.get(4));
+		assertEquals(250, lecture1Points.get(6));
+		assertEquals(100, lecture1Points.get(12));
 	}
 }

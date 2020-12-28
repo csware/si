@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.persistence.dao;
 import java.util.List;
 import java.util.Map;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
@@ -52,4 +53,6 @@ public interface PointsDAOIf {
 	Points createMCPoints(int issuedPoints, Submission submission, String publicComment, PointStatus pointStatus);
 
 	List<PointHistory> getPointHistoryForSubmission(Submission submission);
+
+	public Map<Integer, Integer> getAllPointsForLecture(Lecture lecture);
 }
