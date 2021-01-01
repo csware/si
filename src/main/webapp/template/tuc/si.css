@@ -29,6 +29,7 @@ table.border {
 	border-width:1px;
 	border-color:#008C4F;
 	border-style:solid;
+	background-color: #ffffff; /* make overflow tables look better */ 
 }
 
 th,td { vertical-align: top; }
@@ -124,7 +125,29 @@ code {
 	white-space: nowrap;
 }
 
+#mark ul {
+	padding-left: 20px;
+}
+
+#mark li input[type=checkbox] {
+	margin-left: 0;
+}
+
+ul#tests, ul#mctask, ul#dynamictask {
+	padding-left: 15px;
+}
+
+ul#tests table {
+	margin-left: 0px;
+}
+
+ul#tests > li {
+	margin-bottom: 8px;
+}
+
 pre {
+	margin-top: 0px;
+	margin-bottom: 0px;
 	font-family: "Courier New",Courier,monospace;
 }
 

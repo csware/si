@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -48,7 +48,7 @@ public class ShowJavaAdvancedIOTestResult {
 		} else if (object.containsKey("steps")) {
 			JsonValue arr = object.get("steps");
 			if (arr.getValueType().equals(JsonValue.ValueType.ARRAY)) {
-				out.println("<table>");
+				out.println("<table class=border>");
 				out.println("<tr>");
 				out.println("<th>Test</th>");
 				out.println("<th>Erwartet</th>");
