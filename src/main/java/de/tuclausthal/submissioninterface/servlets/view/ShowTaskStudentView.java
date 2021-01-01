@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -202,6 +202,10 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<th>Bewertung:</th>");
 				out.println("<td>");
 				if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN.ordinal()) {
+					out.println(Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + " von " + Util.showPoints(task.getMaxPoints()) + " Punkt(e)");
+					if (submission.getPoints().getDuplicate() != null) {
+						out.println(" (Plagiat)");
+					}
 					if (task.getPointCategories().size() > 0) {
 						PointGivenDAOIf pointGivenDAO = DAOFactory.PointGivenDAOIf(session);
 						Iterator<PointGiven> pointsGivenIterator = pointGivenDAO.getPointsGivenOfSubmission(submission).iterator();
@@ -225,17 +229,9 @@ public class ShowTaskStudentView extends HttpServlet {
 							} else if (category.isOptional()) {
 								continue;
 							}
-							out.println("<li>" + Util.showPoints(issuedPoints) + "/" + Util.showPoints(category.getPoints()) + " " + Util.escapeHTML(category.getDescription()) + "</li>");
+							out.println("<li>" + Util.showPoints(issuedPoints) + "/" + Util.showPoints(category.getPoints()) + " " + Util.escapeHTML(category.getDescription()) + (category.isOptional() ? " (Bonus)" : "" ) + "</li>");
 						}
 						out.println("</ul>");
-						if (submission.getPoints().getDuplicate() != null) {
-							out.println("(Plagiat)");
-						}
-					} else {
-						out.println(Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + " von " + Util.showPoints(task.getMaxPoints()) + " Punkt(e)");
-						if (submission.getPoints().getDuplicate() != null) {
-							out.println(" (Plagiat)");
-						}
 					}
 				} else if (submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal()) {
 					out.println("0 von " + Util.showPoints(task.getMaxPoints()) + ", Abnahme nicht bestanden");
