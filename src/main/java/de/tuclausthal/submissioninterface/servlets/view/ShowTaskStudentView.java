@@ -138,7 +138,7 @@ public class ShowTaskStudentView extends HttpServlet {
 					file = file.replace(System.getProperty("file.separator"), "/");
 					out.println("<a target=\"_blank\" href=\"" + Util.generateHTMLLink("ShowFile/" + Util.encodeURLPathComponent(file) + "?sid=" + submission.getSubmissionid(), response) + "\">" + Util.escapeHTML(file) + "</a>");
 					if (task.getDeadline().after(Util.correctTimezone(new Date())) && !(task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
-						out.println(" (<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DeleteFile/" + Util.encodeURLPathComponent(file) + "?sid=" + submission.getSubmissionid(), response) + "\">löschen</a>)");
+						out.println(" (<a href=\"" + Util.generateHTMLLink("DeleteFile/" + Util.encodeURLPathComponent(file) + "?sid=" + submission.getSubmissionid(), response) + "\">löschen</a>)");
 					}
 					out.println("<br>");
 				}
@@ -148,8 +148,8 @@ public class ShowTaskStudentView extends HttpServlet {
 			if (task.isAllowPrematureSubmissionClosing() && !submission.isClosed() && task.getDeadline().after(Util.correctTimezone(new Date()))) {
 				out.println("<tr>");
 				out.println("<th>Vorzeitige finale Abgabe</th>");
-				out.println("<td>Diese Abgabe kann vor der Abgabefrist als endgültig abgeschlossen markieren.<br><br><span class=b>Wichtig</span>: Dieser Vorgang kann von Ihnen nicht rückgängig gemacht werden.<br><br>");
-				out.println("<a onclick=\"return sendAsPost(this, 'Lösung wirklich final abgeben?')\" href=\"" + Util.generateHTMLLink("CloseSubmissionByStudent?sid=" + submission.getSubmissionid(), response) + "\">Meine Lösung vorzeitig endgültig abgeben</a></td>");
+				out.println("<td>Diese Abgabe kann vor der Abgabefrist als endgültig abgeschlossen markiert werden.<br><br>");
+				out.println("<a href=\"" + Util.generateHTMLLink("CloseSubmissionByStudent?sid=" + submission.getSubmissionid(), response) + "\">Meine Lösung vorzeitig endgültig abgeben</a></td>");
 				out.println("</tr>");
 			}
 			if (task.isADynamicTask()) {
