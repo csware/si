@@ -75,6 +75,32 @@ public class ShowSubmission extends HttpServlet {
 			return;
 		}
 
+		request.setAttribute("submission", submission);
+		request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringList(new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"))));
+		request.getRequestDispatcher("ShowSubmissionView").forward(request, response);
+	}
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Session session = RequestAdapter.getSession(request);
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
+		if (submission == null) {
+			request.setAttribute("title", "Abgabe nicht gefunden");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
+		Task task = submission.getTask();
+
+		// check Lecture Participation
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), submission.getTask().getTaskGroup().getLecture());
+		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
 		if (((task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()))) && request.getParameter("points") != null) {
 			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf(session);
 			String publicComment = "";
@@ -133,14 +159,6 @@ public class ShowSubmission extends HttpServlet {
 			return;
 		}
 
-		request.setAttribute("submission", submission);
-		request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringList(new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"))));
-		request.getRequestDispatcher("ShowSubmissionView").forward(request, response);
-	}
-
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// don't want to have any special post-handling
-		doGet(request, response);
+		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
 	}
 }

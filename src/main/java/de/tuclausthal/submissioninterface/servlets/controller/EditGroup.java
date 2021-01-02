@@ -65,6 +65,30 @@ public class EditGroup extends HttpServlet {
 			return;
 		}
 
+		request.setAttribute("participation", participation);
+		request.setAttribute("group", group);
+		request.getRequestDispatcher("EditGroupFormView").forward(request, response);
+	}
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Session session = RequestAdapter.getSession(request);
+		GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
+		Group group = groupDAO.getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
+		if (group == null) {
+			request.setAttribute("title", "Gruppe nicht gefunden");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
+		// check Lecture Participation
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), group.getLecture());
+		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
 		if ("removeFromGroup".equals(request.getParameter("action")) && request.getParameter("participationid") != null) {
 			Transaction tx = session.beginTransaction();
 			Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(request.getParameter("participationid"), 0));
@@ -127,15 +151,6 @@ public class EditGroup extends HttpServlet {
 			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response));
 			return;
 		}
-
-		request.setAttribute("participation", participation);
-		request.setAttribute("group", group);
-		request.getRequestDispatcher("EditGroupFormView").forward(request, response);
-	}
-
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// don't want to have any special post-handling
-		doGet(request, response);
+		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
 	}
 }

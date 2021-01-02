@@ -68,47 +68,6 @@ public class MarkEmptyTask extends HttpServlet {
 			return;
 		}
 
-		if (Util.isInteger(request.getParameter("pid"))) {
-			Participation studentParticipation = DAOFactory.ParticipationDAOIf(session).getParticipation(Util.parseInteger(request.getParameter("pid"), 0));
-			if (studentParticipation == null || studentParticipation.getLecture().getId() != participation.getLecture().getId() || studentParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) != 0) {
-				request.setAttribute("title", "Gewählte Person ist kein normaler Teilnehmer der Vorlesung.");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-				return;
-			}
-			Transaction tx = session.beginTransaction();
-			session.buildLockRequest(LockOptions.UPGRADE).lock(studentParticipation);
-			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
-			Submission submission = submissionDAO.getSubmission(task, studentParticipation.getUser());
-			if (submission != null) {
-				tx.commit();
-				request.setAttribute("title", "Es existiert bereits eine Bewertung für diesen Studierenden: < href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), response) + "\">zur Bewertung</a>");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-				return;
-			}
-			submission = submissionDAO.createSubmission(task, studentParticipation);
-			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf(session);
-			String publicComment = "";
-			if (request.getParameter("publiccomment") != null) {
-				publicComment = request.getParameter("publiccomment");
-			}
-			String internalComment = "";
-			if (request.getParameter("internalcomment") != null) {
-				internalComment = request.getParameter("internalcomment");
-			}
-			PointStatus pointStatus = PointStatus.NICHT_ABGENOMMEN;
-			if (request.getParameter("pointsok") != null) {
-				pointStatus = PointStatus.ABGENOMMEN;
-			}
-			// attention: quite similar code in ShowSubmission
-			if (!task.getPointCategories().isEmpty()) {
-				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, null);
-			} else {
-				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, null);
-			}
-			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("MarkEmptyTask?taskid=" + task.getTaskid(), response));
-			return;
-		}
 		request.setAttribute("participations", DAOFactory.ParticipationDAOIf(session).getParticipationsWithNoSubmissionToTaskOrdered(task));
 
 		request.setAttribute("task", task);
@@ -117,7 +76,63 @@ public class MarkEmptyTask extends HttpServlet {
 
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// don't want to have any special post-handling
-		doGet(request, response);
+		Session session = RequestAdapter.getSession(request);
+
+		Task task = DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+		if (task == null) {
+			request.setAttribute("title", "Aufgabe nicht gefunden");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
+		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0 || (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
+		if (!Util.isInteger(request.getParameter("pid"))) {
+			response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
+		}
+
+		Participation studentParticipation = DAOFactory.ParticipationDAOIf(session).getParticipation(Util.parseInteger(request.getParameter("pid"), 0));
+		if (studentParticipation == null || studentParticipation.getLecture().getId() != participation.getLecture().getId() || studentParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) != 0) {
+			request.setAttribute("title", "Gewählte Person ist kein normaler Teilnehmer der Vorlesung.");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+		Transaction tx = session.beginTransaction();
+		session.buildLockRequest(LockOptions.UPGRADE).lock(studentParticipation);
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+		Submission submission = submissionDAO.getSubmission(task, studentParticipation.getUser());
+		if (submission != null) {
+			tx.commit();
+			request.setAttribute("title", "Es existiert bereits eine Bewertung für diesen Studierenden: < href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), response) + "\">zur Bewertung</a>");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+		submission = submissionDAO.createSubmission(task, studentParticipation);
+		PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf(session);
+		String publicComment = "";
+		if (request.getParameter("publiccomment") != null) {
+			publicComment = request.getParameter("publiccomment");
+		}
+		String internalComment = "";
+		if (request.getParameter("internalcomment") != null) {
+			internalComment = request.getParameter("internalcomment");
+		}
+		PointStatus pointStatus = PointStatus.NICHT_ABGENOMMEN;
+		if (request.getParameter("pointsok") != null) {
+			pointStatus = PointStatus.ABGENOMMEN;
+		}
+		// attention: quite similar code in ShowSubmission
+		if (!task.getPointCategories().isEmpty()) {
+			pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, null);
+		} else {
+			pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, null);
+		}
+		tx.commit();
+		response.sendRedirect(Util.generateRedirectURL("MarkEmptyTask?taskid=" + task.getTaskid(), response));
 	}
 }

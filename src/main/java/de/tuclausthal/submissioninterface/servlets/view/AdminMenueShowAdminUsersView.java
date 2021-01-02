@@ -60,13 +60,13 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 			User user = userIterator.next();
 			out.println("<tr>");
 			out.println("<td>" + Util.escapeHTML(user.getFullName()) + "</td>");
-			out.println("<td><a href=\"" + Util.generateHTMLLink("?action=removeSuperUser&userid=" + user.getUid(), response) + "\">degradieren</a></td>");
+			out.println("<td><a onclick=\"return sendAsPost(this, 'Wirklich entfernen?')\" href=\"" + Util.generateHTMLLink("?action=removeSuperUser&userid=" + user.getUid(), response) + "\">degradieren</a></td>");
 			out.println("</tr>");
 		}
 		out.println("<tr>");
 		out.println("<td colspan=2>");
 		userIterator = DAOFactory.UserDAOIf(RequestAdapter.getSession(request)).getUsers().iterator();
-		out.println("<form action=\"?\">");
+		out.println("<form method=post action=\"" + Util.generateHTMLLink("?", response) + "\">");
 		out.println("<input type=hidden name=action value=addSuperUser>");
 		out.println("<select name=userid>");
 		while (userIterator.hasNext()) {

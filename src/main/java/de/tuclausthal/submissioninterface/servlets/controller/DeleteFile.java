@@ -52,7 +52,7 @@ public class DeleteFile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));

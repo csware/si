@@ -57,7 +57,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			List<Participation> participants = (List<Participation>) request.getAttribute("participants");
 			template.printTemplateHeader("Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten", "<a href=\"" + Util.generateHTMLLink("Overview", response) + "\">Meine Veranstaltungen</a> - <a href=\"" + Util.generateHTMLLink("AdminMenue", response) + "\">Admin-Menü</a> &gt; Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten");
 			PrintWriter out = response.getWriter();
-			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("?action=deleteLecture&lecture=" + lecture.getId(), response) + "\">Veranstaltung löschen</a></p>");
+			out.println("<p class=mid><a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("?action=deleteLecture&lecture=" + lecture.getId(), response) + "\">Veranstaltung löschen</a></p>");
 			out.println("<h2>BetreuerInnen</h2>");
 			Iterator<Participation> advisorIterator = participants.iterator();
 			out.println("<table class=border>");
@@ -71,13 +71,13 @@ public class AdminMenueEditLectureView extends HttpServlet {
 					User user = participation.getUser();
 					out.println("<tr>");
 					out.println("<td>" + Util.escapeHTML(user.getFullName()) + "</td>");
-					out.println("<td><a onclick=\"return confirmLink('Wirklich degradieren?')\" href=\"" + Util.generateHTMLLink("?action=removeUser&lecture=" + lecture.getId() + "&userid=" + user.getUid(), response) + "\">degradieren</a></td>");
+					out.println("<td><a onclick=\"return sendAsPost(this, 'Wirklich degradieren?')\" href=\"" + Util.generateHTMLLink("?action=removeUser&lecture=" + lecture.getId() + "&userid=" + user.getUid(), response) + "\">degradieren</a></td>");
 					out.println("</tr>");
 				}
 			}
 			out.println("<tr>");
 			out.println("<td colspan=2>");
-			printAddUserForm(out, lecture, participants, "advisor");
+			printAddUserForm(out, response, lecture, participants, "advisor");
 			out.println("</td>");
 			out.println("</tr>");
 			out.println("</table><p>");
@@ -95,13 +95,13 @@ public class AdminMenueEditLectureView extends HttpServlet {
 					User user = participation.getUser();
 					out.println("<tr>");
 					out.println("<td>" + Util.escapeHTML(user.getFullName()) + "</td>");
-					out.println("<td><a onclick=\"return confirmLink('Wirklich degradieren?')\" href=\"" + Util.generateHTMLLink("?action=removeUser&lecture=" + lecture.getId() + "&userid=" + user.getUid(), response) + "\">degradieren</a></td>");
+					out.println("<td><a onclick=\"return sendAsPost(this, 'Wirklich degradieren?')\" href=\"" + Util.generateHTMLLink("?action=removeUser&lecture=" + lecture.getId() + "&userid=" + user.getUid(), response) + "\">degradieren</a></td>");
 					out.println("</tr>");
 				}
 			}
 			out.println("<tr>");
 			out.println("<td colspan=2>");
-			printAddUserForm(out, lecture, participants, "tutor");
+			printAddUserForm(out, response, lecture, participants, "tutor");
 			out.println("</td>");
 			out.println("</tr>");
 			out.println("</table><p>");
@@ -110,9 +110,9 @@ public class AdminMenueEditLectureView extends HttpServlet {
 		template.printTemplateFooter();
 	}
 
-	public void printAddUserForm(PrintWriter out, Lecture lecture, List<Participation> participants, String type) {
+	public void printAddUserForm(PrintWriter out, HttpServletResponse response, Lecture lecture, List<Participation> participants, String type) {
 		Iterator<Participation> iterator = participants.iterator();
-		out.println("<form action=\"?\">");
+		out.println("<form method=post action=\"" + Util.generateHTMLLink("?", response) + "\">");
 		out.println("<input type=hidden name=action value=addUser>");
 		out.println("<input type=hidden name=type value=" + type + ">");
 		out.println("<input type=hidden name=lecture value=" + lecture.getId() + ">");

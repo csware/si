@@ -114,7 +114,7 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("</table>");
 		out.println("</form>");
 		if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
-			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("AddGroup?lecture=" + group.getLecture().getId() + "&action=deleteGroup&gid=" + group.getGid(), response) + "\">Gruppe löschen</a></td>");
+			out.println("<p class=mid><a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("AddGroup?lecture=" + group.getLecture().getId() + "&action=deleteGroup&gid=" + group.getGid(), response) + "\">Gruppe löschen</a></td>");
 		}
 		template.printTemplateFooter();
 	}

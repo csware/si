@@ -93,7 +93,7 @@ public class ShowLectureStudentView extends HttpServlet {
 			out.println("Sie sind derzeit in keiner Gruppe.");
 		}
 		if (canJoinGroup) {
-			out.println("<form action=\"" + Util.generateHTMLLink("JoinGroup", response) + "\">");
+			out.println("<form method=post action=\"" + Util.generateHTMLLink("JoinGroup", response) + "\">");
 			out.println("<select name=groupid>");
 			for (Group group : joinAbleGroups) {
 				out.println("<option value=" + group.getGid() + ">" + Util.escapeHTML(group.getName()));

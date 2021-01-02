@@ -46,33 +46,34 @@ public class SubscribeToLecture extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
-		if (request.getParameter("lecture") != null) {
-			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
-			if (lecture == null) {
-				request.setAttribute("title", "Veranstaltung nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-				return;
-			}
-
-			ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-			Transaction tx = session.beginTransaction();
-			Participation participation = participationDAO.getParticipationLocked(RequestAdapter.getUser(request), lecture);
-			if (participation != null) {
-				tx.commit();
-				response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
-				return;
-			} else if (lecture.getSemester() < Util.getCurrentSemester()) {
-				tx.commit();
-				response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
-				return;
-			} else {
-				participationDAO.createParticipation(RequestAdapter.getUser(request), lecture, ParticipationRole.NORMAL);
-				tx.commit();
-				response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
-				return;
-			}
-		}
 		request.setAttribute("lectures", DAOFactory.LectureDAOIf(session).getCurrentLecturesWithoutUser(RequestAdapter.getUser(request)));
 		request.getRequestDispatcher("SubscribeToLectureView").forward(request, response);
+	}
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Session session = RequestAdapter.getSession(request);
+
+		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+		if (lecture == null) {
+			request.setAttribute("title", "Veranstaltung nicht gefunden");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Transaction tx = session.beginTransaction();
+		Participation participation = participationDAO.getParticipationLocked(RequestAdapter.getUser(request), lecture);
+		if (participation != null) {
+			tx.commit();
+			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
+		} else if (lecture.getSemester() != Util.getCurrentSemester()) {
+			tx.commit();
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+		} else {
+			participationDAO.createParticipation(RequestAdapter.getUser(request), lecture, ParticipationRole.NORMAL);
+			tx.commit();
+			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
+		}
 	}
 }

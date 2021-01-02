@@ -70,7 +70,7 @@ public class PerformStudentTest extends HttpServlet {
 		Test test = DAOFactory.TestDAOIf(session).getTest(Util.parseInteger(request.getParameter("testid"), 0));
 		if (test == null) {
 			QueuedTest resultFuture = sa.getQueuedTest();
-			if (resultFuture != null && request.getParameter("refresh") != null && resultFuture.testId == Util.parseInteger(request.getParameter("testid"), 0)) {
+			if (resultFuture != null && resultFuture.testId == Util.parseInteger(request.getParameter("testid"), 0)) {
 				sa.setQueuedTest(null);
 			}
 			request.setAttribute("title", "Test nicht gefunden");
@@ -85,7 +85,7 @@ public class PerformStudentTest extends HttpServlet {
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
 		if (participation == null || test.getTimesRunnableByStudents() == 0) {
 			QueuedTest resultFuture = sa.getQueuedTest();
-			if (resultFuture != null && request.getParameter("refresh") != null && resultFuture.testId == test.getId()) {
+			if (resultFuture != null && resultFuture.testId == test.getId()) {
 				sa.setQueuedTest(null);
 			}
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
@@ -100,7 +100,7 @@ public class PerformStudentTest extends HttpServlet {
 			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			QueuedTest resultFuture = sa.getQueuedTest();
-			if (resultFuture != null && request.getParameter("refresh") != null && resultFuture.testId == test.getId()) {
+			if (resultFuture != null && resultFuture.testId == test.getId()) {
 				sa.setQueuedTest(null);
 			}
 			return;
@@ -152,86 +152,121 @@ public class PerformStudentTest extends HttpServlet {
 
 		QueuedTest resultFuture = sa.getQueuedTest();
 		if (resultFuture == null) {
-			if (request.getParameter("refresh") == null) {
-				// prevent user from redo a test by mistake
+			request.setAttribute("title", "Testergebnis nicht (mehr) verfügbar");
+			request.setAttribute("message", "<div class=mid>Das Testergebnis konnte nicht abgerufen werden. Entweder wurde es bereits abgerufen oder es wurde eine neue Sitzung gestartet.<p><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
 
-				if (testCountDAO.canStillRunXTimes(test, submission) == 0) {
-					request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
-					request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-					request.getRequestDispatcher("MessageView").forward(request, response);
-					return;
-				}
+		if (test.getId() != resultFuture.testId) {
+			log.warn("Mismatching testid in session " + resultFuture.testId + " and on request " + test.getId());
+			request.setAttribute("title", "Es kann immer nur ein Test zu einer Zeit angefordert werden.");
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("PerformStudentTest?testid=" + resultFuture.testId, response) + "\">weiter zum bereits angefragten Test</a></div>");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
 
-				Transaction tx = session.beginTransaction();
-				session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
-				if ((resultFuture = sa.getQueuedTest()) != null) {
-					tx.commit();
-					request.setAttribute("title", "Es kann immer nur ein Test zu einer Zeit angefragt werden.");
-					request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("PerformStudentTest?refresh=true&testid=" + resultFuture.testId, response) + "\">weiter zum bereits angefragten Test</a></div>");
-					request.getRequestDispatcher("MessageView").forward(request, response);
-					return;
-				}
-				sa.setQueuedTest(new QueuedTest(test.getId(), submission.getLastModified(), TestExecutor.executeTask(new TestTask(test, submission))));
-				tx.commit();
-				gotoWaitingView(request, response, "testid=" + test.getId());
-			} else {
-				request.setAttribute("title", "Testergebnis nicht mehr verfügbar.");
-				request.setAttribute("message", "<div class=mid>Das Testergebnis konnte nicht abgerufen werden. Entweder wurde es bereits abgerufen oder es wurde eine neue Sitzung gestartet.<p><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+		if (resultFuture.testResult.isDone()) {
+			TestExecutorTestResult result = null;
+			try {
+				result = resultFuture.testResult.get();
+			} catch (InterruptedException e) {
+				log.warn("Was interrupted while waiting for test to finish", e);
+			} catch (ExecutionException e) {
+				log.error("Got ExecutionException while accessing test result", e);
 			}
-		} else {
-			if (request.getParameter("refresh") == null || test.getId() != resultFuture.testId) {
-				request.setAttribute("title", "Es kann immer nur ein Test zu einer Zeit angefragt werden.");
-				request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("PerformStudentTest?refresh=true&testid=" + resultFuture.testId, response) + "\">weiter zum bereits angefragten Test</a></div>");
+
+			sa.setQueuedTest(null);
+
+			Transaction tx = session.beginTransaction();
+			session.refresh(submission, LockModeType.PESSIMISTIC_WRITE);
+			if (!resultFuture.submissionLastChanged.equals(submission.getLastModified()) || submission.isClosed()) {
+				tx.commit();
+				request.setAttribute("title", "Das Testergebnis wurde durch eine zwischenzeitlich modifizierte Abgabe ungültig.");
+				request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 				return;
 			}
-
-			if (resultFuture.testResult.isDone()) {
-				TestExecutorTestResult result = null;
-				try {
-					result = resultFuture.testResult.get();
-				} catch (InterruptedException e) {
-					log.warn("Was interrupted while waiting for test to finish", e);
-				} catch (ExecutionException e) {
-					log.error("Got ExecutionException while accessing test result", e);
-				}
-
-				Transaction tx = session.beginTransaction();
-				session.refresh(submission, LockModeType.PESSIMISTIC_WRITE);
-				if (!resultFuture.submissionLastChanged.equals(submission.getLastModified()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
-					sa.setQueuedTest(null);
-					tx.commit();
-					request.setAttribute("title", "Das Testergebnis wurde durch eine zwischenzeitlich modifizierte Abgabe ungültig.");
-					request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-					request.getRequestDispatcher("MessageView").forward(request, response);
-					return;
-				}
-				if (!testCountDAO.canSeeResultAndIncrementCounterTransaction(test, submission)) {
-					sa.setQueuedTest(null);
-					tx.commit();
-					request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
-					request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-					request.getRequestDispatcher("MessageView").forward(request, response);
-					return;
-				}
-
-				sa.setQueuedTest(null);
+			if (!testCountDAO.canSeeResultAndIncrementCounterTransaction(test, submission)) {
 				tx.commit();
-
-				new LogDAO(session).createLogEntry(participation.getUser(), test, test.getTask(), LogAction.PERFORMED_TEST, result.isTestPassed(), result.getTestOutput());
-				request.setAttribute("testresult", result);
-
-				request.getRequestDispatcher("PerformStudentTestResultView").forward(request, response);
-			} else {
-				gotoWaitingView(request, response, "testid=" + resultFuture.testId);
+				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
+				request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
 			}
+			tx.commit();
+
+			new LogDAO(session).createLogEntry(participation.getUser(), test, test.getTask(), LogAction.PERFORMED_TEST, result.isTestPassed(), result.getTestOutput());
+			request.setAttribute("testresult", result);
+
+			request.getRequestDispatcher("PerformStudentTestResultView").forward(request, response);
+		} else {
+			request.setAttribute("refreshurl", Util.generateRedirectURL("PerformStudentTest?testid=" + resultFuture.testId, response));
+			request.setAttribute("redirectTime", 5);
+			request.getRequestDispatcher("PerformStudentTestRunningView").forward(request, response);
 		}
 	}
 
-	private void gotoWaitingView(HttpServletRequest request, HttpServletResponse response, String url) throws IOException, ServletException {
-		request.setAttribute("refreshurl", Util.generateRedirectURL("PerformStudentTest?refresh=true&" + url, response));
-		request.setAttribute("redirectTime", 5);
-		request.getRequestDispatcher("PerformStudentTestRunningView").forward(request, response);
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Session session = RequestAdapter.getSession(request);
+		Test test = DAOFactory.TestDAOIf(session).getTest(Util.parseInteger(request.getParameter("testid"), 0));
+		if (test == null) {
+			request.setAttribute("title", "Test nicht gefunden");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
+		Task task = test.getTask();
+
+		// check Lecture Participation
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
+		if (participation == null || test.getTimesRunnableByStudents() == 0) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+		Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
+		if (submission == null) {
+			request.setAttribute("title", "Abgabe nicht gefunden");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
+		if ((task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed()))) {
+			request.setAttribute("title", "Testen nicht mehr möglich");
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
+		TestCountDAOIf testCountDAO = DAOFactory.TestCountDAOIf(session);
+
+		request.setAttribute("task", task);
+		request.setAttribute("test", test);
+
+		if (testCountDAO.canStillRunXTimes(test, submission) == 0) {
+			request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
+		SessionAdapter sa = RequestAdapter.getSessionAdapter(request);
+		Transaction tx = session.beginTransaction();
+		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
+		QueuedTest resultFuture = sa.getQueuedTest();
+		if (resultFuture != null) {
+			tx.commit();
+			request.setAttribute("title", "Es kann immer nur ein Test zu einer Zeit angefragt werden.");
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("PerformStudentTest?testid=" + resultFuture.testId, response) + "\">weiter zum bereits angefragten Test</a></div>");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+		sa.setQueuedTest(new QueuedTest(test.getId(), submission.getLastModified(), TestExecutor.executeTask(new TestTask(test, submission))));
+		tx.commit();
+		response.sendRedirect(Util.generateRedirectURL("PerformStudentTest?testid=" + test.getId(), response));
 	}
 }

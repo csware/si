@@ -44,7 +44,7 @@ public class EditParticipation extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(Util.parseInteger(request.getParameter("participationid"), 0));
@@ -73,11 +73,5 @@ public class EditParticipation extends HttpServlet {
 		} else {
 			response.sendRedirect(Util.generateRedirectURL("ShowLecture?action=showLecture&lecture=" + callerParticipation.getLecture().getId(), response));
 		}
-	}
-
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// don't want to have any special post-handling
-		doGet(request, response);
 	}
 }

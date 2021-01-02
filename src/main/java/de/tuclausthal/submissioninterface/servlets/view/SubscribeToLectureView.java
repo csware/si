@@ -58,7 +58,7 @@ public class SubscribeToLectureView extends HttpServlet {
 			for (Lecture lecture : lectures) {
 				out.println("<tr>");
 				out.println("<td>" + Util.escapeHTML(lecture.getName()) + "</td>");
-				out.println("<td><a href=\"" + Util.generateHTMLLink("?lecture=" + lecture.getId(), response) + "\">anmelden</a></td>");
+				out.println("<td><form method=post action=\"" + Util.generateHTMLLink("?lecture=" + lecture.getId(), response) + "\"><input type=submit value=anmelden></form></td>");
 				out.println("</tr>");
 			}
 			out.println("</table><p>");

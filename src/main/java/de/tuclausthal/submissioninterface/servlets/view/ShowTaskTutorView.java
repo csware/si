@@ -137,7 +137,7 @@ public class ShowTaskTutorView extends HttpServlet {
 
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask", response) + "\">Aufgabe bearbeiten</a></div>");
-			out.println("<p><div class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deleteTask", response) + "\">Aufgabe löschen</a></div>");
+			out.println("<p><div class=mid><a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deleteTask", response) + "\">Aufgabe löschen</a></div>");
 		}
 
 		if (!task.isMCTask() && !task.isADynamicTask() && (participation.getRoleType() == ParticipationRole.ADVISOR || task.isTutorsCanUploadFiles()) && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {

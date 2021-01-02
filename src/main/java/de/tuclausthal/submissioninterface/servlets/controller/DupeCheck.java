@@ -66,6 +66,29 @@ public class DupeCheck extends HttpServlet {
 			return;
 		}
 
+		request.setAttribute("task", task);
+		request.getRequestDispatcher("DupeCheckFormView").forward(request, response);
+	}
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Session session = RequestAdapter.getSession(request);
+		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+		if (task == null) {
+			request.setAttribute("title", "Aufgabe nicht gefunden");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
+		// check Lecture Participation
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
+		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
 		SimilarityTestDAOIf semilarityTestDAO = DAOFactory.SimilarityTestDAOIf(session);
 		if ("deleteSimilarityTest".equals(request.getParameter("action")) && request.getParameter("similaritytestid") != null) {
 			Transaction tx = session.beginTransaction();
@@ -91,14 +114,7 @@ public class DupeCheck extends HttpServlet {
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		} else {
-			request.setAttribute("task", task);
-			request.getRequestDispatcher("DupeCheckFormView").forward(request, response);
+			response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
 		}
-	}
-
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// don't want to have any special post-handling
-		doGet(request, response);
 	}
 }

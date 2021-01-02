@@ -66,7 +66,7 @@ public class AdminMenueOverView extends HttpServlet {
 		}
 		out.println("<p class=mid><a href=\"" + Util.generateHTMLLink("?action=newLecture", response) + "\">Neue Veranstaltung</a></p>");
 		out.println("<p class=mid><a href=\"" + Util.generateHTMLLink("?action=showAdminUsers", response) + "\">Super User anzeigen</a></p>");
-		out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich CleanUp durchführen?')\" href=\"" + Util.generateHTMLLink("?action=cleanup", response) + "\">Verzeichnis Cleanup</a></p>");
+		out.println("<p class=mid><a onclick=\"return sendAsPost(this, 'Wirklich CleanUp durchführen?')\" href=\"" + Util.generateHTMLLink("?action=cleanup", response) + "\">Verzeichnis Cleanup</a></p>");
 
 		template.printTemplateFooter();
 	}
