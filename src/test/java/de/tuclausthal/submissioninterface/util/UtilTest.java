@@ -101,4 +101,78 @@ public class UtilTest {
 
 		Util.CLOCK = Clock.systemDefaultZone();
 	}
+
+	@Test
+	public void testEscapeHTML() {
+		assertEquals("", Util.escapeHTML(""));
+		assertEquals("", Util.escapeHTML(null));
+		assertEquals("some\nthing", Util.escapeHTML("some\nthing"));
+		assertEquals("&amp;s&lt;b&gt;ometh&quot;ing", Util.escapeHTML("&s<b>ometh\"ing"));
+	}
+
+	@Test
+	public void testMakeCleanHTML() {
+		assertEquals("", Util.makeCleanHTML(""));
+		assertEquals("", Util.makeCleanHTML(null));
+		assertEquals("some\nthing", Util.makeCleanHTML("some\nthing"));
+		assertEquals("&amp;s<b>ometh&quot;ing&lt;script&gt;<div style=\"fff\">", Util.makeCleanHTML("&s<b>ometh\"ing<script><div style=\"fff\">"));
+	}
+
+	@Test
+	public void testTextToHTML() {
+		assertEquals("", Util.textToHTML(""));
+		assertEquals("", Util.textToHTML(null));
+		assertEquals("some<br>thing", Util.textToHTML("some\nthing"));
+		assertEquals("some\r<br>thing", Util.textToHTML("some\r\nthing"));
+	}
+
+	@Test
+	public void testShowPoints() {
+		assertEquals("0", Util.showPoints(0));
+		assertEquals("1", Util.showPoints(100));
+		assertEquals("1,5", Util.showPoints(150));
+		assertEquals("1,05", Util.showPoints(105));
+	}
+
+	@Test
+	public void testConvertToPoints() {
+		assertEquals(0, Util.convertToPoints("0"));
+		assertEquals(0, Util.convertToPoints("-5"));
+		assertEquals(0, Util.convertToPoints("something"));
+		assertEquals(100, Util.convertToPoints("1"));
+		assertEquals(150, Util.convertToPoints("1,5"));
+		assertEquals(170, Util.convertToPoints("1,7"));
+		assertEquals(170, Util.convertToPoints("1.7"));
+		assertEquals(175, Util.convertToPoints("1,75"));
+		assertEquals(20000, Util.convertToPoints("200"));
+	}
+
+	@Test
+	public void testConvertToPointsMinPointStep() {
+		assertEquals(0, Util.convertToPoints("0", 50));
+		assertEquals(0, Util.convertToPoints("-5", 50));
+		assertEquals(0, Util.convertToPoints("something", 50));
+		assertEquals(100, Util.convertToPoints("1", 50));
+		assertEquals(50, Util.convertToPoints("0,5", 50));
+		assertEquals(150, Util.convertToPoints("1,5", 50));
+		assertEquals(150, Util.convertToPoints("1,7", 50));
+		assertEquals(150, Util.convertToPoints("1.7", 50));
+		assertEquals(150, Util.convertToPoints("1,75", 50));
+	}
+
+	@Test
+	public void testLowerCaseExtension() {
+		StringBuffer buffer;
+		buffer = new StringBuffer();
+		Util.lowerCaseExtension(buffer);
+		assertEquals("", buffer.toString());
+
+		buffer = new StringBuffer("bLa");
+		Util.lowerCaseExtension(buffer);
+		assertEquals("bLa", buffer.toString());
+
+		buffer = new StringBuffer("Hello.JaVa");
+		Util.lowerCaseExtension(buffer);
+		assertEquals("Hello.java", buffer.toString());
+	}
 }

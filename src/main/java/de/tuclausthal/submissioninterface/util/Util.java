@@ -413,7 +413,7 @@ public final class Util {
 	}
 
 	public static String showPoints(int maxPoints) {
-		return NumberFormat.getInstance().format(maxPoints / 100.0);
+		return NumberFormat.getInstance(Locale.GERMANY).format(maxPoints / 100.0);
 	}
 
 	public static int convertToPoints(String parameter) {
