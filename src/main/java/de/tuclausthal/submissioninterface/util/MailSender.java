@@ -27,7 +27,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeUtility;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,15 +52,13 @@ public class MailSender {
 			msg.setSentDate(new Date());
 			subject = subject.replace("\r", " ");
 			subject = subject.replace("\n", " ");
-			msg.setSubject(MimeUtility.encodeText(Configuration.getInstance().getMailSubjectPrefix() + subject, "UTF-8", "Q"));
+			msg.setSubject(Configuration.getInstance().getMailSubjectPrefix() + subject, "UTF-8");
 			msg.setHeader("X-Mailer", "GATE");
 
 			// kein Anhang, Mailtext wird direkt der Mail hinzugefügt.
 			msg.setText(messageText, "UTF-8");
 
 			Transport.send(msg);
-		} catch (java.io.UnsupportedEncodingException e) {
-			log.error("Fehler UnsupportedEncodingException in MailSender: ", e);
 		} catch (MessagingException e) {
 			log.error("Fehler MessagingException in MailSender: ", e);
 		}
