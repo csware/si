@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2014, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2014, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -342,7 +342,10 @@ public final class Util {
 	 * @return the semester encoded as integer
 	 */
 	public static int getCurrentSemester() {
-		if (ZonedDateTime.now(CLOCK).getMonth().getValue() > 7) {
+		if (ZonedDateTime.now(CLOCK).getMonth().getValue() < 3) {
+			// running winter lecture of last year
+			return (ZonedDateTime.now(CLOCK).getYear() - 1) * 10 + 1;
+		} else if (ZonedDateTime.now(CLOCK).getMonth().getValue() > 8) {
 			// winter lecture
 			return ZonedDateTime.now(CLOCK).getYear() * 10 + 1;
 		}

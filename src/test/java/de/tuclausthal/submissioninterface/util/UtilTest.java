@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,6 +19,10 @@
 package de.tuclausthal.submissioninterface.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
 
 import org.junit.jupiter.api.Test;
 
@@ -63,5 +67,38 @@ public class UtilTest {
 		StringBuffer stringBuffer = new StringBuffer("\r\n \r\nfdfdsf\r\n ");
 		Util.cleanCrLf(stringBuffer);
 		assertEquals("\n \nfdfdsf\n ", stringBuffer.toString());
+	}
+
+	@Test
+	public void testGetCurrentSemester() {
+		Util.CLOCK = Clock.fixed(Instant.parse("2020-12-21T12:00:00Z"), ZoneOffset.UTC);
+
+		assertEquals(20201, Util.getCurrentSemester());
+
+		Util.CLOCK = Clock.fixed(Instant.parse("2021-01-08T10:00:00Z"), ZoneOffset.UTC);
+
+		assertEquals(20201, Util.getCurrentSemester());
+
+		Util.CLOCK = Clock.fixed(Instant.parse("2021-03-16T10:00:00Z"), ZoneOffset.UTC);
+
+		assertEquals(20210, Util.getCurrentSemester());
+
+		Util.CLOCK = Clock.fixed(Instant.parse("2021-04-08T10:00:00Z"), ZoneOffset.UTC);
+
+		assertEquals(20210, Util.getCurrentSemester());
+
+		Util.CLOCK = Clock.fixed(Instant.parse("2021-07-08T10:00:00Z"), ZoneOffset.UTC);
+
+		assertEquals(20210, Util.getCurrentSemester());
+
+		Util.CLOCK = Clock.fixed(Instant.parse("2021-08-08T10:00:00Z"), ZoneOffset.UTC);
+
+		assertEquals(20210, Util.getCurrentSemester());
+
+		Util.CLOCK = Clock.fixed(Instant.parse("2021-09-08T10:00:00Z"), ZoneOffset.UTC);
+
+		assertEquals(20211, Util.getCurrentSemester());
+
+		Util.CLOCK = Clock.systemDefaultZone();
 	}
 }
