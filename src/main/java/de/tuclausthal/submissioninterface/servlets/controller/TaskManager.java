@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2014, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2014, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -106,7 +106,7 @@ public class TaskManager extends HttpServlet {
 					request.setAttribute("mcOptions", DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task));
 				}
 			} else {
-				if (lecture.getTaskGroups().size() == 0) {
+				if (lecture.getTaskGroups().isEmpty()) {
 					request.setAttribute("title", "Es wurde noch keine Aufgabengruppe angelegt");
 					request.getRequestDispatcher("MessageView").forward(request, response);
 					return;
@@ -143,7 +143,7 @@ public class TaskManager extends HttpServlet {
 				if (!task.isMCTask()) {
 					task.setMinPointStep(Util.convertToPoints(request.getParameter("minpointstep")));
 				}
-				if (task.getPointCategories().size() == 0) {
+				if (task.getPointCategories().isEmpty()) {
 					task.setMaxPoints(Util.convertToPoints(request.getParameter("maxpoints"), task.getMinPointStep()));
 				}
 				task.setTitle(request.getParameter("title").trim());

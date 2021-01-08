@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -79,7 +79,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		out.println("<th rowspan=2>Vorname</th>");
 		for (TaskGroup taskGroup : taskGroupList) {
 			List<Task> taskList = taskGroup.getTasks();
-			if (taskList.size() > 0) {
+			if (!taskList.isEmpty()) {
 				out.println("<th colspan=" + taskList.size() + ">" + Util.escapeHTML(taskGroup.getTitle()) + "</th>");
 			}
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -62,7 +62,7 @@ public class MarkEmptyTaskView extends HttpServlet {
 			}
 		}
 		out.println("</select><br>");
-		if (task.getPointCategories().size() > 0) {
+		if (!task.getPointCategories().isEmpty()) {
 			out.println("<b>Punkte:</b><br>");
 			out.println("<input type=hidden name=points value=categories>");
 			out.println("<ul>");

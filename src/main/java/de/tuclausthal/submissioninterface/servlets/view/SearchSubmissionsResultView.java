@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -50,7 +50,7 @@ public class SearchSubmissionsResultView extends HttpServlet {
 
 		template.printTemplateHeader("Suchergebnisse", task);
 		PrintWriter out = response.getWriter();
-		if (foundSubmissions.size() > 0) {
+		if (!foundSubmissions.isEmpty()) {
 			out.println("<table>");
 			for (Submission submission : foundSubmissions) {
 				out.println("<tr>");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -187,7 +187,7 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 		@SuppressWarnings("unchecked")
 		Join<Participation, User> userJoin = (Join<Participation, User>) root.fetch(Participation_.user);
 		Predicate where = builder.and(builder.equal(root.get(Participation_.lecture), group.getLecture()), root.get(Participation_.role).in(ParticipationRole.TUTOR.toString(), ParticipationRole.ADVISOR.toString()));
-		if (group.getTutors().size() > 0) {
+		if (!group.getTutors().isEmpty()) {
 			where = builder.and(where, builder.not(root.in(group.getTutors())));
 		}
 		criteria.where(where);

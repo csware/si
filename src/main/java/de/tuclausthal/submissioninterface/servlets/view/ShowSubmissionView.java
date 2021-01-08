@@ -180,7 +180,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<form action=\"?\" method=post>");
 			out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
 			// attention: quite similar code in MarkEmptyTaskView
-			if (task.getPointCategories().size() > 0) {
+			if (!task.getPointCategories().isEmpty()) {
 				PointGivenDAOIf pointGivenDAO = DAOFactory.PointGivenDAOIf(session);
 				Iterator<PointGiven> pointsGivenIterator = pointGivenDAO.getPointsGivenOfSubmission(submission).iterator();
 				PointGiven lastPointGiven = null;
@@ -251,7 +251,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<p>");
 		}
 
-		if (submission.getSimilarSubmissions().size() > 0) {
+		if (!submission.getSimilarSubmissions().isEmpty()) {
 			out.println("<h2>Ähnliche Abgaben: <a href=\"#\" onclick=\"$('#similarSubmissions').toggle(); return false;\">(+/-)</a></h2>");
 			if (requestAdapter.isPrivacyMode()) {
 				out.println("<table id=similarSubmissions style=\"display:none;\">");
@@ -284,7 +284,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("</table><p>");
 		}
 
-		if (submission.getTestResults().size() > 0) {
+		if (!submission.getTestResults().isEmpty()) {
 			out.println("<h2>Tests: <a href=\"#\" onclick=\"$('#tests').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<ul id=tests>");
 			for (TestResult testResult : submission.getTestResults()) {
@@ -360,7 +360,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("</ul>");
 		}
 
-		if (submittedFiles.size() > 0) {
+		if (!submittedFiles.isEmpty()) {
 			out.println("<h2>Dateien: <a href=\"#\" onclick=\"$('#files').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<div id=files class=mid>");
 			out.println("<p><a href=\"" + response.encodeURL("DownloadAsZip?sid=" + submission.getSubmissionid()) + "\">alles als .zip herunterladen</a></p>");

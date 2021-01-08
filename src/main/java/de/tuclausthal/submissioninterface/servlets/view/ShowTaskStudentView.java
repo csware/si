@@ -98,7 +98,7 @@ public class ShowTaskStudentView extends HttpServlet {
 		out.println("<th>Max. Punkte:</th>");
 		out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 		out.println("</tr>");
-		if (advisorFiles.size() > 0) {
+		if (!advisorFiles.isEmpty()) {
 			out.println("<tr>");
 			out.println("<th>Hinterlegte Dateien:</th>");
 			out.println("<td><ul class=taskfiles>");
@@ -130,7 +130,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("</td>");
 				out.println("</tr>");
 			}
-			if (submittedFiles.size() > 0) {
+			if (!submittedFiles.isEmpty()) {
 				out.println("<tr>");
 				out.println("<th>Besteht aus:</th>");
 				out.println("<td>");
@@ -206,7 +206,7 @@ public class ShowTaskStudentView extends HttpServlet {
 					if (submission.getPoints().getDuplicate() != null) {
 						out.println(" (Plagiat)");
 					}
-					if (task.getPointCategories().size() > 0) {
+					if (!task.getPointCategories().isEmpty()) {
 						PointGivenDAOIf pointGivenDAO = DAOFactory.PointGivenDAOIf(session);
 						Iterator<PointGiven> pointsGivenIterator = pointGivenDAO.getPointsGivenOfSubmission(submission).iterator();
 						PointGiven lastPointGiven = null;
@@ -271,7 +271,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			} else if (task.isMCTask()) {
 				out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe bearbeiten</a></div>");
 			} else {
-				if (submittedFiles.size() > 0) {
+				if (!submittedFiles.isEmpty()) {
 					out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe erweitern</a></div>");
 				} else {
 					out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div>");
@@ -280,7 +280,7 @@ public class ShowTaskStudentView extends HttpServlet {
 
 			List<Test> tests = DAOFactory.TestDAOIf(session).getStudentTests(task);
 			TestCountDAOIf testCountDAO = DAOFactory.TestCountDAOIf(session);
-			if (submittedFiles.size() > 0 && tests.size() > 0 && task.getDeadline().after(Util.correctTimezone(new Date())) && !(task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
+			if (!submittedFiles.isEmpty() && !tests.isEmpty() && task.getDeadline().after(Util.correctTimezone(new Date())) && !(task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
 				out.println("<p><h2>Mögliche Tests:</h2>");
 				out.println("<table class=border>");
 				for (Test test : tests) {
@@ -314,7 +314,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			}
 		}
 
-		if (modelSolutionFiles != null && modelSolutionFiles.size() > 0) {
+		if (modelSolutionFiles != null && !modelSolutionFiles.isEmpty()) {
 			out.println("<h2>Musterlösung:</h2>");
 			out.println("<p>Für diese Aufgabe werden Ihnen folgende Dateien als Musterlösung zur Verfügung gestellt:</p>");
 			out.println("<ul>");

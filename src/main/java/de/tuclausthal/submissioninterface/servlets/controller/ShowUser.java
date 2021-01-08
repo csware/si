@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2013, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2013, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -55,7 +55,7 @@ public class ShowUser extends HttpServlet {
 			}
 		}
 
-		if (possibleLectures.size() == 0) {
+		if (possibleLectures.isEmpty()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
@@ -78,7 +78,7 @@ public class ShowUser extends HttpServlet {
 			}
 		}
 
-		if (participations.size() == 0) {
+		if (participations.isEmpty()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}

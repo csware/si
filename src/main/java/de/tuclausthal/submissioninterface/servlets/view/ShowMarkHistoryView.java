@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -66,7 +66,7 @@ public class ShowMarkHistoryView extends HttpServlet {
 
 		List<PointHistory> ph = new ArrayList<>();
 		for (PointHistory pointHistory : data) {
-			if (ph.size() > 0) {
+			if (!ph.isEmpty()) {
 				if (!pointHistory.getDate().equals(ph.get(ph.size() - 1).getDate())) {
 					printRow(out, ph);
 				}

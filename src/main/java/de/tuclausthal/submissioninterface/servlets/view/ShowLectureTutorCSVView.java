@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2013, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -96,7 +96,7 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 			out.print(Util.csvQuote(lectureParticipation.getUser().getLastName()) + ";");
 			out.print(Util.csvQuote(lectureParticipation.getUser().getFirstName()) + ";");
 			out.print(Util.csvQuote(lectureParticipation.getUser().getEmail()));
-			if (taskGroupList.size() > 0) {
+			if (!taskGroupList.isEmpty()) {
 				out.print(";");
 			}
 			int points = 0;

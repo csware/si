@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -88,7 +88,7 @@ public abstract class AbstractDynamicTaskStrategie implements DynamicTaskStrateg
 		TaskNumberDAOIf taskNumberDAO = DAOFactory.TaskNumberDAOIf(session);
 		Transaction tx = session.beginTransaction();
 		List<TaskNumber> taskNumbers = taskNumberDAO.getTaskNumbersForTaskLocked(task, participation);
-		if (taskNumbers.size() == 0) {
+		if (taskNumbers.isEmpty()) {
 			taskNumbers = createTaskNumbers(participation);
 			for (TaskNumber taskNumber : taskNumbers) {
 				session.save(taskNumber);
@@ -127,7 +127,7 @@ public abstract class AbstractDynamicTaskStrategie implements DynamicTaskStrateg
 	@Override
 	final public List<String> getUserResults(Submission submission) {
 		List<String> results = DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission);
-		if (results.size() == 0) {
+		if (results.isEmpty()) {
 			results = new ArrayList<>();
 			for (int i = 0; i < getNumberOfResultFields(); i++) {
 				results.add("");

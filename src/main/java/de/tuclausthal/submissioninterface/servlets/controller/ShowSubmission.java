@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -99,7 +99,7 @@ public class ShowSubmission extends HttpServlet {
 				duplicate = Util.parseInteger(request.getParameter("duplicate"), -1);
 			}
 			// attention: quite similar code in MarkEmptyTask
-			if (task.getPointCategories().size() > 0) {
+			if (!task.getPointCategories().isEmpty()) {
 				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, duplicate, new ContextAdapter(request.getServletContext()));
 			} else {
 				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, duplicate, new ContextAdapter(request.getServletContext()));

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -222,7 +222,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<td><input type=text size=5 name=minpointstep value=\"" + Util.showPoints(task.getMinPointStep()) + "\"> <b>bei Änderung bereits vergebene Pkts. prüfen!</b></td>");
 			out.println("</tr>");
 		}
-		if (task.getPointCategories() == null || task.getPointCategories().size() == 0) {
+		if (task.getPointCategories() == null || task.getPointCategories().isEmpty()) {
 			out.println("<tr>");
 			out.println("<th>Max. Punkte:</th>");
 			out.println("<td><input type=text size=5 name=maxpoints value=\"" + Util.showPoints(task.getMaxPoints()) + "\">" + (task.getTaskid() != 0 ? " <b>bei Änderung bereits vergebene Pkts. prüfen!</b>" : "") + "</td>");
@@ -271,7 +271,7 @@ public class TaskManagerView extends HttpServlet {
 		} else if (task.getTaskid() != 0) {
 			out.println("<h2>Punkte</h2>");
 			out.println("<p>Werden hier Kriterien angelegt, so wird den Tutoren eine differenzierte Bewertung ermöglicht (für " + Util.showPoints(task.getMinPointStep()) + " Punkte wird eine Checkbox angezeigt, für &gt; " + Util.showPoints(task.getMinPointStep()) + " Punkte erscheint ein Texteingabefeld).</p>");
-			if (task.getPointCategories().size() > 0) {
+			if (!task.getPointCategories().isEmpty()) {
 				out.println("<ul>");
 				for (PointCategory category : task.getPointCategories()) {
 					out.println("<li>" + Util.escapeHTML(category.getDescription()) + "; " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? ", optional" : "") + " (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deletePointCategory&amp;pointCategoryId=" + category.getPointcatid()) + "\">del</a>)</li>");
@@ -291,7 +291,7 @@ public class TaskManagerView extends HttpServlet {
 
 		if (task.getTaskid() != 0) {
 			out.println("<h2>Dateien hinterlegen</h2>");
-			if (advisorFiles.size() > 0) {
+			if (!advisorFiles.isEmpty()) {
 				out.println("<ul>");
 				for (String file : advisorFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
@@ -306,7 +306,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("</FORM>");
 
 			out.println("<h2>Musterlösung hinterlegen</h2>");
-			if (modelSolutionFiles.size() > 0) {
+			if (!modelSolutionFiles.isEmpty()) {
 				out.println("<p><form action=\"" + response.encodeURL("?") + "\" method=post>");
 				out.println("<input type=hidden name=action value=\"provideModelSolutionToStudents\">");
 				out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
@@ -335,7 +335,7 @@ public class TaskManagerView extends HttpServlet {
 		// don't show for new tasks
 		if (task.getTaskid() != 0 && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
 			out.println("<h2>Ähnlichkeitsprüfungen</h2>");
-			if (task.getSimularityTests().size() > 0) {
+			if (!task.getSimularityTests().isEmpty()) {
 				out.println("<ul>");
 				for (SimilarityTest similarityTest : task.getSimularityTests()) {
 					out.print("<li>" + similarityTest + "<br>");
@@ -357,7 +357,7 @@ public class TaskManagerView extends HttpServlet {
 			if (!task.isADynamicTask()) {
 				out.println("<h2>Funktionstests der Abgaben</h2>");
 				out.println("<p class=mid><a href=\"" + response.encodeURL("TestManager?action=newTest&amp;taskid=" + task.getTaskid()) + "\">Test hinzufügen</a></p>");
-				if (task.getTests().size() > 0) {
+				if (!task.getTests().isEmpty()) {
 					out.println("<ul>");
 					for (Test test : task.getTests()) {
 						out.println("<li>&quot;" + Util.escapeHTML(test.getTestTitle()) + "&quot;: ");

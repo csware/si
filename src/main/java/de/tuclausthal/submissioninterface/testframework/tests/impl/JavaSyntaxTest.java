@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -53,7 +53,7 @@ public class JavaSyntaxTest extends TempDirTest {
 			List<String> javaFiles = new ArrayList<>();
 			getRecursivelyAllJavaFiles(javaDir, javaFiles);
 
-			if (javaFiles.size() > 0) {
+			if (!javaFiles.isEmpty()) {
 				compiles = jc.run(null, null, errorOutputStream, javaFiles.toArray(new String[] {}));
 			}
 			if (testResult != null) {

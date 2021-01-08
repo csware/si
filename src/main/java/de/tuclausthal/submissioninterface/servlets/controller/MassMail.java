@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -143,7 +143,7 @@ public class MassMail extends HttpServlet {
 				}
 			}
 		}
-		if (receipients.size() == 0) {
+		if (receipients.isEmpty()) {
 			request.setAttribute("title", "Keine Empfänger ausgewählt");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;

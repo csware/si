@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -71,7 +71,7 @@ public class TaskNumberDAO extends AbstractDAO implements TaskNumberDAOIf {
 	@Override
 	public void assignTaskNumbersToSubmission(Submission submission, Participation participation) {
 		// only assign new numbers if not already numbers exist
-		if (getTaskNumbersForSubmission(submission).size() == 0) {
+		if (getTaskNumbersForSubmission(submission).isEmpty()) {
 			for (TaskNumber taskNumber : getTaskNumbersForTaskLocked(submission.getTask(), participation)) {
 				taskNumber.setSubmission(submission);
 				getSession().update(taskNumber);

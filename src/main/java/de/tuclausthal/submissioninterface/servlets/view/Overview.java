@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -79,7 +79,7 @@ public class Overview extends HttpServlet {
 			}
 		}
 
-		if (user.getLectureParticipant().size() > 0) {
+		if (!user.getLectureParticipant().isEmpty()) {
 			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>Veranstaltung</th>");

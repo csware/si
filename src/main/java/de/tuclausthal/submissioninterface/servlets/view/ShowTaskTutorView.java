@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -112,7 +112,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		out.println("<th>Max. Punkte:</th>");
 		out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 		out.println("</tr>");
-		if (advisorFiles.size() > 0) {
+		if (!advisorFiles.isEmpty()) {
 			out.println("<tr>");
 			out.println("<th>Hinterlegte Dateien:</th>");
 			out.println("<td><ul class=taskfiles>");
@@ -146,11 +146,11 @@ public class ShowTaskTutorView extends HttpServlet {
 
 		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("MarkEmptyTask?taskid=" + task.getTaskid()) + "\">Punkte vergeben</a></div>");
-		} else if (task.getTests().size() > 0) {
+		} else if (!task.getTests().isEmpty()) {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("PerformTest?taskid=" + task.getTaskid()) + "\">Test (manuell) durchführen</a></div>");
 		}
 
-		if (modelSolutionFiles.size() > 0) {
+		if (!modelSolutionFiles.isEmpty()) {
 			out.println("<h2>Musterlösung:</h2>");
 			out.println("<ul>");
 			for (String file : modelSolutionFiles) {
@@ -159,7 +159,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("</ul>");
 		}
 
-		if (task.getSubmissions() != null && task.getSubmissions().size() > 0) {
+		if (task.getSubmissions() != null && !task.getSubmissions().isEmpty()) {
 			out.println("<p><h2>Abgaben</h2><p>");
 			if (!task.isMCTask()) {
 				out.println("<p><div class=mid><a href=\"" + response.encodeURL("SearchSubmissions?taskid=" + task.getTaskid()) + "\">Suchen...</a></div>");
@@ -226,7 +226,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					} else {
 						out.println("<h3>Gruppe: " + Util.escapeHTML(group.getName()) + " <a href=\"#\" onclick=\"$('#contentgroup" + group.getGid() + "').toggle(); return false;\">(+/-)</a></h3>");
 						String defaultState = "";
-						if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0 && group.getTutors().size() > 0 && !group.getTutors().contains(participation) && !!"taskWise".equals(task.getTaskGroup().getLecture().getGradingMethod())) {
+						if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0 && !group.getTutors().isEmpty() && !group.getTutors().contains(participation) && !!"taskWise".equals(task.getTaskGroup().getLecture().getGradingMethod())) {
 							defaultState = "style=\"display: none;\"";
 						}
 						out.println("<div " + defaultState + " id=\"contentgroup" + group.getGid() + "\">");

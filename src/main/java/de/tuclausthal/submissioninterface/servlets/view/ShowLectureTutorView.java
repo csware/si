@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -114,7 +114,7 @@ public class ShowLectureTutorView extends HttpServlet {
 		}
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + lecture.getId() + "&amp;action=newTaskGroup") + "\">Neue Aufgabengruppe</a></div>");
-			if (lecture.getTaskGroups().size() > 0) {
+			if (!lecture.getTaskGroups().isEmpty()) {
 				out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + lecture.getId() + "&amp;action=newTask") + "\">Neue Aufgabe</a></div>");
 			}
 		}
@@ -126,13 +126,13 @@ public class ShowLectureTutorView extends HttpServlet {
 		int[] studentsPoints = new int[2];
 		out.println("<p>");
 		out.println("<h2>Teilnehmende</h2>");
-		if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
+		if (!participationDAO.getParticipationsWithoutGroup(lecture).isEmpty()) {
 			out.println("<h3>Ohne Gruppe</h3>");
 			listMembers(participationDAO.getParticipationsWithoutGroup(lecture).iterator(), response, isAdvisor, showMatNo, requestAdapter, studentsPoints);
 			out.println("<p class=mid>");
 			if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 				out.println("<a href=\"" + response.encodeURL("AddGroup?lecture=" + lecture.getId()) + "\">Neue Gruppe erstellen</a>");
-				if (lecture.getGroups().size() > 0) {
+				if (!lecture.getGroups().isEmpty()) {
 					out.println("<br><a href=\"" + response.encodeURL("EditMultipleGroups?lecture=" + lecture.getId()) + "\">Mehrere Gruppen auf einmal bearbeiten</a>");
 				}
 				out.println("<br>");
@@ -145,17 +145,17 @@ public class ShowLectureTutorView extends HttpServlet {
 		for (Group group : lecture.getGroups()) {
 			out.println("<h3><a name=\"group" + group.getGid() + "\">Gruppe: " + Util.escapeHTML(group.getName()) + "</a> <a href=\"#\" onclick=\"$('#contentgroup" + group.getGid() + "').toggle(); return false;\">(+/-)</a></h3>");
 			String defaultState = "";
-			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0 && group.getTutors().size() > 0 && !group.getTutors().contains(participation)) {
+			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0 && !group.getTutors().isEmpty() && !group.getTutors().contains(participation)) {
 				defaultState = "style=\"display: none;\"";
 			}
 			out.println("<div " + defaultState + " id=\"contentgroup" + group.getGid() + "\">");
-			if (participationDAO.getParticipationsWithoutGroup(lecture).size() > 0) {
+			if (!participationDAO.getParticipationsWithoutGroup(lecture).isEmpty()) {
 				out.println("<p class=mid>");
 				out.println("<a href=\"" + response.encodeURL("EditGroup?groupid=" + group.getGid()) + "\">Teilnehmer zuordnen / Gruppe bearbeiten</a>");
 				out.println("<br><a href=\"" + response.encodeURL("MassMail?groupid=" + group.getGid()) + "\">Mail an Gruppe</a>");
 				out.println("</p>");
 			}
-			if (group.getTutors().size() > 0) {
+			if (!group.getTutors().isEmpty()) {
 				out.println("<table class=border>");
 				out.println("<tr>");
 				if (group.getTutors().size() > 1) {

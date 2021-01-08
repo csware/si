@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -101,7 +101,7 @@ public class MarkEmptyTask extends HttpServlet {
 				pointStatus = PointStatus.ABGENOMMEN;
 			}
 			// attention: quite similar code in ShowSubmission
-			if (task.getPointCategories().size() > 0) {
+			if (!task.getPointCategories().isEmpty()) {
 				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, null, new ContextAdapter(request.getServletContext()));
 			} else {
 				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, null, new ContextAdapter(request.getServletContext()));

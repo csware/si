@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -49,7 +49,7 @@ public class SubscribeToLectureView extends HttpServlet {
 		template.printTemplateHeader("Veranstaltungen", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> &gt; Veranstaltungen");
 		PrintWriter out = response.getWriter();
 
-		if (lectures.size() > 0) {
+		if (!lectures.isEmpty()) {
 			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>Veranstaltung</th>");
