@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,7 +19,6 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,9 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.dao.GroupDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
@@ -67,11 +64,7 @@ public class ShowLecture extends HttpServlet {
 
 		request.setAttribute("participation", participation);
 		if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
-			GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
-			List<Group> joinAbleGroups = groupDAO.getJoinAbleGroups(lecture, participation.getGroup());
-			if (participation.getGroup() == null || participation.getGroup().isAllowStudentsToQuit() && joinAbleGroups.size() > 0) {
-				request.setAttribute("joinAbleGroups", joinAbleGroups);
-			}
+			request.setAttribute("joinAbleGroups", DAOFactory.GroupDAOIf(session).getJoinAbleGroups(lecture, participation.getGroup()));
 			request.getRequestDispatcher("ShowLectureStudentView").forward(request, response);
 		} else if ("list".equals(request.getParameter("show"))) {
 			request.getRequestDispatcher("ShowLectureTutorFullView").forward(request, response);

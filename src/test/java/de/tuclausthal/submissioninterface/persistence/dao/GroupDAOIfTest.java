@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -35,7 +35,7 @@ public class GroupDAOIfTest extends BasicTest {
 		assertEquals(2, DAOFactory.GroupDAOIf(session).getJoinAbleGroups(lecture, null).size());
 
 		Group g1 = DAOFactory.GroupDAOIf(session).getGroup(1);
-		assertEquals(2, DAOFactory.GroupDAOIf(session).getJoinAbleGroups(lecture, g1).size());
+		assertEquals(0, DAOFactory.GroupDAOIf(session).getJoinAbleGroups(lecture, g1).size());
 
 		Group g2 = DAOFactory.GroupDAOIf(session).getGroup(2);
 		assertEquals(2, DAOFactory.GroupDAOIf(session).getJoinAbleGroups(lecture, g2).size());

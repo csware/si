@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -88,6 +89,10 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 
 	@Override
 	public List<Group> getJoinAbleGroups(Lecture lecture, Group participationGroup) {
+		if (participationGroup != null && !participationGroup.isAllowStudentsToQuit()) {
+			return Collections.emptyList();
+		}
+
 		Session session = getSession();
 
 		CriteriaBuilder builder = session.getCriteriaBuilder();

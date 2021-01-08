@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -62,7 +62,7 @@ public class ShowLectureStudentView extends HttpServlet {
 		template.printTemplateHeader(lecture);
 		PrintWriter out = response.getWriter();
 
-		boolean canJoinGroup = (joinAbleGroups != null && joinAbleGroups.size() > 0);
+		boolean canJoinGroup = !joinAbleGroups.isEmpty();
 
 		out.println("<div class=mid>");
 		if (participation.getGroup() != null) {
