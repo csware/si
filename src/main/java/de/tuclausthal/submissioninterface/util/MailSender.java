@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -32,10 +32,8 @@ import javax.mail.internet.MimeUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.tuclausthal.submissioninterface.servlets.controller.DownloadAsZip;
-
 public class MailSender {
-	final private static Logger log = LoggerFactory.getLogger(DownloadAsZip.class);
+	final private static Logger log = LoggerFactory.getLogger(MailSender.class);
 
 	public static void sendMail(String to, String subject, String messageText) {
 		MimeMessage msg;
