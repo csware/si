@@ -39,6 +39,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity;
 import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 
 public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
@@ -113,7 +114,7 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 		subQuery.select(builder.max(groupMembersCount.get(Similarity_.percentage)));
 		subQuery.where(builder.and(builder.equal(groupMembersCount.get(Similarity_.similarityTest), root.get(Similarity_.similarityTest)), builder.equal(groupMembersCount.get(Similarity_.submissionOne), root.get(Similarity_.submissionOne))));
 
-		criteria.where(builder.and(builder.equal(root.get(Similarity_.submissionOne).get("task"), task), builder.equal(root.get(Similarity_.percentage), subQuery)));
+		criteria.where(builder.and(builder.equal(root.get(Similarity_.submissionOne).get(Submission_.task), task), builder.equal(root.get(Similarity_.percentage), subQuery)));
 		criteria.orderBy(builder.asc(root.get(Similarity_.submissionOne)), builder.asc(root.get(Similarity_.similarityTest)));
 		Query<Similarity> query = session.createQuery(criteria);
 

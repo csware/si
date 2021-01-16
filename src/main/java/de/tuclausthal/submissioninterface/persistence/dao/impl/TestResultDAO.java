@@ -36,6 +36,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult_;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Test_;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 
 /**
@@ -105,7 +106,7 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 		CriteriaQuery<TestResult> criteria = builder.createQuery(TestResult.class);
 		Root<TestResult> root = criteria.from(TestResult.class);
 		criteria.select(root);
-		criteria.where(builder.and(builder.equal(root.get(TestResult_.test).get("task"), task)));
+		criteria.where(builder.and(builder.equal(root.get(TestResult_.test).get(Test_.task), task)));
 		criteria.orderBy(builder.asc(root.get(TestResult_.submission)), builder.asc(root.get(TestResult_.test)));
 		Query<TestResult> query = session.createQuery(criteria);
 
