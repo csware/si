@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -29,19 +29,17 @@ import de.tuclausthal.submissioninterface.util.Util;
 
 public enum ModelSolutionProvisionType {
 	/** not available for students */
-	INTERNAL("internal", "nur für TutorInnen, nicht für Studierende"),
+	INTERNAL("nur für TutorInnen, nicht für Studierende"),
 	/** available for all students after points deadline */
-	ALL_STUDENTS("allstudents", "alle Studierende der Vorlesung (nach Freigabe der Punkte)"),
+	ALL_STUDENTS("alle Studierende der Vorlesung (nach Freigabe der Punkte)"),
 	/** available for all students after points deadline who submitted a solution */
-	SUBMITTING_STUDENTS("submitters", "alle Studierende, die eine Abgabe durchgeführt haben (nach Freigabe der Punkte)"),
+	SUBMITTING_STUDENTS("alle Studierende, die eine Abgabe durchgeführt haben (nach Freigabe der Punkte)"),
 	/** available for all students after points deadline who submitted a solution, the points are valid and did not plagiarize */
-	CONFIRMED_STUDENTS("confirmed", "alle Studierende, die nicht plagigiert und die Abnahme bestanden haben (nach Freigabe der Punkte)");
+	CONFIRMED_STUDENTS("alle Studierende, die nicht plagigiert und die Abnahme bestanden haben (nach Freigabe der Punkte)");
 
-	private String provisionTypeString;
 	private String info;
 
-	private ModelSolutionProvisionType(String provisionTypeString, String info) {
-		this.provisionTypeString = provisionTypeString;
+	private ModelSolutionProvisionType(String info) {
 		this.info = info;
 	}
 

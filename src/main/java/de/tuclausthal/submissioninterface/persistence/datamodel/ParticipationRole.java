@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,11 +19,5 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 public enum ParticipationRole {
-	NORMAL("NORMAL"), TUTOR("TUTOR"), ADVISOR("ADVISOR");
-
-	private String roleString;
-
-	private ParticipationRole(String roleString) {
-		this.roleString = roleString;
-	}
+	NORMAL, TUTOR, ADVISOR;
 }
