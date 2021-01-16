@@ -18,10 +18,10 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -311,8 +311,6 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 
 	@Override
 	public Map<Integer, Integer> getAllPointsForLecture(Lecture lecture) {
-		Map<Integer, Integer> ret = new HashMap<>();
-
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<SubmissionPointsDTO> criteria = builder.createQuery(SubmissionPointsDTO.class);
@@ -323,15 +321,6 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		criteria.where(builder.and(builder.isNotNull(root.get(Submission_.points)),builder.gt(root.get(Submission_.points).get(Points_.points), 0), builder.ge(root.get(Submission_.points).get(Points_.pointStatus), PointStatus.ABGENOMMEN.ordinal()), builder.equal(taskJoin.join(Task_.taskGroup).get(TaskGroup_.lecture), lecture)));
 		Query<SubmissionPointsDTO> query = session.createQuery(criteria);
 
-		for (SubmissionPointsDTO submissionPoints : query.list()) {
-			int points = submissionPoints.getPlagiarismPoints(submissionPoints.getMinPointStep());
-			if (points > 0) {
-				if (ret.containsKey(submissionPoints.getParticipationid())) {
-					points += ret.get(submissionPoints.getParticipationid());
-				}
-				ret.put(submissionPoints.getParticipationid(), points);
-			}
-		}
-		return ret;
+		return query.list().stream().collect(Collectors.groupingBy(SubmissionPointsDTO::getParticipationid, Collectors.reducing(0, SubmissionPointsDTO::getPlagiarismPoints, Integer::sum)));
 	}
 }

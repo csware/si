@@ -115,7 +115,7 @@ public class SubmissionPointsDTO {
 	}
 
 	@Transient
-	public int getPlagiarismPoints(int minPointStep) {
+	public int getPlagiarismPoints() {
 		return Points.getPlagiarismPoints(duplicate, getPoints(), minPointStep);
 	}
 }
