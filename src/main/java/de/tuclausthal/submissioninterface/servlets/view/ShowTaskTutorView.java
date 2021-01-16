@@ -163,6 +163,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			Map<Integer, Map<Integer, Boolean>> testResults = DAOFactory.TestResultDAOIf(session).getResults(task);
 			Map<Integer, Map<Integer, List<Similarity>>> similarities = DAOFactory.SimilarityDAOIf(session).getMaxSimilarities(task);
 			out.println("<p><h2>Abgaben</h2><p>");
+			out.println("<p><div class=mid>Anzahl Abgaben: " + task.getSubmissions().size() + "</div>");
 			if (!task.isMCTask()) {
 				out.println("<p><div class=mid><a href=\"" + response.encodeURL("SearchSubmissions?taskid=" + task.getTaskid()) + "\">Suchen...</a></div>");
 			}
@@ -343,6 +344,10 @@ public class ShowTaskTutorView extends HttpServlet {
 					if (showPrematureSubmissionColumn) {
 						out.println("<td></td>");
 					}
+					out.println("</tr>");
+				} else {
+					out.println("<tr>");
+					out.println("<td>Anzahl: " + groupSumOfAllSubmissions + "</td>");
 					out.println("</tr>");
 				}
 				out.println("</table><p>");
