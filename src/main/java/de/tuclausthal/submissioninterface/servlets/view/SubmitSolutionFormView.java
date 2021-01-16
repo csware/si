@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -170,7 +170,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie einsenden möchten.</p>");
 			out.println("<INPUT TYPE=file NAME=file required=required>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
-			out.println("<p>Hinweis: Bestehende Dateien werde überschrieben.</p>");
+			out.println("<p>Hinweis: Bestehende Dateien werden überschrieben.</p>");
 			out.println("</FORM>");
 			if (task.isShowTextArea()) {
 				out.println("<p><hr>");
