@@ -132,6 +132,7 @@ public class PlaggieAdapter extends DupeCheck {
 	 * returned list, they are filtered out according to some
 	 * configuration parameters.
 	 */
+	@SuppressWarnings("rawtypes")
 	private ArrayList<SubmissionDetectionResult> generateDetectionResults(ArrayList<DirectorySubmission> submissions) throws Exception {
 
 		ArrayList<SubmissionDetectionResult> detResults = null;
