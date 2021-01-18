@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -97,17 +97,17 @@ public abstract class Template {
 	}
 
 	public void addJQuery() {
-		addHead("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/jquery/themes/base/jquery.ui.all.css\">");
-		addHead("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + prefix + "/jquery/jquery-1.4.2.min.js\"></script>");
-		addHead("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + prefix + "/jquery/jquery-ui-1.8.1.custom.min.js\"></script>");
+		addHead("<link rel=\"stylesheet\" href=\"" + prefix + "/jquery/themes/base/jquery.ui.all.css\">");
+		addHead("<script src=\"" + prefix + "/jquery/jquery-1.4.2.min.js\"></script>");
+		addHead("<script src=\"" + prefix + "/jquery/jquery-ui-1.8.1.custom.min.js\"></script>");
 	}
 
 	public void addDiffJs() {
-		addHead("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + prefix + "/diff.min.js\"></script>");
+		addHead("<script src=\"" + prefix + "/diff.min.js\"></script>");
 	}
 
 	public void addKeepAlive() {
-		addHead("<script type=\"text/javascript\">keepAlive(\"" + servletResponse.encodeURL("Noop") + "\", 120);</script>");
+		addHead("<script>keepAlive(\"" + servletResponse.encodeURL("Noop") + "\", 120);</script>");
 	}
 
 	public abstract void printStyleSheets(PrintWriter out);

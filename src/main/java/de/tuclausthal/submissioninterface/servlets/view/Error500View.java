@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -48,7 +48,7 @@ public class Error500View extends HttpServlet {
 		if (template == null) {
 			response.setContentType("text/html");
 			PrintWriter out = response.getWriter();
-			out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Strict//EN\">");
+			out.println("<!DOCTYPE html>");
 			out.println("<html><head><title>Internal Server Error (500)</title></head><body><h1>Internal Server Error (500)</h1>");
 		} else {
 			template.printTemplateHeader("Internal Server Error (500)");

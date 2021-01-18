@@ -74,7 +74,7 @@ public class Overview extends HttpServlet {
 					studiengang = Util.escapeHTML(student.getStudiengang());
 				}
 				out.println("Bitte nennen Sie Ihren Studiengang: <input type=text required=\"required\" name=studiengang id=studiengang size=40 value=\"" + studiengang + "\"> <input type=submit value=\"speichern...\">");
-				out.println("<script src=\"" + request.getContextPath() + "/studiengaenge.js\" type=\"text/javascript\"></script>");
+				out.println("<script src=\"" + request.getContextPath() + "/studiengaenge.js\"></script>");
 				out.println("</form></p><br>");
 			}
 		}

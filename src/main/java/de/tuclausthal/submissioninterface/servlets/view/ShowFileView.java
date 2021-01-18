@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2013, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -55,7 +55,7 @@ public class ShowFileView extends HttpServlet {
 
 		StringBuffer options = new StringBuffer();
 
-		options.append("<script type=\"text/javascript\">\n//<![CDATA[\nif (window.name.match(\"^iframe\")==\"iframe\") { document.write('<a href=\"#\" onclick=\"this.href=document.location\" target=\"_blank\">(new window)</a>'); }\n//]]>\n</script>");
+		options.append("<script>\nif (window.name.match(\"^iframe\")==\"iframe\") { document.write('<a href=\"#\" onclick=\"this.href=document.location\" target=\"_blank\">(new window)</a>'); }\n</script>");
 
 		StringBuffer renderedCode = new StringBuffer();
 		if (fileName.toLowerCase().endsWith(".java")) {
@@ -75,13 +75,13 @@ public class ShowFileView extends HttpServlet {
 			showWithRenderer(renderedCode, fileName, code, XhtmlRendererFactory.XML);
 		}
 
-		out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
-		out.println("<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n");
+		out.println("<!DOCTYPE html>");
+		out.println("<html lang=\"de\">");
 		out.println("<head>");
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.printStyleSheets(out);
 		out.println("<title>" + Util.escapeHTML(fileName) + "</title>");
-		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + request.getContextPath() + "/scripts.js\"></script>");
+		out.println("<script src=\"" + request.getContextPath() + "/scripts.js\"></script>");
 		out.println("</head>");
 		out.println("<body class=\"filepreview\">");
 
@@ -93,7 +93,7 @@ public class ShowFileView extends HttpServlet {
 			} else {
 				renderedCode.append("<pre>");
 			}
-			renderedCode.append(Util.textToHTML(code.toString()).replace("<br>", "<br />") + "</pre>"); // XHTML here!
+			renderedCode.append(Util.textToHTML(code.toString()) + "</pre>");
 
 			if ("yes".equals(request.getParameter("wrap"))) {
 				options.append(" <a href=\"" + response.encodeURL("?sid=" + submission.getSubmissionid()) + "\">(toggle wrapping)</a>");

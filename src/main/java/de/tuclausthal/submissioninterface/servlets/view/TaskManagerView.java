@@ -66,8 +66,8 @@ public class TaskManagerView extends HttpServlet {
 
 		template.addJQuery();
 		template.addKeepAlive();
-		template.addHead("<script type=\"text/javascript\" src=\"" + getServletContext().getContextPath() + "/tiny_mce/tiny_mce.js\"></script>");
-		template.addHead("<script type=\"text/javascript\">\ntinyMCE.init({" +
+		template.addHead("<script src=\"" + getServletContext().getContextPath() + "/tiny_mce/tiny_mce.js\"></script>");
+		template.addHead("<script>\ntinyMCE.init({" +
 							"mode : \"textareas\"," +
 							"theme : \"advanced\"," +
 							"plugins : \"safari,style,table,advimage,iespell,contextmenu,paste,nonbreaking\"," +
@@ -80,7 +80,7 @@ public class TaskManagerView extends HttpServlet {
 							"theme_advanced_resizing : true," +
 							"content_css : \"/submissionsystem/si.css\"" +
 							"});\n</script>");
-		template.addHead("<script type=\"text/javascript\">\n" +
+		template.addHead("<script>\n" +
 							"function checkRegexp() {" + 
 							"$.ajax({" +
 									"type: \"POST\"," +
@@ -92,7 +92,7 @@ public class TaskManagerView extends HttpServlet {
 								"});" +
 							"}" +
 							"\n</script>");
-		template.addHead("<script type=\"text/javascript\">\n" +
+		template.addHead("<script>\n" +
 							"function getDynamicTaskHints() {" +
 								"if (document.getElementById(\"dynamicTask\").value != \"\") {"+
 									"document.getElementById(\"dynamictaskhints\").innerHTML = \"hole Hinweise...\";" +

@@ -229,7 +229,7 @@ public class ShowTaskStudentView extends HttpServlet {
 							} else if (category.isOptional()) {
 								continue;
 							}
-							out.println("<li>" + Util.showPoints(issuedPoints) + "/" + Util.showPoints(category.getPoints()) + " " + Util.escapeHTML(category.getDescription()) + (category.isOptional() ? " (Bonus)" : "" ) + "</li>");
+							out.println("<li>" + Util.showPoints(issuedPoints) + "/" + Util.showPoints(category.getPoints()) + " " + Util.escapeHTML(category.getDescription()) + (category.isOptional() ? " (Bonus)" : "") + "</li>");
 						}
 						out.println("</ul>");
 					}
@@ -261,7 +261,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("<p>");
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
 				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
-				out.println("<script type=\"javascript\">if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
+				out.println("<script>if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
 			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isMCTask()) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
@@ -304,7 +304,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("<p>");
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
 				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
-				out.println("<script type=\"javascript\">if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
+				out.println("<script>if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
 			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isMCTask()) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {

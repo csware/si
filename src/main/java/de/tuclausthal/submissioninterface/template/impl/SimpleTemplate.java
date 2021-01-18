@@ -47,7 +47,7 @@ public class SimpleTemplate extends Template {
 		out.println("<html lang=\"de\">");
 		out.println("<head>");
 		printStyleSheets(out);
-		out.println("<script type=\"text/javascript\" src=\"" + prefix + "/scripts.js\"></script>");
+		out.println("<script src=\"" + prefix + "/scripts.js\"></script>");
 		out.println("<title>GATE: " + title + "</title>");
 		getHeads();
 		out.println("</head>");
@@ -100,7 +100,7 @@ public class SimpleTemplate extends Template {
 
 	@Override
 	public void printStyleSheets(PrintWriter out) {
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/simple/formate.css\">");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/simple/si.css\">");
+		out.println("<link rel=\"stylesheet\" href=\"" + prefix + "/template/simple/formate.css\">");
+		out.println("<link rel=\"stylesheet\" href=\"" + prefix + "/template/simple/si.css\">");
 	}
 }

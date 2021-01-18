@@ -74,7 +74,7 @@ public class ShowSubmissionView extends HttpServlet {
 		template.addJQuery();
 		template.addDiffJs();
 		template.addKeepAlive();
-		template.addHead("<script type=\"text/javascript\">function hideCodePreview(id) { $(\"#codepreview\" + id).hide();$(\"#showbtn\" + id).show(); } function testResultSetup(id) { $(\"#testresult\" + id).resizable({ handles: 'se' }); } function iframeSetup(id) { $(\"#resizablecodepreview\" + id).resizable({ helper: 'ui-resizable-helper', minWidth: 800, minHeight: 100, handles: 'se' }); }</script>");
+		template.addHead("<script>function hideCodePreview(id) { $(\"#codepreview\" + id).hide();$(\"#showbtn\" + id).show(); } function testResultSetup(id) { $(\"#testresult\" + id).resizable({ handles: 'se' }); } function iframeSetup(id) { $(\"#resizablecodepreview\" + id).resizable({ helper: 'ui-resizable-helper', minWidth: 800, minHeight: 100, handles: 'se' }); }</script>");
 
 		RequestAdapter requestAdapter = new RequestAdapter(request);
 		Session session = requestAdapter.getSession();
@@ -400,7 +400,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("</div>");
 		}
 		if (javaScript.length() != 0) {
-			out.println("<script type=\"text/javascript\">" + javaScript.toString() + "</script>");
+			out.println("<script>" + javaScript.toString() + "</script>");
 		}
 		template.printTemplateFooter();
 	}

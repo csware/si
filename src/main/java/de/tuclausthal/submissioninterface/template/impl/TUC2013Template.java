@@ -25,11 +25,11 @@ public class TUC2013Template extends Template {
 		servletResponse.setContentType("text/html");
 		servletResponse.setCharacterEncoding("UTF-8");
 		PrintWriter out = servletResponse.getWriter();
-		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Strict//EN\">");
+		out.println("<!DOCTYPE html>");
 		out.println("<html lang=\"de\">");
 		out.println("<head>");
 		printStyleSheets(out);
-		out.println("<script type=\"text/javascript\" language=\"JavaScript\" src=\"" + prefix + "/scripts.js\"></script>");
+		out.println("<script src=\"" + prefix + "/scripts.js\"></script>");
 		out.println("<title>GATE: " + title + "</title>");
 		getHeads();
 		out.println("</head>");
@@ -90,13 +90,13 @@ public class TUC2013Template extends Template {
 
 	@Override
 	public void printStyleSheets(PrintWriter out) {
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2013/screen.css\" media=\"screen\">");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/si.css\">");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2013/print.css\" media=\"print\">");
+		out.println("<link rel=\"stylesheet\" href=\"" + prefix + "/template/tuc/2013/screen.css\" media=\"screen\">");
+		out.println("<link rel=\"stylesheet\" href=\"" + prefix + "/template/tuc/si.css\">");
+		out.println("<link rel=\"stylesheet\" href=\"" + prefix + "/template/tuc/2013/print.css\" media=\"print\">");
 		out.println("<!--[if lt IE 9]>");
-		out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + prefix + "/template/tuc/2013/screen-ie-fix.css\">");
+		out.println("<link rel=\"stylesheet\" href=\"" + prefix + "/template/tuc/2013/screen-ie-fix.css\">");
 		out.println("<![endif]-->");
-		out.println("<style type=\"text/css\">");
+		out.println("<style>");
 		out.println("#pfad, #inhalt { margin-left: 0px; }");
 		out.println("#sitelinks a { color:#008C4F; }");
 		out.println("</style>");
