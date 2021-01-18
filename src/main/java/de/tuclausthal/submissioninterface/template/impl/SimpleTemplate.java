@@ -79,7 +79,7 @@ public class SimpleTemplate extends Template {
 		out.println("<hr class=divider>");
 		out.println("<div id=breadcrumb>");
 		out.println(breadCrumb);
-		out.println("</span>");
+		out.println("</div>");
 		out.println("</div>");
 		out.println("<div id=\"content\">");
 		out.println("<h1>" + title + "</h1>");
