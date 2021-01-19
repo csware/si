@@ -175,4 +175,22 @@ public class UtilTest {
 		Util.lowerCaseExtension(buffer);
 		assertEquals("Hello.java", buffer.toString());
 	}
+
+	@Test
+	public void testGenerateHTMLLink() {
+		assertEquals("", Util.generateHTMLLink("", null));
+		assertEquals("bla", Util.generateHTMLLink("bla", null));
+		assertEquals("bla/d", Util.generateHTMLLink("bla/d", null));
+		assertEquals("som%thing?def=def&amp;target=p", Util.generateHTMLLink("som%thing?def=def&target=p", null));
+		assertEquals("https://url.host/some/thing.java?query=parameter&amp;second=value", Util.generateHTMLLink("https://url.host/some/thing.java?query=parameter&second=value", null));
+	}
+
+	@Test
+	public void testGenerateRedirectURL() {
+		assertEquals("", Util.generateRedirectURL("", null));
+		assertEquals("bla", Util.generateRedirectURL("bla", null));
+		assertEquals("bla/d", Util.generateRedirectURL("bla/d", null));
+		assertEquals("som%thing?def=def&target=p", Util.generateRedirectURL("som%thing?def=def&target=p", null));
+		assertEquals("https://url.host/some/thing.java?query=parameter&second=value", Util.generateRedirectURL("https://url.host/some/thing.java?query=parameter&second=value", null));
+	}
 }

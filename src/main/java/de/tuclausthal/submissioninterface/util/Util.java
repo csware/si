@@ -98,11 +98,11 @@ public final class Util {
 	}
 
 	public static String generateRedirectURL(String url, HttpServletResponse response) {
-		return response.encodeRedirectURL(url);
+		return url;
 	}
 
 	public static String generateHTMLLink(String url, HttpServletResponse response) {
-		return escapeHTML(response.encodeURL(url));
+		return escapeHTML(url);
 	}
 
 	/**
