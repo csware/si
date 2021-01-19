@@ -86,27 +86,27 @@ public abstract class Template {
 		printTemplateHeader("Gruppe \"" + Util.escapeHTML(group.getName()) + "\"", "<a href=\"" + Util.generateHTMLLink("Overview", servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateHTMLLink("ShowLecture?lecture=" + group.getLecture().getId(), servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(group.getLecture().getName()) + "\"</a> &gt; Gruppe \"" + Util.escapeHTML(group.getName()) + "\"");
 	}
 
-	public void addHead(String header) {
+	final public void addHead(String header) {
 		headers.add(header);
 	}
 
-	protected void getHeads() throws IOException {
+	final protected void getHeads() throws IOException {
 		for (String header : headers) {
 			servletResponse.getWriter().println(header + "\n");
 		}
 	}
 
-	public void addJQuery() {
+	final public void addJQuery() {
 		addHead("<link rel=\"stylesheet\" href=\"" + prefix + "/jquery/themes/base/jquery.ui.all.css\">");
 		addHead("<script src=\"" + prefix + "/jquery/jquery-1.4.2.min.js\"></script>");
 		addHead("<script src=\"" + prefix + "/jquery/jquery-ui-1.8.1.custom.min.js\"></script>");
 	}
 
-	public void addDiffJs() {
+	final public void addDiffJs() {
 		addHead("<script src=\"" + prefix + "/diff.min.js\"></script>");
 	}
 
-	public void addKeepAlive() {
+	final public void addKeepAlive() {
 		addHead("<script>keepAlive(\"" + Util.generateHTMLLink("Noop", servletResponse) + "\", 120);</script>");
 	}
 
