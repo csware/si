@@ -29,7 +29,6 @@ public class TUC2013Template extends Template {
 		out.println("<html lang=\"de\">");
 		out.println("<head>");
 		printStyleSheets(out);
-		out.println("<script src=\"" + prefix + "/scripts.js\"></script>");
 		out.println("<title>GATE: " + title + "</title>");
 		getHeads();
 		out.println("</head>");

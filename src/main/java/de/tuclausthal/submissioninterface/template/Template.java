@@ -47,6 +47,7 @@ public abstract class Template {
 		this.servletResponse = servletResponse;
 		prefix = servletRequest.getContextPath();
 		requestAdapter = new RequestAdapter(servletRequest);
+		addHead("<script src=\"" + prefix + "/scripts.js\"></script>");
 	}
 
 	/**
