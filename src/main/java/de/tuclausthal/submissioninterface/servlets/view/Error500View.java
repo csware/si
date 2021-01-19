@@ -47,6 +47,7 @@ public class Error500View extends HttpServlet {
 		}
 		if (template == null) {
 			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
 			PrintWriter out = response.getWriter();
 			out.println("<!DOCTYPE html>");
 			out.println("<html><head><title>Internal Server Error (500)</title></head><body><h1>Internal Server Error (500)</h1>");
