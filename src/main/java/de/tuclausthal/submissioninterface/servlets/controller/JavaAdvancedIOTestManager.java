@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -76,7 +76,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 			session.save(newStep);
 			test.getTestSteps().add(newStep);
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId()));
+			response.sendRedirect(Util.generateRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId(), response));
 			return;
 		} else if ("updateStep".equals(request.getParameter("action"))) {
 			JavaAdvancedIOTestStep step = null;
@@ -98,7 +98,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 				session.saveOrUpdate(step);
 				tx.commit();
 			}
-			response.sendRedirect(response.encodeRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId()));
+			response.sendRedirect(Util.generateRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId(), response));
 			return;
 		} else if ("deleteStep".equals(request.getParameter("action"))) {
 			JavaAdvancedIOTestStep step = null;
@@ -114,7 +114,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 				session.delete(step);
 				tx.commit();
 			}
-			response.sendRedirect(response.encodeRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId()));
+			response.sendRedirect(Util.generateRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId(), response));
 			return;
 		}
 

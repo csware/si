@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * View-Servlet for displaying a form for adding a group
@@ -45,7 +46,7 @@ public class AddGroupFormView extends HttpServlet {
 
 		template.printTemplateHeader("Gruppe erstellen", lecture);
 		PrintWriter out = response.getWriter();
-		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=action value=saveNewGroup>");
 		out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
 		out.println("<table class=border>");
@@ -67,7 +68,7 @@ public class AddGroupFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("ShowLecture?lecture=" + lecture.getId()));
+		out.println(Util.generateHTMLLink("ShowLecture?lecture=" + lecture.getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");

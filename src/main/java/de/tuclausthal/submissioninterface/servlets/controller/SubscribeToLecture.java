@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -59,7 +59,7 @@ public class SubscribeToLecture extends HttpServlet {
 			Participation participation = participationDAO.getParticipationLocked(RequestAdapter.getUser(request), lecture);
 			if (participation != null) {
 				tx.commit();
-				response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
+				response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
 				return;
 			} else if (lecture.getSemester() < Util.getCurrentSemester()) {
 				tx.commit();
@@ -68,7 +68,7 @@ public class SubscribeToLecture extends HttpServlet {
 			} else {
 				participationDAO.createParticipation(RequestAdapter.getUser(request), lecture, ParticipationRole.NORMAL);
 				tx.commit();
-				response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
+				response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
 				return;
 			}
 		}

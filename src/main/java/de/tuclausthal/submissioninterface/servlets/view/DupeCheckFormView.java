@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -31,6 +31,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Configuration;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * View-Servlet for displaying a form for adding a new plagiarism test
@@ -50,7 +51,7 @@ public class DupeCheckFormView extends HttpServlet {
 
 		if (new File(Configuration.getInstance().getDataPath(), "jplag.jar").exists()) {
 			out.println("<h2>JPlag Test</h2>");
-			out.println("<form action=\"" + response.encodeURL("?action=savesimilaritytest") + "\" method=post>");
+			out.println("<form action=\"" + Util.generateHTMLLink("?action=savesimilaritytest", response) + "\" method=post>");
 			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 			out.println("<input type=hidden name=action value=performCheck>");
 			out.println("<input type=hidden name=type value=jplag>");
@@ -68,7 +69,7 @@ public class DupeCheckFormView extends HttpServlet {
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-			out.println(response.encodeURL("TaskManager?taskid=" + task.getTaskid() + "&amp;action=editTask&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
+			out.println(Util.generateHTMLLink("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 			out.println("\">Abbrechen</a></td>");
 			out.println("</tr>");
 			out.println("</table>");
@@ -78,7 +79,7 @@ public class DupeCheckFormView extends HttpServlet {
 		}
 
 		out.println("<h2>Plaggie Test (Java <= 1.6)</h2>");
-		out.println("<form action=\"" + response.encodeURL("?action=savesimilaritytest") + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?action=savesimilaritytest", response) + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		out.println("<input type=hidden name=action value=performCheck>");
 		out.println("<input type=hidden name=type value=plaggie>");
@@ -96,14 +97,14 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("TaskManager?taskid=" + task.getTaskid() + "&amp;action=editTask&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
+		out.println(Util.generateHTMLLink("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
 
 		out.println("<h2>Weitere Tests</h2>");
-		out.println("<form action=\"" + response.encodeURL("?action=savesimilaritytest") + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?action=savesimilaritytest", response) + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		out.println("<input type=hidden name=action value=performCheck>");
 		out.println("<table class=border>");
@@ -148,7 +149,7 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("TaskManager?taskid=" + task.getTaskid() + "&amp;action=editTask&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
+		out.println(Util.generateHTMLLink("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");

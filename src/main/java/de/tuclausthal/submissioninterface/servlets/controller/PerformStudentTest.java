@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -183,7 +183,7 @@ public class PerformStudentTest extends HttpServlet {
 	}
 
 	private void gotoWaitingView(HttpServletRequest request, HttpServletResponse response, String url) throws IOException, ServletException {
-		request.setAttribute("refreshurl", response.encodeURL(request.getRequestURL() + "?refresh=true&" + url));
+		request.setAttribute("refreshurl", Util.generateRedirectURL(request.getRequestURL() + "?refresh=true&" + url, response));
 		request.setAttribute("redirectTime", 5);
 		request.getRequestDispatcher("PerformStudentTestRunningView").forward(request, response);
 	}

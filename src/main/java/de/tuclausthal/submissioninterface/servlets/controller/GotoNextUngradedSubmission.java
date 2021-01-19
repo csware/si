@@ -1,5 +1,5 @@
 /*
- * Copyright 2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -72,12 +72,12 @@ public class GotoNextUngradedSubmission extends HttpServlet {
 			}
 			if (submission != null) {
 				if (group != null) {
-					response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid() + "&groupid=" + group.getGid()));
+					response.sendRedirect(Util.generateRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid() + "&groupid=" + group.getGid(), response));
 				} else {
-					response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));
+					response.sendRedirect(Util.generateRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid(), response));
 				}
 			} else {
-				response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
+				response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
 			}
 		} else {
 			Submission submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, lastSubmissionID);
@@ -85,9 +85,9 @@ public class GotoNextUngradedSubmission extends HttpServlet {
 				submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 0);
 			}
 			if (submission != null) {
-				response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));
+				response.sendRedirect(Util.generateRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid(), response));
 			} else {
-				response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
+				response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
 			}
 		}
 	}

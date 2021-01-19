@@ -103,7 +103,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		if (task.getShowPoints() != null) {
 			out.println("<td>" + Util.escapeHTML(dateFormatter.format(task.getShowPoints())) + "</td>");
 		} else if (participation.getRoleType() == ParticipationRole.ADVISOR) {
-			out.println("<td><a href=\"" + response.encodeURL("PublishGrades?taskid=" + task.getTaskid()) + "\">Punkte freigeben</a></td>");
+			out.println("<td><a href=\"" + Util.generateHTMLLink("PublishGrades?taskid=" + task.getTaskid(), response) + "\">Punkte freigeben</a></td>");
 		} else {
 			out.println("<td>Punkte werden manuell freigegeben</td>");
 		}
@@ -118,7 +118,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<td><ul class=taskfiles>");
 			for (String file : advisorFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
-				out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.escapeHTML(file) + "</a></li>");
+				out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a></li>");
 			}
 			out.println("</ul></td>");
 			out.println("</tr>");
@@ -136,25 +136,25 @@ public class ShowTaskTutorView extends HttpServlet {
 		out.println("</table>");
 
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
-			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=editTask") + "\">Aufgabe bearbeiten</a></div>");
-			out.println("<p><div class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deleteTask") + "\">Aufgabe löschen</a></div>");
+			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask", response) + "\">Aufgabe bearbeiten</a></div>");
+			out.println("<p><div class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deleteTask", response) + "\">Aufgabe löschen</a></div>");
 		}
 
 		if (!task.isMCTask() && !task.isADynamicTask() && (participation.getRoleType() == ParticipationRole.ADVISOR || task.isTutorsCanUploadFiles()) && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
-			out.println("<p><div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe für Studierenden durchführen</a> (Achtung wenn Duplikatstest bereits gelaufen ist)</div>");
+			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("SubmitSolution?taskid=" + task.getTaskid(), response) + "\">Abgabe für Studierenden durchführen</a> (Achtung wenn Duplikatstest bereits gelaufen ist)</div>");
 		}
 
 		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
-			out.println("<p><div class=mid><a href=\"" + response.encodeURL("MarkEmptyTask?taskid=" + task.getTaskid()) + "\">Punkte vergeben</a></div>");
+			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("MarkEmptyTask?taskid=" + task.getTaskid(), response) + "\">Punkte vergeben</a></div>");
 		} else if (!task.getTests().isEmpty()) {
-			out.println("<p><div class=mid><a href=\"" + response.encodeURL("PerformTest?taskid=" + task.getTaskid()) + "\">Test (manuell) durchführen</a></div>");
+			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("PerformTest?taskid=" + task.getTaskid(), response) + "\">Test (manuell) durchführen</a></div>");
 		}
 
 		if (!modelSolutionFiles.isEmpty()) {
 			out.println("<h2>Musterlösung:</h2>");
 			out.println("<ul>");
 			for (String file : modelSolutionFiles) {
-				out.println("<li><a href=\"" + response.encodeURL("DownloadModelSolutionFile/" + file + "?taskid=" + task.getTaskid()) + "\">" + file + "</a></li>");
+				out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + file + "?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(file) + "</a></li>");
 			}
 			out.println("</ul>");
 		}
@@ -165,7 +165,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<p><h2>Abgaben</h2><p>");
 			out.println("<p><div class=mid>Anzahl Abgaben: " + task.getSubmissions().size() + "</div>");
 			if (!task.isMCTask()) {
-				out.println("<p><div class=mid><a href=\"" + response.encodeURL("SearchSubmissions?taskid=" + task.getTaskid()) + "\">Suchen...</a></div>");
+				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("SearchSubmissions?taskid=" + task.getTaskid(), response) + "\">Suchen...</a></div>");
 			}
 			Iterator<Submission> submissionIterator = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task).iterator();
 			Group lastGroup = null;
@@ -221,9 +221,9 @@ public class ShowTaskTutorView extends HttpServlet {
 					if (group == null) {
 						out.println("<h3>Ohne Gruppe</h3>");
 						out.println("<div id=\"contentgroup0\">");
-						out.println("<div class=mid><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid() + "&amp;action=grouplist") + "\" target=\"_blank\">Druckbare Liste</a></div>");
+						out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid() + "&action=grouplist", response) + "\" target=\"_blank\">Druckbare Liste</a></div>");
 						if (!task.isADynamicTask() && !task.isMCTask()) {
-							out.println("<div class=mid><a href=\"" + response.encodeURL("DownloadSubmissionsByGroup?taskid=" + task.getTaskid()) + "\">Alle Abgaben der Gruppe herunterladen (ZIP-Archiv)</a></div>");
+							out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("DownloadSubmissionsByGroup?taskid=" + task.getTaskid(), response) + "\">Alle Abgaben der Gruppe herunterladen (ZIP-Archiv)</a></div>");
 						}
 					} else {
 						out.println("<h3>Gruppe: " + Util.escapeHTML(group.getName()) + " <a href=\"#\" onclick=\"$('#contentgroup" + group.getGid() + "').toggle(); return false;\">(+/-)</a></h3>");
@@ -232,12 +232,12 @@ public class ShowTaskTutorView extends HttpServlet {
 							defaultState = "style=\"display: none;\"";
 						}
 						out.println("<div " + defaultState + " id=\"contentgroup" + group.getGid() + "\">");
-						out.println("<div class=mid><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid() + "&amp;action=grouplist&amp;groupid=" + group.getGid()) + "\" target=\"_blank\">Druckbare Liste</a></div>");
+						out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid() + "&action=grouplist&groupid=" + group.getGid(), response) + "\" target=\"_blank\">Druckbare Liste</a></div>");
 						if (!task.isADynamicTask() && !task.isMCTask()) {
-							out.println("<div class=mid><a href=\"" + response.encodeURL("DownloadSubmissionsByGroup?taskid=" + task.getTaskid() + "&amp;groupid=" + group.getGid()) + "\">Alle Abgaben der Gruppe herunterladen (ZIP-Archiv)</a></div>");
+							out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("DownloadSubmissionsByGroup?taskid=" + task.getTaskid() + "&groupid=" + group.getGid(), response) + "\">Alle Abgaben der Gruppe herunterladen (ZIP-Archiv)</a></div>");
 						}
 					}
-					out.println("<form method=post action=\"" + response.encodeURL("MarkApproved?taskid=" + task.getTaskid()) + "\">");
+					out.println("<form method=post action=\"" + Util.generateHTMLLink("MarkApproved?taskid=" + task.getTaskid(), response) + "\">");
 					out.println("<table class=border>");
 					out.println("<tr>");
 					out.println("<th>Abgabe von</th>");
@@ -273,9 +273,9 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("<tr>");
 					String groupAdding = "";
 					if (group != null) {
-						groupAdding = "&amp;groupid=" + group.getGid();
+						groupAdding = "&groupid=" + group.getGid();
 					}
-					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid() + groupAdding) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
+					out.println("<td><a href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid() + groupAdding, response) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
 					lastSID = submission.getSubmissionid();
 					if (showAllColumns) {
 						if (task.isADynamicTask()) {

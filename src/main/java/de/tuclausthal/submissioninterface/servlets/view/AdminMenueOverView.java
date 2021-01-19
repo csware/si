@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -44,7 +44,7 @@ public class AdminMenueOverView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		template.printTemplateHeader("Admin-Menü", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - Admin-Menü");
+		template.printTemplateHeader("Admin-Menü", "<a href=\"" + Util.generateHTMLLink("Overview", response) + "\">Meine Veranstaltungen</a> - Admin-Menü");
 		PrintWriter out = response.getWriter();
 
 		@SuppressWarnings("unchecked")
@@ -58,15 +58,15 @@ public class AdminMenueOverView extends HttpServlet {
 			while (lectureIterator.hasNext()) {
 				Lecture lecture = lectureIterator.next();
 				out.println("<tr>");
-				out.println("<td><a href=\"" + response.encodeURL("?action=showLecture&amp;lecture=" + lecture.getId()) + "\">" + Util.escapeHTML(lecture.getName()) + "</a></td>");
+				out.println("<td><a href=\"" + Util.generateHTMLLink("?action=showLecture&lecture=" + lecture.getId(), response) + "\">" + Util.escapeHTML(lecture.getName()) + "</a></td>");
 				out.println("<td>" + lecture.getReadableSemester() + "</td>");
 				out.println("</tr>");
 			}
 			out.println("</table>");
 		}
-		out.println("<p class=mid><a href=\"" + response.encodeURL("?action=newLecture") + "\">Neue Veranstaltung</a></p>");
-		out.println("<p class=mid><a href=\"" + response.encodeURL("?action=showAdminUsers") + "\">Super User anzeigen</a></p>");
-		out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich CleanUp durchführen?')\" href=\"" + response.encodeURL("?action=cleanup") + "\">Verzeichnis Cleanup</a></p>");
+		out.println("<p class=mid><a href=\"" + Util.generateHTMLLink("?action=newLecture", response) + "\">Neue Veranstaltung</a></p>");
+		out.println("<p class=mid><a href=\"" + Util.generateHTMLLink("?action=showAdminUsers", response) + "\">Super User anzeigen</a></p>");
+		out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich CleanUp durchführen?')\" href=\"" + Util.generateHTMLLink("?action=cleanup", response) + "\">Verzeichnis Cleanup</a></p>");
 
 		template.printTemplateFooter();
 	}

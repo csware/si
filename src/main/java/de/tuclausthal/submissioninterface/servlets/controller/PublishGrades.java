@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -121,6 +121,6 @@ public class PublishGrades extends HttpServlet {
 		session.saveOrUpdate(task);
 		tx.commit();
 
-		response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
+		response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
 	}
 }

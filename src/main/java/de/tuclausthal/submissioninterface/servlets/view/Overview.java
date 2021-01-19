@@ -47,7 +47,7 @@ public class Overview extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		// redirect handler for Shibboleth, not yet perfect but works
 		if (request.getParameter(Shibboleth.REDIR_PARAMETER) != null && request.getParameter(Shibboleth.REDIR_PARAMETER).startsWith(request.getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/")) {
-			response.sendRedirect(response.encodeRedirectURL(request.getParameter(Shibboleth.REDIR_PARAMETER).replace("\r", "%0d").replace("\n", "%0a")));
+			response.sendRedirect(Util.generateRedirectURL(request.getParameter(Shibboleth.REDIR_PARAMETER).replace("\r", "%0d").replace("\n", "%0a"), response));
 			return;
 		}
 
@@ -60,14 +60,14 @@ public class Overview extends HttpServlet {
 		User user = RequestAdapter.getUser(request);
 
 		if (Configuration.getInstance().isMatrikelNumberMustBeEnteredManuallyIfMissing() && !(user instanceof Student)) {
-			out.println("<p><form class=\"highlightborder mid\" action=\"" + response.encodeURL("AlterUser") + "\" method=post>");
+			out.println("<p><form class=\"highlightborder mid\" action=\"" + Util.generateHTMLLink("AlterUser", response) + "\" method=post>");
 			out.println("Bitte nennen Sie Ihre Matrikelnummer: <input type=number required=\"required\" name=matrikelno id=matrikelno pattern=\"[0-9]+\" autocomplete=\"off\" size=15\"> <input type=submit value=\"speichern...\">");
 			out.println("</form></p><br>");
 		}
 		if (user instanceof Student) {
 			Student student = (Student) user;
 			if (student.getStudiengang() == null) {
-				out.println("<p><form class=\"highlightborder mid\" action=\"" + response.encodeURL("AlterUser") + "\" method=post>");
+				out.println("<p><form class=\"highlightborder mid\" action=\"" + Util.generateHTMLLink("AlterUser", response) + "\" method=post>");
 
 				String studiengang = "";
 				if (student.getStudiengang() != null) {
@@ -87,13 +87,13 @@ public class Overview extends HttpServlet {
 			out.println("</tr>");
 			for (Participation participation : user.getLectureParticipant()) {
 				out.println("<tr>");
-				out.println("<td><a href=\"" + response.encodeURL("ShowLecture?lecture=" + participation.getLecture().getId()) + "\">" + Util.escapeHTML(participation.getLecture().getName()) + "</a></td>");
+				out.println("<td><a href=\"" + Util.generateHTMLLink("ShowLecture?lecture=" + participation.getLecture().getId(), response) + "\">" + Util.escapeHTML(participation.getLecture().getName()) + "</a></td>");
 				out.println("<td>" + participation.getLecture().getReadableSemester() + "</td>");
 				out.println("</tr>");
 			}
 			out.println("</table><p>");
 		}
-		out.println("<div class=mid><a href=\"" + response.encodeURL("SubscribeToLecture") + "\">In eine Veranstaltung eintragen...</a></div>");
+		out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("SubscribeToLecture", response) + "\">In eine Veranstaltung eintragen...</a></div>");
 
 		template.printTemplateFooter();
 	}

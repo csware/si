@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * View-Servlet for displaying a form for adding a function test
@@ -47,7 +48,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		template.printTemplateHeader("Test erstellen", task);
 		PrintWriter out = response.getWriter();
 		out.println("<h2>Compile/Syntax Test</h2>");
-		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		out.println("<input type=hidden name=action value=saveNewTest>");
 		out.println("<input type=hidden name=type value=compile>");
@@ -74,14 +75,14 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("TaskManager?action=editTask&amp;taskid=" + task.getTaskid() + "&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
+		out.println(Util.generateHTMLLink("TaskManager?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
 
 		out.println("<h2>Erweiterer Java-IO-Test</h2>");
-		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		out.println("<input type=hidden name=action value=saveNewTest>");
 		out.println("<input type=hidden name=type value=advancedjavaio>");
@@ -107,7 +108,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("TaskManager?action=editTask&amp;taskid=" + task.getTaskid() + "&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
+		out.println(Util.generateHTMLLink("TaskManager?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
@@ -115,7 +116,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 
 		//Formular um UML Constraint Test anzulegen
 		out.println("<h2>UML Constraint Test</h2>");
-		out.println("<form ENCTYPE=\"multipart/form-data\" action=\"" + response.encodeURL("?taskid=" + task.getTaskid() + "&amp;action=saveNewTest&amp;type=umlConstraint") + "\" method=post>");
+		out.println("<form ENCTYPE=\"multipart/form-data\" action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid() + "&action=saveNewTest&type=umlConstraint", response) + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
@@ -143,14 +144,14 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("TaskManager?action=editTask&amp;taskid=" + task.getTaskid() + "&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
+		out.println(Util.generateHTMLLink("TaskManager?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
 
 		out.println("<h2>RegExp. Test</h2>");
-		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		out.println("<input type=hidden name=action value=saveNewTest>");
 		out.println("<input type=hidden name=type value=regexp>");
@@ -193,14 +194,14 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("ShowTask?taskid=" + task.getTaskid()));
+		out.println(Util.generateHTMLLink("TaskManager?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
 
 		out.println("<h2>JUnit Test</h2>");
-		out.println("<form ENCTYPE=\"multipart/form-data\" action=\"" + response.encodeURL("?taskid=" + task.getTaskid() + "&amp;action=saveNewTest&amp;type=junit") + "\" method=post>");
+		out.println("<form ENCTYPE=\"multipart/form-data\" action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid() + "&action=saveNewTest&type=junit", response) + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
@@ -236,14 +237,14 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("TaskManager?action=editTask&amp;taskid=" + task.getTaskid() + "&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
+		out.println(Util.generateHTMLLink("TaskManager?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
 
 		out.println("<h2>Kommentar-Metrik-Test</h2>");
-		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		out.println("<input type=hidden name=action value=saveNewTest>");
 		out.println("<input type=hidden name=type value=commentmetric>");
@@ -278,7 +279,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("TaskManager?action=editTask&amp;taskid=" + task.getTaskid() + "&amp;lecture=" + task.getTaskGroup().getLecture().getId()));
+		out.println(Util.generateHTMLLink("TaskManager?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");

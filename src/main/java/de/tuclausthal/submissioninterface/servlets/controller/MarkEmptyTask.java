@@ -82,7 +82,7 @@ public class MarkEmptyTask extends HttpServlet {
 			Submission submission = submissionDAO.getSubmission(task, studentParticipation.getUser());
 			if (submission != null) {
 				tx.commit();
-				request.setAttribute("title", "Es existiert bereits eine Bewertung für diesen Studierenden: < href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">zur Bewertung</a>");
+				request.setAttribute("title", "Es existiert bereits eine Bewertung für diesen Studierenden: < href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), response) + "\">zur Bewertung</a>");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 				return;
 			}
@@ -107,7 +107,7 @@ public class MarkEmptyTask extends HttpServlet {
 				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, null, new ContextAdapter(request.getServletContext()));
 			}
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("MarkEmptyTask?taskid=" + task.getTaskid()));
+			response.sendRedirect(Util.generateRedirectURL("MarkEmptyTask?taskid=" + task.getTaskid(), response));
 			return;
 		}
 		request.setAttribute("participations", DAOFactory.ParticipationDAOIf(session).getParticipationsWithNoSubmissionToTaskOrdered(task));

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -51,13 +51,13 @@ public class AdminMenueEditLectureView extends HttpServlet {
 		if (lecture == null) {
 			template.printTemplateHeader("Veranstaltung nicht gefunden");
 			PrintWriter out = response.getWriter();
-			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("?", response) + "\">zur Übersicht</a></div>");
 		} else {
 			@SuppressWarnings("unchecked")
 			List<Participation> participants = (List<Participation>) request.getAttribute("participants");
-			template.printTemplateHeader("Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"AdminMenue\">Admin-Menü</a> &gt; Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten");
+			template.printTemplateHeader("Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten", "<a href=\"" + Util.generateHTMLLink("Overview", response) + "\">Meine Veranstaltungen</a> - <a href=\"" + Util.generateHTMLLink("AdminMenue", response) + "\">Admin-Menü</a> &gt; Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten");
 			PrintWriter out = response.getWriter();
-			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("?action=deleteLecture&amp;lecture=" + lecture.getId()) + "\">Veranstaltung löschen</a></p>");
+			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("?action=deleteLecture&lecture=" + lecture.getId(), response) + "\">Veranstaltung löschen</a></p>");
 			out.println("<h2>BetreuerInnen</h2>");
 			Iterator<Participation> advisorIterator = participants.iterator();
 			out.println("<table class=border>");
@@ -71,7 +71,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 					User user = participation.getUser();
 					out.println("<tr>");
 					out.println("<td>" + Util.escapeHTML(user.getFullName()) + "</td>");
-					out.println("<td><a onclick=\"return confirmLink('Wirklich degradieren?')\" href=\"" + response.encodeURL("?action=removeUser&amp;lecture=" + lecture.getId() + "&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
+					out.println("<td><a onclick=\"return confirmLink('Wirklich degradieren?')\" href=\"" + Util.generateHTMLLink("?action=removeUser&lecture=" + lecture.getId() + "&userid=" + user.getUid(), response) + "\">degradieren</a></td>");
 					out.println("</tr>");
 				}
 			}
@@ -95,7 +95,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 					User user = participation.getUser();
 					out.println("<tr>");
 					out.println("<td>" + Util.escapeHTML(user.getFullName()) + "</td>");
-					out.println("<td><a onclick=\"return confirmLink('Wirklich degradieren?')\" href=\"" + response.encodeURL("?action=removeUser&amp;lecture=" + lecture.getId() + "&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
+					out.println("<td><a onclick=\"return confirmLink('Wirklich degradieren?')\" href=\"" + Util.generateHTMLLink("?action=removeUser&lecture=" + lecture.getId() + "&userid=" + user.getUid(), response) + "\">degradieren</a></td>");
 					out.println("</tr>");
 				}
 			}
@@ -105,7 +105,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			out.println("</td>");
 			out.println("</tr>");
 			out.println("</table><p>");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("?", response) + "\">zur Übersicht</a></div>");
 		}
 		template.printTemplateFooter();
 	}

@@ -119,7 +119,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 		}
 
 		if (task.isMCTask()) {
-			out.println("<FORM ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
+			out.println("<FORM ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid(), response) + "\">");
 			out.println(setWithUser.toString());
 		}
 
@@ -165,7 +165,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 		}
 
 		if (!"-".equals(task.getFilenameRegexp())) {
-			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
+			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid(), response) + "\">");
 			out.println(setWithUser.toString());
 			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie einsenden möchten.</p>");
 			out.println("<INPUT TYPE=file NAME=file required=required>");
@@ -178,7 +178,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 		}
 
 		if (task.isShowTextArea()) {
-			out.println("<FORM class=mid method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
+			out.println("<FORM class=mid method=POST action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid(), response) + "\">");
 			out.println(setWithUser.toString());
 			if (task.isADynamicTask()) {
 				out.println("<p>Benutzen Sie bitte einen Punkt statt ein Komma zur Trennung von Dezimal-Stellen.</p>");

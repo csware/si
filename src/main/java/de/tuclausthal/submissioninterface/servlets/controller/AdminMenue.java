@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -97,20 +97,20 @@ public class AdminMenue extends HttpServlet {
 					}
 				}
 			}
-			response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?"));
+			response.sendRedirect(Util.generateRedirectURL("AdminMenue", response));
 		} else if ("saveLecture".equals(request.getParameter("action")) && request.getParameter("name") != null && !request.getParameter("name").trim().isEmpty()) {
 			Transaction tx = session.beginTransaction();
 			Lecture newLecture = DAOFactory.LectureDAOIf(session).newLecture(request.getParameter("name").trim(), request.getParameter("requiresAbhnahme") != null, request.getParameter("groupWise") != null);
 			DAOFactory.ParticipationDAOIf(session).createParticipation(RequestAdapter.getUser(request), newLecture, ParticipationRole.ADVISOR);
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?action=showLecture&lecture=" + newLecture.getId()));
+			response.sendRedirect(Util.generateRedirectURL("AdminMenue?action=showLecture&lecture=" + newLecture.getId(), response));
 		} else if ("deleteLecture".equals(request.getParameter("action")) && request.getParameter("lecture") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 			if (lecture != null) {
 				DAOFactory.LectureDAOIf(session).deleteLecture(lecture);
 			}
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
-			response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?"));
+			response.sendRedirect(Util.generateRedirectURL("AdminMenue", response));
 		} else if ("showLecture".equals(request.getParameter("action")) && request.getParameter("lecture") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 			request.setAttribute("lecture", lecture);
@@ -128,13 +128,13 @@ public class AdminMenue extends HttpServlet {
 				userDAO.saveUser(user);
 			}
 			session.getTransaction().commit();
-			response.sendRedirect(response.encodeURL(request.getRequestURL() + "?action=showAdminUsers"));
+			response.sendRedirect(Util.generateRedirectURL("AdminMenue?action=showAdminUsers", response));
 		} else if (("addUser".equals(request.getParameter("action")) || "removeUser".equals(request.getParameter("action"))) && request.getParameter("lecture") != null && request.getParameter("userid") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 			UserDAOIf userDAO = DAOFactory.UserDAOIf(session);
 			User user = userDAO.getUser(Util.parseInteger(request.getParameter("userid"), 0));
 			if (lecture == null || user == null) {
-				response.sendRedirect(response.encodeURL(request.getRequestURL() + "?"));
+				response.sendRedirect(Util.generateRedirectURL("AdminMenue", response));
 			} else {
 				// request.getParameter("type") != null
 				ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
@@ -149,15 +149,15 @@ public class AdminMenue extends HttpServlet {
 					participationDAO.createParticipation(user, lecture, ParticipationRole.NORMAL);
 				}
 				tx.commit();
-				response.sendRedirect(response.encodeURL(request.getRequestURL() + "?action=showLecture&lecture=" + lecture.getId()));
+				response.sendRedirect(Util.generateRedirectURL("AdminMenue?action=showLecture&lecture=" + lecture.getId(), response));
 			}
 		} else if ("su".equals(request.getParameter("action")) && request.getParameter("userid") != null) {
 			User user = DAOFactory.UserDAOIf(session).getUser(Util.parseInteger(request.getParameter("userid"), 0));
 			if (user != null) {
 				RequestAdapter.getSessionAdapter(request).setUser(user, request.getRemoteAddr());
-				response.sendRedirect(response.encodeRedirectURL("Overview"));
+				response.sendRedirect(Util.generateRedirectURL("Overview", response));
 			} else {
-				response.sendRedirect(response.encodeRedirectURL(request.getRequestURL() + "?"));
+				response.sendRedirect(Util.generateRedirectURL("AdminMenue", response));
 			}
 		} else { // list all lectures
 			request.setAttribute("lectures", DAOFactory.LectureDAOIf(session).getLectures());

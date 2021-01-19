@@ -97,7 +97,7 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		for (Participation participation : submission.getSubmitters()) {
-			out.println("<a href=\"" + response.encodeURL("ShowUser?uid=" + participation.getUser().getUid()) + "\">" + Util.escapeHTML(participation.getUser().getFullName()) + "</a><br>");
+			out.println("<a href=\"" + Util.generateHTMLLink("ShowUser?uid=" + participation.getUser().getUid(), response) + "\">" + Util.escapeHTML(participation.getUser().getFullName()) + "</a><br>");
 		}
 
 		if (!task.isAllowSubmittersAcrossGroups() && submission.getSubmitters().iterator().next().getGroup() != null) {
@@ -156,9 +156,9 @@ public class ShowSubmissionView extends HttpServlet {
 				pointsFailed = submission.getPoints().getPointStatus() == PointStatus.ABGENOMMEN_FAILED.ordinal();
 				pointsGivenBy = " (bisher " + Util.showPoints(points) + " Punkte vergeben von: ";
 				if (submission.getPoints().getIssuedBy() == null) {
-					pointsGivenBy += "GATE, <a href=\"" + response.encodeURL("ShowMarkHistory?sid=" + submission.getSubmissionid()) + "\">History</a>)";
+					pointsGivenBy += "GATE, <a href=\"" + Util.generateHTMLLink("ShowMarkHistory?sid=" + submission.getSubmissionid(), response) + "\">History</a>)";
 				} else {
-					pointsGivenBy += "<a href=\"mailto:" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getEmail()) + "\">" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>, <a href=\"" + response.encodeURL("ShowMarkHistory?sid=" + submission.getSubmissionid()) + "\">History</a>)";
+					pointsGivenBy += "<a href=\"mailto:" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getEmail()) + "\">" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>, <a href=\"" + Util.generateHTMLLink("ShowMarkHistory?sid=" + submission.getSubmissionid(), response) + "\">History</a>)";
 				}
 				pointsClass = Util.getPointsCSSClass(submission.getPoints());
 				if (submission.getPoints().getPointStatus() == PointStatus.NICHT_BEWERTET.ordinal()) {
@@ -239,9 +239,9 @@ public class ShowSubmissionView extends HttpServlet {
 				out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
 				String groupAdding = "";
 				if (request.getParameter("groupid") != null && Util.parseInteger(request.getParameter("groupid"), 0) > 0) {
-					groupAdding = "&amp;groupid=" + Util.parseInteger(request.getParameter("groupid"), 0);
+					groupAdding = "&groupid=" + Util.parseInteger(request.getParameter("groupid"), 0);
 				}
-				out.println("- <a href=\"" + response.encodeURL("GotoNextUngradedSubmission?sid=" + submission.getSubmissionid() + "&amp;taskid=" + task.getTaskid() + groupAdding) + "\">nächste</a>");
+				out.println("- <a href=\"" + Util.generateHTMLLink("GotoNextUngradedSubmission?sid=" + submission.getSubmissionid() + "&taskid=" + task.getTaskid() + groupAdding, response) + "\">nächste</a>");
 			}
 			out.println("</form>");
 			out.println("</td>");
@@ -273,7 +273,7 @@ public class ShowSubmissionView extends HttpServlet {
 				out.println("</tr>");
 				for (Similarity similarity : DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(similarityTest, submission)) {
 					out.println("<tr>");
-					out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + similarity.getSubmissionTwo().getSubmissionid()) + "\">" + Util.escapeHTML(similarity.getSubmissionTwo().getSubmitterNames()) + "</a></td>");
+					out.println("<td><a href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + similarity.getSubmissionTwo().getSubmissionid(), response) + "\">" + Util.escapeHTML(similarity.getSubmissionTwo().getSubmitterNames()) + "</a></td>");
 					out.println("<td class=points>" + similarity.getPercentage() + "%</td>");
 					out.println("</tr>");
 				}
@@ -363,7 +363,7 @@ public class ShowSubmissionView extends HttpServlet {
 		if (!submittedFiles.isEmpty()) {
 			out.println("<h2>Dateien: <a href=\"#\" onclick=\"$('#files').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<div id=files class=mid>");
-			out.println("<p><a href=\"" + response.encodeURL("DownloadAsZip?sid=" + submission.getSubmissionid()) + "\">alles als .zip herunterladen</a></p>");
+			out.println("<p><a href=\"" + Util.generateHTMLLink("DownloadAsZip?sid=" + submission.getSubmissionid(), response) + "\">alles als .zip herunterladen</a></p>");
 			Pattern pattern = null;
 			if (!"".equals(task.getFeaturedFiles().trim())) {
 				if (task.getFeaturedFiles().startsWith("^")) {
@@ -382,7 +382,7 @@ public class ShowSubmissionView extends HttpServlet {
 					out.println("<a id=\"hidebtn" + id + "\" href=\"#\" onclick='hideCodePreview(\"" + id + "\");return false;'>(hide)</a>");
 					out.println("</div>");
 					out.println("<div id=\"resizablecodepreview" + id + "\" class=\"mid inlinefile\">");
-					out.println("<iframe name=\"iframe" + id + "\" id=\"iframe" + id + "\" scrolling=\"yes\" width=\"100%\" height=\"100%\" src=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\"></iframe></div>");
+					out.println("<iframe name=\"iframe" + id + "\" id=\"iframe" + id + "\" scrolling=\"yes\" width=\"100%\" height=\"100%\" src=\"" + Util.generateHTMLLink("ShowFile/" + file + "?sid=" + submission.getSubmissionid(), response) + "\"></iframe></div>");
 					out.println("</div>");
 					javaScript.append("iframeSetup('" + id + "');");
 					if (pattern != null) {
@@ -394,7 +394,7 @@ public class ShowSubmissionView extends HttpServlet {
 				} else {
 					out.println("<h3 class=files>" + Util.escapeHTML(file) + "</h3>");
 				}
-				out.println("<a href=\"" + response.encodeURL("ShowFile/" + file + "?download=true&amp;sid=" + submission.getSubmissionid()) + "\">Download " + Util.escapeHTML(file) + "</a><p>");
+				out.println("<a href=\"" + Util.generateHTMLLink("ShowFile/" + file + "?download=true&sid=" + submission.getSubmissionid(), response) + "\">Download " + Util.escapeHTML(file) + "</a><p>");
 				id++;
 			}
 			out.println("</div>");

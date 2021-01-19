@@ -54,7 +54,7 @@ public class SearchSubmissionsResultView extends HttpServlet {
 			out.println("<table>");
 			for (Submission submission : foundSubmissions) {
 				out.println("<tr>");
-				out.println("<td><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
+				out.println("<td><a href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), response) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
 				//out.println("<td><a href=\"\">" + submission.getSubmissionid() + "</a></td>");
 				out.println("</tr>");
 			}

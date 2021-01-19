@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -73,7 +73,7 @@ public class EditGroup extends HttpServlet {
 				participationDAO.saveParticipation(memberParticipation);
 			}
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid()));
+			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response));
 			return;
 		} else if ("removeTutorFromGroup".equals(request.getParameter("action"))) {
 			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
@@ -85,7 +85,7 @@ public class EditGroup extends HttpServlet {
 					groupDAO.saveGroup(group);
 				}
 				tx.commit();
-				response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid()));
+				response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response));
 				return;
 			}
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
@@ -123,7 +123,7 @@ public class EditGroup extends HttpServlet {
 				}
 			}
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid()));
+			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response));
 			return;
 		}
 

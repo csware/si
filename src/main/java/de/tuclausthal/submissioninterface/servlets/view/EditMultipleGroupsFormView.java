@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -48,7 +48,7 @@ public class EditMultipleGroupsFormView extends HttpServlet {
 		template.addKeepAlive();
 		template.printTemplateHeader("Mehrere Gruppen bearbeiten", lecture);
 		PrintWriter out = response.getWriter();
-		out.println("<form action=\"" + response.encodeURL("?lecture=" + lecture.getId()) + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?lecture=" + lecture.getId(), response) + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Studierende können sich eintragen:</th>");
@@ -75,7 +75,7 @@ public class EditMultipleGroupsFormView extends HttpServlet {
 		out.println("</select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"" + response.encodeURL("ShowLecture?lecture=" + lecture.getId()) + "\">Abbrechen</a></td>");
+		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"" + Util.generateHTMLLink("ShowLecture?lecture=" + lecture.getId(), response) + "\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");

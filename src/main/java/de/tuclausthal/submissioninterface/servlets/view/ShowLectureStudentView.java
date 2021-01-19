@@ -86,7 +86,7 @@ public class ShowLectureStudentView extends HttpServlet {
 			out.println("Sie sind derzeit in keiner Gruppe.");
 		}
 		if (canJoinGroup) {
-			out.println("<form action=\"" + response.encodeURL("JoinGroup") + "\">");
+			out.println("<form action=\"" + Util.generateHTMLLink("JoinGroup", response) + "\">");
 			out.println("<select name=groupid>");
 			for (Group group : joinAbleGroups) {
 				out.println("<option value=" + group.getGid() + ">" + Util.escapeHTML(group.getName()));
@@ -132,7 +132,7 @@ public class ShowLectureStudentView extends HttpServlet {
 							}
 							maxPoints += task.getMaxPoints();
 							out.println("<tr>");
-							out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
+							out.println("<td><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
 							out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 							Submission submission = DAOFactory.SubmissionDAOIf(RequestAdapter.getSession(request)).getSubmission(task, RequestAdapter.getUser(request));
 							if (submission != null) {

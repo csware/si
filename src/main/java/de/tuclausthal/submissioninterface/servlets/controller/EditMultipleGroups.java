@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -100,6 +100,6 @@ public class EditMultipleGroups extends HttpServlet {
 			}
 			tx.commit();
 		}
-		response.sendRedirect(response.encodeRedirectURL("ShowLecture?lecture=" + lecture.getId()));
+		response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
 	}
 }

@@ -46,7 +46,7 @@ public class SubscribeToLectureView extends HttpServlet {
 		@SuppressWarnings("unchecked")
 		List<Lecture> lectures = (List<Lecture>) request.getAttribute("lectures");
 
-		template.printTemplateHeader("Veranstaltungen", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> &gt; Veranstaltungen");
+		template.printTemplateHeader("Veranstaltungen", "<a href=\"" + Util.generateHTMLLink("Overview", response) + "\">Meine Veranstaltungen</a> &gt; Veranstaltungen");
 		PrintWriter out = response.getWriter();
 
 		if (!lectures.isEmpty()) {
@@ -58,7 +58,7 @@ public class SubscribeToLectureView extends HttpServlet {
 			for (Lecture lecture : lectures) {
 				out.println("<tr>");
 				out.println("<td>" + Util.escapeHTML(lecture.getName()) + "</td>");
-				out.println("<td><a href=\"" + response.encodeURL("?lecture=" + lecture.getId()) + "\">anmelden</a></td>");
+				out.println("<td><a href=\"" + Util.generateHTMLLink("?lecture=" + lecture.getId(), response) + "\">anmelden</a></td>");
 				out.println("</tr>");
 			}
 			out.println("</table><p>");

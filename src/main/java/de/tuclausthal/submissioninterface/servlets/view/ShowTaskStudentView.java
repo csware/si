@@ -104,7 +104,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("<td><ul class=taskfiles>");
 			for (String file : advisorFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
-				out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.escapeHTML(file) + "</a></li>");
+				out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a></li>");
 			}
 			out.println("</ul></td>");
 			out.println("</tr>");
@@ -136,9 +136,9 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<td>");
 				for (String file : submittedFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
-					out.println("<a target=\"_blank\" href=\"" + response.encodeURL("ShowFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">" + Util.escapeHTML(file) + "</a>");
+					out.println("<a target=\"_blank\" href=\"" + Util.generateHTMLLink("ShowFile/" + file + "?sid=" + submission.getSubmissionid(), response) + "\">" + Util.escapeHTML(file) + "</a>");
 					if (task.getDeadline().after(Util.correctTimezone(new Date())) && !(task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
-						out.println(" (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DeleteFile/" + file + "?sid=" + submission.getSubmissionid()) + "\">löschen</a>)");
+						out.println(" (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DeleteFile/" + file + "?sid=" + submission.getSubmissionid(), response) + "\">löschen</a>)");
 					}
 					out.println("<br>");
 				}
@@ -149,7 +149,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<tr>");
 				out.println("<th>Vorzeitige finale Abgabe</th>");
 				out.println("<td>Diese Abgabe kann vor der Abgabefrist als endgültig abgeschlossen markieren.<br><br><span class=b>Wichtig</span>: Dieser Vorgang kann von Ihnen nicht rückgängig gemacht werden.<br><br>");
-				out.println("<a onclick=\"return confirmLink('Lösung wirklich final abgeben?')\" href=\"" + response.encodeURL("CloseSubmissionByStudent?sid=" + submission.getSubmissionid()) + "\">Meine Lösung vorzeitig endgültig abgeben</a></td>");
+				out.println("<a onclick=\"return confirmLink('Lösung wirklich final abgeben?')\" href=\"" + Util.generateHTMLLink("CloseSubmissionByStudent?sid=" + submission.getSubmissionid(), response) + "\">Meine Lösung vorzeitig endgültig abgeben</a></td>");
 				out.println("</tr>");
 			}
 			if (task.isADynamicTask()) {
@@ -260,7 +260,7 @@ public class ShowTaskStudentView extends HttpServlet {
 
 			out.println("<p>");
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
-				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
+				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"" + Util.generateHTMLLink("WebStart?tool=argouml&taskid=" + task.getTaskid(), response) + "\">ArgoUML öffnen</a></div>");
 				out.println("<script>if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
 			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isMCTask()) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
@@ -269,12 +269,12 @@ public class ShowTaskStudentView extends HttpServlet {
 			} else if (task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
 				out.println("<div class=mid>Die Abgabe wurde als endgültig abgeschlossen markiert.<br>Eine Veränderung ist jetzt nicht mehr möglich.</div>");
 			} else if (task.isMCTask()) {
-				out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe bearbeiten</a></div>");
+				out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("SubmitSolution?taskid=" + task.getTaskid(), response) + "\">Abgabe bearbeiten</a></div>");
 			} else {
 				if (!submittedFiles.isEmpty()) {
-					out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe erweitern</a></div>");
+					out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("SubmitSolution?taskid=" + task.getTaskid(), response) + "\">Abgabe erweitern</a></div>");
 				} else {
-					out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div>");
+					out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("SubmitSolution?taskid=" + task.getTaskid(), response) + "\">Abgabe starten</a></div>");
 				}
 			}
 
@@ -291,7 +291,7 @@ public class ShowTaskStudentView extends HttpServlet {
 					out.println("</td>");
 					out.println("<td>");
 					if (testCountDAO.canStillRunXTimes(test, submission) > 0) {
-						out.println("<a href=\"" + response.encodeURL("PerformStudentTest?testid=" + test.getId()) + "\">Test ausführen</a>");
+						out.println("<a href=\"" + Util.generateHTMLLink("PerformStudentTest?testid=" + test.getId(), response) + "\">Test ausführen</a>");
 					} else {
 						out.println("Limit erreicht");
 					}
@@ -303,14 +303,14 @@ public class ShowTaskStudentView extends HttpServlet {
 		} else {
 			out.println("<p>");
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
-				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"WebStart?tool=argouml&amp;taskid=" + task.getTaskid() + "\">ArgoUML öffnen</a></div>");
+				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"" + Util.generateHTMLLink("WebStart?tool=argouml&taskid=" + task.getTaskid(), response) + "\">ArgoUML öffnen</a></div>");
 				out.println("<script>if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
 			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isMCTask()) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
 			} else {
-				out.println("<div class=mid><a href=\"" + response.encodeURL("SubmitSolution?taskid=" + task.getTaskid()) + "\">Abgabe starten</a></div>");
+				out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("SubmitSolution?taskid=" + task.getTaskid(), response) + "\">Abgabe starten</a></div>");
 			}
 		}
 
@@ -319,7 +319,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("<p>Für diese Aufgabe werden Ihnen folgende Dateien als Musterlösung zur Verfügung gestellt:</p>");
 			out.println("<ul>");
 			for (String file : modelSolutionFiles) {
-				out.println("<li><a href=\"" + response.encodeURL("DownloadModelSolutionFile/" + file + "?taskid=" + task.getTaskid()) + "\">" + file + "</a></li>");
+				out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + file + "?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(file) + "</a></li>");
 			}
 			out.println("</ul>");
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -31,6 +31,7 @@ import de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.S
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Controller-Servlet for clearing up the session
@@ -55,7 +56,7 @@ public class Logout extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.printTemplateHeader("Logged out");
 		PrintWriter out = response.getWriter();
-		out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
+		out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("Overview", response) + "\">zur Übersicht</a></div>");
 		template.printTemplateFooter();
 	}
 }

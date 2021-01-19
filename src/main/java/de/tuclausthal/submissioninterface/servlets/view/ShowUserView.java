@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -79,7 +79,7 @@ public class ShowUserView extends HttpServlet {
 				out.println("<h1>Vorlesungen</h1>");
 				titleShown = true;
 			}
-			out.println("<h2><a href=\"" + response.encodeURL("ShowLecture?lecture=" + participation.getLecture().getId()) + "\">" + Util.escapeHTML(participation.getLecture().getName()) + " (" + participation.getLecture().getReadableSemester() + ")</a></h2>");
+			out.println("<h2><a href=\"" + Util.generateHTMLLink("ShowLecture?lecture=" + participation.getLecture().getId(), response) + "\">" + Util.escapeHTML(participation.getLecture().getName()) + " (" + participation.getLecture().getReadableSemester() + ")</a></h2>");
 			if (participation.getGroup() != null) {
 				out.println("<p>Gruppe: " + Util.escapeHTML(participation.getGroup().getName()) + "</p>");
 			}
@@ -125,7 +125,7 @@ public class ShowUserView extends HttpServlet {
 						out.println("</tr>");
 					}
 					out.println("<tr>");
-					out.println("<td><a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
+					out.println("<td><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
 					out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 					maxPoints += task.getMaxPoints();
 					Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, user);
@@ -135,16 +135,16 @@ public class ShowUserView extends HttpServlet {
 					}
 					if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 						if (submission.getPoints().getPointsOk()) {
-							out.println("<td class=\"points" + Util.getPointsCSSClass(submission.getPoints()) + "\"><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">" + Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + "");
+							out.println("<td class=\"points" + Util.getPointsCSSClass(submission.getPoints()) + "\"><a href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), response) + "\">" + Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + "");
 							points += submission.getPoints().getPointsByStatus(task.getMinPointStep());
 						} else {
-							out.println("<td class=\"points" + Util.getPointsCSSClass(submission.getPoints()) + "\"><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ")");
+							out.println("<td class=\"points" + Util.getPointsCSSClass(submission.getPoints()) + "\"><a href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), response) + "\">(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ")");
 						}
 					} else {
 						if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
-							out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">(noch unbewertet)");
+							out.println("<td class=points><a href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), response) + "\">(noch unbewertet)");
 						} else {
-							out.println("<td class=points><a href=\"" + response.encodeURL("ShowSubmission?sid=" + submission.getSubmissionid()) + "\">noch unbewertet");
+							out.println("<td class=points><a href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), response) + "\">noch unbewertet");
 						}
 					}
 					out.println("</a></td>");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * Copyright 2019 Dustin Reineke <dustin.reineke@tu-clausthal.de>
  *
  * This file is part of the SubmissionInterface.
@@ -86,6 +86,6 @@ public class CloseSubmissionByStudent extends HttpServlet {
 		session.update(submission);
 		tx.commit();
 
-		response.sendRedirect(response.encodeURL("ShowTask?taskid=" + submission.getTask().getTaskid()));
+		response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + submission.getTask().getTaskid(), response));
 	}
 }

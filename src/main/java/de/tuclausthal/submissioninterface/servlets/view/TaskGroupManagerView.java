@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -53,7 +53,7 @@ public class TaskGroupManagerView extends HttpServlet {
 		}
 
 		PrintWriter out = response.getWriter();
-		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		if (taskGroup.getTaskGroupId() != 0) {
 			out.println("<input type=hidden name=action value=saveTaskGroup>");
 			out.println("<input type=hidden name=taskgroupid value=\"" + taskGroup.getTaskGroupId() + "\">");
@@ -68,14 +68,14 @@ public class TaskGroupManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("ShowLecture?lecture=" + lecture.getId()));
+		out.println(Util.generateHTMLLink("ShowLecture?lecture=" + lecture.getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
 		if (taskGroup.getTaskGroupId() != 0) {
 			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"");
-			out.println(response.encodeURL("TaskManager?action=deleteTaskGroup&taskgroupid=" + taskGroup.getTaskGroupId() + "&lecture=" + lecture.getId()));
+			out.println(Util.generateHTMLLink("TaskManager?action=deleteTaskGroup&taskgroupid=" + taskGroup.getTaskGroupId() + "&lecture=" + lecture.getId(), response));
 			out.println("\">Löschen</a></p>");
 		}
 		template.printTemplateFooter();

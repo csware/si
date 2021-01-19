@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2015, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2015, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * Copyright 2011 Joachim Schramm
  * 
@@ -106,7 +106,7 @@ public class TestManager extends HttpServlet {
 			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(response.encodeRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId()));
+			response.sendRedirect(Util.generateRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "umlConstraint".equals(request.getParameter("type"))) {
 			// Check that we have a file upload request
 
@@ -142,7 +142,7 @@ public class TestManager extends HttpServlet {
 			test.setGiveDetailsToStudents(true);
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "junit".equals(request.getParameter("type"))) {
 			// Check that we have a file upload request
 
@@ -181,7 +181,7 @@ public class TestManager extends HttpServlet {
 			test.setTimeout(timeout);
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "regexp".equals(request.getParameter("type"))) {
 			//check regexp
@@ -207,7 +207,7 @@ public class TestManager extends HttpServlet {
 			test.setTestDescription(request.getParameter("description"));
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "compile".equals(request.getParameter("type"))) {
 			// store it
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
@@ -220,7 +220,7 @@ public class TestManager extends HttpServlet {
 			test.setTestDescription(request.getParameter("description"));
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "commentmetric".equals(request.getParameter("type"))) {
 			// store it
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
@@ -239,7 +239,7 @@ public class TestManager extends HttpServlet {
 			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("deleteTest".equals(request.getParameter("action"))) {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			session.beginTransaction();
@@ -248,7 +248,7 @@ public class TestManager extends HttpServlet {
 				testDAO.deleteTest(test);
 			}
 			session.getTransaction().commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 			return;
 		} else if ("rerunTest".equals(request.getParameter("action"))) {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
@@ -259,7 +259,7 @@ public class TestManager extends HttpServlet {
 				testDAO.saveTest(test);
 			}
 			session.getTransaction().commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid()));
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 			return;
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * View-Servlet for displaying a java-sourcecode file
@@ -53,7 +54,7 @@ public class PerformStudentTestRunningView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		out.println("Der Test wird im Hintergrund ausgeführt. Bitte warten.<br>");
-		out.println("Sollte diese Seite nicht innerhalb von " + redirectTime + " Sekunden neu geladen werden, <a href=\"" + response.encodeURL(url) + "\">hier</a> gehts weiter.");
+		out.println("Sollte diese Seite nicht innerhalb von " + redirectTime + " Sekunden neu geladen werden, <a href=\"" + Util.escapeHTML(url) + "\">hier</a> gehts weiter.");
 
 		template.printTemplateFooter();
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -85,7 +85,7 @@ public class TaskManagerDynamicTaskPreView extends HttpServlet {
 		out.println("</dd>");
 		out.println("</dl>");
 
-		out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=editTask") + "\">Aufgabe bearbeiten</a></div>");
+		out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask", response) + "\">Aufgabe bearbeiten</a></div>");
 
 		template.printTemplateFooter();
 	}

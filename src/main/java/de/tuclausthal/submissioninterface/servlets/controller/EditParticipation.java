@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -69,9 +69,9 @@ public class EditParticipation extends HttpServlet {
 		}
 		tx.commit();
 		if ("admin".equals(request.getParameter("goback"))) {
-			response.sendRedirect(response.encodeURL("AdminMenue?action=showLecture&lecture=" + callerParticipation.getLecture().getId()));
+			response.sendRedirect(Util.generateRedirectURL("AdminMenue?action=showLecture&lecture=" + callerParticipation.getLecture().getId(), response));
 		} else {
-			response.sendRedirect(response.encodeURL("ShowLecture?action=showLecture&lecture=" + callerParticipation.getLecture().getId()));
+			response.sendRedirect(Util.generateRedirectURL("ShowLecture?action=showLecture&lecture=" + callerParticipation.getLecture().getId(), response));
 		}
 	}
 

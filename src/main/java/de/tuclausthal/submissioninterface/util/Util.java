@@ -43,6 +43,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import org.apache.commons.fileupload.FileUploadBase;
@@ -94,6 +95,14 @@ public final class Util {
 			}
 		}
 		return (result.toString());
+	}
+
+	public static String generateRedirectURL(String url, HttpServletResponse response) {
+		return response.encodeRedirectURL(url);
+	}
+
+	public static String generateHTMLLink(String url, HttpServletResponse response) {
+		return escapeHTML(response.encodeURL(url));
 	}
 
 	/**

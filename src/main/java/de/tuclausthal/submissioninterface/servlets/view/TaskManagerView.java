@@ -84,7 +84,7 @@ public class TaskManagerView extends HttpServlet {
 							"function checkRegexp() {" + 
 							"$.ajax({" +
 									"type: \"POST\"," +
-									"url: \"" + response.encodeURL("?action=regexptest") + "\"," +
+									"url: \"" + Util.generateHTMLLink("?action=regexptest", response) + "\"," +
 									"data: { regexp: document.getElementById(\"filenameregexp\").value, test: document.getElementById(\"regexptest\").value }, " +
 									"success: function(msg){" +
 										"alert(msg);" +
@@ -98,7 +98,7 @@ public class TaskManagerView extends HttpServlet {
 									"document.getElementById(\"dynamictaskhints\").innerHTML = \"hole Hinweise...\";" +
 									"$.ajax({" +
 											"type: \"POST\"," +
-											"url: \"" + response.encodeURL("?action=dynamictaskhints") + "\"," +
+											"url: \"" + Util.generateHTMLLink("?action=dynamictaskhints", response) + "\"," +
 											"data: { dynamicTask: document.getElementById(\"dynamicTask\").value }, " +
 											"success: function(msg){" +
 												"document.getElementById(\"dynamictaskhints\").innerHTML = msg;" +
@@ -117,7 +117,7 @@ public class TaskManagerView extends HttpServlet {
 		}
 
 		PrintWriter out = response.getWriter();
-		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		if (task.getTaskid() != 0) {
 			out.println("<input type=hidden name=action value=saveTask>");
 			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
@@ -240,9 +240,9 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<tr>");
 		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
 		if (task.getTaskid() != 0) {
-			out.print(response.encodeURL("ShowTask?taskid=" + task.getTaskid()));
+			out.print(Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response));
 		} else {
-			out.print(response.encodeURL("ShowLecture?lecture=" + lecture.getId()));
+			out.print(Util.generateHTMLLink("ShowLecture?lecture=" + lecture.getId(), response));
 		}
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
@@ -256,11 +256,11 @@ public class TaskManagerView extends HttpServlet {
 			if (!options.isEmpty()) {
 				out.println("<ul>");
 				for (MCOption option : options) {
-					out.println("<li>" + Util.escapeHTML(option.getTitle()) + " (" + (option.isCorrect() ? "korrekt, " : "") + "<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deleteMCOption&amp;optionId=" + option.getId()) + "\">del</a>)</li>");
+					out.println("<li>" + Util.escapeHTML(option.getTitle()) + " (" + (option.isCorrect() ? "korrekt, " : "") + "<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deleteMCOption&optionId=" + option.getId(), response) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
-			out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+			out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 			out.println("<input type=hidden name=action value=\"newMCOption\">");
 			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 			out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
@@ -274,11 +274,11 @@ public class TaskManagerView extends HttpServlet {
 			if (!task.getPointCategories().isEmpty()) {
 				out.println("<ul>");
 				for (PointCategory category : task.getPointCategories()) {
-					out.println("<li>" + Util.escapeHTML(category.getDescription()) + "; " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? ", optional" : "") + " (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid() + "&amp;action=deletePointCategory&amp;pointCategoryId=" + category.getPointcatid()) + "\">del</a>)</li>");
+					out.println("<li>" + Util.escapeHTML(category.getDescription()) + "; " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? ", optional" : "") + " (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deletePointCategory&pointCategoryId=" + category.getPointcatid(), response) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
-			out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+			out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 			out.println("<input type=hidden name=action value=\"newPointCategory\">");
 			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 			out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
@@ -295,11 +295,11 @@ public class TaskManagerView extends HttpServlet {
 				out.println("<ul>");
 				for (String file : advisorFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
-					out.println("<li><a href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DownloadTaskFile/" + file + "?action=delete&taskid=" + task.getTaskid()) + "\">del</a>)</li>");
+					out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + file + "?action=delete&taskid=" + task.getTaskid(), response) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
-			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadTaskFile&amp;lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid()) + "\">");
+			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?action=uploadTaskFile&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response) + "\">");
 			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie den Studierenden zum Lösen der Aufgabe zur Verfügung stellen möchten:</p>");
 			out.println("<INPUT TYPE=file NAME=file required=required>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
@@ -307,7 +307,7 @@ public class TaskManagerView extends HttpServlet {
 
 			out.println("<h2>Musterlösung hinterlegen</h2>");
 			if (!modelSolutionFiles.isEmpty()) {
-				out.println("<p><form action=\"" + response.encodeURL("?") + "\" method=post>");
+				out.println("<p><form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 				out.println("<input type=hidden name=action value=\"provideModelSolutionToStudents\">");
 				out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 				out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
@@ -321,11 +321,11 @@ public class TaskManagerView extends HttpServlet {
 				out.println("<ul>");
 				for (String file : modelSolutionFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
-					out.println("<li><a href=\"" + response.encodeURL("DownloadModelSolutionFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DownloadModelSolutionFile/" + file + "?action=delete&taskid=" + task.getTaskid()) + "\">del</a>)</li>");
+					out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + file + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + file + "?action=delete&taskid=" + task.getTaskid(), response) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
-			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadModelSolutionFile&amp;lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid()) + "\">");
+			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?action=uploadModelSolutionFile&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response) + "\">");
 			out.println("<p>Bitte wählen Sie eine Datei aus, die zur Musterlösung gehört bzw. diese darstellt:</p>");
 			out.println("<INPUT TYPE=file NAME=file required=required>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
@@ -346,17 +346,17 @@ public class TaskManagerView extends HttpServlet {
 					} else if (similarityTest.getStatus() == 2) {
 						out.println("in Ausführung<br>");
 					} else {
-						out.println("bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("DupeCheck?action=rerunSimilarityTest&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
+						out.println("bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + Util.generateHTMLLink("DupeCheck?action=rerunSimilarityTest&similaritytestid=" + similarityTest.getSimilarityTestId() + "&taskid=" + task.getTaskid(), response) + "\">erneut ausführen</a><br>");
 					}
-					out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DupeCheck?action=deleteSimilarityTest&amp;taskid=" + task.getTaskid() + "&amp;similaritytestid=" + similarityTest.getSimilarityTestId()) + "\">löschen</a></li>");
+					out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DupeCheck?action=deleteSimilarityTest&taskid=" + task.getTaskid() + "&similaritytestid=" + similarityTest.getSimilarityTestId(), response) + "\">löschen</a></li>");
 				}
 				out.println("</ul>");
 			}
-			out.println("<p class=mid><a href=\"" + response.encodeURL("DupeCheck?taskid=" + task.getTaskid()) + "\">Ähnlichkeitsprüfung hinzufügen</a><p>");
+			out.println("<p class=mid><a href=\"" + Util.generateHTMLLink("DupeCheck?taskid=" + task.getTaskid(), response) + "\">Ähnlichkeitsprüfung hinzufügen</a><p>");
 
 			if (!task.isADynamicTask()) {
 				out.println("<h2>Funktionstests der Abgaben</h2>");
-				out.println("<p class=mid><a href=\"" + response.encodeURL("TestManager?action=newTest&amp;taskid=" + task.getTaskid()) + "\">Test hinzufügen</a></p>");
+				out.println("<p class=mid><a href=\"" + Util.generateHTMLLink("TestManager?action=newTest&taskid=" + task.getTaskid(), response) + "\">Test hinzufügen</a></p>");
 				if (!task.getTests().isEmpty()) {
 					out.println("<ul>");
 					for (Test test : task.getTests()) {
@@ -382,14 +382,14 @@ public class TaskManagerView extends HttpServlet {
 							if (test.isNeedsToRun()) {
 								out.println("in Queue, noch nicht ausgeführt<br>");
 							} else {
-								out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + response.encodeURL("TestManager?action=rerunTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">erneut ausführen</a><br>");
+								out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + Util.generateHTMLLink("TestManager?action=rerunTest&testid=" + test.getId() + "&taskid=" + task.getTaskid(), response) + "\">erneut ausführen</a><br>");
 							}
 						}
 						if (test instanceof JavaAdvancedIOTest) {
 							out.println("Bestehend aus " + ((JavaAdvancedIOTest) test).getTestSteps().size() + " Schritten<br>");
-							out.println("<a href=\"" + response.encodeURL("JavaAdvancedIOTestManager?testid=" + test.getId()) + "\">Test bearbeiten</a><br>");
+							out.println("<a href=\"" + Util.generateHTMLLink("JavaAdvancedIOTestManager?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
 						}
-						out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("TestManager?action=deleteTest&amp;testid=" + test.getId()) + "&amp;taskid=" + task.getTaskid() + "\">Test löschen</a>");
+						out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TestManager?action=deleteTest&testid=" + test.getId() + "&taskid=" + task.getTaskid(), response) + "\">Test löschen</a>");
 						out.println("</li>");
 					}
 					out.println("</ul>");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -46,7 +46,7 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		template.printTemplateHeader("Super User", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"" + response.encodeURL("AdminMenue") + "\">Admin-Menü</a> &gt; Super User");
+		template.printTemplateHeader("Super User", "<a href=\"" + Util.generateHTMLLink("Overview", response) + "\">Meine Veranstaltungen</a> - <a href=\"" + Util.generateHTMLLink("AdminMenue", response) + "\">Admin-Menü</a> &gt; Super User");
 		PrintWriter out = response.getWriter();
 
 		@SuppressWarnings("unchecked")
@@ -60,7 +60,7 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 			User user = userIterator.next();
 			out.println("<tr>");
 			out.println("<td>" + Util.escapeHTML(user.getFullName()) + "</td>");
-			out.println("<td><a href=\"" + response.encodeURL("?action=removeSuperUser&amp;userid=" + user.getUid()) + "\">degradieren</a></td>");
+			out.println("<td><a href=\"" + Util.generateHTMLLink("?action=removeSuperUser&userid=" + user.getUid(), response) + "\">degradieren</a></td>");
 			out.println("</tr>");
 		}
 		out.println("<tr>");
@@ -82,7 +82,7 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 		out.println("</tr>");
 		out.println("</table><p>");
 
-		out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
+		out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("?", response) + "\">zur Übersicht</a></div>");
 		template.printTemplateFooter();
 	}
 }

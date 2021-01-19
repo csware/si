@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -64,7 +64,7 @@ public class SubmitSolutionAdvisorFormView extends HttpServlet {
 		if (task.getMaxSubmitters() > 1) {
 			out.println("<p>PartnerInnen können im zweiten Schritt bei der Abgabe eingestellt werden.</p>");
 		}
-		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\">");
+		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid(), response) + "\">");
 		out.println(setWithUser.toString());
 		out.println("<p>Bitte wählen Sie eine Datei aus, die Sie einsenden möchten.</p>");
 		out.println("<INPUT TYPE=file NAME=file required=required>");

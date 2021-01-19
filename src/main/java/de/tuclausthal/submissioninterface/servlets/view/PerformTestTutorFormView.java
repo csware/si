@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -47,7 +47,7 @@ public class PerformTestTutorFormView extends HttpServlet {
 
 		template.printTemplateHeader("Test durchführen", task);
 		PrintWriter out = response.getWriter();
-		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?") + "\">");
+		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?", response) + "\">");
 		out.println("<p>Test: <select name=\"testid\" size=1 required=required>");
 		for (Test test : task.getTests()) {
 			out.println("<option value=\"" + test.getId() + "\">" + Util.escapeHTML(test.getTestTitle()) + (test.isForTutors() ? " (Tutortest)" : "") + "</option>");

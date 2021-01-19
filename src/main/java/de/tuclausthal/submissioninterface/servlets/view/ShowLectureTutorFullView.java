@@ -108,8 +108,8 @@ public class ShowLectureTutorFullView extends HttpServlet {
 				}
 				out.println("<td>n/a</td>");
 			}
-			out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + lectureParticipation.getUser().getUid()) + "\">" + Util.escapeHTML(lectureParticipation.getUser().getLastName()) + "</a></td>");
-			out.println("<td><a href=\"" + response.encodeURL("ShowUser?uid=" + lectureParticipation.getUser().getUid()) + "\">" + Util.escapeHTML(lectureParticipation.getUser().getFirstName()) + "</a></td>");
+			out.println("<td><a href=\"" + Util.generateHTMLLink("ShowUser?uid=" + lectureParticipation.getUser().getUid(), response) + "\">" + Util.escapeHTML(lectureParticipation.getUser().getLastName()) + "</a></td>");
+			out.println("<td><a href=\"" + Util.generateHTMLLink("ShowUser?uid=" + lectureParticipation.getUser().getUid(), response) + "\">" + Util.escapeHTML(lectureParticipation.getUser().getFirstName()) + "</a></td>");
 			int points = 0;
 			for (TaskGroup taskGroup : taskGroupList) {
 				List<Task> taskList = taskGroup.getTasks();

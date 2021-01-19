@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -53,7 +53,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 
 		for (JavaAdvancedIOTestStep step : test.getTestSteps()) {
 			out.println("<h2>" + Util.escapeHTML(step.getTitle()) + "</h2>");
-			out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+			out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 			out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");
 			out.println("<input type=hidden name=teststepid value=\"" + step.getTeststepid() + "\">");
 			out.println("<input type=hidden name=action value=updateStep>");
@@ -76,7 +76,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 			out.println("<tr>");
 			out.println("<td colspan=2 class=mid>");
 			out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\"  href=\"");
-			out.println(response.encodeURL("JavaAdvancedIOTestManager?testid=" + test.getId() + "&amp;action=deleteStep&teststepid=" + step.getTeststepid()));
+			out.println(Util.generateHTMLLink("JavaAdvancedIOTestManager?testid=" + test.getId() + "&action=deleteStep&teststepid=" + step.getTeststepid(), response));
 			out.println("\">Löschen</a></td>");
 			out.println("</tr>");
 			out.println("</table>");
@@ -139,7 +139,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 		out.println("<p>Diese Art von Test ist für einfache Ausgabetests ausgerichtet, es können aber auch approximative Tests oder nahezu beliebige Überprüfungen durchgefühert werden, z.B. erwartet \"ca. 0.13\" und Testcode \"float f = StudentCode.getFloat(); if (Math.abs(f - 0.13) < 0.01) { System.out.println(\"ca. 0.13\"); } else { System.out.println(f); }\".</p>");
 		out.println("</div>");
 
-		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");
 		out.println("<input type=hidden name=action value=addNewStep>");
 		out.println("<table class=border>");
@@ -157,7 +157,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(response.encodeURL("TaskManager?action=editTask&amp;taskid=" + test.getTask().getTaskid() + "&amp;lecture=" + test.getTask().getTaskGroup().getLecture().getId()));
+		out.println(Util.generateHTMLLink("TaskManager?action=editTask&taskid=" + test.getTask().getTaskid() + "&lecture=" + test.getTask().getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");

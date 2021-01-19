@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * View-Servlet for displaying a message
@@ -46,7 +47,7 @@ public class MessageView extends HttpServlet {
 		template.printTemplateHeader(title);
 		PrintWriter out = response.getWriter();
 		if (message == null) {
-			out.println("<div class=mid><a href=\"" + response.encodeURL(request.getContextPath() + "/?") + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(request.getContextPath() + "/?", response) + "\">zur Übersicht</a></div>");
 		} else {
 			out.println(message);
 		}

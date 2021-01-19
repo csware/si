@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2014, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2014, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -182,7 +182,7 @@ public class SubmitSolution extends HttpServlet {
 		if (task == null) {
 			template.printTemplateHeader("Aufgabe nicht gefunden");
 			PrintWriter out = response.getWriter();
-			out.println("<div class=mid><a href=\"" + response.encodeURL("?") + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("?", response) + "\">zur Übersicht</a></div>");
 			template.printTemplateFooter();
 			return;
 		}
@@ -195,7 +195,7 @@ public class SubmitSolution extends HttpServlet {
 			template.printTemplateHeader("Ungültige Anfrage");
 			PrintWriter out = response.getWriter();
 			out.println("<div class=mid>Sie nehmen an dieser Veranstaltung nicht teil.</div>");
-			out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("Overview", response) + "\">zur Übersicht</a></div>");
 			template.printTemplateFooter();
 			return;
 		}
@@ -231,7 +231,7 @@ public class SubmitSolution extends HttpServlet {
 				template.printTemplateHeader("Ungültige Anfrage");
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Sie sind nicht berechtigt bei dieser Veranstaltung Dateien für Studierende hochzuladen.</div>");
-				out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
+				out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("Overview", response) + "\">zur Übersicht</a></div>");
 				template.printTemplateFooter();
 				return;
 			}
@@ -240,7 +240,7 @@ public class SubmitSolution extends HttpServlet {
 				template.printTemplateHeader("Ungültige Anfrage");
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Der gewählte Studierende ist keine Teilnehemerin bzw. kein Teilnehmer dieser Veranstaltung.</div>");
-				out.println("<div class=mid><a href=\"" + response.encodeURL("Overview") + "\">zur Übersicht</a></div>");
+				out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("Overview", response) + "\">zur Übersicht</a></div>");
 				template.printTemplateFooter();
 				return;
 			}
@@ -405,7 +405,7 @@ public class SubmitSolution extends HttpServlet {
 				}
 			}
 
-			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
+			response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
 			return;
 		} else if (task.isMCTask()) {
 			MCOptionDAOIf mcOptionDAO = DAOFactory.MCOptionDAOIf(session);
@@ -440,7 +440,7 @@ public class SubmitSolution extends HttpServlet {
 			submissionDAO.saveSubmission(submission);
 			tx.commit();
 			new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null, null, "!mc!", os.toByteArray());
-			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
+			response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
 		} else if (request.getParameter("textsolution") != null) {
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			if (task.isADynamicTask()) {
@@ -472,7 +472,7 @@ public class SubmitSolution extends HttpServlet {
 			tx.commit();
 			os.write(request.getParameter("textsolution").getBytes());
 			new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null, null, "!textsolution!", os.toByteArray());
-			response.sendRedirect(response.encodeRedirectURL("ShowTask?taskid=" + task.getTaskid()));
+			response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
 		} else {
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 				submission.setLastModified(new Date());

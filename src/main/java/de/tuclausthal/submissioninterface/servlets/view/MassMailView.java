@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -49,7 +49,7 @@ public class MassMailView extends HttpServlet {
 		template.addKeepAlive();
 		template.printTemplateHeader("E-Mail senden", lecture);
 		PrintWriter out = response.getWriter();
-		out.println("<form action=\"" + response.encodeURL("?lectureid=" + lecture.getId()) + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?lectureid=" + lecture.getId(), response) + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Betreff:</th>");
@@ -73,7 +73,7 @@ public class MassMailView extends HttpServlet {
 		out.println("</select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"" + response.encodeURL("ShowLecture?lecture=" + lecture.getId()) + "\">Abbrechen</a></td>");
+		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"" + Util.generateHTMLLink("ShowLecture?lecture=" + lecture.getId(), response) + "\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");

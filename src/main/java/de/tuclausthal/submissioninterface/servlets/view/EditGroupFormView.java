@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -54,7 +54,7 @@ public class EditGroupFormView extends HttpServlet {
 		template.addKeepAlive();
 		template.printTemplateHeader(group);
 		PrintWriter out = response.getWriter();
-		out.println("<form action=\"" + response.encodeURL("?") + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=action value=editGroup>");
 		out.println("<input type=hidden name=groupid value=" + group.getGid() + ">");
 		out.println("<table class=border>");
@@ -105,12 +105,12 @@ public class EditGroupFormView extends HttpServlet {
 			out.println("</tr>");
 		}
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=zuordnen> <a href=\"" + response.encodeURL("ShowLecture?lecture=" + group.getLecture().getId()) + "\">Abbrechen</a></td>");
+		out.println("<td colspan=2 class=mid><input type=submit value=zuordnen> <a href=\"" + Util.generateHTMLLink("ShowLecture?lecture=" + group.getLecture().getId(), response) + "\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
 		if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
-			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("AddGroup?lecture=" + group.getLecture().getId() + "&amp;action=deleteGroup&amp;gid=" + group.getGid()) + "\">Gruppe löschen</a></td>");
+			out.println("<p class=mid><a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("AddGroup?lecture=" + group.getLecture().getId() + "&action=deleteGroup&gid=" + group.getGid(), response) + "\">Gruppe löschen</a></td>");
 		}
 		template.printTemplateFooter();
 	}

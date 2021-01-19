@@ -107,9 +107,9 @@ public class ShowSubmission extends HttpServlet {
 			tx.commit();
 			String groupAdding = "";
 			if (request.getParameter("group") != null && Util.parseInteger(request.getParameter("group"), 0) > 0) {
-				groupAdding = "&amp;groupid=" + Util.parseInteger(request.getParameter("group"), 0);
+				groupAdding = "&groupid=" + Util.parseInteger(request.getParameter("group"), 0);
 			}
-			response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid() + groupAdding));
+			response.sendRedirect(Util.generateRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid() + groupAdding, response));
 			return;
 		}
 
@@ -121,7 +121,7 @@ public class ShowSubmission extends HttpServlet {
 				submission.getSubmitters().add(partnerParticipation);
 				session.update(submission);
 				tx.commit();
-				response.sendRedirect(response.encodeRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid()));
+				response.sendRedirect(Util.generateRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid(), response));
 				return;
 			}
 			tx.rollback();

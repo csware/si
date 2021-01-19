@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -42,12 +42,12 @@ public class AdminMenueAddLectureView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		template.printTemplateHeader("neue Veranstaltung", "<a href=\"" + response.encodeURL("Overview") + "\">Meine Veranstaltungen</a> - <a href=\"AdminMenue\">Admin-Menü</a> &gt; neue Veranstaltung");
+		template.printTemplateHeader("neue Veranstaltung", "<a href=\"" + Util.generateHTMLLink("Overview", response) + "\">Meine Veranstaltungen</a> - <a href=\"" + Util.generateHTMLLink("AdminMenue", response) + "\">Admin-Menü</a> &gt; neue Veranstaltung");
 		PrintWriter out = response.getWriter();
 
 		Lecture dummyLecture = new Lecture();
 		dummyLecture.setSemester(Util.getCurrentSemester());
-		out.println("<form action=\"" + response.encodeURL("?action=saveLecture") + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?action=saveLecture", response) + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Name der Veranstaltung:</th>");
@@ -66,7 +66,7 @@ public class AdminMenueAddLectureView extends HttpServlet {
 		out.println("<td><input type=checkbox name=groupWise></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=anlegen> <a href=\"" + response.encodeURL("?") + "\">Abbrechen</a></td>");
+		out.println("<td colspan=2 class=mid><input type=submit value=anlegen> <a href=\"" + Util.generateHTMLLink("?", response) + "\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");

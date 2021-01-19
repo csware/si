@@ -62,9 +62,9 @@ public class ShowFileView extends HttpServlet {
 			if ("off".equals(request.getParameter("comments"))) {
 				StripCommentsNormalizer scn = new StripCommentsNormalizer();
 				code = scn.normalize(code);
-				options.append(" <a href=\"" + response.encodeURL("?sid=" + submission.getSubmissionid()) + "\">(toggle comments)</a>");
+				options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">(toggle comments)</a>");
 			} else {
-				options.append(" <a href=\"" + response.encodeURL("?sid=" + submission.getSubmissionid() + "&amp;comments=off") + "\">(toggle comments)</a>");
+				options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid() + "&comments=off", response) + "\">(toggle comments)</a>");
 			}
 			showWithRenderer(renderedCode, fileName, code, XhtmlRendererFactory.JAVA);
 		} else if (fileName.toLowerCase().endsWith(".htm") || fileName.toLowerCase().endsWith(".html")) {
@@ -96,9 +96,9 @@ public class ShowFileView extends HttpServlet {
 			renderedCode.append(Util.textToHTML(code.toString()) + "</pre>");
 
 			if ("yes".equals(request.getParameter("wrap"))) {
-				options.append(" <a href=\"" + response.encodeURL("?sid=" + submission.getSubmissionid()) + "\">(toggle wrapping)</a>");
+				options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">(toggle wrapping)</a>");
 			} else {
-				options.append(" <a href=\"" + response.encodeURL("?sid=" + submission.getSubmissionid() + "&amp;wrap=yes") + "\">(toggle wrapping)</a>");
+				options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid() + "&wrap=yes", response) + "\">(toggle wrapping)</a>");
 			}
 		}
 		options.append(" <a href='#' onclick=\"selectAll('fileContents'); return false;\">(select all)</a>");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -48,7 +48,7 @@ public class SearchSubmissionsView extends HttpServlet {
 		template.addKeepAlive();
 		template.printTemplateHeader("Abgaben durchsuchen", task);
 		PrintWriter out = response.getWriter();
-		out.println("<form action=\"" + response.encodeURL("?taskid=" + task.getTaskid()) + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid(), response) + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Suchen nach:</th>");
@@ -72,7 +72,7 @@ public class SearchSubmissionsView extends HttpServlet {
 		out.println("</select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=Suchen> <a href=\"" + response.encodeURL("ShowTask?taskid=" + task.getTaskid()) + "\">Abbrechen</a></td>");
+		out.println("<td colspan=2 class=mid><input type=submit value=Suchen> <a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");

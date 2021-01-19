@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -49,7 +50,7 @@ public class SwitchLogin extends HttpServlet {
 			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
 		} else {
 			response.addCookie(new Cookie("privacy", "1"));
-			response.sendRedirect(request.getContextPath() + "/" + contextAdapter.getServletsPath() + "/ShowUser?uid=" + uid);
+			response.sendRedirect(Util.generateRedirectURL("ShowUser?uid=" + uid, response));
 		}
 	}
 }

@@ -1,7 +1,7 @@
-﻿<%@page language="java" import="de.tuclausthal.submissioninterface.template.Template,de.tuclausthal.submissioninterface.template.TemplateFactory" %>
+﻿<%@page language="java" import="de.tuclausthal.submissioninterface.template.Template,de.tuclausthal.submissioninterface.template.TemplateFactory,de.tuclausthal.submissioninterface.util.Util" %>
 <% String title = "Willkommen bei GATE!"; %>
 <% Template template = TemplateFactory.getTemplate(request, response); %>
-<% template.printTemplateHeader(title, "<a href=\"" + response.encodeURL("servlets/Overview") + "\">GATE Übersicht/Login</a>"); %>
+<% template.printTemplateHeader(title, "<a href=\"" + Util.generateHTMLLink("servlets/Overview", response) + "\">GATE Übersicht/Login</a>"); %>
 
 <p>GATE ist ein E-Assessment-System, das zur Unterstützung des Übungsbetriebs von Programmier-Lehrveranstaltungen entwickelt wurde.</p>
 

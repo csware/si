@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -74,13 +74,13 @@ public class DupeCheck extends HttpServlet {
 				semilarityTestDAO.deleteSimilarityTest(similarityTest);
 			}
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId()));
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		} else if (request.getParameter("type") != null && "savesimilaritytest".equals(request.getParameter("action"))) {
 			int minSimilarity = Util.parseInteger(request.getParameter("minsimilarity"), 50);
 			Transaction tx = session.beginTransaction();
 			semilarityTestDAO.addSimilarityTest(task, request.getParameter("type"), request.getParameter("normalizer1"), "lc".equals(request.getParameter("normalizer2")), request.getParameter("normalizer3"), minSimilarity, request.getParameter("excludeFiles"));
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId()));
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		} else if ("rerunSimilarityTest".equals(request.getParameter("action")) && request.getParameter("similaritytestid") != null) {
 			Transaction tx = session.beginTransaction();
 			SimilarityTest similarityTest = semilarityTestDAO.getSimilarityTestLocked(Util.parseInteger(request.getParameter("similaritytestid"), 0));
@@ -89,7 +89,7 @@ public class DupeCheck extends HttpServlet {
 				semilarityTestDAO.saveSimilarityTest(similarityTest);
 			}
 			tx.commit();
-			response.sendRedirect(response.encodeRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId()));
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		} else {
 			request.setAttribute("task", task);
 			request.getRequestDispatcher("DupeCheckFormView").forward(request, response);

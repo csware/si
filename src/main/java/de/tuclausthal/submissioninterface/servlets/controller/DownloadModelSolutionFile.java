@@ -88,7 +88,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 					response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 				} else {
 					file.delete();
-					response.sendRedirect(response.encodeRedirectURL(getServletContext().getContextPath() + "/" + contextAdapter.getServletsPath() + "/TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid()));
+					response.sendRedirect(Util.generateRedirectURL(getServletContext().getContextPath() + "/" + contextAdapter.getServletsPath() + "/TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
 					return;
 				}
 			}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -42,6 +42,7 @@ import de.tuclausthal.submissioninterface.authfilter.authentication.verify.Verif
 import de.tuclausthal.submissioninterface.authfilter.authentication.verify.VerifyResult;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Authentication filter
@@ -145,7 +146,7 @@ public class AuthenticationFilter implements Filter {
 		if (request.getQueryString() != null) {
 			queryString = "?" + request.getQueryString();
 		}
-		response.sendRedirect(response.encodeRedirectURL((request.getRequestURL().toString() + queryString).replace("\r", "%0d").replace("\n", "%0a")));
+		response.sendRedirect(Util.generateRedirectURL((request.getRequestURL().toString() + queryString).replace("\r", "%0d").replace("\n", "%0a"), response));
 	}
 
 	@Override
