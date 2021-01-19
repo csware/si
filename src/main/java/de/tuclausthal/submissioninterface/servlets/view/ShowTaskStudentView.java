@@ -104,7 +104,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("<td><ul class=taskfiles>");
 			for (String file : advisorFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
-				out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a></li>");
+				out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a></li>");
 			}
 			out.println("</ul></td>");
 			out.println("</tr>");
@@ -136,9 +136,9 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<td>");
 				for (String file : submittedFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
-					out.println("<a target=\"_blank\" href=\"" + Util.generateHTMLLink("ShowFile/" + file + "?sid=" + submission.getSubmissionid(), response) + "\">" + Util.escapeHTML(file) + "</a>");
+					out.println("<a target=\"_blank\" href=\"" + Util.generateHTMLLink("ShowFile/" + Util.encodeURLPathComponent(file) + "?sid=" + submission.getSubmissionid(), response) + "\">" + Util.escapeHTML(file) + "</a>");
 					if (task.getDeadline().after(Util.correctTimezone(new Date())) && !(task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
-						out.println(" (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DeleteFile/" + file + "?sid=" + submission.getSubmissionid(), response) + "\">löschen</a>)");
+						out.println(" (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DeleteFile/" + Util.encodeURLPathComponent(file) + "?sid=" + submission.getSubmissionid(), response) + "\">löschen</a>)");
 					}
 					out.println("<br>");
 				}
@@ -319,7 +319,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			out.println("<p>Für diese Aufgabe werden Ihnen folgende Dateien als Musterlösung zur Verfügung gestellt:</p>");
 			out.println("<ul>");
 			for (String file : modelSolutionFiles) {
-				out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + file + "?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(file) + "</a></li>");
+				out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(file) + "</a></li>");
 			}
 			out.println("</ul>");
 		}

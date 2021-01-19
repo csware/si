@@ -295,7 +295,7 @@ public class TaskManagerView extends HttpServlet {
 				out.println("<ul>");
 				for (String file : advisorFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
-					out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + file + "?action=delete&taskid=" + task.getTaskid(), response) + "\">del</a>)</li>");
+					out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + Util.encodeURLPathComponent(file) + "?action=delete&taskid=" + task.getTaskid(), response) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
@@ -321,7 +321,7 @@ public class TaskManagerView extends HttpServlet {
 				out.println("<ul>");
 				for (String file : modelSolutionFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
-					out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + file + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + file + "?action=delete&taskid=" + task.getTaskid(), response) + "\">del</a>)</li>");
+					out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + Util.encodeURLPathComponent(file) + "?action=delete&taskid=" + task.getTaskid(), response) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}

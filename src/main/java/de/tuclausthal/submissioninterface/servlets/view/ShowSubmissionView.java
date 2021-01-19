@@ -382,7 +382,7 @@ public class ShowSubmissionView extends HttpServlet {
 					out.println("<a id=\"hidebtn" + id + "\" href=\"#\" onclick='hideCodePreview(\"" + id + "\");return false;'>(hide)</a>");
 					out.println("</div>");
 					out.println("<div id=\"resizablecodepreview" + id + "\" class=\"mid inlinefile\">");
-					out.println("<iframe name=\"iframe" + id + "\" id=\"iframe" + id + "\" scrolling=\"yes\" width=\"100%\" height=\"100%\" src=\"" + Util.generateHTMLLink("ShowFile/" + file + "?sid=" + submission.getSubmissionid(), response) + "\"></iframe></div>");
+					out.println("<iframe name=\"iframe" + id + "\" id=\"iframe" + id + "\" scrolling=\"yes\" width=\"100%\" height=\"100%\" src=\"" + Util.generateHTMLLink("ShowFile/" + Util.encodeURLPathComponent(file) + "?sid=" + submission.getSubmissionid(), response) + "\"></iframe></div>");
 					out.println("</div>");
 					javaScript.append("iframeSetup('" + id + "');");
 					if (pattern != null) {
@@ -394,7 +394,7 @@ public class ShowSubmissionView extends HttpServlet {
 				} else {
 					out.println("<h3 class=files>" + Util.escapeHTML(file) + "</h3>");
 				}
-				out.println("<a href=\"" + Util.generateHTMLLink("ShowFile/" + file + "?download=true&sid=" + submission.getSubmissionid(), response) + "\">Download " + Util.escapeHTML(file) + "</a><p>");
+				out.println("<a href=\"" + Util.generateHTMLLink("ShowFile/" + Util.encodeURLPathComponent(file) + "?download=true&sid=" + submission.getSubmissionid(), response) + "\">Download " + Util.escapeHTML(file) + "</a><p>");
 				id++;
 			}
 			out.println("</div>");

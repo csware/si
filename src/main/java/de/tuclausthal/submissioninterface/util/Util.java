@@ -29,6 +29,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.NumberFormat;
 import java.time.Clock;
 import java.time.ZonedDateTime;
@@ -103,6 +105,15 @@ public final class Util {
 
 	public static String generateHTMLLink(String url, HttpServletResponse response) {
 		return escapeHTML(url);
+	}
+
+	public static String encodeURLPathComponent(String path) {
+		try {
+			return new URI(null, null, path, null).toASCIIString();
+		} catch (URISyntaxException e) {
+			log.error("Could not encode pathcomponent.", e);
+		}
+		return "";
 	}
 
 	/**

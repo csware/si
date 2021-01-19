@@ -193,4 +193,14 @@ public class UtilTest {
 		assertEquals("som%thing?def=def&target=p", Util.generateRedirectURL("som%thing?def=def&target=p", null));
 		assertEquals("https://url.host/some/thing.java?query=parameter&second=value", Util.generateRedirectURL("https://url.host/some/thing.java?query=parameter&second=value", null));
 	}
+
+	@Test
+	public void testEncodeURLPathComponent() {
+		assertEquals("", Util.encodeURLPathComponent(""));
+		assertEquals("bla", Util.encodeURLPathComponent("bla"));
+		assertEquals("bla/d", Util.encodeURLPathComponent("bla/d"));
+		assertEquals("b%20la+some-_%23thing.test", Util.encodeURLPathComponent("b la+some-_#thing.test"));
+		assertEquals("b%20la+some/thing.test", Util.encodeURLPathComponent("b la+some/thing.test"));
+		assertEquals("%25UTF-8%C3%BC/Hello%20World.java", Util.encodeURLPathComponent("%UTF-8ü/Hello World.java"));
+	}
 }

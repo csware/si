@@ -118,7 +118,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<td><ul class=taskfiles>");
 			for (String file : advisorFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
-				out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + file + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a></li>");
+				out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a></li>");
 			}
 			out.println("</ul></td>");
 			out.println("</tr>");
@@ -154,7 +154,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<h2>Musterlösung:</h2>");
 			out.println("<ul>");
 			for (String file : modelSolutionFiles) {
-				out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + file + "?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(file) + "</a></li>");
+				out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(file) + "</a></li>");
 			}
 			out.println("</ul>");
 		}
