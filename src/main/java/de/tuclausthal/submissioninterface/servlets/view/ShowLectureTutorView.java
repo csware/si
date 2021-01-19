@@ -43,7 +43,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
-import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -65,7 +65,7 @@ public class ShowLectureTutorView extends HttpServlet {
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 
 		boolean isAdvisor = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0);
-		boolean showMatNo = isAdvisor || new ContextAdapter(getServletContext()).isMatrikelNoAvailableToTutors(); 
+		boolean showMatNo = isAdvisor || Configuration.getInstance().isMatrikelNoAvailableToTutors(); 
 
 		// list all tasks for a lecture
 		template.printTemplateHeader(lecture);

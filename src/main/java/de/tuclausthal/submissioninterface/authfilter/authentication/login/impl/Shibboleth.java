@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -36,7 +36,7 @@ import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginI
 import de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.LDAPVerify;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
-import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.Configuration;
 
 /**
  * Shibboleth-based login method implementation
@@ -57,16 +57,15 @@ public class Shibboleth implements LoginIf {
 
 	@Override
 	public void failNoData(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		ContextAdapter contextAdapter = new ContextAdapter(request.getServletContext());
 		// don't do a redirect for the Noop servlet
-		if (request.getRequestURI().equals(request.getServletContext().getContextPath() + "/" + contextAdapter.getServletsPath() + "/Noop")) {
+		if (request.getRequestURI().equals(request.getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/Noop")) {
 			response.setContentType("text/plain");
 			response.setStatus(401);
 			response.getWriter().println("not logged in");
 			return;
 		}
 
-		String redirector = request.getServletContext().getContextPath() + "/" + contextAdapter.getServletsPath() + "/Overview";
+		String redirector = request.getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/Overview";
 		boolean isRedirector = request.getRequestURI().equals(redirector);
 		if (isRedirector && request.getSession().getAttribute(LOOP_DETECTION_KEY) != null) {
 			LOG.error("Got no data from Shibboleth service provider; login loop detected.");

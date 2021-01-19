@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2015, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2015, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -47,7 +47,7 @@ import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
-import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -166,11 +166,9 @@ public class PerformTest extends HttpServlet {
 		request.setAttribute("task", test.getTask());
 		request.setAttribute("test", test);
 
-		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
-
 		TestTask testTask = new TestTask(test);
 		TestExecutorTestResult testResult = new TestExecutorTestResult();
-		testTask.performTaskInFolder(test, contextAdapter.getDataPath(), path, testResult);
+		testTask.performTaskInFolder(test, Configuration.getInstance().getDataPath(), path, testResult);
 
 		Util.recursiveDelete(path);
 

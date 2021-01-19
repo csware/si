@@ -39,7 +39,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStat
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
-import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -102,9 +101,9 @@ public class MarkEmptyTask extends HttpServlet {
 			}
 			// attention: quite similar code in ShowSubmission
 			if (!task.getPointCategories().isEmpty()) {
-				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, null, new ContextAdapter(request.getServletContext()));
+				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, null);
 			} else {
-				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, null, new ContextAdapter(request.getServletContext()));
+				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, null);
 			}
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL("MarkEmptyTask?taskid=" + task.getTaskid(), response));

@@ -41,7 +41,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
-import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -58,11 +58,9 @@ public class DownloadModelSolutionFile extends HttpServlet {
 		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 
-		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
-
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
+			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
 			return;
 		}
 
@@ -77,18 +75,18 @@ public class DownloadModelSolutionFile extends HttpServlet {
 
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
+			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
 			return;
 		}
 
-		File file = new File(contextAdapter.getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "modelsolutionfiles" + System.getProperty("file.separator") + request.getPathInfo().substring(1));
+		File file = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "modelsolutionfiles" + System.getProperty("file.separator") + request.getPathInfo().substring(1));
 		if (file.exists() && file.isFile()) {
 			if ("delete".equals(request.getParameter("action"))) {
 				if (participation.getRoleType() != ParticipationRole.ADVISOR) {
 					response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 				} else {
 					file.delete();
-					response.sendRedirect(Util.generateRedirectURL(getServletContext().getContextPath() + "/" + contextAdapter.getServletsPath() + "/TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
+					response.sendRedirect(Util.generateRedirectURL(getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
 					return;
 				}
 			}
@@ -106,6 +104,6 @@ public class DownloadModelSolutionFile extends HttpServlet {
 		}
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
-		request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
+		request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
 	}
 }

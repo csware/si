@@ -52,7 +52,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task_;
 import de.tuclausthal.submissioninterface.persistence.dto.SubmissionPointsDTO;
 import de.tuclausthal.submissioninterface.util.Configuration;
-import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.MailSender;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -66,7 +65,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	}
 
 	@Override
-	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate, de.tuclausthal.submissioninterface.util.ContextAdapter contextAdapter) {
+	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate) {
 		Session session = getSession();
 
 		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
@@ -124,7 +123,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 				changed = true;
 			}
 			if (changed && oldPoints.getIssuedBy() != null && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid() && Configuration.getInstance().isMailLastGradingTutorOnGradeChange()) {
-				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <" + contextAdapter.getFullServletsURI() + "/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
+				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <" + Configuration.getInstance().getFullServletsURI() + "/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
 			}
 		} else {
 			if (points.getPointStatus() != null) {
@@ -152,7 +151,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	}
 
 	@Override
-	public Points createPoints(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate, ContextAdapter contextAdapter) {
+	public Points createPoints(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate) {
 		Session session = getSession();
 
 		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
@@ -252,7 +251,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 				changed = true;
 			}
 			if (changed && oldPoints.getIssuedBy() != null && oldPoints.getIssuedBy().getUser().getUid() != participation.getUser().getUid() && Configuration.getInstance().isMailLastGradingTutorOnGradeChange()) {
-				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <" + contextAdapter.getFullServletsURI() + "/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
+				MailSender.sendMail(oldPoints.getIssuedBy().getUser().getEmail(), "Mark-Change Notification", "Hallo,\n\n" + participation.getUser().getFullName() + " hat Deine Bewertung von <" + Configuration.getInstance().getFullServletsURI() + "/ShowSubmission?sid=" + submission.getSubmissionid() + "> verändert.\n\n-- \nReply is not possible.");
 			}
 		} else {
 			if (points.getPointStatus() != null) {

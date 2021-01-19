@@ -38,7 +38,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
-import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -60,7 +60,7 @@ public class AdminMenue extends HttpServlet {
 		if ("newLecture".equals(request.getParameter("action"))) {
 			request.getRequestDispatcher("AdminMenueAddLectureView").forward(request, response);
 		} else if ("cleanup".equals(request.getParameter("action"))) {
-			File path = new ContextAdapter(getServletContext()).getDataPath();
+			File path = Configuration.getInstance().getDataPath();
 			// list lectures
 			for (File lectures : path.listFiles()) {
 				if (lectures.isDirectory() && DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(lectures.getName(), 0)) == null) {

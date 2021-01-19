@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -35,7 +35,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
-import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -47,7 +47,6 @@ public class WebStart extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
-		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
 
 		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
@@ -74,11 +73,11 @@ public class WebStart extends HttpServlet {
 		if ("argouml".equals(request.getParameter("tool"))) {
 			response.setContentType("application/x-java-jnlp-file");
 			request.setAttribute("task", task);
-			request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/WebStartArgoUMLView").forward(request, response);
+			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/WebStartArgoUMLView").forward(request, response);
 			return;
 		}
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
-		request.getRequestDispatcher("/" + contextAdapter.getServletsPath() + "/MessageView").forward(request, response);
+		request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
 	}
 }

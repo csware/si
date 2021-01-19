@@ -41,7 +41,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
-import de.tuclausthal.submissioninterface.util.ContextAdapter;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -97,7 +97,7 @@ public class DownloadSubmissionsByGroup extends HttpServlet {
 		ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream());
 
 		// add submitted files to zip archive
-		final File taskPath = new File(new ContextAdapter(getServletContext()).getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+		final File taskPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
 		for (final int submissionId : submissionIds) {
 			File submissionDir = new File(taskPath, submissionId + System.getProperty("file.separator"));
 			if (!submissionDir.exists()) {

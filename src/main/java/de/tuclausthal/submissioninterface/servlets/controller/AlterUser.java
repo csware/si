@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2013, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -34,7 +34,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Configuration;
-import de.tuclausthal.submissioninterface.util.ContextAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -72,7 +71,6 @@ public class AlterUser extends HttpServlet {
 			tx.commit();
 		}
 
-		ContextAdapter contextAdapter = new ContextAdapter(getServletContext());
-		response.sendRedirect(request.getContextPath() + "/" + contextAdapter.getServletsPath() + "/Overview");
+		response.sendRedirect(Util.generateRedirectURL("Overview", response));
 	}
 }
