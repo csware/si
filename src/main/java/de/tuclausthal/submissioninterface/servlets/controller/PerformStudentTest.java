@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import javax.persistence.LockModeType;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -170,7 +171,7 @@ public class PerformStudentTest extends HttpServlet {
 					request.getRequestDispatcher("MessageView").forward(request, response);
 					return;
 				}
-				sa.setQueuedTest(new QueuedTest(test.getId(), TestExecutor.executeTask(new TestTask(test, submission))));
+				sa.setQueuedTest(new QueuedTest(test.getId(), submission.getLastModified(), TestExecutor.executeTask(new TestTask(test, submission))));
 				tx.commit();
 				gotoWaitingView(request, response, "testid=" + test.getId());
 			} else {
@@ -197,7 +198,15 @@ public class PerformStudentTest extends HttpServlet {
 				}
 
 				Transaction tx = session.beginTransaction();
-				session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
+				session.refresh(submission, LockModeType.PESSIMISTIC_WRITE);
+				if (!resultFuture.submissionLastChanged.equals(submission.getLastModified()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
+					sa.setQueuedTest(null);
+					tx.commit();
+					request.setAttribute("title", "Das Testergebnis wurde durch eine zwischenzeitlich modifizierte Abgabe ungültig.");
+					request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+					request.getRequestDispatcher("MessageView").forward(request, response);
+					return;
+				}
 				if (!testCountDAO.canSeeResultAndIncrementCounterTransaction(test, submission)) {
 					sa.setQueuedTest(null);
 					tx.commit();

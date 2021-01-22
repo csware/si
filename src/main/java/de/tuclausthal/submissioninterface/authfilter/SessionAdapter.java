@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.authfilter;
 
+import java.util.Date;
 import java.util.concurrent.Future;
 
 import javax.servlet.http.HttpServletRequest;
@@ -83,10 +84,12 @@ public class SessionAdapter {
 
 	public static class QueuedTest {
 		public int testId;
+		public Date submissionLastChanged;
 		public Future<TestExecutorTestResult> testResult;
 
-		public QueuedTest(int testId, Future<TestExecutorTestResult> testResult) {
+		public QueuedTest(int testId, Date submissionLastChanged, Future<TestExecutorTestResult> testResult) {
 			this.testId = testId;
+			this.submissionLastChanged = submissionLastChanged;
 			this.testResult = testResult;
 		}
 	}
