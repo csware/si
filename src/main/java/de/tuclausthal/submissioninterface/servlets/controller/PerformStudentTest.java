@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -104,8 +105,8 @@ public class PerformStudentTest extends HttpServlet {
 				request.getRequestDispatcher("MessageArgoUMLView").forward(request, response);
 				return;
 			}
-			sa.setQueuedTest(TestExecutor.executeTask(new TestTask(test, submission)));
-			while (!sa.getQueuedTest().isDone()) {
+			Future<TestExecutorTestResult> resultFuture = TestExecutor.executeTask(new TestTask(test, submission));
+			while (!resultFuture.isDone()) {
 				try {
 					Thread.sleep(250);
 				} catch (InterruptedException e) {
@@ -114,7 +115,7 @@ public class PerformStudentTest extends HttpServlet {
 			}
 			TestExecutorTestResult result = null;
 			try {
-				result = sa.getQueuedTest().get();
+				result = resultFuture.get();
 			} catch (InterruptedException e) {
 				log.warn("Was interrupted while waiting for test to finish", e);
 			} catch (ExecutionException e) {
@@ -122,13 +123,10 @@ public class PerformStudentTest extends HttpServlet {
 			}
 
 			if (!testCountDAO.canSeeResultAndIncrementCounter(test, submission)) {
-				sa.setQueuedTest(null);
 				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
 				request.getRequestDispatcher("MessageArgoUMLView").forward(request, response);
 				return;
 			}
-
-			sa.setQueuedTest(null);
 
 			new LogDAO(session).createLogEntry(participation.getUser(), test, test.getTask(), LogAction.PERFORMED_TEST, result.isTestPassed(), result.getTestOutput());
 			request.setAttribute("testresult", result);
