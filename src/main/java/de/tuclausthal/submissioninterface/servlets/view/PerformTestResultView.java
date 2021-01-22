@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -52,7 +52,9 @@ public class PerformTestResultView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		out.println("<b>Titel:</b> " + Util.escapeHTML(test.getTestTitle()) + "<br>");
-		out.println("<b>Beschreibung:</b><br>" + Util.textToHTML(test.getTestDescription()) + "<br>");
+		if (test.getTestDescription() != null && !test.getTestDescription().isEmpty()) {
+			out.println("<b>Beschreibung:</b><br>" + Util.textToHTML(test.getTestDescription()) + "<br>");
+		}
 		out.println("<b>Bestanden:</b> " + Util.boolToHTML(testResult.isTestPassed()) + "<br>");
 		if (!testResult.getTestOutput().isEmpty()) {
 			if (test instanceof JavaAdvancedIOTest) {
