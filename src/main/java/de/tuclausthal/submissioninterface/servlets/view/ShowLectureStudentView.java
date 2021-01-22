@@ -66,7 +66,7 @@ public class ShowLectureStudentView extends HttpServlet {
 
 		out.println("<div class=mid>");
 		if (participation.getGroup() != null) {
-			out.println("Meine Gruppe: " + Util.escapeHTML(participation.getGroup().getName()));
+			out.println("Meine Gruppe: <a href=\"" + Util.generateHTMLLink("ShowGroup?lecture=" + lecture.getId(), response) + "\">" + Util.escapeHTML(participation.getGroup().getName()) + "</a>");
 			if (participation.getGroup().getTutors() != null && !participation.getGroup().getTutors().isEmpty()) {
 				if (participation.getGroup().getTutors().size() > 1) {
 					out.println("<br>Meine TutorInnen: ");

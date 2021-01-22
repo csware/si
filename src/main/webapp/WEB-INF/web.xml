@@ -780,4 +780,20 @@
     <servlet-name>CloseSubmissionByStudent</servlet-name>
     <url-pattern>/servlets/CloseSubmissionByStudent</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>ShowGroup</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.ShowGroup</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ShowGroup</servlet-name>
+    <url-pattern>/servlets/ShowGroup</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ShowGroupStudentView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ShowGroupStudentView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ShowGroupStudentView</servlet-name>
+    <url-pattern>/servlets/ShowGroupStudentView</url-pattern>
+  </servlet-mapping>
 </web-app>
