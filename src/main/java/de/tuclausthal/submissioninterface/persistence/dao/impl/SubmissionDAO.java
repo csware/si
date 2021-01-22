@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.persistence.LockModeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -88,7 +89,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 			submission = new Submission(task, submitter);
 			session.save(submission);
 		} else {
-			session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
+			session.refresh(submission, LockModeType.PESSIMISTIC_WRITE);
 		}
 		return submission;
 	}

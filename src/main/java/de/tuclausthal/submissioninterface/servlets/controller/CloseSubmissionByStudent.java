@@ -22,12 +22,12 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.persistence.LockModeType;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -70,7 +70,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 		}
 
 		Transaction tx = session.beginTransaction();
-		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
+		session.refresh(submission, LockModeType.PESSIMISTIC_WRITE);
 		if (submission.getTask().getDeadline().before(Util.correctTimezone(new Date())) || submission.isClosed()) {
 			tx.rollback();
 			request.setAttribute("title", "An dieser Abgabe sind keine Veränderungen mehr möglich.");
