@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -47,6 +47,7 @@ public class Group implements Serializable {
 	private boolean allowStudentsToQuit = false;
 	private int maxStudents = 20;
 	private boolean submissionGroup = false;
+	private boolean membersVisibleToStudents = false;
 
 	/**
 	 * @return the gid
@@ -180,5 +181,20 @@ public class Group implements Serializable {
 	 */
 	public void setSubmissionGroup(boolean submissionGroup) {
 		this.submissionGroup = submissionGroup;
+	}
+
+	/**
+	 * @return the membersVisibleToStudents
+	 */
+	@Column(nullable = false)
+	public boolean isMembersVisibleToStudents() {
+		return membersVisibleToStudents;
+	}
+
+	/**
+	 * @param membersVisibleToStudents the membersVisibleToStudents to set
+	 */
+	public void setMembersVisibleToStudents(boolean membersVisibleToStudents) {
+		this.membersVisibleToStudents = membersVisibleToStudents;
 	}
 }

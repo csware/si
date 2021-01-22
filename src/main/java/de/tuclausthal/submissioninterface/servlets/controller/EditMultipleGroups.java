@@ -94,6 +94,7 @@ public class EditMultipleGroups extends HttpServlet {
 					if (request.getParameter("maxStudents") != null && !request.getParameter("maxStudents").isEmpty()) {
 						group.setMaxStudents(Util.parseInteger(request.getParameter("maxStudents"), 0));
 					}
+					group.setMembersVisibleToStudents(request.getParameter("membersvisible") != null);
 					group.setSubmissionGroup(request.getParameter("submissionGroup") != null);
 					groupDAO.saveGroup(group);
 				}
