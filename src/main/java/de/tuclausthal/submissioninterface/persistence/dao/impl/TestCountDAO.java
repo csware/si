@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -24,7 +24,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -43,9 +42,8 @@ public class TestCountDAO extends AbstractDAO implements TestCountDAOIf {
 	}
 
 	@Override
-	public boolean canSeeResultAndIncrementCounter(Test test, Submission submission) {
+	public boolean canSeeResultAndIncrementCounterTransaction(Test test, Submission submission) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		for (Participation participation : submission.getSubmitters()) {
 			CriteriaQuery<TestCount> criteria = builder.createQuery(TestCount.class);
@@ -59,13 +57,11 @@ public class TestCountDAO extends AbstractDAO implements TestCountDAOIf {
 				testCount.setTest(test);
 			}
 			if (testCount.getTimesExecuted() >= test.getTimesRunnableByStudents()) {
-				tx.commit(); // rollback is evil in hibernate! ;)
 				return false;
 			}
 			testCount.setTimesExecuted(testCount.getTimesExecuted() + 1);
 			session.saveOrUpdate(testCount);
 		}
-		tx.commit();
 		return true;
 	}
 

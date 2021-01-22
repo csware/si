@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -41,7 +41,9 @@ class TestCountDAOIfTest extends BasicTest {
 		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(12);
 		de.tuclausthal.submissioninterface.persistence.datamodel.Test test = DAOFactory.TestDAOIf(session).getTest(1);
 		assertEquals(0, DAOFactory.TestCountDAOIf(session).canStillRunXTimes(test, submission));
-		assertEquals(false, DAOFactory.TestCountDAOIf(session).canSeeResultAndIncrementCounter(test, submission));
+		session.getTransaction().begin();
+		assertEquals(false, DAOFactory.TestCountDAOIf(session).canSeeResultAndIncrementCounterTransaction(test, submission));
+		session.getTransaction().commit();
 	}
 
 	@Test
@@ -65,11 +67,17 @@ class TestCountDAOIfTest extends BasicTest {
 		DAOFactory.TestDAOIf(session).saveTest(test);
 		session.getTransaction().commit();
 		assertEquals(2, DAOFactory.TestCountDAOIf(session).canStillRunXTimes(test, submission));
-		assertEquals(true, DAOFactory.TestCountDAOIf(session).canSeeResultAndIncrementCounter(test, submission));
+		session.getTransaction().begin();
+		assertEquals(true, DAOFactory.TestCountDAOIf(session).canSeeResultAndIncrementCounterTransaction(test, submission));
+		session.getTransaction().commit();
 		assertEquals(1, DAOFactory.TestCountDAOIf(session).canStillRunXTimes(test, submission));
-		assertEquals(true, DAOFactory.TestCountDAOIf(session).canSeeResultAndIncrementCounter(test, submission));
+		session.getTransaction().begin();
+		assertEquals(true, DAOFactory.TestCountDAOIf(session).canSeeResultAndIncrementCounterTransaction(test, submission));
+		session.getTransaction().commit();
 		assertEquals(0, DAOFactory.TestCountDAOIf(session).canStillRunXTimes(test, submission));
-		assertEquals(false, DAOFactory.TestCountDAOIf(session).canSeeResultAndIncrementCounter(test, submission));
+		session.getTransaction().begin();
+		assertEquals(false, DAOFactory.TestCountDAOIf(session).canSeeResultAndIncrementCounterTransaction(test, submission));
+		session.getTransaction().commit();
 		session.getTransaction().begin();
 		DAOFactory.TestDAOIf(session).deleteTest(test);
 		session.getTransaction().commit();

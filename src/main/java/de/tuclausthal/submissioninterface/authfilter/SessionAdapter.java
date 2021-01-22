@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -73,12 +73,21 @@ public class SessionAdapter {
 		return user;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Future<TestExecutorTestResult> getQueuedTest() {
-		return (Future<TestExecutorTestResult>) session.getAttribute("queuedTest");
+	public QueuedTest getQueuedTest() {
+		return (QueuedTest) session.getAttribute("queuedTest");
 	}
 
-	public void setQueuedTest(Future<TestExecutorTestResult> futureTestResult) {
-		session.setAttribute("queuedTest", futureTestResult);
+	public void setQueuedTest(QueuedTest queuedTest) {
+		session.setAttribute("queuedTest", queuedTest);
+	}
+
+	public static class QueuedTest {
+		public int testId;
+		public Future<TestExecutorTestResult> testResult;
+
+		public QueuedTest(int testId, Future<TestExecutorTestResult> testResult) {
+			this.testId = testId;
+			this.testResult = testResult;
+		}
 	}
 }
