@@ -66,7 +66,7 @@ public class AddGroup extends HttpServlet {
 		if (request.getParameter("action") != null && request.getParameter("action").equals("saveNewGroup") && request.getParameter("name") != null) {
 			GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
 			Transaction tx = session.beginTransaction();
-			Group group = groupDAO.createGroup(lecture, request.getParameter("name"), request.getParameter("allowStudentsToSignup") != null, request.getParameter("allowStudentsToQuit") != null, Util.parseInteger(request.getParameter("maxStudents"), 0));
+			Group group = groupDAO.createGroup(lecture, request.getParameter("name"), request.getParameter("allowStudentsToSignup") != null, request.getParameter("allowStudentsToQuit") != null, Util.parseInteger(request.getParameter("maxStudents"), 0), request.getParameter("membersvisible") != null);
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL("EditGroup?groupid=" + group.getGid(), response));
 			return;

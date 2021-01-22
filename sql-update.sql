@@ -86,3 +86,6 @@ ALTER TABLE `users` DROP KEY `email`;
 
 -- store last logged in time
 ALTER TABLE `users` ADD `lastLoggedIn` DATETIME NULL AFTER `studiengang`;
+
+-- Make showing group members to students configurable
+ALTER TABLE `groups` ADD `membersvisibletostudents` bit(1) NOT NULL;

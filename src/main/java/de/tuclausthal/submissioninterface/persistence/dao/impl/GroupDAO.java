@@ -47,7 +47,7 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 	}
 
 	@Override
-	public Group createGroup(Lecture lecture, String name, boolean allowStudentsToSignup, boolean allowStudentsToQuit, int maxStudents) {
+	public Group createGroup(Lecture lecture, String name, boolean allowStudentsToSignup, boolean allowStudentsToQuit, int maxStudents, boolean membersVisibleToStudents) {
 		Session session = getSession();
 		Group group = new Group();
 		group.setName(name);
@@ -55,6 +55,7 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 		group.setAllowStudentsToSignup(allowStudentsToSignup);
 		group.setAllowStudentsToQuit(allowStudentsToQuit);
 		group.setMaxStudents(maxStudents);
+		group.setMembersVisibleToStudents(membersVisibleToStudents);
 		session.save(group);
 		return group;
 	}

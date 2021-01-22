@@ -55,7 +55,7 @@ public class ShowGroup extends HttpServlet {
 
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), lecture);
-		if (participation == null) {
+		if (participation == null || (participation.getGroup() != null && !participation.getGroup().isMembersVisibleToStudents())) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}

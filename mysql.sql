@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `name` varchar(255) NOT NULL,
   `submissionGroup` bit(1) NOT NULL,
   `lectureid` int(11) NOT NULL,
+  `membersvisibletostudents` bit(1) NOT NULL,
   PRIMARY KEY (`gid`),
   KEY `FKB63DD9D4AF18EDD1` (`lectureid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
