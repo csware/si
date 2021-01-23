@@ -106,7 +106,7 @@ public class ShowSubmissionView extends HttpServlet {
 
 		if (task.getMaxSubmitters() > 1 && submission.getSubmitters().size() < task.getMaxSubmitters() && (task.isAllowSubmittersAcrossGroups() || submission.getSubmitters().iterator().next().getGroup() != null)) {
 			StringBuffer setWithUser = new StringBuffer();
-			setWithUser.append("<form action=\"?\" method=post>");
+			setWithUser.append("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 			setWithUser.append("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 			setWithUser.append("<p>Fehlt ein(e) PartnerIn: <select name=partnerid size=1 required=required>");
@@ -177,7 +177,7 @@ public class ShowSubmissionView extends HttpServlet {
 			if (!task.getSimularityTests().isEmpty() && (task.getDeadline().after(Util.correctTimezone(new Date())) || task.getSimularityTests().stream().anyMatch(test -> test.getStatus() > 0))) {
 				out.println("<p class=\"bmid\" style=\"color: #8C1C00\">Achtung: Eine Ähnlichkeitsprüfung wurde noch nicht durchgeführt bzw. ist noch nicht vollständig abgeschlossen.</p>");
 			}
-			out.println("<form action=\"?\" method=post>");
+			out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 			out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
 			// attention: quite similar code in MarkEmptyTaskView
 			if (!task.getPointCategories().isEmpty()) {

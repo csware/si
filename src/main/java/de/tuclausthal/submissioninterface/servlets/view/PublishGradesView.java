@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -31,6 +31,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * View-Servlet for displaying a task in tutor view
@@ -47,7 +48,7 @@ public class PublishGradesView extends HttpServlet {
 		template.addKeepAlive();
 		template.printTemplateHeader("Punkte freischalten", task);
 		PrintWriter out = response.getWriter();
-		out.println("<form action=\"?\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		int unbewertet = 0;
 		int nichtAbgenommen = 0;
