@@ -63,7 +63,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStat
  * @author Sven Strickroth
  */
 public final class Util {
-	final private static Logger log = LoggerFactory.getLogger(Util.class);
+	final private static Logger LOG = LoggerFactory.getLogger(Util.class);
 	public static Clock CLOCK = Clock.systemDefaultZone();
 
 	/**
@@ -111,7 +111,7 @@ public final class Util {
 		try {
 			return new URI(null, null, path, null).toASCIIString();
 		} catch (URISyntaxException e) {
-			log.error("Could not encode pathcomponent.", e);
+			LOG.error("Could not encode pathcomponent.", e);
 		}
 		return "";
 	}
@@ -352,7 +352,7 @@ public final class Util {
 				}
 			} catch (Exception e) {
 				// ignore ;)
-				log.error("Error creating zip file", e);
+				LOG.error("Error creating zip file", e);
 			}
 		}
 	}

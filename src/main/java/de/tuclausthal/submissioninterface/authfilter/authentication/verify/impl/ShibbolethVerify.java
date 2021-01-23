@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -38,7 +38,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class ShibbolethVerify implements VerifyIf {
-	final private Logger log = LoggerFactory.getLogger(ShibbolethVerify.class);
+	final static private Logger LOG = LoggerFactory.getLogger(ShibbolethVerify.class);
 
 	private String userAttribute;
 	private String matrikelNumberAttribute;
@@ -51,11 +51,11 @@ public class ShibbolethVerify implements VerifyIf {
 	@Override
 	public VerifyResult checkCredentials(Session session, LoginData logindata, HttpServletRequest request) {
 		if (request.getAttribute("Shib-Identity-Provider") == null) {
-			log.error("No Shib-Identity-Provider request attribute found.");
+			LOG.error("No Shib-Identity-Provider request attribute found.");
 			return null;
 		}
 		if (!logindata.getUsername().equals(Shibboleth.getAttribute(request, userAttribute))) {
-			log.error("Got mismatching username from Shibboleth and LoginIf.");
+			LOG.error("Got mismatching username from Shibboleth and LoginIf.");
 			return null;
 		}
 
@@ -84,7 +84,7 @@ public class ShibbolethVerify implements VerifyIf {
 			}
 		}
 		if (!result.wasLoginSuccessful()) {
-			log.warn("Shibboleth login worked, but not detected as logged in, missing data?!");
+			LOG.warn("Shibboleth login worked, but not detected as logged in, missing data?!");
 		}
 
 		return result;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -46,7 +46,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class LDAPVerify implements VerifyIf {
-	final private Logger log = LoggerFactory.getLogger(LDAPVerify.class);
+	final static private Logger LOG = LoggerFactory.getLogger(LDAPVerify.class);
 
 	private String[] providerURLs;
 	private String securityAuthentication;
@@ -120,7 +120,7 @@ public class LDAPVerify implements VerifyIf {
 				// ignore authentication errors
 				break;
 			} catch (NamingException e) {
-				log.error("Could not reach LDAP server \"" + providerURL + "\"", e);
+				LOG.error("Could not reach LDAP server \"" + providerURL + "\"", e);
 			}
 		}
 		return result;

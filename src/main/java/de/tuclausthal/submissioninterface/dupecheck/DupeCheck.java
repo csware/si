@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -49,7 +49,7 @@ public abstract class DupeCheck {
 
 	protected File path;
 
-	final private Logger log = LoggerFactory.getLogger(DupeCheck.class);
+	final static private Logger LOG = LoggerFactory.getLogger(DupeCheck.class);
 
 	/**
 	 * Creates a new DupeCheck instance
@@ -74,7 +74,7 @@ public abstract class DupeCheck {
 		try {
 			normalizerCache = new NormalizerCache(taskPath, similarityTest.getNormalizer());
 		} catch (IOException ex) {
-			log.error("Could not initialize normalizer cache", ex);
+			LOG.error("Could not initialize normalizer cache", ex);
 			// if we get an error here, don't mark run as completed
 			return;
 		}
@@ -98,7 +98,7 @@ public abstract class DupeCheck {
 							javaFiles.add(cache.normalize(submissions.get(i).getSubmissionid() + System.getProperty("file.separator") + javaFile));
 						} catch (IOException e) {
 							// skip single file
-							log.error("Skipping file", e);
+							LOG.error("Skipping file", e);
 						}
 					}
 					// the similariy matrix is symmetric, so it's sufficient
@@ -115,7 +115,7 @@ public abstract class DupeCheck {
 									maxSimilarity = Math.max(maxSimilarity, calculateSimilarity(fileOne, fileTwo, 100 - similarityTest.getMinimumDifferenceInPercent()));
 								} catch (IOException e) {
 									// skip single file
-									log.error("Skipping file", e);
+									LOG.error("Skipping file", e);
 								}
 								if (maxSimilarity == 100) {
 									break;
@@ -136,7 +136,7 @@ public abstract class DupeCheck {
 		executorService.shutdown();
 		try {
 			while (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
-				log.debug("Waiting for all analyses to finish: " + executorService.toString());
+				LOG.debug("Waiting for all analyses to finish: " + executorService.toString());
 			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();

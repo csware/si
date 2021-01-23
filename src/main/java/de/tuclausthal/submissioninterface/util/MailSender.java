@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MailSender {
-	final private static Logger log = LoggerFactory.getLogger(MailSender.class);
+	final private static Logger LOG = LoggerFactory.getLogger(MailSender.class);
 
 	public static void sendMail(String to, String subject, String messageText) {
 		MimeMessage msg;
@@ -60,7 +60,7 @@ public class MailSender {
 
 			Transport.send(msg);
 		} catch (MessagingException e) {
-			log.error("Fehler MessagingException in MailSender: ", e);
+			LOG.error("Fehler MessagingException in MailSender: ", e);
 		}
 	}
 }

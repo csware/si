@@ -81,7 +81,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 @MultipartConfig(maxFileSize = 100 * 1024 * 1024)
 public class SubmitSolution extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	final private Logger log = LoggerFactory.getLogger(SubmitSolution.class);
+	final static private Logger LOG = LoggerFactory.getLogger(SubmitSolution.class);
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -362,7 +362,7 @@ public class SubmitSolution extends HttpServlet {
 						submission.setLastModified(new Date());
 						submissionDAO.saveSubmission(submission);
 					}
-					log.debug("File does not match pattern: file;" + submittedFileName + ";" + pattern.pattern());
+					LOG.debug("File does not match pattern: file;" + submittedFileName + ";" + pattern.pattern());
 					tx.commit();
 					template.printTemplateHeader("Ungültige Anfrage", task);
 					PrintWriter out = response.getWriter();
@@ -378,7 +378,7 @@ public class SubmitSolution extends HttpServlet {
 			}
 			byte[] upload = null;
 			try {
-				handleUploadedFile(log, path, task, fileName, file);
+				handleUploadedFile(LOG, path, task, fileName, file);
 				ByteArrayOutputStream os = new ByteArrayOutputStream((int)file.getSize());
 				Util.copyInputStreamAndClose(file.getInputStream(), os);
 				upload = os.toByteArray();
@@ -387,7 +387,7 @@ public class SubmitSolution extends HttpServlet {
 					submission.setLastModified(new Date());
 					submissionDAO.saveSubmission(submission);
 				}
-				log.error("Problem on processing uploaded file", e);
+				LOG.error("Problem on processing uploaded file", e);
 				tx.commit();
 				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
@@ -484,7 +484,7 @@ public class SubmitSolution extends HttpServlet {
 				submission.setLastModified(new Date());
 				submissionDAO.saveSubmission(submission);
 			}
-			log.error("Found no data on upload.");
+			LOG.error("Found no data on upload.");
 			tx.commit();
 			template.printTemplateHeader("Ungültige Anfrage", task);
 			PrintWriter out = response.getWriter();

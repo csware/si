@@ -72,7 +72,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 @MultipartConfig(maxFileSize = 100 * 1024 * 1024)
 public class TaskManager extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	final private Logger log = LoggerFactory.getLogger(TaskManager.class);
+	final static private Logger LOG = LoggerFactory.getLogger(TaskManager.class);
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -204,7 +204,7 @@ public class TaskManager extends HttpServlet {
 		Util.lowerCaseExtension(submittedFileName);
 		Matcher m = pattern.matcher(submittedFileName);
 		if (!m.matches()) {
-			log.debug("Filename did not match pattern: file;" + submittedFileName + ";" + pattern.pattern());
+			LOG.debug("Filename did not match pattern: file;" + submittedFileName + ";" + pattern.pattern());
 			template.printTemplateHeader("Ungültige Anfrage");
 			out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
 			template.printTemplateFooter();

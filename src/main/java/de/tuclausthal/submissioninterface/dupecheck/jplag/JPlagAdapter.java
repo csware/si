@@ -1,5 +1,5 @@
 /* 
- *  Copyright (C) 2020 Sven Strickroth <email@cs-ware.de> 
+ *  Copyright (C) 2020-2021 Sven Strickroth <email@cs-ware.de> 
  * 
  * This file is part of the SubmissionInterface.
  *
@@ -50,7 +50,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  *
  */
 public class JPlagAdapter extends DupeCheck {
-	final private Logger log = LoggerFactory.getLogger(JPlagAdapter.class);
+	final static private Logger LOG = LoggerFactory.getLogger(JPlagAdapter.class);
 
 	public JPlagAdapter(File path) {
 		super(path);
@@ -134,7 +134,7 @@ public class JPlagAdapter extends DupeCheck {
 					while ((line = resultsFile.readLine()) != null) {
 						String[] results = line.split(";");
 						if (results.length < 4 || (results.length - 1) % 3 != 0) {
-							log.error("invalid line in JPlag results file: " + line);
+							LOG.error("invalid line in JPlag results file: " + line);
 							continue;
 						}
 						Submission submissionOne = submissionDAO.getSubmission(Integer.parseInt(results[0]));
@@ -146,11 +146,11 @@ public class JPlagAdapter extends DupeCheck {
 					DAOFactory.SimilarityTestDAOIf(session).finish(similarityTest);
 				}
 			} else {
-				log.error("Executing \"" + new File(path, "jplag.jar").toString() + "\" failed: Exit code: " + exitValue);
-				log.error(outputGrapper.getStdErrBuffer().toString());
+				LOG.error("Executing \"" + new File(path, "jplag.jar").toString() + "\" failed: Exit code: " + exitValue);
+				LOG.error(outputGrapper.getStdErrBuffer().toString());
 			}
 		} catch (Exception e) {
-			log.error("Error executing JPlag", e);
+			LOG.error("Error executing JPlag", e);
 		} finally {
 			if (tempDir != null) {
 				Util.recursiveDelete(tempDir);

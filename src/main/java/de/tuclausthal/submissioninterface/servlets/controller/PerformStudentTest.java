@@ -60,7 +60,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 public class PerformStudentTest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	final private Logger log = LoggerFactory.getLogger(PerformStudentTest.class);
+	final static private Logger LOG = LoggerFactory.getLogger(PerformStudentTest.class);
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -122,16 +122,16 @@ public class PerformStudentTest extends HttpServlet {
 				try {
 					Thread.sleep(250);
 				} catch (InterruptedException e) {
-					log.warn("Was interrupted while waiting for test to finish", e);
+					LOG.warn("Was interrupted while waiting for test to finish", e);
 				}
 			}
 			TestExecutorTestResult result = null;
 			try {
 				result = resultFuture.get();
 			} catch (InterruptedException e) {
-				log.warn("Was interrupted while waiting for test to finish", e);
+				LOG.warn("Was interrupted while waiting for test to finish", e);
 			} catch (ExecutionException e) {
-				log.error("Got ExecutionException while accessing test result", e);
+				LOG.error("Got ExecutionException while accessing test result", e);
 			}
 
 			Transaction tx = session.beginTransaction();
@@ -159,7 +159,7 @@ public class PerformStudentTest extends HttpServlet {
 		}
 
 		if (test.getId() != resultFuture.testId) {
-			log.warn("Mismatching testid in session " + resultFuture.testId + " and on request " + test.getId());
+			LOG.warn("Mismatching testid in session " + resultFuture.testId + " and on request " + test.getId());
 			request.setAttribute("title", "Es kann immer nur ein Test zu einer Zeit angefordert werden.");
 			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("PerformStudentTest?testid=" + resultFuture.testId, response) + "\">weiter zum bereits angefragten Test</a></div>");
 			request.getRequestDispatcher("MessageView").forward(request, response);
@@ -171,9 +171,9 @@ public class PerformStudentTest extends HttpServlet {
 			try {
 				result = resultFuture.testResult.get();
 			} catch (InterruptedException e) {
-				log.warn("Was interrupted while waiting for test to finish", e);
+				LOG.warn("Was interrupted while waiting for test to finish", e);
 			} catch (ExecutionException e) {
-				log.error("Got ExecutionException while accessing test result", e);
+				LOG.error("Got ExecutionException while accessing test result", e);
 			}
 
 			sa.setQueuedTest(null);

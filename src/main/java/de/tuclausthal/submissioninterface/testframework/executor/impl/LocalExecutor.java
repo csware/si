@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -41,7 +41,7 @@ public class LocalExecutor implements TestExecutorIf {
 	public static int CORES = 1;
 	public static File dataPath;
 
-	final private Logger log = LoggerFactory.getLogger(LocalExecutor.class);
+	final static private Logger LOG = LoggerFactory.getLogger(LocalExecutor.class);
 
 	private LocalExecutor() {}
 
@@ -66,7 +66,7 @@ public class LocalExecutor implements TestExecutorIf {
 		executorService.shutdown();
 		try {
 			while (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
-				log.debug("Waiting for all checks to finish: " + executorService.toString());
+				LOG.debug("Waiting for all checks to finish: " + executorService.toString());
 			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();

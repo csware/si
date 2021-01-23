@@ -49,7 +49,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class AuthenticationFilter implements Filter {
-	final private Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
+	final static private Logger LOG = LoggerFactory.getLogger(AuthenticationFilter.class);
 
 	private boolean bindToIP = false;
 	private LoginIf login;
@@ -102,7 +102,7 @@ public class AuthenticationFilter implements Filter {
 					verifyResult.verifiedUser = DAOFactory.UserDAOIf(session).createUser(verifyResult.username, verifyResult.mail, verifyResult.firstName, verifyResult.lastName);
 				}
 				if (verifyResult.verifiedUser == null) {
-					log.error("Creating new user failed!");
+					LOG.error("Creating new user failed!");
 					login.failNoData("Anlegen des neuen Nutzers fehlgeschlagen. Bitte versuchen Sie es erneut.", request, response);
 					session.close();
 					return;
@@ -158,7 +158,7 @@ public class AuthenticationFilter implements Filter {
 			login = (LoginIf) Class.forName(filterConfig.getInitParameter("login")).getDeclaredConstructor(FilterConfig.class).newInstance(filterConfig);
 			verify = (VerifyIf) Class.forName(filterConfig.getInitParameter("verify")).getDeclaredConstructor(FilterConfig.class).newInstance(filterConfig);
 		} catch (Exception e) {
-			log.error("Could not initialize Login or Verify interface", e);
+			LOG.error("Could not initialize Login or Verify interface", e);
 			throw new ServletException(e.getMessage());
 		}
 	}

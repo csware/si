@@ -1,6 +1,6 @@
 /* 
  *  Copyright (C) 2006 Aleksi Ahtiainen, Mikko Rahikainen.
- *  Copyright (C) 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de> 
+ *  Copyright (C) 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de> 
  * 
  *  This file is part of the homework submission interface.
  *
@@ -70,7 +70,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  *
  */
 public class PlaggieAdapter extends DupeCheck {
-	final private Logger log = LoggerFactory.getLogger(PlaggieAdapter.class);
+	final static private Logger LOG = LoggerFactory.getLogger(PlaggieAdapter.class);
 
 	public PlaggieAdapter(File path) {
 		super(path);
@@ -120,7 +120,7 @@ public class PlaggieAdapter extends DupeCheck {
 				}
 			}
 		} catch (Exception e) {
-			log.error("Plaggy failed", e);
+			LOG.error("Plaggy failed", e);
 		} finally {
 			DAOFactory.SimilarityTestDAOIf(session).finish(similarityTest);
 		}

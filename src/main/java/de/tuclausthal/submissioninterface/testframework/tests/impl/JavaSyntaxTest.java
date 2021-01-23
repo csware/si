@@ -36,7 +36,7 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
  * @author Sven Strickroth
  */
 public class JavaSyntaxTest extends TempDirTest {
-	final private static Logger log = LoggerFactory.getLogger(JavaSyntaxTest.class);
+	final private static Logger LOG = LoggerFactory.getLogger(JavaSyntaxTest.class);
 
 	@Override
 	protected void performTestInTempDir(Test test, File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {
@@ -61,7 +61,7 @@ public class JavaSyntaxTest extends TempDirTest {
 				testResult.setTestOutput(errorOutputStream.toString().replace(javaDir.getAbsolutePath() + System.getProperty("file.separator"), ""));
 			}
 		} catch (Exception e) {
-			log.error("System.getProperty(\"java.home\") should point to a jre in a jdk directory and tools.jar must be in the classpath", e);
+			LOG.error("System.getProperty(\"java.home\") should point to a jre in a jdk directory and tools.jar must be in the classpath", e);
 			throw e;
 		}
 		return (compiles == 0);

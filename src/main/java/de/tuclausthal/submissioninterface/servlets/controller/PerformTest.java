@@ -57,7 +57,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 @MultipartConfig(maxFileSize = 100 * 1024 * 1024)
 public class PerformTest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	final private Logger log = LoggerFactory.getLogger(PerformTest.class);
+	final static private Logger LOG = LoggerFactory.getLogger(PerformTest.class);
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -154,9 +154,9 @@ public class PerformTest extends HttpServlet {
 			fileName = m.group(1);
 		}
 		try {
-			SubmitSolution.handleUploadedFile(log, path, task, fileName, file);
+			SubmitSolution.handleUploadedFile(LOG, path, task, fileName, file);
 		} catch (IOException e) {
-			log.error("Problem on processing uploaded file.", e);
+			LOG.error("Problem on processing uploaded file.", e);
 			template.printTemplateHeader("Ungültige Anfrage", task);
 			PrintWriter out = response.getWriter();
 			out.println("Problem beim Speichern der Daten.");
