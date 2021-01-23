@@ -108,6 +108,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 		if (submission.getTask().getDeadline().before(Util.correctTimezone(new Date())) || submission.isClosed()) {
 			tx.rollback();
 			request.setAttribute("title", "An dieser Abgabe sind keine Veränderungen mehr möglich.");
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + submission.getTask().getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}

@@ -78,6 +78,7 @@ public class ShowFile extends HttpServlet {
 
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
 			return;
 		}
@@ -118,6 +119,7 @@ public class ShowFile extends HttpServlet {
 		}
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
+		request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 		request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
 	}
 

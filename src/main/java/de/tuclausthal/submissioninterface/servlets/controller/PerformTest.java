@@ -143,10 +143,11 @@ public class PerformTest extends HttpServlet {
 		for (Pattern pattern : SubmitSolution.getTaskFileNamePatterns(task, false)) {
 			Matcher m = pattern.matcher(submittedFileName);
 			if (!m.matches()) {
-				template.printTemplateHeader("Ungültige Anfrage");
+				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
 				out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
+				out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur Abgabeseite</a></div>");
 				template.printTemplateFooter();
 				return;
 			}
@@ -156,9 +157,10 @@ public class PerformTest extends HttpServlet {
 			SubmitSolution.handleUploadedFile(log, path, task, fileName, file);
 		} catch (IOException e) {
 			log.error("Problem on processing uploaded file.", e);
-			template.printTemplateHeader("Ungültige Anfrage");
+			template.printTemplateHeader("Ungültige Anfrage", task);
 			PrintWriter out = response.getWriter();
-			out.println("Problem beim Entpacken des Archives.");
+			out.println("Problem beim Speichern der Daten.");
+			out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur Abgabeseite</a></div>");
 			template.printTemplateFooter();
 			return;
 		}

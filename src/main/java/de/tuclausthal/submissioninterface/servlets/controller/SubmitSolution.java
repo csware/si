@@ -118,6 +118,7 @@ public class SubmitSolution extends HttpServlet {
 			}
 			if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 				request.setAttribute("title", "Abgabe nicht mehr möglich");
+				request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 				request.getRequestDispatcher("MessageView").forward(request, response);
 				return;
 			}
@@ -219,6 +220,7 @@ public class SubmitSolution extends HttpServlet {
 		}
 		if (file != null && file.getSize() > task.getMaxsize()) {
 			request.setAttribute("title", "Datei ist zu groß (maximum sind " + task.getMaxsize() + " Bytes)");
+			request.setAttribute("message", "<div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
@@ -227,24 +229,24 @@ public class SubmitSolution extends HttpServlet {
 			// Uploader ist wahrscheinlich Betreuer -> keine zeitlichen Prüfungen
 			// check if uploader is allowed to upload for students
 			if (!(studentParticipation.getRoleType() == ParticipationRole.ADVISOR || (task.isTutorsCanUploadFiles() && studentParticipation.getRoleType() == ParticipationRole.TUTOR))) {
-				template.printTemplateHeader("Ungültige Anfrage");
+				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Sie sind nicht berechtigt bei dieser Veranstaltung Dateien für Studierende hochzuladen.</div>");
-				out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("Overview", response) + "\">zur Übersicht</a></div>");
+				out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
 				template.printTemplateFooter();
 				return;
 			}
 			studentParticipation = participationDAO.getParticipation(uploadFor);
 			if (studentParticipation == null || studentParticipation.getLecture().getId() != task.getTaskGroup().getLecture().getId()) {
-				template.printTemplateHeader("Ungültige Anfrage");
+				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Der gewählte Studierende ist keine Teilnehemerin bzw. kein Teilnehmer dieser Veranstaltung.</div>");
-				out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("Overview", response) + "\">zur Übersicht</a></div>");
+				out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
 				template.printTemplateFooter();
 				return;
 			}
 			if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isMCTask()) {
-				template.printTemplateHeader("Ungültige Anfrage");
+				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.</div>");
 				template.printTemplateFooter();
@@ -252,7 +254,7 @@ public class SubmitSolution extends HttpServlet {
 			}
 		} else {
 			if (studentParticipation.getRoleType() == ParticipationRole.ADVISOR || studentParticipation.getRoleType() == ParticipationRole.TUTOR) {
-				template.printTemplateHeader("Ungültige Anfrage");
+				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>BetreuerInnen und TutorInnen können keine eigenen Lösungen einsenden.</div>");
 				template.printTemplateFooter();
@@ -267,22 +269,25 @@ public class SubmitSolution extends HttpServlet {
 				return;
 			}
 			if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
-				template.printTemplateHeader("Ungültige Anfrage");
+				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Abgabe nicht mehr möglich.</div>");
+				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 				template.printTemplateFooter();
 				return;
 			}
 			if (file != null && "-".equals(task.getFilenameRegexp())) {
-				template.printTemplateHeader("Ungültige Anfrage");
+				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Dateiupload ist für diese Aufgabe deaktiviert.</div>");
+				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 				template.printTemplateFooter();
 				return;
 			} else if (file == null && !task.isShowTextArea() && !task.isMCTask()) {
-				template.printTemplateHeader("Ungültige Anfrage");
+				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Textlösungen sind für diese Aufgabe deaktiviert.</div>");
+				out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
 				template.printTemplateFooter();
 				return;
 			}
@@ -296,6 +301,7 @@ public class SubmitSolution extends HttpServlet {
 
 		if (task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
 			request.setAttribute("title", "Die Abgabe wurde bereits als endgültig abgeschlossen markiert. Eine Veränderung ist daher nicht mehr möglich.");
+			request.setAttribute("message", "<p><div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
@@ -313,7 +319,7 @@ public class SubmitSolution extends HttpServlet {
 						session.update(submission);
 					} else if (partnerSubmission.getSubmissionid() != submission.getSubmissionid()) {
 						tx.rollback();
-						template.printTemplateHeader("Ungültige Anfrage");
+						template.printTemplateHeader("Ungültige Anfrage", task);
 						PrintWriter out = response.getWriter();
 						out.println("<div class=mid>Es wurde bereits eine Gruppen-Abgabe initiiert.</div>");
 						template.printTemplateFooter();
@@ -329,9 +335,10 @@ public class SubmitSolution extends HttpServlet {
 						session.update(submission);
 					} else {
 						tx.rollback();
-						template.printTemplateHeader("Ungültige Anfrage");
+						template.printTemplateHeader("Ungültige Anfrage", task);
 						PrintWriter out = response.getWriter();
 						out.println("<div class=mid>Ein ausgewählter Studierender hat bereits eine eigene Abgabe initiiert, Sie haben bereits die maximale Anzahl von Studierenden überschritten oder einen nicht verfügbaren Studierenden ausgewählt.</div>");
+						out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
 						template.printTemplateFooter();
 						return;
 					}
@@ -357,12 +364,13 @@ public class SubmitSolution extends HttpServlet {
 					}
 					log.debug("File does not match pattern: file;" + submittedFileName + ";" + pattern.pattern());
 					tx.commit();
-					template.printTemplateHeader("Ungültige Anfrage");
+					template.printTemplateHeader("Ungültige Anfrage", task);
 					PrintWriter out = response.getWriter();
 					out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
 					if (uploadFor > 0) {
 						out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
 					}
+					out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur Abgabeseite</a></div>");
 					template.printTemplateFooter();
 					return;
 				}
@@ -381,9 +389,10 @@ public class SubmitSolution extends HttpServlet {
 				}
 				log.error("Problem on processing uploaded file", e);
 				tx.commit();
-				template.printTemplateHeader("Ungültige Anfrage");
+				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
-				out.println("Problem beim Entpacken des Archives.");
+				out.println("<div class=mid>Problem beim Speichern der Daten.</div>");
+				out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
 				template.printTemplateFooter();
 				return;
 			}
@@ -477,8 +486,11 @@ public class SubmitSolution extends HttpServlet {
 			}
 			log.error("Found no data on upload.");
 			tx.commit();
+			template.printTemplateHeader("Ungültige Anfrage", task);
 			PrintWriter out = response.getWriter();
-			out.println("Problem: Keine Abgabedaten gefunden.");
+			out.println("<div class=mid>Problem: Keine Abgabedaten gefunden.</div>");
+			out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
+			template.printTemplateFooter();
 		}
 	}
 
