@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2012, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2012, 2017, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -48,7 +48,7 @@ public class Form implements LoginIf {
 	public void failNoData(String error, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.addHeader("Cache-Control", "no-cache, must-revalidate");
 		Template template = TemplateFactory.getTemplate(request, response);
-		template.printTemplateHeader("Login erforderlich", "Login erforderlich");
+		template.printTemplateHeader("Login erforderlich");
 		PrintWriter out = response.getWriter();
 		if (!error.isEmpty()) {
 			out.println("<p class=\"red mid\">" + error + "</p>");

@@ -57,6 +57,10 @@ public abstract class Template {
 	 * @throws IOException
 	 */
 	public void printTemplateHeader(String title) throws IOException {
+		if (requestAdapter.getUser() == null) {
+			printTemplateHeader(title, "<a href=\"" + Util.generateHTMLLink(prefix + "/", servletResponse) + "\">Home</a> &gt; <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/Overview", servletResponse) + "\">GATE Übersicht/Login</a>");
+			return;
+		}
 		printTemplateHeader(title, "<a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/Overview", servletResponse) + "\">Meine Veranstaltungen</a> &gt; " + title);
 	}
 
