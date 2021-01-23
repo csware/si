@@ -537,16 +537,28 @@
     <url-pattern>/servlets/JoinGroup</url-pattern>
   </servlet-mapping>
   <error-page>
+    <error-code>403</error-code>
+    <location>/GATEErrorHandler</location>
+  </error-page>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/GATEErrorHandler</location>
+  </error-page>
+  <error-page>
+    <error-code>405</error-code>
+    <location>/GATEErrorHandler</location>
+  </error-page>
+  <error-page>
     <error-code>500</error-code>
-    <location>/Error500</location>
+    <location>/GATEErrorHandler</location>
   </error-page>
   <servlet>
-    <servlet-name>Error500</servlet-name>
-    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.Error500View</servlet-class>
+    <servlet-name>GATEErrorHandler</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ErrorHandlerView</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>Error500</servlet-name>
-    <url-pattern>/Error500</url-pattern>
+    <servlet-name>GATEErrorHandler</servlet-name>
+    <url-pattern>/GATEErrorHandler</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>DownloadTaskFile</servlet-name>
