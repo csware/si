@@ -75,7 +75,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<td colspan=2 class=mid>");
-			out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\"  href=\"");
+			out.println("<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\"  href=\"");
 			out.println(Util.generateHTMLLink("JavaAdvancedIOTestManager?testid=" + test.getId() + "&action=deleteStep&teststepid=" + step.getTeststepid(), response));
 			out.println("\">Löschen</a></td>");
 			out.println("</tr>");

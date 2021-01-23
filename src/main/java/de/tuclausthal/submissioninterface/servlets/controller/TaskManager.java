@@ -91,7 +91,7 @@ public class TaskManager extends HttpServlet {
 			return;
 		}
 
-		if (request.getParameter("action") != null && ((request.getParameter("action").equals("editTask") && request.getParameter("taskid") != null) || (request.getParameter("action").equals("newTask") && request.getParameter("lecture") != null))) {
+		if (("editTask".equals(request.getParameter("action")) && request.getParameter("taskid") != null) || ("newTask".equals(request.getParameter("action")) && request.getParameter("lecture") != null)) {
 			boolean editTask = request.getParameter("action").equals("editTask");
 			Task task;
 			if (editTask == true) {
@@ -125,108 +125,24 @@ public class TaskManager extends HttpServlet {
 			request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
 
 			request.getRequestDispatcher("TaskManagerView").forward(request, response);
-		} else if (request.getParameter("action") != null && (request.getParameter("action").equals("saveNewTask") || request.getParameter("action").equals("saveTask"))) {
-			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
-			TaskGroup taskGroup = DAOFactory.TaskGroupDAOIf(session).getTaskGroup(Util.parseInteger(request.getParameter("taskGroup"), 0));
-			if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
-				request.setAttribute("title", "Aufgabengruppe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-			}
-			Task task;
-			if (request.getParameter("action").equals("saveTask")) {
-				task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
-				if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
-					request.setAttribute("title", "Aufgabe nicht gefunden");
+		} else if ((("editTaskGroup".equals(request.getParameter("action")) && request.getParameter("taskgroupid") != null) || (request.getParameter("action").equals("newTaskGroup") && request.getParameter("lecture") != null))) {
+			boolean editTaskGroup = request.getParameter("action").equals("editTaskGroup");
+			TaskGroup taskGroup;
+			if (editTaskGroup == true) {
+				TaskGroupDAOIf taskDAO = DAOFactory.TaskGroupDAOIf(session);
+				taskGroup = taskDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
+				if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
+					request.setAttribute("title", "Aufgabengruppe nicht gefunden");
 					request.getRequestDispatcher("MessageView").forward(request, response);
 					return;
 				}
-				if (!task.isMCTask()) {
-					task.setMinPointStep(Util.convertToPoints(request.getParameter("minpointstep")));
-				}
-				if (task.getPointCategories().isEmpty()) {
-					task.setMaxPoints(Util.convertToPoints(request.getParameter("maxpoints"), task.getMinPointStep()));
-				}
-				task.setTitle(request.getParameter("title").trim());
-				task.setDescription(request.getParameter("description"));
-				task.setMaxSubmitters(Util.parseInteger(request.getParameter("maxSubmitters"), 1));
-				task.setAllowSubmittersAcrossGroups(request.getParameter("allowSubmittersAcrossGroups") != null);
-				if (!task.isMCTask() && !task.isADynamicTask()) {
-					task.setFilenameRegexp(request.getParameter("filenameregexp"));
-					task.setArchiveFilenameRegexp(request.getParameter("archivefilenameregexp"));
-					task.setFeaturedFiles(request.getParameter("featuredfiles"));
-					task.setShowTextArea(request.getParameter("showtextarea") != null);
-					task.setTutorsCanUploadFiles(request.getParameter("tutorsCanUploadFiles") != null);
-				}
-				task.setStart(parseDate(request.getParameter("startdate"), new Date()));
-				task.setDeadline(parseDate(request.getParameter("deadline"), new Date()));
-				if (task.getDeadline().before(task.getStart())) {
-					task.setDeadline(task.getStart());
-				}
-				task.setAllowPrematureSubmissionClosing(request.getParameter("prematureClosing") != null);
-				if (request.getParameter("pointsmanual") != null) {
-					task.setShowPoints(null);
-				} else {
-					task.setShowPoints(parseDate(request.getParameter("pointsdate"), new Date()));
-					if (task.getShowPoints().before(task.getDeadline())) {
-						task.setShowPoints(task.getDeadline());
-					}
-				}
-				task.setTaskGroup(taskGroup);
-				taskDAO.saveTask(task);
-				if (request.getParameter("dynamictaskpreview") != null) {
-					response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=dynamictaskpreview", response));
-				} else {
-					response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
-				}
 			} else {
-				Date startdate = parseDate(request.getParameter("startdate"), new Date());
-				Date deadline = parseDate(request.getParameter("deadline"), new Date());
-				Date pointsdate = parseDate(request.getParameter("pointsdate"), new Date());
-				if (deadline.before(startdate)) {
-					deadline = startdate;
-				}
-				Date showPoints = parseDate(request.getParameter("pointsdate"), new Date());
-				if (showPoints.before(deadline)) {
-					showPoints = deadline;
-				}
-				if (request.getParameter("pointsmanual") != null) {
-					pointsdate = null;
-				} else if (pointsdate.before(deadline)) {
-					pointsdate = deadline;
-				}
-				String taskType = "";
-				String dynamicTask = null;
-				if (request.getParameter("mctask") != null) {
-					taskType = "mc";
-				} else {
-					if (DynamicTaskStrategieFactory.IsValidStrategieName(request.getParameter("dynamicTask"))) {
-						taskType = "dynamicTask";
-						dynamicTask = request.getParameter("dynamicTask");
-					}
-				}
-				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), 50), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, taskType, dynamicTask, pointsdate, request.getParameter("prematureClosing") != null);
-				if (task.isMCTask()) {
-					task.setFilenameRegexp("-");
-					task.setShowTextArea(false); // be explicit here, it's false by default
-				} else if (task.isADynamicTask()) {
-					task.setFilenameRegexp("-");
-					task.setShowTextArea(true);
-				}
-				taskDAO.saveTask(task);
-				response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask", response));
+				// temp. Task for code-reuse
+				taskGroup = new TaskGroup();
+				taskGroup.setLecture(lecture);
 			}
-			return;
-		} else if ("deleteTask".equals(request.getParameter("action"))) {
-			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
-			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
-			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
-				request.setAttribute("title", "Aufgabe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-			} else {
-				taskDAO.deleteTask(task);
-			}
-			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
-			return;
+			request.setAttribute("taskGroup", taskGroup);
+			request.getRequestDispatcher("TaskGroupManagerView").forward(request, response);
 		} else if ("dynamictaskpreview".equals(request.getParameter("action"))) {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
@@ -253,147 +169,6 @@ public class TaskManager extends HttpServlet {
 			request.setAttribute("resultFields", dts.getResultFields(true));
 
 			request.getRequestDispatcher("TaskManagerDynamicTaskPreView").forward(request, response);
-		} else if ("uploadTaskFile".equals(request.getParameter("action"))) {
-			handleUploadedFiles(participation.getLecture(), "advisorfiles", request, response, session);
-			return;
-		} else if ("uploadModelSolutionFile".equals(request.getParameter("action"))) {
-			handleUploadedFiles(participation.getLecture(), "modelsolutionfiles", request, response, session);
-			return;
-		} else if ((("editTaskGroup".equals(request.getParameter("action")) && request.getParameter("taskgroupid") != null) || (request.getParameter("action").equals("newTaskGroup") && request.getParameter("lecture") != null))) {
-			boolean editTaskGroup = request.getParameter("action").equals("editTaskGroup");
-			TaskGroup taskGroup;
-			if (editTaskGroup == true) {
-				TaskGroupDAOIf taskDAO = DAOFactory.TaskGroupDAOIf(session);
-				taskGroup = taskDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
-				if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
-					request.setAttribute("title", "Aufgabengruppe nicht gefunden");
-					request.getRequestDispatcher("MessageView").forward(request, response);
-					return;
-				}
-			} else {
-				// temp. Task for code-reuse
-				taskGroup = new TaskGroup();
-				taskGroup.setLecture(lecture);
-			}
-			request.setAttribute("taskGroup", taskGroup);
-			request.getRequestDispatcher("TaskGroupManagerView").forward(request, response);
-		} else if (("saveNewTaskGroup".equals(request.getParameter("action")) || "saveTaskGroup".equals(request.getParameter("action")))) {
-			TaskGroupDAOIf taskGroupDAO = DAOFactory.TaskGroupDAOIf(session);
-			TaskGroup taskGroup;
-			if (request.getParameter("action").equals("saveTaskGroup")) {
-				taskGroup = taskGroupDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
-				if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
-					request.setAttribute("title", "Aufgabengruppe nicht gefunden");
-					request.getRequestDispatcher("MessageView").forward(request, response);
-					return;
-				}
-				taskGroup.setTitle(request.getParameter("title"));
-				Transaction tx = session.beginTransaction();
-				taskGroupDAO.saveTaskGroup(taskGroup);
-				tx.commit();
-			} else {
-				Transaction tx = session.beginTransaction();
-				taskGroupDAO.newTaskGroup(request.getParameter("title"), lecture);
-				tx.commit();
-			}
-			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
-			return;
-		} else if ("deleteTaskGroup".equals(request.getParameter("action"))) {
-			TaskGroupDAOIf taskGroupDAO = DAOFactory.TaskGroupDAOIf(session);
-			TaskGroup taskGroup = taskGroupDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
-			if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
-				request.setAttribute("title", "Aufgabengruppe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-			} else {
-				Transaction tx = session.beginTransaction();
-				taskGroupDAO.deleteTaskGroup(taskGroup);
-				tx.commit();
-			}
-			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
-			return;
-		} else if ("deletePointCategory".equals(request.getParameter("action"))) {
-			PointCategoryDAOIf pointCategoryDAO = DAOFactory.PointCategoryDAOIf(session);
-			PointCategory pointCategory = pointCategoryDAO.getPointCategory(Util.parseInteger(request.getParameter("pointCategoryId"), 0));
-			if (pointCategory == null || pointCategory.getTask().getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
-				request.setAttribute("title", "Punktkategorie nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-				return;
-			}
-			Transaction tx = session.beginTransaction();
-			// TODO make nice! and use DAOs
-			Task task = pointCategory.getTask();
-			session.buildLockRequest(LockOptions.UPGRADE).lock(task);
-			pointCategoryDAO.deletePointCategory(pointCategory);
-			task.setMaxPoints(pointCategoryDAO.countPoints(task));
-			session.update(task);
-			tx.commit();
-
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + pointCategory.getTask().getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + pointCategory.getTask().getTaskid(), response));
-			return;
-		} else if ("newPointCategory".equals(request.getParameter("action"))) {
-			PointCategoryDAOIf pointCategoryDAO = DAOFactory.PointCategoryDAOIf(session);
-			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
-			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
-			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
-				request.setAttribute("title", "Aufgabe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-				return;
-			}
-			if (Util.convertToPoints(request.getParameter("points"), task.getMinPointStep()) > 0) {
-				// TODO make nice! and use DAOs
-				Transaction tx = session.beginTransaction();
-				session.buildLockRequest(LockOptions.UPGRADE).lock(task);
-				pointCategoryDAO.newPointCategory(task, Util.convertToPoints(request.getParameter("points")), request.getParameter("description"), request.getParameter("optional") != null);
-				task.setMaxPoints(pointCategoryDAO.countPoints(task));
-				session.update(task);
-				tx.commit();
-				response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
-			} else {
-				request.setAttribute("title", "Punkte ungültig.");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-			}
-			return;
-		} else if ("provideModelSolutionToStudents".equals(request.getParameter("action"))) {
-			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
-			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
-			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
-				request.setAttribute("title", "Aufgabe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-				return;
-			}
-
-			Transaction tx = session.beginTransaction();
-			session.buildLockRequest(LockOptions.UPGRADE).lock(task);
-			task.setModelSolutionProvisionType(ModelSolutionProvisionType.valueOf(request.getParameter("modelsolutiontype")));
-			session.update(task);
-			tx.commit();
-
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
-		} else if ("newMCOption".equals(request.getParameter("action"))) {
-			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
-			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
-			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
-				request.setAttribute("title", "Aufgabe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-				return;
-			}
-			DAOFactory.MCOptionDAOIf(session).createMCOption(task, request.getParameter("option"), request.getParameter("correkt") != null);
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
-		} else if ("deleteMCOption".equals(request.getParameter("action"))) {
-			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
-			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
-			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
-				request.setAttribute("title", "Aufgabe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
-				return;
-			}
-			for (MCOption option : DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task)) {
-				if (option.getId() == Util.parseInteger(request.getParameter("optionId"), -1)) {
-					DAOFactory.MCOptionDAOIf(session).deleteMCOption(option);
-					break;
-				}
-			}
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
 			request.getRequestDispatcher("MessageView").forward(request, response);
@@ -520,7 +295,250 @@ public class TaskManager extends HttpServlet {
 			}
 			return;
 		}
-		// don't want to have any special post-handling
-		doGet(request, response);
+
+		Session session = RequestAdapter.getSession(request);
+		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+		if (lecture == null) {
+			request.setAttribute("title", "Veranstaltung nicht gefunden");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), lecture);
+		if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
+		if ("saveNewTask".equals(request.getParameter("action")) || "saveTask".equals(request.getParameter("action"))) {
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+			TaskGroup taskGroup = DAOFactory.TaskGroupDAOIf(session).getTaskGroup(Util.parseInteger(request.getParameter("taskGroup"), 0));
+			if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
+				request.setAttribute("title", "Aufgabengruppe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+			}
+			Task task;
+			if (request.getParameter("action").equals("saveTask")) {
+				task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+				if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+					request.setAttribute("title", "Aufgabe nicht gefunden");
+					request.getRequestDispatcher("MessageView").forward(request, response);
+					return;
+				}
+				if (!task.isMCTask()) {
+					task.setMinPointStep(Util.convertToPoints(request.getParameter("minpointstep")));
+				}
+				if (task.getPointCategories().isEmpty()) {
+					task.setMaxPoints(Util.convertToPoints(request.getParameter("maxpoints"), task.getMinPointStep()));
+				}
+				task.setTitle(request.getParameter("title").trim());
+				task.setDescription(request.getParameter("description"));
+				task.setMaxSubmitters(Util.parseInteger(request.getParameter("maxSubmitters"), 1));
+				task.setAllowSubmittersAcrossGroups(request.getParameter("allowSubmittersAcrossGroups") != null);
+				if (!task.isMCTask() && !task.isADynamicTask()) {
+					task.setFilenameRegexp(request.getParameter("filenameregexp"));
+					task.setArchiveFilenameRegexp(request.getParameter("archivefilenameregexp"));
+					task.setFeaturedFiles(request.getParameter("featuredfiles"));
+					task.setShowTextArea(request.getParameter("showtextarea") != null);
+					task.setTutorsCanUploadFiles(request.getParameter("tutorsCanUploadFiles") != null);
+				}
+				task.setStart(parseDate(request.getParameter("startdate"), new Date()));
+				task.setDeadline(parseDate(request.getParameter("deadline"), new Date()));
+				if (task.getDeadline().before(task.getStart())) {
+					task.setDeadline(task.getStart());
+				}
+				task.setAllowPrematureSubmissionClosing(request.getParameter("prematureClosing") != null);
+				if (request.getParameter("pointsmanual") != null) {
+					task.setShowPoints(null);
+				} else {
+					task.setShowPoints(parseDate(request.getParameter("pointsdate"), new Date()));
+					if (task.getShowPoints().before(task.getDeadline())) {
+						task.setShowPoints(task.getDeadline());
+					}
+				}
+				task.setTaskGroup(taskGroup);
+				taskDAO.saveTask(task);
+				if (request.getParameter("dynamictaskpreview") != null) {
+					response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=dynamictaskpreview", response));
+				} else {
+					response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
+				}
+			} else {
+				Date startdate = parseDate(request.getParameter("startdate"), new Date());
+				Date deadline = parseDate(request.getParameter("deadline"), new Date());
+				Date pointsdate = parseDate(request.getParameter("pointsdate"), new Date());
+				if (deadline.before(startdate)) {
+					deadline = startdate;
+				}
+				Date showPoints = parseDate(request.getParameter("pointsdate"), new Date());
+				if (showPoints.before(deadline)) {
+					showPoints = deadline;
+				}
+				if (request.getParameter("pointsmanual") != null) {
+					pointsdate = null;
+				} else if (pointsdate.before(deadline)) {
+					pointsdate = deadline;
+				}
+				String taskType = "";
+				String dynamicTask = null;
+				if (request.getParameter("mctask") != null) {
+					taskType = "mc";
+				} else {
+					if (DynamicTaskStrategieFactory.IsValidStrategieName(request.getParameter("dynamicTask"))) {
+						taskType = "dynamicTask";
+						dynamicTask = request.getParameter("dynamicTask");
+					}
+				}
+				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), 50), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, taskType, dynamicTask, pointsdate, request.getParameter("prematureClosing") != null);
+				if (task.isMCTask()) {
+					task.setFilenameRegexp("-");
+					task.setShowTextArea(false); // be explicit here, it's false by default
+				} else if (task.isADynamicTask()) {
+					task.setFilenameRegexp("-");
+					task.setShowTextArea(true);
+				}
+				taskDAO.saveTask(task);
+				response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask", response));
+			}
+			return;
+		} else if ("deleteTask".equals(request.getParameter("action"))) {
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+				request.setAttribute("title", "Aufgabe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+			} else {
+				taskDAO.deleteTask(task);
+			}
+			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
+			return;
+		} else if ("uploadTaskFile".equals(request.getParameter("action"))) {
+			handleUploadedFiles(participation.getLecture(), "advisorfiles", request, response, session);
+			return;
+		} else if ("uploadModelSolutionFile".equals(request.getParameter("action"))) {
+			handleUploadedFiles(participation.getLecture(), "modelsolutionfiles", request, response, session);
+			return;
+		} else if (("saveNewTaskGroup".equals(request.getParameter("action")) || "saveTaskGroup".equals(request.getParameter("action")))) {
+			TaskGroupDAOIf taskGroupDAO = DAOFactory.TaskGroupDAOIf(session);
+			TaskGroup taskGroup;
+			if (request.getParameter("action").equals("saveTaskGroup")) {
+				taskGroup = taskGroupDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
+				if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
+					request.setAttribute("title", "Aufgabengruppe nicht gefunden");
+					request.getRequestDispatcher("MessageView").forward(request, response);
+					return;
+				}
+				taskGroup.setTitle(request.getParameter("title"));
+				Transaction tx = session.beginTransaction();
+				taskGroupDAO.saveTaskGroup(taskGroup);
+				tx.commit();
+			} else {
+				Transaction tx = session.beginTransaction();
+				taskGroupDAO.newTaskGroup(request.getParameter("title"), lecture);
+				tx.commit();
+			}
+			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
+			return;
+		} else if ("deleteTaskGroup".equals(request.getParameter("action"))) {
+			TaskGroupDAOIf taskGroupDAO = DAOFactory.TaskGroupDAOIf(session);
+			TaskGroup taskGroup = taskGroupDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
+			if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
+				request.setAttribute("title", "Aufgabengruppe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+			} else {
+				Transaction tx = session.beginTransaction();
+				taskGroupDAO.deleteTaskGroup(taskGroup);
+				tx.commit();
+			}
+			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
+			return;
+		} else if ("deletePointCategory".equals(request.getParameter("action"))) {
+			PointCategoryDAOIf pointCategoryDAO = DAOFactory.PointCategoryDAOIf(session);
+			PointCategory pointCategory = pointCategoryDAO.getPointCategory(Util.parseInteger(request.getParameter("pointCategoryId"), 0));
+			if (pointCategory == null || pointCategory.getTask().getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+				request.setAttribute("title", "Punktkategorie nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
+			Transaction tx = session.beginTransaction();
+			// TODO make nice! and use DAOs
+			Task task = pointCategory.getTask();
+			session.buildLockRequest(LockOptions.UPGRADE).lock(task);
+			pointCategoryDAO.deletePointCategory(pointCategory);
+			task.setMaxPoints(pointCategoryDAO.countPoints(task));
+			session.update(task);
+			tx.commit();
+
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + pointCategory.getTask().getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + pointCategory.getTask().getTaskid(), response));
+			return;
+		} else if ("newPointCategory".equals(request.getParameter("action"))) {
+			PointCategoryDAOIf pointCategoryDAO = DAOFactory.PointCategoryDAOIf(session);
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+				request.setAttribute("title", "Aufgabe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
+			if (Util.convertToPoints(request.getParameter("points"), task.getMinPointStep()) > 0) {
+				// TODO make nice! and use DAOs
+				Transaction tx = session.beginTransaction();
+				session.buildLockRequest(LockOptions.UPGRADE).lock(task);
+				pointCategoryDAO.newPointCategory(task, Util.convertToPoints(request.getParameter("points")), request.getParameter("description"), request.getParameter("optional") != null);
+				task.setMaxPoints(pointCategoryDAO.countPoints(task));
+				session.update(task);
+				tx.commit();
+				response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
+			} else {
+				request.setAttribute("title", "Punkte ungültig.");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+			}
+			return;
+		} else if ("provideModelSolutionToStudents".equals(request.getParameter("action"))) {
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+				request.setAttribute("title", "Aufgabe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
+
+			Transaction tx = session.beginTransaction();
+			session.buildLockRequest(LockOptions.UPGRADE).lock(task);
+			task.setModelSolutionProvisionType(ModelSolutionProvisionType.valueOf(request.getParameter("modelsolutiontype")));
+			session.update(task);
+			tx.commit();
+
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
+		} else if ("newMCOption".equals(request.getParameter("action"))) {
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+				request.setAttribute("title", "Aufgabe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
+			DAOFactory.MCOptionDAOIf(session).createMCOption(task, request.getParameter("option"), request.getParameter("correkt") != null);
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
+		} else if ("deleteMCOption".equals(request.getParameter("action"))) {
+			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+				request.setAttribute("title", "Aufgabe nicht gefunden");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
+			for (MCOption option : DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task)) {
+				if (option.getId() == Util.parseInteger(request.getParameter("optionId"), -1)) {
+					DAOFactory.MCOptionDAOIf(session).deleteMCOption(option);
+					break;
+				}
+			}
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
+		} else {
+			request.setAttribute("title", "Ungültiger Aufruf");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+		}
 	}
 }

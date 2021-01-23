@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,52 +20,39 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * View-Servlet for displaying the list of lectures a user can subscribe to
+ * View-Servlet for deleting a file
  * @author Sven Strickroth
  */
-public class SubscribeToLectureView extends HttpServlet {
+public class DeleteFileView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Submission submission = (Submission) request.getAttribute("submission");
+		String filename = (String) request.getAttribute("filename");
+
 		Template template = TemplateFactory.getTemplate(request, response);
+		template.printTemplateHeader("Datei löschen", submission.getTask());
 
-		@SuppressWarnings("unchecked")
-		List<Lecture> lectures = (List<Lecture>) request.getAttribute("lectures");
-
-		template.printTemplateHeader("Veranstaltungen", "<a href=\"" + Util.generateHTMLLink("Overview", response) + "\">Meine Veranstaltungen</a> &gt; Veranstaltungen");
 		PrintWriter out = response.getWriter();
-
-		if (!lectures.isEmpty()) {
-			out.println("<table class=border>");
-			out.println("<tr>");
-			out.println("<th>Veranstaltung</th>");
-			out.println("<th>Anmelden</th>");
-			out.println("</tr>");
-			for (Lecture lecture : lectures) {
-				out.println("<tr>");
-				out.println("<td>" + Util.escapeHTML(lecture.getName()) + "</td>");
-				out.println("<td><form method=post action=\"" + Util.generateHTMLLink("?lecture=" + lecture.getId(), response) + "\"><input type=submit value=anmelden></form></td>");
-				out.println("</tr>");
-			}
-			out.println("</table><p>");
-		} else {
-			out.println("<div class=mid>keine Veranstaltungen gefunden.</div>");
-		}
-
+		out.println("<FORM class=mid method=POST action=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">");
+		out.println("<p>Sie Sie sicher, dass Sie die Datei \"" + Util.escapeHTML(filename) + "\" löschen möchten?</p>");
+		out.println("<p>Dateien gleichen Namens werden auch durch erneutes Hochladen überschrieben.</p>");
+		out.println("<INPUT TYPE=submit VALUE=\"Datei löschen\"> <a href=\"" + Util.generateHTMLLink(request.getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + submission.getTask().getTaskid(), response) + "\">Abbrechen</a>");
+		out.println("</FORM>");
 		template.printTemplateFooter();
 	}
 }

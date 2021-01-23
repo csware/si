@@ -87,6 +87,54 @@ public class DeleteFile extends HttpServlet {
 
 		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 		File file = new File(path, request.getPathInfo().substring(1));
+		if (file.exists() && file.isFile()) {
+			request.setAttribute("submission", submission);
+			request.setAttribute("filename", request.getPathInfo().substring(1));
+			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/DeleteFileView").forward(request, response);
+			return;
+		}
+
+		request.setAttribute("title", "Datei nicht gefunden");
+		request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+		return;
+	}
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Session session = RequestAdapter.getSession(request);
+		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
+
+		if (submission == null) {
+			request.setAttribute("title", "Abgabe nicht gefunden");
+			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			return;
+		}
+
+		Task task = submission.getTask();
+
+		// check Lecture Participation
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
+		if (participation == null || !submission.getSubmitters().contains(participation)) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
+		if (task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
+			request.setAttribute("title", "Es sind keine Veränderungen an dieser Abgabe mehr möglich.");
+			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			return;
+		}
+
+		if (request.getPathInfo() == null) {
+			request.setAttribute("title", "Ungültige Anfrage");
+			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			return;
+		}
+
+		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
+		File file = new File(path, request.getPathInfo().substring(1));
 		Transaction tx = session.beginTransaction();
 		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
 		if (file.exists() && file.isFile() && file.delete()) {

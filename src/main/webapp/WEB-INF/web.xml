@@ -796,4 +796,20 @@
     <servlet-name>ShowGroupStudentView</servlet-name>
     <url-pattern>/servlets/ShowGroupStudentView</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>DeleteFileView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.DeleteFileView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeleteFileView</servlet-name>
+    <url-pattern>/servlets/DeleteFileView</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>CloseSubmissionView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.CloseSubmissionView</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CloseSubmissionView</servlet-name>
+    <url-pattern>/servlets/CloseSubmissionView</url-pattern>
+  </servlet-mapping>
 </web-app>

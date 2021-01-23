@@ -256,7 +256,7 @@ public class TaskManagerView extends HttpServlet {
 			if (!options.isEmpty()) {
 				out.println("<ul>");
 				for (MCOption option : options) {
-					out.println("<li>" + Util.escapeHTML(option.getTitle()) + " (" + (option.isCorrect() ? "korrekt, " : "") + "<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deleteMCOption&optionId=" + option.getId(), response) + "\">del</a>)</li>");
+					out.println("<li>" + Util.escapeHTML(option.getTitle()) + " (" + (option.isCorrect() ? "korrekt, " : "") + "<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deleteMCOption&optionId=" + option.getId(), response) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
@@ -274,7 +274,7 @@ public class TaskManagerView extends HttpServlet {
 			if (!task.getPointCategories().isEmpty()) {
 				out.println("<ul>");
 				for (PointCategory category : task.getPointCategories()) {
-					out.println("<li>" + Util.escapeHTML(category.getDescription()) + "; " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? ", optional" : "") + " (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deletePointCategory&pointCategoryId=" + category.getPointcatid(), response) + "\">del</a>)</li>");
+					out.println("<li>" + Util.escapeHTML(category.getDescription()) + "; " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? ", optional" : "") + " (<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deletePointCategory&pointCategoryId=" + category.getPointcatid(), response) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
@@ -295,7 +295,7 @@ public class TaskManagerView extends HttpServlet {
 				out.println("<ul>");
 				for (String file : advisorFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
-					out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + Util.encodeURLPathComponent(file) + "?action=delete&taskid=" + task.getTaskid(), response) + "\">del</a>)</li>");
+					out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + Util.encodeURLPathComponent(file) + "?action=delete&taskid=" + task.getTaskid(), response) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
@@ -321,7 +321,7 @@ public class TaskManagerView extends HttpServlet {
 				out.println("<ul>");
 				for (String file : modelSolutionFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
-					out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + Util.encodeURLPathComponent(file) + "?action=delete&taskid=" + task.getTaskid(), response) + "\">del</a>)</li>");
+					out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + Util.encodeURLPathComponent(file) + "?action=delete&taskid=" + task.getTaskid(), response) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
@@ -346,9 +346,9 @@ public class TaskManagerView extends HttpServlet {
 					} else if (similarityTest.getStatus() == 2) {
 						out.println("in Ausführung<br>");
 					} else {
-						out.println("bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + Util.generateHTMLLink("DupeCheck?action=rerunSimilarityTest&similaritytestid=" + similarityTest.getSimilarityTestId() + "&taskid=" + task.getTaskid(), response) + "\">erneut ausführen</a><br>");
+						out.println("bereits ausgeführt - <a onclick=\"return sendAsPost(this, 'Wirklich erneut ausführen?')\" href=\"" + Util.generateHTMLLink("DupeCheck?action=rerunSimilarityTest&similaritytestid=" + similarityTest.getSimilarityTestId() + "&taskid=" + task.getTaskid(), response) + "\">erneut ausführen</a><br>");
 					}
-					out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DupeCheck?action=deleteSimilarityTest&taskid=" + task.getTaskid() + "&similaritytestid=" + similarityTest.getSimilarityTestId(), response) + "\">löschen</a></li>");
+					out.println("<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DupeCheck?action=deleteSimilarityTest&taskid=" + task.getTaskid() + "&similaritytestid=" + similarityTest.getSimilarityTestId(), response) + "\">löschen</a></li>");
 				}
 				out.println("</ul>");
 			}
@@ -382,14 +382,14 @@ public class TaskManagerView extends HttpServlet {
 							if (test.isNeedsToRun()) {
 								out.println("in Queue, noch nicht ausgeführt<br>");
 							} else {
-								out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return confirmLink('Wirklich erneut ausführen?')\" href=\"" + Util.generateHTMLLink("TestManager?action=rerunTest&testid=" + test.getId() + "&taskid=" + task.getTaskid(), response) + "\">erneut ausführen</a><br>");
+								out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return sendAsPost(this, 'Wirklich erneut ausführen?')\" href=\"" + Util.generateHTMLLink("TestManager?action=rerunTest&testid=" + test.getId() + "&taskid=" + task.getTaskid(), response) + "\">erneut ausführen</a><br>");
 							}
 						}
 						if (test instanceof JavaAdvancedIOTest) {
 							out.println("Bestehend aus " + ((JavaAdvancedIOTest) test).getTestSteps().size() + " Schritten<br>");
 							out.println("<a href=\"" + Util.generateHTMLLink("JavaAdvancedIOTestManager?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
 						}
-						out.println("<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TestManager?action=deleteTest&testid=" + test.getId() + "&taskid=" + task.getTaskid(), response) + "\">Test löschen</a>");
+						out.println("<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TestManager?action=deleteTest&testid=" + test.getId() + "&taskid=" + task.getTaskid(), response) + "\">Test löschen</a>");
 						out.println("</li>");
 					}
 					out.println("</ul>");

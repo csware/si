@@ -83,9 +83,31 @@ public class TestManager extends HttpServlet {
 		if ("newTest".equals(request.getParameter("action"))) {
 			request.setAttribute("task", task);
 			request.getRequestDispatcher("TestManagerAddTestFormView").forward(request, response);
+		} else {
+			request.setAttribute("title", "Ungültiger Aufruf");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+		}
+	}
 
-			//Controlleranpassung für den UML Constraint Test
-		} else if ("saveNewTest".equals(request.getParameter("action")) && "advancedjavaio".equals(request.getParameter("type"))) {
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Session session = RequestAdapter.getSession(request);
+		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+		if (task == null) {
+			request.setAttribute("title", "Aufgabe nicht gefunden");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
+		if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
+		if ("saveNewTest".equals(request.getParameter("action")) && "advancedjavaio".equals(request.getParameter("type"))) {
 			session.beginTransaction();
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			JavaAdvancedIOTest test = testDAO.createJavaAdvancedIOTest(task);
@@ -180,7 +202,6 @@ public class TestManager extends HttpServlet {
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
-
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "regexp".equals(request.getParameter("type"))) {
 			//check regexp
 			try {
@@ -264,11 +285,5 @@ public class TestManager extends HttpServlet {
 			request.getRequestDispatcher("MessageView").forward(request, response);
 
 		}
-	}
-
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// don't want to have any special post-handling
-		doGet(request, response);
 	}
 }

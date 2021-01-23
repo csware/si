@@ -59,7 +59,29 @@ public class AdminMenue extends HttpServlet {
 
 		if ("newLecture".equals(request.getParameter("action"))) {
 			request.getRequestDispatcher("AdminMenueAddLectureView").forward(request, response);
-		} else if ("cleanup".equals(request.getParameter("action"))) {
+		} else if ("showLecture".equals(request.getParameter("action")) && request.getParameter("lecture") != null) {
+			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+			request.setAttribute("lecture", lecture);
+			request.setAttribute("participants", DAOFactory.ParticipationDAOIf(session).getLectureParticipations(lecture));
+			request.getRequestDispatcher("AdminMenueEditLectureView").forward(request, response);
+		} else if ("showAdminUsers".equals(request.getParameter("action"))) {
+			request.setAttribute("superusers", DAOFactory.UserDAOIf(session).getSuperUsers());
+			request.getRequestDispatcher("AdminMenueShowAdminUsersView").forward(request, response);
+		} else { // list all lectures
+			request.setAttribute("lectures", DAOFactory.LectureDAOIf(session).getLectures());
+			request.getRequestDispatcher("AdminMenueOverView").forward(request, response);
+		}
+	}
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Session session = RequestAdapter.getSession(request);
+		if (!RequestAdapter.getUser(request).isSuperUser()) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
+		if ("cleanup".equals(request.getParameter("action"))) {
 			File path = Configuration.getInstance().getDataPath();
 			// list lectures
 			for (File lectures : path.listFiles()) {
@@ -111,14 +133,6 @@ public class AdminMenue extends HttpServlet {
 			}
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
 			response.sendRedirect(Util.generateRedirectURL("AdminMenue", response));
-		} else if ("showLecture".equals(request.getParameter("action")) && request.getParameter("lecture") != null) {
-			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
-			request.setAttribute("lecture", lecture);
-			request.setAttribute("participants", DAOFactory.ParticipationDAOIf(session).getLectureParticipations(lecture));
-			request.getRequestDispatcher("AdminMenueEditLectureView").forward(request, response);
-		} else if ("showAdminUsers".equals(request.getParameter("action"))) {
-			request.setAttribute("superusers", DAOFactory.UserDAOIf(session).getSuperUsers());
-			request.getRequestDispatcher("AdminMenueShowAdminUsersView").forward(request, response);
 		} else if (("addSuperUser".equals(request.getParameter("action")) || "removeSuperUser".equals(request.getParameter("action"))) && request.getParameter("userid") != null) {
 			UserDAOIf userDAO = DAOFactory.UserDAOIf(session);
 			session.beginTransaction();
@@ -159,15 +173,9 @@ public class AdminMenue extends HttpServlet {
 			} else {
 				response.sendRedirect(Util.generateRedirectURL("AdminMenue", response));
 			}
-		} else { // list all lectures
-			request.setAttribute("lectures", DAOFactory.LectureDAOIf(session).getLectures());
-			request.getRequestDispatcher("AdminMenueOverView").forward(request, response);
+		} else {
+			request.setAttribute("title", "Ungültiger Aufruf");
+			request.getRequestDispatcher("MessageView").forward(request, response);
 		}
-	}
-
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// don't want to have any special post-handling
-		doGet(request, response);
 	}
 }

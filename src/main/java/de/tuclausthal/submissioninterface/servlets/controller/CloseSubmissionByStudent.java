@@ -69,6 +69,40 @@ public class CloseSubmissionByStudent extends HttpServlet {
 			return;
 		}
 
+		if (submission.getTask().getDeadline().before(Util.correctTimezone(new Date())) || submission.isClosed()) {
+			request.setAttribute("title", "An dieser Abgabe sind keine Veränderungen mehr möglich.");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
+		request.setAttribute("submission", submission);
+		request.getRequestDispatcher("CloseSubmissionView").forward(request, response);
+	}
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		RequestAdapter requestAdapter = new RequestAdapter(request);
+		Session session = requestAdapter.getSession();
+
+		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
+		if (submission == null) {
+			request.setAttribute("title", "Abgabe nicht gefunden");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
+		Participation participation = DAOFactory.ParticipationDAOIf(session).getParticipation(requestAdapter.getUser(), submission.getTask().getTaskGroup().getLecture());
+		if (participation == null || !submission.getSubmitters().contains(participation)) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
+		if (!submission.getTask().isAllowPrematureSubmissionClosing()) {
+			request.setAttribute("title", "Ungültige Anfrage");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
 		Transaction tx = session.beginTransaction();
 		session.refresh(submission, LockModeType.PESSIMISTIC_WRITE);
 		if (submission.getTask().getDeadline().before(Util.correctTimezone(new Date())) || submission.isClosed()) {

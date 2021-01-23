@@ -67,6 +67,29 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 			return;
 		}
 
+		request.setAttribute("test", test);
+		request.getRequestDispatcher("JavaAdvancedIOTestManagerOverView").forward(request, response);
+	}
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Session session = RequestAdapter.getSession(request);
+		TestDAOIf testDAOIf = DAOFactory.TestDAOIf(session);
+		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
+		if (tst == null || !(tst instanceof JavaAdvancedIOTest)) {
+			request.setAttribute("title", "Test nicht gefunden");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+		JavaAdvancedIOTest test = (JavaAdvancedIOTest) tst;
+
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), test.getTask().getTaskGroup().getLecture());
+		if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
 		if ("addNewStep".equals(request.getParameter("action"))) {
 			String title = request.getParameter("title");
 			String testCode = request.getParameter("testcode");
@@ -118,13 +141,6 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 			return;
 		}
 
-		request.setAttribute("test", test);
-		request.getRequestDispatcher("JavaAdvancedIOTestManagerOverView").forward(request, response);
-	}
-
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// don't want to have any special post-handling
-		doGet(request, response);
+		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
 	}
 }

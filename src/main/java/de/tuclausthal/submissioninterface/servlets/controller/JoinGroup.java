@@ -46,7 +46,7 @@ public class JoinGroup extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
 		GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
 		Transaction tx = session.beginTransaction();
@@ -75,11 +75,5 @@ public class JoinGroup extends HttpServlet {
 		response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + group.getLecture().getId(), response));
 		tx.commit();
 		return;
-	}
-
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// don't want to have any special post-handling
-		doGet(request, response);
 	}
 }

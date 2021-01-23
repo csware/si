@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * Copyright 2019 Dustin Reineke <dustin.reineke@tu-clausthal.de>
  *
  * This file is part of the SubmissionInterface.
@@ -23,6 +23,20 @@ function confirmLink(msg) {
     }
     return confirm(msg);
 }
+
+function sendAsPost(e, msg) {
+	if (!confirm(msg)) {
+		return false;
+	}
+	let frm = document.createElement('FORM');
+	frm.id = 'frm_' + Math.random();
+	frm.method = 'POST';
+	frm.action = e.href;
+	document.body.appendChild(frm);
+	frm.submit();
+	return false;
+}
+
 function selectAll(divId) {
 	if (document.selection) {
 		var div = document.body.createTextRange();
