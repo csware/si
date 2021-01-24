@@ -42,7 +42,7 @@ Please read the whole procedure in advance to executing it.
         require valid-user
     </Location>
     ```
-   - For debugging: Please not that the Shibboleth attributes passes to Tomcat don't show up when iterating over the request variables. They need to be explicitly named (e.g., `uid` or `Shib-Identity-Provider`).
+   - For debugging: Please not that the Shibboleth attributes passed to Tomcat don't show up when iterating over the request variables. They need to be explicitly named (e.g., `uid` or `Shib-Identity-Provider`).
 - For building the whole package you need [maven](https://maven.apache.org/) (also often available as a package on *nix systems)
 - For running the cron task regularly with the predefined script `submissiondir/runtests.sh` you need the `lockfile` tools (usually part of the `procmail` package on *nix systems)
 
