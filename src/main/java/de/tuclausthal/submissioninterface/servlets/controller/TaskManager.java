@@ -199,7 +199,7 @@ public class TaskManager extends HttpServlet {
 			return;
 		}
 		// Process a file upload
-		Pattern pattern = Pattern.compile("^(?:.*?[\\\\/])?([a-zA-Z0-9_. -]+)$");
+		Pattern pattern = Pattern.compile("^([a-zA-Z0-9_. -]+)$");
 		StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
 		Util.lowerCaseExtension(submittedFileName);
 		Matcher m = pattern.matcher(submittedFileName);

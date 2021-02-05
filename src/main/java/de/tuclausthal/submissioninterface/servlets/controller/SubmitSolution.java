@@ -496,21 +496,21 @@ public class SubmitSolution extends HttpServlet {
 
 	public static Vector<Pattern> getTaskFileNamePatterns(Task task, boolean ignoreTaskPattern) {
 		Vector<Pattern> patterns = new Vector<>(2);
-		patterns.add(Pattern.compile("^(?:.*?[\\\\/])?([a-zA-Z0-9_. -]+)$"));
+		patterns.add(Pattern.compile("^([a-zA-Z0-9_. -]+)$"));
 		if (!(task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty() || ignoreTaskPattern)) {
-			patterns.add(Pattern.compile("^(?:.*?[\\\\/])?(" + task.getFilenameRegexp() + ")$"));
+			patterns.add(Pattern.compile("^(" + task.getFilenameRegexp() + ")$"));
 		}
 		return patterns;
 	}
 
 	private static Vector<Pattern> getArchiveFileNamePatterns(Task task) {
 		Vector<Pattern> patterns = new Vector<>(2);
-		patterns.add(Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?([a-zA-Z0-9_ .-]+))$"));
+		patterns.add(Pattern.compile("^[/a-zA-Z0-9_ .-]+$"));
 		if (task.getArchiveFilenameRegexp() != null && !task.getArchiveFilenameRegexp().isEmpty()) {
 			if (task.getArchiveFilenameRegexp().startsWith("^")) {
 				patterns.add(Pattern.compile("^(" + task.getArchiveFilenameRegexp().substring(1) + ")$"));
 			} else {
-				patterns.add(Pattern.compile("^(([/a-zA-Z0-9_ .-]*?/)?(" + task.getArchiveFilenameRegexp() + "))$"));
+				patterns.add(Pattern.compile("(?:^|.*/)(" + task.getArchiveFilenameRegexp() + ")$"));
 			}
 		}
 		return patterns;
@@ -526,11 +526,17 @@ public class SubmitSolution extends HttpServlet {
 					continue;
 				}
 				StringBuffer archivedFileName = new StringBuffer(entry.getName().replace("\\", "/"));
+				boolean fileNameOk = true;
 				for (Pattern pattern : patterns) {
 					if (!pattern.matcher(archivedFileName).matches()) {
 						log.debug("Ignored entry: " + archivedFileName + ";" + pattern.pattern());
-						continue;
+						fileNameOk = false;
+						break;
 					}
+				}
+				if (!fileNameOk || archivedFileName.length() == 0 || archivedFileName.charAt(0) == '/' || archivedFileName.charAt(archivedFileName.length() - 1) == '/') {
+					log.debug("Ignored entry: " + archivedFileName);
+					continue;
 				}
 				try {
 					if (!new File(submissionPath, archivedFileName.toString()).getCanonicalPath().startsWith(submissionPath.getCanonicalPath())) {

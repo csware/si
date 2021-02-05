@@ -50,6 +50,7 @@ import javax.servlet.http.Part;
 
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.ParameterParser;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -477,6 +478,7 @@ public final class Util {
 	}
 
 	// taken from Apache::Commons::FileUpload, FileUploadBase
+	// Servlet API 3.1.0 has support for Part.getSubmittedFileName(), however, fails with uploads from Internet Explorer (which provides the full path of the uploaded file with backslashes, normalizing just removes all backslashes resulting in a broken filename)
 	public static String getUploadFileName(Part part) {
 		String pContentDisposition = part.getHeader(FileUploadBase.CONTENT_DISPOSITION);
 		String fileName = null;
@@ -500,7 +502,7 @@ public final class Util {
 				}
 			}
 		}
-		return fileName;
+		return FilenameUtils.getName(fileName);
 	}
 
 	/**
