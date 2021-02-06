@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -62,9 +62,9 @@ public class NormalizerCache {
 		}
 		StringBuffer stringBuffer = normalizer.normalize(Util.loadFile(new File(pathToTask, file)));
 		tempFile.getParentFile().mkdirs();
-		BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile));
-		bw.write(stringBuffer.toString());
-		bw.close();
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
+			bw.write(stringBuffer.toString());
+		}
 		return stringBuffer;
 	}
 

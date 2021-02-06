@@ -83,14 +83,13 @@ public class DownloadModelSolutionFile extends HttpServlet {
 		if (file.exists() && file.isFile()) {
 			response.setContentType("application/x-download");
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + MimeUtility.encodeWord(file.getName()) + "\"");
-			OutputStream out = response.getOutputStream();
 			byte[] buffer = new byte[8196];
-			BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-			int len = 0;
-			while ((len = inputStream.read(buffer)) > 0) {
-				out.write(buffer, 0, len);
+			try (OutputStream out = response.getOutputStream(); BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file))) {
+				int len = 0;
+				while ((len = inputStream.read(buffer)) > 0) {
+					out.write(buffer, 0, len);
+				}
 			}
-			inputStream.close();
 			return;
 		}
 

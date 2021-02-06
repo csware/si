@@ -76,10 +76,11 @@ public class DownloadAsZip extends HttpServlet {
 			response.setContentType("application/zip");
 			response.setHeader("Content-Disposition", "attachment; filename=submission-id" + submission.getSubmissionid() + ".zip");
 
-			ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
-			//out.setMethod(ZipOutputStream.STORED);
-			Util.recursivelyZip(out, path, "");
-			out.close();
+			try (ZipOutputStream out = new ZipOutputStream(response.getOutputStream()))
+			{
+				//out.setMethod(ZipOutputStream.STORED);
+				Util.recursivelyZip(out, path, "");
+			}
 			return;
 		}
 

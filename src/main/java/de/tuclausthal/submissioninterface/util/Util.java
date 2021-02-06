@@ -189,21 +189,23 @@ public final class Util {
 	}
 
 	public static final void copyInputStreamAndClose(InputStream in, OutputStream out) throws IOException {
-		byte[] buffer = new byte[1024];
-		int len;
-
-		while ((len = in.read(buffer)) >= 0) {
-			out.write(buffer, 0, len);
+		try {
+			byte[] buffer = new byte[8192];
+			int len;
+			while ((len = in.read(buffer)) >= 0) {
+				out.write(buffer, 0, len);
+			}
+		} finally {
+			if (in instanceof ZipInputStream) {
+				((ZipInputStream) in).closeEntry();
+			} else
+				in.close();
+			if (out instanceof ZipOutputStream) {
+				((ZipOutputStream) out).closeEntry();
+			} else {
+				out.close();
+			}
 		}
-
-		if (in instanceof ZipInputStream) {
-			((ZipInputStream) in).closeEntry();
-		} else
-			in.close();
-		if (out instanceof ZipOutputStream) {
-			((ZipOutputStream) out).closeEntry();
-		} else
-			out.close();
 	}
 
 	/**
@@ -323,15 +325,13 @@ public final class Util {
 			for (File subFile : fromFile.listFiles()) {
 				recursiveCopy(subFile, new File(toFile.getAbsolutePath() + System.getProperty("file.separator") + subFile.getName()));
 			}
-		} else {
-			BufferedReader in = new BufferedReader(new FileReader(fromFile));
-			BufferedWriter out = new BufferedWriter(new FileWriter(toFile));
+			return;
+		}
+		try (BufferedReader in = new BufferedReader(new FileReader(fromFile)); BufferedWriter out = new BufferedWriter(new FileWriter(toFile))) {
 			int c;
 			while ((c = in.read()) != -1) {
 				out.write(c);
 			}
-			in.close();
-			out.close();
 		}
 	}
 
@@ -380,14 +380,14 @@ public final class Util {
 	 * @throws IOException
 	 */
 	public static StringBuffer loadFile(File file) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		StringBuffer sb = new StringBuffer((int) file.length());
-		String line;
-		while ((line = br.readLine()) != null) {
-			sb.append(line + "\n");
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			StringBuffer sb = new StringBuffer((int) file.length());
+			String line;
+			while ((line = br.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			return sb;
 		}
-		br.close();
-		return sb;
 	}
 
 	/**

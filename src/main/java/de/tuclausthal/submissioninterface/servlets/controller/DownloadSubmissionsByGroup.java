@@ -84,7 +84,7 @@ public class DownloadSubmissionsByGroup extends HttpServlet {
 		HashSet<Integer> submissionIds = new HashSet<>();
 		for (Submission submission : DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOfGroupOrdered(task, group)) {
 			submissionIds.add(submission.getSubmissionid());
-		};
+		}
 
 		// set header
 		response.setContentType("application/zip");
@@ -94,20 +94,18 @@ public class DownloadSubmissionsByGroup extends HttpServlet {
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + MimeUtility.encodeWord("Abgaben Aufgabe-" + task.getTaskid() + " Gruppe " + group.getName() + ".zip") + "\"");
 		}
 
-		ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream());
+		try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
+			// add submitted files to zip archive
+			final File taskPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+			for (final int submissionId : submissionIds) {
+				File submissionDir = new File(taskPath, submissionId + System.getProperty("file.separator"));
+				if (!submissionDir.exists()) {
+					continue;
+				}
 
-		// add submitted files to zip archive
-		final File taskPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
-		for (final int submissionId : submissionIds) {
-			File submissionDir = new File(taskPath, submissionId + System.getProperty("file.separator"));
-			if (!submissionDir.exists()) {
-				continue;
+				String submitters = submissionId + " " + DAOFactory.SubmissionDAOIf(session).getSubmission(submissionId).getSubmitterNames();
+				Util.recursivelyZip(zipOutputStream, submissionDir, submitters + System.getProperty("file.separator"));
 			}
-
-			String submitters = submissionId + " " + DAOFactory.SubmissionDAOIf(session).getSubmission(submissionId).getSubmitterNames();
-			Util.recursivelyZip(zipOutputStream, submissionDir, submitters + System.getProperty("file.separator"));
 		}
-
-		zipOutputStream.close();
 	}
 }

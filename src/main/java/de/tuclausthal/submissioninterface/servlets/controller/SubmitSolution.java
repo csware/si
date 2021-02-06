@@ -145,15 +145,15 @@ public class SubmitSolution extends HttpServlet {
 					if (submission != null) {
 						File textSolutionFile = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + "textloesung.txt");
 						if (textSolutionFile.exists()) {
-							BufferedReader bufferedReader = new BufferedReader(new FileReader(textSolutionFile));
-							StringBuffer sb = new StringBuffer();
-							String line;
-							while ((line = bufferedReader.readLine()) != null) {
-								sb.append(line);
-								sb.append(System.getProperty("line.separator"));
+							try (BufferedReader bufferedReader = new BufferedReader(new FileReader(textSolutionFile))) {
+								StringBuffer sb = new StringBuffer();
+								String line;
+								while ((line = bufferedReader.readLine()) != null) {
+									sb.append(line);
+									sb.append(System.getProperty("line.separator"));
+								}
+								textsolution = sb.toString();
 							}
-							textsolution = sb.toString();
-							bufferedReader.close();
 						}
 						if (task.isADynamicTask()) {
 							task.setDescription(task.getDynamicTaskStrategie(session).getTranslatedDescription(submission));
@@ -379,7 +379,7 @@ public class SubmitSolution extends HttpServlet {
 			byte[] upload = null;
 			try {
 				handleUploadedFile(LOG, path, task, fileName, file);
-				ByteArrayOutputStream os = new ByteArrayOutputStream((int)file.getSize());
+				ByteArrayOutputStream os = new ByteArrayOutputStream((int) file.getSize());
 				Util.copyInputStreamAndClose(file.getInputStream(), os);
 				upload = os.toByteArray();
 			} catch (IOException e) {
@@ -467,11 +467,11 @@ public class SubmitSolution extends HttpServlet {
 			}
 
 			File uploadedFile = new File(path, "textloesung.txt");
-			FileWriter fileWriter = new FileWriter(uploadedFile);
-			if (request.getParameter("textsolution") != null && request.getParameter("textsolution").length() <= task.getMaxsize()) {
-				fileWriter.write(request.getParameter("textsolution"));
+			try (FileWriter fileWriter = new FileWriter(uploadedFile)) {
+				if (request.getParameter("textsolution") != null && request.getParameter("textsolution").length() <= task.getMaxsize()) {
+					fileWriter.write(request.getParameter("textsolution"));
+				}
 			}
-			fileWriter.close();
 
 			submission.setLastModified(new Date());
 			submissionDAO.saveSubmission(submission);

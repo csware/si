@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
- * Copyright 2011, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -95,9 +95,9 @@ public abstract class UMLDiagramm {
 		Document document = null;
 		try {
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			FileReader freader = new FileReader(file);
-			document = builder.parse(new InputSource(freader));
-			freader.close();
+			try (FileReader freader = new FileReader(file)) {
+				document = builder.parse(new InputSource(freader));
+			}
 		} catch (ParserConfigurationException e) {
 		} catch (SAXException e) {
 		} catch (IOException e) {
