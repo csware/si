@@ -18,7 +18,6 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -554,7 +553,7 @@ public class SubmitSolution extends HttpServlet {
 					if (!fileToCreate.getParentFile().exists()) {
 						fileToCreate.getParentFile().mkdirs();
 					}
-					Util.copyInputStreamAndClose(zipFile, new BufferedOutputStream(new FileOutputStream(fileToCreate)));
+					Util.copyInputStreamAndClose(zipFile, new FileOutputStream(fileToCreate));
 				}
 			}
 			zipFile.close();

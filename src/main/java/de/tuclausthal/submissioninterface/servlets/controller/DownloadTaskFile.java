@@ -18,9 +18,7 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -31,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import jakarta.mail.internet.MimeUtility;
 
+import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -90,12 +89,8 @@ public class DownloadTaskFile extends HttpServlet {
 			}
 			response.setContentType("application/x-download");
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + MimeUtility.encodeWord(file.getName()) + "\"");
-			byte[] buffer = new byte[8000]; // should be equal to the Tomcat buffersize
-			try (OutputStream out = response.getOutputStream(); BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file))) {
-				int len = 0;
-				while ((len = inputStream.read(buffer)) > 0) {
-					out.write(buffer, 0, len);
-				}
+			try (OutputStream out = response.getOutputStream()) {
+				FileUtils.copyFile(file, out);
 			}
 			return;
 		}
