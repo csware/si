@@ -524,7 +524,7 @@ public final class Util {
 		if (fileName.toLowerCase().endsWith(".java")) {
 			NormalizerIf stripComments = new StripCommentsNormalizer();
 			StringBuffer javaFileContents = stripComments.normalize(Util.loadFile(uploadedFile));
-			Pattern packagePattern = Pattern.compile(".*package\\s+([a-zA-Z$]([a-zA-Z0-9_$]|\\.[a-zA-Z0-9_$])*)\\s*;.*", Pattern.DOTALL);
+			Pattern packagePattern = Pattern.compile(".*\\bpackage\\s+([a-zA-Z$]([a-zA-Z0-9_$]|\\.[a-zA-Z0-9_$])*)\\s*;.*", Pattern.DOTALL);
 			Matcher packageMatcher = packagePattern.matcher(javaFileContents);
 			File destFile = new File(path, fileName);
 			if (packageMatcher.matches()) {
