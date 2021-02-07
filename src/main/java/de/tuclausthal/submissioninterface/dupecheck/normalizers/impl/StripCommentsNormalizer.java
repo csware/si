@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2012, 2015, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2012, 2015, 2017, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -60,26 +60,27 @@ public class StripCommentsNormalizer implements NormalizerIf {
 				continue;
 			}
 			if ("//".equals(stringBuffer.substring(i, i + 2))) {
-				while (i < stringBuffer.length()) {
-					if (stringBuffer.charAt(i) != '\n') {
-						stringBuffer.deleteCharAt(i);
-					} else {
+				int j = i;
+				while (j < stringBuffer.length()) {
+					if (stringBuffer.charAt(j) == '\n') {
 						break;
 					}
+					++j;
 				}
+				stringBuffer.delete(i, j);
 			}
 			if (i < stringBuffer.length() - 1 && "/*".equals(stringBuffer.substring(i, i + 2))) {
-				stringBuffer.deleteCharAt(i);
-				stringBuffer.deleteCharAt(i);
-				while (i < stringBuffer.length()) {
-					if (i < stringBuffer.length() - 1 && "*/".equals(stringBuffer.substring(i, i + 2))) {
-						stringBuffer.deleteCharAt(i);
-						stringBuffer.deleteCharAt(i);
-						i--;
+				int start = i;
+				int j = i + 2;
+				while (j < stringBuffer.length()) {
+					if (j < stringBuffer.length() - 1 && "*/".equals(stringBuffer.substring(j, j + 2))) {
+						j += 2;
+						--i;
 						break;
 					}
-					stringBuffer.deleteCharAt(i);
+					++j;
 				}
+				stringBuffer.delete(start, j);
 			}
 			i++;
 		}

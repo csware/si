@@ -1,5 +1,5 @@
 /*
- * Copyright 2009,2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2012, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -29,25 +29,26 @@ public class SpacesTabsNewlinesSemicolonNormalizer implements NormalizerIf {
 	@Override
 	public StringBuffer normalize(StringBuffer stringBuffer) {
 		int i = 0;
-		boolean lastWasNewline = true;
 		while (i < stringBuffer.length()) {
 			if (stringBuffer.charAt(i) == '\t' || stringBuffer.charAt(i) == ' ' || stringBuffer.charAt(i) == '\r' || stringBuffer.charAt(i) == '\n' || stringBuffer.charAt(i) == ';') {
-				stringBuffer.setCharAt(i, ' ');
-				if (lastWasNewline) {
-					stringBuffer.deleteCharAt(i);
-				} else {
-					i++;
+				if (i != 0) {
+					stringBuffer.setCharAt(i, ' ');
+					++i;
 				}
-				lastWasNewline = true;
-			} else {
-				lastWasNewline = false;
-				i++;
+				int j = i;
+				while (j < stringBuffer.length()) {
+					if (!(stringBuffer.charAt(j) == '\t' || stringBuffer.charAt(j) == ' ' || stringBuffer.charAt(j) == '\r' || stringBuffer.charAt(j) == '\n' || stringBuffer.charAt(j) == ';')) {
+						break;
+					}
+					++j;
+				}
+				stringBuffer.delete(i, j);
 			}
+			++i;
 		}
 		i = stringBuffer.length() - 1;
-		while (i>= 0 && stringBuffer.charAt(i) == ' ') {
-			stringBuffer.deleteCharAt(i);
-			i--;
+		if (i >= 0 && stringBuffer.charAt(i) == ' ') {
+			stringBuffer.setLength(i);
 		}
 		return stringBuffer;
 	}

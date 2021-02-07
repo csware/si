@@ -1,5 +1,5 @@
 /*
- * Copyright 2009,2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2012, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -29,25 +29,26 @@ public class SpacesTabsNormalizer implements NormalizerIf {
 	@Override
 	public StringBuffer normalize(StringBuffer stringBuffer) {
 		int i = 0;
-		boolean lastWasSpace = true;
 		while (i < stringBuffer.length()) {
 			if (stringBuffer.charAt(i) == '\t' || stringBuffer.charAt(i) == ' ') {
-				stringBuffer.setCharAt(i, ' ');
-				if (lastWasSpace) {
-					stringBuffer.deleteCharAt(i);
-				} else {
-					i++;
+				if (i != 0) {
+					stringBuffer.setCharAt(i, ' ');
+					++i;
 				}
-				lastWasSpace = true;
-			} else {
-				lastWasSpace = false;
-				i++;
+				int j = i;
+				while (j < stringBuffer.length()) {
+					if (!(stringBuffer.charAt(j) == '\t' || stringBuffer.charAt(j) == ' ')) {
+						break;
+					}
+					++j;
+				}
+				stringBuffer.delete(i, j);
 			}
+			++i;
 		}
-		i = stringBuffer.length() - 1;
-		while (i>= 0 && stringBuffer.charAt(i) == ' ') {
-			stringBuffer.deleteCharAt(i);
-			i--;
+		i = stringBuffer.length() - 1; 
+		if (i >= 0 && stringBuffer.charAt(i) == ' ') {
+			stringBuffer.setLength(i);
 		}
 		return stringBuffer;
 	}

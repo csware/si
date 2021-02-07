@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2012, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2012, 2017, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -28,67 +28,65 @@ public class StripCodeNormalizer implements NormalizerIf {
 	@Override
 	public StringBuffer normalize(StringBuffer stringBuffer) {
 		int i = 0;
+		int start = i;
 		while (i < stringBuffer.length()) {
 			if (stringBuffer.charAt(i) == '"') {
-				stringBuffer.deleteCharAt(i);
+				++i;
 				while (i < stringBuffer.length()) {
 					if (stringBuffer.charAt(i) == '\\') {
-						stringBuffer.deleteCharAt(i);
-						if (i < stringBuffer.length()) {
-							stringBuffer.deleteCharAt(i);
-						}
+						i += 2;
 						continue;
 					}
 					if (stringBuffer.charAt(i) == '"' || stringBuffer.charAt(i) == '\n') {
-						stringBuffer.deleteCharAt(i);
+						++i;
 						break;
 					}
-					stringBuffer.deleteCharAt(i);
+					++i;
 				}
 				continue;
 			}
 			if (stringBuffer.charAt(i) == '\'') {
-				stringBuffer.deleteCharAt(i);
+				++i;
 				while (i < stringBuffer.length()) {
 					if (stringBuffer.charAt(i) == '\\') {
-						stringBuffer.deleteCharAt(i);
-						if (i < stringBuffer.length()) {
-							stringBuffer.deleteCharAt(i);
-						}
+						i += 2;
 						continue;
 					}
 					if (stringBuffer.charAt(i) == '\'' || stringBuffer.charAt(i) == '\n') {
-						stringBuffer.deleteCharAt(i);
+						++i;
 						break;
 					}
-					stringBuffer.deleteCharAt(i);
+					++i;
 				}
 				continue;
 			}
 			if (i < stringBuffer.length() - 1 && "//".equals(stringBuffer.substring(i, i + 2))) {
-				stringBuffer.deleteCharAt(i);
-				stringBuffer.deleteCharAt(i);
+				stringBuffer.delete(start, i + 2);
+				i = start;
 				while (i < stringBuffer.length()) {
 					if (i == stringBuffer.length() - 1 || stringBuffer.charAt(i) != '\n') {
 						i++;
 					} else {
 						break;
 					}
+					start = i;
 				}
 			} else if (i < stringBuffer.length() - 1 && "/*".equals(stringBuffer.substring(i, i + 2))) {
-				stringBuffer.deleteCharAt(i);
-				stringBuffer.deleteCharAt(i);
+				stringBuffer.delete(start, i + 2);
+				i = start;
 				while (i < stringBuffer.length()) {
 					if (i < stringBuffer.length() - 1 && "*/".equals(stringBuffer.substring(i, i + 2))) {
-						stringBuffer.deleteCharAt(i);
-						stringBuffer.deleteCharAt(i);
+						i += 2;
 						break;
 					}
 					++i;
+					start = i;
 				}
-			} else {
-				stringBuffer.deleteCharAt(i);
 			}
+			++i;
+		}
+		if (stringBuffer.length() > 0) {
+			stringBuffer.delete(start, stringBuffer.length());
 		}
 		return stringBuffer;
 	}
