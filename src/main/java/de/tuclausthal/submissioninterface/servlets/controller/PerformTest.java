@@ -127,7 +127,7 @@ public class PerformTest extends HttpServlet {
 			return;
 		}
 
-		File path = Util.createTemporaryDirectory("tutortest", null);
+		File path = Util.createTemporaryDirectory("tutortest");
 		if (path == null) {
 			throw new IOException("Failed to create tempdir!");
 		}

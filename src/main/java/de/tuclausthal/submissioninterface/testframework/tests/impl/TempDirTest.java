@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -47,7 +47,7 @@ public abstract class TempDirTest extends AbstractTest {
 		} else {
 			File tempDir = null;
 			try {
-				tempDir = Util.createTemporaryDirectory("test", null);
+				tempDir = Util.createTemporaryDirectory("test");
 				if (tempDir == null) {
 					throw new IOException("Failed to create tempdir!");
 				}

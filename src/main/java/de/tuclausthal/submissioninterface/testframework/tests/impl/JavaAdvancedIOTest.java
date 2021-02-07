@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -46,7 +46,7 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 	public void performTest(Test test, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
 		File tempDir = null;
 		try {
-			tempDir = Util.createTemporaryDirectory("test", null);
+			tempDir = Util.createTemporaryDirectory("test");
 			if (tempDir == null) {
 				throw new IOException("Failed to create tempdir!");
 			}

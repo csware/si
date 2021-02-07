@@ -64,7 +64,7 @@ public class JPlagAdapter extends DupeCheck {
 		DAOFactory.SimilarityTestDAOIf(session).resetSimilarityTest(similarityTest);
 		File tempDir = null;
 		try {
-			tempDir = Util.createTemporaryDirectory("jplag", null);
+			tempDir = Util.createTemporaryDirectory("jplag");
 			if (tempDir == null) {
 				throw new IOException("Failed to create tempdir!");
 			}

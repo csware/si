@@ -406,15 +406,14 @@ public final class Util {
 	}
 
 	/**
-	 * Creates a temporaty directory
+	 * Creates a temporary directory
 	 * @param prefix
-	 * @param suffix
-	 * @return the temporate directory or null on error
+	 * @return the temporary directory or null on error
 	 */
-	public static File createTemporaryDirectory(String prefix, String suffix) {
+	public static File createTemporaryDirectory(String prefix) {
 		File temp;
 		try {
-			temp = File.createTempFile(prefix, suffix);
+			temp = File.createTempFile(prefix, null);
 			if (temp.delete() != true || temp.mkdirs() != true) {
 				temp = null;
 			}

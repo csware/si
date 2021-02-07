@@ -43,7 +43,7 @@ public class NormalizerCache {
 	public NormalizerCache(File pathToTask, NormalizerIf normalizer) throws IOException {
 		this.pathToTask = pathToTask;
 		this.normalizer = normalizer;
-		cacheDirectoty = Util.createTemporaryDirectory("normalizer.cache", null);
+		cacheDirectoty = Util.createTemporaryDirectory("normalizer.cache");
 		if (cacheDirectoty == null) {
 			throw new IOException("Could not create temporary directory");
 		}
