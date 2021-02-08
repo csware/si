@@ -76,10 +76,9 @@ public final class Util {
 		if (message == null) {
 			return "";
 		}
-		char content[] = new char[message.length()];
-		message.getChars(0, message.length(), content, 0);
-		StringBuffer result = new StringBuffer(content.length + 50);
-		for (char element : content) {
+		StringBuilder result = new StringBuilder(message.length() + 50);
+		for (int i = 0; i < message.length(); ++i) {
+			char element = message.charAt(i);
 			switch (element) {
 				case '<':
 					result.append("&lt;");
@@ -155,10 +154,9 @@ public final class Util {
 		if (message == null) {
 			return null;
 		}
-		char content[] = new char[message.length()];
-		message.getChars(0, message.length(), content, 0);
-		StringBuffer result = new StringBuffer(content.length + 50);
-		for (char element : content) {
+		StringBuilder result = new StringBuilder(message.length() + 50);
+		for (int i = 0; i < message.length(); ++i) {
+			char element = message.charAt(i);
 			switch (element) {
 				case '<':
 					result.append("\\<");
