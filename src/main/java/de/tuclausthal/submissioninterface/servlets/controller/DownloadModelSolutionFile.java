@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -76,13 +77,17 @@ public class DownloadModelSolutionFile extends HttpServlet {
 			return;
 		}
 
-		File file = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "modelsolutionfiles" + System.getProperty("file.separator") + request.getPathInfo().substring(1));
-		if (file.exists() && file.isFile()) {
-			ShowFile.setContentTypeBasedonFilenameExtension(response, file.getName(), true);
-			try (OutputStream out = response.getOutputStream()) {
-				FileUtils.copyFile(file, out);
+		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "modelsolutionfiles");
+		String relativeFile = FilenameUtils.normalize(request.getPathInfo().substring(1));
+		if (relativeFile != null && !relativeFile.isEmpty()) {
+			File file = new File(path, relativeFile);
+			if (file.exists() && file.isFile()) {
+				ShowFile.setContentTypeBasedonFilenameExtension(response, file.getName(), true);
+				try (OutputStream out = response.getOutputStream()) {
+					FileUtils.copyFile(file, out);
+				}
+				return;
 			}
-			return;
 		}
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
@@ -116,15 +121,19 @@ public class DownloadModelSolutionFile extends HttpServlet {
 			return;
 		}
 
-		File file = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "modelsolutionfiles" + System.getProperty("file.separator") + request.getPathInfo().substring(1));
-		if (file.exists() && file.isFile()) {
-			if (!"delete".equals(request.getParameter("action"))) {
-				response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
+		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "modelsolutionfiles");
+		String relativeFile = FilenameUtils.normalize(request.getPathInfo().substring(1));
+		if (relativeFile != null && !relativeFile.isEmpty()) {
+			File file = new File(path, relativeFile);
+			if (file.exists() && file.isFile()) {
+				if (!"delete".equals(request.getParameter("action"))) {
+					response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
+					return;
+				}
+				file.delete();
+				response.sendRedirect(Util.generateRedirectURL(getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
 				return;
 			}
-			file.delete();
-			response.sendRedirect(Util.generateRedirectURL(getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
-			return;
 		}
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");

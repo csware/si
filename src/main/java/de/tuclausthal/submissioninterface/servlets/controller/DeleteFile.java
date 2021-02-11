@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FilenameUtils;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -88,12 +89,15 @@ public class DeleteFile extends HttpServlet {
 		}
 
 		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-		File file = new File(path, request.getPathInfo().substring(1));
-		if (file.exists() && file.isFile()) {
-			request.setAttribute("submission", submission);
-			request.setAttribute("filename", request.getPathInfo().substring(1));
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/DeleteFileView").forward(request, response);
-			return;
+		String relativeFile = FilenameUtils.normalize(request.getPathInfo().substring(1));
+		if (relativeFile != null && !relativeFile.isEmpty()) {
+			File file = new File(path, relativeFile);
+			if (file.exists() && file.isFile()) {
+				request.setAttribute("submission", submission);
+				request.setAttribute("filename", relativeFile);
+				request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/DeleteFileView").forward(request, response);
+				return;
+			}
 		}
 
 		request.setAttribute("title", "Datei nicht gefunden");
@@ -136,21 +140,24 @@ public class DeleteFile extends HttpServlet {
 		}
 
 		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-		File file = new File(path, request.getPathInfo().substring(1));
-		Transaction tx = session.beginTransaction();
-		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
-		if (file.exists() && file.isFile() && file.delete()) {
-			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
-				submission.setLastModified(new Date());
-				submissionDAO.saveSubmission(submission);
-			}
-			tx.commit();
-			new LogDAO(session).createLogEntry(participation.getUser(), null, submission.getTask(), LogAction.DELETE_FILE, null, null, request.getPathInfo().substring(1), null);
+		String relativeFile = FilenameUtils.normalize(request.getPathInfo().substring(1));
+		if (relativeFile != null && !relativeFile.isEmpty()) {
+			File file = new File(path, relativeFile);
+			Transaction tx = session.beginTransaction();
+			session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
+			if (file.exists() && file.isFile() && file.delete()) {
+				if (!submissionDAO.deleteIfNoFiles(submission, path)) {
+					submission.setLastModified(new Date());
+					submissionDAO.saveSubmission(submission);
+				}
+				tx.commit();
+				new LogDAO(session).createLogEntry(participation.getUser(), null, submission.getTask(), LogAction.DELETE_FILE, null, null, request.getPathInfo().substring(1), null);
 
-			response.sendRedirect(Util.generateRedirectURL(request.getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + task.getTaskid(), response));
-			return;
+				response.sendRedirect(Util.generateRedirectURL(request.getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + task.getTaskid(), response));
+				return;
+			}
+			tx.rollback();
 		}
-		tx.rollback();
 
 		request.setAttribute("title", "Datei nicht gefunden");
 		request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");

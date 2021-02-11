@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import jakarta.mail.internet.MimeUtility;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -83,23 +84,27 @@ public class ShowFile extends HttpServlet {
 			return;
 		}
 
-		File file = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + request.getPathInfo().substring(1));
-		if (file.exists() && file.isFile()) {
-			if (isPlainTextFile(file.getName().toLowerCase()) && !"true".equals(request.getParameter("download"))) {
-				// code for loading/displaying text-files
-				StringBuffer code = Util.loadFile(file);
+		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid());
+		String relativeFile = FilenameUtils.normalize(request.getPathInfo().substring(1));
+		if (relativeFile != null && !relativeFile.isEmpty()) {
+			File file = new File(path, relativeFile);
+			if (file.exists() && file.isFile()) {
+				if (isPlainTextFile(file.getName().toLowerCase()) && !"true".equals(request.getParameter("download"))) {
+					// code for loading/displaying text-files
+					StringBuffer code = Util.loadFile(file);
 
-				request.setAttribute("submission", submission);
-				request.setAttribute("code", code);
-				request.setAttribute("fileName", Util.escapeHTML(file.getName()));
-				request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/ShowFileView").forward(request, response);
-			} else {
+					request.setAttribute("submission", submission);
+					request.setAttribute("code", code);
+					request.setAttribute("fileName", Util.escapeHTML(file.getName()));
+					request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/ShowFileView").forward(request, response);
+					return;
+				}
 				setContentTypeBasedonFilenameExtension(response, file.getName(), "true".equals(request.getParameter("download")));
 				try (OutputStream out = response.getOutputStream()) {
 					FileUtils.copyFile(file, out);
 				}
+				return;
 			}
-			return;
 		}
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
