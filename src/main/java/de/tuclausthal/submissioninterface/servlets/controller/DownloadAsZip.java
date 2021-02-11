@@ -73,9 +73,7 @@ public class DownloadAsZip extends HttpServlet {
 		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
 
 		if (path.exists()) {
-			response.setContentType("application/zip");
-			response.setHeader("Content-Disposition", "attachment; filename=submission-id" + submission.getSubmissionid() + ".zip");
-
+			ShowFile.setContentTypeBasedonFilenameExtension(response, "submission-id" + submission.getSubmissionid() + ".zip", true);
 			try (ZipOutputStream out = new ZipOutputStream(response.getOutputStream()))
 			{
 				//out.setMethod(ZipOutputStream.STORED);

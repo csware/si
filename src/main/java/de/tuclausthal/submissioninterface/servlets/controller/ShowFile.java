@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -93,18 +94,7 @@ public class ShowFile extends HttpServlet {
 				request.setAttribute("fileName", Util.escapeHTML(file.getName()));
 				request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/ShowFileView").forward(request, response);
 			} else {
-				if (file.getName().toLowerCase().endsWith(".pdf")) {
-					response.setContentType("application/pdf");
-				} else if (file.getName().toLowerCase().endsWith(".jpg") || file.getName().toLowerCase().endsWith(".jpeg")) {
-					response.setContentType("image/jpg");
-				} else if (file.getName().toLowerCase().endsWith(".gif")) {
-					response.setContentType("image/gif");
-				} else if (file.getName().toLowerCase().endsWith(".png")) {
-					response.setContentType("image/png");
-				} else {
-					response.setContentType("application/x-download");
-					response.setHeader("Content-Disposition", "attachment; filename=\"" + MimeUtility.encodeWord(file.getName()) + "\"");
-				}
+				setContentTypeBasedonFilenameExtension(response, file.getName(), "true".equals(request.getParameter("download")));
 				try (OutputStream out = response.getOutputStream()) {
 					FileUtils.copyFile(file, out);
 				}
@@ -138,5 +128,30 @@ public class ShowFile extends HttpServlet {
 			}
 		}
 		return false;
+	}
+
+	public static void setContentTypeBasedonFilenameExtension(HttpServletResponse response, String filename, boolean forceDownload) throws UnsupportedEncodingException {
+		String filenameLowerCase = filename.toLowerCase();
+		if (filenameLowerCase.endsWith(".pdf")) {
+			response.setContentType("application/pdf");
+		} else if (filenameLowerCase.endsWith(".jpg") || filenameLowerCase.endsWith(".jpeg")) {
+			response.setContentType("image/jpg");
+		} else if (filenameLowerCase.endsWith(".gif")) {
+			response.setContentType("image/gif");
+		} else if (filenameLowerCase.endsWith(".png")) {
+			response.setContentType("image/png");
+		} else if (filenameLowerCase.endsWith(".zip")) {
+			response.setContentType("application/zip");
+		} else if (filenameLowerCase.endsWith(".txt")) {
+			response.setContentType("text/plain");
+		} else if (filenameLowerCase.endsWith(".csv")) {
+			response.setContentType("text/csv");
+		} else {
+			response.setContentType("application/octet-stream");
+			forceDownload = true;
+		}
+		if (forceDownload) {
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + MimeUtility.encodeWord(filename) + "\"");
+		}
 	}
 }

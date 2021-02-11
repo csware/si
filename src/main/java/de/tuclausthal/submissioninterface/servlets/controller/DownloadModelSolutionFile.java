@@ -27,8 +27,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import jakarta.mail.internet.MimeUtility;
-
 import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 
@@ -80,8 +78,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 
 		File file = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "modelsolutionfiles" + System.getProperty("file.separator") + request.getPathInfo().substring(1));
 		if (file.exists() && file.isFile()) {
-			response.setContentType("application/x-download");
-			response.setHeader("Content-Disposition", "attachment; filename=\"" + MimeUtility.encodeWord(file.getName()) + "\"");
+			ShowFile.setContentTypeBasedonFilenameExtension(response, file.getName(), true);
 			try (OutputStream out = response.getOutputStream()) {
 				FileUtils.copyFile(file, out);
 			}

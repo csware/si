@@ -29,8 +29,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import jakarta.mail.internet.MimeUtility;
-
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -87,11 +85,10 @@ public class DownloadSubmissionsByGroup extends HttpServlet {
 		}
 
 		// set header
-		response.setContentType("application/zip");
 		if (group == null) {
-			response.setHeader("Content-Disposition", "attachment; filename=\"Abgaben Aufgabe " + task.getTaskid() + " ohne Gruppe.zip\"");
+			ShowFile.setContentTypeBasedonFilenameExtension(response, "Abgaben Aufgabe " + task.getTaskid() + " ohne Gruppe.zip", true);
 		} else {
-			response.setHeader("Content-Disposition", "attachment; filename=\"" + MimeUtility.encodeWord("Abgaben Aufgabe-" + task.getTaskid() + " Gruppe " + group.getName() + ".zip") + "\"");
+			ShowFile.setContentTypeBasedonFilenameExtension(response, "Abgaben Aufgabe-" + task.getTaskid() + " Gruppe " + group.getName() + ".zip", true);
 		}
 
 		try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
