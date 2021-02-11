@@ -313,7 +313,7 @@ public class TaskManagerView extends HttpServlet {
 				out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
 				out.println("Downloadbar für: <select size=1 name=modelsolutiontype>");
 				for (int i = 0; i < ModelSolutionProvisionType.values().length; i++) {
-					out.println("<option value=\"" + ModelSolutionProvisionType.values()[i] + "\"" + (ModelSolutionProvisionType.values()[i].equals(task.getModelSolutionProvisionType()) ? " selected" : "") + ">" + ModelSolutionProvisionType.values()[i].getInfo() + "</option>");
+					out.println("<option value=\"" + Util.escapeHTML(ModelSolutionProvisionType.values()[i].toString()) + "\"" + (ModelSolutionProvisionType.values()[i].equals(task.getModelSolutionProvisionType()) ? " selected" : "") + ">" + Util.escapeHTML(ModelSolutionProvisionType.values()[i].getInfo()) + "</option>");
 				}
 				out.println("</select> <input type=submit value=speichern>");
 				out.println("</form></p>");
@@ -338,7 +338,7 @@ public class TaskManagerView extends HttpServlet {
 			if (!task.getSimularityTests().isEmpty()) {
 				out.println("<ul>");
 				for (SimilarityTest similarityTest : task.getSimularityTests()) {
-					out.print("<li>" + similarityTest + "<br>");
+					out.print("<li>" + Util.escapeHTML(similarityTest.toString()) + "<br>");
 					out.println("Ignored Files: " + Util.escapeHTML(similarityTest.getExcludeFiles()) + "<br>");
 					out.print("Status: ");
 					if (similarityTest.getStatus() == 1) {

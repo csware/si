@@ -118,7 +118,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<tr>");
 				out.println("<th>Bearbeitet von:</th>");
 				out.println("<td>");
-				out.println(submission.getSubmitterNames().replaceAll("; ", "<br>"));
+				out.println(Util.textToHTML(submission.getSubmitterNames().replaceAll("; ", "\n")));
 				out.println("</td>");
 				out.println("</tr>");
 			}

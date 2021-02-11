@@ -101,7 +101,7 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		if (!task.isAllowSubmittersAcrossGroups() && submission.getSubmitters().iterator().next().getGroup() != null) {
-			out.println("<h2>Gruppe: " + submission.getSubmitters().iterator().next().getGroup().getName() + "</h2>");
+			out.println("<h2>Gruppe: " + Util.escapeHTML(submission.getSubmitters().iterator().next().getGroup().getName()) + "</h2>");
 		}
 
 		if (task.getMaxSubmitters() > 1 && submission.getSubmitters().size() < task.getMaxSubmitters() && (task.isAllowSubmittersAcrossGroups() || submission.getSubmitters().iterator().next().getGroup() != null)) {
@@ -260,7 +260,7 @@ public class ShowSubmissionView extends HttpServlet {
 			}
 			out.println("<tr>");
 			for (SimilarityTest similarityTest : task.getSimularityTests()) {
-				out.println("<th><span title=\"Ähnlichkeit zu\">" + similarityTest + "</span></th>");
+				out.println("<th><span title=\"Ähnlichkeit zu\">" + Util.escapeHTML(similarityTest.toString()) + "</span></th>");
 			}
 			out.println("</tr>");
 			out.println("<tr>");
@@ -288,7 +288,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<h2>Tests: <a href=\"#\" onclick=\"$('#tests').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<ul id=tests>");
 			for (TestResult testResult : submission.getTestResults()) {
-				out.println("<li>" + testResult.getTest().getTestTitle() + "<br>");
+				out.println("<li>" + Util.escapeHTML(testResult.getTest().getTestTitle()) + "<br>");
 				out.println("Erfolgreich: " + Util.boolToHTML(testResult.getPassedTest()));
 				if (!testResult.getTestOutput().isEmpty()) {
 					if (testResult.getTest() instanceof JavaAdvancedIOTest) {

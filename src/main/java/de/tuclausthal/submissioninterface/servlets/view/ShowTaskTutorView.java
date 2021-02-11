@@ -257,7 +257,7 @@ public class ShowTaskTutorView extends HttpServlet {
 									color = "red";
 									hint = " (läuft)";
 								}
-								out.println("<th><span class=" + color + " title=\"Max. Ähnlichkeit\">" + similarityTest + hint + "</span></th>");
+								out.println("<th><span class=" + color + " title=\"Max. Ähnlichkeit\">" + Util.escapeHTML(similarityTest.toString() + hint) + "</span></th>");
 							}
 						}
 						out.println("<th>Punkte</th>");

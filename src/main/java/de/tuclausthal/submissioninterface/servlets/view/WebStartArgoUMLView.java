@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * Copyright 2011 Joachim Schramm
  * 
  * This file is part of the SubmissionInterface.
@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.util.Configuration;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * View-Servlet für den ArgoUML Webstart
@@ -135,7 +136,7 @@ public class WebStartArgoUMLView extends HttpServlet {
 
 		//Parameter, dynamischer Teil
 		out.println("<argument>-sessionid</argument>");
-		out.println("<argument>" + sessionID + "</argument>");
+		out.println("<argument>" + Util.escapeHTML(sessionID) + "</argument>");
 		out.println("<argument>-srvpath</argument>");
 		out.println("<argument>" + servletPath + "</argument>");
 		out.println("<argument>-taskid</argument>");
