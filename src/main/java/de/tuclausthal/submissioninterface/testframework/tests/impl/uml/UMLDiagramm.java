@@ -94,6 +94,7 @@ public abstract class UMLDiagramm {
 		factory.setNamespaceAware(true);
 		Document document = null;
 		try {
+			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			try (FileReader freader = new FileReader(file)) {
 				document = builder.parse(new InputSource(freader));
