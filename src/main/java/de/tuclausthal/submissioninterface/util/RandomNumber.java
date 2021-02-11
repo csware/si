@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Giselle Rodriguez
- * Copyright 2011, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -24,7 +24,7 @@ import java.text.DecimalFormat;
 
 public class RandomNumber {
 	private static final char[] types = { 'B', 'O', 'D', 'F', 'H', 'L' };
-	private static final int[][] randomParam = { { 2, 2, 0 }, { 8, 2, 0 }, { 10, 2, 0 }, { 10, 2, 2 }, { 16, 3, 0 }, { 10, 8, 0 } };
+	private static final int[][] randomParam = { { 2, 3, 0 }, { 8, 100, 0 }, { 10, 100, 0 }, { 10, 100, 2 }, { 16, 1000, 0 }, { 10, 100000000, 0 } };
 
 	public static String getRandomNumber(int[] randomParam) {
 		StringBuilder before = new StringBuilder("1");
