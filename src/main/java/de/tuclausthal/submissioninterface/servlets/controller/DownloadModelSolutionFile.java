@@ -108,7 +108,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
 
-		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0 && !ModelSolutionProvisionType.canStudentAccessModelSolution(task, null, participation.getUser(), session)) {
+		if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
@@ -123,13 +123,10 @@ public class DownloadModelSolutionFile extends HttpServlet {
 		if (file.exists() && file.isFile()) {
 			if (!"delete".equals(request.getParameter("action"))) {
 				response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
+				return;
 			}
-			if (participation.getRoleType() != ParticipationRole.ADVISOR) {
-				response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
-			} else {
-				file.delete();
-				response.sendRedirect(Util.generateRedirectURL(getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
-			}
+			file.delete();
+			response.sendRedirect(Util.generateRedirectURL(getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
 			return;
 		}
 
