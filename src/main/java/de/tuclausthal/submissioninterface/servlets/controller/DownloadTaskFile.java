@@ -78,20 +78,52 @@ public class DownloadTaskFile extends HttpServlet {
 
 		File file = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator") + request.getPathInfo().substring(1));
 		if (file.exists() && file.isFile()) {
-			if ("delete".equals(request.getParameter("action"))) {
-				if (participation.getRoleType() != ParticipationRole.ADVISOR) {
-					response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
-				} else {
-					file.delete();
-					response.sendRedirect(Util.generateRedirectURL(getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
-					return;
-				}
-			}
 			response.setContentType("application/x-download");
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + MimeUtility.encodeWord(file.getName()) + "\"");
 			try (OutputStream out = response.getOutputStream()) {
 				FileUtils.copyFile(file, out);
 			}
+			return;
+		}
+
+		request.setAttribute("title", "Datei/Pfad nicht gefunden");
+		request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+	}
+
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Session session = RequestAdapter.getSession(request);
+		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
+		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
+
+		if (task == null) {
+			request.setAttribute("title", "Aufgabe nicht gefunden");
+			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			return;
+		}
+
+		// check Lecture Participation
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
+		if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
+		if (request.getPathInfo() == null) {
+			request.setAttribute("title", "Ungültige Anfrage");
+			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			return;
+		}
+
+		File file = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles" + System.getProperty("file.separator") + request.getPathInfo().substring(1));
+		if (file.exists() && file.isFile()) {
+			if (!"delete".equals(request.getParameter("action"))) {
+				response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
+				return;
+			}
+			file.delete();
+			response.sendRedirect(Util.generateRedirectURL(getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
 			return;
 		}
 
