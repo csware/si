@@ -54,32 +54,32 @@ INSERT INTO `lectures` (`id`, `gradingMethod`, `name`, `requiresAbhnahme`, `seme
 -- Daten für Tabelle `logs`
 --
 
-INSERT INTO `logs` (`id`, `action`, `result`, `testOutput`, `timeStamp`, `upload`, `uploadFilename`, `taskId`, `testId`, `userId`, `additionaldata`) VALUES
-(1, 0, NULL, NULL, '2020-12-21 10:35:21', 0x36307c7c0a3131313130303d3630, '!textsolution!', 1, NULL, 8, '{\"taskNumbers\":[{\"number\":\"111100\",\"origNumber\":\"60\"}],\"userResponses\":[\"60\"]}'),
-(2, 2, NULL, NULL, '2020-12-21 10:35:31', NULL, 'MathFunctions.java', 1, NULL, 8, '{\"filename\":\"MathFunctions.java\"}'),
-(3, 0, NULL, NULL, '2020-12-21 10:36:17', 0x337c7c, '!mc!', 2, NULL, 8, '{\"mc\":[\"3\"]}'),
-(4, 0, NULL, NULL, '2020-12-21 10:37:12', 0x7075626c696320636c6173732048656c6c6f576f726c64207b0d0a097075626c69632073746174696320766f6964206d61696e28537472696e675b5d206172677329207b0d0a090953797374656d2e6f75742e7072696e746c6e282248656c6c6f20576f726c642122293b0d0a097d0d0a7d, 'HelloWorld.java', 3, NULL, 8, '{\"filename\":\"HelloWorld.java\"}'),
-(5, 1, b'1', '', '2020-12-21 10:37:19', NULL, NULL, 3, 1, 8, NULL),
-(6, 1, b'1', '', '2020-12-21 10:37:29', NULL, NULL, 3, 1, 8, NULL),
-(7, 1, b'1', '{\"stdout\":\"Hello World!\\n\",\"separator\":\"#<GATE@-2790265235529257908#@>#\\n\",\"exitedCleanly\":true,\"steps\":[{\"id\":1,\"got\":\"Hello World!\\n\",\"expected\":\"Hello World!\",\"ok\":true}]}', '2020-12-21 10:37:39', NULL, NULL, 3, 2, 8, NULL),
-(8, 1, b'1', '{\"stdout\":\"Hello World!\\n\",\"separator\":\"#<GATE@-1526931535110961630#@>#\\n\",\"exitedCleanly\":true,\"steps\":[{\"id\":1,\"got\":\"Hello World!\\n\",\"expected\":\"Hello World!\",\"ok\":true}]}', '2020-12-21 10:37:47', NULL, NULL, 3, 2, 8, NULL),
-(9, 0, NULL, NULL, '2020-12-21 10:43:00', 0x32367c7c0a6e6978206973, '!textsolution!', 1, NULL, 9, '{\"taskNumbers\":[{\"number\":\"10001\",\"origNumber\":\"17\"}],\"userResponses\":[\"26\"]}'),
-(10, 0, NULL, NULL, '2020-12-21 10:43:08', 0x337c7c, '!mc!', 2, NULL, 9, '{\"mc\":[\"3\"]}'),
-(11, 0, NULL, NULL, '2020-12-21 10:43:46', 0x7075626c696320636c6173732047617573737363686553756d6d656e466f726d656c0d0a7b0d0a092f2a0d0a09202a20446965206d61696e204d6574686f64652e0d0a09202a20486965722073696e64207363686f6e2065696e207061617220546573746661656c6c6520766f726765676562656e2e0d0a09202a2054726f747a64656d206461726673742064752061756368206e6f636820656967656e6520546573746661656c6c652064617a752073636872656962656e2e0d0a09202a2f0d0a097075626c69632073746174696320766f6964206d61696e28537472696e675b5d2061726773290d0a097b0d0a090953797374656d2e6f75742e7072696e746c6e28224469652053756d6d6520766f6e20312b32206973743a2022293b0d0a090953797374656d2e6f75742e7072696e746c6e286265726563686e53756d6d65283229293b0d0a090953797374656d2e6f75742e7072696e746c6e28224469652053756d6d6520766f6e20312b322b33206973743a2022293b0d0a090953797374656d2e6f75742e7072696e746c6e286265726563686e53756d6d65283329293b0d0a090953797374656d2e6f75742e7072696e746c6e28224469652053756d6d6520766f6e20312b322b332b34206973743a2022293b0d0a090953797374656d2e6f75742e7072696e746c6e286265726563686e53756d6d65283429293b0d0a090953797374656d2e6f75742e7072696e746c6e28224469652053756d6d6520766f6e20312b322b332b342b35206973743a2022293b0d0a090953797374656d2e6f75742e7072696e746c6e286265726563686e53756d6d65283529293b0d0a097d0d0a090d0a092f2a0d0a09202a20496e20646965736572204175666761626520736f6c6c2065696e652053756d6d65206265726563686e65742077657264656e2e0d0a09202a20446162656920736f6c6c656e20616c6c65205a61686c656e20766f6e203120626973206e2073756d6d696572742077657264656e2e0d0a09202a20426569737069656c3a0d0a09202a206265726563686e6553756d6d65283529202d2d3e20312b322b332b342b35203d2031352e0d0a09202a20416c7320556562756e6720736f6c6c746520646965732072656b7572736976206265726563686e65742077657264656e2e0d0a09202a2044617a75206b616e6e206d616e20616e6e65686d656e2c2064617373206469657365204d6574686f6465206e7572206d69740d0a09202a20706f7369746976656e205a61686c656e20676574657374657420776972642e0d0a09202a2044616e6e20697374206265726563686e6553756d6d65286e29203d206265726563686e6553756d6d65286e2d31292b6e2c2066616c6c73206e203e20310d0a09202a2009090909090909203d2031202020202020202020202020202020202020202c20736f6e73740d0a09202a2048696e776569733a204e61747565726c696368206b616e6e206d616e2064696573652046756e6b74696f6e20617563682069746572617469760d0a09202a206265726563686e656e2c20756e6420657320697374206562656e66616c6c7320616c6c67656d65696e2062656b616e6e742c20646173730d0a09202a20312b322b332b2e2e2e2b6e203d20286e2a286e2b3129292f32206973742e0d0a09202a2044656e6e6f6368206973742065732065696e65206775746520556562756e672c20646965736520466f726d656c0d0a09202a206165686e6c69636820776965206469652046616b756c7461657420617563682072656b7572736976207a75206265726563686e656e2e0d0a09202a2f0d0a097075626c69632073746174696320696e74206265726563686e53756d6d6528696e74206e290d0a097b0d0a0909696e742073c3bc6d6d65203d2031323b0d0a090972657475726e2073c3bc6d6d653b0d0a097d0d0a7d, 'HelloWorld.java', 3, NULL, 9, '{\"filename\":\"HelloWorld.java\"}'),
-(12, 1, b'0', 'HelloWorld.java:1: error: class GaussscheSummenFormel is public, should be declared in a file named GaussscheSummenFormel.java\r\npublic class GaussscheSummenFormel\r\n       ^\r\n1 error\r\n', '2020-12-21 10:43:52', NULL, NULL, 3, 1, 9, NULL),
-(13, 1, b'0', '{\"stdout\":\"\",\"separator\":\"#<GATE@-5785040581425448127#@>#\\n\",\"exitedCleanly\":false,\"steps\":[{\"id\":1,\"got\":\"\",\"expected\":\"Hello World!\",\"ok\":false}]}', '2020-12-21 10:44:00', NULL, NULL, 3, 2, 9, NULL),
-(14, 0, NULL, NULL, '2020-12-21 10:44:36', 0x34377c7c0a3130313131313d3437, '!textsolution!', 1, NULL, 3, '{\"taskNumbers\":[{\"number\":\"101111\",\"origNumber\":\"47\"}],\"userResponses\":[\"47\"]}'),
-(15, 0, NULL, NULL, '2020-12-21 10:44:44', 0x337c7c, '!mc!', 2, NULL, 3, '{\"mc\":[\"3\"]}'),
-(16, 0, NULL, NULL, '2020-12-21 10:45:23', 0x7075626c696320636c6173732048656c6c6f576f726c64207b0d0a09737461746963207075626c696320766f6964206d61696e28537472696e675b5d206172677329207b0d0a090953797374656d2e6f75742e7072696e746c6e282248656c6c6f20576f726c642122293b0d0a097d0d0a7d, 'HelloWorld.java', 3, NULL, 3, '{\"filename\":\"HelloWorld.java\"}'),
-(17, 1, b'1', '', '2020-12-21 10:45:32', NULL, NULL, 3, 1, 3, NULL),
-(18, 1, b'1', '{\"stdout\":\"Hello World!\\n\",\"separator\":\"#<GATE@7902065626236426519#@>#\\n\",\"exitedCleanly\":true,\"steps\":[{\"id\":1,\"got\":\"Hello World!\\n\",\"expected\":\"Hello World!\",\"ok\":true}]}', '2020-12-21 10:45:42', NULL, NULL, 3, 2, 3, NULL),
-(19, 0, NULL, NULL, '2020-12-21 10:46:44', 0x7075626c696320636c6173732048656c6c6f576f726c64207b0d0a09737461746963207075626c696320766f6964206d61696e28537472696e675b5d206172677329207b0d0a090953797374656d2e6f75742e7072696e746c6e282248656c6c6f20576f726c642122293b0d0a097d0d0a7d, 'HelloWorld.java', 3, NULL, 5, '{\"filename\":\"HelloWorld.java\"}'),
-(20, 1, b'1', '', '2020-12-21 10:46:51', NULL, NULL, 3, 1, 5, NULL),
-(21, 1, b'1', '', '2020-12-21 10:46:57', NULL, NULL, 3, 1, 5, NULL),
-(22, 2, NULL, NULL, '2020-12-21 10:47:11', NULL, 'HelloWorld.java', 3, NULL, 5, '{\"filename\":\"HelloWorld.java\"}'),
-(23, 0, NULL, NULL, '2020-12-21 10:47:39', 0x7075626c696320636c6173732048656c6c6f576f726c64207b0d0a09737461746963207075626c696320766f6964206d61696e28537472696e675b5d206172677329207b0d0a090953797374656d2e6f75742e7072696e746c6e282248656c6c6f20576f726c642122293b0d0a097d0d0a7d, 'HelloWorld.java', 3, NULL, 6, '{\"filename\":\"HelloWorld.java\"}'),
-(24, 0, NULL, NULL, '2020-12-21 10:50:58', 0x337c7c, '!mc!', 2, NULL, 10, '{\"mc\":[\"3\"]}'),
-(25, 0, NULL, NULL, '2020-12-23 14:19:14', 0x33347c7c0a, '!textsolution!', 1, NULL, 5, '{\"taskNumbers\":[{\"number\":\"100010\",\"origNumber\":\"34\"}],\"userResponses\":[\"34\"]}');
+INSERT INTO `logs` (`id`, `action`, `result`, `testOutput`, `timeStamp`, `taskId`, `testId`, `userId`, `additionaldata`) VALUES
+(1, 0, NULL, NULL, '2020-12-21 10:35:21', 1, NULL, 8, '{\"taskNumbers\":[{\"number\":\"111100\",\"origNumber\":\"60\"}],\"userResponses\":[\"60\"]}'),
+(2, 2, NULL, NULL, '2020-12-21 10:35:31', 1, NULL, 8, '{\"filename\":\"MathFunctions.java\"}'),
+(3, 0, NULL, NULL, '2020-12-21 10:36:17', 2, NULL, 8, '{\"mc\":[\"3\"]}'),
+(4, 0, NULL, NULL, '2020-12-21 10:37:12', 3, NULL, 8, '{\"filename\":\"HelloWorld.java\"}'),
+(5, 1, b'1', '', '2020-12-21 10:37:19', 3, 1, 8, NULL),
+(6, 1, b'1', '', '2020-12-21 10:37:29', 3, 1, 8, NULL),
+(7, 1, b'1', '{\"stdout\":\"Hello World!\\n\",\"separator\":\"#<GATE@-2790265235529257908#@>#\\n\",\"exitedCleanly\":true,\"steps\":[{\"id\":1,\"got\":\"Hello World!\\n\",\"expected\":\"Hello World!\",\"ok\":true}]}', '2020-12-21 10:37:39', 3, 2, 8, NULL),
+(8, 1, b'1', '{\"stdout\":\"Hello World!\\n\",\"separator\":\"#<GATE@-1526931535110961630#@>#\\n\",\"exitedCleanly\":true,\"steps\":[{\"id\":1,\"got\":\"Hello World!\\n\",\"expected\":\"Hello World!\",\"ok\":true}]}', '2020-12-21 10:37:47', 3, 2, 8, NULL),
+(9, 0, NULL, NULL, '2020-12-21 10:43:00', 1, NULL, 9, '{\"taskNumbers\":[{\"number\":\"10001\",\"origNumber\":\"17\"}],\"userResponses\":[\"26\"]}'),
+(10, 0, NULL, NULL, '2020-12-21 10:43:08', 2, NULL, 9, '{\"mc\":[\"3\"]}'),
+(11, 0, NULL, NULL, '2020-12-21 10:43:46', 3, NULL, 9, '{\"filename\":\"HelloWorld.java\"}'),
+(12, 1, b'0', 'HelloWorld.java:1: error: class GaussscheSummenFormel is public, should be declared in a file named GaussscheSummenFormel.java\r\npublic class GaussscheSummenFormel\r\n       ^\r\n1 error\r\n', '2020-12-21 10:43:52', 3, 1, 9, NULL),
+(13, 1, b'0', '{\"stdout\":\"\",\"separator\":\"#<GATE@-5785040581425448127#@>#\\n\",\"exitedCleanly\":false,\"steps\":[{\"id\":1,\"got\":\"\",\"expected\":\"Hello World!\",\"ok\":false}]}', '2020-12-21 10:44:00', 3, 2, 9, NULL),
+(14, 0, NULL, NULL, '2020-12-21 10:44:36', 1, NULL, 3, '{\"taskNumbers\":[{\"number\":\"101111\",\"origNumber\":\"47\"}],\"userResponses\":[\"47\"]}'),
+(15, 0, NULL, NULL, '2020-12-21 10:44:44', 2, NULL, 3, '{\"mc\":[\"3\"]}'),
+(16, 0, NULL, NULL, '2020-12-21 10:45:23', 3, NULL, 3, '{\"filename\":\"HelloWorld.java\"}'),
+(17, 1, b'1', '', '2020-12-21 10:45:32', 3, 1, 3, NULL),
+(18, 1, b'1', '{\"stdout\":\"Hello World!\\n\",\"separator\":\"#<GATE@7902065626236426519#@>#\\n\",\"exitedCleanly\":true,\"steps\":[{\"id\":1,\"got\":\"Hello World!\\n\",\"expected\":\"Hello World!\",\"ok\":true}]}', '2020-12-21 10:45:42', 3, 2, 3, NULL),
+(19, 0, NULL, NULL, '2020-12-21 10:46:44', 3, NULL, 5, '{\"filename\":\"HelloWorld.java\"}'),
+(20, 1, b'1', '', '2020-12-21 10:46:51', 3, 1, 5, NULL),
+(21, 1, b'1', '', '2020-12-21 10:46:57', 3, 1, 5, NULL),
+(22, 2, NULL, NULL, '2020-12-21 10:47:11', 3, NULL, 5, '{\"filename\":\"HelloWorld.java\"}'),
+(23, 0, NULL, NULL, '2020-12-21 10:47:39', 3, NULL, 6, '{\"filename\":\"HelloWorld.java\"}'),
+(24, 0, NULL, NULL, '2020-12-21 10:50:58', 2, NULL, 10, '{\"mc\":[\"3\"]}'),
+(25, 0, NULL, NULL, '2020-12-23 14:19:14', 1, NULL, 5, '{\"taskNumbers\":[{\"number\":\"100010\",\"origNumber\":\"34\"}],\"userResponses\":[\"34\"]}');
 
 --
 -- Daten für Tabelle `mcoptions`

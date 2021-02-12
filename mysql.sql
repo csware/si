@@ -93,8 +93,6 @@ CREATE TABLE IF NOT EXISTS `logs` (
   `result` bit(1) DEFAULT NULL,
   `testOutput` longtext DEFAULT NULL,
   `timeStamp` datetime DEFAULT NULL,
-  `upload` longblob DEFAULT NULL,
-  `uploadFilename` varchar(255) DEFAULT NULL,
   `taskId` int(11) NOT NULL,
   `testId` int(11) DEFAULT NULL,
   `userId` int(11) NOT NULL,

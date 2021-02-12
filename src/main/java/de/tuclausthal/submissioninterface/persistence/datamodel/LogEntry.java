@@ -46,8 +46,6 @@ public class LogEntry implements Serializable {
 	private int action;
 	private Boolean result;
 	private String testOutput;
-	private String uploadFilename;
-	private byte[] upload;
 	private String additionalData;
 
 	public LogEntry() {}
@@ -190,35 +188,6 @@ public class LogEntry implements Serializable {
 	 */
 	public void setTask(Task task) {
 		this.task = task;
-	}
-
-	/**
-	 * @return the upload
-	 */
-	@Lob
-	public byte[] getUpload() {
-		return upload;
-	}
-
-	/**
-	 * @param upload the upload to set
-	 */
-	public void setUpload(byte[] upload) {
-		this.upload = upload;
-	}
-
-	/**
-	 * @return the uploadFilename
-	 */
-	public String getUploadFilename() {
-		return uploadFilename;
-	}
-
-	/**
-	 * @param uploadFilename the uploadFilename to set
-	 */
-	public void setUploadFilename(String uploadFilename) {
-		this.uploadFilename = uploadFilename;
 	}
 
 	/**

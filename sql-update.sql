@@ -91,5 +91,6 @@ ALTER TABLE `users` ADD `lastLoggedIn` DATETIME NULL AFTER `studiengang`;
 ALTER TABLE `groups` ADD `membersvisibletostudents` bit(1) NOT NULL;
 
 -- don't store uploaded files in the database
--- Execute ExtractUploadData
+-- Execute ExtractUploadData from commit fca631b8d487811e5c665ef8bb0b7834d397887d
 ALTER TABLE `logs` ADD `additionaldata` LONGTEXT;
+ALTER TABLE `logs` DROP `uploadFilename` , DROP `upload`;
