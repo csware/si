@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS `logs` (
   `taskId` int(11) NOT NULL,
   `testId` int(11) DEFAULT NULL,
   `userId` int(11) NOT NULL,
+  `additionaldata` LONGTEXT,
   PRIMARY KEY (`id`),
   KEY `FK32C5AFAE3F26C5` (`testId`),
   KEY `FK32C5AFB0B38AF7` (`userId`),

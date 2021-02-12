@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Giselle Rodriguez
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -47,5 +47,5 @@ public interface TaskNumberDAOIf {
 	 */
 	public List<TaskNumber> getTaskNumbersForTaskLocked(Task task, Participation participation);
 
-	public void assignTaskNumbersToSubmission(Submission submission, Participation participation);
+	public List<TaskNumber> assignTaskNumbersToSubmission(Submission submission, Participation participation);
 }

@@ -69,13 +69,16 @@ public class TaskNumberDAO extends AbstractDAO implements TaskNumberDAOIf {
 	}
 
 	@Override
-	public void assignTaskNumbersToSubmission(Submission submission, Participation participation) {
+	public List<TaskNumber> assignTaskNumbersToSubmission(Submission submission, Participation participation) {
 		// only assign new numbers if not already numbers exist
+		List<TaskNumber> taskNumbers = getTaskNumbersForSubmission(submission);
 		if (getTaskNumbersForSubmission(submission).isEmpty()) {
-			for (TaskNumber taskNumber : getTaskNumbersForTaskLocked(submission.getTask(), participation)) {
+			taskNumbers = getTaskNumbersForTaskLocked(submission.getTask(), participation);
+			for (TaskNumber taskNumber : taskNumbers) {
 				taskNumber.setSubmission(submission);
 				getSession().update(taskNumber);
 			}
 		}
+		return taskNumbers;
 	}
 }

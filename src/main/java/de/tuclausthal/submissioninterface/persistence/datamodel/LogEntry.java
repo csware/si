@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -48,10 +48,11 @@ public class LogEntry implements Serializable {
 	private String testOutput;
 	private String uploadFilename;
 	private byte[] upload;
+	private String additionalData;
 
 	public LogEntry() {}
 
-	public LogEntry(User user, Test test, Task task, LogAction logAction, Boolean result, String testOutput, String uploadFilename, byte[] upload) {
+	public LogEntry(User user, Test test, Task task, LogAction logAction, Boolean result, String testOutput, String additionalData) {
 		action = logAction.ordinal();
 		if (logAction.compareTo(LogAction.PERFORMED_TEST) == 0) {
 			this.result = result;
@@ -59,8 +60,7 @@ public class LogEntry implements Serializable {
 		}
 		this.user = user;
 		this.test = test;
-		this.upload = upload;
-		this.uploadFilename = uploadFilename;
+		this.additionalData = additionalData;
 		this.task = task;
 	}
 
@@ -219,5 +219,20 @@ public class LogEntry implements Serializable {
 	 */
 	public void setUploadFilename(String uploadFilename) {
 		this.uploadFilename = uploadFilename;
+	}
+
+	/**
+	 * @return the additionalData
+	 */
+	@Lob
+	public String getAdditionalData() {
+		return additionalData;
+	}
+
+	/**
+	 * @param additionalData the additionalData to set
+	 */
+	public void setAdditionalData(String additionalData) {
+		this.additionalData = additionalData;
 	}
 }

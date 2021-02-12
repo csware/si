@@ -19,7 +19,6 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -35,9 +34,13 @@ import java.util.Random;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
@@ -58,6 +61,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LogDAO;
+import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry;
 import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
 import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -65,6 +69,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
@@ -345,12 +350,16 @@ public class SubmitSolution extends HttpServlet {
 			}
 		}
 
-		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
+		File taskPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+		File path = new File(taskPath, String.valueOf(submission.getSubmissionid()));
 		if (path.exists() == false) {
 			path.mkdirs();
 		}
 
 		if (file != null) {
+			LogEntry logEntry = new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null);
+			File logPath = new File(taskPath, "logs" + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
+			logPath.mkdirs();
 			StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
 			Util.lowerCaseExtension(submittedFileName);
 			String fileName = null;
@@ -375,18 +384,21 @@ public class SubmitSolution extends HttpServlet {
 				}
 				fileName = m.group(1);
 			}
-			byte[] upload = null;
 			try {
 				handleUploadedFile(LOG, path, task, fileName, file);
-				ByteArrayOutputStream os = new ByteArrayOutputStream((int) file.getSize());
-				Util.copyInputStreamAndClose(file.getInputStream(), os);
-				upload = os.toByteArray();
+				try (FileOutputStream os = new FileOutputStream(new File(logPath, fileName))) {
+					Util.copyInputStreamAndClose(file.getInputStream(), os);
+				}
+				logEntry.setAdditionalData(Json.createObjectBuilder().add("filename", fileName).build().toString());
+				session.update(logEntry);
 			} catch (IOException e) {
 				if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 					submission.setLastModified(new Date());
 					submissionDAO.saveSubmission(submission);
 				}
 				LOG.error("Problem on processing uploaded file", e);
+				session.remove(logEntry);
+				Util.recursiveDelete(logPath);
 				tx.commit();
 				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
@@ -400,9 +412,8 @@ public class SubmitSolution extends HttpServlet {
 				submissionDAO.saveSubmission(submission);
 			}
 			tx.commit();
-			new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null, null, fileName, upload);
-			response.addIntHeader("SID", submission.getSubmissionid());
 
+			response.addIntHeader("SID", submission.getSubmissionid());
 			for (Test test : task.getTests()) {
 				if (test instanceof UMLConstraintTest && test.getTimesRunnableByStudents() > 0) {
 					response.addIntHeader("TID", test.getId());
@@ -429,25 +440,22 @@ public class SubmitSolution extends HttpServlet {
 				++i;
 			}
 			Collections.sort(resultIDs);
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			List<String> results = new ArrayList<>();
-			for (i = 0; i < resultIDs.size(); ++i) {
-				String result = String.valueOf(resultIDs.get(i));
-				results.add(result);
-				os.write(result.getBytes());
-				os.write("||".getBytes());
-			}
+			List<String> results = resultIDs.stream().map(String::valueOf).collect(Collectors.toList());
 			DAOFactory.ResultDAOIf(session).createResults(submission, results);
 
 			DAOFactory.PointsDAOIf(session).createMCPoints(allCorrect ? task.getMaxPoints() : 0, submission, "", task.getTaskGroup().getLecture().isRequiresAbhnahme() ? PointStatus.NICHT_ABGENOMMEN : PointStatus.ABGENOMMEN);
 
 			submission.setLastModified(new Date());
 			submissionDAO.saveSubmission(submission);
+			new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, Json.createObjectBuilder().add("mc", Json.createArrayBuilder(results)).build().toString());
 			tx.commit();
-			new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null, null, "!mc!", os.toByteArray());
 			response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
 		} else if (request.getParameter("textsolution") != null) {
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			LogEntry logEntry = new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null);
+			File logPath = new File(taskPath, "logs" + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
+			logPath.mkdirs();
+
+			JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
 			if (task.isADynamicTask()) {
 				int numberOfFields = task.getDynamicTaskStrategie(session).getNumberOfResultFields();
 				List<String> results = new ArrayList<>();
@@ -457,12 +465,18 @@ public class SubmitSolution extends HttpServlet {
 						result = "";
 					}
 					results.add(result);
-					os.write(result.getBytes());
-					os.write("||".getBytes());
 				}
 				DAOFactory.ResultDAOIf(session).createResults(submission, results);
-				DAOFactory.TaskNumberDAOIf(session).assignTaskNumbersToSubmission(submission, studentParticipation);
-				os.write("\n".getBytes());
+				List<TaskNumber> taskNumbers = DAOFactory.TaskNumberDAOIf(session).assignTaskNumbersToSubmission(submission, studentParticipation);
+				jsonBuilder.add("userResponses", Json.createArrayBuilder(results));
+				JsonArrayBuilder taskNumbersArrayBuilder = Json.createArrayBuilder();
+				for (TaskNumber tasknumber : taskNumbers) {
+					JsonObjectBuilder taskNumberBuilder = Json.createObjectBuilder();
+					taskNumberBuilder.add("number", tasknumber.getNumber());
+					taskNumberBuilder.add("origNumber", tasknumber.getOrigNumber());
+					taskNumbersArrayBuilder.add(taskNumberBuilder);
+				}
+				jsonBuilder.add("taskNumbers", taskNumbersArrayBuilder);
 			}
 
 			File uploadedFile = new File(path, "textloesung.txt");
@@ -472,11 +486,13 @@ public class SubmitSolution extends HttpServlet {
 				}
 			}
 
+			Util.recursiveCopy(uploadedFile, new File(logPath, "textloesung.txt"));
+			logEntry.setAdditionalData(jsonBuilder.add("filename", uploadedFile.getName()).build().toString());
+			session.save(logEntry);
+
 			submission.setLastModified(new Date());
 			submissionDAO.saveSubmission(submission);
 			tx.commit();
-			os.write(request.getParameter("textsolution").getBytes());
-			new LogDAO(session).createLogEntry(studentParticipation.getUser(), null, task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null, null, "!textsolution!", os.toByteArray());
 			response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
 		} else {
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {

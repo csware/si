@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -17,6 +17,8 @@
  */
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
+
+import javax.json.Json;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -36,14 +38,27 @@ public class LogDAO extends AbstractDAO {
 		super(session);
 	}
 
-	public void createLogEntry(User user, Test test, Task task, LogAction logAction, Boolean result, String testOutput) {
-		createLogEntry(user, test, task, logAction, result, testOutput, null, null);
+	public void createLogEntryForStudentTest(User user, Test test, Task task, Boolean result, String testOutput) {
+		createLogEntry(user, test, task, LogAction.PERFORMED_TEST, result, testOutput, null);
 	}
 
-	public void createLogEntry(User user, Test test, Task task, LogAction logAction, Boolean result, String testOutput, String filename, byte[] upload) {
+	public void createLogDeleteEntryTransaction(User user, Task task, String filename) {
+		Session session = getSession();
+		LogEntry logEntry = new LogEntry(user, null, task, LogAction.DELETE_FILE, null, null, Json.createObjectBuilder().add("filename", filename).build().toString());
+		session.save(logEntry);
+	}
+
+	public LogEntry createLogUploadEntryTransaction(User user, Task task, LogAction logaction, String additionalData) {
+		Session session = getSession();
+		LogEntry logEntry = new LogEntry(user, null, task, logaction, null, null, additionalData);
+		session.save(logEntry);
+		return logEntry;
+	}
+
+	private void createLogEntry(User user, Test test, Task task, LogAction logAction, Boolean result, String testOutput, String additionalData) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		LogEntry logEntry = new LogEntry(user, test, task, logAction, result, testOutput, filename, upload);
+		LogEntry logEntry = new LogEntry(user, test, task, logAction, result, testOutput, additionalData);
 		session.save(logEntry);
 		tx.commit();
 	}

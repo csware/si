@@ -42,7 +42,6 @@ import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LogDAO;
-import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry.LogAction;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -144,7 +143,7 @@ public class PerformStudentTest extends HttpServlet {
 			}
 			tx.commit();
 
-			new LogDAO(session).createLogEntry(participation.getUser(), test, test.getTask(), LogAction.PERFORMED_TEST, result.isTestPassed(), result.getTestOutput());
+			new LogDAO(session).createLogEntryForStudentTest(participation.getUser(), test, test.getTask(), result.isTestPassed(), result.getTestOutput());
 			request.setAttribute("testresult", result);
 			request.getRequestDispatcher("PerformStudentTestArgoUMLView").forward(request, response);
 			return;
@@ -196,7 +195,7 @@ public class PerformStudentTest extends HttpServlet {
 			}
 			tx.commit();
 
-			new LogDAO(session).createLogEntry(participation.getUser(), test, test.getTask(), LogAction.PERFORMED_TEST, result.isTestPassed(), result.getTestOutput());
+			new LogDAO(session).createLogEntryForStudentTest(participation.getUser(), test, test.getTask(), result.isTestPassed(), result.getTestOutput());
 			request.setAttribute("testresult", result);
 
 			request.getRequestDispatcher("PerformStudentTestResultView").forward(request, response);

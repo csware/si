@@ -89,3 +89,7 @@ ALTER TABLE `users` ADD `lastLoggedIn` DATETIME NULL AFTER `studiengang`;
 
 -- Make showing group members to students configurable
 ALTER TABLE `groups` ADD `membersvisibletostudents` bit(1) NOT NULL;
+
+-- don't store uploaded files in the database
+-- Execute ExtractUploadData
+ALTER TABLE `logs` ADD `additionaldata` LONGTEXT;
