@@ -300,8 +300,8 @@ public class TaskManagerView extends HttpServlet {
 				out.println("</ul>");
 			}
 			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?action=uploadTaskFile&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response) + "\">");
-			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie den Studierenden zum Lösen der Aufgabe zur Verfügung stellen möchten:</p>");
-			out.println("<INPUT TYPE=file NAME=file required=required>");
+			out.println("<p>Bitte wählen Sie eine oder mehrere Dateien aus, die Sie den Studierenden zum Lösen der Aufgabe zur Verfügung stellen möchten:</p>");
+			out.println("<INPUT TYPE=file NAME=file multiple required>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
 			out.println("</FORM>");
 
@@ -326,8 +326,8 @@ public class TaskManagerView extends HttpServlet {
 				out.println("</ul>");
 			}
 			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?action=uploadModelSolutionFile&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response) + "\">");
-			out.println("<p>Bitte wählen Sie eine Datei aus, die zur Musterlösung gehört bzw. diese darstellt:</p>");
-			out.println("<INPUT TYPE=file NAME=file required=required>");
+			out.println("<p>Bitte wählen Sie eine oder mehrere Dateien aus, die zur Musterlösung gehört bzw. diese darstellt:</p>");
+			out.println("<INPUT TYPE=file NAME=file multiple required>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
 			out.println("</FORM>");
 		}

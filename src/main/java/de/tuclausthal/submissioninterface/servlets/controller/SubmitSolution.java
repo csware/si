@@ -222,11 +222,20 @@ public class SubmitSolution extends HttpServlet {
 		if (contentType.toLowerCase(Locale.ENGLISH).startsWith(FileUploadBase.MULTIPART)) {
 			file = request.getPart("file");
 		}
-		if (file != null && file.getSize() > task.getMaxsize()) {
-			request.setAttribute("title", "Datei ist zu groß (maximum sind " + task.getMaxsize() + " Bytes)");
-			request.setAttribute("message", "<div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
-			request.getRequestDispatcher("MessageView").forward(request, response);
-			return;
+		if (file != null) {
+			if (!request.getParts().stream().allMatch(part -> part.getSize() <= task.getMaxsize())) {
+				request.setAttribute("title", "Datei ist zu groß (maximum sind " + task.getMaxsize() + " Bytes)");
+				request.setAttribute("message", "<div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
+			long fileParts = request.getParts().stream().filter(part -> "file".equals(part.getName())).count();
+			if (fileParts > 1 && fileParts != request.getParts().stream().filter(part -> "file".equals(part.getName())).map(part -> Util.getUploadFileName(part)).collect(Collectors.toSet()).size()) {
+				request.setAttribute("title", "Mehrere Dateien mit identischem Namen im Upload gefunden.");
+				request.setAttribute("message", "<div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
+				request.getRequestDispatcher("MessageView").forward(request, response);
+				return;
+			}
 		}
 
 		if (uploadFor > 0) {
@@ -360,58 +369,83 @@ public class SubmitSolution extends HttpServlet {
 			LogEntry logEntry = new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null);
 			File logPath = new File(taskPath, "logs" + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
 			logPath.mkdirs();
-			StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
-			Util.lowerCaseExtension(submittedFileName);
-			String fileName = null;
-			for (Pattern pattern : getTaskFileNamePatterns(task, uploadFor > 0)) {
-				Matcher m = pattern.matcher(submittedFileName);
-				if (!m.matches()) {
+			boolean skippedFiles = false;
+			Vector<String> uploadedFilenames = new Vector<>();
+			for (Part aFile : request.getParts()) {
+				if (!aFile.getName().equalsIgnoreCase("file")) {
+					continue;
+				}
+				StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(aFile));
+				Util.lowerCaseExtension(submittedFileName);
+				String fileName = null;
+				for (Pattern pattern : getTaskFileNamePatterns(task, uploadFor > 0)) {
+					Matcher m = pattern.matcher(submittedFileName);
+					if (!m.matches()) {
+						LOG.debug("File does not match pattern: file;" + submittedFileName + ";" + pattern.pattern());
+						skippedFiles = true;
+						fileName = null;
+						break;
+					}
+					fileName = m.group(1);
+				}
+				if (fileName == null) {
+					continue;
+				}
+				try {
+					handleUploadedFile(LOG, path, task, fileName, aFile);
+					try (FileOutputStream os = new FileOutputStream(new File(logPath, fileName))) {
+						Util.copyInputStreamAndClose(aFile.getInputStream(), os);
+					}
+					uploadedFilenames.add(fileName);
+				} catch (IOException e) {
 					if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 						submission.setLastModified(new Date());
 						submissionDAO.saveSubmission(submission);
 					}
-					LOG.debug("File does not match pattern: file;" + submittedFileName + ";" + pattern.pattern());
-					tx.commit();
-					template.printTemplateHeader("Ungültige Anfrage", task);
-					PrintWriter out = response.getWriter();
-					out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
-					if (uploadFor > 0) {
-						out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
+					LOG.error("Problem on processing uploaded file", e);
+					Util.recursiveDeleteEmptyDirectories(logPath);
+					if (!logPath.exists()) {
+						session.remove(logEntry);
+					} else {
+						logEntry.setAdditionalData(Json.createObjectBuilder().add("filenames", Json.createArrayBuilder(uploadedFilenames)).build().toString());
+						session.update(logEntry);
 					}
-					out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur Abgabeseite</a></div>");
+					tx.commit();
+					template.printTemplateHeader("Fehler beim Upload", task);
+					PrintWriter out = response.getWriter();
+					out.println("<div class=mid>Problem beim Speichern der Daten.</div>");
+					out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
 					template.printTemplateFooter();
 					return;
 				}
-				fileName = m.group(1);
-			}
-			try {
-				handleUploadedFile(LOG, path, task, fileName, file);
-				try (FileOutputStream os = new FileOutputStream(new File(logPath, fileName))) {
-					Util.copyInputStreamAndClose(file.getInputStream(), os);
-				}
-				logEntry.setAdditionalData(Json.createObjectBuilder().add("filename", fileName).build().toString());
-				session.update(logEntry);
-			} catch (IOException e) {
-				if (!submissionDAO.deleteIfNoFiles(submission, path)) {
-					submission.setLastModified(new Date());
-					submissionDAO.saveSubmission(submission);
-				}
-				LOG.error("Problem on processing uploaded file", e);
-				session.remove(logEntry);
-				Util.recursiveDelete(logPath);
-				tx.commit();
-				template.printTemplateHeader("Ungültige Anfrage", task);
-				PrintWriter out = response.getWriter();
-				out.println("<div class=mid>Problem beim Speichern der Daten.</div>");
-				out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
-				template.printTemplateFooter();
-				return;
 			}
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 				submission.setLastModified(new Date());
 				submissionDAO.saveSubmission(submission);
 			}
+			if (!uploadedFilenames.isEmpty()) {
+				logEntry.setAdditionalData(Json.createObjectBuilder().add("filenames", Json.createArrayBuilder(uploadedFilenames)).build().toString());
+				session.update(logEntry);
+			} else {
+				session.remove(logEntry);
+				Util.recursiveDeleteEmptyDirectories(logPath);
+			}
 			tx.commit();
+
+			if (skippedFiles) {
+				template.printTemplateHeader("Nicht alle Dateien wurden verarbeitet.", task);
+				PrintWriter out = response.getWriter();
+				if (uploadedFilenames.isEmpty()) {
+					out.println("Es konnte keine Datei verarbeitet werden, da der");
+				} else {
+					out.println("Nicht alle Dateien konnten verarbeitet werden, da mindestens ein");
+				}
+				out.println("Dateiname ungültig war bzw. nicht der Vorgabe entsprach (ist z.B. ein Klassenname vorgegeben, so muss die Datei genauso heißen, Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten).");
+				out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur Abgabeseite</a></div>");
+				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+				template.printTemplateFooter();
+				return;
+			}
 
 			response.addIntHeader("SID", submission.getSubmissionid());
 			for (Test test : task.getTests()) {

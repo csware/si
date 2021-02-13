@@ -53,8 +53,8 @@ public class PerformTestTutorFormView extends HttpServlet {
 			out.println("<option value=\"" + test.getId() + "\">" + Util.escapeHTML(test.getTestTitle()) + (test.isForTutors() ? " (Tutortest)" : "") + "</option>");
 		}
 		out.println("</select></p>");
-		out.println("<p>Bitte wählen Sie eine Datei aus, die Sie testen möchten.</p>");
-		out.println("<INPUT TYPE=file NAME=file required=required>");
+		out.println("<p>Bitte wählen Sie eine oder mehrere Dateien aus, die Sie testen möchten.</p>");
+		out.println("<INPUT TYPE=file NAME=file required multiple>");
 		out.println("<INPUT TYPE=submit VALUE=upload>");
 		out.println("</FORM>");
 

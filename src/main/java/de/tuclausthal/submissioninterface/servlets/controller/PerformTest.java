@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -126,6 +127,18 @@ public class PerformTest extends HttpServlet {
 			template.printTemplateFooter();
 			return;
 		}
+		long fileParts = request.getParts().stream().filter(part -> "file".equals(part.getName())).count();
+		if (fileParts == 0) {
+			request.setAttribute("title", "Keine Datei gefunden.");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+		if (fileParts > 1 && fileParts != request.getParts().stream().filter(part -> "file".equals(part.getName())).map(part -> Util.getUploadFileName(part)).collect(Collectors.toSet()).size()) {
+			request.setAttribute("title", "Mehrere Dateien mit identischem Namen im Upload gefunden.");
+			request.setAttribute("message", "<div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
 
 		File path = Util.createTemporaryDirectory("tutortest");
 		if (path == null) {
@@ -136,33 +149,39 @@ public class PerformTest extends HttpServlet {
 		}
 
 		// Process the uploaded item
-		Part file = request.getPart("file");
-		StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
-		Util.lowerCaseExtension(submittedFileName);
-		String fileName = null;
-		for (Pattern pattern : SubmitSolution.getTaskFileNamePatterns(task, false)) {
-			Matcher m = pattern.matcher(submittedFileName);
-			if (!m.matches()) {
+		for (Part file : request.getParts()) {
+			if (!file.getName().equalsIgnoreCase("file")) {
+				continue;
+			}
+			StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
+			Util.lowerCaseExtension(submittedFileName);
+			String fileName = null;
+			for (Pattern pattern : SubmitSolution.getTaskFileNamePatterns(task, false)) {
+				Matcher m = pattern.matcher(submittedFileName);
+				if (!m.matches()) {
+					template.printTemplateHeader("Ungültige Anfrage", task);
+					PrintWriter out = response.getWriter();
+					out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
+					out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
+					out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur Abgabeseite</a></div>");
+					template.printTemplateFooter();
+					Util.recursiveDelete(path);
+					return;
+				}
+				fileName = m.group(1);
+			}
+			try {
+				SubmitSolution.handleUploadedFile(LOG, path, task, fileName, file);
+			} catch (IOException e) {
+				LOG.error("Problem on processing uploaded file.", e);
 				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
-				out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
-				out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
+				out.println("Problem beim Speichern der Daten.");
 				out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur Abgabeseite</a></div>");
 				template.printTemplateFooter();
+				Util.recursiveDelete(path);
 				return;
 			}
-			fileName = m.group(1);
-		}
-		try {
-			SubmitSolution.handleUploadedFile(LOG, path, task, fileName, file);
-		} catch (IOException e) {
-			LOG.error("Problem on processing uploaded file.", e);
-			template.printTemplateHeader("Ungültige Anfrage", task);
-			PrintWriter out = response.getWriter();
-			out.println("Problem beim Speichern der Daten.");
-			out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur Abgabeseite</a></div>");
-			template.printTemplateFooter();
-			return;
 		}
 
 		request.setAttribute("task", test.getTask());

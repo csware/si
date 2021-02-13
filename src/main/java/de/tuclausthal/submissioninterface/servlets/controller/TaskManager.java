@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -192,28 +193,39 @@ public class TaskManager extends HttpServlet {
 			path.mkdirs();
 		}
 
-		Part file = request.getPart("file");
-		if (file == null) {
+		long fileParts = request.getParts().stream().filter(part -> "file".equals(part.getName())).count();
+		if (fileParts == 0) {
 			request.setAttribute("title", "Keine Datei gefunden.");
+			request.getRequestDispatcher("MessageView").forward(request, response);
+			return;
+		}
+		if (fileParts > 1 && fileParts != request.getParts().stream().filter(part -> "file".equals(part.getName())).map(part -> Util.getUploadFileName(part)).collect(Collectors.toSet()).size()) {
+			request.setAttribute("title", "Mehrere Dateien gleichen Namens gefunden.");
+			request.setAttribute("message", "<div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
 			request.getRequestDispatcher("MessageView").forward(request, response);
 			return;
 		}
 		// Process a file upload
 		Pattern pattern = Pattern.compile("^([a-zA-Z0-9_. -]+)$");
-		StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
-		Util.lowerCaseExtension(submittedFileName);
-		Matcher m = pattern.matcher(submittedFileName);
-		if (!m.matches()) {
-			LOG.debug("Filename did not match pattern: file;" + submittedFileName + ";" + pattern.pattern());
-			template.printTemplateHeader("Ungültige Anfrage");
-			out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
-			template.printTemplateFooter();
-			return;
-		}
-		String fileName = m.group(1);
+		for (Part file : request.getParts()) {
+			if (!file.getName().equalsIgnoreCase("file")) {
+				continue;
+			}
+			StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
+			Util.lowerCaseExtension(submittedFileName);
+			Matcher m = pattern.matcher(submittedFileName);
+			if (!m.matches()) {
+				LOG.debug("Filename did not match pattern: file;" + submittedFileName + ";" + pattern.pattern());
+				template.printTemplateHeader("Ungültige Anfrage");
+				out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
+				template.printTemplateFooter();
+				return;
+			}
+			String fileName = m.group(1);
 
-		File uploadedFile = new File(path, fileName);
-		Util.copyInputStreamAndClose(file.getInputStream(), new BufferedOutputStream(new FileOutputStream(uploadedFile)));
+			File uploadedFile = new File(path, fileName);
+			Util.copyInputStreamAndClose(file.getInputStream(), new BufferedOutputStream(new FileOutputStream(uploadedFile)));
+		}
 
 		response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
 	}

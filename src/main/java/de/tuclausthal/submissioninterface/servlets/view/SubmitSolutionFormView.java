@@ -167,8 +167,8 @@ public class SubmitSolutionFormView extends HttpServlet {
 		if (!"-".equals(task.getFilenameRegexp())) {
 			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid(), response) + "\">");
 			out.println(setWithUser.toString());
-			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie einsenden möchten.</p>");
-			out.println("<INPUT TYPE=file NAME=file required=required>");
+			out.println("<p>Bitte wählen Sie eine oder mehrere Dateien aus, die Sie einsenden möchten.</p>");
+			out.println("<INPUT TYPE=file NAME=file multiple required>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
 			out.println("<p>Hinweis: Bestehende Dateien werden überschrieben.</p>");
 			out.println("</FORM>");
