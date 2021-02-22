@@ -206,7 +206,7 @@ public class TaskManager extends HttpServlet {
 			return;
 		}
 		// Process a file upload
-		Pattern pattern = Pattern.compile("^([a-zA-Z0-9_. -]+)$");
+		Pattern pattern = Pattern.compile(Configuration.GLOBAL_FILENAME_REGEXP);
 		for (Part file : request.getParts()) {
 			if (!file.getName().equalsIgnoreCase("file")) {
 				continue;
@@ -216,8 +216,8 @@ public class TaskManager extends HttpServlet {
 			Matcher m = pattern.matcher(submittedFileName);
 			if (!m.matches()) {
 				LOG.debug("Filename did not match pattern: file;" + submittedFileName + ";" + pattern.pattern());
-				template.printTemplateHeader("Ungültige Anfrage");
-				out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt.");
+				template.printTemplateHeader("Dateiname ungültig");
+				out.println("Dateiname ungültig, Datei muss folgendem Regexp entsprechen: &quot;" + Util.escapeHTML(Configuration.GLOBAL_FILENAME_REGEXP) + "&quot;");
 				template.printTemplateFooter();
 				return;
 			}
@@ -259,21 +259,22 @@ public class TaskManager extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		if ("regexptest".equals(request.getParameter("action"))) {
-			response.setContentType("text/html");
+			response.setContentType("text/plain");
 			PrintWriter out = response.getWriter();
 			String regexp = request.getParameter("regexp");
 			if ("-".equals(regexp)) {
 				out.println("Dateiupload deaktiviert.");
 				return;
 			}
-			if (regexp == null || regexp.isEmpty()) {
-				regexp = "[a-zA-Z0-9_. -]+";
+			if (!Pattern.compile(Configuration.GLOBAL_FILENAME_REGEXP).matcher(request.getParameter("test")).matches()) {
+				out.println("nicht OK (blockiert vom globalen System-Regexp)");
+				return;
 			}
-			if (Pattern.compile("^(" + regexp + ")$").matcher(request.getParameter("test")).matches()) {
-				out.println("OK");
-			} else {
+			if (regexp != null && !regexp.isEmpty() && !Pattern.compile("^(" + regexp + ")$").matcher(request.getParameter("test")).matches()) {
 				out.println("nicht OK");
+				return;
 			}
+			out.println("OK");
 			return;
 		} else if ("dynamictaskhints".equals(request.getParameter("action"))) {
 			response.setContentType("text/html");

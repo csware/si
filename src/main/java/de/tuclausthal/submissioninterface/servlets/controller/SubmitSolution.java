@@ -545,7 +545,7 @@ public class SubmitSolution extends HttpServlet {
 
 	public static Vector<Pattern> getTaskFileNamePatterns(Task task, boolean ignoreTaskPattern) {
 		Vector<Pattern> patterns = new Vector<>(2);
-		patterns.add(Pattern.compile("^([a-zA-Z0-9_. -]+)$"));
+		patterns.add(Pattern.compile(Configuration.GLOBAL_FILENAME_REGEXP));
 		if (!(task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty() || ignoreTaskPattern)) {
 			patterns.add(Pattern.compile("^(" + task.getFilenameRegexp() + ")$"));
 		}
@@ -554,7 +554,7 @@ public class SubmitSolution extends HttpServlet {
 
 	private static Vector<Pattern> getArchiveFileNamePatterns(Task task) {
 		Vector<Pattern> patterns = new Vector<>(2);
-		patterns.add(Pattern.compile("^[/a-zA-Z0-9_ .-]+$"));
+		patterns.add(Pattern.compile(Configuration.GLOBAL_ARCHIVEFILENAME_REGEXP));
 		if (task.getArchiveFilenameRegexp() != null && !task.getArchiveFilenameRegexp().isEmpty()) {
 			if (task.getArchiveFilenameRegexp().startsWith("^")) {
 				patterns.add(Pattern.compile("^(" + task.getArchiveFilenameRegexp().substring(1) + ")$"));

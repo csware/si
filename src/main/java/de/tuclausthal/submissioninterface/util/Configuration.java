@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2013, 2015, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2013, 2015, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -33,6 +33,11 @@ import de.tuclausthal.submissioninterface.template.Template;
  * @author Sven Strickroth
  */
 public class Configuration {
+	final public static String GLOBAL_FILENAME_CHARS = "a-zA-Z0-9_. -";
+	final public static String GLOBAL_ARCHIVEFILENAME_CHARS = "/" + GLOBAL_FILENAME_CHARS;
+	final public static String GLOBAL_FILENAME_REGEXP = "^([" + GLOBAL_FILENAME_CHARS + "]+)$";
+	final public static String GLOBAL_ARCHIVEFILENAME_REGEXP = "^([" + GLOBAL_ARCHIVEFILENAME_CHARS + "]+)$";
+
 	static private Configuration instance = null;
 	private Constructor<Template> templateConstructor;
 	private String dataPath;

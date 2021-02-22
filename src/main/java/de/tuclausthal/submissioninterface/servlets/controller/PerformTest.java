@@ -159,7 +159,7 @@ public class PerformTest extends HttpServlet {
 			for (Pattern pattern : SubmitSolution.getTaskFileNamePatterns(task, false)) {
 				Matcher m = pattern.matcher(submittedFileName);
 				if (!m.matches()) {
-					template.printTemplateHeader("Ungültige Anfrage", task);
+					template.printTemplateHeader("Dateiname ungültig", task);
 					PrintWriter out = response.getWriter();
 					out.println("Dateiname ungültig bzw. entspricht nicht der Vorgabe (ist ein Klassenname vorgegeben, so muss die Datei genauso heißen).<br>Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten.");
 					out.println("<br>Für Experten: Der Dateiname muss dem folgenden regulären Ausdruck genügen: " + Util.escapeHTML(pattern.pattern()));
