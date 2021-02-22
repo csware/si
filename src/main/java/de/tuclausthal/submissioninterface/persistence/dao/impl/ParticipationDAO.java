@@ -55,12 +55,12 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 	}
 
 	@Override
-	public Participation createParticipation(User user, Lecture lecture, ParticipationRole type) {
+	public void createParticipation(User user, Lecture lecture, ParticipationRole type) {
 		Session session = getSession();
 		Participation participation = null;
-
-		// try to load an existing participation and lock it (or lock it in advance, so that nobody can create it in another thread)
-		participation = getParticipationLocked(user, lecture);
+		session.lock(user, LockModeType.PESSIMISTIC_WRITE);
+		// try to load an existing participation, this is thread-safe as the user is locked first
+		participation = getParticipation(user, lecture);
 		if (participation == null) {
 			participation = new Participation();
 			participation.setUser(user);
@@ -68,8 +68,6 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 		}
 		participation.setRoleType(type);
 		session.saveOrUpdate(participation);
-
-		return participation;
 	}
 
 	@Override

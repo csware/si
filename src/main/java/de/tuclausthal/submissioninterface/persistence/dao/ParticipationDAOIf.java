@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -37,9 +37,8 @@ public interface ParticipationDAOIf {
 	 * @param user the user
 	 * @param lecture the lecture
 	 * @param type the role-type
-	 * @return the (new or updated) participation
 	 */
-	public Participation createParticipation(User user, Lecture lecture, ParticipationRole type);
+	public void createParticipation(User user, Lecture lecture, ParticipationRole type);
 
 	/**
 	 * Fetch a participation for a user in a specific lecture

@@ -31,7 +31,6 @@ import org.hibernate.Transaction;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -61,19 +60,15 @@ public class SubscribeToLecture extends HttpServlet {
 			return;
 		}
 
+		if (lecture.getSemester() != Util.getCurrentSemester()) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
+
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Transaction tx = session.beginTransaction();
-		Participation participation = participationDAO.getParticipationLocked(RequestAdapter.getUser(request), lecture);
-		if (participation != null) {
-			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
-		} else if (lecture.getSemester() != Util.getCurrentSemester()) {
-			tx.commit();
-			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
-		} else {
-			participationDAO.createParticipation(RequestAdapter.getUser(request), lecture, ParticipationRole.NORMAL);
-			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
-		}
+		participationDAO.createParticipation(RequestAdapter.getUser(request), lecture, ParticipationRole.NORMAL);
+		tx.commit();
+		response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
 	}
 }
