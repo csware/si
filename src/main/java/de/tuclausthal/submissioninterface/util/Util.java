@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.time.Clock;
 import java.time.ZonedDateTime;
@@ -419,16 +420,11 @@ public final class Util {
 	 * @return the temporary directory or null on error
 	 */
 	public static File createTemporaryDirectory(String prefix) {
-		File temp;
 		try {
-			temp = File.createTempFile(prefix, null);
-			if (temp.delete() != true || temp.mkdirs() != true) {
-				temp = null;
-			}
+			return Files.createTempDirectory(prefix).toFile();
 		} catch (IOException e) {
-			temp = null;
 		}
-		return temp;
+		return null;
 	}
 
 	/**
