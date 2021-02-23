@@ -20,7 +20,6 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -152,7 +151,7 @@ public class TestManager extends HttpServlet {
 				return;
 			}
 			File uploadedFile = new File(path, "musterloesung" + test.getId() + ".xmi");
-			Util.copyInputStreamAndClose(file.getInputStream(), new BufferedOutputStream(new FileOutputStream(uploadedFile)));
+			Util.copyInputStreamAndClose(file.getInputStream(), new FileOutputStream(uploadedFile));
 
 			test.setTimesRunnableByStudents(timesRunnableByStudents);
 			test.setForTutors(tutortest);
@@ -190,7 +189,7 @@ public class TestManager extends HttpServlet {
 				return;
 			}
 			File uploadedFile = new File(path, "junittest" + test.getId() + ".jar");
-			Util.copyInputStreamAndClose(file.getInputStream(), new BufferedOutputStream(new FileOutputStream(uploadedFile)));
+			Util.copyInputStreamAndClose(file.getInputStream(), new FileOutputStream(uploadedFile));
 
 			test.setTimesRunnableByStudents(timesRunnableByStudents);
 			test.setMainClass(mainclass);

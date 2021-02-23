@@ -18,7 +18,6 @@
 
 package de.tuclausthal.submissioninterface.util;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -512,7 +511,7 @@ public final class Util {
 		if (fileName.toLowerCase().endsWith(".java")) {
 			uploadedFile = File.createTempFile("upload", null, path);
 		}
-		copyInputStreamAndClose(item.getInputStream(), new BufferedOutputStream(new FileOutputStream(uploadedFile)));
+		copyInputStreamAndClose(item.getInputStream(), new FileOutputStream(uploadedFile));
 		// extract defined package in java-files
 		if (fileName.toLowerCase().endsWith(".java")) {
 			NormalizerIf stripComments = new StripCommentsNormalizer();
