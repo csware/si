@@ -20,12 +20,10 @@ package de.tuclausthal.submissioninterface.util;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -325,11 +323,8 @@ public final class Util {
 			}
 			return;
 		}
-		try (BufferedReader in = new BufferedReader(new FileReader(fromFile)); BufferedWriter out = new BufferedWriter(new FileWriter(toFile))) {
-			int c;
-			while ((c = in.read()) != -1) {
-				out.write(c);
-			}
+		try (FileInputStream in = new FileInputStream(fromFile); FileOutputStream out = new FileOutputStream(toFile)) {
+			copyInputStreamAndClose(in, out);
 		}
 	}
 
