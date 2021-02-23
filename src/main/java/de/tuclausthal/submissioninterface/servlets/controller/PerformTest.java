@@ -144,9 +144,6 @@ public class PerformTest extends HttpServlet {
 		if (path == null) {
 			throw new IOException("Failed to create tempdir!");
 		}
-		if (path.exists() == false) {
-			path.mkdirs();
-		}
 
 		// Process the uploaded item
 		for (Part file : request.getParts()) {

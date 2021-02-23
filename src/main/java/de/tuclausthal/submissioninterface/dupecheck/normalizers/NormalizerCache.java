@@ -56,7 +56,7 @@ public class NormalizerCache {
 	 * @throws IOException
 	 */
 	synchronized public StringBuffer normalize(String file) throws IOException {
-		File tempFile = new File(cacheDirectoty.getPath(), file);
+		File tempFile = new File(cacheDirectoty, file);
 		if (tempFile.exists()) {
 			return Util.loadFile(tempFile);
 		}
