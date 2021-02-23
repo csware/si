@@ -183,7 +183,25 @@ public final class Util {
 		return (result.toString());
 	}
 
-	public static final void copyInputStreamAndClose(InputStream in, OutputStream out) throws IOException {
+	public static final void copyInputStreamAndClose(File inputFile, File outputFile) throws IOException {
+		try (FileInputStream in = new FileInputStream(inputFile)) {
+			copyInputStreamAndClose(in, outputFile);
+		}
+	}
+
+	public static final void copyInputStreamAndClose(InputStream in, File outputfile) throws IOException {
+		try (FileOutputStream os = new FileOutputStream(outputfile)) {
+			copyInputStreamAndClose(in, os);
+		}
+	}
+
+	public static final void copyInputStreamAndClose(File inputFile, OutputStream out) throws IOException {
+		try (FileInputStream in = new FileInputStream(inputFile)) {
+			copyInputStreamAndClose(in, out);
+		}
+	}
+
+	private static final void copyInputStreamAndClose(InputStream in, OutputStream out) throws IOException {
 		try {
 			byte[] buffer = new byte[8192];
 			int len;
@@ -322,9 +340,7 @@ public final class Util {
 			}
 			return;
 		}
-		try (FileInputStream in = new FileInputStream(fromFile); FileOutputStream out = new FileOutputStream(toFile)) {
-			copyInputStreamAndClose(in, out);
-		}
+		copyInputStreamAndClose(fromFile, toFile);
 	}
 
 	/**
@@ -339,7 +355,7 @@ public final class Util {
 			try {
 				if (file.isFile()) {
 					out.putNextEntry(new ZipEntry(relativePath + file.getName()));
-					Util.copyInputStreamAndClose(new FileInputStream(file), out);
+					copyInputStreamAndClose(file, out);
 				} else {
 					recursivelyZip(out, file, relativePath + file.getName() + System.getProperty("file.separator"));
 				}
@@ -511,7 +527,7 @@ public final class Util {
 		if (fileName.toLowerCase().endsWith(".java")) {
 			uploadedFile = File.createTempFile("upload", null, path);
 		}
-		copyInputStreamAndClose(item.getInputStream(), new FileOutputStream(uploadedFile));
+		copyInputStreamAndClose(item.getInputStream(), uploadedFile);
 		// extract defined package in java-files
 		if (fileName.toLowerCase().endsWith(".java")) {
 			NormalizerIf stripComments = new StripCommentsNormalizer();

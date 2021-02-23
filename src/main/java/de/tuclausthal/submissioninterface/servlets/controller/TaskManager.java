@@ -19,7 +19,6 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -223,7 +222,7 @@ public class TaskManager extends HttpServlet {
 			String fileName = m.group(1);
 
 			File uploadedFile = new File(path, fileName);
-			Util.copyInputStreamAndClose(file.getInputStream(), new FileOutputStream(uploadedFile));
+			Util.copyInputStreamAndClose(file.getInputStream(), uploadedFile);
 		}
 
 		response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
