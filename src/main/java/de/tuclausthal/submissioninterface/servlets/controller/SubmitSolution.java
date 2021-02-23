@@ -596,7 +596,7 @@ public class SubmitSolution extends HttpServlet {
 					// i.e. filename not valid on system
 					continue;
 				}
-				if (!entry.getName().toLowerCase().endsWith(".class")) {
+				if (!entry.getName().toLowerCase().endsWith(".class") && !entry.getName().startsWith("__MACOSX/")) {
 					Util.lowerCaseExtension(archivedFileName);
 					// TODO: relocate java-files from jar/zip archives?
 					File fileToCreate = new File(submissionPath, archivedFileName.toString());
