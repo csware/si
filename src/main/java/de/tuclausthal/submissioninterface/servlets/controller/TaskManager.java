@@ -347,6 +347,7 @@ public class TaskManager extends HttpServlet {
 				task.setDescription(request.getParameter("description"));
 				task.setMaxSubmitters(Util.parseInteger(request.getParameter("maxSubmitters"), 1));
 				task.setAllowSubmittersAcrossGroups(request.getParameter("allowSubmittersAcrossGroups") != null);
+				task.setMaxsize(Math.max(1024, Math.min(Configuration.MAX_UPLOAD_SIZE, 1024 * Util.parseInteger(request.getParameter("maxfilesize"), 0))));
 				if (!task.isMCTask() && !task.isADynamicTask()) {
 					task.setFilenameRegexp(request.getParameter("filenameregexp"));
 					task.setArchiveFilenameRegexp(request.getParameter("archivefilenameregexp"));

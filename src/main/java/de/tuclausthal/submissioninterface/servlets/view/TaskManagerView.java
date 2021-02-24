@@ -193,6 +193,10 @@ public class TaskManagerView extends HttpServlet {
 				out.println("<td><input type=text name=featuredfiles size=100 value=\"" + Util.escapeHTML(task.getFeaturedFiles()) + "\"> <a href=\"#\" onclick=\"$('#featuredfileshelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=featuredfileshelp><b>Hilfe:</b><br>Dieser reguläre Ausdruck bestimmt welche Dateien bei den Tutoren automatisch aufgeklappt sind. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = keine Dateien aufklappen</span></td>");
 				out.println("</tr>");
 			}
+			out.println("<tr>");
+			out.println("<th>Maximale Dateigröße (in KiB):</th>");
+			out.println("<td><input type=text size=15 required id=\"maxfilesize\" name=maxfilesize value=\"" + (task.getMaxsize() / 1024) + "\"> <a href=\"#\" onclick=\"$('#maxfilesizehelp').toggle(); return false;\">(?)</a><br><div style=\"display:none;\" id=maxfilesizehelp><b>Hilfe:</b><br>maximale Dateigröße bzw. Länge des Textfeldes, das akzeptiert wird (Systemlimit: " + (Configuration.MAX_UPLOAD_SIZE / 1024 / 1024) + " MiB). Muss &gt;= 1 KiB sein!</div></td>");
+			out.println("</tr>");
 		}
 		if (task.getTaskid() != 0 && !task.isADynamicTask() && !task.isMCTask()) {
 			out.println("<tr>");
