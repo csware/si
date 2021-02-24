@@ -33,7 +33,7 @@ import de.tuclausthal.submissioninterface.template.Template;
  * @author Sven Strickroth
  */
 public class Configuration {
-	final public static String GLOBAL_FILENAME_CHARS = "a-zA-Z0-9_. -";
+	final public static String GLOBAL_FILENAME_CHARS = "0-9._`´#§$%^&() \\p{L}}\\p{Sc}}\\p{No}[\\p{Sm}}\\p{So}&&[^<>:|]]-";
 	final public static String GLOBAL_ARCHIVEFILENAME_CHARS = "/" + GLOBAL_FILENAME_CHARS;
 	final public static String GLOBAL_FILENAME_REGEXP = "^([" + GLOBAL_FILENAME_CHARS + "]+)$";
 	final public static String GLOBAL_ARCHIVEFILENAME_REGEXP = "^([" + GLOBAL_ARCHIVEFILENAME_CHARS + "]+)$";

@@ -19,10 +19,13 @@
 package de.tuclausthal.submissioninterface.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
 
@@ -202,5 +205,71 @@ public class UtilTest {
 		assertEquals("b%20la+some-_%23thing.test", Util.encodeURLPathComponent("b la+some-_#thing.test"));
 		assertEquals("b%20la+some/thing.test", Util.encodeURLPathComponent("b la+some/thing.test"));
 		assertEquals("%25UTF-8%C3%BC/Hello%20World.java", Util.encodeURLPathComponent("%UTF-8ü/Hello World.java"));
+	}
+
+	@Test
+	public void testValidFilenameChars() {
+		Pattern pattern = Pattern.compile(Configuration.GLOBAL_FILENAME_REGEXP);
+
+		// need to pass:
+		assertTrue(pattern.matcher("a-zöäüA-ZÖÄ`´Üß+()%&$§=#~0-9_. -").matches());
+		assertTrue(pattern.matcher("Hal lo.").matches());
+		assertTrue(pattern.matcher("Hal lo.~").matches()); // included in \\p{Sm}
+		assertTrue(pattern.matcher("Hal lo.-").matches());
+		assertTrue(pattern.matcher("Hal lo^").matches());
+		assertTrue(pattern.matcher("Hal lo°").matches()); // included in \\p{Sm}
+		assertTrue(pattern.matcher("Hal lo_").matches());
+		assertTrue(pattern.matcher("Hal lo#").matches());
+		assertTrue(pattern.matcher("Hal lo$").matches());
+		assertTrue(pattern.matcher("Hal lo+").matches()); // included in \\p{Sm}
+		assertTrue(pattern.matcher("Hal lo)").matches());
+		assertTrue(pattern.matcher("Hal lo=").matches()); // included in \\p{Sm}
+		assertTrue(pattern.matcher("Hallo").matches());
+		assertTrue(pattern.matcher("Halloü").matches());
+		assertTrue(pattern.matcher("HalloŇ").matches());
+		assertTrue(pattern.matcher("HalloḦ").matches());
+		assertTrue(pattern.matcher("Hallo𑀗").matches());
+		assertTrue(pattern.matcher("HalloΕ").matches());
+		assertTrue(pattern.matcher("Halloä").matches());
+		assertTrue(pattern.matcher("Halloé").matches());
+		assertTrue(pattern.matcher("Hallo€").matches()); // included in \\p{Sc}
+		assertTrue(pattern.matcher("Hallo²").matches()); // included in \\p{No}
+		assertTrue(pattern.matcher("Hallo❻").matches()); // included in \\p{No}
+
+		// don't care:
+		/*
+		assertTrue(pattern.matcher("Hallo𒁖").matches() || true);
+		assertTrue(pattern.matcher("Hallo⛄").matches() || true); // included in \\p{So}
+		assertTrue(pattern.matcher("Hallo🙄").matches() || true);
+		assertTrue(pattern.matcher("Hallo🙃").matches() || true);
+		assertTrue(pattern.matcher("Hallo⏵").matches() || true);
+		assertTrue(pattern.matcher("Hallo🧷").matches() || true);
+		assertTrue(pattern.matcher("Hallo⋜").matches() || true); // included in \\p{Sm}
+		assertTrue(pattern.matcher("Hallo🚡").matches() || true);
+		assertTrue(pattern.matcher("Hallo۞").matches() || true); // included in \\p{So}
+		assertTrue(pattern.matcher("Hallo©").matches() || true); // included in \\p{So}
+		assertTrue(pattern.matcher("Hallo𝅂").matches() || true); // included in \\p{So}
+		*/
+
+		// must fail:
+		assertFalse(pattern.matcher("Hal\blo").matches());
+		assertFalse(pattern.matcher("Hal\tlo").matches());
+		assertFalse(pattern.matcher("<fjf").matches()); // included in \\p{Sm}
+		assertFalse(pattern.matcher("f|jf").matches()); // included in \\p{Sm}
+		assertFalse(pattern.matcher("d:jf").matches());
+		assertFalse(pattern.matcher("d;jf").matches());
+		assertFalse(pattern.matcher("d?jf").matches());
+		assertFalse(pattern.matcher("fjf\"jh").matches());
+		assertFalse(pattern.matcher("d*").matches());
+		assertFalse(pattern.matcher("d{d").matches());
+		assertFalse(pattern.matcher("d!d").matches());
+		assertFalse(pattern.matcher("s]fg").matches());
+		assertFalse(pattern.matcher("jh>s").matches()); // included in \\p{Sm}
+		assertFalse(pattern.matcher("jdd'").matches());
+		assertFalse(pattern.matcher("d\u0000s").matches());
+		assertFalse(pattern.matcher("s\u0006c").matches());
+		assertFalse(pattern.matcher("a/b").matches());
+		assertFalse(pattern.matcher("Hal lo/").matches());
+		assertFalse(pattern.matcher("Hal lo\\").matches());
 	}
 }
