@@ -55,7 +55,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for performing a test (tutor or advisor)
  * @author Sven Strickroth
  */
-@MultipartConfig(maxFileSize = 100 * 1024 * 1024)
+@MultipartConfig(maxFileSize = Configuration.MAX_UPLOAD_SIZE)
 public class PerformTest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	final static private Logger LOG = LoggerFactory.getLogger(PerformTest.class);

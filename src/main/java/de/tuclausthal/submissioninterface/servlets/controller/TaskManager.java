@@ -68,7 +68,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for managing (add, edit, remove) tasks by advisors
  * @author Sven Strickroth
  */
-@MultipartConfig(maxFileSize = 100 * 1024 * 1024)
+@MultipartConfig(maxFileSize = Configuration.MAX_UPLOAD_SIZE)
 public class TaskManager extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	final static private Logger LOG = LoggerFactory.getLogger(TaskManager.class);

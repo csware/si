@@ -56,7 +56,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for managing (add, edit, remove) function tests by advisors
  * @author Sven Strickroth
  */
-@MultipartConfig(maxFileSize = 100 * 1024 * 1024)
+@MultipartConfig(maxFileSize = Configuration.MAX_UPLOAD_SIZE)
 public class TestManager extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

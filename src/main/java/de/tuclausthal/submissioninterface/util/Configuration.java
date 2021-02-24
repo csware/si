@@ -38,6 +38,8 @@ public class Configuration {
 	final public static String GLOBAL_FILENAME_REGEXP = "^([" + GLOBAL_FILENAME_CHARS + "]+)$";
 	final public static String GLOBAL_ARCHIVEFILENAME_REGEXP = "^([" + GLOBAL_ARCHIVEFILENAME_CHARS + "]+)$";
 
+	final public static int MAX_UPLOAD_SIZE = 100 * 1024 * 1024;
+
 	static private Configuration instance = null;
 	private Constructor<Template> templateConstructor;
 	private String dataPath;

@@ -38,13 +38,14 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Controller-Servlet for managing (add, edit, remove) advanced Java IO tests steps by advisors
  * @author Sven Strickroth
  */
-@MultipartConfig(maxFileSize = 100 * 1024 * 1024)
+@MultipartConfig(maxFileSize = Configuration.MAX_UPLOAD_SIZE)
 public class JavaAdvancedIOTestManager extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
