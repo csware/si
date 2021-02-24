@@ -392,7 +392,9 @@ public class SubmitSolution extends HttpServlet {
 					continue;
 				}
 				try {
-					handleUploadedFile(LOG, path, task, fileName, aFile);
+					if (!handleUploadedFile(LOG, path, task, fileName, aFile)) {
+						skippedFiles = true;
+					}
 					try (FileOutputStream os = new FileOutputStream(new File(logPath, fileName))) {
 						Util.copyInputStreamAndClose(aFile.getInputStream(), os);
 					}
@@ -565,8 +567,9 @@ public class SubmitSolution extends HttpServlet {
 		return patterns;
 	}
 
-	public static void handleUploadedFile(Logger log, File submissionPath, Task task, String fileName, Part item) throws IOException {
+	public static boolean handleUploadedFile(Logger log, File submissionPath, Task task, String fileName, Part item) throws IOException {
 		if (!"-".equals(task.getArchiveFilenameRegexp()) && (fileName.endsWith(".zip") || fileName.endsWith(".jar"))) {
+			boolean skippedFiles = false;
 			Vector<Pattern> patterns = getArchiveFileNamePatterns(task);
 			ZipInputStream zipFile = new ZipInputStream(item.getInputStream());
 			ZipEntry entry = null;
@@ -585,11 +588,13 @@ public class SubmitSolution extends HttpServlet {
 				}
 				if (!fileNameOk || archivedFileName.length() == 0 || archivedFileName.charAt(0) == '/' || archivedFileName.charAt(archivedFileName.length() - 1) == '/') {
 					log.debug("Ignored entry: " + archivedFileName);
+					skippedFiles = true;
 					continue;
 				}
 				try {
 					if (!new File(submissionPath, archivedFileName.toString()).getCanonicalPath().startsWith(submissionPath.getCanonicalPath())) {
 						log.debug("Ignored entry: " + archivedFileName + "; tries to escape submissiondir");
+						skippedFiles = true;
 						continue;
 					}
 				} catch (IOException e) {
@@ -607,8 +612,10 @@ public class SubmitSolution extends HttpServlet {
 				}
 			}
 			zipFile.close();
-		} else {
-			Util.saveAndRelocateJavaFile(item, submissionPath, fileName);
+			return !skippedFiles;
 		}
+
+		Util.saveAndRelocateJavaFile(item, submissionPath, fileName);
+		return true;
 	}
 }
