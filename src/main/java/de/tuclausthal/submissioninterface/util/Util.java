@@ -49,6 +49,9 @@ import javax.servlet.http.Part;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.ParameterParser;
 import org.apache.commons.io.FilenameUtils;
+import org.owasp.html.Handler;
+import org.owasp.html.HtmlSanitizer;
+import org.owasp.html.HtmlStreamRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,16 +127,22 @@ public final class Util {
 		if (message == null) {
 			return "";
 		}
-		String regexp = "(?is:<\\s*(!--.*?--|/?\\s*a(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*b(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*blockquote(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*br(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*sup(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*sub(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*center(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*div(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?dl\\s*/?|/?dd\\s*/?|/?dt\\s*/?|/?\\s*em(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*font(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?h1\\s*/?|/?h2\\s*/?|/?\\s*h3(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?h4\\s*/?|/?h5\\s*/?|/?h6\\s*/?|/?\\s*hr(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*i(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*img(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*li(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*ol(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*p(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*pre(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*span(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*strong(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*table(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?tbody\\s*/?|/?\\s*td(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*th(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*tr(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*tt(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?|/?\\s*ul(\\s+[\\w:]+\\s*=\\s*(\"[^\"]*\"|'[^']*'))*\\s*/?)\\s*>)";
-		String string = escapeHTML(message.replaceAll(regexp, "\022$1\024"));
-		Pattern pattern = Pattern.compile("\022([^\024]*)\024");
-		Matcher matcher = pattern.matcher(string);
-		StringBuffer returnString = new StringBuffer(string.length() + 50);
-		while (matcher.find()) {
-			matcher.appendReplacement(returnString, "<" + matcher.toMatchResult().group(1).replace("&gt;", ">").replace("&lt;", "<").replace("&quot;", "\"") + ">");
-		}
-		matcher.appendTail(returnString);
-		return returnString.toString().replaceAll("(?i:&amp;([a-z#0-9]+);)", "&$1;");
+		StringBuilder sb = new StringBuilder();
+		HtmlStreamRenderer renderer = HtmlStreamRenderer.create(sb,
+				new Handler<IOException>() {
+					public void handle(IOException ex) {
+						// System.out suppresses IOExceptions
+						throw new AssertionError(null, ex);
+					}
+				},
+				new Handler<String>() {
+					public void handle(String x) {
+						throw new AssertionError(x);
+					}
+				});
+		// Use the policy defined above to sanitize the HTML.
+		HtmlSanitizer.sanitize(message, HTMLSanitizerPolicy.POLICY_DEFINITION.apply(renderer));
+		return sb.toString();
 	}
 
 	public static String textToHTML(String message) {
