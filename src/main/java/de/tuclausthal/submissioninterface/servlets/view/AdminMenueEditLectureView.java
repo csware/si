@@ -71,7 +71,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 					User user = participation.getUser();
 					out.println("<tr>");
 					out.println("<td>" + Util.escapeHTML(user.getFullName()) + "</td>");
-					out.println("<td><a onclick=\"return sendAsPost(this, 'Wirklich degradieren?')\" href=\"" + Util.generateHTMLLink("?action=removeUser&lecture=" + lecture.getId() + "&userid=" + user.getUid(), response) + "\">degradieren</a></td>");
+					out.println("<td><a onclick=\"return sendAsPost(this, 'Wirklich degradieren?')\" href=\"" + Util.generateHTMLLink("?action=removeUser&lecture=" + lecture.getId() + "&participationid=" + participation.getId(), response) + "\">degradieren</a></td>");
 					out.println("</tr>");
 				}
 			}
@@ -95,7 +95,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 					User user = participation.getUser();
 					out.println("<tr>");
 					out.println("<td>" + Util.escapeHTML(user.getFullName()) + "</td>");
-					out.println("<td><a onclick=\"return sendAsPost(this, 'Wirklich degradieren?')\" href=\"" + Util.generateHTMLLink("?action=removeUser&lecture=" + lecture.getId() + "&userid=" + user.getUid(), response) + "\">degradieren</a></td>");
+					out.println("<td><a onclick=\"return sendAsPost(this, 'Wirklich degradieren?')\" href=\"" + Util.generateHTMLLink("?action=removeUser&lecture=" + lecture.getId() + "&participationid=" + participation.getId(), response) + "\">degradieren</a></td>");
 					out.println("</tr>");
 				}
 			}
@@ -116,12 +116,12 @@ public class AdminMenueEditLectureView extends HttpServlet {
 		out.println("<input type=hidden name=action value=addUser>");
 		out.println("<input type=hidden name=type value=" + type + ">");
 		out.println("<input type=hidden name=lecture value=" + lecture.getId() + ">");
-		out.println("<select name=userid required=required>");
+		out.println("<select name=participationid required>");
 		while (iterator.hasNext()) {
 			Participation participation = iterator.next();
 			if (participation.getRoleType() == ParticipationRole.NORMAL) {
 				User user = participation.getUser();
-				out.println("<option value=" + user.getUid() + ">" + Util.escapeHTML(user.getFullName()));
+				out.println("<option value=" + participation.getId() + ">" + Util.escapeHTML(user.getFullName()));
 			}
 		}
 		out.println("</select>");

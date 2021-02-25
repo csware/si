@@ -65,9 +65,9 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 			participation = new Participation();
 			participation.setUser(user);
 			participation.setLecture(lecture);
+			participation.setRoleType(type);
+			session.save(participation);
 		}
-		participation.setRoleType(type);
-		session.saveOrUpdate(participation);
 	}
 
 	@Override

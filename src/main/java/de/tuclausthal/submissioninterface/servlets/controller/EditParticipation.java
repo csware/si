@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
 
+import javax.persistence.LockModeType;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -59,19 +60,20 @@ public class EditParticipation extends HttpServlet {
 			return;
 		}
 
+		if (request.getParameter("type") == null) {
+			response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
+			return;
+		}
+
 		Transaction tx = session.beginTransaction();
-		if (request.getParameter("type") != null && request.getParameter("type").equals("advisor") && callerParticipation.getUser().isSuperUser()) {
-			participationDAO.createParticipation(participation.getUser(), participation.getLecture(), ParticipationRole.ADVISOR);
-		} else if (request.getParameter("type") != null && request.getParameter("type").equals("tutor")) {
-			participationDAO.createParticipation(participation.getUser(), participation.getLecture(), ParticipationRole.TUTOR);
+		session.refresh(participation, LockModeType.PESSIMISTIC_WRITE);
+		if ("tutor".equals(request.getParameter("type"))) {
+			participation.setRoleType(ParticipationRole.TUTOR);
 		} else {
-			participationDAO.createParticipation(participation.getUser(), participation.getLecture(), ParticipationRole.NORMAL);
+			participation.setRoleType(ParticipationRole.NORMAL);
 		}
+		participationDAO.saveParticipation(participation);
 		tx.commit();
-		if ("admin".equals(request.getParameter("goback"))) {
-			response.sendRedirect(Util.generateRedirectURL("AdminMenue?action=showLecture&lecture=" + callerParticipation.getLecture().getId(), response));
-		} else {
-			response.sendRedirect(Util.generateRedirectURL("ShowLecture?action=showLecture&lecture=" + callerParticipation.getLecture().getId(), response));
-		}
+		response.sendRedirect(Util.generateRedirectURL("ShowLecture?action=showLecture&lecture=" + callerParticipation.getLecture().getId(), response));
 	}
 }

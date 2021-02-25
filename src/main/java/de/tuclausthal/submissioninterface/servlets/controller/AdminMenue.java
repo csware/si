@@ -34,6 +34,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
@@ -143,28 +144,27 @@ public class AdminMenue extends HttpServlet {
 			}
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL("AdminMenue?action=showAdminUsers", response));
-		} else if (("addUser".equals(request.getParameter("action")) || "removeUser".equals(request.getParameter("action"))) && request.getParameter("lecture") != null && request.getParameter("userid") != null) {
+		} else if (("addUser".equals(request.getParameter("action")) || "removeUser".equals(request.getParameter("action"))) && request.getParameter("lecture") != null && request.getParameter("participationid") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
-			UserDAOIf userDAO = DAOFactory.UserDAOIf(session);
-			User user = userDAO.getUser(Util.parseInteger(request.getParameter("userid"), 0));
-			if (lecture == null || user == null) {
+			ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+			Transaction tx = session.beginTransaction();
+			Participation participation = participationDAO.getParticipationLocked(Util.parseInteger(request.getParameter("participationid"), 0));
+			if (lecture == null || participation == null) {
 				response.sendRedirect(Util.generateRedirectURL("AdminMenue", response));
 			} else {
-				// request.getParameter("type") != null
-				ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-				Transaction tx = session.beginTransaction();
 				if (request.getParameter("action").equals("addUser")) {
 					if ("advisor".equals(request.getParameter("type"))) {
-						participationDAO.createParticipation(user, lecture, ParticipationRole.ADVISOR);
-					} else {
-						participationDAO.createParticipation(user, lecture, ParticipationRole.TUTOR);
+						participation.setRoleType(ParticipationRole.ADVISOR);
+					} else if ("tutor".equals(request.getParameter("type"))) {
+						participation.setRoleType(ParticipationRole.TUTOR);
 					}
 				} else { // dregregate user
-					participationDAO.createParticipation(user, lecture, ParticipationRole.NORMAL);
+					participation.setRoleType(ParticipationRole.NORMAL);
 				}
-				tx.commit();
+				participationDAO.saveParticipation(participation);
 				response.sendRedirect(Util.generateRedirectURL("AdminMenue?action=showLecture&lecture=" + lecture.getId(), response));
 			}
+			tx.commit();
 		} else if ("su".equals(request.getParameter("action")) && request.getParameter("userid") != null) {
 			User user = DAOFactory.UserDAOIf(session).getUser(Util.parseInteger(request.getParameter("userid"), 0));
 			if (user != null) {
