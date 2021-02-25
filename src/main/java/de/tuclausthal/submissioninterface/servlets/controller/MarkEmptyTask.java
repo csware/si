@@ -94,6 +94,7 @@ public class MarkEmptyTask extends HttpServlet {
 
 		if (!Util.isInteger(request.getParameter("pid"))) {
 			response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
+			return;
 		}
 
 		Participation studentParticipation = DAOFactory.ParticipationDAOIf(session).getParticipation(Util.parseInteger(request.getParameter("pid"), 0));
