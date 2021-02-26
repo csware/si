@@ -396,7 +396,7 @@ public class SubmitSolution extends HttpServlet {
 					}
 					Util.copyInputStreamAndClose(aFile.getInputStream(), new File(logPath, fileName));
 					uploadedFilenames.add(fileName);
-				} catch (IOException e) {
+				} catch (IOException | IllegalArgumentException e) {
 					if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 						submission.setLastModified(new Date());
 						submissionDAO.saveSubmission(submission);
