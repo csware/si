@@ -56,6 +56,12 @@
     <param-name>intranetPrefixes</param-name>
     <param-value>192.168.0.;127.0.0.1;0:0:0:0:0:0:0:1</param-value>
   </context-param>
+  <context-param>
+    <!-- configure the default charset for fileencoding of zip files, on German Windows this is likely cp850, on English Windows (as and based on the ZIP specification) this should be cp437.
+         This is needed to be able to unpack .ZIP archives that don't use UTF-8 encoding of filenames and don't indicate this in the flags and use e.g. umlauts -->
+    <param-name>default-zipfile-charset</param-name>
+    <param-value>cp850</param-value>
+  </context-param>
   <listener> <!-- must be the first listener! -->
     <listener-class>de.tuclausthal.submissioninterface.util.ContextConfigurationListener</listener-class>
   </listener>

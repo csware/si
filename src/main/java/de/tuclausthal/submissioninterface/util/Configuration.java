@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.util;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
@@ -55,6 +56,7 @@ public class Configuration {
 	private boolean mailLastGradingTutorOnGradeChange;
 	private int testFrameworkCores;
 	private ArrayList<String> intranetPrefixes = new ArrayList<>();
+	private Charset defaultZipFileCharset;
 
 	private Configuration() {}
 
@@ -75,6 +77,7 @@ public class Configuration {
 		instance.matrikelNumberMustBeEnteredManuallyIfMissing = parseBooleanValue(context.getInitParameter("matrikelno-must-be-enterend-manually-if-missing"), false);
 		instance.testFrameworkCores = Util.parseInteger(context.getInitParameter("testframework-cores"), 2);
 		instance.mailLastGradingTutorOnGradeChange = parseBooleanValue(context.getInitParameter("mail-last-grading-tutor-on-grade-change"), true);
+		instance.defaultZipFileCharset = Charset.forName(context.getInitParameter("default-zipfile-charset"));
 
 		if (context.getInitParameter("intranetPrefixes") != null) {
 			for (String prefix : context.getInitParameter("intranetPrefixes").split(";")) {
@@ -216,5 +219,9 @@ public class Configuration {
 	 */
 	public ArrayList<String> getIntranetPrefixes() {
 		return intranetPrefixes;
+	}
+
+	public Charset getDefaultZipFileCharset() {
+		return defaultZipFileCharset;
 	}
 }

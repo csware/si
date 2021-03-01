@@ -568,7 +568,7 @@ public class SubmitSolution extends HttpServlet {
 		if (!"-".equals(task.getArchiveFilenameRegexp()) && (fileName.endsWith(".zip") || fileName.endsWith(".jar"))) {
 			boolean skippedFiles = false;
 			Vector<Pattern> patterns = getArchiveFileNamePatterns(task);
-			try (ZipInputStream zipFile = new ZipInputStream(item.getInputStream())) {
+			try (ZipInputStream zipFile = new ZipInputStream(item.getInputStream(), Configuration.getInstance().getDefaultZipFileCharset())) {
 				ZipEntry entry = null;
 				while ((entry = zipFile.getNextEntry()) != null) {
 					if (entry.isDirectory()) {
