@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `allowStudentsToQuit` bit(1) NOT NULL,
   `allowStudentsToSignup` bit(1) NOT NULL,
   `maxStudents` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL COLLATE utf8mb4_unicode_ci,
   `submissionGroup` bit(1) NOT NULL,
   `lectureid` int(11) NOT NULL,
   `membersvisibletostudents` bit(1) NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `javaadvancedioteststep` (
   `teststepid` int(11) NOT NULL AUTO_INCREMENT,
   `expect` longtext NOT NULL,
   `testcode` longtext NOT NULL,
-  `title` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL COLLATE utf8mb4_unicode_ci,
   `testid` int(11) NOT NULL,
   PRIMARY KEY (`teststepid`),
   KEY `FK1DB21A80AE3F26C5` (`testid`),
@@ -74,7 +74,7 @@ DROP TABLE IF EXISTS `lectures`;
 CREATE TABLE IF NOT EXISTS `lectures` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gradingMethod` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL COLLATE utf8mb4_unicode_ci,
   `requiresAbhnahme` bit(1) NOT NULL,
   `semester` int(11) NOT NULL,
   PRIMARY KEY (`id`)
@@ -91,12 +91,12 @@ CREATE TABLE IF NOT EXISTS `logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `action` int(11) NOT NULL,
   `result` bit(1) DEFAULT NULL,
-  `testOutput` longtext DEFAULT NULL,
+  `testOutput` longtext DEFAULT NULL COLLATE utf8mb4_unicode_ci,
   `timeStamp` datetime DEFAULT NULL,
   `taskId` int(11) NOT NULL,
   `testId` int(11) DEFAULT NULL,
   `userId` int(11) NOT NULL,
-  `additionaldata` LONGTEXT,
+  `additionaldata` LONGTEXT COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `FK32C5AFAE3F26C5` (`testId`),
   KEY `FK32C5AFB0B38AF7` (`userId`),
@@ -113,7 +113,7 @@ DROP TABLE IF EXISTS `mcoptions`;
 CREATE TABLE IF NOT EXISTS `mcoptions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `correct` bit(1) NOT NULL,
-  `title` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL COLLATE utf8mb4_unicode_ci,
   `taskid` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK2BE2448AE0697EB` (`taskid`)
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `participations` (
 DROP TABLE IF EXISTS `pointcategories`;
 CREATE TABLE IF NOT EXISTS `pointcategories` (
   `pointcatid` int(11) NOT NULL AUTO_INCREMENT,
-  `description` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL COLLATE utf8mb4_unicode_ci,
   `optional` bit(1) NOT NULL,
   `points` int(11) NOT NULL,
   `taskid` int(11) NOT NULL,
@@ -183,10 +183,10 @@ CREATE TABLE IF NOT EXISTS `pointgiven` (
 DROP TABLE IF EXISTS `pointhistory`;
 CREATE TABLE IF NOT EXISTS `pointhistory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `added` longtext NOT NULL,
+  `added` longtext NOT NULL COLLATE utf8mb4_unicode_ci,
   `date` datetime NOT NULL,
   `field` varchar(255) NOT NULL,
-  `removed` longtext NOT NULL,
+  `removed` longtext NOT NULL COLLATE utf8mb4_unicode_ci,
   `submission_submissionid` int(11) NOT NULL,
   `who_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -246,10 +246,10 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   `closedTime` datetime DEFAULT NULL,
   `lastModified` datetime DEFAULT NULL,
   `duplicate` int(11) DEFAULT NULL,
-  `internalComment` longtext DEFAULT NULL,
+  `internalComment` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `pointStatus` tinyint(4) DEFAULT NULL,
   `points` int(11) DEFAULT NULL,
-  `publicComment` longtext DEFAULT NULL,
+  `publicComment` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `closedBy` int(11) DEFAULT NULL,
   `issuedBy_id` int(11) DEFAULT NULL,
   `taskid` int(11) NOT NULL,
@@ -283,7 +283,7 @@ CREATE TABLE IF NOT EXISTS `submissions_participations` (
 DROP TABLE IF EXISTS `submissions_results`;
 CREATE TABLE IF NOT EXISTS `submissions_results` (
   `resultid` int(11) NOT NULL AUTO_INCREMENT,
-  `result` varchar(255) NOT NULL,
+  `result` varchar(255) NOT NULL COLLATE utf8mb4_unicode_ci,
   `submissionid` int(11) NOT NULL,
   PRIMARY KEY (`resultid`),
   KEY `FKB4227A5E39FBF139` (`submissionid`)
@@ -318,7 +318,7 @@ CREATE TABLE IF NOT EXISTS `submissions_tasknumbers` (
 DROP TABLE IF EXISTS `taskgroups`;
 CREATE TABLE IF NOT EXISTS `taskgroups` (
   `taskGroupId` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL COLLATE utf8mb4_unicode_ci,
   `lectureid` int(11) NOT NULL,
   PRIMARY KEY (`taskGroupId`),
   KEY `FK5BD51799AF18EDD1` (`lectureid`)
@@ -337,7 +337,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `allowSubmittersAcrossGroups` bit(1) NOT NULL,
   `archiveFilenameRegexp` varchar(255) NOT NULL,
   `deadline` datetime NOT NULL,
-  `description` longtext NOT NULL,
+  `description` longtext NOT NULL COLLATE utf8mb4_unicode_ci,
   `dynamicTask` varchar(255) DEFAULT NULL,
   `featuredFiles` text NOT NULL,
   `filenameRegexp` varchar(255) NOT NULL,
@@ -349,7 +349,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `showTextArea` bit(1) NOT NULL,
   `start` datetime NOT NULL,
   `type` VARCHAR(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL COLLATE utf8mb4_unicode_ci,
   `tutorsCanUploadFiles` bit(1) NOT NULL,
   `taskgroupid` int(11) NOT NULL,
   `modelSolutionProvision` varchar(255),
@@ -367,7 +367,7 @@ DROP TABLE IF EXISTS `testresults`;
 CREATE TABLE IF NOT EXISTS `testresults` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `passedTest` bit(1) NOT NULL,
-  `testOutput` longtext NOT NULL,
+  `testOutput` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `submission_submissionid` int(11) NOT NULL,
   `test_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -388,8 +388,8 @@ CREATE TABLE IF NOT EXISTS `tests` (
   `forTutors` bit(1) NOT NULL,
   `giveDetailsToStudents` bit(1) NOT NULL,
   `needsToRun` bit(1) NOT NULL,
-  `testDescription` varchar(255) DEFAULT NULL,
-  `testTitle` varchar(255) DEFAULT NULL,
+  `testDescription` varchar(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci,
+  `testTitle` varchar(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci,
   `timeout` int(11) NOT NULL,
   `timesRunnableByStudents` int(11) NOT NULL,
   `mainClass` varchar(255) DEFAULT NULL,
@@ -428,13 +428,13 @@ CREATE TABLE IF NOT EXISTS `testscounts` (
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `firstName` varchar(255) NOT NULL,
-  `lastName` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL COLLATE utf8mb4_general_ci,
+  `email` varchar(255) NOT NULL COLLATE utf8mb4_general_ci,
+  `firstName` varchar(255) NOT NULL COLLATE utf8mb4_unicode_ci,
+  `lastName` varchar(255) NOT NULL COLLATE utf8mb4_unicode_ci,
   `superUser` bit(1) NOT NULL,
   `matrikelno` int(11) DEFAULT NULL,
-  `studiengang` varchar(255) DEFAULT NULL,
+  `studiengang` varchar(255) DEFAULT NULL COLLATE utf8mb4_unicode_ci,
   `lastLoggedIn` datetime DEFAULT NULL,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `username` (`username`)
@@ -597,11 +597,8 @@ ALTER TABLE `submissions_participations` DROP INDEX `FK27F157EA5F9373D1`;
 
 -- use German sort ordering for names
 ALTER TABLE `groups` CHANGE `name` `name` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_german2_ci NOT NULL;
-ALTER TABLE `lectures` CHANGE `name` `name` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_german2_ci NOT NULL;
-ALTER TABLE `taskgroups` CHANGE `title` `title` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_german2_ci NULL DEFAULT NULL;
 ALTER TABLE `users` CHANGE `lastName` `lastName` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_german2_ci NOT NULL;
 ALTER TABLE `users` CHANGE `firstName` `firstName` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_german2_ci NOT NULL;
-ALTER TABLE `users` CHANGE `studiengang` `studiengang` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_german2_ci NULL DEFAULT NULL; 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
