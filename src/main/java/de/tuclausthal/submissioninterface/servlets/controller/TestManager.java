@@ -40,6 +40,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -125,6 +126,28 @@ public class TestManager extends HttpServlet {
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId(), response));
+		} else if ("saveNewTest".equals(request.getParameter("action")) && "docker".equals(request.getParameter("type"))) {
+			session.beginTransaction();
+			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
+			DockerTest test = testDAO.createDockerTest(task);
+
+			int timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
+			int timeout = Util.parseInteger(request.getParameter("timeout"), 15);
+			boolean tutortest = request.getParameter("tutortest") != null;
+			String title = request.getParameter("title");
+			String description = request.getParameter("description");
+			String preparationcode = request.getParameter("preparationcode");
+
+			test.setTimesRunnableByStudents(timesRunnableByStudents);
+			test.setForTutors(tutortest);
+			test.setTestTitle(title);
+			test.setTestDescription(description);
+			test.setTimeout(timeout);
+			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
+			test.setPreparationShellCode(preparationcode.replaceAll("\r\n", "\n"));
+			testDAO.saveTest(test);
+			session.getTransaction().commit();
+			response.sendRedirect(Util.generateRedirectURL("DockerTestManager?testid=" + test.getId(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "umlConstraint".equals(request.getParameter("type"))) {
 			// Check that we have a file upload request
 

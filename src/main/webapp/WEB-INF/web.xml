@@ -615,6 +615,18 @@
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.JavaAdvancedIOTestManagerOverView</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>DockerTestManager</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.DockerTestManager</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DockerTestManager</servlet-name>
+    <url-pattern>/servlets/DockerTestManager</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>DockerTestManagerOverView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.DockerTestManagerOverView</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>DownloadSubmissionsByGroup</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.DownloadSubmissionsByGroup</servlet-class>
   </servlet>

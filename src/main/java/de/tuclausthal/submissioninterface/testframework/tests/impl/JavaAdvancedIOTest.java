@@ -99,6 +99,7 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 		}
 	}
 
+	// similar code in DockerTest
 	@Override
 	protected boolean calculateTestResult(Test test, boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted) {
 		de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest jtt = (de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest) test;

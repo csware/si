@@ -14,8 +14,20 @@ SET time_zone = "+00:00";
 -- create database submissionsystem CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin;
 
 -- --------------------------------------------------------
-
+-- Tabellenstruktur für Tabelle `dockerteststep`
 --
+
+DROP TABLE IF EXISTS `dockerteststep`;
+CREATE TABLE `dockerteststep` (
+  `teststepid` int(11) NOT NULL,
+  `expect` longtext NOT NULL,
+  `testcode` longtext NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `testid` int(11) NOT NULL,
+  PRIMARY KEY (`teststepid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- --------------------------------------------------------
 -- Tabellenstruktur für Tabelle `groups`
 --
 
@@ -398,6 +410,7 @@ CREATE TABLE IF NOT EXISTS `tests` (
   `mainClass` varchar(255) DEFAULT NULL,
   `commandLineParameter` varchar(255) DEFAULT NULL,
   `regularExpression` varchar(255) DEFAULT NULL,
+  `preparationshellcode` longtext DEFAULT NULL,
   `excludedFiles` varchar(255) DEFAULT NULL,
   `minProzent` int(11) DEFAULT NULL,
   `taskid` int(11) NOT NULL,
@@ -446,6 +459,12 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 -- Constraints der exportierten Tabellen
 --
+
+--
+-- Constraints der Tabelle `dockerteststep`
+--
+ALTER TABLE `dockerteststep`
+  ADD CONSTRAINT `FK4tbopcx0wiytwom7cs13924no` FOREIGN KEY (`testid`) REFERENCES `tests` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `groups`

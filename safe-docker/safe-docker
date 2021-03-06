@@ -1,0 +1,90 @@
+#!/usr/bin/perl
+#
+# © 2014 Joachim Breitner <breitner@kit.edu>
+# Licensed under the The MIT License (MIT)
+# based on https://github.com/nomeata/safe-docker/blob/master/safe-docker
+# version e1732d3074d8442aa8aff81cb292f0098ac62b82, with minor modifications
+# needs /etc/sudoers entry: "tomcat ALL= NOPASSWD: /usr/local/bin/safe-docker"
+
+use Getopt::Long;
+use IPC::Run qw/ start run timeout /;
+use Cwd;
+use Data::GUID;
+
+# hardcoded, for security reasons
+my $image = 'safe-docker';
+
+my @dirs = ();
+my $timeout = 60;
+my $maxmemory = "512M";
+
+GetOptions (
+#	"image=s" => \$image,
+	"dir=s" => \@dirs,
+	"timeout=i" => \$timeout,
+	"memory=s" => \$maxmemory,
+	)
+or die("Error in command line arguments\n");
+
+# Now @ARGV is the command to run
+die "Missing command\n" unless @ARGV;
+
+die "Missing option --image \n" unless $image;
+
+die "Needs to be run under sudo\n" unless ($< == 0 and exists $ENV{SUDO_UID});
+
+my $uid = $ENV{SUDO_UID};
+die "Cannot run as user root" unless $uid > 0;
+my $gid = $ENV{SUDO_GID};
+die "Cannot run as group root" unless $gid > 0;
+
+my $containername = sprintf "secure-tmp-%s", Data::GUID->new->as_string;
+
+my $cwd = getcwd;
+
+die "CWD contains a :" if $cwd =~ /:/;
+for (@dirs) {
+	die "--dir $_ contains a :" if $_ =~ /:/;
+}
+
+my @cmd;
+# --memory-swap=-1 is only a temporary HACK to avoid a warning on STDERR; set it to the same value as --memory in the future as soon there is support in the kernel for it
+# be careful with nproc ulimit, it is a limit for the nubmer of processes for a user independant of the cgroup/container
+push @cmd, qw!docker run --rm -i --read-only --sig-proxy --tmpfs /tmp --tmpfs /run --tmpfs /home --net=none --cap-drop AUDIT_WRITE --cap-drop CHOWN --cap-drop DAC_OVERRIDE --cap-drop FOWNER --cap-drop FSETID --cap-drop KILL --cap-drop MKNOD --cap-drop NET_RAW --cap-drop SETFCAP --cap-drop SETGID --cap-drop SETPCAP --cap-drop SETUID --cap-drop SYS_CHROOT --memory-swap=-1 --cpus=1 --ulimit nofile=1024!;
+push @cmd, (sprintf "--memory=%s", $maxmemory);
+push @cmd, (sprintf "--user=%d:%d", $uid, $gid);
+push @cmd, (sprintf "--volume=%s:%s:ro", $_, $_) for @dirs;
+push @cmd, (sprintf "--volume=%s:%s", $cwd, $cwd);
+push @cmd, (sprintf "--workdir=%s", $cwd, $cwd);
+push @cmd, "--name", $containername;
+push @cmd, $image;
+push @cmd, @ARGV;
+
+#print @cmd;
+
+sub kill_docker {
+	run ["docker", "kill", $containername ], \undef, '>/dev/null';
+	# magic value
+	exit 23;
+}
+use sigtrap qw/handler kill_docker normal-signals/;
+
+
+# print @cmd;
+my $h = start \@cmd, timeout ($timeout);
+
+eval {
+	my $ret = $h->finish;
+};
+if ($@) {
+	my $x = $@;
+	kill_docker;
+}
+
+# This is the observed behaviour for out-of-memory, so lets report that as a
+# special value
+if ($h->result == 255 or $h->result == 137) {
+	exit 24;
+}
+
+exit $h->result;

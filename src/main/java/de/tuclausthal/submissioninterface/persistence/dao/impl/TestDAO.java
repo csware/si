@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -33,6 +33,7 @@ import org.hibernate.Transaction;
 import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
@@ -165,6 +166,15 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 	public JavaAdvancedIOTest createJavaAdvancedIOTest(Task task) {
 		Session session = getSession();
 		JavaAdvancedIOTest test = new JavaAdvancedIOTest();
+		test.setTask(task);
+		session.save(test);
+		return test;
+	}
+
+	@Override
+	public DockerTest createDockerTest(Task task) {
+		Session session = getSession();
+		DockerTest test = new DockerTest();
 		test.setTask(task);
 		session.save(test);
 		return test;

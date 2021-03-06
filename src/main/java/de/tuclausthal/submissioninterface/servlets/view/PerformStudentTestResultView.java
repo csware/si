@@ -26,9 +26,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowDockerTestResult;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowJavaAdvancedIOTestResult;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -61,6 +63,8 @@ public class PerformStudentTestResultView extends HttpServlet {
 		if (test.isGiveDetailsToStudents() && !testResult.getTestOutput().isEmpty()) {
 			if (test instanceof JavaAdvancedIOTest) {
 				ShowJavaAdvancedIOTestResult.printTestResults(out, (JavaAdvancedIOTest) test, testResult.getTestOutput(), true, null);
+			} else if (test instanceof DockerTest) {
+				ShowDockerTestResult.printTestResults(out, (DockerTest) test, testResult.getTestOutput(), true, null);
 			} else {
 				out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
 			}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -22,6 +22,7 @@ import java.util.List;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
@@ -65,6 +66,8 @@ public interface TestDAOIf {
 	public JavaAdvancedIOTest createJavaAdvancedIOTest(Task task);
 
 	public CommentsMetricTest createCommentsMetricTest(Task task);
+
+	public DockerTest createDockerTest(Task task);
 
 	/**
 	 * Update/save a test

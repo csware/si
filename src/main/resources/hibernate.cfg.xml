@@ -62,5 +62,7 @@
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTestStep"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.MCOption"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep"/>
  </session-factory>
 </hibernate-configuration>

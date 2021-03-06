@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -28,25 +28,33 @@ import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.json.stream.JsonParsingException;
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
 import de.tuclausthal.submissioninterface.util.Util;
 
-public class ShowJavaAdvancedIOTestResult { // similar code in ShowDockerTestResult
-	public static void printTestResults(PrintWriter out, JavaAdvancedIOTest jtt, String testOutput, boolean forStudent, StringBuilder javaScript) {
+public class ShowDockerTestResult { // similar code in ShowJavaAdvancedIOTestResult
+	public static void printTestResults(PrintWriter out, DockerTest dt, String testOutput, boolean forStudent, StringBuilder javaScript) {
 		JsonObject object = null;
 		try (JsonReader jsonReader = Json.createReader(new StringReader(testOutput))) {
 			object = jsonReader.readObject();
 		} catch (JsonParsingException ex) {
 		}
 		if (object == null) {
-			if (forStudent) {
-				out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testOutput) + "</pre>");
-			} else {
-				out.println("<textarea id=\"testresultjtt" + jtt.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(testOutput) + "</textarea>");
-			}
+			out.println("Keine gültige Ausgabe erhalten.");
 		} else if (object.containsKey("steps")) {
 			JsonValue arr = object.get("steps");
-			if (arr.getValueType().equals(JsonValue.ValueType.ARRAY)) {
+			if (arr.getValueType().equals(JsonValue.ValueType.ARRAY) && arr.asJsonArray().isEmpty()) {
+				if ((object.containsKey("exitedCleanly") && object.getBoolean("exitedCleanly") == false) || (object.containsKey("time-exceeded") && object.getBoolean("time-exceeded") == true) || (object.containsKey("missing-tests") && object.getBoolean("missing-tests") == true)) {
+					if (object.containsKey("stderr")) {
+						if (forStudent) { // TODO show stderr to students?
+							out.println("<b>Syntaxfehler:</b><br><pre>" + Util.escapeHTML(object.getString("stderr")) + "</pre>");
+						} else {
+							out.println("<textarea id=\"testresultajtt1\" cols=80 rows=15>" + Util.escapeHTML(object.getString("stderr")) + "</textarea>");
+						}
+					} else {
+						out.println("Ein unbekannter Fehler ist aufgetreten.");
+					}
+				}
+			} else if (arr.getValueType().equals(JsonValue.ValueType.ARRAY)) {
 				out.println("<table class=border>");
 				out.println("<tr>");
 				out.println("<th>Test</th>");
@@ -59,18 +67,18 @@ public class ShowJavaAdvancedIOTestResult { // similar code in ShowDockerTestRes
 					// TODO make nicer!
 					JsonObject stepObject = array.get(i).asJsonObject();
 					int foundTest = -1;
-					for (int j = 0; j < jtt.getTestSteps().size(); ++j) {
-						if (jtt.getTestSteps().get(j).getTeststepid() == stepObject.getInt("id")) {
+					for (int j = 0; j < dt.getTestSteps().size(); ++j) {
+						if (dt.getTestSteps().get(j).getTeststepid() == stepObject.getInt("id")) {
 							foundTest = j;
 							break;
 						}
 					}
 					if (foundTest >= 0) {
 						out.println("<tr>");
-						out.println("<td>" + Util.escapeHTML(jtt.getTestSteps().get(foundTest).getTitle()) + "</td>");
-						out.println("<td><pre id=\"exp" + jtt.getId() + "-" + i + "\">" + Util.escapeHTML(stepObject.getString("expected")) + "</pre></td>");
-						out.println("<td><pre id=\"got" + jtt.getId() + "-" + i + "\">" + Util.escapeHTML(stepObject.getString("got")) + "</pre><pre id=\"diff" + jtt.getId() + "-" + i + "\" style=\"display:none;\"></pre></td>");
-						out.println("<td>" + Util.boolToHTML(stepObject.getBoolean("ok")) + (stepObject.getBoolean("ok") ? "" : " (<a href=\"javascript:dodiff('" + jtt.getId() + "-" + i + "')\">Diff</a>)") + "</td>");
+						out.println("<td>" + Util.escapeHTML(dt.getTestSteps().get(foundTest).getTitle()) + "</td>");
+						out.println("<td><pre id=\"exp" + dt.getId() + "-" + i + "\">" + Util.escapeHTML(stepObject.getString("expected")) + "</pre></td>");
+						out.println("<td><pre id=\"got" + dt.getId() + "-" + i + "\">" + Util.escapeHTML(stepObject.getString("got")) + "</pre><pre id=\"diff" + dt.getId() + "-" + i + "\" style=\"display:none;\"></pre></td>");
+						out.println("<td>" + Util.boolToHTML(stepObject.getBoolean("ok")) + (stepObject.getBoolean("ok") ? "" : " (<a href=\"javascript:dodiff('" + dt.getId() + "-" + i + "')\">Diff</a>)") + "</td>");
 						out.println("</tr>");
 					}
 				}
@@ -99,9 +107,9 @@ public class ShowJavaAdvancedIOTestResult { // similar code in ShowDockerTestRes
 					}
 					if (!stderr.trim().isEmpty()) {
 						if (forStudent) { // TODO show stderr to students?
-							out.println("<b>Laufzeitfehler:</b><br><pre>" + Util.escapeHTML(stderr) + "</pre>");
+							out.println("<b>Laufzeitfehler/Warnungen:</b><br><pre>" + Util.escapeHTML(stderr) + "</pre>");
 						} else {
-							out.println("<textarea id=\"testresultajtt" + jtt.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(stderr) + "</textarea>");
+							out.println("<textarea id=\"testresultadtt" + dt.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(stderr) + "</textarea>");
 						}
 					}
 				}

@@ -45,6 +45,7 @@ Please read the whole procedure in advance to executing it.
    - For debugging: Please not that the Shibboleth attributes passed to Tomcat don't show up when iterating over the request variables. They need to be explicitly named (e.g., `uid` or `Shib-Identity-Provider`).
 - For building the whole package you need [maven](https://maven.apache.org/) (also often available as a package on *nix systems)
 - For running the cron task regularly with the predefined script `submissiondir/runtests.sh` you need the `lockfile` tool (usually part of the `procmail` package on *nix systems)
+- For using Docker-based tests you need to install Docker
 
 ### Database
 - Decide what user and password to use (for production use a dedicated user is recommended)
@@ -97,5 +98,16 @@ Alternatively you can also use GitLab CI/CD functionality and download the built
   - You can use the shipped script `submissiondir/runtests.sh` which should be in `datapath` and configure `/etc/crontab`: `*/10 * * * *   tomcat   /srv/submissioninterface/runtests.sh`
   - Please make sure that you receive mails for the tomcat user in order to get errors of the cron task runner
 - Restart Tomcat
+- For using Docker-based tests
+    - Build the local `safe-docker` image, based on `safe-docker/Dockerfile` (e.g., `docker build --tag safe-docker .` in the `safe-docker` folder of this repository). So far, the image is only prepared for supporting Haskell, you might want to extend it according to your needs.
+    - Copy `safe-docker/safe-docker` to `/usr/local/bin/safe-docker` and make sure it is owned by `root:root` and has the permissions `700`, you might want to check the parameters passed to `docker`.
+    - On Debian-based systems you might need to lift some systemd restrictions by creating the file `/etc/systemd/system/tomcat9.service.d/gate-safe-docker.conf` containing:
+      ```
+      [Service]
+      NoNewPrivileges=false
+      PrivateTmp=no
+      ReadWritePaths=/tmp/
+      ```
+    - Set up `sudo` by inserting `tomcat ALL= NOPASSWD: /usr/local/bin/safe-docker` in `/etc/sudoers`
 
 Now GATE can be access using e.g. <http://localhost:8080/gate/> depending on your concrete local setup.

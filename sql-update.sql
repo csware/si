@@ -112,3 +112,15 @@ ALTER TABLE `taskgroups` CHANGE `title` `title` VARCHAR(255) CHARACTER SET utf8m
 
 -- similarities are unique
 alter table similarities add constraint UKdtkfair4dgx3r6e6utbf1fuu1 unique (similaritytest_similaritytestid, submissionone_submissionid, submissiontwo_submissionid), DROP INDEX `FKB31AC193B8B275`;
+
+-- docker test
+CREATE TABLE `dockerteststep` (
+  `teststepid` int(11) NOT NULL,
+  `expect` longtext NOT NULL,
+  `testcode` longtext NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `testid` int(11) NOT NULL,
+  PRIMARY KEY (`teststepid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+ALTER TABLE `dockerteststep` ADD CONSTRAINT `FK4tbopcx0wiytwom7cs13924no` FOREIGN KEY (`testid`) REFERENCES `tests` (`id`) ON DELETE CASCADE;
+alter table tests add column `preparationshellcode` LONGTEXT DEFAULT NULL;

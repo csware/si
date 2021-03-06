@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
@@ -428,15 +429,17 @@ public class TaskManagerView extends HttpServlet {
 						out.println("<li>&quot;" + Util.escapeHTML(test.getTestTitle()) + "&quot;: ");
 						if (test instanceof RegExpTest) {
 							RegExpTest regexptest = (RegExpTest) test;
-							out.println("RegExp-Test:<br>Prüfpattern: " + Util.escapeHTML(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.escapeHTML(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.escapeHTML(regexptest.getMainClass()) + "<br>");
+							out.println("Java RegExp-Test:<br>Prüfpattern: " + Util.escapeHTML(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.escapeHTML(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.escapeHTML(regexptest.getMainClass()) + "<br>");
 						} else if (test instanceof CompileTest) {
-							out.println("Compile-Test<br>");
+							out.println("Java Syntax-Test<br>");
 						} else if (test instanceof JUnitTest) {
 							out.println("JUnit-Test<br>");
 						} else if (test instanceof CommentsMetricTest) {
 							out.println("Kommentar-Metrik-Test<br>");
 						} else if (test instanceof JavaAdvancedIOTest) {
 							out.println("Erweiterer Java-IO-Test<br>");
+						} else if (test instanceof DockerTest) {
+							out.println("Docker<br>");
 						} else {
 							out.println("unknown<br>");
 						}
@@ -453,6 +456,9 @@ public class TaskManagerView extends HttpServlet {
 						if (test instanceof JavaAdvancedIOTest) {
 							out.println("Bestehend aus " + ((JavaAdvancedIOTest) test).getTestSteps().size() + " Schritten<br>");
 							out.println("<a href=\"" + Util.generateHTMLLink("JavaAdvancedIOTestManager?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
+						} else if (test instanceof DockerTest) {
+							out.println("Bestehend aus " + ((DockerTest) test).getTestSteps().size() + " Schritten<br>");
+							out.println("<a href=\"" + Util.generateHTMLLink("DockerTestManager?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
 						}
 						if (!modelSolutionFiles.isEmpty()) {
 							out.println("<a onclick=\"return sendAsPost(this, 'Wirklich testen?')\" href=\"" + Util.generateHTMLLink("PerformTest?modelsolution=true&testid=" + test.getId(), response) + "\">Mit Musterlösung testen...</a><br>");

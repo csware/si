@@ -12,3 +12,4 @@
 .gitattributes text
 .gitignore text
 .tgitconfig text
+safe-docker/** text
