@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginData;
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginIf;
-import de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.LDAPVerify;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Configuration;
@@ -43,7 +42,7 @@ import de.tuclausthal.submissioninterface.util.Configuration;
  * @author Sven Strickroth
  */
 public class Shibboleth implements LoginIf {
-	static final private Logger LOG = LoggerFactory.getLogger(LDAPVerify.class);
+	static final private Logger LOG = LoggerFactory.getLogger(Shibboleth.class);
 
 	static final public String REDIR_PARAMETER = "redir";
 	static final public String SHIBBOLETH_LOGIN_KEY = "SHIBBOLETH_LOGIN";
