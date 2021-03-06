@@ -95,7 +95,7 @@
     </init-param>
     <init-param>
       <param-name>PROVIDER_URL</param-name>
-      <param-value>ldaps://beelzebub.rz.tu-clausthal.de/ou=people,dc=tu-clausthal,dc=de;ldaps://bastet.rz.tu-clausthal.de/ou=people,dc=tu-clausthal,dc=de</param-value>
+      <param-value>ldaps://example.com/ou=people,dc=example,dc=com</param-value>
     </init-param>
     <init-param>
       <param-name>SECURITY_AUTHENTICATION</param-name>
@@ -103,7 +103,7 @@
     </init-param>
     <init-param>
       <param-name>SECURITY_PRINCIPAL</param-name>
-      <param-value>uid={0},ou=people,dc=tu-clausthal,dc=de</param-value>
+      <param-value>uid={0},ou=people,dc=example,dc=com</param-value>
     </init-param>
     <init-param>
       <param-name>userAttribute</param-name>
