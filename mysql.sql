@@ -11,6 +11,8 @@ SET time_zone = "+00:00";
 -- Datenbank: `submissionsystem`
 --
 
+-- create database submissionsystem CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin;
+
 -- --------------------------------------------------------
 
 --
