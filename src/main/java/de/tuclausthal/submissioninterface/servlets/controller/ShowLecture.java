@@ -58,6 +58,12 @@ public class ShowLecture extends HttpServlet {
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), lecture);
 		if (participation == null) {
+			if (lecture.getSemester() == Util.getCurrentSemester()) {
+				request.setAttribute("title", "Zugriff verweigert (403)");
+				request.setAttribute("message", "<p>Sie versuchen auf eine Vorlesung zuzugreifen, für die Sie nicht angemeldet sind.</p><p>Sie können Sie <a href=\"" + Util.generateHTMLLink("SubscribeToLecture", response) + "\">hier</a> für die Vorlesung anmelden.</p>");
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				return;
+			}
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}

@@ -66,6 +66,12 @@ public class ShowTask extends HttpServlet {
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
 		if (participation == null) {
+			if (task.getTaskGroup().getLecture().getSemester() == Util.getCurrentSemester()) {
+				request.setAttribute("title", "Zugriff verweigert (403)");
+				request.setAttribute("message", "<p>Sie versuchen auf eine Aufgabe einer Vorlesung zuzugreifen, für die Sie nicht angemeldet sind.</p><p>Sie können Sie <a href=\"" + Util.generateHTMLLink("SubscribeToLecture", response) + "\" target=\"_blank\">hier</a> für die Vorlesung anmelden.</p>");
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				return;
+			}
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
