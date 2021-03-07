@@ -392,7 +392,7 @@ public final class Util {
 	}
 
 	/**
-	 * Opens the specified file and returns it's contents as string buffer
+	 * Opens the specified file and returns its contents as string buffer
 	 * @param file the file to open
 	 * @return the file contents
 	 * @throws IOException

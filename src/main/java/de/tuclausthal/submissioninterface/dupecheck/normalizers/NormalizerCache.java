@@ -50,7 +50,7 @@ public class NormalizerCache {
 	}
 
 	/**
-	 * Normalize and cache the contens of the given file of the given submission
+	 * Normalize and cache the contents of the given file of the given submission
 	 * @param file
 	 * @return the (cached) normalized string
 	 * @throws IOException
