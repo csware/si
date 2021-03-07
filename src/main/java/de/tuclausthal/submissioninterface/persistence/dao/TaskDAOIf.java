@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -32,7 +32,7 @@ public interface TaskDAOIf {
 	 * Creates and stores a new task on the DB with given attribute-values
 	 * @param title the title of the task
 	 * @param maxPoints the maximum number of points
-	 * @param start the start date of the task/when it get's visible to students
+	 * @param start the start date of the task/when it get's visible to students; if != null show points automatically after that date, otherwise manuel intervention is required
 	 * @param deadline the date after which no submission is possible any more
 	 * @param description the description of the task (HTML possible)
 	 * @param taskGroup the lecture to which the task should be associated
@@ -41,11 +41,10 @@ public interface TaskDAOIf {
 	 * @param allowSubmittersAcrossGroups
 	 * @param taskType 
 	 * @param dynamicTask task with dynamic nubmers and a special result field for calculated solution
-	 * @param showPointsDate if != null show points automatically after that date, otherwise manuel intervention is required
 	 * @param allowPrematureSubmissionClosing set the flag to enable the feature that students can close the submission before the deadline ends to allow tutors grading the task
 	 * @return a new Task
 	 */
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, Date showPointsDate, boolean allowPrematureSubmissionClosing);
+	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, boolean allowPrematureSubmissionClosing);
 
 	/**
 	 * Fetch a task based on it's id

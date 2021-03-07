@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -91,10 +91,9 @@ public class Task implements Serializable {
 	 * @param allowSubmittersAcrossGroups 
 	 * @param taskType 
 	 * @param dynamicTask 
-	 * @param showPointsDate 
 	 * @param allowPrematureSubmissionClosing 
 	 */
-	public Task(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, Date showPointsDate, boolean allowPrematureSubmissionClosing) {
+	public Task(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, boolean allowPrematureSubmissionClosing) {
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.start = start;
@@ -106,7 +105,6 @@ public class Task implements Serializable {
 		this.allowSubmittersAcrossGroups = allowSubmittersAcrossGroups;
 		this.type = taskType;
 		this.dynamicTask = dynamicTask;
-		this.showPoints = showPointsDate;
 		this.allowPrematureSubmissionClosing = allowPrematureSubmissionClosing;
 	}
 

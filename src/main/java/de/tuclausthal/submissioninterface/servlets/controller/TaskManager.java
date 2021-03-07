@@ -383,10 +383,6 @@ public class TaskManager extends HttpServlet {
 				if (deadline.before(startdate)) {
 					deadline = startdate;
 				}
-				Date showPoints = parseDate(request.getParameter("pointsdate"), new Date());
-				if (showPoints.before(deadline)) {
-					showPoints = deadline;
-				}
 				if (request.getParameter("pointsmanual") != null) {
 					pointsdate = null;
 				} else if (pointsdate.before(deadline)) {
@@ -402,7 +398,7 @@ public class TaskManager extends HttpServlet {
 						dynamicTask = request.getParameter("dynamicTask");
 					}
 				}
-				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), 50), startdate, deadline, request.getParameter("description"), taskGroup, showPoints, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, taskType, dynamicTask, pointsdate, request.getParameter("prematureClosing") != null);
+				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), 50), startdate, deadline, request.getParameter("description"), taskGroup, pointsdate, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, taskType, dynamicTask, request.getParameter("prematureClosing") != null);
 				if (task.isMCTask()) {
 					task.setFilenameRegexp("-");
 					task.setShowTextArea(false); // be explicit here, it's false by default
