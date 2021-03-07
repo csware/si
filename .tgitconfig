@@ -1,0 +1,8 @@
+[tgit]
+	projectlanguage = 1033
+	warnnosignedoffby = true
+
+[hook "precommit"]
+	cmdline = WScript %root%\\src\\checkyear.js
+	wait = true
+	show = false
