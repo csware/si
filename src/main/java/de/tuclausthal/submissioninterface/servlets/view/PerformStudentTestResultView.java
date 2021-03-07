@@ -66,6 +66,8 @@ public class PerformStudentTestResultView extends HttpServlet {
 			}
 		}
 
+		out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+
 		template.printTemplateFooter();
 	}
 }
