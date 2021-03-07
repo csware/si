@@ -1,0 +1,14 @@
+*.css text
+*.java text
+*.js text
+*.jsp text
+*.md text
+*.properties text
+*.sql text
+*.svg text
+*.txt text
+*.xml text
+*.yml text
+.gitattributes text
+.gitignore text
+.tgitconfig text
