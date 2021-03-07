@@ -53,7 +53,7 @@ public class EditGroup extends HttpServlet {
 		Group group = groupDAO.getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
 		if (group == null) {
 			request.setAttribute("title", "Gruppe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -67,7 +67,7 @@ public class EditGroup extends HttpServlet {
 
 		request.setAttribute("participation", participation);
 		request.setAttribute("group", group);
-		request.getRequestDispatcher("EditGroupFormView").forward(request, response);
+		getServletContext().getNamedDispatcher("EditGroupFormView").forward(request, response);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class EditGroup extends HttpServlet {
 		Group group = groupDAO.getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
 		if (group == null) {
 			request.setAttribute("title", "Gruppe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 

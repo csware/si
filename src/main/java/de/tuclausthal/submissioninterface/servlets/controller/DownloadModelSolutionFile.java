@@ -58,7 +58,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -73,7 +73,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -91,7 +91,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 		}
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
-		request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -117,7 +117,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -137,6 +137,6 @@ public class DownloadModelSolutionFile extends HttpServlet {
 		}
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
-		request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 	}
 }

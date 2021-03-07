@@ -57,7 +57,7 @@ public class MarkEmptyTask extends HttpServlet {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -71,7 +71,7 @@ public class MarkEmptyTask extends HttpServlet {
 		request.setAttribute("participations", DAOFactory.ParticipationDAOIf(session).getParticipationsWithNoSubmissionToTaskOrdered(task));
 
 		request.setAttribute("task", task);
-		request.getRequestDispatcher("MarkEmptyTaskView").forward(request, response);
+		getServletContext().getNamedDispatcher("MarkEmptyTaskView").forward(request, response);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class MarkEmptyTask extends HttpServlet {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -100,7 +100,7 @@ public class MarkEmptyTask extends HttpServlet {
 		Participation studentParticipation = DAOFactory.ParticipationDAOIf(session).getParticipation(Util.parseInteger(request.getParameter("pid"), 0));
 		if (studentParticipation == null || studentParticipation.getLecture().getId() != participation.getLecture().getId() || studentParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) != 0) {
 			request.setAttribute("title", "Gewählte Person ist kein normaler Teilnehmer der Vorlesung.");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 		Transaction tx = session.beginTransaction();
@@ -110,7 +110,7 @@ public class MarkEmptyTask extends HttpServlet {
 		if (submission != null) {
 			tx.commit();
 			request.setAttribute("title", "Es existiert bereits eine Bewertung für diesen Studierenden: < href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), response) + "\">zur Bewertung</a>");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 		submission = submissionDAO.createSubmission(task, studentParticipation);

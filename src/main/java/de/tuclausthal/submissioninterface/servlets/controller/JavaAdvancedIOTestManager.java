@@ -56,7 +56,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
 		if (tst == null || !(tst instanceof JavaAdvancedIOTest)) {
 			request.setAttribute("title", "Test nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 		JavaAdvancedIOTest test = (JavaAdvancedIOTest) tst;
@@ -69,7 +69,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 		}
 
 		request.setAttribute("test", test);
-		request.getRequestDispatcher("JavaAdvancedIOTestManagerOverView").forward(request, response);
+		getServletContext().getNamedDispatcher("JavaAdvancedIOTestManagerOverView").forward(request, response);
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
 		if (tst == null || !(tst instanceof JavaAdvancedIOTest)) {
 			request.setAttribute("title", "Test nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 		JavaAdvancedIOTest test = (JavaAdvancedIOTest) tst;

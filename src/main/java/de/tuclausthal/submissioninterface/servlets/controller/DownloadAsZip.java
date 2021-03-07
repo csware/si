@@ -56,7 +56,7 @@ public class DownloadAsZip extends HttpServlet {
 
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -83,6 +83,6 @@ public class DownloadAsZip extends HttpServlet {
 		}
 
 		request.setAttribute("title", "No files available to download as zip.");
-		request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 	}
 }

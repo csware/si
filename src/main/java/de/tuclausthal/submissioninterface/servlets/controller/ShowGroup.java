@@ -49,7 +49,7 @@ public class ShowGroup extends HttpServlet {
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -62,11 +62,11 @@ public class ShowGroup extends HttpServlet {
 
 		if (participation.getGroup() == null) {
 			request.setAttribute("title", "Sie sind in keiner Gruppe.");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
 		request.setAttribute("group", participation.getGroup());
-		request.getRequestDispatcher("ShowGroupStudentView").forward(request, response);
+		getServletContext().getNamedDispatcher("ShowGroupStudentView").forward(request, response);
 	}
 }

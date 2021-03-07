@@ -57,7 +57,7 @@ public class PublishGrades extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -71,12 +71,12 @@ public class PublishGrades extends HttpServlet {
 
 		if (task.getDeadline().after(Util.correctTimezone(new Date())) || task.getShowPoints() != null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
 		request.setAttribute("task", task);
-		request.getRequestDispatcher("PublishGradesView").forward(request, response);
+		getServletContext().getNamedDispatcher("PublishGradesView").forward(request, response);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class PublishGrades extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -101,7 +101,7 @@ public class PublishGrades extends HttpServlet {
 
 		if (task.getDeadline().after(Util.correctTimezone(new Date())) || task.getShowPoints() != null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 

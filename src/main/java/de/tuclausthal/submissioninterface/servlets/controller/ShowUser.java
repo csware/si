@@ -63,7 +63,7 @@ public class ShowUser extends HttpServlet {
 		User user = DAOFactory.UserDAOIf(session).getUser(Util.parseInteger(request.getParameter("uid"), 0));
 		if (user == null) {
 			request.setAttribute("title", "BenutzerIn nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -86,6 +86,6 @@ public class ShowUser extends HttpServlet {
 		request.setAttribute("user", user);
 		request.setAttribute("participations", participations);
 		request.setAttribute("isAtLeastAdvisorOnce", isAtLeastAdvisorOnce);
-		request.getRequestDispatcher("ShowUserView").forward(request, response);
+		getServletContext().getNamedDispatcher("ShowUserView").forward(request, response);
 	}
 }

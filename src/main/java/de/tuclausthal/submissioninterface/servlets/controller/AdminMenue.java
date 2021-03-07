@@ -59,18 +59,18 @@ public class AdminMenue extends HttpServlet {
 		}
 
 		if ("newLecture".equals(request.getParameter("action"))) {
-			request.getRequestDispatcher("AdminMenueAddLectureView").forward(request, response);
+			getServletContext().getNamedDispatcher("AdminMenueAddLectureView").forward(request, response);
 		} else if ("showLecture".equals(request.getParameter("action")) && request.getParameter("lecture") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 			request.setAttribute("lecture", lecture);
 			request.setAttribute("participants", DAOFactory.ParticipationDAOIf(session).getLectureParticipations(lecture));
-			request.getRequestDispatcher("AdminMenueEditLectureView").forward(request, response);
+			getServletContext().getNamedDispatcher("AdminMenueEditLectureView").forward(request, response);
 		} else if ("showAdminUsers".equals(request.getParameter("action"))) {
 			request.setAttribute("superusers", DAOFactory.UserDAOIf(session).getSuperUsers());
-			request.getRequestDispatcher("AdminMenueShowAdminUsersView").forward(request, response);
+			getServletContext().getNamedDispatcher("AdminMenueShowAdminUsersView").forward(request, response);
 		} else { // list all lectures
 			request.setAttribute("lectures", DAOFactory.LectureDAOIf(session).getLectures());
-			request.getRequestDispatcher("AdminMenueOverView").forward(request, response);
+			getServletContext().getNamedDispatcher("AdminMenueOverView").forward(request, response);
 		}
 	}
 
@@ -175,7 +175,7 @@ public class AdminMenue extends HttpServlet {
 			}
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 		}
 	}
 }

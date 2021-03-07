@@ -63,7 +63,7 @@ public class ShowFile extends HttpServlet {
 
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -80,7 +80,7 @@ public class ShowFile extends HttpServlet {
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
 			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -96,7 +96,7 @@ public class ShowFile extends HttpServlet {
 					request.setAttribute("submission", submission);
 					request.setAttribute("code", code);
 					request.setAttribute("fileName", Util.escapeHTML(file.getName()));
-					request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/ShowFileView").forward(request, response);
+					getServletContext().getNamedDispatcher("ShowFileView").forward(request, response);
 					return;
 				}
 				setContentTypeBasedonFilenameExtension(response, file.getName(), "true".equals(request.getParameter("download")));
@@ -109,7 +109,7 @@ public class ShowFile extends HttpServlet {
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
 		request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-		request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 	}
 
 	private boolean isPlainTextFile(String lowercaseFilename) {

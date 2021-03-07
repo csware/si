@@ -56,7 +56,7 @@ public class DownloadSubmissionsByGroup extends HttpServlet {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -73,7 +73,7 @@ public class DownloadSubmissionsByGroup extends HttpServlet {
 			group = DAOFactory.GroupDAOIf(session).getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
 			if (group == null || group.getLecture().getId() != participation.getLecture().getId()) {
 				request.setAttribute("title", "Gruppe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 				return;
 			}
 		}

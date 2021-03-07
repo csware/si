@@ -59,7 +59,7 @@ public class DeleteFile extends HttpServlet {
 
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -76,14 +76,14 @@ public class DeleteFile extends HttpServlet {
 		if (task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
 			request.setAttribute("title", "Es sind keine Veränderungen an dieser Abgabe mehr möglich.");
 			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
 			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -94,13 +94,13 @@ public class DeleteFile extends HttpServlet {
 			if (file.exists() && file.isFile()) {
 				request.setAttribute("submission", submission);
 				request.setAttribute("filename", relativeFile);
-				request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/DeleteFileView").forward(request, response);
+				getServletContext().getNamedDispatcher("DeleteFileView").forward(request, response);
 				return;
 			}
 		}
 
 		request.setAttribute("title", "Datei nicht gefunden");
-		request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 		return;
 	}
 
@@ -112,7 +112,7 @@ public class DeleteFile extends HttpServlet {
 
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -128,13 +128,13 @@ public class DeleteFile extends HttpServlet {
 
 		if (task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
 			request.setAttribute("title", "Es sind keine Veränderungen an dieser Abgabe mehr möglich.");
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -160,7 +160,7 @@ public class DeleteFile extends HttpServlet {
 
 		request.setAttribute("title", "Datei nicht gefunden");
 		request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-		request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 		return;
 	}
 }

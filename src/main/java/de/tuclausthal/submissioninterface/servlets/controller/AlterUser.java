@@ -52,7 +52,7 @@ public class AlterUser extends HttpServlet {
 		User user = userDAO.getUser(RequestAdapter.getUser(request).getUid());
 		if (user == null) {
 			request.setAttribute("title", "BenutzerIn nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 

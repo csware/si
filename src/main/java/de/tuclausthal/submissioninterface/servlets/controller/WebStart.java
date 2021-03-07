@@ -35,7 +35,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
-import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -52,7 +51,7 @@ public class WebStart extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -66,18 +65,18 @@ public class WebStart extends HttpServlet {
 
 		if (task.getStart().after(Util.correctTimezone(new Date())) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
 		if ("argouml".equals(request.getParameter("tool"))) {
 			response.setContentType("application/x-java-jnlp-file");
 			request.setAttribute("task", task);
-			request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/WebStartArgoUMLView").forward(request, response);
+			getServletContext().getNamedDispatcher("WebStartArgoUMLView").forward(request, response);
 			return;
 		}
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
-		request.getRequestDispatcher("/" + Configuration.getInstance().getServletsPath() + "/MessageView").forward(request, response);
+		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 	}
 }

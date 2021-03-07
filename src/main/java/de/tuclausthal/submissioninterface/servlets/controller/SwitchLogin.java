@@ -44,7 +44,7 @@ public class SwitchLogin extends HttpServlet {
 		int uid = Util.parseInteger(request.getParameter("uid"), -1);
 		if (uid <= 0) {
 			request.setAttribute("title", "Invalid Request");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 		} else {
 			response.addCookie(new Cookie("privacy", "1"));
 			response.sendRedirect(Util.generateRedirectURL("ShowUser?uid=" + uid, response));

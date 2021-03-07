@@ -51,7 +51,7 @@ public class ShowLecture extends HttpServlet {
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -65,13 +65,13 @@ public class ShowLecture extends HttpServlet {
 		request.setAttribute("participation", participation);
 		if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 			request.setAttribute("joinAbleGroups", DAOFactory.GroupDAOIf(session).getJoinAbleGroups(lecture, participation.getGroup()));
-			request.getRequestDispatcher("ShowLectureStudentView").forward(request, response);
+			getServletContext().getNamedDispatcher("ShowLectureStudentView").forward(request, response);
 		} else if ("list".equals(request.getParameter("show"))) {
-			request.getRequestDispatcher("ShowLectureTutorFullView").forward(request, response);
+			getServletContext().getNamedDispatcher("ShowLectureTutorFullView").forward(request, response);
 		} else if ("csv".equals(request.getParameter("show"))) {
-			request.getRequestDispatcher("ShowLectureTutorCSVView").forward(request, response);
+			getServletContext().getNamedDispatcher("ShowLectureTutorCSVView").forward(request, response);
 		} else {
-			request.getRequestDispatcher("ShowLectureTutorView").forward(request, response);
+			getServletContext().getNamedDispatcher("ShowLectureTutorView").forward(request, response);
 		}
 	}
 }

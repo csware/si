@@ -355,10 +355,6 @@
     <url-pattern>/servlets/MarkEmptyTask</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>MarkEmptyTaskView</servlet-name>
-    <url-pattern>/servlets/MarkEmptyTaskView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
     <servlet-name>ShowTask</servlet-name>
     <url-pattern>/servlets/ShowTask</url-pattern>
   </servlet-mapping>
@@ -379,16 +375,8 @@
     <url-pattern>/servlets/ShowMarkHistory</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>ShowMarkHistoryView</servlet-name>
-    <url-pattern>/servlets/ShowMarkHistoryView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
     <servlet-name>ShowUser</servlet-name>
     <url-pattern>/servlets/ShowUser</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ShowUserView</servlet-name>
-    <url-pattern>/servlets/ShowUserView</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>EditGroup</servlet-name>
@@ -429,102 +417,6 @@
   <servlet-mapping>
     <servlet-name>DupeCheck</servlet-name>
     <url-pattern>/servlets/DupeCheck</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ShowLectureStudentView</servlet-name>
-    <url-pattern>/servlets/ShowLectureStudentView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ShowLectureTutorView</servlet-name>
-    <url-pattern>/servlets/ShowLectureTutorView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ShowLectureTutorFullView</servlet-name>
-    <url-pattern>/servlets/ShowLectureTutorFullView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ShowLectureTutorCSVView</servlet-name>
-    <url-pattern>/servlets/ShowLectureTutorCSVView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ShowTaskStudentView</servlet-name>
-    <url-pattern>/servlets/ShowTaskStudentView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ShowTaskTutorView</servlet-name>
-    <url-pattern>/servlets/ShowTaskTutorView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ShowTaskTutorPrintView</servlet-name>
-    <url-pattern>/servlets/ShowTaskTutorPrintView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>DupeCheckFormView</servlet-name>
-    <url-pattern>/servlets/DupeCheckFormView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ShowSubmissionView</servlet-name>
-    <url-pattern>/servlets/ShowSubmissionView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>EditGroupFormView</servlet-name>
-    <url-pattern>/servlets/EditGroupFormView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>SubmitSolutionFormView</servlet-name>
-    <url-pattern>/servlets/SubmitSolutionFormView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>SubmitSolutionAdvisorFormView</servlet-name>
-    <url-pattern>/servlets/SubmitSolutionAdvisorFormView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>SubscribeToLectureView</servlet-name>
-    <url-pattern>/servlets/SubscribeToLectureView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>TaskManagerView</servlet-name>
-    <url-pattern>/servlets/TaskManagerView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ShowFileView</servlet-name>
-    <url-pattern>/servlets/ShowFileView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>AdminMenueOverView</servlet-name>
-    <url-pattern>/servlets/AdminMenueOverView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>AdminMenueShowAdminUsersView</servlet-name>
-    <url-pattern>/servlets/AdminMenueShowAdminUsersView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>AdminMenueAddLectureView</servlet-name>
-    <url-pattern>/servlets/AdminMenueAddLectureView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>AdminMenueEditLectureView</servlet-name>
-    <url-pattern>/servlets/AdminMenueEditLectureView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>MessageView</servlet-name>
-    <url-pattern>/servlets/MessageView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>AddGroupFormView</servlet-name>
-    <url-pattern>/servlets/AddGroupFormView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>TestManagerAddTestFormView</servlet-name>
-    <url-pattern>/servlets/TestManagerAddTestFormView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>PerformStudentTestRunningView</servlet-name>
-    <url-pattern>/servlets/PerformStudentTestRunningView</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>PerformStudentTestResultView</servlet-name>
-    <url-pattern>/servlets/PerformStudentTestResultView</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>LocalExecutorStartUp</servlet-name>
@@ -578,10 +470,6 @@
     <servlet-name>TaskGroupManagerView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.TaskGroupManagerView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>TaskGroupManagerView</servlet-name>
-    <url-pattern>/servlets/TaskGroupManagerView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>SwitchLogin</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.SwitchLogin</servlet-class>
@@ -602,10 +490,6 @@
     <servlet-name>EditMultipleGroupsFormView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.EditMultipleGroupsFormView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>EditMultipleGroupsFormView</servlet-name>
-    <url-pattern>/servlets/EditMultipleGroupsFormView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>PublishGrades</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.PublishGrades</servlet-class>
@@ -618,10 +502,6 @@
     <servlet-name>PublishGradesView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PublishGradesView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>PublishGradesView</servlet-name>
-    <url-pattern>/servlets/PublishGradesView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>Noop</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.Noop</servlet-class>
@@ -642,42 +522,22 @@
     <servlet-name>WebStartArgoUMLView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.WebStartArgoUMLView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>WebStartArgoUMLView</servlet-name>
-    <url-pattern>/servlets/WebStartArgoUMLView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>PerformStudentTestArgoUMLView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PerformStudentTestArgoUMLView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>PerformStudentTestArgoUMLView</servlet-name>
-    <url-pattern>/servlets/PerformStudentTestArgoUMLView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>ShowTaskDescriptionView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ShowTaskDescriptionView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>ShowTaskDescriptionView</servlet-name>
-    <url-pattern>/servlets/ShowTaskDescriptionView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>SubmitSolutionPossiblePartnersView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.SubmitSolutionPossiblePartnersView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>SubmitSolutionPossiblePartnersView</servlet-name>
-    <url-pattern>/servlets/SubmitSolutionPossiblePartnersView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>MessageArgoUMLView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.MessageArgoUMLView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>MessageArgoUMLView</servlet-name>
-    <url-pattern>/servlets/MessageArgoUMLView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>MassMail</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.MassMail</servlet-class>
@@ -690,10 +550,6 @@
     <servlet-name>MassMailView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.MassMailView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>MassMailView</servlet-name>
-    <url-pattern>/servlets/MassMailView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>SearchSubmissions</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.SearchSubmissions</servlet-class>
@@ -706,18 +562,10 @@
     <servlet-name>SearchSubmissionsView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.SearchSubmissionsView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>SearchSubmissionsView</servlet-name>
-    <url-pattern>/servlets/SearchSubmissionsView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>SearchSubmissionsResultView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.SearchSubmissionsResultView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>SearchSubmissionsResultView</servlet-name>
-    <url-pattern>/servlets/SearchSubmissionsResultView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>PerformTest</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.PerformTest</servlet-class>
@@ -730,18 +578,10 @@
     <servlet-name>PerformTestTutorFormView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PerformTestTutorFormView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>PerformTestTutorFormView</servlet-name>
-    <url-pattern>/servlets/PerformTestTutorFormView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>PerformTestResultView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.PerformTestResultView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>PerformTestResultView</servlet-name>
-    <url-pattern>/servlets/PerformTestResultView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>GotoNextUngradedSubmission</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.GotoNextUngradedSubmission</servlet-class>
@@ -754,10 +594,6 @@
     <servlet-name>TaskManagerDynamicTaskPreView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.TaskManagerDynamicTaskPreView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>TaskManagerDynamicTaskPreView</servlet-name>
-    <url-pattern>/servlets/TaskManagerDynamicTaskPreView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>DownloadModelSolutionFile</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.DownloadModelSolutionFile</servlet-class>
@@ -778,10 +614,6 @@
     <servlet-name>JavaAdvancedIOTestManagerOverView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.JavaAdvancedIOTestManagerOverView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>JavaAdvancedIOTestManagerOverView</servlet-name>
-    <url-pattern>/servlets/JavaAdvancedIOTestManagerOverView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>DownloadSubmissionsByGroup</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.DownloadSubmissionsByGroup</servlet-class>
@@ -810,24 +642,12 @@
     <servlet-name>ShowGroupStudentView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ShowGroupStudentView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>ShowGroupStudentView</servlet-name>
-    <url-pattern>/servlets/ShowGroupStudentView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>DeleteFileView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.DeleteFileView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>DeleteFileView</servlet-name>
-    <url-pattern>/servlets/DeleteFileView</url-pattern>
-  </servlet-mapping>
   <servlet>
     <servlet-name>CloseSubmissionView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.CloseSubmissionView</servlet-class>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>CloseSubmissionView</servlet-name>
-    <url-pattern>/servlets/CloseSubmissionView</url-pattern>
-  </servlet-mapping>
 </web-app>

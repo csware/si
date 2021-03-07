@@ -79,7 +79,7 @@ public class TaskManager extends HttpServlet {
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -98,7 +98,7 @@ public class TaskManager extends HttpServlet {
 				task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 				if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
 					request.setAttribute("title", "Aufgabe nicht gefunden");
-					request.getRequestDispatcher("MessageView").forward(request, response);
+					getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 					return;
 				}
 				if (task.isMCTask()) {
@@ -107,7 +107,7 @@ public class TaskManager extends HttpServlet {
 			} else {
 				if (lecture.getTaskGroups().isEmpty()) {
 					request.setAttribute("title", "Es wurde noch keine Aufgabengruppe angelegt");
-					request.getRequestDispatcher("MessageView").forward(request, response);
+					getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 					return;
 				}
 				// temp. Task for code-reuse
@@ -123,7 +123,7 @@ public class TaskManager extends HttpServlet {
 			request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "advisorfiles" + System.getProperty("file.separator"))));
 			request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
 
-			request.getRequestDispatcher("TaskManagerView").forward(request, response);
+			getServletContext().getNamedDispatcher("TaskManagerView").forward(request, response);
 		} else if ((("editTaskGroup".equals(request.getParameter("action")) && request.getParameter("taskgroupid") != null) || (request.getParameter("action").equals("newTaskGroup") && request.getParameter("lecture") != null))) {
 			boolean editTaskGroup = request.getParameter("action").equals("editTaskGroup");
 			TaskGroup taskGroup;
@@ -132,7 +132,7 @@ public class TaskManager extends HttpServlet {
 				taskGroup = taskDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
 				if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
 					request.setAttribute("title", "Aufgabengruppe nicht gefunden");
-					request.getRequestDispatcher("MessageView").forward(request, response);
+					getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 					return;
 				}
 			} else {
@@ -141,18 +141,18 @@ public class TaskManager extends HttpServlet {
 				taskGroup.setLecture(lecture);
 			}
 			request.setAttribute("taskGroup", taskGroup);
-			request.getRequestDispatcher("TaskGroupManagerView").forward(request, response);
+			getServletContext().getNamedDispatcher("TaskGroupManagerView").forward(request, response);
 		} else if ("dynamictaskpreview".equals(request.getParameter("action"))) {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
 				request.setAttribute("title", "Aufgabe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 				return;
 			}
 			if (!task.isADynamicTask()) {
 				request.setAttribute("title", "Aufgabe ist keine dynamische Aufgabe");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 				return;
 			}
 
@@ -167,10 +167,10 @@ public class TaskManager extends HttpServlet {
 			request.setAttribute("correctResults", correctResults);
 			request.setAttribute("resultFields", dts.getResultFields(true));
 
-			request.getRequestDispatcher("TaskManagerDynamicTaskPreView").forward(request, response);
+			getServletContext().getNamedDispatcher("TaskManagerDynamicTaskPreView").forward(request, response);
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 		}
 	}
 
@@ -182,7 +182,7 @@ public class TaskManager extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null || task.getTaskGroup().getLecture().getId() != lecture.getId()) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -194,13 +194,13 @@ public class TaskManager extends HttpServlet {
 		long fileParts = request.getParts().stream().filter(part -> "file".equals(part.getName())).count();
 		if (fileParts == 0) {
 			request.setAttribute("title", "Keine Datei gefunden.");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 		if (fileParts > 1 && fileParts != request.getParts().stream().filter(part -> "file".equals(part.getName())).map(part -> Util.getUploadFileName(part)).collect(Collectors.toSet()).size()) {
 			request.setAttribute("title", "Mehrere Dateien gleichen Namens gefunden.");
 			request.setAttribute("message", "<div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 		// Process a file upload
@@ -311,7 +311,7 @@ public class TaskManager extends HttpServlet {
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -327,14 +327,14 @@ public class TaskManager extends HttpServlet {
 			TaskGroup taskGroup = DAOFactory.TaskGroupDAOIf(session).getTaskGroup(Util.parseInteger(request.getParameter("taskGroup"), 0));
 			if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
 				request.setAttribute("title", "Aufgabengruppe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			}
 			Task task;
 			if (request.getParameter("action").equals("saveTask")) {
 				task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 				if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
 					request.setAttribute("title", "Aufgabe nicht gefunden");
-					request.getRequestDispatcher("MessageView").forward(request, response);
+					getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 					return;
 				}
 				if (!task.isMCTask()) {
@@ -419,7 +419,7 @@ public class TaskManager extends HttpServlet {
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
 				request.setAttribute("title", "Aufgabe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			} else {
 				taskDAO.deleteTask(task);
 			}
@@ -438,7 +438,7 @@ public class TaskManager extends HttpServlet {
 				taskGroup = taskGroupDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
 				if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
 					request.setAttribute("title", "Aufgabengruppe nicht gefunden");
-					request.getRequestDispatcher("MessageView").forward(request, response);
+					getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 					return;
 				}
 				taskGroup.setTitle(request.getParameter("title"));
@@ -457,7 +457,7 @@ public class TaskManager extends HttpServlet {
 			TaskGroup taskGroup = taskGroupDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
 			if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
 				request.setAttribute("title", "Aufgabengruppe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			} else {
 				Transaction tx = session.beginTransaction();
 				taskGroupDAO.deleteTaskGroup(taskGroup);
@@ -470,7 +470,7 @@ public class TaskManager extends HttpServlet {
 			PointCategory pointCategory = pointCategoryDAO.getPointCategory(Util.parseInteger(request.getParameter("pointCategoryId"), 0));
 			if (pointCategory == null || pointCategory.getTask().getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
 				request.setAttribute("title", "Punktkategorie nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 				return;
 			}
 			Transaction tx = session.beginTransaction();
@@ -490,7 +490,7 @@ public class TaskManager extends HttpServlet {
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
 				request.setAttribute("title", "Aufgabe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 				return;
 			}
 			if (Util.convertToPoints(request.getParameter("points"), task.getMinPointStep()) > 0) {
@@ -504,7 +504,7 @@ public class TaskManager extends HttpServlet {
 				response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
 			} else {
 				request.setAttribute("title", "Punkte ungültig.");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			}
 			return;
 		} else if ("provideModelSolutionToStudents".equals(request.getParameter("action"))) {
@@ -512,7 +512,7 @@ public class TaskManager extends HttpServlet {
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
 				request.setAttribute("title", "Aufgabe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 				return;
 			}
 
@@ -528,7 +528,7 @@ public class TaskManager extends HttpServlet {
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
 				request.setAttribute("title", "Aufgabe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 				return;
 			}
 			DAOFactory.MCOptionDAOIf(session).createMCOption(task, request.getParameter("option"), request.getParameter("correkt") != null);
@@ -538,7 +538,7 @@ public class TaskManager extends HttpServlet {
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
 				request.setAttribute("title", "Aufgabe nicht gefunden");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 				return;
 			}
 			for (MCOption option : DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task)) {
@@ -550,7 +550,7 @@ public class TaskManager extends HttpServlet {
 			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 		}
 	}
 }

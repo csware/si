@@ -53,7 +53,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -65,18 +65,18 @@ public class CloseSubmissionByStudent extends HttpServlet {
 
 		if (!submission.getTask().isAllowPrematureSubmissionClosing()) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
 		if (submission.getTask().getDeadline().before(Util.correctTimezone(new Date())) || submission.isClosed()) {
 			request.setAttribute("title", "An dieser Abgabe sind keine Veränderungen mehr möglich.");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
 		request.setAttribute("submission", submission);
-		request.getRequestDispatcher("CloseSubmissionView").forward(request, response);
+		getServletContext().getNamedDispatcher("CloseSubmissionView").forward(request, response);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -99,7 +99,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 
 		if (!submission.getTask().isAllowPrematureSubmissionClosing()) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -109,7 +109,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 			tx.rollback();
 			request.setAttribute("title", "An dieser Abgabe sind keine Veränderungen mehr möglich.");
 			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + submission.getTask().getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 

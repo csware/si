@@ -53,7 +53,7 @@ public class JoinGroup extends HttpServlet {
 		Group group = groupDAO.getGroupLocked(Util.parseInteger(request.getParameter("groupid"), 0));
 		if (group == null) {
 			request.setAttribute("title", "Gruppe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			tx.commit();
 			return;
 		}

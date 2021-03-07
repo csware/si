@@ -61,7 +61,7 @@ public class ShowSubmission extends HttpServlet {
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -77,7 +77,7 @@ public class ShowSubmission extends HttpServlet {
 
 		request.setAttribute("submission", submission);
 		request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringList(new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"))));
-		request.getRequestDispatcher("ShowSubmissionView").forward(request, response);
+		getServletContext().getNamedDispatcher("ShowSubmissionView").forward(request, response);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class ShowSubmission extends HttpServlet {
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 

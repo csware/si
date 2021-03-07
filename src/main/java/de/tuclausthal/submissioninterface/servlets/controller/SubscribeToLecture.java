@@ -46,7 +46,7 @@ public class SubscribeToLecture extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
 		request.setAttribute("lectures", DAOFactory.LectureDAOIf(session).getCurrentLecturesWithoutUser(RequestAdapter.getUser(request)));
-		request.getRequestDispatcher("SubscribeToLectureView").forward(request, response);
+		getServletContext().getNamedDispatcher("SubscribeToLectureView").forward(request, response);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class SubscribeToLecture extends HttpServlet {
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 

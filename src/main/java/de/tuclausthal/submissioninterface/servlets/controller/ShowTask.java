@@ -58,7 +58,7 @@ public class ShowTask extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -72,7 +72,7 @@ public class ShowTask extends HttpServlet {
 
 		if (task.getStart().after(Util.correctTimezone(new Date())) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -87,17 +87,17 @@ public class ShowTask extends HttpServlet {
 			if (submission != null) {
 				response.addHeader("SID", String.valueOf(submission.getSubmissionid()));
 			}
-			request.getRequestDispatcher("ShowTaskDescriptionView").forward(request, response);
+			getServletContext().getNamedDispatcher("ShowTaskDescriptionView").forward(request, response);
 		} else if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 			if ("grouplist".equals(request.getParameter("action"))) {
 				Group group = DAOFactory.GroupDAOIf(session).getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
 				if (group != null && group.getLecture().getId() == participation.getLecture().getId()) {
 					request.setAttribute("group", group);
 				}
-				request.getRequestDispatcher("ShowTaskTutorPrintView").forward(request, response);
+				getServletContext().getNamedDispatcher("ShowTaskTutorPrintView").forward(request, response);
 			} else {
 				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
-				request.getRequestDispatcher("ShowTaskTutorView").forward(request, response);
+				getServletContext().getNamedDispatcher("ShowTaskTutorView").forward(request, response);
 			}
 		} else {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
@@ -118,7 +118,7 @@ public class ShowTask extends HttpServlet {
 			}
 
 			request.setAttribute("submission", submission);
-			request.getRequestDispatcher("ShowTaskStudentView").forward(request, response);
+			getServletContext().getNamedDispatcher("ShowTaskStudentView").forward(request, response);
 		}
 	}
 }

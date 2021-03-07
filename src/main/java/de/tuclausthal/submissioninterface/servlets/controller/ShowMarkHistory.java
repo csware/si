@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -51,7 +51,7 @@ public class ShowMarkHistory extends HttpServlet {
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -65,6 +65,6 @@ public class ShowMarkHistory extends HttpServlet {
 
 		request.setAttribute("submission", submission);
 		request.setAttribute("data", DAOFactory.PointsDAOIf(session).getPointHistoryForSubmission(submission));
-		request.getRequestDispatcher("ShowMarkHistoryView").forward(request, response);
+		getServletContext().getNamedDispatcher("ShowMarkHistoryView").forward(request, response);
 	}
 }

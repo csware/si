@@ -51,7 +51,7 @@ public class EditMultipleGroups extends HttpServlet {
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -63,7 +63,7 @@ public class EditMultipleGroups extends HttpServlet {
 		}
 
 		request.setAttribute("lecture", lecture);
-		request.getRequestDispatcher("EditMultipleGroupsFormView").forward(request, response);
+		getServletContext().getNamedDispatcher("EditMultipleGroupsFormView").forward(request, response);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class EditMultipleGroups extends HttpServlet {
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 

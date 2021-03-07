@@ -58,7 +58,7 @@ public class SearchSubmissions extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -71,7 +71,7 @@ public class SearchSubmissions extends HttpServlet {
 		}
 
 		request.setAttribute("task", task);
-		request.getRequestDispatcher("SearchSubmissionsView").forward(request, response);
+		getServletContext().getNamedDispatcher("SearchSubmissionsView").forward(request, response);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class SearchSubmissions extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -95,7 +95,7 @@ public class SearchSubmissions extends HttpServlet {
 
 		if (request.getParameterValues("search") == null || request.getParameterValues("search").length == 0 || request.getParameter("q") == null || request.getParameter("search").trim().isEmpty()) {
 			request.setAttribute("title", "Nicht gesucht");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -150,7 +150,7 @@ public class SearchSubmissions extends HttpServlet {
 
 		request.setAttribute("task", task);
 		request.setAttribute("results", foundSubmissions);
-		request.getRequestDispatcher("SearchSubmissionsResultView").forward(request, response);
+		getServletContext().getNamedDispatcher("SearchSubmissionsResultView").forward(request, response);
 	}
 
 	static private boolean arrayContains(String array[], String searchFor) {

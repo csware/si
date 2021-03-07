@@ -67,7 +67,7 @@ public class TestManager extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -80,10 +80,10 @@ public class TestManager extends HttpServlet {
 
 		if ("newTest".equals(request.getParameter("action"))) {
 			request.setAttribute("task", task);
-			request.getRequestDispatcher("TestManagerAddTestFormView").forward(request, response);
+			getServletContext().getNamedDispatcher("TestManagerAddTestFormView").forward(request, response);
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class TestManager extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -145,7 +145,7 @@ public class TestManager extends HttpServlet {
 			Part file = request.getPart("testcase");
 			if (file == null || !Util.getUploadFileName(file).endsWith(".xmi")) {
 				request.setAttribute("title", "Dateiname ungültig.");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 				session.getTransaction().rollback();
 				return;
 			}
@@ -183,7 +183,7 @@ public class TestManager extends HttpServlet {
 			Part file = request.getPart("testcase");
 			if (file == null || !Util.getUploadFileName(file).endsWith(".jar")) {
 				request.setAttribute("title", "Dateiname ungültig.");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 				session.getTransaction().rollback();
 				return;
 			}
@@ -206,7 +206,7 @@ public class TestManager extends HttpServlet {
 				Pattern.compile(request.getParameter("regexp"));
 			} catch (PatternSyntaxException e) {
 				request.setAttribute("title", "Ungültiger regulärer Ausdruck");
-				request.getRequestDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 				return;
 			}
 			// store it
@@ -280,7 +280,7 @@ public class TestManager extends HttpServlet {
 			return;
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 
 		}
 	}

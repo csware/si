@@ -54,7 +54,7 @@ public class DupeCheck extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 
@@ -67,7 +67,7 @@ public class DupeCheck extends HttpServlet {
 		}
 
 		request.setAttribute("task", task);
-		request.getRequestDispatcher("DupeCheckFormView").forward(request, response);
+		getServletContext().getNamedDispatcher("DupeCheckFormView").forward(request, response);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class DupeCheck extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 

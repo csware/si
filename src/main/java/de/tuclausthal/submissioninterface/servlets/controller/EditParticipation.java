@@ -51,7 +51,7 @@ public class EditParticipation extends HttpServlet {
 		Participation participation = participationDAO.getParticipation(Util.parseInteger(request.getParameter("participationid"), 0));
 		if (participation == null) {
 			request.setAttribute("title", "Teilnahme nicht gefunden");
-			request.getRequestDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
 		Participation callerParticipation = participationDAO.getParticipation(RequestAdapter.getUser(request), participation.getLecture());
