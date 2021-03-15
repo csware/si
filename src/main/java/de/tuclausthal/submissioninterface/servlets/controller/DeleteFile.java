@@ -101,7 +101,6 @@ public class DeleteFile extends HttpServlet {
 
 		request.setAttribute("title", "Datei nicht gefunden");
 		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
-		return;
 	}
 
 	@Override
@@ -161,6 +160,5 @@ public class DeleteFile extends HttpServlet {
 		request.setAttribute("title", "Datei nicht gefunden");
 		request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
-		return;
 	}
 }
