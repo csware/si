@@ -650,4 +650,16 @@
     <servlet-name>CloseSubmissionView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.CloseSubmissionView</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>MassMarkTask</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.MassMarkTask</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MassMarkTask</servlet-name>
+    <url-pattern>/servlets/MassMarkTask</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>MassMarkTaskView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.MassMarkTaskView</servlet-class>
+  </servlet>
 </web-app>

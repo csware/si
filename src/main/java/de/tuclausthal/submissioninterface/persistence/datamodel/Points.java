@@ -177,6 +177,11 @@ public class Points implements Serializable {
 		setPointStatus(pointStatus.ordinal());
 	}
 
+	@Transient
+	public PointStatus getTypedPointStatus() {
+		return PointStatus.values()[pointStatus];
+	}
+
 	public static enum PointStatus {
 		NICHT_BEWERTET, NICHT_ABGENOMMEN, ABGENOMMEN_FAILED, ABGENOMMEN
 	}
