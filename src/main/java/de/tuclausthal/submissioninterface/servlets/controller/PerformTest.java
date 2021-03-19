@@ -46,6 +46,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -59,6 +60,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 @MultipartConfig(maxFileSize = Configuration.MAX_UPLOAD_SIZE)
+@GATEController
 public class PerformTest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

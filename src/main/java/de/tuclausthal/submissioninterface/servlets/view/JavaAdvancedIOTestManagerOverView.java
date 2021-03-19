@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTestStep;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -36,6 +37,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a form for adding/editing/deleting advanved Java IO test steps
  * @author Sven Strickroth
  */
+@GATEView
 public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

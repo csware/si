@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.controller.SelfTest.TestResult;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -36,6 +37,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View for the SelfTest
  * @author Sven Strickroth
  */
+@GATEView
 public class SelfTestView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

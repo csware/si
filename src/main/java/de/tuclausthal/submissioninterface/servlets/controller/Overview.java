@@ -26,12 +26,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Shibboleth;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Controller servlet for displaying the startpage of the system
  * @author Sven Strickroth
  */
+@GATEController
 public class Overview extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

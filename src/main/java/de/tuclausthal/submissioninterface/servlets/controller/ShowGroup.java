@@ -31,6 +31,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -39,6 +40,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  *
  */
+@GATEController
 public class ShowGroup extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

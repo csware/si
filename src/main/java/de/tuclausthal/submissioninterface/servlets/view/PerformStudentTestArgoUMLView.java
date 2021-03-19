@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * Copyright 2011 Joachim Schramm
  * 
  * This file is part of the SubmissionInterface.
@@ -28,11 +28,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.util.Util;
 
+@GATEView
 public class PerformStudentTestArgoUMLView extends HttpServlet {
-
 	private static final long serialVersionUID = 1L;
 
 	@Override

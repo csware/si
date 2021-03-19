@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -35,6 +36,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a form for adding a new lecture
  * @author Sven Strickroth
  */
+@GATEView
 public class AdminMenueAddLectureView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

@@ -42,6 +42,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -50,6 +51,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for exporting lecture points of all participants as CSV
  * @author Sven Strickroth
  */
+@GATEView
 public class ShowLectureTutorCSVView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

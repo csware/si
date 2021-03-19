@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -36,6 +37,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a file as HTML document
  * @author Sven Strickroth
  */
+@GATEView
 public class ShowFileView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

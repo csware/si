@@ -34,6 +34,7 @@ import org.hibernate.Transaction;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -42,6 +43,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * the submitted solution before the deadline ends, to enable the grading
  * options for the tutors and advisors.
  */
+@GATEController
 public class CloseSubmissionByStudent extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

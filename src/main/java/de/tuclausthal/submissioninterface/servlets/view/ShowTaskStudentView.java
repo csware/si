@@ -48,6 +48,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStat
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.template.Template;
@@ -59,6 +60,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * 
  * @author Sven Strickroth
  */
+@GATEView
 public class ShowTaskStudentView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

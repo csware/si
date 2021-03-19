@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -36,6 +37,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a form for adding/editing/deleting docker test steps
  * @author Sven Strickroth
  */
+@GATEView
 public class DockerTestManagerOverView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

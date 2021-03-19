@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -39,6 +40,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying the admin users and an add form for new ones
  * @author Sven Strickroth
  */
+@GATEView
 public class AdminMenueShowAdminUsersView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

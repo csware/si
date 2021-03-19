@@ -41,6 +41,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -51,6 +52,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for loading and displaying a submission to tutors
  * @author Sven Strickroth
  */
+@GATEController
 public class ShowSubmission extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

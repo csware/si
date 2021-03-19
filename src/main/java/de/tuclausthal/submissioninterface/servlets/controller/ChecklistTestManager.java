@@ -36,6 +36,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTestChe
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -43,6 +44,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for managing checklist checklists by advisors
  * @author Sven Strickroth
  */
+@GATEController
 public class ChecklistTestManager extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

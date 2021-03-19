@@ -54,6 +54,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowFile;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowDockerTestResult;
@@ -68,6 +69,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * 
  * @author Sven Strickroth
  */
+@GATEView
 public class ShowSubmissionView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

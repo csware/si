@@ -38,6 +38,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -45,6 +46,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 /**
  * controller servlet to download all submissions of a group as a zip file
  */
+@GATEController
 public class DownloadSubmissionsByGroup extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

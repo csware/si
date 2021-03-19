@@ -40,6 +40,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -48,6 +49,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for searching a task
  * @author Sven Strickroth
  */
+@GATEController
 public class SearchSubmissions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

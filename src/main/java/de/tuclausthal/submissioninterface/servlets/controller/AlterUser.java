@@ -32,6 +32,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -40,6 +41,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for changeing user properties
  * @author Sven Strickroth
  */
+@GATEController
 public class AlterUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

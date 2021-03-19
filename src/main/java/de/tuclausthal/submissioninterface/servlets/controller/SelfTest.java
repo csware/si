@@ -48,6 +48,7 @@ import de.tuclausthal.submissioninterface.dupecheck.jplag.JPlagAdapter;
 import de.tuclausthal.submissioninterface.dupecheck.plaggie.PlaggieAdapter;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.executor.impl.LocalExecutor;
@@ -63,8 +64,8 @@ import de.tuclausthal.submissioninterface.util.Util;
 /**
  * Controller for a short Self-Test
  * @author Sven Strickroth
- *
  */
+@GATEController
 public class SelfTest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

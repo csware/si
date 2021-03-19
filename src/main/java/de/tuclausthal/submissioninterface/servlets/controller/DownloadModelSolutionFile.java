@@ -38,6 +38,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ModelSolutionPro
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -47,6 +48,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  *
  */
+@GATEController(recursive = true)
 public class DownloadModelSolutionFile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

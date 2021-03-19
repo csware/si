@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -37,6 +38,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a form for adding/editing a task
  * @author Sven Strickroth
  */
+@GATEView
 public class TaskManagerDynamicTaskPreView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

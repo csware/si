@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -36,6 +37,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  * @author Joachim Schramm
  */
+@GATEView
 public class WebStartArgoUMLView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -39,6 +40,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying the startpage of the system
  * @author Sven Strickroth
  */
+@GATEView
 public class OverviewView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

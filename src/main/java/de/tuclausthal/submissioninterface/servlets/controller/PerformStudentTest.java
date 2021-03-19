@@ -49,6 +49,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.testframework.TestExecutor;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
@@ -59,6 +60,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for performing a test
  * @author Sven Strickroth
  */
+@GATEController
 public class PerformStudentTest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

@@ -34,12 +34,14 @@ import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Controller-Servlet für den ArgoUML WebStart
  */
+@GATEController
 public class WebStart extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

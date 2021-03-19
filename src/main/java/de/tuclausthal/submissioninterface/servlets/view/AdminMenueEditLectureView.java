@@ -32,6 +32,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -40,6 +41,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a form for editing a lecture
  * @author Sven Strickroth
  */
+@GATEView
 public class AdminMenueEditLectureView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

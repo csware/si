@@ -41,6 +41,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -50,6 +51,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  *
  */
+@GATEController(recursive = true)
 public class ShowFile extends HttpServlet {
 	private final static long serialVersionUID = 1L;
 	private final static String[] plainTextFiles = new String[] { "xml", "htm", "html", "jsp", "txt", "css", "js", "java", "c", "cpp", "h", "hs", "project", "classpath", "patch", "diff", "sql", "php", "pl", "py", "rb", "tex", "log", "bib", "cfg", "sml", "lcirc" };

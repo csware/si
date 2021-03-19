@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -33,6 +34,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for clearing up the session and redirect to a user overview page
  * @author Sven Strickroth
  */
+@GATEController
 public class SwitchLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
