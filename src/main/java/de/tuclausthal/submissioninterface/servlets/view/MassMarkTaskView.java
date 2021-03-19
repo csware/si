@@ -64,6 +64,10 @@ public class MassMarkTaskView extends HttpServlet {
 		out.println("<td><input type=checkbox name=create" + (!(task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) ? " disabled" : "") + "></td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Existierende Bewertungen aktualisieren:</th>");
+		out.println("<td><input type=checkbox name=override></td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<th>Vorschau/Dry-Run:</th>");
 		out.println("<td><input type=checkbox name=dryrun checked></td>");
 		out.println("</tr>");

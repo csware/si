@@ -140,6 +140,7 @@ public class MassMarkTask extends HttpServlet {
 
 		boolean dryRun = request.getParameter("dryrun") != null;
 		boolean onlyExistingSubmission = request.getParameter("create") == null || !(task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()));
+		boolean overrideExistingMarks = request.getParameter("override") != null;
 
 		int columns = 4 + (!task.getPointCategories().isEmpty() ? task.getPointCategories().size() : 1);
 		List<PointCategory> pointCategories = new ArrayList<>(task.getPointCategories());
@@ -177,7 +178,7 @@ public class MassMarkTask extends HttpServlet {
 					errors.add("Die Abgabe zu Email-Adresse \"" + Util.escapeHTML(line[0]) + "\" weist mehrere assoziierte Studierende auf.");
 					continue;
 				}
-				if (submission.getPoints() != null) {
+				if (!overrideExistingMarks && submission.getPoints() != null) {
 					errors.add("Email-Adresse \"" + Util.escapeHTML(line[0]) + "\" wurde bereits bewertet.");
 					continue;
 				}
