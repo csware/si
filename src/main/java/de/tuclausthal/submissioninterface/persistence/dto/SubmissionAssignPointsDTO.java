@@ -18,6 +18,8 @@
 
 package de.tuclausthal.submissioninterface.persistence.dto;
 
+import java.util.List;
+
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
@@ -25,6 +27,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 public class SubmissionAssignPointsDTO {
 	private Submission submission;
 	private Participation participation;
+	private List<Integer> pointCategories;
 	private Points points;
 
 	/**
@@ -36,6 +39,17 @@ public class SubmissionAssignPointsDTO {
 		this.submission = submission;
 		this.participation = participation;
 		this.points = points;
+	}
+
+	/**
+	 * @param submission
+	 * @param participation
+	 * @param points
+	 * @param pointcategories
+	 */
+	public SubmissionAssignPointsDTO(Submission submission, Participation participation, Points points, List<Integer> pointcategories) {
+		this(submission, participation, points);
+		this.pointCategories = pointcategories;
 	}
 
 	/**
@@ -57,5 +71,12 @@ public class SubmissionAssignPointsDTO {
 	 */
 	public Participation getParticipation() {
 		return participation;
+	}
+
+	/**
+	 * @return the pointCategories
+	 */
+	public List<Integer> getPointCategories() {
+		return pointCategories;
 	}
 }

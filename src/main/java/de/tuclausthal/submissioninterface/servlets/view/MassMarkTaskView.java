@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.dto.SubmissionAssignPointsDTO;
 import de.tuclausthal.submissioninterface.template.Template;
@@ -72,7 +73,15 @@ public class MassMarkTaskView extends HttpServlet {
 		out.println("</FORM>");
 
 		out.println("<h3>Aufbau der CSV-Datei:</h3>");
-		out.println("<p>Spalten: E-Mail-Adresse;Interner Kommentar;Externer Kommentar;Abgenommen (0=nicht abgenommen|1=abgenommen|2=nicht bestanden);Punkte</p>");
+		out.print("<p>Spalten: E-Mail-Adresse;Interner Kommentar;Externer Kommentar;Abgenommen (0=nicht abgenommen|1=abgenommen|2=nicht bestanden)");
+		if (!task.getPointCategories().isEmpty()) {
+			for (PointCategory category : task.getPointCategories()) {
+				out.print(";" + Util.escapeHTML(Util.csvQuote(category.getDescription())) + "");
+			}
+		} else {
+			out.print(";Punkte");
+		}
+		out.println("</p>");
 		out.println("<p>Die Datei ist UTF-8 kodiert, enthält eine Überschriftenzeile, die Felder sind durch \";\" getrennt, Punkte haben \",\" oder \".\" als Dezimaltrennzeichen und Werte mit Zeilenumbruch, doppelte Anführungszeichen oder Semikolon sind in doppelte Anführungszeichen eingeschlossen (Escaping von Anführungszeichen mit \"\\\").</p>");
 
 		template.printTemplateFooter();
@@ -107,7 +116,10 @@ public class MassMarkTaskView extends HttpServlet {
 		out.println("<th>Interner Kommentar</th>");
 		out.println("<th>Öffentlicher Kommentar</th>");
 		out.println("<th>Abgenommen</th>");
-		out.println("<th>Punkte</th>");
+		for (PointCategory category : task.getPointCategories()) {
+			out.println("<th>" + Util.escapeHTML(category.getDescription()) + "</th>");
+		}
+		out.println("<th>Gesamt Punkte</th>");
 		out.println("</tr>");
 		for (SubmissionAssignPointsDTO submissionAssignPointsDTO : points) {
 			out.println("<tr>");
@@ -115,6 +127,11 @@ public class MassMarkTaskView extends HttpServlet {
 			out.println("<td>" + Util.escapeHTML(submissionAssignPointsDTO.getPoints().getInternalComment()) + "</td>");
 			out.println("<td>" + Util.escapeHTML(submissionAssignPointsDTO.getPoints().getPublicComment()) + "</td>");
 			out.println("<td>" + Util.boolToHTML(submissionAssignPointsDTO.getPoints().getPointsOk()) + "</td>");
+			if (submissionAssignPointsDTO.getPointCategories() != null) {
+				for (Integer categoryPoints : submissionAssignPointsDTO.getPointCategories()) {
+					out.println("<td class=\"points\">" + Util.showPoints(categoryPoints) + "</td>");
+				}
+			}
 			out.println("<td class=\"points" + Util.getPointsCSSClass(submissionAssignPointsDTO.getPoints()) + "\">" + Util.showPoints(submissionAssignPointsDTO.getPoints().getPointsByStatus(task.getMinPointStep())) + "</td>");
 			out.println("</tr>");
 		}

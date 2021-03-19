@@ -124,9 +124,9 @@ public class ShowSubmission extends HttpServlet {
 			if (request.getParameter("isdupe") != null && Util.parseInteger(request.getParameter("duplicate"), -1) >= 0) {
 				duplicate = Util.parseInteger(request.getParameter("duplicate"), -1);
 			}
-			// attention: quite similar code in MarkEmptyTask
+			// attention: quite similar code in MarkEmptyTask and MassMarkTask
 			if (!task.getPointCategories().isEmpty()) {
-				pointsDAO.createPoints(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, duplicate);
+				pointsDAO.createPointsFromRequestParameters(request.getParameterMap(), submission, participation, publicComment, internalComment, pointStatus, duplicate);
 			} else {
 				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, duplicate);
 			}

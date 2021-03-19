@@ -48,6 +48,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
@@ -85,13 +86,6 @@ public class MassMarkTask extends HttpServlet {
 			return;
 		}
 
-		if (!task.getPointCategories().isEmpty()) {
-			request.setAttribute("title", "Aufgabe nicht unterstützt");
-			request.setAttribute("message", "Aktuell werden für den Upload nur Aufgaben ohne detaillierte Bewertungskriterien unterstützt.");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
-			return;
-		}
-
 		request.setAttribute("task", task);
 		getServletContext().getNamedDispatcher("MassMarkTaskView").forward(request, response);
 	}
@@ -116,13 +110,6 @@ public class MassMarkTask extends HttpServlet {
 
 		if (request.getPart("file") == null) {
 			request.setAttribute("title", "Keine Datei gefunden.");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
-			return;
-		}
-
-		if (!task.getPointCategories().isEmpty()) {
-			request.setAttribute("title", "Aufgabe nicht unterstützt");
-			request.setAttribute("message", "Aktuell werden für den Upload nur Aufgaben ohne detaillierte Bewertungskriterien unterstützt.");
 			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
 		}
@@ -154,10 +141,12 @@ public class MassMarkTask extends HttpServlet {
 		boolean dryRun = request.getParameter("dryrun") != null;
 		boolean onlyExistingSubmission = request.getParameter("create") == null || !(task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()));
 
+		int columns = 4 + (!task.getPointCategories().isEmpty() ? task.getPointCategories().size() : 1);
+		List<PointCategory> pointCategories = new ArrayList<>(task.getPointCategories());
 		Transaction tx = session.beginTransaction();
 		for (int i = 1; i < lines.size(); ++i) {
 			String[] line = lines.get(i);
-			if (line.length != 5) {
+			if (line.length != columns) {
 				request.setAttribute("title", "Zeile mit ungültigem Format gefunden.");
 				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 				return;
@@ -194,6 +183,7 @@ public class MassMarkTask extends HttpServlet {
 				}
 			}
 			Points point = new Points();
+			point.setIssuedBy(participation);
 			point.setInternalComment(line[1]);
 			point.setPublicComment(line[2]);
 			if ("0".equals(line[3])) {
@@ -206,18 +196,34 @@ public class MassMarkTask extends HttpServlet {
 				errors.add("Email-Adresse \"" + Util.escapeHTML(line[0]) + "\" enthält ungültigen \"Abgenommen\" Wert, nur 0/1 ist erlaubt.");
 				continue;
 			}
-			int origPoints = Util.convertToPoints(line[4], task.getMinPointStep());
-			int issuedPoints = origPoints;
-			if (issuedPoints > task.getMaxPoints()) {
-				issuedPoints = task.getMaxPoints();
+			if (task.getPointCategories().isEmpty()) {
+				int origPoints = Util.convertToPoints(line[4], task.getMinPointStep());
+				int issuedPoints = origPoints;
+				if (issuedPoints > task.getMaxPoints()) {
+					issuedPoints = task.getMaxPoints();
+				}
+				if (origPoints != issuedPoints) {
+					errors.add("Email-Adresse \"" + Util.escapeHTML(line[0]) + "\" enthielt eine ungültige Punktangabe.");
+					continue;
+				}
+				point.setPoints(issuedPoints);
+				points.add(new SubmissionAssignPointsDTO(submission, studentParticipation, point));
+			} else {
+				int sumIssuedPoints = 0;
+				List<Integer> categoryPoints = new ArrayList<>();
+				for (int j = 0; j < pointCategories.size(); ++j) {
+					int origPoints = Util.convertToPoints(line[4 + j], task.getMinPointStep());
+					int issuedPoints = origPoints;
+					if (issuedPoints > pointCategories.get(j).getPoints()) {
+						issuedPoints = pointCategories.get(j).getPoints();
+						errors.add("Email-Adresse \"" + Util.escapeHTML(line[0]) + "\" enthielt ungültige Punktangabe für \"" + Util.escapeHTML(pointCategories.get(j).getDescription()) + "\".");
+					}
+					categoryPoints.add(issuedPoints);
+					sumIssuedPoints += issuedPoints;
+				}
+				point.setPoints(sumIssuedPoints);
+				points.add(new SubmissionAssignPointsDTO(submission, studentParticipation, point, categoryPoints));
 			}
-			if (origPoints != issuedPoints) {
-				errors.add("Email-Adresse \"" + Util.escapeHTML(line[0]) + "\" enthielt eine ungültige Punktangabe.");
-				continue;
-			}
-			point.setPoints(issuedPoints);
-			point.setIssuedBy(participation);
-			points.add(new SubmissionAssignPointsDTO(submission, studentParticipation, point));
 		}
 
 		if (dryRun || !errors.isEmpty()) {
@@ -235,7 +241,13 @@ public class MassMarkTask extends HttpServlet {
 			if (submission == null) {
 				submission = submissionDAO.createSubmission(task, submissionAssignPointsDTO.getParticipation());
 			}
-			pointsDAO.createPoints(submissionAssignPointsDTO.getPoints().getPoints().intValue(), submissionAssignPointsDTO.getSubmission(), submissionAssignPointsDTO.getPoints().getIssuedBy(), submissionAssignPointsDTO.getPoints().getPublicComment(), submissionAssignPointsDTO.getPoints().getInternalComment(), submissionAssignPointsDTO.getPoints().getTypedPointStatus(), null);
+
+			// attention: quite similar code in ShowSubmission and MassMarkTask
+			if (!task.getPointCategories().isEmpty()) {
+				pointsDAO.createPoints(submissionAssignPointsDTO.getPointCategories(), submission, submissionAssignPointsDTO.getPoints().getIssuedBy(), submissionAssignPointsDTO.getPoints().getPublicComment(), submissionAssignPointsDTO.getPoints().getInternalComment(), submissionAssignPointsDTO.getPoints().getTypedPointStatus(), null);
+			} else {
+				pointsDAO.createPoints(submissionAssignPointsDTO.getPoints().getPoints().intValue(), submission, submissionAssignPointsDTO.getPoints().getIssuedBy(), submissionAssignPointsDTO.getPoints().getPublicComment(), submissionAssignPointsDTO.getPoints().getInternalComment(), submissionAssignPointsDTO.getPoints().getTypedPointStatus(), null);
+			}
 		}
 		tx.commit();
 		response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));

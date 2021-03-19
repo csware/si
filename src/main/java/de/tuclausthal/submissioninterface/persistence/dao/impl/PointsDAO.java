@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -151,7 +152,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	}
 
 	@Override
-	public Points createPoints(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate) {
+	public Points createPoints(List<Integer> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate) {
 		Session session = getSession();
 
 		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
@@ -167,6 +168,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 			lastPointGiven = pointsGivenIterator.next();
 		}
 		int numPoints = 0;
+		int i = 0;
 		for (PointCategory category : submission.getTask().getPointCategories()) {
 			while (lastPointGiven != null && category.getPointcatid() > lastPointGiven.getCategory().getPointcatid()) {
 				if (pointsGivenIterator.hasNext()) {
@@ -176,10 +178,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 					break;
 				}
 			}
-			int issuedPoints = 0;
-			if (pointGiven.get("point_" + category.getPointcatid()) != null) {
-				issuedPoints = Util.convertToPoints(pointGiven.get("point_" + category.getPointcatid())[0], submission.getTask().getMinPointStep());
-			}
+			int issuedPoints = pointGiven.get(i++);
 			if (issuedPoints > category.getPoints()) {
 				issuedPoints = category.getPoints();
 			}
@@ -271,6 +270,25 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 			}
 		}
 		return points;
+	}
+
+	@Override
+	public Points createPointsFromRequestParameters(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate) {
+		Session session = getSession();
+		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
+		session.buildLockRequest(LockOptions.UPGRADE).lock(submission.getTask());
+
+		List<Integer> pointsGivenList = new ArrayList<>();
+
+		for (PointCategory category : submission.getTask().getPointCategories()) {
+			int issuedPoints = 0;
+			if (pointGiven.get("point_" + category.getPointcatid()) != null) {
+				issuedPoints = Util.convertToPoints(pointGiven.get("point_" + category.getPointcatid())[0], submission.getTask().getMinPointStep());
+			}
+			pointsGivenList.add(issuedPoints);
+		}
+
+		return createPoints(pointsGivenList, submission, participation, publicComment, internalComment, pointStatus, duplicate);
 	}
 
 	@Override
