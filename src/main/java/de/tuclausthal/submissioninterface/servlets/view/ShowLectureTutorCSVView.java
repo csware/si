@@ -60,6 +60,7 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 		boolean showMatNo = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) || Configuration.getInstance().isMatrikelNoAvailableToTutors();
 
 		response.setContentType("text/csv");
+		response.setCharacterEncoding("UTF-8");
 		response.setHeader("Content-Disposition", "attachment; filename=export.csv");
 
 		PrintWriter out = response.getWriter();
