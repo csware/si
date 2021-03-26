@@ -662,4 +662,8 @@
     <servlet-name>MassMarkTaskView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.MassMarkTaskView</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>ShowTaskTutorCSVView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ShowTaskTutorCSVView</servlet-class>
+  </servlet>
 </web-app>

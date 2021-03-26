@@ -86,6 +86,7 @@ public class MassMarkTaskView extends HttpServlet {
 			out.print(";Punkte");
 		}
 		out.println("</p>");
+		out.println("<p><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid() + "&show=markingcsv", response) + "\">Download Template/aktuelle Bewertungen</a></p>");
 		out.println("<p>Die Datei ist UTF-8 kodiert, enthält eine Überschriftenzeile, die Felder sind durch \";\" getrennt, Punkte haben \",\" oder \".\" als Dezimaltrennzeichen und Werte mit Zeilenumbruch, doppelte Anführungszeichen oder Semikolon sind in doppelte Anführungszeichen eingeschlossen (Escaping von Anführungszeichen mit \"\\\").</p>");
 
 		template.printTemplateFooter();

@@ -95,6 +95,10 @@ public class ShowTask extends HttpServlet {
 			}
 			getServletContext().getNamedDispatcher("ShowTaskDescriptionView").forward(request, response);
 		} else if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) >= 0 && "markingcsv".equals(request.getParameter("show"))) {
+				getServletContext().getNamedDispatcher("ShowTaskTutorCSVView").forward(request, response);
+				return;
+			}
 			if ("grouplist".equals(request.getParameter("action"))) {
 				Group group = DAOFactory.GroupDAOIf(session).getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
 				if (group != null && group.getLecture().getId() == participation.getLecture().getId()) {
