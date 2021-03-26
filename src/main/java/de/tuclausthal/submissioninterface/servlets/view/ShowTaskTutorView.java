@@ -149,6 +149,10 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("PerformTest?taskid=" + task.getTaskid(), response) + "\">Test (manuell) durchführen</a></div>");
 		}
 
+		if (!task.isMCTask() && participation.getRoleType() == ParticipationRole.ADVISOR && task.getMaxSubmitters() <= 1) {
+			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("MassMarkTask?taskid=" + task.getTaskid(), response) + "\">Bewertungen als CSV-Datei hochladen</a></div>");
+		}
+
 		if (!modelSolutionFiles.isEmpty()) {
 			out.println("<h2>Musterlösung:</h2>");
 			out.println("<ul>");

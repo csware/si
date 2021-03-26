@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -62,6 +62,17 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 		if (locked) {
 			query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
 		}
+		return query.uniqueResult();
+	}
+
+	public User getUserByEmail(String email) {
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<User> criteria = builder.createQuery(User.class);
+		Root<User> root = criteria.from(User.class);
+		criteria.select(root);
+		criteria.where(builder.equal(root.get(User_.email), email));
+		Query<User> query = session.createQuery(criteria);
 		return query.uniqueResult();
 	}
 

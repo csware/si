@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -40,6 +40,8 @@ public interface UserDAOIf {
 	 * @return the user or null
 	 */
 	public User getUserByUsername(String username);
+
+	public User getUserByEmail(String email);
 
 	/**
 	 * Create and store a new user with the username/email-address email in the DB

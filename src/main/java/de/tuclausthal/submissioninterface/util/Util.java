@@ -479,16 +479,6 @@ public final class Util {
 		return pointsClass;
 	}
 
-	public static String csvQuote(String title) {
-		if (title == null) {
-			return null;
-		}
-		if (title.contains(";")) {
-			title = "\"" + title + "\""; // .replace("\"", "\"\"")
-		}
-		return title;
-	}
-
 	// taken from Apache::Commons::FileUpload, FileUploadBase
 	// Servlet API 3.1.0 has support for Part.getSubmittedFileName(), however, fails with uploads from Internet Explorer (which provides the full path of the uploaded file with backslashes, normalizing just removes all backslashes resulting in a broken filename)
 	public static String getUploadFileName(Part part) {
