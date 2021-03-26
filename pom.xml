@@ -12,7 +12,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<slf4j.version>1.7.30</slf4j.version>
-		<hibernate.version>5.4.27.Final</hibernate.version>
+		<hibernate.version>5.4.30.Final</hibernate.version>
 	</properties>
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
