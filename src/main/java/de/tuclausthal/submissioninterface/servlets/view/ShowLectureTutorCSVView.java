@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -28,6 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
+
+import com.opencsv.CSVWriter;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
@@ -44,7 +47,7 @@ import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * View-Servlet for displaying a lecture in tutor/advisor view
+ * View-Servlet for exporting lecture points of all participants as CSV
  * @author Sven Strickroth
  */
 public class ShowLectureTutorCSVView extends HttpServlet {
@@ -63,69 +66,75 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.setHeader("Content-Disposition", "attachment; filename=export.csv");
 
-		PrintWriter out = response.getWriter();
-
 		List<TaskGroup> taskGroupList = lecture.getTaskGroups();
 
-		out.print("Teilnahme;");
-		if (showMatNo) {
-			out.print("MatrikelNo;");
-		}
-		out.print("Studiengang;Nachname;Vorname;eMail;");
-
-		for (TaskGroup taskGroup : taskGroupList) {
-			List<Task> taskList = taskGroup.getTasks();
-			for (Task task : taskList) {
-				out.print(Util.csvQuote(task.getTitle()) + " (Pkts: " + Util.showPoints(task.getMaxPoints()) + ")" + ";");
+		final String[] empty = new String[0];
+		try (CSVWriter writer = new CSVWriter(new PrintWriter(response.getWriter()), ';', CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
+			List<String> header = new ArrayList<>();
+			header.add("Teilnahme");
+			if (showMatNo) {
+				header.add("MatrikelNo");
 			}
-		}
-		out.println("Gesamt");
-
-		for (Participation lectureParticipation : DAOFactory.ParticipationDAOIf(session).getLectureParticipations(lecture)) {
-			out.print(lectureParticipation.getRoleType().toString() + ";");
-			if (lectureParticipation.getUser() instanceof Student) {
-				if (showMatNo) {
-					out.print(((Student) lectureParticipation.getUser()).getMatrikelno() + ";");
-				}
-				out.print(Util.csvQuote(((Student) lectureParticipation.getUser()).getStudiengang()) + ";");
-			} else {
-				if (showMatNo) {
-					out.print("n/a;");
-				}
-				out.print("n/a;");
-			}
-			out.print(Util.csvQuote(lectureParticipation.getUser().getLastName()) + ";");
-			out.print(Util.csvQuote(lectureParticipation.getUser().getFirstName()) + ";");
-			out.print(Util.csvQuote(lectureParticipation.getUser().getEmail()));
-			if (!taskGroupList.isEmpty()) {
-				out.print(";");
-			}
-			int points = 0;
+			header.add("Studiengang");
+			header.add("Nachname");
+			header.add("Vorname");
+			header.add("eMail");
 			for (TaskGroup taskGroup : taskGroupList) {
 				List<Task> taskList = taskGroup.getTasks();
 				for (Task task : taskList) {
-					Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
-					if (submission != null) {
-						if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
-							if (submission.getPoints().getPointsOk()) {
-								out.print(Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + ";");
-								points += submission.getPoints().getPointsByStatus(task.getMinPointStep());
-							} else {
-								out.print("(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ");");
-							}
-						} else {
-							out.print("n.b.;");
-						}
-					} else {
-						out.print("k.A.;");
-					}
+					header.add(task.getTitle() + " (Pkts: " + Util.showPoints(task.getMaxPoints()) + ")");
 				}
 			}
-			if (points > 0) {
-				out.println(Util.showPoints(points));
-			} else {
-				out.println("n/a");
+			header.add("Gesamt");
+			writer.writeNext(header.toArray(empty), false);
+
+			for (Participation lectureParticipation : DAOFactory.ParticipationDAOIf(session).getLectureParticipations(lecture)) {
+				String[] line = new String[header.size()];
+				int column = 0;
+				line[column++] = lectureParticipation.getRoleType().toString();
+				if (lectureParticipation.getUser() instanceof Student) {
+					if (showMatNo) {
+						line[column++] = String.valueOf(((Student) lectureParticipation.getUser()).getMatrikelno());
+					}
+					line[column++] = ((Student) lectureParticipation.getUser()).getStudiengang();
+				} else {
+					if (showMatNo) {
+						line[column++] = "n/a;";
+					}
+					line[column++] = "n/a;";
+				}
+				line[column++] = lectureParticipation.getUser().getLastName();
+				line[column++] = lectureParticipation.getUser().getFirstName();
+				line[column++] = lectureParticipation.getUser().getEmail();
+				int points = 0;
+				for (TaskGroup taskGroup : taskGroupList) {
+					List<Task> taskList = taskGroup.getTasks();
+					for (Task task : taskList) {
+						Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
+						if (submission != null) {
+							if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
+								if (submission.getPoints().getPointsOk()) {
+									line[column++] = Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep()));
+									points += submission.getPoints().getPointsByStatus(task.getMinPointStep());
+								} else {
+									line[column++] = "(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ")";
+								}
+							} else {
+								line[column++] = "n.b.";
+							}
+						} else {
+							line[column++] = "k.A.";
+						}
+					}
+				}
+				if (points > 0) {
+					line[column++] = Util.showPoints(points);
+				} else {
+					line[column++] = "n/a";
+				}
+				writer.writeNext(line, false);
 			}
+			writer.flush();
 		}
 	}
 }

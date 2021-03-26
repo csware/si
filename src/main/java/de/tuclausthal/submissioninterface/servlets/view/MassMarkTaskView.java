@@ -80,7 +80,7 @@ public class MassMarkTaskView extends HttpServlet {
 		out.print("<p>Spalten: E-Mail-Adresse;Interner Kommentar;Externer Kommentar;Abgenommen (0=nicht abgenommen|1=abgenommen|2=nicht bestanden)");
 		if (!task.getPointCategories().isEmpty()) {
 			for (PointCategory category : task.getPointCategories()) {
-				out.print(";" + Util.escapeHTML(Util.csvQuote(category.getDescription())) + "");
+				out.print(";\"" + Util.escapeHTML(category.getDescription()) + "\"");
 			}
 		} else {
 			out.print(";Punkte");
