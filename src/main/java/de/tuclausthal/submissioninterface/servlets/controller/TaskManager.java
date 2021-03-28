@@ -225,7 +225,7 @@ public class TaskManager extends HttpServlet {
 			Util.copyInputStreamAndClose(file.getInputStream(), uploadedFile);
 		}
 
-		response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
+		response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid() + "#" + foldername, response));
 	}
 
 	/**
@@ -478,7 +478,7 @@ public class TaskManager extends HttpServlet {
 			session.update(task);
 			tx.commit();
 
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + pointCategory.getTask().getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + pointCategory.getTask().getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + pointCategory.getTask().getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + pointCategory.getTask().getTaskid() + "#pointcriteria", response));
 			return;
 		} else if ("newPointCategory".equals(request.getParameter("action"))) {
 			PointCategoryDAOIf pointCategoryDAO = DAOFactory.PointCategoryDAOIf(session);
@@ -497,7 +497,7 @@ public class TaskManager extends HttpServlet {
 				task.setMaxPoints(pointCategoryDAO.countPoints(task));
 				session.update(task);
 				tx.commit();
-				response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
+				response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid() + "#pointcriteria", response));
 			} else {
 				request.setAttribute("title", "Punkte ungültig.");
 				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
@@ -518,7 +518,7 @@ public class TaskManager extends HttpServlet {
 			session.update(task);
 			tx.commit();
 
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid() + "#modelsolutions", response));
 		} else if ("newMCOption".equals(request.getParameter("action"))) {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
@@ -528,7 +528,7 @@ public class TaskManager extends HttpServlet {
 				return;
 			}
 			DAOFactory.MCOptionDAOIf(session).createMCOption(task, request.getParameter("option"), request.getParameter("correkt") != null);
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid() + "#mcoptions", response));
 		} else if ("deleteMCOption".equals(request.getParameter("action"))) {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
@@ -543,7 +543,7 @@ public class TaskManager extends HttpServlet {
 					break;
 				}
 			}
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid() + "#mcoptions", response));
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
 			getServletContext().getNamedDispatcher("MessageView").forward(request, response);

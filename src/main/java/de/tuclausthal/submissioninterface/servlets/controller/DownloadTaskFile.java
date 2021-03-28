@@ -128,7 +128,7 @@ public class DownloadTaskFile extends HttpServlet {
 					return;
 				}
 				file.delete();
-				response.sendRedirect(Util.generateRedirectURL(getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid(), response));
+				response.sendRedirect(Util.generateRedirectURL(getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid() + "#advisorfiles", response));
 				return;
 			}
 		}

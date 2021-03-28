@@ -257,7 +257,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<p><div class=mid><a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deleteTask", response) + "\">Aufgabe löschen</a></div>");
 
 		if (task.isMCTask()) {
-			out.println("<h2>Multiple Choice-Optionen</h2>");
+			out.println("<h2 id=mcoptions>Multiple Choice-Optionen</h2>");
 			@SuppressWarnings("unchecked")
 			List<MCOption> options = (List<MCOption>) request.getAttribute("mcOptions");
 			if (!options.isEmpty()) {
@@ -276,7 +276,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<input type=submit value=hinzufügen>");
 			out.println("</form>");
 		} else if (task.getTaskid() != 0) {
-			out.println("<h2>Punkte</h2>");
+			out.println("<h2 id=pointcriteria>Punkte</h2>");
 			out.println("<p>Werden hier Kriterien angelegt, so wird den Tutoren eine differenzierte Bewertung ermöglicht (für " + Util.showPoints(task.getMinPointStep()) + " Punkte wird eine Checkbox angezeigt, für &gt; " + Util.showPoints(task.getMinPointStep()) + " Punkte erscheint ein Texteingabefeld).</p>");
 			if (!task.getPointCategories().isEmpty()) {
 				out.println("<ul>");
@@ -297,7 +297,7 @@ public class TaskManagerView extends HttpServlet {
 		}
 
 		if (task.getTaskid() != 0) {
-			out.println("<h2>Dateien hinterlegen</h2>");
+			out.println("<h2 id=advisorfiles>Dateien hinterlegen</h2>");
 			if (!advisorFiles.isEmpty()) {
 				out.println("<ul>");
 				for (String file : advisorFiles) {
@@ -312,7 +312,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<INPUT TYPE=submit VALUE=upload>");
 			out.println("</FORM>");
 
-			out.println("<h2>Musterlösung hinterlegen</h2>");
+			out.println("<h2 id=modelsolutionfiles>Musterlösung hinterlegen</h2>");
 			if (!modelSolutionFiles.isEmpty()) {
 				out.println("<p><form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 				out.println("<input type=hidden name=action value=\"provideModelSolutionToStudents\">");
