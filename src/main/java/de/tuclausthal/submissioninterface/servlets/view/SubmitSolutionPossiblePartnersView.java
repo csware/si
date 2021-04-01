@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -101,7 +101,7 @@ public class SubmitSolutionPossiblePartnersView extends HttpServlet {
 				}
 				if (cnt == 0) {
 					Element info = document.createElement("info");
-					StringBuffer setWithUser = new StringBuffer("Sie können im Moment keine Partnerin und keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie die folgenden Voraussetzungen erfüllen:<ol><li>Ihre Partnerin bzw. Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li>");
+					StringBuilder setWithUser = new StringBuilder("Sie können im Moment keine Partnerin und keinen Partner für Ihre Abgabe auswählen. Um dies zu erreichen müssen Sie die folgenden Voraussetzungen erfüllen:<ol><li>Ihre Partnerin bzw. Ihr Partner muss sich auch (mindestens) einmal an diesem System angemeldet haben</li>");
 					setWithUser.append("<li>Ihr Partner darf noch keine eigene Abgabe vorgenommen haben.</li>");
 					if (!task.isAllowSubmittersAcrossGroups()) {
 						setWithUser.append("<li>Sie, als auch Ihre Partnerin bzw. Ihr Partner, müssen von Ihrer Tutorin bzw. Ihrem Tutor in die gleiche Übungsgruppe aufgenommen worden sein.</li>");

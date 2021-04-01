@@ -32,7 +32,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTe
 import de.tuclausthal.submissioninterface.util.Util;
 
 public class ShowJavaAdvancedIOTestResult {
-	public static void printTestResults(PrintWriter out, JavaAdvancedIOTest jtt, String testOutput, boolean forStudent, StringBuffer javaScript) {
+	public static void printTestResults(PrintWriter out, JavaAdvancedIOTest jtt, String testOutput, boolean forStudent, StringBuilder javaScript) {
 		JsonObject object = null;
 		try (JsonReader jsonReader = Json.createReader(new StringReader(testOutput))) {
 			object = jsonReader.readObject();

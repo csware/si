@@ -86,7 +86,7 @@ public class ShowSubmissionView extends HttpServlet {
 
 		template.printTemplateHeader(submission);
 		PrintWriter out = response.getWriter();
-		StringBuffer javaScript = new StringBuffer();
+		StringBuilder javaScript = new StringBuilder();
 
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		if (submission.getLastModified() != null) {
@@ -105,7 +105,7 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		if (task.getMaxSubmitters() > 1 && submission.getSubmitters().size() < task.getMaxSubmitters() && (task.isAllowSubmittersAcrossGroups() || submission.getSubmitters().iterator().next().getGroup() != null)) {
-			StringBuffer setWithUser = new StringBuffer();
+			StringBuilder setWithUser = new StringBuilder();
 			setWithUser.append("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 			setWithUser.append("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);

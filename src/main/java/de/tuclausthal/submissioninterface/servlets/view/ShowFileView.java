@@ -53,11 +53,11 @@ public class ShowFileView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 
-		StringBuffer options = new StringBuffer();
+		StringBuilder options = new StringBuilder();
 
 		options.append("<script>\nif (window.name.match(\"^iframe\")==\"iframe\") { document.write('<a href=\"#\" onclick=\"this.href=document.location\" target=\"_blank\">(new window)</a>'); }\n</script>");
 
-		StringBuffer renderedCode = new StringBuffer();
+		StringBuilder renderedCode = new StringBuilder();
 		if (fileName.toLowerCase().endsWith(".java")) {
 			if ("off".equals(request.getParameter("comments"))) {
 				StripCommentsNormalizer scn = new StripCommentsNormalizer();
@@ -111,7 +111,7 @@ public class ShowFileView extends HttpServlet {
 		out.println("</body></html>");
 	}
 
-	private void showWithRenderer(StringBuffer renderedCode, String fileName, StringBuffer code, String renderertype) throws IOException {
+	private void showWithRenderer(StringBuilder renderedCode, String fileName, StringBuffer code, String renderertype) throws IOException {
 		Renderer renderer = XhtmlRendererFactory.getRenderer(renderertype);
 		renderedCode.append("<code>" + renderer.highlight(fileName, code.toString(), "UTF-8", true) + "</code>");
 	}

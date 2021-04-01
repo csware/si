@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -86,7 +86,7 @@ public class Lecture implements Serializable {
 	@Transient
 	public String getReadableSemester() {
 		String semester = ((Integer) getSemester()).toString();
-		StringBuffer ret = new StringBuffer(8);
+		StringBuilder ret = new StringBuilder(8);
 		if (getSemester() % 2 == 1) {
 			ret.insert(0, "WS " + semester.substring(0, 4) + "/" + ((getSemester() - 1) / 10 + 1));
 		} else {
