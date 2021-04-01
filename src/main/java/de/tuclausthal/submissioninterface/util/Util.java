@@ -26,6 +26,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -394,18 +396,19 @@ public final class Util {
 	/**
 	 * Opens the specified file and returns its contents as string buffer
 	 * @param file the file to open
-	 * @return the file contents
+	 * @return the file contents with \n EOL only
 	 * @throws IOException
 	 */
 	public static StringBuffer loadFile(File file) throws IOException {
-		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-			StringBuffer sb = new StringBuffer((int) file.length());
-			String line;
-			while ((line = br.readLine()) != null) {
-				sb.append(line + "\n");
+		StringWriter sw = new StringWriter((int) file.length());
+		try (Reader br = new CrLfFilterReader(new BufferedReader(new FileReader(file)))) {
+			char[] buffer = new char[8192];
+			int len;
+			while ((len = br.read(buffer)) >= 0) {
+				sw.write(buffer, 0, len);
 			}
-			return sb;
 		}
+		return sw.getBuffer();
 	}
 
 	/**

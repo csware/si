@@ -18,25 +18,27 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 
-import de.tuclausthal.submissioninterface.util.Util;
+import de.tuclausthal.submissioninterface.util.CrLfFilterReader;
 
 /**
  * Thread for reading output from the process
  * @author Sven Strickroth
  */
 public class ReadOutputThread extends Thread {
-	final private InputStreamReader streamReader;
-	private StringBuffer stringBuffer = new StringBuffer();
+	final private Reader streamReader;
+	final private StringBuffer stringBuffer = new StringBuffer();
 
 	final private static int BUFFER_LENGTH = 8 * 1024;
 	final private static int MAX_LENGTH = 1024 * 1024;
 
 	public ReadOutputThread(InputStream is) {
-		streamReader = new InputStreamReader(is);
+		streamReader = new CrLfFilterReader(new BufferedReader(new InputStreamReader(is)));
 	}
 
 	public StringBuffer getBuffer() {
@@ -71,7 +73,6 @@ public class ReadOutputThread extends Thread {
 		if (truncated) {
 			stringBuffer.append("\n\nOUTPUT TOO LONG: TRUNCATED HERE");
 		}
-		stringBuffer = Util.cleanCrLf(stringBuffer);
 		if (stringBuffer.length() != 0 && stringBuffer.charAt(stringBuffer.length() - 1) != '\n') {
 			stringBuffer.append("\n");
 		}
