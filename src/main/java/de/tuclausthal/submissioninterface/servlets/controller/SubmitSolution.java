@@ -18,9 +18,7 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -148,15 +146,7 @@ public class SubmitSolution extends HttpServlet {
 					if (submission != null) {
 						File textSolutionFile = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + "textloesung.txt");
 						if (textSolutionFile.exists()) {
-							try (BufferedReader bufferedReader = new BufferedReader(new FileReader(textSolutionFile))) {
-								StringBuffer sb = new StringBuffer();
-								String line;
-								while ((line = bufferedReader.readLine()) != null) {
-									sb.append(line);
-									sb.append(System.getProperty("line.separator"));
-								}
-								textsolution = sb.toString();
-							}
+							textsolution = Util.loadFile(textSolutionFile).toString();
 						}
 						if (task.isADynamicTask()) {
 							task.setDescription(task.getDynamicTaskStrategie(session).getTranslatedDescription(submission));
