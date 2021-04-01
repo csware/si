@@ -33,43 +33,37 @@ public class UtilTest {
 	@Test
 	public void testCleanCrLfEmpty() {
 		StringBuffer stringBuffer = new StringBuffer("");
-		Util.cleanCrLf(stringBuffer);
-		assertEquals("", stringBuffer.toString());
+		assertEquals("", Util.cleanCrLf(stringBuffer).toString());
 	}
 
 	@Test
 	public void testCleanCrLfJustLf() {
 		StringBuffer stringBuffer = new StringBuffer("\n\n\n");
-		Util.cleanCrLf(stringBuffer);
-		assertEquals("\n\n\n", stringBuffer.toString());
+		assertEquals("\n\n\n", Util.cleanCrLf(stringBuffer).toString());
 	}
 
 	@Test
 	public void testCleanCrLfJustCr() {
 		StringBuffer stringBuffer = new StringBuffer("\r\r\r");
-		Util.cleanCrLf(stringBuffer);
-		assertEquals("\r\r\r", stringBuffer.toString());
+		assertEquals("\r\r\r", Util.cleanCrLf(stringBuffer).toString());
 	}
 
 	@Test
 	public void testCleanCrLfMixed() {
 		StringBuffer stringBuffer = new StringBuffer("\r\n\r\r\n\n\r");
-		Util.cleanCrLf(stringBuffer);
-		assertEquals("\n\r\n\n\r", stringBuffer.toString());
+		assertEquals("\n\r\n\n\r", Util.cleanCrLf(stringBuffer).toString());
 	}
 
 	@Test
 	public void testCleanCrLfMulti() {
 		StringBuffer stringBuffer = new StringBuffer("\r\n\r\n\r\n");
-		Util.cleanCrLf(stringBuffer);
-		assertEquals("\n\n\n", stringBuffer.toString());
+		assertEquals("\n\n\n", Util.cleanCrLf(stringBuffer).toString());
 	}
 
 	@Test
 	public void testCleanCrLfNormal() {
 		StringBuffer stringBuffer = new StringBuffer("\r\n \r\nfdfdsf\r\n ");
-		Util.cleanCrLf(stringBuffer);
-		assertEquals("\n \nfdfdsf\n ", stringBuffer.toString());
+		assertEquals("\n \nfdfdsf\n ", Util.cleanCrLf(stringBuffer).toString());
 	}
 
 	@Test

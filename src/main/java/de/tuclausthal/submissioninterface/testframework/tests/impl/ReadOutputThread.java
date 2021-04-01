@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -30,7 +30,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 public class ReadOutputThread extends Thread {
 	final private InputStreamReader streamReader;
-	final private StringBuffer stringBuffer = new StringBuffer();
+	private StringBuffer stringBuffer = new StringBuffer();
 
 	final private static int BUFFER_LENGTH = 8 * 1024;
 	final private static int MAX_LENGTH = 1024 * 1024;
@@ -71,7 +71,7 @@ public class ReadOutputThread extends Thread {
 		if (truncated) {
 			stringBuffer.append("\n\nOUTPUT TOO LONG: TRUNCATED HERE");
 		}
-		Util.cleanCrLf(stringBuffer);
+		stringBuffer = Util.cleanCrLf(stringBuffer);
 		if (stringBuffer.length() != 0 && stringBuffer.charAt(stringBuffer.length() - 1) != '\n') {
 			stringBuffer.append("\n");
 		}

@@ -114,8 +114,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 				Transaction tx = session.beginTransaction();
 				String title = request.getParameter("title");
 				String testCode = request.getParameter("testcode");
-				StringBuffer expect = new StringBuffer(request.getParameter("expect"));
-				Util.cleanCrLf(expect);
+				StringBuffer expect = Util.cleanCrLf(new StringBuffer(request.getParameter("expect")));
 				step.setTitle(title);
 				step.setTestcode(testCode);
 				step.setExpect(expect.toString());

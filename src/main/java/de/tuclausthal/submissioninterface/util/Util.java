@@ -553,13 +553,34 @@ public final class Util {
 		}
 	}
 
-	public static void cleanCrLf(StringBuffer stringBuffer) {
-		for (int i = 1; i < stringBuffer.length();) {
-			if (stringBuffer.charAt(i - 1) == '\r' && stringBuffer.charAt(i) == '\n') {
-				stringBuffer.deleteCharAt(i - 1);
-				continue;
+	// based on <https://stackoverflow.com/a/47957403/3906760>
+	public static StringBuffer cleanCrLf(StringBuffer stringBuffer) {
+		StringBuffer stringBuilder = null;
+		int index = 0;
+		int len = stringBuffer.length();
+		while (index < len) {
+			char c = stringBuffer.charAt(index);
+			if (c == '\r') {
+				if (stringBuilder == null) {
+					stringBuilder = new StringBuffer();
+					// build up the string builder so it contains all the prior characters
+					stringBuilder.append(stringBuffer, 0, index);
+				}
+				if ((index + 1 < len) && stringBuffer.charAt(index + 1) == '\n') {
+					// this means we encountered a \r\n  ... move index forward one more character
+					++index;
+					stringBuilder.append('\n');
+				} else {
+					// found a single \r w/o \n
+					stringBuilder.append(c);
+				}
+			} else {
+				if (stringBuilder != null) {
+					stringBuilder.append(c);
+				}
 			}
-			++i;
+			++index;
 		}
+		return stringBuilder == null ? stringBuffer : stringBuilder;
 	}
 }
