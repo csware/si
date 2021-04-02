@@ -105,7 +105,7 @@ public final class Util {
 	}
 
 	public static String generateAbsoluteServletsRedirectURL(String url, HttpServletRequest request, HttpServletResponse response) {
-		return generateRedirectURL(request.getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/" + url, response);
+		return generateRedirectURL(request.getServletContext().getContextPath() + Configuration.SERVLETS_PATH_WITH_BOTHSLASHES + url, response);
 	}
 
 	public static String generateHTMLLink(String url, HttpServletResponse response) {
@@ -113,7 +113,7 @@ public final class Util {
 	}
 
 	public static String generateAbsoluteServletsHTMLLink(String uri, HttpServletRequest request, HttpServletResponse response) {
-		return generateAbsoluteHTMLLink(Configuration.getInstance().getServletsPath() + "/" + uri, request, response);
+		return generateAbsoluteHTMLLink(Configuration.SERVLETS_PATH_WITH_ENDSLASH + uri, request, response);
 	}
 
 	public static String generateAbsoluteHTMLLink(String uri, HttpServletRequest request, HttpServletResponse response) {

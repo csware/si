@@ -21,10 +21,6 @@
     <param-value>localhost</param-value>
   </context-param>
   <context-param>
-    <param-name>servletspath</param-name>
-    <param-value>servlets</param-value>
-  </context-param>
-  <context-param>
     <param-name>adminmail</param-name>
     <param-value>admin@localhost</param-value>
   </context-param>
@@ -114,10 +110,6 @@
       <param-value>tucmatrikelNr</param-value>
     </init-param>
   </filter>
-  <filter-mapping>
-    <filter-name>AuthenticationFilter</filter-name>
-    <url-pattern>/servlets/*</url-pattern>
-  </filter-mapping>
   <error-page>
     <error-code>403</error-code>
     <location>/GATEErrorHandler</location>

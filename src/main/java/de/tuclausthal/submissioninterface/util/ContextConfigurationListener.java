@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.util;
 
 import java.util.Set;
 
+import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRegistration;
@@ -39,6 +40,10 @@ public class ContextConfigurationListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent event) {
 		Configuration.fillConfiguration(event.getServletContext());
 
+		// configure AuthenticationFilter
+		FilterRegistration authenticationFilter = event.getServletContext().getFilterRegistration("AuthenticationFilter");
+		authenticationFilter.addMappingForUrlPatterns(null, false, Configuration.SERVLETS_PATH_WITH_BOTHSLASHES + "*");
+
 		// register Views
 		Set<Class<?>> viewServlets = new Reflections("de.tuclausthal.submissioninterface.servlets.view").getTypesAnnotatedWith(GATEView.class);
 		for (Class<?> servlet : viewServlets) {
@@ -56,9 +61,9 @@ public class ContextConfigurationListener implements ServletContextListener {
 			}
 			ServletRegistration.Dynamic registration = event.getServletContext().addServlet(servlet.getSimpleName(), servlet.getCanonicalName());
 			if (servlet.getAnnotation(GATEController.class).recursive()) {
-				registration.addMapping("/servlets/" + servlet.getSimpleName() + "/*");
+				registration.addMapping(Configuration.SERVLETS_PATH_WITH_BOTHSLASHES + servlet.getSimpleName() + "/*");
 			} else {
-				registration.addMapping("/servlets/" + servlet.getSimpleName());
+				registration.addMapping(Configuration.SERVLETS_PATH_WITH_BOTHSLASHES + servlet.getSimpleName());
 			}
 		}
 	}
