@@ -47,7 +47,7 @@ public class MessageView extends HttpServlet {
 		template.printTemplateHeader(title);
 		PrintWriter out = response.getWriter();
 		if (message == null) {
-			out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(request.getContextPath() + "/?", response) + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink("Overview", request, response) + "\">zur Übersicht</a></div>");
 		} else {
 			out.println(message);
 		}

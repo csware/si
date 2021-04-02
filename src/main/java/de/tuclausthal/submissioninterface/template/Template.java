@@ -31,7 +31,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
-import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -39,6 +38,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public abstract class Template {
+	protected HttpServletRequest servletRequest;
 	protected HttpServletResponse servletResponse;
 	protected RequestAdapter requestAdapter;
 	protected String prefix;
@@ -46,6 +46,7 @@ public abstract class Template {
 	private boolean jqueryadded = false;
 
 	public Template(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+		this.servletRequest = servletRequest;
 		this.servletResponse = servletResponse;
 		prefix = servletRequest.getContextPath();
 		requestAdapter = new RequestAdapter(servletRequest);
@@ -59,38 +60,38 @@ public abstract class Template {
 	 */
 	public void printTemplateHeader(String title) throws IOException {
 		if (requestAdapter.getUser() == null) {
-			printTemplateHeader(title, "<a href=\"" + Util.generateHTMLLink(prefix + "/", servletResponse) + "\">Home</a> &gt; <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/Overview", servletResponse) + "\">GATE Übersicht/Login</a>");
+			printTemplateHeader(title, "<a href=\"" + Util.generateAbsoluteHTMLLink("", servletRequest, servletResponse) + "\">Home</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink("Overview", servletRequest, servletResponse) + "\">GATE Übersicht/Login</a>");
 			return;
 		}
-		printTemplateHeader(title, "<a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/Overview", servletResponse) + "\">Meine Veranstaltungen</a> &gt; " + title);
+		printTemplateHeader(title, "<a href=\"" + Util.generateAbsoluteServletsHTMLLink("Overview", servletRequest, servletResponse) + "\">Meine Veranstaltungen</a> &gt; " + title);
 	}
 
 	public void printTemplateHeader(Lecture lecture) throws IOException {
-		printTemplateHeader("Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\"", "<a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/Overview", servletResponse) + "\">Meine Veranstaltungen</a> &gt; Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\"");
+		printTemplateHeader("Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\"", "<a href=\"" + Util.generateAbsoluteServletsHTMLLink("Overview", servletRequest, servletResponse) + "\">Meine Veranstaltungen</a> &gt; Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\"");
 	}
 
 	public void printTemplateHeader(String title, Lecture lecture) throws IOException {
-		printTemplateHeader(title, "<a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/Overview", servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/ShowLecture?lecture=" + lecture.getId(), servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\"</a> &gt; " + title);
+		printTemplateHeader(title, "<a href=\"" + Util.generateAbsoluteServletsHTMLLink("Overview", servletRequest, servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowLecture?lecture=" + lecture.getId(), servletRequest, servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\"</a> &gt; " + title);
 	}
 
 	public void printTemplateHeader(Task task) throws IOException {
-		printTemplateHeader("Aufgabe \"" + Util.escapeHTML(task.getTitle()) + "\"", "<a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/Overview", servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/ShowLecture?lecture=" + task.getTaskGroup().getLecture().getId(), servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(task.getTaskGroup().getLecture().getName()) + "\"</a> &gt; " + "Aufgabe \"" + Util.escapeHTML(task.getTitle()) + "\"");
+		printTemplateHeader("Aufgabe \"" + Util.escapeHTML(task.getTitle()) + "\"", "<a href=\"" + Util.generateAbsoluteServletsHTMLLink("Overview", servletRequest, servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowLecture?lecture=" + task.getTaskGroup().getLecture().getId(), servletRequest, servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(task.getTaskGroup().getLecture().getName()) + "\"</a> &gt; " + "Aufgabe \"" + Util.escapeHTML(task.getTitle()) + "\"");
 	}
 
 	public void printTemplateHeader(String title, Task task) throws IOException {
-		printTemplateHeader(title, "<a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/Overview", servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/ShowLecture?lecture=" + task.getTaskGroup().getLecture().getId(), servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(task.getTaskGroup().getLecture().getName()) + "\"</a> &gt; <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + task.getTaskid(), servletResponse) + "\">Aufgabe \"" + Util.escapeHTML(task.getTitle()) + "\"</a> &gt; " + title);
+		printTemplateHeader(title, "<a href=\"" + Util.generateAbsoluteServletsHTMLLink("Overview", servletRequest, servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowLecture?lecture=" + task.getTaskGroup().getLecture().getId(), servletRequest, servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(task.getTaskGroup().getLecture().getName()) + "\"</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowTask?taskid=" + task.getTaskid(), servletRequest, servletResponse) + "\">Aufgabe \"" + Util.escapeHTML(task.getTitle()) + "\"</a> &gt; " + title);
 	}
 
 	public void printTemplateHeader(Submission submission) throws IOException {
-		printTemplateHeader("Abgabe von \"" + Util.escapeHTML(submission.getSubmitterNames()) + "\"", "<a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/Overview", servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/ShowLecture?lecture=" + submission.getTask().getTaskGroup().getLecture().getId(), servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(submission.getTask().getTaskGroup().getLecture().getName()) + "\"</a> &gt; <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + submission.getTask().getTaskid(), servletResponse) + "\">Aufgabe \"" + Util.escapeHTML(submission.getTask().getTitle()) + "\"</a> &gt; Abgabe von \"" + Util.escapeHTML(submission.getSubmitterNames()) + "\"");
+		printTemplateHeader("Abgabe von \"" + Util.escapeHTML(submission.getSubmitterNames()) + "\"", "<a href=\"" + Util.generateAbsoluteServletsHTMLLink("Overview", servletRequest, servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowLecture?lecture=" + submission.getTask().getTaskGroup().getLecture().getId(), servletRequest, servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(submission.getTask().getTaskGroup().getLecture().getName()) + "\"</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowTask?taskid=" + submission.getTask().getTaskid(), servletRequest, servletResponse) + "\">Aufgabe \"" + Util.escapeHTML(submission.getTask().getTitle()) + "\"</a> &gt; Abgabe von \"" + Util.escapeHTML(submission.getSubmitterNames()) + "\"");
 	}
 
 	public void printTemplateHeader(String title, Submission submission) throws IOException {
-		printTemplateHeader("Abgabe von \"" + Util.escapeHTML(submission.getSubmitterNames()) + "\"", "<a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/Overview", servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/ShowLecture?lecture=" + submission.getTask().getTaskGroup().getLecture().getId(), servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(submission.getTask().getTaskGroup().getLecture().getName()) + "\"</a> &gt; <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/ShowTask?taskid=" + submission.getTask().getTaskid(), servletResponse) + "\">Aufgabe \"" + Util.escapeHTML(submission.getTask().getTitle()) + "\"</a> &gt; <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/ShowSubmission?sid=" + submission.getSubmissionid(), servletResponse) + "\">Abgabe von \"" + Util.escapeHTML(submission.getSubmitterNames()) + "\"</a> &gt; " + title);
+		printTemplateHeader("Abgabe von \"" + Util.escapeHTML(submission.getSubmitterNames()) + "\"", "<a href=\"" + Util.generateAbsoluteServletsHTMLLink("Overview", servletRequest, servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowLecture?lecture=" + submission.getTask().getTaskGroup().getLecture().getId(), servletRequest, servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(submission.getTask().getTaskGroup().getLecture().getName()) + "\"</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowTask?taskid=" + submission.getTask().getTaskid(), servletRequest, servletResponse) + "\">Aufgabe \"" + Util.escapeHTML(submission.getTask().getTitle()) + "\"</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), servletRequest, servletResponse) + "\">Abgabe von \"" + Util.escapeHTML(submission.getSubmitterNames()) + "\"</a> &gt; " + title);
 	}
 
 	public void printTemplateHeader(Group group) throws IOException {
-		printTemplateHeader("Gruppe \"" + Util.escapeHTML(group.getName()) + "\"", "<a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/Overview", servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/ShowLecture?lecture=" + group.getLecture().getId(), servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(group.getLecture().getName()) + "\"</a> &gt; Gruppe \"" + Util.escapeHTML(group.getName()) + "\"");
+		printTemplateHeader("Gruppe \"" + Util.escapeHTML(group.getName()) + "\"", "<a href=\"" + Util.generateAbsoluteServletsHTMLLink("Overview", servletRequest, servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowLecture?lecture=" + group.getLecture().getId(), servletRequest, servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(group.getLecture().getName()) + "\"</a> &gt; Gruppe \"" + Util.escapeHTML(group.getName()) + "\"");
 	}
 
 	final public void addHead(String header) {
@@ -119,7 +120,7 @@ public abstract class Template {
 	}
 
 	final public void addKeepAlive() {
-		addHead("<script>keepAlive(\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/Noop", servletResponse) + "\", 120);</script>");
+		addHead("<script>keepAlive(\"" + Util.generateAbsoluteServletsHTMLLink("Noop", servletRequest, servletResponse) + "\", 120);</script>");
 	}
 
 	public abstract void printStyleSheets(PrintWriter out);

@@ -131,7 +131,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 					return;
 				}
 				file.delete();
-				response.sendRedirect(Util.generateRedirectURL(getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid() +"#modelsolutionfiles", response));
+				response.sendRedirect(Util.generateAbsoluteServletsRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid() + "#modelsolutionfiles", request, response));
 				return;
 			}
 		}

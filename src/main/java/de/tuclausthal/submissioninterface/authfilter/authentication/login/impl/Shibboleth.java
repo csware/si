@@ -35,7 +35,7 @@ import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginD
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginIf;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
-import de.tuclausthal.submissioninterface.util.Configuration;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Shibboleth-based login method implementation
@@ -57,14 +57,14 @@ public class Shibboleth implements LoginIf {
 	@Override
 	public void failNoData(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// don't do a redirect for the Noop servlet
-		if (request.getRequestURI().equals(request.getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/Noop")) {
+		if (request.getRequestURI().equals(Util.generateAbsoluteServletsRedirectURL("Noop", request, response))) {
 			response.setContentType("text/plain");
 			response.setStatus(401);
 			response.getWriter().println("not logged in");
 			return;
 		}
 
-		String redirector = request.getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/Overview";
+		String redirector = Util.generateAbsoluteServletsRedirectURL("Overview", request, response);
 		boolean isRedirector = request.getRequestURI().equals(redirector);
 		if (isRedirector && request.getSession().getAttribute(LOOP_DETECTION_KEY) != null) {
 			LOG.error("Got no data from Shibboleth service provider; login loop detected.");

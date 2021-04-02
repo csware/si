@@ -45,6 +45,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
@@ -106,8 +107,20 @@ public final class Util {
 		return url;
 	}
 
+	public static String generateAbsoluteServletsRedirectURL(String url, HttpServletRequest request, HttpServletResponse response) {
+		return generateRedirectURL(request.getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/" + url, response);
+	}
+
 	public static String generateHTMLLink(String url, HttpServletResponse response) {
 		return escapeHTML(url);
+	}
+
+	public static String generateAbsoluteServletsHTMLLink(String uri, HttpServletRequest request, HttpServletResponse response) {
+		return generateAbsoluteHTMLLink(Configuration.getInstance().getServletsPath() + "/" + uri, request, response);
+	}
+
+	public static String generateAbsoluteHTMLLink(String uri, HttpServletRequest request, HttpServletResponse response) {
+		return generateHTMLLink(request.getServletContext().getContextPath() + "/" + uri, response);
 	}
 
 	public static String encodeURLPathComponent(String path) {

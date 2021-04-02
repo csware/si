@@ -63,14 +63,14 @@ public class SimpleTemplate extends Template {
 		if (user != null) {
 			out.println("Angemeldet als: " + Util.escapeHTML(user.getEmail()));
 			if (user.isSuperUser()) {
-				out.println(" - <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/AdminMenue", servletResponse) + "\">Admin-Menü</a>");
+				out.println(" - <a href=\"" + Util.generateAbsoluteServletsHTMLLink("AdminMenue", servletRequest, servletResponse) + "\">Admin-Menü</a>");
 			}
 			if (requestAdapter.isPrivacyMode()) {
 				out.println(" - Privacy-Mode");
 			} else if (requestAdapter.isIntranet()) {
-				out.println(" - <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/SwitchLogin?uid=" + user.getUid(), servletResponse) + "\">Tutor Login</a>");
+				out.println(" - <a href=\"" + Util.generateAbsoluteServletsHTMLLink("SwitchLogin?uid=" + user.getUid(), servletRequest, servletResponse) + "\">Tutor Login</a>");
 			}
-			out.println(" - <a href=\"" + Util.generateHTMLLink(prefix + "/" + Configuration.getInstance().getServletsPath() + "/Logout", servletResponse) + "\">LogOut</a>");
+			out.println(" - <a href=\"" + Util.generateAbsoluteServletsHTMLLink("Logout", servletRequest, servletResponse) + "\">LogOut</a>");
 		} else {
 			out.println("nicht eingeloggt");
 		}

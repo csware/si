@@ -46,7 +46,7 @@ public class Overview extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		// redirect handler for Shibboleth, not yet perfect but works
-		if (request.getParameter(Shibboleth.REDIR_PARAMETER) != null && request.getParameter(Shibboleth.REDIR_PARAMETER).startsWith(request.getServletContext().getContextPath() + "/" + Configuration.getInstance().getServletsPath() + "/")) {
+		if (request.getParameter(Shibboleth.REDIR_PARAMETER) != null && request.getParameter(Shibboleth.REDIR_PARAMETER).startsWith(Util.generateAbsoluteServletsRedirectURL("", request, response))) {
 			response.sendRedirect(Util.generateRedirectURL(request.getParameter(Shibboleth.REDIR_PARAMETER).replace("\r", "%0d").replace("\n", "%0a"), response));
 			return;
 		}

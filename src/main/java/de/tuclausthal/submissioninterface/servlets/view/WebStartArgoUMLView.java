@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -57,7 +56,7 @@ public class WebStartArgoUMLView extends HttpServlet {
 		if ((request.isSecure() && request.getServerPort() != 443) || (!request.isSecure() && request.getServerPort() != 80)) {
 			urlprefix += ":" + request.getServerPort();
 		}
-		String servletPath = urlprefix + request.getContextPath() + "/" + Configuration.getInstance().getServletsPath();
+		String servletPath = urlprefix + Util.generateAbsoluteServletsRedirectURL("", request, response);
 		urlprefix += request.getContextPath() + "/argouml/";
 
 		//Generiere jnlp Datei
