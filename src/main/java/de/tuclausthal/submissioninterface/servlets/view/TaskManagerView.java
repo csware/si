@@ -254,7 +254,9 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</table>");
 		out.println("</form>");
 
-		out.println("<p><div class=mid><a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deleteTask", response) + "\">Aufgabe löschen</a></div>");
+		if (task.getTaskid() != 0) {
+			out.println("<p class=mid><a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deleteTask", response) + "\">Aufgabe löschen</a></p>");
+		}
 
 		if (task.isMCTask()) {
 			out.println("<h2 id=mcoptions>Multiple Choice-Optionen</h2>");
