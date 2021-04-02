@@ -38,6 +38,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.ChecklistTestManagerOverView;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -55,7 +57,7 @@ public class ChecklistTestManager extends HttpServlet {
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
 		if (tst == null || !(tst instanceof ChecklistTest)) {
 			request.setAttribute("title", "Test nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		ChecklistTest test = (ChecklistTest) tst;
@@ -68,7 +70,7 @@ public class ChecklistTestManager extends HttpServlet {
 		}
 
 		request.setAttribute("test", test);
-		getServletContext().getNamedDispatcher("ChecklistTestManagerOverView").forward(request, response);
+		getServletContext().getNamedDispatcher(ChecklistTestManagerOverView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -78,7 +80,7 @@ public class ChecklistTestManager extends HttpServlet {
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
 		if (tst == null || !(tst instanceof ChecklistTest)) {
 			request.setAttribute("title", "Test nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		ChecklistTest test = (ChecklistTest) tst;
@@ -95,7 +97,7 @@ public class ChecklistTestManager extends HttpServlet {
 			test.setTestTitle(request.getParameter("title"));
 			session.update(test);
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("ChecklistTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
 		} else if ("addNewCheckItem".equals(request.getParameter("action"))) {
 			ChecklistTestCheckItem newCheckItem = new ChecklistTestCheckItem();
@@ -105,7 +107,7 @@ public class ChecklistTestManager extends HttpServlet {
 			session.save(newCheckItem);
 			test.getCheckItems().add(newCheckItem);
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("ChecklistTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
 		} else if ("updateCheckItem".equals(request.getParameter("action"))) {
 			ChecklistTestCheckItem checkItem = null;
@@ -121,7 +123,7 @@ public class ChecklistTestManager extends HttpServlet {
 				session.saveOrUpdate(checkItem);
 				tx.commit();
 			}
-			response.sendRedirect(Util.generateRedirectURL("ChecklistTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
 		} else if ("deleteCheckItem".equals(request.getParameter("action"))) {
 			ChecklistTestCheckItem checkItem = null;
@@ -137,7 +139,7 @@ public class ChecklistTestManager extends HttpServlet {
 				session.delete(checkItem);
 				tx.commit();
 			}
-			response.sendRedirect(Util.generateRedirectURL("ChecklistTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
 		}
 

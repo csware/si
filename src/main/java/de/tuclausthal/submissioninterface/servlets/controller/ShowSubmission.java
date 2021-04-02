@@ -43,6 +43,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.ShowSubmissionView;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Configuration;
@@ -63,7 +65,7 @@ public class ShowSubmission extends HttpServlet {
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -79,7 +81,7 @@ public class ShowSubmission extends HttpServlet {
 
 		request.setAttribute("submission", submission);
 		request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringList(new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"))));
-		getServletContext().getNamedDispatcher("ShowSubmissionView").forward(request, response);
+		getServletContext().getNamedDispatcher(ShowSubmissionView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -89,7 +91,7 @@ public class ShowSubmission extends HttpServlet {
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -137,7 +139,7 @@ public class ShowSubmission extends HttpServlet {
 			if (request.getParameter("group") != null && Util.parseInteger(request.getParameter("group"), 0) > 0) {
 				groupAdding = "&groupid=" + Util.parseInteger(request.getParameter("group"), 0);
 			}
-			response.sendRedirect(Util.generateRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid() + groupAdding, response));
+			response.sendRedirect(Util.generateRedirectURL(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid() + groupAdding, response));
 			return;
 		}
 
@@ -149,7 +151,7 @@ public class ShowSubmission extends HttpServlet {
 				submission.getSubmitters().add(partnerParticipation);
 				session.update(submission);
 				tx.commit();
-				response.sendRedirect(Util.generateRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid(), response));
+				response.sendRedirect(Util.generateRedirectURL(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid(), response));
 				return;
 			}
 			tx.rollback();

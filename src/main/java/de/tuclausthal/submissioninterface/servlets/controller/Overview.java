@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Shibboleth;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
+import de.tuclausthal.submissioninterface.servlets.view.OverviewView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -45,6 +46,6 @@ public class Overview extends HttpServlet {
 			return;
 		}
 
-		getServletContext().getNamedDispatcher("OverviewView").forward(request, response);
+		getServletContext().getNamedDispatcher(OverviewView.class.getSimpleName()).forward(request, response);
 	}
 }

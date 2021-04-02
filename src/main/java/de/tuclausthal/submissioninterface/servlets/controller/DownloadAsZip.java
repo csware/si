@@ -38,6 +38,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -58,7 +59,7 @@ public class DownloadAsZip extends HttpServlet {
 
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -85,6 +86,6 @@ public class DownloadAsZip extends HttpServlet {
 		}
 
 		request.setAttribute("title", "No files available to download as zip.");
-		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+		getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 	}
 }

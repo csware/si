@@ -36,6 +36,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.ShowUserView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -65,7 +67,7 @@ public class ShowUser extends HttpServlet {
 		User user = DAOFactory.UserDAOIf(session).getUser(Util.parseInteger(request.getParameter("uid"), 0));
 		if (user == null) {
 			request.setAttribute("title", "BenutzerIn nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -88,6 +90,6 @@ public class ShowUser extends HttpServlet {
 		request.setAttribute("user", user);
 		request.setAttribute("participations", participations);
 		request.setAttribute("isAtLeastAdvisorOnce", isAtLeastAdvisorOnce);
-		getServletContext().getNamedDispatcher("ShowUserView").forward(request, response);
+		getServletContext().getNamedDispatcher(ShowUserView.class.getSimpleName()).forward(request, response);
 	}
 }

@@ -39,6 +39,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.PublishGradesView;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.MailSender;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -59,7 +61,7 @@ public class PublishGrades extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -73,12 +75,12 @@ public class PublishGrades extends HttpServlet {
 
 		if (task.getDeadline().after(new Date()) || task.getShowPoints() != null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
 		request.setAttribute("task", task);
-		getServletContext().getNamedDispatcher("PublishGradesView").forward(request, response);
+		getServletContext().getNamedDispatcher(PublishGradesView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -89,7 +91,7 @@ public class PublishGrades extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -103,7 +105,7 @@ public class PublishGrades extends HttpServlet {
 
 		if (task.getDeadline().after(new Date()) || task.getShowPoints() != null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -114,7 +116,7 @@ public class PublishGrades extends HttpServlet {
 			for (Submission submission : task.getSubmissions()) {
 				for (Participation submitterParticipation : submission.getSubmitters()) {
 					if (submission.getPoints() != null && submission.getPoints().getPointsOk()) {
-						MailSender.sendMail(submitterParticipation.getUser().getEmail(), "Bewertung erfolgt", "Hallo " + submitterParticipation.getUser().getFullName() + ",\n\neine Ihrer Abgaben wurde bewertet.\n\nEinsehen: <"+ baseURI + "/ShowTask?taskid=" + task.getTaskid() + ">.\n\n-- \nReply is not possible.");
+						MailSender.sendMail(submitterParticipation.getUser().getEmail(), "Bewertung erfolgt", "Hallo " + submitterParticipation.getUser().getFullName() + ",\n\neine Ihrer Abgaben wurde bewertet.\n\nEinsehen: <" + baseURI + "/" + ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid() + ">.\n\n-- \nReply is not possible.");
 					}
 				}
 			}
@@ -123,6 +125,6 @@ public class PublishGrades extends HttpServlet {
 		session.saveOrUpdate(task);
 		tx.commit();
 
-		response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
+		response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 	}
 }

@@ -35,6 +35,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.ShowMarkHistoryView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -53,7 +55,7 @@ public class ShowMarkHistory extends HttpServlet {
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -67,6 +69,6 @@ public class ShowMarkHistory extends HttpServlet {
 
 		request.setAttribute("submission", submission);
 		request.setAttribute("data", DAOFactory.PointsDAOIf(session).getPointHistoryForSubmission(submission));
-		getServletContext().getNamedDispatcher("ShowMarkHistoryView").forward(request, response);
+		getServletContext().getNamedDispatcher(ShowMarkHistoryView.class.getSimpleName()).forward(request, response);
 	}
 }

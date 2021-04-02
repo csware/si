@@ -73,7 +73,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 
 		if (submission != null && task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
 			request.setAttribute("title", "Die Abgabe wurde bereits als endgültig abgeschlossen markiert. Eine Veränderung ist daher nicht mehr möglich.");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 

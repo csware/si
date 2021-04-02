@@ -31,6 +31,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Student;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.controller.AlterUser;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowLecture;
+import de.tuclausthal.submissioninterface.servlets.controller.SubscribeToLecture;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Configuration;
@@ -54,14 +57,14 @@ public class OverviewView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		if (Configuration.getInstance().isMatrikelNumberMustBeEnteredManuallyIfMissing() && !(user instanceof Student)) {
-			out.println("<p><form class=\"highlightborder mid\" action=\"" + Util.generateHTMLLink("AlterUser", response) + "\" method=post>");
+			out.println("<p><form class=\"highlightborder mid\" action=\"" + Util.generateHTMLLink(AlterUser.class.getSimpleName(), response) + "\" method=post>");
 			out.println("Bitte nennen Sie Ihre Matrikelnummer: <input type=number required=\"required\" name=matrikelno id=matrikelno pattern=\"[0-9]+\" autocomplete=\"off\" size=15\"> <input type=submit value=\"speichern...\">");
 			out.println("</form></p><br>");
 		}
 		if (user instanceof Student) {
 			Student student = (Student) user;
 			if (student.getStudiengang() == null) {
-				out.println("<p><form class=\"highlightborder mid\" action=\"" + Util.generateHTMLLink("AlterUser", response) + "\" method=post>");
+				out.println("<p><form class=\"highlightborder mid\" action=\"" + Util.generateHTMLLink(AlterUser.class.getSimpleName(), response) + "\" method=post>");
 				out.println("Bitte nennen Sie Ihren Studiengang: <select required name=studiengang>");
 				out.println("<option value=\"\"></option>");
 				for (String aStudiengang : Configuration.getInstance().getStudiengaenge()) {
@@ -80,13 +83,13 @@ public class OverviewView extends HttpServlet {
 			out.println("</tr>");
 			for (Participation participation : user.getLectureParticipant()) {
 				out.println("<tr>");
-				out.println("<td><a href=\"" + Util.generateHTMLLink("ShowLecture?lecture=" + participation.getLecture().getId(), response) + "\">" + Util.escapeHTML(participation.getLecture().getName()) + "</a></td>");
+				out.println("<td><a href=\"" + Util.generateHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + participation.getLecture().getId(), response) + "\">" + Util.escapeHTML(participation.getLecture().getName()) + "</a></td>");
 				out.println("<td>" + participation.getLecture().getReadableSemester() + "</td>");
 				out.println("</tr>");
 			}
 			out.println("</table><p>");
 		}
-		out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("SubscribeToLecture", response) + "\">In eine Veranstaltung eintragen...</a></div>");
+		out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(SubscribeToLecture.class.getSimpleName(), response) + "\">In eine Veranstaltung eintragen...</a></div>");
 
 		template.printTemplateFooter();
 	}

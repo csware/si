@@ -41,6 +41,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.EditGroupFormView;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -59,7 +61,7 @@ public class EditGroup extends HttpServlet {
 		Group group = groupDAO.getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
 		if (group == null) {
 			request.setAttribute("title", "Gruppe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -73,7 +75,7 @@ public class EditGroup extends HttpServlet {
 
 		request.setAttribute("participation", participation);
 		request.setAttribute("group", group);
-		getServletContext().getNamedDispatcher("EditGroupFormView").forward(request, response);
+		getServletContext().getNamedDispatcher(EditGroupFormView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -83,7 +85,7 @@ public class EditGroup extends HttpServlet {
 		Group group = groupDAO.getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
 		if (group == null) {
 			request.setAttribute("title", "Gruppe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -103,7 +105,7 @@ public class EditGroup extends HttpServlet {
 				participationDAO.saveParticipation(memberParticipation);
 			}
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response));
+			response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response));
 			return;
 		} else if ("removeTutorFromGroup".equals(request.getParameter("action"))) {
 			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
@@ -115,7 +117,7 @@ public class EditGroup extends HttpServlet {
 					groupDAO.saveGroup(group);
 				}
 				tx.commit();
-				response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response));
+				response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response));
 				return;
 			}
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
@@ -195,14 +197,14 @@ public class EditGroup extends HttpServlet {
 				}
 				output.append("<h2>Ergebnis</h2>");
 				output.append("<p>Studierende zur Gruppe hinzugefügt: " + count + "</p>");
-				output.append("<p class=mid><a href=\"" + Util.generateHTMLLink("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response) + "\">zurück zur Vorlesung</a></p>");
+				output.append("<p class=mid><a href=\"" + Util.generateHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response) + "\">zurück zur Vorlesung</a></p>");
 				request.setAttribute("title", "Batch-Ergebnisse");
 				request.setAttribute("message", output.toString());
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 			tx.commit(); // attention, there is a commit right before this
-			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response));
+			response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response));
 			return;
 		}
 		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");

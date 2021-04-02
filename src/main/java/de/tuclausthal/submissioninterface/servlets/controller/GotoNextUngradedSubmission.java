@@ -36,6 +36,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -54,7 +55,7 @@ public class GotoNextUngradedSubmission extends HttpServlet {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -74,12 +75,12 @@ public class GotoNextUngradedSubmission extends HttpServlet {
 			}
 			if (submission != null) {
 				if (group != null) {
-					response.sendRedirect(Util.generateRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid() + "&groupid=" + group.getGid(), response));
+					response.sendRedirect(Util.generateRedirectURL(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid() + "&groupid=" + group.getGid(), response));
 				} else {
-					response.sendRedirect(Util.generateRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid(), response));
+					response.sendRedirect(Util.generateRedirectURL(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid(), response));
 				}
 			} else {
-				response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
+				response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 			}
 		} else {
 			Submission submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, lastSubmissionID, request.getParameter("prev") != null);
@@ -87,9 +88,9 @@ public class GotoNextUngradedSubmission extends HttpServlet {
 				submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 0, request.getParameter("prev") != null);
 			}
 			if (submission != null) {
-				response.sendRedirect(Util.generateRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid(), response));
+				response.sendRedirect(Util.generateRedirectURL(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid(), response));
 			} else {
-				response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
+				response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 			}
 		}
 	}

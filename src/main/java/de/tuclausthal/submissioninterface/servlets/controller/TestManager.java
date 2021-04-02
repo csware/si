@@ -52,6 +52,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.TestManagerAddTestFormView;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -71,7 +73,7 @@ public class TestManager extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -84,10 +86,10 @@ public class TestManager extends HttpServlet {
 
 		if ("newTest".equals(request.getParameter("action"))) {
 			request.setAttribute("task", task);
-			getServletContext().getNamedDispatcher("TestManagerAddTestFormView").forward(request, response);
+			getServletContext().getNamedDispatcher(TestManagerAddTestFormView.class.getSimpleName()).forward(request, response);
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 		}
 	}
 
@@ -98,7 +100,7 @@ public class TestManager extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -128,7 +130,7 @@ public class TestManager extends HttpServlet {
 			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(Util.generateRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(JavaAdvancedIOTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "docker".equals(request.getParameter("type"))) {
 			session.beginTransaction();
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
@@ -150,7 +152,7 @@ public class TestManager extends HttpServlet {
 			test.setPreparationShellCode(preparationcode.replaceAll("\r\n", "\n"));
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(Util.generateRedirectURL("DockerTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "checklist".equals(request.getParameter("type"))) {
 			session.beginTransaction();
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
@@ -167,7 +169,7 @@ public class TestManager extends HttpServlet {
 			test.setTestDescription(description);
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(Util.generateRedirectURL("ChecklistTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "umlConstraint".equals(request.getParameter("type"))) {
 			// Check that we have a file upload request
 
@@ -188,7 +190,7 @@ public class TestManager extends HttpServlet {
 			Part file = request.getPart("testcase");
 			if (file == null || !Util.getUploadFileName(file).endsWith(".xmi")) {
 				request.setAttribute("title", "Dateiname ungültig.");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				session.getTransaction().rollback();
 				return;
 			}
@@ -203,7 +205,7 @@ public class TestManager extends HttpServlet {
 			test.setGiveDetailsToStudents(true);
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "junit".equals(request.getParameter("type"))) {
 			// Check that we have a file upload request
 
@@ -226,7 +228,7 @@ public class TestManager extends HttpServlet {
 			Part file = request.getPart("testcase");
 			if (file == null || !Util.getUploadFileName(file).endsWith(".jar")) {
 				request.setAttribute("title", "Dateiname ungültig.");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				session.getTransaction().rollback();
 				return;
 			}
@@ -242,14 +244,14 @@ public class TestManager extends HttpServlet {
 			test.setTimeout(timeout);
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "regexp".equals(request.getParameter("type"))) {
 			//check regexp
 			try {
 				Pattern.compile(request.getParameter("regexp"));
 			} catch (PatternSyntaxException e) {
 				request.setAttribute("title", "Ungültiger regulärer Ausdruck");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 			// store it
@@ -267,7 +269,7 @@ public class TestManager extends HttpServlet {
 			test.setTestDescription(request.getParameter("description"));
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "compile".equals(request.getParameter("type"))) {
 			// store it
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
@@ -280,7 +282,7 @@ public class TestManager extends HttpServlet {
 			test.setTestDescription(request.getParameter("description"));
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "commentmetric".equals(request.getParameter("type"))) {
 			// store it
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
@@ -299,7 +301,7 @@ public class TestManager extends HttpServlet {
 			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("deleteTest".equals(request.getParameter("action"))) {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			session.beginTransaction();
@@ -308,7 +310,7 @@ public class TestManager extends HttpServlet {
 				testDAO.deleteTest(test);
 			}
 			session.getTransaction().commit();
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 			return;
 		} else if ("rerunTest".equals(request.getParameter("action"))) {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
@@ -319,11 +321,11 @@ public class TestManager extends HttpServlet {
 				testDAO.saveTest(test);
 			}
 			session.getTransaction().commit();
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 			return;
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 
 		}
 	}

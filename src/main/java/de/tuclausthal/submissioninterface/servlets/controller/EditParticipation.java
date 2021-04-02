@@ -35,6 +35,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -53,7 +54,7 @@ public class EditParticipation extends HttpServlet {
 		Participation participation = participationDAO.getParticipation(Util.parseInteger(request.getParameter("participationid"), 0));
 		if (participation == null) {
 			request.setAttribute("title", "Teilnahme nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		Participation callerParticipation = participationDAO.getParticipation(RequestAdapter.getUser(request), participation.getLecture());
@@ -76,6 +77,6 @@ public class EditParticipation extends HttpServlet {
 		}
 		participationDAO.saveParticipation(participation);
 		tx.commit();
-		response.sendRedirect(Util.generateRedirectURL("ShowLecture?action=showLecture&lecture=" + callerParticipation.getLecture().getId(), response));
+		response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?action=showLecture&lecture=" + callerParticipation.getLecture().getId(), response));
 	}
 }

@@ -50,6 +50,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.SelfTestView;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.executor.impl.LocalExecutor;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.DockerTest;
@@ -76,7 +78,7 @@ public class SelfTest extends HttpServlet {
 			LOG.error("SelfTest was accessed without proper authentication. AuthenticationFilter does not seem to be working correctly!");
 			request.setAttribute("title", "Selbsttest");
 			request.setAttribute("message", "<div class=red>Selbsttest OHNE Authentifizierung erreichbar!</div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		if (!RequestAdapter.getUser(request).isSuperUser()) {
@@ -182,7 +184,7 @@ public class SelfTest extends HttpServlet {
 		}
 
 		request.setAttribute("testresults", testresults);
-		getServletContext().getNamedDispatcher("SelfTestView").forward(request, response);
+		getServletContext().getNamedDispatcher(SelfTestView.class.getSimpleName()).forward(request, response);
 	}
 
 	private boolean checkDataDir() {

@@ -41,6 +41,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowUser;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Configuration;
@@ -110,8 +111,8 @@ public class ShowLectureTutorFullView extends HttpServlet {
 				}
 				out.println("<td>n/a</td>");
 			}
-			out.println("<td><a href=\"" + Util.generateHTMLLink("ShowUser?uid=" + lectureParticipation.getUser().getUid(), response) + "\">" + Util.escapeHTML(lectureParticipation.getUser().getLastName()) + "</a></td>");
-			out.println("<td><a href=\"" + Util.generateHTMLLink("ShowUser?uid=" + lectureParticipation.getUser().getUid(), response) + "\">" + Util.escapeHTML(lectureParticipation.getUser().getFirstName()) + "</a></td>");
+			out.println("<td><a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + lectureParticipation.getUser().getUid(), response) + "\">" + Util.escapeHTML(lectureParticipation.getUser().getLastName()) + "</a></td>");
+			out.println("<td><a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + lectureParticipation.getUser().getUid(), response) + "\">" + Util.escapeHTML(lectureParticipation.getUser().getFirstName()) + "</a></td>");
 			int points = 0;
 			for (TaskGroup taskGroup : taskGroupList) {
 				List<Task> taskList = taskGroup.getTasks();

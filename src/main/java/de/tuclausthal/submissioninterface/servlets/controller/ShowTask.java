@@ -41,6 +41,12 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.ShowTaskDescriptionView;
+import de.tuclausthal.submissioninterface.servlets.view.ShowTaskStudentView;
+import de.tuclausthal.submissioninterface.servlets.view.ShowTaskTutorCSVView;
+import de.tuclausthal.submissioninterface.servlets.view.ShowTaskTutorPrintView;
+import de.tuclausthal.submissioninterface.servlets.view.ShowTaskTutorView;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -60,7 +66,7 @@ public class ShowTask extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -70,8 +76,8 @@ public class ShowTask extends HttpServlet {
 		if (participation == null) {
 			if (task.getTaskGroup().getLecture().getSemester() == Util.getCurrentSemester()) {
 				request.setAttribute("title", "Zugriff verweigert (403)");
-				request.setAttribute("message", "<p>Sie versuchen auf eine Aufgabe einer Vorlesung zuzugreifen, für die Sie nicht angemeldet sind.</p><p>Sie können Sie <a href=\"" + Util.generateHTMLLink("SubscribeToLecture", response) + "\" target=\"_blank\">hier</a> für die Vorlesung anmelden.</p>");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				request.setAttribute("message", "<p>Sie versuchen auf eine Aufgabe einer Vorlesung zuzugreifen, für die Sie nicht angemeldet sind.</p><p>Sie können Sie <a href=\"" + Util.generateHTMLLink(SubscribeToLecture.class.getSimpleName(), response) + "\" target=\"_blank\">hier</a> für die Vorlesung anmelden.</p>");
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
@@ -80,7 +86,7 @@ public class ShowTask extends HttpServlet {
 
 		if (task.getStart().after(new Date()) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -95,10 +101,10 @@ public class ShowTask extends HttpServlet {
 			if (submission != null) {
 				response.addHeader("SID", String.valueOf(submission.getSubmissionid()));
 			}
-			getServletContext().getNamedDispatcher("ShowTaskDescriptionView").forward(request, response);
+			getServletContext().getNamedDispatcher(ShowTaskDescriptionView.class.getSimpleName()).forward(request, response);
 		} else if (participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) >= 0 && "markingcsv".equals(request.getParameter("show"))) {
-				getServletContext().getNamedDispatcher("ShowTaskTutorCSVView").forward(request, response);
+				getServletContext().getNamedDispatcher(ShowTaskTutorCSVView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 			if ("grouplist".equals(request.getParameter("action"))) {
@@ -106,10 +112,10 @@ public class ShowTask extends HttpServlet {
 				if (group != null && group.getLecture().getId() == participation.getLecture().getId()) {
 					request.setAttribute("group", group);
 				}
-				getServletContext().getNamedDispatcher("ShowTaskTutorPrintView").forward(request, response);
+				getServletContext().getNamedDispatcher(ShowTaskTutorPrintView.class.getSimpleName()).forward(request, response);
 			} else {
 				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
-				getServletContext().getNamedDispatcher("ShowTaskTutorView").forward(request, response);
+				getServletContext().getNamedDispatcher(ShowTaskTutorView.class.getSimpleName()).forward(request, response);
 			}
 		} else {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
@@ -130,7 +136,7 @@ public class ShowTask extends HttpServlet {
 			}
 
 			request.setAttribute("submission", submission);
-			getServletContext().getNamedDispatcher("ShowTaskStudentView").forward(request, response);
+			getServletContext().getNamedDispatcher(ShowTaskStudentView.class.getSimpleName()).forward(request, response);
 		}
 	}
 }

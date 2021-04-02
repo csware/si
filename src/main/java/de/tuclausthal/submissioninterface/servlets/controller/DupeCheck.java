@@ -38,6 +38,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.DupeCheckFormView;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -56,7 +58,7 @@ public class DupeCheck extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -69,7 +71,7 @@ public class DupeCheck extends HttpServlet {
 		}
 
 		request.setAttribute("task", task);
-		getServletContext().getNamedDispatcher("DupeCheckFormView").forward(request, response);
+		getServletContext().getNamedDispatcher(DupeCheckFormView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -79,7 +81,7 @@ public class DupeCheck extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -99,13 +101,13 @@ public class DupeCheck extends HttpServlet {
 				semilarityTestDAO.deleteSimilarityTest(similarityTest);
 			}
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		} else if (request.getParameter("type") != null && "savesimilaritytest".equals(request.getParameter("action"))) {
 			int minSimilarity = Util.parseInteger(request.getParameter("minsimilarity"), 50);
 			Transaction tx = session.beginTransaction();
 			semilarityTestDAO.addSimilarityTest(task, request.getParameter("type"), request.getParameter("normalizer1"), "lc".equals(request.getParameter("normalizer2")), request.getParameter("normalizer3"), minSimilarity, request.getParameter("excludeFiles"));
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		} else if ("rerunSimilarityTest".equals(request.getParameter("action")) && request.getParameter("similaritytestid") != null) {
 			Transaction tx = session.beginTransaction();
 			SimilarityTest similarityTest = semilarityTestDAO.getSimilarityTestLocked(Util.parseInteger(request.getParameter("similaritytestid"), 0));
@@ -114,7 +116,7 @@ public class DupeCheck extends HttpServlet {
 				semilarityTestDAO.saveSimilarityTest(similarityTest);
 			}
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		} else {
 			response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
 		}

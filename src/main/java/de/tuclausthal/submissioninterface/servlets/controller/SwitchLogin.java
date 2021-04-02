@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -46,10 +47,10 @@ public class SwitchLogin extends HttpServlet {
 		int uid = Util.parseInteger(request.getParameter("uid"), -1);
 		if (uid <= 0) {
 			request.setAttribute("title", "Invalid Request");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 		} else {
 			response.addCookie(new Cookie("privacy", "1"));
-			response.sendRedirect(Util.generateRedirectURL("ShowUser?uid=" + uid, response));
+			response.sendRedirect(Util.generateRedirectURL(ShowUser.class.getSimpleName() + "?uid=" + uid, response));
 		}
 	}
 }

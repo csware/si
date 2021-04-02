@@ -36,6 +36,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.CloseSubmissionView;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -55,7 +57,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -67,18 +69,18 @@ public class CloseSubmissionByStudent extends HttpServlet {
 
 		if (!submission.getTask().isAllowPrematureSubmissionClosing()) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
 		if (submission.getTask().getDeadline().before(new Date()) || submission.isClosed()) {
 			request.setAttribute("title", "An dieser Abgabe sind keine Veränderungen mehr möglich.");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
 		request.setAttribute("submission", submission);
-		getServletContext().getNamedDispatcher("CloseSubmissionView").forward(request, response);
+		getServletContext().getNamedDispatcher(CloseSubmissionView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -89,7 +91,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -101,7 +103,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 
 		if (!submission.getTask().isAllowPrematureSubmissionClosing()) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -110,8 +112,8 @@ public class CloseSubmissionByStudent extends HttpServlet {
 		if (submission.getTask().getDeadline().before(new Date()) || submission.isClosed()) {
 			tx.rollback();
 			request.setAttribute("title", "An dieser Abgabe sind keine Veränderungen mehr möglich.");
-			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + submission.getTask().getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -123,6 +125,6 @@ public class CloseSubmissionByStudent extends HttpServlet {
 		session.update(submission);
 		tx.commit();
 
-		response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + submission.getTask().getTaskid(), response));
+		response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid(), response));
 	}
 }

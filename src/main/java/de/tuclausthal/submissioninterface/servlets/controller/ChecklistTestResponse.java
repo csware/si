@@ -49,6 +49,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -66,7 +67,7 @@ public class ChecklistTestResponse extends HttpServlet {
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
 		if (tst == null || !(tst instanceof ChecklistTest)) {
 			request.setAttribute("title", "Test nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		ChecklistTest test = (ChecklistTest) tst;
@@ -100,7 +101,7 @@ public class ChecklistTestResponse extends HttpServlet {
 		tx.commit();
 
 		if (request.getParameter("ajax") == null) {
-			response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + test.getTask().getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + test.getTask().getTaskid(), response));
 		} else {
 			response.getWriter().print("ok");
 		}

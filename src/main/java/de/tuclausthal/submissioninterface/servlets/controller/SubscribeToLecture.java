@@ -34,6 +34,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.SubscribeToLectureView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -48,7 +50,7 @@ public class SubscribeToLecture extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Session session = RequestAdapter.getSession(request);
 		request.setAttribute("lectures", DAOFactory.LectureDAOIf(session).getCurrentLecturesWithoutUser(RequestAdapter.getUser(request)));
-		getServletContext().getNamedDispatcher("SubscribeToLectureView").forward(request, response);
+		getServletContext().getNamedDispatcher(SubscribeToLectureView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -58,7 +60,7 @@ public class SubscribeToLecture extends HttpServlet {
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -71,6 +73,6 @@ public class SubscribeToLecture extends HttpServlet {
 		Transaction tx = session.beginTransaction();
 		participationDAO.createParticipation(RequestAdapter.getUser(request), lecture, ParticipationRole.NORMAL);
 		tx.commit();
-		response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
+		response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response));
 	}
 }

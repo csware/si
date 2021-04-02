@@ -34,6 +34,11 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.ShowLectureStudentView;
+import de.tuclausthal.submissioninterface.servlets.view.ShowLectureTutorCSVView;
+import de.tuclausthal.submissioninterface.servlets.view.ShowLectureTutorFullView;
+import de.tuclausthal.submissioninterface.servlets.view.ShowLectureTutorView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -53,7 +58,7 @@ public class ShowLecture extends HttpServlet {
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -62,8 +67,8 @@ public class ShowLecture extends HttpServlet {
 		if (participation == null) {
 			if (lecture.getSemester() == Util.getCurrentSemester()) {
 				request.setAttribute("title", "Zugriff verweigert (403)");
-				request.setAttribute("message", "<p>Sie versuchen auf eine Vorlesung zuzugreifen, für die Sie nicht angemeldet sind.</p><p>Sie können Sie <a href=\"" + Util.generateHTMLLink("SubscribeToLecture", response) + "\">hier</a> für die Vorlesung anmelden.</p>");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				request.setAttribute("message", "<p>Sie versuchen auf eine Vorlesung zuzugreifen, für die Sie nicht angemeldet sind.</p><p>Sie können Sie <a href=\"" + Util.generateHTMLLink(SubscribeToLecture.class.getSimpleName(), response) + "\">hier</a> für die Vorlesung anmelden.</p>");
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
@@ -75,13 +80,13 @@ public class ShowLecture extends HttpServlet {
 			request.setAttribute("joinAbleGroups", DAOFactory.GroupDAOIf(session).getJoinAbleGroups(lecture, participation.getGroup()));
 			request.setAttribute("tasks", DAOFactory.TaskDAOIf(session).getTasks(lecture, true));
 			request.setAttribute("submissions", DAOFactory.SubmissionDAOIf(session).getAllSubmissions(participation));
-			getServletContext().getNamedDispatcher("ShowLectureStudentView").forward(request, response);
+			getServletContext().getNamedDispatcher(ShowLectureStudentView.class.getSimpleName()).forward(request, response);
 		} else if ("list".equals(request.getParameter("show"))) {
-			getServletContext().getNamedDispatcher("ShowLectureTutorFullView").forward(request, response);
+			getServletContext().getNamedDispatcher(ShowLectureTutorFullView.class.getSimpleName()).forward(request, response);
 		} else if ("csv".equals(request.getParameter("show"))) {
-			getServletContext().getNamedDispatcher("ShowLectureTutorCSVView").forward(request, response);
+			getServletContext().getNamedDispatcher(ShowLectureTutorCSVView.class.getSimpleName()).forward(request, response);
 		} else {
-			getServletContext().getNamedDispatcher("ShowLectureTutorView").forward(request, response);
+			getServletContext().getNamedDispatcher(ShowLectureTutorView.class.getSimpleName()).forward(request, response);
 		}
 	}
 }

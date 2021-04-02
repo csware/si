@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.servlets.controller.TaskManager;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Configuration;
@@ -71,7 +72,7 @@ public class DupeCheckFormView extends HttpServlet {
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-			out.println(Util.generateHTMLLink("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+			out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 			out.println("\">Abbrechen</a></td>");
 			out.println("</tr>");
 			out.println("</table>");
@@ -99,7 +100,7 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
@@ -151,7 +152,7 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink("TaskManager?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");

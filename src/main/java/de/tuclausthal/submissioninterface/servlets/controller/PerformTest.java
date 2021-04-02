@@ -48,6 +48,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.PerformTestResultView;
+import de.tuclausthal.submissioninterface.servlets.view.PerformTestTutorFormView;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
@@ -72,7 +75,7 @@ public class PerformTest extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -86,7 +89,7 @@ public class PerformTest extends HttpServlet {
 
 		request.setAttribute("task", task);
 
-		getServletContext().getNamedDispatcher("PerformTestTutorFormView").forward(request, response);
+		getServletContext().getNamedDispatcher(PerformTestTutorFormView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -143,7 +146,7 @@ public class PerformTest extends HttpServlet {
 				Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 				if (submission == null || submission.getTask().getTaskid() != task.getTaskid()) {
 					request.setAttribute("title", "Abgabe nicht gefunden");
-					getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+					getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 					return;
 				}
 
@@ -165,7 +168,7 @@ public class PerformTest extends HttpServlet {
 			Util.recursiveDelete(path);
 
 			request.setAttribute("testresult", testResult);
-			getServletContext().getNamedDispatcher("PerformTestResultView").forward(request, response);
+			getServletContext().getNamedDispatcher(PerformTestResultView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -177,13 +180,13 @@ public class PerformTest extends HttpServlet {
 		long fileParts = request.getParts().stream().filter(part -> "file".equals(part.getName())).count();
 		if (fileParts == 0) {
 			request.setAttribute("title", "Keine Datei gefunden.");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		if (fileParts > 1 && fileParts != request.getParts().stream().filter(part -> "file".equals(part.getName())).map(part -> Util.getUploadFileName(part)).collect(Collectors.toSet()).size()) {
 			request.setAttribute("title", "Mehrere Dateien mit identischem Namen im Upload gefunden.");
 			request.setAttribute("message", "<div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -238,6 +241,6 @@ public class PerformTest extends HttpServlet {
 		Util.recursiveDelete(path);
 
 		request.setAttribute("testresult", testResult);
-		getServletContext().getNamedDispatcher("PerformTestResultView").forward(request, response);
+		getServletContext().getNamedDispatcher(PerformTestResultView.class.getSimpleName()).forward(request, response);
 	}
 }

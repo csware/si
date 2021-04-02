@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowSubmission;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -56,7 +57,7 @@ public class SearchSubmissionsResultView extends HttpServlet {
 			out.println("<table>");
 			for (Submission submission : foundSubmissions) {
 				out.println("<tr>");
-				out.println("<td><a href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), response) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
+				out.println("<td><a href=\"" + Util.generateHTMLLink(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid(), response) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
 				//out.println("<td><a href=\"\">" + submission.getSubmissionid() + "</a></td>");
 				out.println("</tr>");
 			}

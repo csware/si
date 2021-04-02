@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -52,7 +53,7 @@ public class DeleteFileView extends HttpServlet {
 		out.println("<FORM class=mid method=POST action=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">");
 		out.println("<p>Sie Sie sicher, dass Sie die Datei \"" + Util.escapeHTML(filename) + "\" löschen möchten?</p>");
 		out.println("<p>Dateien gleichen Namens werden auch durch erneutes Hochladen überschrieben.</p>");
-		out.println("<INPUT TYPE=submit VALUE=\"Datei löschen\"> <a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowTask?taskid=" + submission.getTask().getTaskid(), request, response) + "\">Abbrechen</a>");
+		out.println("<INPUT TYPE=submit VALUE=\"Datei löschen\"> <a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid(), request, response) + "\">Abbrechen</a>");
 		out.println("</FORM>");
 		template.printTemplateFooter();
 	}

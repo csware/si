@@ -39,6 +39,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.DockerTestManagerOverView;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -56,7 +58,7 @@ public class DockerTestManager extends HttpServlet {
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
 		if (tst == null || !(tst instanceof DockerTest)) {
 			request.setAttribute("title", "Test nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		DockerTest test = (DockerTest) tst;
@@ -69,7 +71,7 @@ public class DockerTestManager extends HttpServlet {
 		}
 
 		request.setAttribute("test", test);
-		getServletContext().getNamedDispatcher("DockerTestManagerOverView").forward(request, response);
+		getServletContext().getNamedDispatcher(DockerTestManagerOverView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -79,7 +81,7 @@ public class DockerTestManager extends HttpServlet {
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
 		if (tst == null || !(tst instanceof DockerTest)) {
 			request.setAttribute("title", "Test nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		DockerTest test = (DockerTest) tst;
@@ -97,7 +99,7 @@ public class DockerTestManager extends HttpServlet {
 			test.setPreparationShellCode(request.getParameter("preparationcode").replaceAll("\r\n", "\n"));
 			session.update(test);
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("DockerTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
 		} else if ("addNewStep".equals(request.getParameter("action"))) {
 			String title = request.getParameter("title");
@@ -108,7 +110,7 @@ public class DockerTestManager extends HttpServlet {
 			session.save(newStep);
 			test.getTestSteps().add(newStep);
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("DockerTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
 		} else if ("updateStep".equals(request.getParameter("action"))) {
 			DockerTestStep step = null;
@@ -128,7 +130,7 @@ public class DockerTestManager extends HttpServlet {
 				session.saveOrUpdate(step);
 				tx.commit();
 			}
-			response.sendRedirect(Util.generateRedirectURL("DockerTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
 		} else if ("deleteStep".equals(request.getParameter("action"))) {
 			DockerTestStep step = null;
@@ -144,7 +146,7 @@ public class DockerTestManager extends HttpServlet {
 				session.delete(step);
 				tx.commit();
 			}
-			response.sendRedirect(Util.generateRedirectURL("DockerTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
 		}
 

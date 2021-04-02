@@ -33,6 +33,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.ShowGroupStudentView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -51,7 +53,7 @@ public class ShowGroup extends HttpServlet {
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -64,11 +66,11 @@ public class ShowGroup extends HttpServlet {
 
 		if (participation.getGroup() == null) {
 			request.setAttribute("title", "Sie sind in keiner Gruppe.");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
 		request.setAttribute("group", participation.getGroup());
-		getServletContext().getNamedDispatcher("ShowGroupStudentView").forward(request, response);
+		getServletContext().getNamedDispatcher(ShowGroupStudentView.class.getSimpleName()).forward(request, response);
 	}
 }
