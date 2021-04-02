@@ -34,37 +34,5 @@
     <property name="current_session_context_class">thread</property>
     <!-- this will show us all sql statements -->
     <property name="hibernate.show_sql">true</property>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.User"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Student"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Task"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Similarity"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Submission"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Lecture"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Participation"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Points"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Group"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TestResult"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Test"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TestCount"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.Result"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTestStep"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.MCOption"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest"/>
-    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTestCheckItem"/>
  </session-factory>
 </hibernate-configuration>

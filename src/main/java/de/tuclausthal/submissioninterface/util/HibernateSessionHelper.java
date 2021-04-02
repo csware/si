@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,11 +18,16 @@
 
 package de.tuclausthal.submissioninterface.util;
 
+import java.util.Set;
+
+import javax.persistence.Entity;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.reflections.Reflections;
 
 /**
  * Hibernate Session Helper Singleton+Facade
@@ -34,7 +39,12 @@ public class HibernateSessionHelper {
 
 	static {
 		StandardServiceRegistry standardRegistry = new StandardServiceRegistryBuilder().configure().build();
-		Metadata metadata = new MetadataSources(standardRegistry).getMetadataBuilder().build();
+		MetadataSources metadataSources = new MetadataSources(standardRegistry);
+		Set<Class<?>> entities = new Reflections("de.tuclausthal.submissioninterface.persistence.datamodel").getTypesAnnotatedWith(Entity.class);
+		for (Class<?> entity : entities) {
+			metadataSources.addAnnotatedClass(entity);
+		}
+		Metadata metadata = metadataSources.getMetadataBuilder().build();
 		sessionFactory = metadata.getSessionFactoryBuilder().build();
 	}
 
