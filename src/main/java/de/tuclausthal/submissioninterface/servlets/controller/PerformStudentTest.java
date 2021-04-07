@@ -165,6 +165,16 @@ public class PerformStudentTest extends HttpServlet {
 			return;
 		}
 
+		if (resultFuture.testResult == null) {
+			// should only happen after (session deserialization) or (failover in a clustered setup)
+			LOG.warn("testResult future was null");
+			sa.setQueuedTest(null);
+			request.setAttribute("title", "Testergebnis nicht mehr verfügbar");
+			request.setAttribute("message", "<div class=mid>Auf Grund eines technischen Fehlers ist das Testergebnis nicht mehr abrufbar. Bitte fordern Sie den Test erneut an.<p><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			return;
+		}
+
 		if (resultFuture.testResult.isDone()) {
 			TestExecutorTestResult result = null;
 			try {
