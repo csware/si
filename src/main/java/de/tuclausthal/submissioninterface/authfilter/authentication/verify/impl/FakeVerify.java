@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -17,6 +17,8 @@
  */
 
 package de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl;
+
+import java.lang.invoke.MethodHandles;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +39,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.User;
  * @author Sven Strickroth
  */
 public class FakeVerify implements VerifyIf {
-	final private static Logger LOG = LoggerFactory.getLogger(FakeVerify.class);
+	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	public FakeVerify(FilterConfig filterConfig) {
 		LOG.warn("Using FakeVerify as authenticator! No passwords will be validated!");
 	}

@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl;
 
+import java.lang.invoke.MethodHandles;
 import java.text.MessageFormat;
 import java.util.Hashtable;
 
@@ -46,7 +47,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class LDAPVerify implements VerifyIf {
-	final static private Logger LOG = LoggerFactory.getLogger(LDAPVerify.class);
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private String[] providerURLs;
 	private String securityAuthentication;

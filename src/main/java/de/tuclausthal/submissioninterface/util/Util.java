@@ -26,6 +26,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.net.URI;
@@ -68,7 +69,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStat
  * @author Sven Strickroth
  */
 public final class Util {
-	final private static Logger LOG = LoggerFactory.getLogger(Util.class);
+	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	public static Clock CLOCK = Clock.systemDefaultZone();
 
 	/**

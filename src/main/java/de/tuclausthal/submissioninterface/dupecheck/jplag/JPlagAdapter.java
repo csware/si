@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  *
  */
 public class JPlagAdapter extends DupeCheck {
-	final static private Logger LOG = LoggerFactory.getLogger(JPlagAdapter.class);
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public JPlagAdapter(File path) {
 		super(path);

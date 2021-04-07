@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.authfilter.authentication.login.impl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.invoke.MethodHandles;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -42,7 +43,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class Shibboleth implements LoginIf {
-	static final private Logger LOG = LoggerFactory.getLogger(Shibboleth.class);
+	static final private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	static final public String REDIR_PARAMETER = "redir";
 	static final public String SHIBBOLETH_LOGIN_KEY = "SHIBBOLETH_LOGIN";

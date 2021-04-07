@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.dupecheck;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +50,7 @@ public abstract class DupeCheck {
 
 	protected File path;
 
-	final static private Logger LOG = LoggerFactory.getLogger(DupeCheck.class);
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	/**
 	 * Creates a new DupeCheck instance

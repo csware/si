@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.testframework.tests;
 
 import java.io.File;
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -84,7 +85,7 @@ public class TestTask implements Serializable {
 					try {
 						tx.commit();
 					} catch (Exception e) {
-						LoggerFactory.getLogger(TestTask.class).error("Saving Testresult failed.", e);
+						LoggerFactory.getLogger(MethodHandles.lookup().lookupClass()).error("Saving Testresult failed.", e);
 						tx.rollback();
 					}
 				}
@@ -111,7 +112,7 @@ public class TestTask implements Serializable {
 		try {
 			testImpl.performTest(test, basePath, path, testResult);
 		} catch (Exception e) {
-			LoggerFactory.getLogger(TestTask.class).error("Performing test failed.", e);
+			LoggerFactory.getLogger(MethodHandles.lookup().lookupClass()).error("Performing test failed.", e);
 			testResult.setTestOutput(e.getMessage());
 		}
 	}

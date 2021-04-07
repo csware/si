@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -59,7 +60,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 public class PerformStudentTest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	final static private Logger LOG = LoggerFactory.getLogger(PerformStudentTest.class);
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

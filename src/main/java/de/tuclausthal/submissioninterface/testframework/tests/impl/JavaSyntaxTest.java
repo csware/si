@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
  * @author Sven Strickroth
  */
 public class JavaSyntaxTest extends TempDirTest {
-	final private static Logger LOG = LoggerFactory.getLogger(JavaSyntaxTest.class);
+	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	@Override
 	protected void performTestInTempDir(Test test, File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {

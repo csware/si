@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.authfilter.authentication;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.Date;
 
 import javax.servlet.Filter;
@@ -49,7 +50,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class AuthenticationFilter implements Filter {
-	final static private Logger LOG = LoggerFactory.getLogger(AuthenticationFilter.class);
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private boolean bindToIP = false;
 	private LoginIf login;

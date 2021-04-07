@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.invoke.MethodHandles;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -71,7 +72,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 @MultipartConfig(maxFileSize = Configuration.MAX_UPLOAD_SIZE)
 public class TaskManager extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	final static private Logger LOG = LoggerFactory.getLogger(TaskManager.class);
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

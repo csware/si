@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.util;
 
+import java.lang.invoke.MethodHandles;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
 import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 
 public class HibernateListener implements ServletContextListener {
-	final private static Logger LOG = LoggerFactory.getLogger(HibernateListener.class);
+	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {

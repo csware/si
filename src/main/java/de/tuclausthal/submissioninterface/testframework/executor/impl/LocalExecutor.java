@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.testframework.executor.impl;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -41,7 +42,7 @@ public class LocalExecutor implements TestExecutorIf {
 	public static int CORES = 1;
 	public static File dataPath;
 
-	final static private Logger LOG = LoggerFactory.getLogger(LocalExecutor.class);
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private LocalExecutor() {}
 

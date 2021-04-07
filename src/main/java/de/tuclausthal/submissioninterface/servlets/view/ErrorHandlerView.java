@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.invoke.MethodHandles;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -41,7 +42,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class ErrorHandlerView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	final static private Logger LOG = LoggerFactory.getLogger(ErrorHandlerView.class);
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

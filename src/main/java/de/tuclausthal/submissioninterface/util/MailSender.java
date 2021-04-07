@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.util;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Date;
 import java.util.Properties;
 
@@ -32,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MailSender {
-	final private static Logger LOG = LoggerFactory.getLogger(MailSender.class);
+	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public static void sendMail(String to, String subject, String messageText) {
 		MimeMessage msg;

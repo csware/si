@@ -18,6 +18,8 @@
 
 package de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl;
 
+import java.lang.invoke.MethodHandles;
+
 import javax.servlet.FilterConfig;
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,7 +40,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class ShibbolethVerify implements VerifyIf {
-	final static private Logger LOG = LoggerFactory.getLogger(ShibbolethVerify.class);
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private String userAttribute;
 	private String matrikelNumberAttribute;

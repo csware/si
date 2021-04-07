@@ -28,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -70,7 +71,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  *
  */
 public class PlaggieAdapter extends DupeCheck {
-	final static private Logger LOG = LoggerFactory.getLogger(PlaggieAdapter.class);
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public PlaggieAdapter(File path) {
 		super(path);
