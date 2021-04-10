@@ -134,7 +134,7 @@ public class HTMLSanitizerPolicy {
 			.toFactory();
 
 	private static Predicate<String> matchesEither(final Pattern a, final Pattern b) {
-		return new Predicate<String>() {
+		return new Predicate<>() {
 			public boolean apply(String s) {
 				return a.matcher(s).matches() || b.matcher(s).matches();
 			}
@@ -151,7 +151,7 @@ public class HTMLSanitizerPolicy {
 	}
 
 	private static Predicate<String> matchesEither(final Pattern a, final Pattern b, final Pattern c) {
-		return new Predicate<String>() {
+		return new Predicate<>() {
 			public boolean apply(String s) {
 				return a.matcher(s).matches() || b.matcher(s).matches() || c.matcher(s).matches();
 			}

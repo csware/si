@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -114,10 +115,9 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 				Transaction tx = session.beginTransaction();
 				String title = request.getParameter("title");
 				String testCode = request.getParameter("testcode");
-				StringBuffer expect = Util.cleanCrLf(new StringBuffer(request.getParameter("expect")));
 				step.setTitle(title);
 				step.setTestcode(testCode);
-				step.setExpect(expect.toString());
+				step.setExpect(Objects.toString(request.getParameter("expect"), "").replaceAll("\r\n", "\n"));
 				session.saveOrUpdate(step);
 				tx.commit();
 			}

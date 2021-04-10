@@ -569,35 +569,4 @@ public final class Util {
 			filename.replace(lastDot, filename.length(), filename.subSequence(lastDot, filename.length()).toString().toLowerCase());
 		}
 	}
-
-	// based on <https://stackoverflow.com/a/47957403/3906760>
-	public static StringBuffer cleanCrLf(StringBuffer stringBuffer) {
-		StringBuffer stringBuilder = null;
-		int index = 0;
-		int len = stringBuffer.length();
-		while (index < len) {
-			char c = stringBuffer.charAt(index);
-			if (c == '\r') {
-				if (stringBuilder == null) {
-					stringBuilder = new StringBuffer();
-					// build up the string builder so it contains all the prior characters
-					stringBuilder.append(stringBuffer, 0, index);
-				}
-				if ((index + 1 < len) && stringBuffer.charAt(index + 1) == '\n') {
-					// this means we encountered a \r\n  ... move index forward one more character
-					++index;
-					stringBuilder.append('\n');
-				} else {
-					// found a single \r w/o \n
-					stringBuilder.append(c);
-				}
-			} else {
-				if (stringBuilder != null) {
-					stringBuilder.append(c);
-				}
-			}
-			++index;
-		}
-		return stringBuilder == null ? stringBuffer : stringBuilder;
-	}
 }

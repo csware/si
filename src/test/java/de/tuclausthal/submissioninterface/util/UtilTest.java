@@ -31,42 +31,6 @@ import org.junit.jupiter.api.Test;
 
 public class UtilTest {
 	@Test
-	public void testCleanCrLfEmpty() {
-		StringBuffer stringBuffer = new StringBuffer("");
-		assertEquals("", Util.cleanCrLf(stringBuffer).toString());
-	}
-
-	@Test
-	public void testCleanCrLfJustLf() {
-		StringBuffer stringBuffer = new StringBuffer("\n\n\n");
-		assertEquals("\n\n\n", Util.cleanCrLf(stringBuffer).toString());
-	}
-
-	@Test
-	public void testCleanCrLfJustCr() {
-		StringBuffer stringBuffer = new StringBuffer("\r\r\r");
-		assertEquals("\r\r\r", Util.cleanCrLf(stringBuffer).toString());
-	}
-
-	@Test
-	public void testCleanCrLfMixed() {
-		StringBuffer stringBuffer = new StringBuffer("\r\n\r\r\n\n\r");
-		assertEquals("\n\r\n\n\r", Util.cleanCrLf(stringBuffer).toString());
-	}
-
-	@Test
-	public void testCleanCrLfMulti() {
-		StringBuffer stringBuffer = new StringBuffer("\r\n\r\n\r\n");
-		assertEquals("\n\n\n", Util.cleanCrLf(stringBuffer).toString());
-	}
-
-	@Test
-	public void testCleanCrLfNormal() {
-		StringBuffer stringBuffer = new StringBuffer("\r\n \r\nfdfdsf\r\n ");
-		assertEquals("\n \nfdfdsf\n ", Util.cleanCrLf(stringBuffer).toString());
-	}
-
-	@Test
 	public void testGetCurrentSemester() {
 		Util.CLOCK = Clock.fixed(Instant.parse("2020-12-21T12:00:00Z"), ZoneOffset.UTC);
 

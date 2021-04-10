@@ -24,7 +24,8 @@ cache:
   paths:
     - .m2/repository
 
-.compile:
+compile-jdk11:
+  image: maven:3.6.3-jdk-11
   stage: build
   before_script:
     - echo -e "section_start:`date +%s`:install_packages[collapsed=true]\r\e[0K\e[1;96mInstalling packages\e[0m"
@@ -47,10 +48,3 @@ cache:
       - 1.sql
     expire_in: 1 week
 
-compile-jdk8:
-    extends: .compile
-    image: maven:3.6.3-jdk-8
-
-compile-jdk11:
-    extends: .compile
-    image: maven:3.6.3-jdk-11
