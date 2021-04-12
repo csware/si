@@ -86,13 +86,19 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("<th>Studierende hinzufügen:</th>");
 		out.println("<td><select multiple name=members>");
 		Iterator<Participation> participationIterator = DAOFactory.ParticipationDAOIf(RequestAdapter.getSession(request)).getParticipationsWithoutGroup(group.getLecture()).iterator();
+		int cnt = 0;
 		while (participationIterator.hasNext()) {
 			Participation thisParticipation = participationIterator.next();
 			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0 || thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 				out.println("<option value=" + thisParticipation.getId() + ">" + Util.escapeHTML(thisParticipation.getUser().getFullName()) + "</option>");
+				++cnt;
 			}
 		}
-		out.println("</select></td>");
+		out.println("</select>");
+		if (cnt > 10) {
+			out.println("<textarea name=membersmailadresses placeholder=\"E-Mail-Adressen, eine pro Zeile\"></textarea>");
+		}
+		out.println("</td>");
 		out.println("</tr>");
 		if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
 			out.println("<tr>");

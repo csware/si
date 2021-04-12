@@ -19,6 +19,8 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,9 +34,11 @@ import org.hibernate.Transaction;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.GroupDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -147,7 +151,55 @@ public class EditGroup extends HttpServlet {
 					}
 				}
 			}
-			tx.commit();
+			if (request.getParameter("membersmailadresses") != null && !request.getParameter("membersmailadresses").trim().isEmpty()) {
+				UserDAOIf userDAO = DAOFactory.UserDAOIf(session);
+				int count = 0;
+				List<String> errors = new ArrayList<>();
+				String mailadresses[] = request.getParameter("membersmailadresses").replaceAll("\r\n", "\n").split("\n");
+				for (String mailaddress : mailadresses) {
+					if (mailaddress.isEmpty()) {
+						continue;
+					}
+					User user = userDAO.getUserByEmail(mailaddress);
+					if (user == null) {
+						errors.add("\"" + mailaddress + "\" nicht gefunden.");
+						continue;
+					}
+					Participation memberParticipation = participationDAO.getParticipationLocked(user, group.getLecture());
+					if (memberParticipation == null) {
+						errors.add("\"" + mailaddress + "\" ist kein Teilnehmer der Veranstaltung.");
+						continue;
+					}
+					if (!memberParticipation.getRoleType().equals(ParticipationRole.NORMAL)) {
+						errors.add("\"" + mailaddress + "\" ist kein normaler Teilnehmer der Veranstaltung.");
+						continue;
+					}
+					if (memberParticipation.getGroup() != null) {
+						errors.add("\"" + mailaddress + "\" ist bereits in einer anderen Gruppe.");
+						continue;
+					}
+					memberParticipation.setGroup(group);
+					participationDAO.saveParticipation(memberParticipation);
+					++count;
+				}
+				tx.commit();
+				StringBuilder output = new StringBuilder();
+				if (!errors.isEmpty()) {
+					output.append("<h2>Fehler</h2><ul>");
+					for (String string : errors) {
+						output.append("<li>" + Util.escapeHTML(string) + "</li>");
+					}
+					output.append("</ul>");
+				}
+				output.append("<h2>Ergebnis</h2>");
+				output.append("<p>Studierende zur Gruppe hinzugefügt: " + count + "</p>");
+				output.append("<p class=mid><a href=\"" + Util.generateHTMLLink("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response) + "\">zurück zur Vorlesung</a></p>");
+				request.setAttribute("title", "Batch-Ergebnisse");
+				request.setAttribute("message", output.toString());
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				return;
+			}
+			tx.commit(); // attention, there is a commit right before this
 			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response));
 			return;
 		}
