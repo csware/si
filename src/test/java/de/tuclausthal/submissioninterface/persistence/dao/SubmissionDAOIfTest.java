@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -70,49 +70,62 @@ class SubmissionDAOIfTest extends BasicTest {
 	@Test
 	void testGetUngradedSubmissionNone() {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(2);
-		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1));
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, false));
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, true));
 	}
 
 	@Test
 	void testGetUngradedSubmissionNoneNoSub() {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(4);
-		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 1));
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 1, false));
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 1, true));
 	}
 
 	@Test
 	void testGetUngradedSubmission() {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(3);
-		assertEquals(12, DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1).getSubmissionid());
-		assertEquals(12, DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 3).getSubmissionid());
-		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 12));
+		assertEquals(12, DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, false).getSubmissionid());
+		assertEquals(12, DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 3, false).getSubmissionid());
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 12, false));
+
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, true));
+		assertEquals(12, DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 20, true).getSubmissionid());
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 12, true));
 	}
 
 	@Test
 	void testGetUngradedSubmissionNoGroupNone() {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(3);
-		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, null));
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, null, false));
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, null, true));
 	}
 
 	@Test
 	void testGetUngradedSubmissionNoGroupOne() {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(1);
-		assertEquals(4, DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, null).getSubmissionid());
-		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 4, null));
+		assertEquals(4, DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, null, false).getSubmissionid());
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 4, null, false));
+
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, null, true));
+		assertEquals(4, DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 5, null, true).getSubmissionid());
 	}
 
 	@Test
 	void testGetUngradedSubmissionGroupNone() {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(3);
 		Group group = DAOFactory.GroupDAOIf(session).getGroup(1);
-		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, group));
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, group, false));
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, group, true));
 	}
 
 	@Test
 	void testGetUngradedSubmissionGroupOne() {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(3);
 		Group group = DAOFactory.GroupDAOIf(session).getGroup(2);
-		assertEquals(12, DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, group).getSubmissionid());
-		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 12, group));
+		assertEquals(12, DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, group, false).getSubmissionid());
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 12, group, false));
+
+		assertNull(DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, -1, group, true));
 	}
 
 	@Test

@@ -28,6 +28,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
@@ -148,25 +149,43 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 	}
 
 	@Override
-	public Submission getUngradedSubmission(Task task, int lastSubmissionID) {
+	public Submission getUngradedSubmission(Task task, int lastSubmissionID, boolean reverse) {
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Submission> criteria = builder.createQuery(Submission.class);
 		Root<Submission> root = criteria.from(Submission.class);
 		criteria.select(root);
-		criteria.where(builder.and(builder.gt(root.get(Submission_.submissionid), lastSubmissionID), builder.equal(root.get(Submission_.task), task), builder.isNull(root.get(Submission_.points))));
-		criteria.orderBy(builder.asc(root.get(Submission_.submissionid)));
+		Predicate mainPred;
+		if (reverse) {
+			mainPred = builder.lt(root.get(Submission_.submissionid), lastSubmissionID);
+			criteria.orderBy(builder.desc(root.get(Submission_.submissionid)));
+		} else {
+			mainPred = builder.gt(root.get(Submission_.submissionid), lastSubmissionID);
+			criteria.orderBy(builder.asc(root.get(Submission_.submissionid)));
+		}
+		criteria.where(builder.and(mainPred, builder.equal(root.get(Submission_.task), task), builder.isNull(root.get(Submission_.points))));
 		return session.createQuery(criteria).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
-	public Submission getUngradedSubmission(Task task, int lastSubmissionID, Group group) {
+	public Submission getUngradedSubmission(Task task, int lastSubmissionID, Group group, boolean reverse) {
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Submission> criteria = builder.createQuery(Submission.class);
 		Root<Submission> root = criteria.from(Submission.class);
 		criteria.select(root);
-		Predicate where = builder.and(builder.gt(root.get(Submission_.submissionid), lastSubmissionID), builder.equal(root.get(Submission_.task), task), builder.isNull(root.get(Submission_.points)));
+
+		Predicate mainPred;
+		Order mainOrder;
+		if (reverse) {
+			mainPred = builder.lt(root.get(Submission_.submissionid), lastSubmissionID);
+			mainOrder = builder.desc(root.get(Submission_.submissionid));
+		} else {
+			mainPred = builder.gt(root.get(Submission_.submissionid), lastSubmissionID);
+			mainOrder = builder.asc(root.get(Submission_.submissionid));
+		}
+
+		Predicate where = builder.and(mainPred, builder.equal(root.get(Submission_.task), task), builder.isNull(root.get(Submission_.points)));
 		SetJoin<Submission, Participation> submittersJoin = root.join(Submission_.submitters);
 		if (group == null) {
 			where = builder.and(where, builder.isNull(submittersJoin.get(Participation_.group)));
@@ -174,7 +193,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 			where = builder.and(where, builder.equal(submittersJoin.get(Participation_.group), group));
 		}
 		criteria.where(where);
-		criteria.orderBy(builder.asc(submittersJoin.get(Participation_.group)), builder.asc(root.get(Submission_.submissionid)));
+		criteria.orderBy(builder.asc(submittersJoin.get(Participation_.group)), mainOrder);
 		return session.createQuery(criteria).setMaxResults(1).uniqueResult();
 	}
 

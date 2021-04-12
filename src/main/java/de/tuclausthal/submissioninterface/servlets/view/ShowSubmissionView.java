@@ -242,6 +242,7 @@ public class ShowSubmissionView extends HttpServlet {
 					groupAdding = "&groupid=" + Util.parseInteger(request.getParameter("groupid"), 0);
 				}
 				out.println("- <a href=\"" + Util.generateHTMLLink("GotoNextUngradedSubmission?sid=" + submission.getSubmissionid() + "&taskid=" + task.getTaskid() + groupAdding, response) + "\">nächste</a>");
+				out.println("- <a href=\"" + Util.generateHTMLLink("GotoNextUngradedSubmission?sid=" + submission.getSubmissionid() + "&taskid=" + task.getTaskid() + groupAdding + "&prev", response) + "\">vorherige</a>");
 			}
 			out.println("</form>");
 			out.println("</td>");

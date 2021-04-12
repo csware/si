@@ -66,9 +66,9 @@ public class GotoNextUngradedSubmission extends HttpServlet {
 		int lastSubmissionID = Util.parseInteger(request.getParameter("sid"), 0);
 		if (!"taskWise".equals(task.getTaskGroup().getLecture().getGradingMethod())) {
 			Group group = DAOFactory.GroupDAOIf(session).getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
-			Submission submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, lastSubmissionID, group);
+			Submission submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, lastSubmissionID, group, request.getParameter("prev") != null);
 			if (submission == null && lastSubmissionID > 0) {
-				submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 0, group);
+				submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 0, group, request.getParameter("prev") != null);
 			}
 			if (submission != null) {
 				if (group != null) {
@@ -80,9 +80,9 @@ public class GotoNextUngradedSubmission extends HttpServlet {
 				response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
 			}
 		} else {
-			Submission submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, lastSubmissionID);
+			Submission submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, lastSubmissionID, request.getParameter("prev") != null);
 			if (submission == null && lastSubmissionID > 0) {
-				submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 0);
+				submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 0, request.getParameter("prev") != null);
 			}
 			if (submission != null) {
 				response.sendRedirect(Util.generateRedirectURL("ShowSubmission?sid=" + submission.getSubmissionid(), response));
