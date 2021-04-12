@@ -104,6 +104,17 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			printAddUserForm(out, response, lecture, participants, "tutor");
 			out.println("</td>");
 			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<td colspan=2>");
+			out.println("<form method=post action=\"" + Util.generateHTMLLink("?", response) + "\">");
+			out.println("<input type=hidden name=action value=addUserMulti>");
+			out.println("<input type=hidden name=type value=tutor>");
+			out.println("<input type=hidden name=lecture value=" + lecture.getId() + ">");
+			out.println("<textarea name=mailadresses placeholder=\"E-Mail-Adressen, eine pro Zeile\"></textarea>");
+			out.println("<input type=submit value=\"mehrere hinzufügen\">");
+			out.println("</form>");
+			out.println("</td>");
+			out.println("</tr>");
 			out.println("</table><p>");
 			out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("?", response) + "\">zur Übersicht</a></div>");
 		}

@@ -20,6 +20,8 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -144,6 +146,55 @@ public class AdminMenue extends HttpServlet {
 			}
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL("AdminMenue?action=showAdminUsers", response));
+		} else if ("addUserMulti".equals(request.getParameter("action")) && request.getParameter("mailadresses") != null && request.getParameter("lecture") != null) {
+			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+			ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+			UserDAOIf userDAO = DAOFactory.UserDAOIf(session);
+			Transaction tx = session.beginTransaction();
+			int count = 0;
+			List<String> errors = new ArrayList<>();
+			if (lecture == null) {
+				response.sendRedirect(Util.generateRedirectURL("AdminMenue", response));
+			} else {
+				String mailadresses[] = request.getParameter("mailadresses").replaceAll("\r\n", "\n").split("\n");
+				for (String mailaddress : mailadresses) {
+					if (mailaddress.isEmpty()) {
+						continue;
+					}
+					User user = userDAO.getUserByEmail(mailaddress);
+					if (user == null) {
+						errors.add("\"" + mailaddress + "\" nicht gefunden.");
+						continue;
+					}
+					Participation participation = participationDAO.getParticipationLocked(user, lecture);
+					if (participation == null) {
+						errors.add("\"" + mailaddress + "\" ist kein Teilnehmer der Veranstaltung.");
+						continue;
+					}
+					if (!participation.getRoleType().equals(ParticipationRole.NORMAL)) {
+						errors.add("\"" + mailaddress + "\" ist kein normaler Teilnehmer der Veranstaltung.");
+						continue;
+					}
+					participation.setRoleType(ParticipationRole.TUTOR);
+					participationDAO.saveParticipation(participation);
+					++count;
+				}
+			}
+			tx.commit();
+			StringBuilder output = new StringBuilder();
+			if (!errors.isEmpty()) {
+				output.append("<h2>Fehler</h2><ul>");
+				for (String string : errors) {
+					output.append("<li>" + Util.escapeHTML(string) + "</li>");
+				}
+				output.append("</ul>");
+			}
+			output.append("<h2>Ergebnis</h2>");
+			output.append("<p>Zu TutorInnen befördert: " + count + "</p>");
+			output.append("<p class=mid><a href=\"" + Util.generateHTMLLink("AdminMenue?action=showLecture&lecture=" + lecture.getId(), response) + "\">zurück zur Übersicht</a></p>");
+			request.setAttribute("title", "Batch-Ergebnisse");
+			request.setAttribute("message", output.toString());
+			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 		} else if (("addUser".equals(request.getParameter("action")) || "removeUser".equals(request.getParameter("action"))) && request.getParameter("lecture") != null && request.getParameter("participationid") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 			ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
