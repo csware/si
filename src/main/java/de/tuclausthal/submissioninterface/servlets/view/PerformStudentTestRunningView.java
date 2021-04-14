@@ -32,7 +32,7 @@ import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * View-Servlet for displaying a java-sourcecode file
+ * View-Servlet for displaying the queuing status of a running test
  * @author Sven Strickroth
  */
 public class PerformStudentTestRunningView extends HttpServlet {

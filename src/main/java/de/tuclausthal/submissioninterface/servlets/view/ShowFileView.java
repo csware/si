@@ -36,7 +36,7 @@ import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * View-Servlet for displaying a java-sourcecode file
+ * View-Servlet for displaying a file as HTML document
  * @author Sven Strickroth
  */
 public class ShowFileView extends HttpServlet {
