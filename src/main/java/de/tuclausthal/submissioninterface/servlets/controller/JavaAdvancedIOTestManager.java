@@ -95,7 +95,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 		if ("addNewStep".equals(request.getParameter("action"))) {
 			String title = request.getParameter("title");
 			String testCode = request.getParameter("testcode");
-			String expect = request.getParameter("expect");
+			String expect = request.getParameter("expect").replaceAll("\r\n", "\n");
 			JavaAdvancedIOTestStep newStep = new JavaAdvancedIOTestStep(test, title, testCode, expect);
 			Transaction tx = session.beginTransaction();
 			session.save(newStep);
