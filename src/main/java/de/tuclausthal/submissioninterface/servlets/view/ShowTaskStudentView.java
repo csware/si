@@ -290,8 +290,10 @@ public class ShowTaskStudentView extends HttpServlet {
 					out.println(Util.textToHTML(test.getTestDescription()));
 					out.println("</td>");
 					out.println("<td>");
-					if (testCountDAO.canStillRunXTimes(test, submission) > 0) {
+					int runnable = testCountDAO.canStillRunXTimes(test, submission);
+					if (runnable > 0) {
 						out.println("<form method=post action=\"" + Util.generateHTMLLink("PerformStudentTest?testid=" + test.getId(), response) + "\"><input type=submit value=\"Test ausführen\"></form>");
+						out.println(" (noch " + runnable + "x ausführbar)");
 					} else {
 						out.println("Limit erreicht");
 					}
