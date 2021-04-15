@@ -166,7 +166,6 @@ public class ShowTaskTutorView extends HttpServlet {
 			Map<Integer, Map<Integer, Boolean>> testResults = DAOFactory.TestResultDAOIf(session).getResults(task);
 			Map<Integer, Map<Integer, List<Similarity>>> similarities = DAOFactory.SimilarityDAOIf(session).getMaxSimilarities(task);
 			out.println("<p><h2>Abgaben</h2><p>");
-			out.println("<p><div class=mid>Anzahl Abgaben: " + task.getSubmissions().size() + "</div>");
 			if (!task.isMCTask()) {
 				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("SearchSubmissions?taskid=" + task.getTaskid(), response) + "\">Suchen...</a></div>");
 			}
@@ -356,7 +355,9 @@ public class ShowTaskTutorView extends HttpServlet {
 				out.println("</table><p>");
 				out.println("</form></div>");
 				if (showAllColumns) {
-					out.println("<h3>Gesamtdurchschnitt: " + Util.showPoints(Float.valueOf(sumOfPoints / (float) sumOfSubmissions).intValue()) + "</h3>");
+					out.println("<p class=mid><strong>Gesamtanzahl Abgaben:</strong> " + task.getSubmissions().size() + "; <strong>Gesamtdurchschnitt:</strong> " + Util.showPoints(Float.valueOf(sumOfPoints / (float) sumOfSubmissions).intValue()) + "</p>");
+				} else {
+					out.println("<p class=mid><strong>Gesamtanzahl Abgaben:</strong> " + task.getSubmissions().size() + "</p>");
 				}
 			}
 		}

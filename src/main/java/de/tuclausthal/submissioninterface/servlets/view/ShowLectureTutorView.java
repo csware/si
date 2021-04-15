@@ -179,7 +179,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			listMembers(participationDAO.getParticipationsOfGroup(group).iterator(), response, isAdvisor, showMatNo, requestAdapter, studentsPoints, allPoints);
 			out.println("</div>");
 		}
-		out.println("<h3>Gesamtdurchschnitt: " + Util.showPoints(((Double) (studentsPoints[1] / (double) studentsPoints[0])).intValue()) + "</h3>");
+		out.println("<p class=mid><strong>Studierende:</strong> " + studentsPoints[0] + "; <strong>Gesamtdurchschnitt:</strong> " + Util.showPoints(((Double) (studentsPoints[1] / (double) studentsPoints[0])).intValue()) + "</p>");
 		out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("ShowLecture?lecture=" + lecture.getId() + "&show=list", response) + "\">Gesamtliste</a> - <a href=\"" + Util.generateHTMLLink("ShowLecture?lecture=" + lecture.getId() + "&show=csv", response) + "\">CSV-Download</a></div>");
 		template.printTemplateFooter();
 	}
