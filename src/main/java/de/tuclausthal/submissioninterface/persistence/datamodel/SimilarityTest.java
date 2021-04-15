@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -270,7 +270,7 @@ public class SimilarityTest implements Serializable {
 			return "JPlag-Test, min. Übereinstimmung: " + getMinimumDifferenceInPercent() + "%";
 		}
 		if ("plaggie".equals(getType())) {
-			return "Plaggie-Test (java <= 1.6), min. Übereinstimmung: " + getMinimumDifferenceInPercent() + "%";
+			return "Plaggie-Test (Java <= 1.6), min. Übereinstimmung: " + getMinimumDifferenceInPercent() + "%";
 		}
 		String string;
 		if ("compression".equals(getType())) {

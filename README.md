@@ -11,15 +11,15 @@ Please read the whole procedure in advance to executing it.
 ### Installation steps of required software
 
 - Install Java
-  - On *nix (such as Debian) use the `openjdk-11-jdk-headless` package
+  - On *nix (such as Debian) use the `openjdk-11-jre-headless` package
   - On Windows you can use [Liberica OpenJDK 11](https://bell-sw.com/pages/downloads/)
-- Install [Apache Tomcat](https://tomcat.apache.org) (on *nix use the `tomcat-9` package)
+- Install [Apache Tomcat](https://tomcat.apache.org) (e.g., on Debian-based systems use the `tomcat9` package)
   - After installation Tomcat usually listens on locahost:8080
   - For development it is recommended to integrate Tomcat into the used IDE, e.g. into Eclipse.
 - Install MariaDB (recommended on *nix) or MySQL (on Windows, <https://dev.mysql.com/downloads/mysql/>)
   - For a development machine on Windows [XAMPP](https://www.apachefriends.org/) is recommended which comes with [phpMyAdmin](https://www.phpmyadmin.net/) a nice administration interface for MySQL
 - For development [Eclipse](https://www.eclipse.org/downloads/packages/) (IDE for Enterprise Java Developers) is recommended with the plugin `m2e-apt`
-- For production use, it is recommended to run Apache Tomcat behind Apache httpd, connecting Tomcat using [mod_proxy_ajp](https://httpd.apache.org/docs/2.4/mod/mod_proxy_ajp.html), terminate SSL/TLS in httpd and propably use Shibboleth for Single-Sign on.
+- For production use, it is recommended to run Apache Tomcat behind Apache httpd, connecting Tomcat using [mod_proxy_ajp](https://httpd.apache.org/docs/2.4/mod/mod_proxy_ajp.html), terminate SSL/TLS in httpd and probably use Shibboleth for Single-Sign on.
   - Configure the VHost with mod_proxy_ajp:
     ```
     ProxyPreserveHost On
@@ -44,7 +44,7 @@ Please read the whole procedure in advance to executing it.
     ```
    - For debugging: Please not that the Shibboleth attributes passed to Tomcat don't show up when iterating over the request variables. They need to be explicitly named (e.g., `uid` or `Shib-Identity-Provider`).
 - For building the whole package you need [maven](https://maven.apache.org/) (also often available as a package on *nix systems)
-- For running the cron task regularly with the predefined script `submissiondir/runtests.sh` you need the `lockfile` tools (usually part of the `procmail` package on *nix systems)
+- For running the cron task regularly with the predefined script `submissiondir/runtests.sh` you need the `lockfile` tool (usually part of the `procmail` package on *nix systems)
 
 ### Database
 - Decide what user and password to use (for production use a dedicated user is recommended)
@@ -55,8 +55,8 @@ Please read the whole procedure in advance to executing it.
 - `src/main/resources/hibernate.cfg.xml` for the database configuration
   - Set the database name, username and password here
 - `src/main/webapp/WEB-INF/web.xml` for Tomcat and GATE specific configurations
-  - Adjust the `datapath` here, please make sure that thbis is accessible by Tomcat, use e.g. `/srv/gate/` or `c:\gate` here
-    - On *nix the system Tomcat runs as the user `tomcat`, so make sure that user has appropriate permissions, also on Debian-based systems, Tomcat might be sandboxed by systemd. Create a file `/etc/systemd/system/tomcat9.service.d/gate.gate.conf` containing: ```
+  - Adjust the `datapath` here, please make sure that this is accessible by Tomcat, use e.g. `/srv/gate/` or `c:\gate` here
+    - On *nix the system Tomcat runs as the user `tomcat`, so make sure that the user has appropriate permissions, also on Debian-based systems, Tomcat might be sandboxed by systemd. Create a file `/etc/systemd/system/tomcat9.service.d/gate.gate.conf` containing: ```
 [Service]
 ReadWritePaths=/srv/submissioninterface/
 ``` (afterwards, issue `systemctl daemon-reload` and `systemctl restart tomcat`)
@@ -65,7 +65,7 @@ ReadWritePaths=/srv/submissioninterface/
     - Adjust `verify` to `de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.FakeVerify` to disable any authentication
   - For production use:
     - Check the other configuration options, especially the mail related ones
-    - For LDAP authentication set `login` to `de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Form` and `verify` to `de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.LDAPVerify`, configure LDAP related settings for the `AuthenticationFilter` (`PROVIDER_URL`, `SECURITY_AUTHENTICATION`, `SECURITY_PRINCIPAL`, `matrikelNumberAttribute` (optional), and `userAttribute`), please also look at `src/main/java/de/tuclausthal/submissioninterface/authfilter/authentication/verify/impl/LDAPVerify.java` whether special adjustmens are needed (e.g. first and last name generation)
+    - For LDAP authentication set `login` to `de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Form` and `verify` to `de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.LDAPVerify`, configure LDAP related settings for the `AuthenticationFilter` (`PROVIDER_URL`, `SECURITY_AUTHENTICATION`, `SECURITY_PRINCIPAL`, `matrikelNumberAttribute` (optional), and `userAttribute`), please also look at `src/main/java/de/tuclausthal/submissioninterface/authfilter/authentication/verify/impl/LDAPVerify.java` whether special adjustments are needed (e.g. first and last name generation)
     - For Shibboleth set `login` to `de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Shibboleth` and `verify` to `de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.ShibbolethVerify`, configure Shibboleth related settings for the `AuthenticationFilter` (`userAttribute` and (optional) `matrikelNumberAttribute`); required fields from the Identity-Provider are `sn`, `givenName`, `mail`, and the configured `userAttribute` (usually `uid`).
  - `submissiondir/runtests.sh` for adjusting the paths
  - `src/main/webapp/studiengaenge.js` for updating the list of study programs that are used for auto completion for the users of GATE
@@ -75,22 +75,22 @@ ReadWritePaths=/srv/submissioninterface/
 - Clone the repository
 - Adjust the config files
 - Run `mvn clean verify`
-- The build `.war` file can then be found in the `target` directory
+- The built `.war` file can then be found in the `target` directory
 
-Alternatively you can also use GitLab CI/CD functionality and download the build `.war` file.
+Alternatively you can also use GitLab CI/CD functionality and download the built `.war` file.
 
 ### Installation steps for GATE
 
-- Prepate the `datapath` in which the submissions will be stored (see the "Configuration files" section above)
+- Prepare the `datapath` in which the submissions will be stored (see the "Configuration files" section above)
   - Copy `submissiondir/*` and `SecurityManager/NoExitSecurityManager.jar` to that folder
   - If you want to use the [JPlag plagiarism system](https://github.com/jplag/jplag), compile it into a single .jar (using the maven goal `assembly:assembly` inside the `jplag` directory and copy the final `.jar` (from the target folder) as `jplag.jar` into the root of the `datapath`
 - On Windows: Make sure the `JAVA_HOME` environment variable is set and points to the JDK directory (e.g. `C:\Program Files\BellSoft\LibericaJDK-11\`)
 - Prepare Tomcat
   - If you want to have the user names on the Tomcat access log, you can use `%{username}r` (as a replacement for `%u`) for configuring the `AccessLogValve` `pattern`, cf. https://tomcat.apache.org/tomcat-9.0-doc/config/valve.html#Access_Log_Valve
-  - Rename the build `.war` file to e.g. `gate`, because the name is then used to build the URL under which GATE will be accessible using Tomcat
+  - Rename the built `.war` file to e.g. `gate`, because the name is then used to build the URL under which GATE will be accessible using Tomcat
   - Copy the `.war` file to the `webapps` folder of Tomcat (usually in `C:\Program Files\Apache Tomcat 9\webapps` or `/var/lib/tomcat9/webapps/`)
   - New versions of GATE can be easily deployed by just overriding the `.war` file in the `webapps` folder
-- Create first user with superuser permissions: Execute `util.CreateFirstUser` with parameters: `loginname emailaddress firtsname lastname`. Alternatively you can also manually insert a new row into the `users` table.
+- Create first user with superuser permissions: Execute `util.CreateFirstUser` with parameters: `loginname emailaddress firtsname lastname`. Alternatively, you can also manually insert a new row into the `users` table.
 - Set up the cron task that performs regular tasks such as automatically start the plagiarism check in background
   - You can use the shipped script `submissiondir/runtests.sh` which should be in `datapath` and configure `/etc/crontab`: `*/10 * * * *   tomcat   /srv/submissioninterface/runtests.sh`
   - Please make sure that you receive mails for the tomcat user in order to get errors of the cron task runner

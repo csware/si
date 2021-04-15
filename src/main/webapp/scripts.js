@@ -96,7 +96,7 @@ function kaAjax(url)
     if (kaHttpRequest.readyState === kaHttpRequest.DONE) {
       if (!(kaHttpRequest.status === 200 && kaHttpRequest.responseText == "still logged in"))
       {
-        alert("Ihre Sitzung scheint nicht mehr aktiv zu sein. Bitte sichern Sie Ihren eingegebene Antwort z.B. in der Zwischenablage und melden sich erneut am GATE-System an (z.B. in einem neuen Tab)!");
+        alert("Ihre Sitzung scheint nicht mehr aktiv zu sein. Bitte sichern Sie Ihre eingegebene Antwort z.B. in der Zwischenablage und melden sich erneut am GATE-System an (z.B. in einem neuen Tab)!");
         if (kaInterval)
         {
           clearInterval(kaInterval);
