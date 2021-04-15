@@ -18,9 +18,6 @@
  */
 
 function confirmLink(msg) {
-    if (typeof(window.opera) != 'undefined') {
-        return true;
-    }
     return confirm(msg);
 }
 
@@ -67,22 +64,6 @@ function kaAjax(url)
     if (kaHttpRequest.overrideMimeType)
     {
       kaHttpRequest.overrideMimeType('text/plain');
-    }
-  }
-  else if (window.ActiveXObject)
-  { // For IE6
-    try
-    {
-      kaHttpRequest = new ActiveXObject("Msxml2.XMLHTTP");
-    }
-    catch (e)
-    {
-      try
-      {
-        kaHttpRequest = new ActiveXObject("Microsoft.XMLHTTP");
-      }
-      catch (e)
-      {}
     }
   }
   if (!kaHttpRequest)
