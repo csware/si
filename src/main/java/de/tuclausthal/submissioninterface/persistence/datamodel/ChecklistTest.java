@@ -1,6 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
- * Copyright 2011 Joachim Schramm
+ * Copyright 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,25 +18,55 @@
 
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
+import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
-import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
-import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaUMLConstraintTest;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.OrderBy;
 
+import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
+import de.tuclausthal.submissioninterface.testframework.tests.impl.NullTest;
+
+/**
+ * Checklist test
+ * @author Sven Strickroth
+ */
 @Entity
-public class UMLConstraintTest extends Test {
+public class ChecklistTest extends Test {
 	private static final long serialVersionUID = 1L;
+
+	private List<ChecklistTestCheckItem> checkItems;
 
 	@Override
 	@Transient
 	public AbstractTest getTestImpl() {
-		return new JavaUMLConstraintTest();
+		return new NullTest();
+	}
+
+	/**
+	 * @return the checkItems
+	 */
+	@OneToMany(mappedBy = "test")
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OrderBy(clause = "checkitemid asc")
+	public List<ChecklistTestCheckItem> getCheckItems() {
+		return checkItems;
+	}
+
+	/**
+	 * @param checkItems the checkItems to set
+	 */
+	public void setCheckItems(List<ChecklistTestCheckItem> checkItems) {
+		this.checkItems = checkItems;
 	}
 
 	@Override
 	@Transient
 	public boolean TutorsCanRun() {
-		return true;
+		return false;
 	}
 }

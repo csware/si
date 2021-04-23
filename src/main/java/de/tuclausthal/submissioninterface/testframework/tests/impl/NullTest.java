@@ -1,6 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
- * Copyright 2011 Joachim Schramm
+ * Copyright 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -17,27 +16,19 @@
  * along with SubmissionInterface. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tuclausthal.submissioninterface.persistence.datamodel;
+package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import java.io.File;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
-import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaUMLConstraintTest;
 
-@Entity
-public class UMLConstraintTest extends Test {
-	private static final long serialVersionUID = 1L;
-
+/**
+ * @author Sven Strickroth
+ */
+public class NullTest extends AbstractTest {
 	@Override
-	@Transient
-	public AbstractTest getTestImpl() {
-		return new JavaUMLConstraintTest();
-	}
-
-	@Override
-	@Transient
-	public boolean TutorsCanRun() {
-		return true;
+	public void performTest(Test test, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
 	}
 }

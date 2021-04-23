@@ -394,10 +394,13 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		if (!submittedFiles.isEmpty()) {
-			if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
+			if (task.getDeadline().after(Util.correctTimezone(new Date())) && task.getTests().stream().anyMatch(atest -> atest.TutorsCanRun())) {
 				out.println("<FORM class=mid method=POST action=\"" + Util.generateHTMLLink("PerformTest", response) + "\">");
 				out.println("<p>Test auf Abgabe ausführen: <select name=testid size=1 required>");
 				for (Test test : task.getTests()) {
+					if (!test.TutorsCanRun()) {
+						continue;
+					}
 					out.println("<option value=" + test.getId() + ">" + Util.escapeHTML(test.getTestTitle()) + (test.isForTutors() ? " (Tutortest)" : "") + "</option>");
 				}
 				out.println("</select>");

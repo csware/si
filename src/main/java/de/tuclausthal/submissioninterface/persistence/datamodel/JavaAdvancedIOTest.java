@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -61,5 +61,11 @@ public class JavaAdvancedIOTest extends Test {
 	 */
 	public void setTestSteps(List<JavaAdvancedIOTestStep> testSteps) {
 		this.testSteps = testSteps;
+	}
+
+	@Override
+	@Transient
+	public boolean TutorsCanRun() {
+		return true;
 	}
 }

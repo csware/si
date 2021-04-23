@@ -144,7 +144,7 @@ public class ShowTaskTutorView extends HttpServlet {
 
 		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("MarkEmptyTask?taskid=" + task.getTaskid(), response) + "\">Punkte vergeben</a></div>");
-		} else if (!task.getTests().isEmpty()) {
+		} else if (!task.getTests().isEmpty() && task.getTests().stream().anyMatch(test -> test.TutorsCanRun())) {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("PerformTest?taskid=" + task.getTaskid(), response) + "\">Test (manuell) durchführen</a></div>");
 		}
 

@@ -136,3 +136,25 @@ function toggleVisibility(id) {
 		element.style.display = "none";
 	}
 }
+
+function storeCheckbox() {
+	var theform = document.getElementById('manualcheckform');
+
+	var urlEncodedDataPairs = [];
+
+	var fd = new FormData(theform);
+	fd.append("ajax", "1");
+
+	for (var pair of fd.entries()) {
+		urlEncodedDataPairs.push(encodeURIComponent(pair[0]) + '=' + encodeURIComponent(pair[1]));
+	}
+
+	// Combine the pairs into a single string and replace all %-encoded spaces to
+	// the '+' character; matches the behavior of browser form submissions.
+	var urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
+
+	var request = new XMLHttpRequest();
+	request.open("POST", theform.action);
+	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	request.send(urlEncodedData);
+}

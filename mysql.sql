@@ -14,6 +14,19 @@ SET time_zone = "+00:00";
 -- create database submissionsystem CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin;
 
 -- --------------------------------------------------------
+-- Tabellenstruktur für Tabelle `checklisttestcheckitem`
+--
+
+DROP TABLE IF EXISTS `checklisttestcheckitem`;
+CREATE TABLE `checklisttestcheckitem` (
+  `checkitemid` int(11) NOT NULL AUTO_INCREMENT,
+  `title` longtext NOT NULL,
+  `testid` int(11) NOT NULL,
+  PRIMARY KEY (`checkitemid`),
+  KEY `FK81pc66uelq448v1na0u5ryetf` (`testid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- --------------------------------------------------------
 -- Tabellenstruktur für Tabelle `dockerteststep`
 --
 
@@ -459,6 +472,12 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 -- Constraints der exportierten Tabellen
 --
+
+--
+-- Constraints der Tabelle `checklisttestcheckitem`
+--
+ALTER TABLE `checklisttestcheckitem`
+  ADD CONSTRAINT `FK81pc66uelq448v1na0u5ryetf` FOREIGN KEY (`testid`) REFERENCES `tests` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `dockerteststep`

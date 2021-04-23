@@ -31,6 +31,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
@@ -175,6 +176,15 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 	public DockerTest createDockerTest(Task task) {
 		Session session = getSession();
 		DockerTest test = new DockerTest();
+		test.setTask(task);
+		session.save(test);
+		return test;
+	}
+
+	@Override
+	public ChecklistTest createChecklistTest(Task task) {
+		Session session = getSession();
+		ChecklistTest test = new ChecklistTest();
 		test.setTask(task);
 		session.save(test);
 		return test;

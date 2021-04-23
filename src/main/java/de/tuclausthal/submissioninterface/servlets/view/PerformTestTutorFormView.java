@@ -50,6 +50,9 @@ public class PerformTestTutorFormView extends HttpServlet {
 		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?", response) + "\">");
 		out.println("<p>Test: <select name=\"testid\" size=1 required=required>");
 		for (Test test : task.getTests()) {
+			if (!test.TutorsCanRun()) {
+				continue;
+			}
 			out.println("<option value=\"" + test.getId() + "\">" + Util.escapeHTML(test.getTestTitle()) + (test.isForTutors() ? " (Tutortest)" : "") + "</option>");
 		}
 		out.println("</select></p>");

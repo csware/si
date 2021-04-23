@@ -38,6 +38,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
@@ -148,6 +149,23 @@ public class TestManager extends HttpServlet {
 			testDAO.saveTest(test);
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL("DockerTestManager?testid=" + test.getId(), response));
+		} else if ("saveNewTest".equals(request.getParameter("action")) && "checklist".equals(request.getParameter("type"))) {
+			session.beginTransaction();
+			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
+			ChecklistTest test = testDAO.createChecklistTest(task);
+
+			int timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
+			String title = request.getParameter("title");
+			String description = request.getParameter("description");
+
+			test.setTimesRunnableByStudents(timesRunnableByStudents);
+			test.setForTutors(false);
+			test.setGiveDetailsToStudents(true);
+			test.setTestTitle(title);
+			test.setTestDescription(description);
+			testDAO.saveTest(test);
+			session.getTransaction().commit();
+			response.sendRedirect(Util.generateRedirectURL("ChecklistTestManager?testid=" + test.getId(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "umlConstraint".equals(request.getParameter("type"))) {
 			// Check that we have a file upload request
 

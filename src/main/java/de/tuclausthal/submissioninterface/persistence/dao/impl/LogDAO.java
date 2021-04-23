@@ -38,8 +38,8 @@ public class LogDAO extends AbstractDAO {
 		super(session);
 	}
 
-	public void createLogEntryForStudentTest(User user, Test test, Task task, Boolean result, String testOutput) {
-		createLogEntry(user, test, task, LogAction.PERFORMED_TEST, result, testOutput, null);
+	public LogEntry createLogEntryForStudentTest(User user, Test test, Task task, Boolean result, String testOutput) {
+		return createLogEntry(user, test, task, LogAction.PERFORMED_TEST, result, testOutput, null);
 	}
 
 	public void createLogDeleteEntryTransaction(User user, Task task, String filename) {
@@ -55,11 +55,12 @@ public class LogDAO extends AbstractDAO {
 		return logEntry;
 	}
 
-	private void createLogEntry(User user, Test test, Task task, LogAction logAction, Boolean result, String testOutput, String additionalData) {
+	private LogEntry createLogEntry(User user, Test test, Task task, LogAction logAction, Boolean result, String testOutput, String additionalData) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		LogEntry logEntry = new LogEntry(user, test, task, logAction, result, testOutput, additionalData);
 		session.save(logEntry);
 		tx.commit();
+		return logEntry;
 	}
 }

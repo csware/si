@@ -157,6 +157,32 @@ public class TestManagerAddTestFormView extends HttpServlet {
 			out.println("<p>(Docker-Tests sind nicht verfügbar, da /usr/local/bin/safe-docker nicht gefunden wurde.)</p>");
 		}
 
+		// similar code in ChecklistTestManagerView
+		out.println("<h2>Checklist Test</h2>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
+		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
+		out.println("<input type=hidden name=action value=saveNewTest>");
+		out.println("<input type=hidden name=type value=checklist>");
+		out.println("<table class=border>");
+		out.println("<tr>");
+		out.println("<th>Titel:</th>");
+		out.println("<td><input type=text name=title value=\"Testen\" required></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th># ausführbar für Studierende:</th>");
+		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\" required pattern=\"[0-9]+\"></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<td colspan=2 class=mid>Weitere Einstellungen auf zweiter Seite...</td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.println(Util.generateHTMLLink("TaskManager?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+		out.println("\">Abbrechen</a></td>");
+		out.println("</tr>");
+		out.println("</table>");
+		out.println("</form>");
+
 		//Formular um UML Constraint Test anzulegen
 		out.println("<h2>UML Constraint Test</h2>");
 		out.println("<form ENCTYPE=\"multipart/form-data\" action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid() + "&action=saveNewTest&type=umlConstraint", response) + "\" method=post>");

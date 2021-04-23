@@ -43,6 +43,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LogDAO;
+import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -206,7 +207,8 @@ public class PerformStudentTest extends HttpServlet {
 			}
 			tx.commit();
 
-			new LogDAO(session).createLogEntryForStudentTest(participation.getUser(), test, test.getTask(), result.isTestPassed(), result.getTestOutput());
+			LogEntry logEntry = new LogDAO(session).createLogEntryForStudentTest(participation.getUser(), test, test.getTask(), result.isTestPassed(), result.getTestOutput());
+			request.setAttribute("logentry", logEntry);
 			request.setAttribute("testresult", result);
 
 			getServletContext().getNamedDispatcher("PerformStudentTestResultView").forward(request, response);

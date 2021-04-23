@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.persistence.dao;
 
 import java.util.List;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
@@ -68,6 +69,8 @@ public interface TestDAOIf {
 	public CommentsMetricTest createCommentsMetricTest(Task task);
 
 	public DockerTest createDockerTest(Task task);
+
+	public ChecklistTest createChecklistTest(Task task);
 
 	/**
 	 * Update/save a test

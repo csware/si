@@ -79,4 +79,10 @@ public class DockerTest extends Test {
 	public void setTestSteps(List<DockerTestStep> testSteps) {
 		this.testSteps = testSteps;
 	}
+
+	@Override
+	@Transient
+	public boolean TutorsCanRun() {
+		return true;
+	}
 }

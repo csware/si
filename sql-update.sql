@@ -124,3 +124,13 @@ CREATE TABLE `dockerteststep` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 ALTER TABLE `dockerteststep` ADD CONSTRAINT `FK4tbopcx0wiytwom7cs13924no` FOREIGN KEY (`testid`) REFERENCES `tests` (`id`) ON DELETE CASCADE;
 alter table tests add column `preparationshellcode` LONGTEXT DEFAULT NULL;
+
+-- checklist test
+CREATE TABLE `checklisttestcheckitem` (
+  `checkitemid` int(11) NOT NULL AUTO_INCREMENT,
+  `title` longtext NOT NULL,
+  `testid` int(11) NOT NULL,
+  PRIMARY KEY (`checkitemid`),
+  KEY `FK81pc66uelq448v1na0u5ryetf` (`testid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+ALTER TABLE `checklisttestcheckitem` ADD CONSTRAINT `FK81pc66uelq448v1na0u5ryetf` FOREIGN KEY (`testid`) REFERENCES `tests` (`id`) ON DELETE CASCADE;

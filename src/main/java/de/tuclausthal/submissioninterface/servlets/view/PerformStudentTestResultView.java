@@ -26,8 +26,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTestCheckItem;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowDockerTestResult;
@@ -52,6 +55,39 @@ public class PerformStudentTestResultView extends HttpServlet {
 
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.addDiffJs();
+
+		if (test instanceof ChecklistTest) {
+			template.printTemplateHeader("Überprüfung", task);
+
+			PrintWriter out = response.getWriter();
+
+			ChecklistTest checklistTest = (ChecklistTest) test;
+			LogEntry logEntry = (LogEntry) request.getAttribute("logentry");
+
+			out.println("<p><strong>Bitte überprüfen Sie Ihre Lösung hinsichtlich der folgenden Punkte und haken alle erfolgreichen Tests an:</strong></p>");
+
+			out.println("<FORM method=POST action=\"" + Util.generateHTMLLink("ChecklistTestResponse", response) + "\" id=manualcheckform>");
+			out.println("<input type=hidden name=testid value=" + test.getId() + ">");
+			out.println("<input type=hidden name=logid value=" + logEntry.getId() + ">");
+			out.println("<table class=border>");
+			out.println("<tr>");
+			out.println("<th>Test</th>");
+			out.println("<th>OK?</th>");
+			out.println("</tr>");
+			for (ChecklistTestCheckItem checkItem : checklistTest.getCheckItems()) {
+				out.println("<tr>");
+				out.println("<td><label for=\"checkitem" + checkItem.getCheckitemid() + "\">" + Util.makeCleanHTML(checkItem.getTitle()) + "</label></td><td><input type=checkbox onchange=\"storeCheckbox()\" name=\"checkitem" + checkItem.getCheckitemid() + "\" id=\"checkitem" + checkItem.getCheckitemid() + "\"></td>");
+				out.println("</tr>");
+			}
+			out.println("<tr>");
+			out.println("<td colspan=2><input type=submit value=\"Ergebnis meiner Überprüfung speichern\"></td>");
+			out.println("</tr>");
+			out.println("</table>");
+			out.println("</form>");
+
+			template.printTemplateFooter();
+			return;
+		}
 		template.printTemplateHeader("Testergebnis", task);
 
 		PrintWriter out = response.getWriter();

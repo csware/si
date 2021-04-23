@@ -678,4 +678,24 @@
     <servlet-name>ShowTaskTutorCSVView</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ShowTaskTutorCSVView</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>ChecklistTestManager</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.ChecklistTestManager</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ChecklistTestManager</servlet-name>
+    <url-pattern>/servlets/ChecklistTestManager</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ChecklistTestManagerOverView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.ChecklistTestManagerOverView</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ChecklistTestResponse</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.ChecklistTestResponse</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ChecklistTestResponse</servlet-name>
+    <url-pattern>/servlets/ChecklistTestResponse</url-pattern>
+  </servlet-mapping>
 </web-app>

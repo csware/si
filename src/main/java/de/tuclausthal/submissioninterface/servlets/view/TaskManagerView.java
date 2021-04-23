@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieFactory;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
@@ -440,6 +441,8 @@ public class TaskManagerView extends HttpServlet {
 							out.println("Erweiterer Java-IO-Test<br>");
 						} else if (test instanceof DockerTest) {
 							out.println("Docker<br>");
+						} else if (test instanceof ChecklistTest) {
+							out.println("Checklist<br>");
 						} else {
 							out.println("unknown<br>");
 						}
@@ -459,8 +462,11 @@ public class TaskManagerView extends HttpServlet {
 						} else if (test instanceof DockerTest) {
 							out.println("Bestehend aus " + ((DockerTest) test).getTestSteps().size() + " Schritten<br>");
 							out.println("<a href=\"" + Util.generateHTMLLink("DockerTestManager?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
+						} else if (test instanceof ChecklistTest) {
+							out.println("Bestehend aus " + ((ChecklistTest) test).getCheckItems().size() + " Checklist-Einträgen<br>");
+							out.println("<a href=\"" + Util.generateHTMLLink("ChecklistTestManager?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
 						}
-						if (!modelSolutionFiles.isEmpty()) {
+						if (test.TutorsCanRun() && !modelSolutionFiles.isEmpty()) {
 							out.println("<a onclick=\"return sendAsPost(this, 'Wirklich testen?')\" href=\"" + Util.generateHTMLLink("PerformTest?modelsolution=true&testid=" + test.getId(), response) + "\">Mit Musterlösung testen...</a><br>");
 						}
 						out.println("<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TestManager?action=deleteTest&testid=" + test.getId() + "&taskid=" + task.getTaskid(), response) + "\">Test löschen</a>");

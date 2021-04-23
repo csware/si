@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -63,5 +63,11 @@ public class CommentsMetricTest extends Test {
 	 */
 	public void setExcludedFiles(String excludedFiles) {
 		this.excludedFiles = excludedFiles;
+	}
+
+	@Override
+	@Transient
+	public boolean TutorsCanRun() {
+		return true;
 	}
 }

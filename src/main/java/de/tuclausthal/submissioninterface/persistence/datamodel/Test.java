@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -182,4 +182,7 @@ public abstract class Test implements Serializable {
 	public void setGiveDetailsToStudents(boolean giveDetailsToStudents) {
 		this.giveDetailsToStudents = giveDetailsToStudents;
 	}
+
+	@Transient
+	abstract public boolean TutorsCanRun();
 }

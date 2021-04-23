@@ -64,5 +64,7 @@
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.MCOption"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest"/>
     <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest"/>
+    <mapping class="de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTestCheckItem"/>
  </session-factory>
 </hibernate-configuration>
