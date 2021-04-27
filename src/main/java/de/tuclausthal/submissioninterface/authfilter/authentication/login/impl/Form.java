@@ -29,6 +29,7 @@ import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginD
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginIf;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Form-based login method implementation
@@ -54,6 +55,10 @@ public class Form implements LoginIf {
 			out.println("<p class=\"red mid\">" + error + "</p>");
 		}
 		out.print("<form action=\"");
+		// prevent immediate logout if refresh is called on Logout page
+		if (request.getRequestURI().equals(Util.generateAbsoluteServletsRedirectURL("Logout", request, response))) {
+			out.print(Util.generateAbsoluteServletsHTMLLink("Overview", request, response));
+		}
 		out.println("\" method=POST name=login>");
 		out.println("<input type=hidden name=" + LOGONEVIDENCE + " value='1234'>");
 		out.println("<table class=border>");
