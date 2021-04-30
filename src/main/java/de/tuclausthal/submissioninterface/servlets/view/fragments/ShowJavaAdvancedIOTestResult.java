@@ -76,16 +76,20 @@ public class ShowJavaAdvancedIOTestResult {
 					}
 				}
 				out.println("</table>");
+				boolean wasError = false;
 				if (object.containsKey("missing-tests") && object.getBoolean("missing-tests") == true) {
 					out.println("<p>Nicht alle Tests wurden durchlaufen.</p>");
+					wasError = true;
 				}
 				if (object.containsKey("time-exceeded") && object.getBoolean("time-exceeded") == true) {
 					out.println("<p>Der Test wurde zwangweise beendet, da er das Zeitlimit überschritten hat.</p>");
+					wasError = true;
 				}
 				if (object.containsKey("exitedCleanly") && object.getBoolean("exitedCleanly") == false) {
 					out.println("<p>Das Program wurde nicht ordentlich beendet.</p>");
+					wasError = true;
 				}
-				if (object.containsKey("stderr")) {
+				if (wasError && object.containsKey("stderr")) {
 					if (forStudent) { // TODO show stderr to students?
 						out.println("<b>Laufzeitfehler:</b><br><pre>" + Util.escapeHTML(object.getString("stderr")) + "</pre>");
 					} else {
