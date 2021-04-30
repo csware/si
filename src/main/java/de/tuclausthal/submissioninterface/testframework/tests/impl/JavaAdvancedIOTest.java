@@ -66,6 +66,7 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 			for (JavaAdvancedIOTestStep testStep : jtt.getTestSteps()) {
 				if (!isFirst) {
 					testCode.append("System.out.println(\"" + separator + "\");");
+					testCode.append("System.err.println(\"" + separator + "\");");
 				}
 				testCode.append("{\n");
 				testCode.append(testStep.getTestcode());

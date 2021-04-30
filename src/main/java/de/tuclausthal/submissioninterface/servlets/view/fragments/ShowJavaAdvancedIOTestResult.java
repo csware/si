@@ -90,11 +90,21 @@ public class ShowJavaAdvancedIOTestResult {
 					wasError = true;
 				}
 				if (wasError && object.containsKey("stderr")) {
-					if (forStudent) { // TODO show stderr to students?
-						out.println("<b>Laufzeitfehler:</b><br><pre>" + Util.escapeHTML(object.getString("stderr")) + "</pre>");
-					} else {
-						out.println("<textarea id=\"testresultajtt" + jtt.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(object.getString("stderr")) + "</textarea>");
-						javaScript.append("testResultSetup('ajtt" + jtt.getId() + "');");
+					String stderr = object.getString("stderr");
+					if (object.containsKey("separator")) {
+						String separator = object.getString("separator");
+						int lastIndex = stderr.lastIndexOf(separator);
+						if (lastIndex >= 0) {
+							stderr = stderr.substring(lastIndex + separator.length());
+						}
+					}
+					if (!stderr.trim().isEmpty()) {
+						if (forStudent) { // TODO show stderr to students?
+							out.println("<b>Laufzeitfehler:</b><br><pre>" + Util.escapeHTML(stderr) + "</pre>");
+						} else {
+							out.println("<textarea id=\"testresultajtt" + jtt.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(stderr) + "</textarea>");
+							javaScript.append("testResultSetup('ajtt" + jtt.getId() + "');");
+						}
 					}
 				}
 			}
