@@ -77,7 +77,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.23</version>
+			<version>8.0.24</version>
 		</dependency>
 		<!-- Enable Hibernate's Metamodel Generator to generate metadata model classes (ending in _ suffix) for more type-safe Criteria queries -->
 		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen -->
