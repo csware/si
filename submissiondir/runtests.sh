@@ -23,4 +23,7 @@ if ! java -Dfile.encoding=UTF-8 -Xmx1024m -cp "$contextpath/WEB-INF/classes/:$co
 fi
 date >> "$datadir/gate-runner.log"
 echo "finished" >> "$datadir/gate-runner.log"
+#date=$(date +%Y%m%d)
+#cat "$datadir/gate-runner.log" >> "$datadir/logs/gate-runner.$date.log"
+#find "$datadir/logs/" -mtime +5 -type f -delete
 rm -f "$datadir/gate-runner.lck"
