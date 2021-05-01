@@ -5,6 +5,11 @@ webappdir="/var/lib/tomcat9/webapps/"
 contextpath="$webappdir$contextname"
 datadir="/srv/submissioninterface"
 
+if [[ $UID = 0 ]]; then
+	echo "This script should not be run as root." >&2
+	exit 1
+fi
+
 if [[ ! -d "$contextpath" ]]; then
 	latestcontextpath=$(find "$webappdir" -maxdepth 1 -type d -name "$contextname##*" | sort -r | head -n1)
 	if [[ -z "$latestcontextpath" ]]; then
