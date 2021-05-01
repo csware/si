@@ -29,7 +29,7 @@ Please read the whole procedure in advance to executing it.
     ProxyPass /Shibboleth/ !
     ProxyPass /shibboleth-sp/ !
 
-    ProxyPass / ajp://localhost:8009/
+    ProxyPass / ajp://localhost:8009/ secret=SECRET
     ```
     - Make sure Tomcat is not accessible directly (e.g., ports 8080, 8009, 8443); e.g. make port `8009` listen on `::1` only and comment all other `Connector`s in `server.xml`.
   - How to configure Shibboleth:
