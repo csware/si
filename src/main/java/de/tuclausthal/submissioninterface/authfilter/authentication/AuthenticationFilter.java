@@ -131,6 +131,28 @@ public class AuthenticationFilter implements Filter {
 		}
 		request.setAttribute("username", sa.getUser().getUsername());
 		try {
+			if ("POST".equalsIgnoreCase(request.getMethod())) {
+				StringBuilder correctOrigin = new StringBuilder(request.getScheme());
+				correctOrigin.append("://");
+				correctOrigin.append(request.getServerName());
+				if (("https".equals(request.getScheme()) && request.getLocalPort() != 443) || ("http".equals(request.getScheme()) && request.getLocalPort() != 80)) {
+					correctOrigin.append(":");
+					correctOrigin.append(request.getLocalPort());
+				}
+				String origin = request.getHeader("Origin");
+				if (origin == null) {
+					if (request.getHeader("Referer") == null || !request.getHeader("Referer").startsWith(correctOrigin.toString() + "/")) {
+						// just for compatibility of old browsers that do not send the Origin header
+						LOG.warn("POST-CORS request-blocked: referer mismatched: \"" + request.getHeader("Referer") + "\"");
+						response.sendError(HttpServletResponse.SC_FORBIDDEN, "Cross-Origin POST request blocked");
+						return;
+					}
+				} else if (!correctOrigin.toString().equals(origin)) {
+					LOG.warn("POST-CORS request-blocked: Origin mismatched: \"" + origin + "\"");
+					response.sendError(HttpServletResponse.SC_FORBIDDEN, "Cross-Origin POST request blocked");
+					return;
+				}
+			}
 			chain.doFilter(request, response);
 		} finally {
 			if (session.getTransaction() != null && session.getTransaction().isActive()) {
