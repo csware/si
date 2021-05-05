@@ -169,8 +169,8 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Abgaben mit max. PartnerInnen:</th>");
-		out.println("<td><input type=text size=5 id=maxSubmitters name=\"maxSubmitters\" value=\"" + task.getMaxSubmitters() + "\" onkeyup=\"if ($('#maxSubmitters').val()>1) {$('#submitteracrossgroups').show();} else {$('#submitteracrossgroups').hide();}return true;\"><span id=submitteracrossgroups" + (task.getMaxSubmitters() > 1 ? "" : " style=\"display:none;\"") + ">, <input type=checkbox name=allowSubmittersAcrossGroups " + (task.isAllowSubmittersAcrossGroups() ? "checked" : "") + "> über Gruppengrenzen hinweg</span> <a href=\"#\" onclick=\"$('#maxsubmittershelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=maxsubmittershelp><b>Hilfe:</b><br>Sofern &quot;über Gruppengrenzen hinweg&quot; nicht gesetzt ist, müssen die Studierenden in Gruppen eingeteilt sein und können auch nur Studierende wählen, die in der gleichen Gruppe sind. Die Zahl wird als Gesamtanzahl der Studierenden, die eine Aufgabe gemeinsam bearbeiten dürfen, angesehen. Sind bei der Veranstaltung Abgabegruppen defininert und wird eine Zahl &gt; 1 angegeben, werden immer alle Studierenden der Gruppe bei der ersten Abgabe automatisch hinzugefügt (auch wenn mehr Studierende in der Gruppe sind; ist der abgebende Studierende in keiner Gruppe ist es automatisch eine Einzelabgabe, wenn gruppenübergreifende PartnerInnen verboten sind); die Angabe von &quot;1&quot; erlaubt auch bei Abgabegruppen Individualabgaben. Im Fall von Abgabegrupopen können Studierende, die in einer Abgabegruppe sind, keine gruppenübergreifenden oder beliebigen Partnerabgaben durchführen (auch nicht, wenn gruppenübergreifende Partnerschaften erlaubt sind).</span></td>");
+		out.println("<th>Abgaben von max. Personen:</th>");
+		out.println("<td><input type=text size=5 id=maxSubmitters name=\"maxSubmitters\" value=\"" + task.getMaxSubmitters() + "\" onkeyup=\"if ($('#maxSubmitters').val()>1) {$('#submitteracrossgroups').show();} else {$('#submitteracrossgroups').hide();}return true;\"><span id=submitteracrossgroups" + (task.getMaxSubmitters() > 1 ? "" : " style=\"display:none;\"") + ">, <input type=checkbox name=allowSubmittersAcrossGroups " + (task.isAllowSubmittersAcrossGroups() ? "checked" : "") + "> über Gruppengrenzen hinweg</span> <a href=\"#\" onclick=\"$('#maxsubmittershelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=maxsubmittershelp><b>Hilfe:</b><br>Sofern &quot;über Gruppengrenzen hinweg&quot; nicht gesetzt ist, müssen die Studierenden in Gruppen eingeteilt sein und können auch nur Studierende wählen, die in der gleichen Gruppe sind. Die Zahl wird als Gesamtanzahl der Studierenden, die eine Aufgabe gemeinsam bearbeiten dürfen, angesehen. Sind bei der Veranstaltung Abgabegruppen defininert und wird eine Zahl &gt; 1 angegeben, werden immer alle Studierenden der Gruppe bei der ersten Abgabe automatisch hinzugefügt (auch wenn mehr Studierende in der Gruppe sind; ist der abgebende Studierende in keiner Gruppe ist es automatisch eine Einzelabgabe, wenn gruppenübergreifende PartnerInnen verboten sind); die Angabe von &quot;1&quot; erlaubt auch bei Abgabegruppen Individualabgaben. Im Fall von Abgabegruppen können Studierende, die in einer Abgabegruppe sind, keine gruppenübergreifenden oder beliebigen Partnerabgaben durchführen (auch nicht, wenn gruppenübergreifende Partnerschaften erlaubt sind).</span></td>");
 		out.println("</tr>");
 		if (task.getTaskid() != 0) {
 			out.println("<tr>");
@@ -206,15 +206,15 @@ public class TaskManagerView extends HttpServlet {
 		}
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		out.println("<tr>");
-		out.println("<th>Startdatum:</th>");
+		out.println("<th>Startdatum (sichtbar für Studierende ab):</th>");
 		out.println("<td><input type=text required=required pattern=\"([012][1-9]|[123][01])\\.[01][0-9]\\.[0-9]{4}( ([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])?\" name=startdate value=\"" + Util.escapeHTML(dateFormatter.format(task.getStart())) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Enddatum:</th>");
+		out.println("<th>Enddatum (Deadline für Abgabe):</th>");
 		out.println("<td><input type=text required=required pattern=\"([012][1-9]|[123][01])\\.[01][0-9]\\.[0-9]{4}( ([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])?\" name=deadline value=\"" + Util.escapeHTML(dateFormatter.format(task.getDeadline())) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<th>Punktedatum:</th>");
+		out.println("<th>Punktedatum (sichtbar für Studierende ab):</th>");
 		String pointsDate = "";
 		if (task.getShowPoints() != null) {
 			pointsDate = Util.escapeHTML(dateFormatter.format(task.getShowPoints()));
