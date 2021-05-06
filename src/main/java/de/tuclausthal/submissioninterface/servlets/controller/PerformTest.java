@@ -39,9 +39,11 @@ import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
@@ -123,6 +125,40 @@ public class PerformTest extends HttpServlet {
 			template.printTemplateFooter();
 			return;
 		}
+
+		if (request.getParameter("sid") != null) {
+			request.setAttribute("task", test.getTask());
+			request.setAttribute("test", test);
+
+			File path = Util.createTemporaryDirectory("tutortest");
+			if (path == null) {
+				throw new IOException("Failed to create tempdir!");
+			}
+
+			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+			Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
+			if (submission == null || submission.getTask().getTaskid() != task.getTaskid()) {
+				request.setAttribute("title", "Abgabe nicht gefunden");
+				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				return;
+			}
+
+			File submissionPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
+
+			// prepare tempdir
+			Util.recursiveCopy(submissionPath, path);
+
+			TestTask testTask = new TestTask(test);
+			TestExecutorTestResult testResult = new TestExecutorTestResult();
+			testTask.performTaskInFolder(test, Configuration.getInstance().getDataPath(), path, testResult);
+
+			Util.recursiveDelete(path);
+
+			request.setAttribute("testresult", testResult);
+			getServletContext().getNamedDispatcher("PerformTestResultView").forward(request, response);
+			return;
+		}
+
 		if (request.getPart("file") == null) {
 			template.printTemplateHeader("Invalid request");
 			template.printTemplateFooter();
@@ -193,6 +229,5 @@ public class PerformTest extends HttpServlet {
 
 		request.setAttribute("testresult", testResult);
 		getServletContext().getNamedDispatcher("PerformTestResultView").forward(request, response);
-		return;
 	}
 }

@@ -51,6 +51,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowFile;
@@ -362,6 +363,18 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		if (!submittedFiles.isEmpty()) {
+			if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
+				out.println("<FORM class=mid method=POST action=\"" + Util.generateHTMLLink("PerformTest", response) + "\">");
+				out.println("<p>Test auf Abgabe ausführen: <select name=testid size=1 required>");
+				for (Test test : task.getTests()) {
+					out.println("<option value=" + test.getId() + ">" + Util.escapeHTML(test.getTestTitle()) + (test.isForTutors() ? " (Tutortest)" : "") + "</option>");
+				}
+				out.println("</select>");
+				out.println("<INPUT TYPE=hidden NAME=sid value=" + submission.getSubmissionid() + ">");
+				out.println("<INPUT TYPE=submit VALUE=Testen></p>");
+				out.println("</FORM>");
+			}
+
 			out.println("<h2>Dateien: <a href=\"#\" onclick=\"$('#files').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<div id=files class=mid>");
 			out.println("<p><a href=\"" + Util.generateHTMLLink("DownloadAsZip?sid=" + submission.getSubmissionid(), response) + "\">alles als .zip herunterladen</a></p>");
