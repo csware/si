@@ -92,7 +92,14 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 			return;
 		}
 
-		if ("addNewStep".equals(request.getParameter("action"))) {
+		if ("edittest".equals(request.getParameter("action"))) {
+			Transaction tx = session.beginTransaction();
+			test.setTestTitle(request.getParameter("title"));
+			session.update(test);
+			tx.commit();
+			response.sendRedirect(Util.generateRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId(), response));
+			return;
+		} else if ("addNewStep".equals(request.getParameter("action"))) {
 			String title = request.getParameter("title");
 			String testCode = request.getParameter("testcode");
 			String expect = request.getParameter("expect").replaceAll("\r\n", "\n");
