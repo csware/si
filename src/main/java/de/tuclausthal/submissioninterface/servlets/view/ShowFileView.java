@@ -26,9 +26,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.uwyn.jhighlight.renderer.Renderer;
-import com.uwyn.jhighlight.renderer.XhtmlRendererFactory;
-
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.template.Template;
@@ -57,7 +54,7 @@ public class ShowFileView extends HttpServlet {
 
 		options.append("<script>\nif (window.name.match(\"^iframe\")==\"iframe\") { document.write('<a href=\"#\" onclick=\"this.href=document.location\" target=\"_blank\">(new window)</a>'); }\n</script>");
 
-		StringBuilder renderedCode = new StringBuilder();
+		String rendererType = "none";
 		if (fileName.toLowerCase().endsWith(".java")) {
 			if ("off".equals(request.getParameter("comments"))) {
 				StripCommentsNormalizer scn = new StripCommentsNormalizer();
@@ -66,13 +63,31 @@ public class ShowFileView extends HttpServlet {
 			} else {
 				options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid() + "&comments=off", response) + "\">(toggle comments)</a>");
 			}
-			showWithRenderer(renderedCode, fileName, code, XhtmlRendererFactory.JAVA);
+			rendererType = "java";
 		} else if (fileName.toLowerCase().endsWith(".htm") || fileName.toLowerCase().endsWith(".html")) {
-			showWithRenderer(renderedCode, fileName, code, XhtmlRendererFactory.HTML);
-		} else if (fileName.toLowerCase().endsWith(".c") || fileName.toLowerCase().endsWith(".cpp")) {
-			showWithRenderer(renderedCode, fileName, code, XhtmlRendererFactory.CPP);
+			rendererType = "html";
+		} else if (fileName.toLowerCase().endsWith(".css")) {
+			rendererType = "css";
+		} else if (fileName.toLowerCase().endsWith(".hs")) {
+			rendererType = "haskell";
+		} else if (fileName.toLowerCase().endsWith(".c")) {
+			rendererType = "c";
+		} else if (fileName.toLowerCase().endsWith(".cpp")) {
+			rendererType = "cpp";
 		} else if (fileName.toLowerCase().endsWith(".xml") || fileName.toLowerCase().endsWith(".classpath") || fileName.toLowerCase().endsWith(".project")) {
-			showWithRenderer(renderedCode, fileName, code, XhtmlRendererFactory.XML);
+			rendererType = "xml";
+		} else if (fileName.toLowerCase().endsWith(".py")) {
+			rendererType = "python";
+		} else if (fileName.toLowerCase().endsWith(".pl")) {
+			rendererType = "prolog";
+		} else if (fileName.toLowerCase().endsWith(".js")) {
+			rendererType = "javascript";
+		}
+
+		if ("yes".equals(request.getParameter("wrap"))) {
+			options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">(toggle wrapping)</a>");
+		} else {
+			options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid() + "&wrap=yes", response) + "\">(toggle wrapping)</a>");
 		}
 
 		out.println("<!DOCTYPE html>");
@@ -82,37 +97,19 @@ public class ShowFileView extends HttpServlet {
 		template.printStyleSheets(out);
 		out.println("<title>" + Util.escapeHTML(fileName) + "</title>");
 		out.println("<script src=\"" + request.getContextPath() + "/scripts.js\"></script>");
+		out.println("<link href=\"" + request.getContextPath() + "/assets/prism/prism.css\" rel=\"stylesheet\">");
 		out.println("</head>");
 		out.println("<body class=\"filepreview\">");
-
-		if (renderedCode.length() == 0) {
-			//http://www.css4you.de/Texteigenschaften/white-space.html
-			//http://myy.helia.fi/~karte/pre-wrap-css3-mozilla-opera-ie.html
-			if ("yes".equals(request.getParameter("wrap"))) {
-				renderedCode.append("<pre class=\"wrap\">");
-			} else {
-				renderedCode.append("<pre>");
-			}
-			renderedCode.append(Util.textToHTML(code.toString()) + "</pre>");
-
-			if ("yes".equals(request.getParameter("wrap"))) {
-				options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">(toggle wrapping)</a>");
-			} else {
-				options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid() + "&wrap=yes", response) + "\">(toggle wrapping)</a>");
-			}
-		}
 		options.append(" <a href='#' onclick=\"selectAll('fileContents'); return false;\">(select all)</a>");
 		if (options.length() > 0) {
 			out.println("<div class=\"previewmenubox inlinemenu\">" + options.toString() + "</div>");
 		}
 
 		out.println("<h1>" + Util.escapeHTML(fileName) + "</h1>");
-		out.println("<div id=\"fileContents\">" + renderedCode.toString() + "</div>");
+		out.print("<pre class=\"line-numbers" + ("yes".equals(request.getParameter("wrap")) ? " wrap" : "") + "\"><code id=fileContents class=\"language-" + rendererType + "\">");
+		out.print(Util.escapeHTML(code.toString()));
+		out.println("\n</code></pre>");
+		out.println("<script src=\"" + request.getContextPath() + "/assets/prism/prism.js\" defer></script>");
 		out.println("</body></html>");
-	}
-
-	private void showWithRenderer(StringBuilder renderedCode, String fileName, StringBuffer code, String renderertype) throws IOException {
-		Renderer renderer = XhtmlRendererFactory.getRenderer(renderertype);
-		renderedCode.append("<code>" + renderer.highlight(fileName, code.toString(), "UTF-8", true) + "</code>");
 	}
 }

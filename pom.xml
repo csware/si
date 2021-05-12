@@ -88,13 +88,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.codelibs/jhighlight -->
-		<dependency>
-			<groupId>org.codelibs</groupId>
-			<artifactId>jhighlight</artifactId>
-			<version>1.0.3</version>
-		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/com.sun.mail/jakarta.mail -->
 		<dependency>
 			<groupId>com.sun.mail</groupId>

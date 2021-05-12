@@ -84,7 +84,7 @@ ins {
 
 .inlinefile {
 	background-color: white;
-	height: 600px
+	height: 600px;
 }
 
 .inlinemenu {
@@ -95,7 +95,7 @@ body.filepreview {
 	font: 82% Verdana, Lucida, sans-serif;
 	color: black;
 	background: none repeat scroll 0 0 white;
-	margin: 8px;
+	margin: 8px 0px 8px 8px;
 }
 
 body.filepreview h1 {
@@ -129,8 +129,7 @@ body.filepreview h1, .previewmenubox, .highlightborder {
 }
 
 code {
-	font-family: "Courier New",Courier,monospace;
-	white-space: nowrap;
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
 }
 
 #mark ul {
@@ -156,19 +155,21 @@ ul#tests > li {
 pre {
 	margin-top: 0px;
 	margin-bottom: 0px;
-	font-family: "Courier New",Courier,monospace;
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
 }
 
-/*
- * Browser specific (not valid) styles to make preformatted text wrap
- * http://myy.helia.fi/~karte/pre-wrap-css3-mozilla-opera-ie.html
- */
-pre.wrap {
-	white-space: pre-wrap;       /* css-3 */
-	white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-	white-space: -pre-wrap;      /* Opera 4-6 */
-	white-space: -o-pre-wrap;    /* Opera 7 */
-	word-wrap: break-word;       /* Internet Explorer 5.5+ */
+pre.wrap, pre.wrap > code {
+	min-width:auto !important;
+	width:auto !important;
+	white-space: pre-wrap !important;
+}
+
+pre[class*="language-"] > code {
+	overflow: initial !important;
+	border:0 !important;
+	box-shadow: none !important;
+	min-width: calc(100% - 5em);
+	width: max-content;
 }
 
 /*
@@ -209,139 +210,3 @@ a[href ^="mailto:"] {
 	height: 200px;
 }
 
-/* JHighlight */
-.java_plain {
-	color: rgb(0,0,0);
-}
-
-.java_keyword {
-	color: rgb(0,0,0);
-	font-weight: bold;
-}
-
-.java_type {
-	color: rgb(0,44,221);
-}
-
-.java_operator {
-	color: rgb(0,124,31);
-}
-
-.java_separator {
-	color: rgb(0,33,255);
-}
-
-.java_literal {
-	color: rgb(188,0,0);
-}
-
-.java_comment {
-	color: rgb(147,147,147);
-	background-color: rgb(247,247,247);
-}
-
-.java_javadoc_comment {
-	color: rgb(147,147,147);
-	background-color: rgb(247,247,247);
-	font-style: italic;
-}
-
-.java_javadoc_tag {
-	color: rgb(147,147,147);
-	background-color: rgb(247,247,247);
-	font-style: italic;
-	font-weight: bold;
-}
-
-.xml_plain {
-	color: rgb(0,0,0);
-}
-
-.xml_char_data {
-	color: rgb(0,0,0);
-}
-
-.xml_tag_symbols {
-	color: rgb(0,59,255);
-}
-
-.xml_comment {
-	color: rgb(147,147,147);
-	background-color: rgb(247,247,247);
-}
-
-.xml_attribute_value {
-	color: rgb(193,0,0);
-}
-
-.xml_attribute_name {
-	color: rgb(0,0,0);
-	font-weight: bold;
-}
-
-.xml_processing_instruction {
-	color: rgb(0,0,0);
-	font-weight: bold;
-	font-style: italic;
-}
-
-.xml_tag_name {
-	color: rgb(0,55,255);
-}
-
-.xml_rife_tag {
-	color: rgb(0,0,0);
-	background-color: rgb(228,230,160);
-}
-
-.xml_rife_name {
-	color: rgb(0,0,196);
-	background-color: rgb(228,230,160);
-}
-
-.cpp_plain {
-	color: rgb(0,0,0);
-}
-
-.cpp_keyword {
-	color: rgb(0,0,0);
-	font-weight: bold;
-}
-
-.cpp_type {
-	color: rgb(0,44,221);
-}
-
-.cpp_operator {
-	color: rgb(0,124,31);
-}
-
-.cpp_separator {
-	color: rgb(0,33,255);
-}
-
-.cpp_literal {
-	color: rgb(188,0,0);
-}
-
-.cpp_comment {
-	color: rgb(147,147,147);
-	background-color: rgb(247,247,247);
-}
-
-.cpp_doxygen_comment {
-	color: rgb(147,147,147);
-	background-color: rgb(247,247,247);
-	font-style: italic;
-}
-
-.cpp_doxygen_tag {
-	color: rgb(147,147,147);
-	background-color: rgb(247,247,247);
-	font-style: italic;
-	font-weight: bold;
-}
-
-.cpp_preproc {
-	color: purple;
-}
