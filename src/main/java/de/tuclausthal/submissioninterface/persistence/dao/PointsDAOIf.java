@@ -55,4 +55,6 @@ public interface PointsDAOIf {
 	List<PointHistory> getPointHistoryForSubmission(Submission submission);
 
 	public Map<Integer, Integer> getAllPointsForLecture(Lecture lecture);
+
+	public Map<Integer, Integer> getUngradedSubmissionsPerTasks(Lecture lecture);
 }

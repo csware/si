@@ -73,6 +73,10 @@ public class ShowLectureTutorView extends HttpServlet {
 
 		Iterator<TaskGroup> taskGroupIterator = lecture.getTaskGroups().iterator();
 		if (taskGroupIterator.hasNext()) {
+			Map<Integer, Integer> ungradedSubmikssions = null;
+			if (isAdvisor) {
+				ungradedSubmikssions = DAOFactory.PointsDAOIf(session).getUngradedSubmissionsPerTasks(lecture);
+			}
 			boolean isStartedTable = false;
 			while (taskGroupIterator.hasNext()) {
 				TaskGroup taskGroup = taskGroupIterator.next();
@@ -84,6 +88,9 @@ public class ShowLectureTutorView extends HttpServlet {
 						out.println("<tr>");
 						out.println("<th>Aufgabe</th>");
 						out.println("<th>Max. Punkte</th>");
+						if (ungradedSubmikssions != null) {
+							out.println("<th># unbewertet</th>");
+						}
 						out.println("</tr>");
 					}
 					out.println("<tr>");
@@ -91,14 +98,17 @@ public class ShowLectureTutorView extends HttpServlet {
 					if (isAdvisor) {
 						editLink = " (<a href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + lecture.getId() + "&action=editTaskGroup&taskgroupid=" + taskGroup.getTaskGroupId(), response) + "\">edit</a>)";
 					}
-					out.println("<th colspan=2>Aufgabengruppe " + Util.escapeHTML(taskGroup.getTitle()) + editLink + "</th>");
+					out.println("<th colspan=" + (2 + ((ungradedSubmikssions != null) ? 1 : 0)) + ">Aufgabengruppe " + Util.escapeHTML(taskGroup.getTitle()) + editLink + "</th>");
 					out.println("</tr>");
 					while (taskIterator.hasNext()) {
 						Task task = taskIterator.next();
 						if (task.getStart().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 							out.println("<tr>");
-							out.println("<td><a href=\"" +Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
+							out.println("<td><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
 							out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
+							if (ungradedSubmikssions != null) {
+								out.println("<td class=points>" + ungradedSubmikssions.getOrDefault(task.getTaskid(), 0) + "</td>");
+							}
 							out.println("</tr>");
 						}
 					}

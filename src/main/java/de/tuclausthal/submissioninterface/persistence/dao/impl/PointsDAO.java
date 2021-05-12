@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -339,5 +340,20 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		Query<SubmissionPointsDTO> query = session.createQuery(criteria);
 
 		return query.list().stream().collect(Collectors.groupingBy(SubmissionPointsDTO::getParticipationid, Collectors.reducing(0, SubmissionPointsDTO::getPlagiarismPoints, Integer::sum)));
+	}
+
+	@Override
+	public Map<Integer, Integer> getUngradedSubmissionsPerTasks(Lecture lecture) {
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Tuple> criteria = builder.createTupleQuery();
+		Root<Submission> root = criteria.from(Submission.class);
+		Join<Submission, Task> taskJoin = root.join(Submission_.task);
+		criteria.groupBy(root.get(Submission_.task).get(Task_.taskid));
+		criteria.select(builder.tuple(root.get(Submission_.task).get(Task_.taskid), builder.count(root.get(Submission_.submissionid))));
+		criteria.where(builder.and(builder.or(builder.isNull(root.get(Submission_.points)), builder.equal(root.get(Submission_.points).get(Points_.pointStatus), PointStatus.NICHT_BEWERTET.ordinal())), builder.equal(taskJoin.join(Task_.taskGroup).get(TaskGroup_.lecture), lecture)));
+		Query<Tuple> query = session.createQuery(criteria);
+
+		return query.list().stream().collect(Collectors.toMap(tupel -> tupel.get(0, Integer.class), tupel -> tupel.get(1, Long.class).intValue()));
 	}
 }

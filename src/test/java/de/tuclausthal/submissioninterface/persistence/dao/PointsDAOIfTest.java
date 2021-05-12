@@ -50,4 +50,16 @@ class PointsDAOIfTest extends BasicTest {
 		assertEquals(250, lecture1Points.get(6));
 		assertEquals(100, lecture1Points.get(12));
 	}
+
+	@Test
+	void testGetUngradedSubmissionsPerTasks() {
+		assertTrue(DAOFactory.PointsDAOIf(session).getUngradedSubmissionsPerTasks(DAOFactory.LectureDAOIf(session).getLecture(2)).isEmpty());
+
+		Map<Integer, Integer> lecture1Ungraded = DAOFactory.PointsDAOIf(session).getUngradedSubmissionsPerTasks(DAOFactory.LectureDAOIf(session).getLecture(1));
+		assertEquals(2, lecture1Ungraded.size());
+		assertEquals(2, lecture1Ungraded.getOrDefault(1, 0));
+		assertEquals(0, lecture1Ungraded.getOrDefault(2, 0));
+		assertEquals(1, lecture1Ungraded.getOrDefault(3, 0));
+		assertEquals(0, lecture1Ungraded.getOrDefault(4, 0));
+	}
 }
