@@ -59,9 +59,9 @@ public class ShowFileView extends HttpServlet {
 			if ("off".equals(request.getParameter("comments"))) {
 				StripCommentsNormalizer scn = new StripCommentsNormalizer();
 				code = scn.normalize(code);
-				options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">(toggle comments)</a>");
+				options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">(comments)</a>");
 			} else {
-				options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid() + "&comments=off", response) + "\">(toggle comments)</a>");
+				options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid() + "&comments=off", response) + "\">(no comments)</a>");
 			}
 			rendererType = "java";
 		} else if (fileName.toLowerCase().endsWith(".htm") || fileName.toLowerCase().endsWith(".html")) {
@@ -85,9 +85,9 @@ public class ShowFileView extends HttpServlet {
 		}
 
 		if ("yes".equals(request.getParameter("wrap"))) {
-			options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">(toggle wrapping)</a>");
+			options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">(no wrap)</a>");
 		} else {
-			options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid() + "&wrap=yes", response) + "\">(toggle wrapping)</a>");
+			options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid() + "&wrap=yes", response) + "\">(wrap)</a>");
 		}
 
 		out.println("<!DOCTYPE html>");
