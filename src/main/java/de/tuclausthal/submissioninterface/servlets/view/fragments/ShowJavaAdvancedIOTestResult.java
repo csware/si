@@ -43,7 +43,6 @@ public class ShowJavaAdvancedIOTestResult {
 				out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testOutput) + "</pre>");
 			} else {
 				out.println("<textarea id=\"testresultjtt" + jtt.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(testOutput) + "</textarea>");
-				javaScript.append("testResultSetup('jtt" + jtt.getId() + "');");
 			}
 		} else if (object.containsKey("steps")) {
 			JsonValue arr = object.get("steps");
@@ -103,7 +102,6 @@ public class ShowJavaAdvancedIOTestResult {
 							out.println("<b>Laufzeitfehler:</b><br><pre>" + Util.escapeHTML(stderr) + "</pre>");
 						} else {
 							out.println("<textarea id=\"testresultajtt" + jtt.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(stderr) + "</textarea>");
-							javaScript.append("testResultSetup('ajtt" + jtt.getId() + "');");
 						}
 					}
 				}

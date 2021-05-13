@@ -79,8 +79,8 @@ ins {
 	text-decoration: none;
 }
 
-.ui-resizable-helper { border: 2px dotted #008C4F; }
-.ui-resizable-se { bottom: 0px; }
+.resizer { display:flex; margin:0; padding:0; resize:both; overflow:hidden;padding-bottom:1.4em; }
+/*.resizer > .resized { flex-grow:1; margin:0; padding:0; border:0; }*/
 
 .inlinefile {
 	background-color: white;

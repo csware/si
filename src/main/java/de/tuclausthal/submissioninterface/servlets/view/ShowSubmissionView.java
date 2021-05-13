@@ -75,7 +75,7 @@ public class ShowSubmissionView extends HttpServlet {
 		template.addJQuery();
 		template.addDiffJs();
 		template.addKeepAlive();
-		template.addHead("<script>function hideCodePreview(id) { $(\"#codepreview\" + id).hide();$(\"#showbtn\" + id).show(); } function testResultSetup(id) { $(\"#testresult\" + id).resizable({ handles: 'se' }); } function iframeSetup(id) { $(\"#resizablecodepreview\" + id).resizable({ helper: 'ui-resizable-helper', minWidth: 800, minHeight: 100, handles: 'se' }); }</script>");
+		template.addHead("<script>function hideCodePreview(id) { $(\"#codepreview\" + id).hide();$(\"#showbtn\" + id).show(); }</script>");
 
 		RequestAdapter requestAdapter = new RequestAdapter(request);
 		Session session = requestAdapter.getSession();
@@ -298,7 +298,6 @@ public class ShowSubmissionView extends HttpServlet {
 						ShowJavaAdvancedIOTestResult.printTestResults(out, (JavaAdvancedIOTest) testResult.getTest(), testResult.getTestOutput(), false, javaScript);
 					} else {
 						out.println("<br><textarea id=\"testresult" + testResult.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(testResult.getTestOutput()) + "</textarea>");
-						javaScript.append("testResultSetup('" + testResult.getId() + "');");
 					}
 				}
 				out.println("</li>");
@@ -395,10 +394,9 @@ public class ShowSubmissionView extends HttpServlet {
 					out.println("<div class=\"inlinemenu\">");
 					out.println("<a id=\"hidebtn" + id + "\" href=\"#\" onclick='hideCodePreview(\"" + id + "\");return false;'>(hide)</a>");
 					out.println("</div>");
-					out.println("<div id=\"resizablecodepreview" + id + "\" class=\"mid inlinefile\">");
+					out.println("<div id=\"resizablecodepreview" + id + "\" class=\"mid inlinefile resizer\">");
 					out.println("<iframe name=\"iframe" + id + "\" id=\"iframe" + id + "\" scrolling=\"yes\" width=\"100%\" height=\"100%\" src=\"" + Util.generateHTMLLink("ShowFile/" + Util.encodeURLPathComponent(file) + "?sid=" + submission.getSubmissionid(), response) + "\"></iframe></div>");
 					out.println("</div>");
-					javaScript.append("iframeSetup('" + id + "');");
 					if (pattern != null) {
 						Matcher m = pattern.matcher(file);
 						if (!m.matches()) {
