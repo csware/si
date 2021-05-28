@@ -60,6 +60,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Configuration;
@@ -306,6 +307,37 @@ public class TaskManager extends HttpServlet {
 				out.println("</dl>");
 			}
 			return;
+		} else if ("clozepreview".equals(request.getParameter("action"))) {
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			ClozeTaskType clozeHelper = new ClozeTaskType(request.getParameter("description"), null, false, false);
+			Template template = TemplateFactory.getTemplate(request, response);
+			template.printTemplateHeader("Close testen...");
+			PrintWriter out = response.getWriter();
+			out.println("<form action=\"" + Util.generateHTMLLink("?action=clozepreviewtest", response) + "\" method=post>");
+			out.println(clozeHelper.toHTML());
+			out.println("<input type=hidden name=description value=\"" + Util.escapeHTML(request.getParameter("description")) + "\">");
+			out.println("<input type=submit value=testen...>");
+			out.println("</form>");
+			template.printTemplateFooter();
+			return;
+		} else if ("clozepreviewtest".equals(request.getParameter("action"))) {
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			ClozeTaskType clozeHelper = new ClozeTaskType(request.getParameter("description"), null, false, false);
+			Template template = TemplateFactory.getTemplate(request, response);
+			template.printTemplateHeader("Close testen: Ergebnis");
+			List<String> results = clozeHelper.parseResults(request);
+			clozeHelper = new ClozeTaskType(request.getParameter("description"), results, true, true);
+			PrintWriter out = response.getWriter();
+			out.println(clozeHelper.toHTML());
+			out.println("<hr>");
+			out.println("Automatisch bewertbar: " + Util.boolToHTML(clozeHelper.isAutoGradeAble()) + "<br>");
+			if (clozeHelper.isAutoGradeAble()) {
+				out.println("Calculated points: " + Util.showPoints(clozeHelper.calculatePoints(results)));
+			}
+			template.printTemplateFooter();
+			return;
 		}
 
 		Session session = RequestAdapter.getSession(request);
@@ -344,12 +376,19 @@ public class TaskManager extends HttpServlet {
 				if (task.getPointCategories().isEmpty()) {
 					task.setMaxPoints(Util.convertToPoints(request.getParameter("maxpoints"), task.getMinPointStep()));
 				}
+				if (task.isClozeTask()) {
+					ClozeTaskType clozeHelper = new ClozeTaskType(request.getParameter("description"), null, false, false);
+					int points = clozeHelper.maxPoints();
+					if (points > task.getMaxPoints()) {
+						task.setMaxPoints(points);
+					}
+				}
 				task.setTitle(request.getParameter("title").trim());
 				task.setDescription(request.getParameter("description"));
 				task.setMaxSubmitters(Util.parseInteger(request.getParameter("maxSubmitters"), 1));
 				task.setAllowSubmittersAcrossGroups(request.getParameter("allowSubmittersAcrossGroups") != null);
 				task.setMaxsize(Math.max(1024, Math.min(Configuration.MAX_UPLOAD_SIZE, 1024 * Util.parseInteger(request.getParameter("maxfilesize"), 0))));
-				if (!task.isSCMCTask() && !task.isADynamicTask()) {
+				if (!task.isSCMCTask() && !task.isADynamicTask() && !task.isClozeTask()) {
 					task.setFilenameRegexp(request.getParameter("filenameregexp"));
 					task.setArchiveFilenameRegexp(request.getParameter("archivefilenameregexp"));
 					task.setFeaturedFiles(request.getParameter("featuredfiles"));
@@ -397,6 +436,8 @@ public class TaskManager extends HttpServlet {
 					} else {
 						taskType = "mc";
 					}
+				} else if (request.getParameter("cloze") != null) {
+					taskType = "cloze";
 				} else {
 					if (DynamicTaskStrategieFactory.IsValidStrategieName(request.getParameter("dynamicTask"))) {
 						taskType = "dynamicTask";
@@ -404,12 +445,19 @@ public class TaskManager extends HttpServlet {
 					}
 				}
 				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), 50), startdate, deadline, request.getParameter("description"), taskGroup, pointsdate, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, taskType, dynamicTask, request.getParameter("prematureClosing") != null);
-				if (task.isSCMCTask()) {
+				if (task.isSCMCTask() || task.isClozeTask()) {
 					task.setFilenameRegexp("-");
 					task.setShowTextArea(false); // be explicit here, it's false by default
 				} else if (task.isADynamicTask()) {
 					task.setFilenameRegexp("-");
 					task.setShowTextArea(true);
+				}
+				if (task.isClozeTask()) {
+					ClozeTaskType clozeHelper = new ClozeTaskType(request.getParameter("description"), null, false, false);
+					int points = clozeHelper.maxPoints();
+					if (points > task.getMaxPoints()) {
+						task.setMaxPoints(points);
+					}
 				}
 				taskDAO.saveTask(task);
 				response.sendRedirect(Util.generateRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask", response));

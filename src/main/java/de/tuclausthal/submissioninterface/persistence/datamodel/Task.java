@@ -545,6 +545,15 @@ public class Task implements Serializable {
 	}
 
 	/**
+	 * Checks if the task is a cloze text
+	 * @return true/false
+	 */
+	@Transient
+	public boolean isClozeTask() {
+		return "cloze".equals(getType());
+	}
+
+	/**
 	 * Returns the flag whether the task has the close submission before deadline feature enabled
 	 *
 	 * @return the live submission flag

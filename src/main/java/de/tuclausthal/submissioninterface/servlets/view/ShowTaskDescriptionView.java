@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -43,7 +43,9 @@ public class ShowTaskDescriptionView extends HttpServlet {
 		Task task = (Task) request.getAttribute("task");
 
 		out.println("<html><head><title>Aufgabenbeschreibung</title></head><body>");
-		out.println(Util.makeCleanHTML(task.getDescription()));
+		if (!task.isClozeTask() && !task.isADynamicTask()) {
+			out.println(Util.makeCleanHTML(task.getDescription()));
+		}
 		out.println("</body></html>");
 	}
 }

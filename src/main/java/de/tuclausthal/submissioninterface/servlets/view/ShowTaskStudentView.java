@@ -49,6 +49,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -82,7 +83,18 @@ public class ShowTaskStudentView extends HttpServlet {
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
-		out.println("<td id=taskdescription>" + Util.makeCleanHTML(task.getDescription()) + "</td>");
+		out.print("<td id=taskdescription>");
+		if (task.isClozeTask()) {
+			List<String> lastResults = null;
+			if (submission != null) {
+				lastResults = DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission);
+			}
+			ClozeTaskType clozeHelper = new ClozeTaskType(task.getDescription(), lastResults, true, submission != null && submission.isPointsVisibleToStudents());
+			out.print(clozeHelper.toHTML());
+		} else {
+			out.print(Util.makeCleanHTML(task.getDescription()));
+		}
+		out.println("</td>");
 		out.println("</tr>");
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 		out.println("<tr>");
@@ -266,13 +278,13 @@ public class ShowTaskStudentView extends HttpServlet {
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
 				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"" + Util.generateHTMLLink("WebStart?tool=argouml&taskid=" + task.getTaskid(), response) + "\">ArgoUML öffnen</a></div>");
 				out.println("<script>if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
-			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isSCMCTask()) {
+			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isSCMCTask() && !task.isClozeTask()) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
 			} else if (task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
 				out.println("<div class=mid>Die Abgabe wurde als endgültig abgeschlossen markiert.<br>Eine Veränderung ist jetzt nicht mehr möglich.</div>");
-			} else if (task.isSCMCTask()) {
+			} else if (task.isSCMCTask() || task.isClozeTask()) {
 				out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("SubmitSolution?taskid=" + task.getTaskid(), response) + "\">Abgabe bearbeiten</a></div>");
 			} else {
 				if (!submittedFiles.isEmpty()) {
@@ -311,7 +323,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
 				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"" + Util.generateHTMLLink("WebStart?tool=argouml&taskid=" + task.getTaskid(), response) + "\">ArgoUML öffnen</a></div>");
 				out.println("<script>if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
-			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isSCMCTask()) {
+			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isSCMCTask() && !task.isClozeTask()) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");

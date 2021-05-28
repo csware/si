@@ -71,6 +71,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Configuration;
@@ -126,7 +127,7 @@ public class SubmitSolution extends HttpServlet {
 			}
 		}
 
-		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask()) {
+		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask() && !task.isClozeTask()) {
 			request.setAttribute("title", "Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.");
 			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
@@ -248,7 +249,7 @@ public class SubmitSolution extends HttpServlet {
 				template.printTemplateFooter();
 				return;
 			}
-			if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask()) {
+			if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask() && !task.isClozeTask()) {
 				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.</div>");
@@ -286,7 +287,7 @@ public class SubmitSolution extends HttpServlet {
 				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 				template.printTemplateFooter();
 				return;
-			} else if (file == null && !task.isShowTextArea() && !task.isSCMCTask()) {
+			} else if (file == null && !task.isShowTextArea() && !task.isSCMCTask() && !task.isClozeTask()) {
 				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Textlösungen sind für diese Aufgabe deaktiviert.</div>");
@@ -472,6 +473,18 @@ public class SubmitSolution extends HttpServlet {
 			submission.setLastModified(new Date());
 			submissionDAO.saveSubmission(submission);
 			new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, Json.createObjectBuilder().add("mc", Json.createArrayBuilder(results)).build().toString());
+			tx.commit();
+			response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
+		} else if (task.isClozeTask()) {
+			ClozeTaskType clozeHelper = new ClozeTaskType(task.getDescription(), null, false, false);
+			List<String> results = clozeHelper.parseResults(request);
+			DAOFactory.ResultDAOIf(session).createResults(submission, results);
+			if (clozeHelper.isAutoGradeAble()) {
+				DAOFactory.PointsDAOIf(session).createMCPoints(clozeHelper.calculatePoints(results), submission, "", task.getTaskGroup().getLecture().isRequiresAbhnahme() ? PointStatus.NICHT_ABGENOMMEN : PointStatus.ABGENOMMEN);
+			}
+			submission.setLastModified(new Date());
+			submissionDAO.saveSubmission(submission);
+			new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, Json.createObjectBuilder().add("cloze", Json.createArrayBuilder(results)).build().toString());
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
 		} else if (request.getParameter("textsolution") != null) {

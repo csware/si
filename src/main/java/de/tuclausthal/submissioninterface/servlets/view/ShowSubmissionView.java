@@ -56,6 +56,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowFile;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowJavaAdvancedIOTestResult;
+import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -132,7 +133,7 @@ public class ShowSubmissionView extends HttpServlet {
 			}
 		}
 
-		if ((task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask())) {
+		if ((task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask() && !task.isClozeTask())) {
 			out.println("<h2>Bewertung: <a href=\"#\" onclick=\"$('#mark').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<table id=mark class=border>");
 			String oldPublicComment = "";
@@ -333,6 +334,25 @@ public class ShowSubmissionView extends HttpServlet {
 			}
 			out.println("</ul></li>");
 			out.println("<li>Gesamtbewertung korrekt: " + Util.boolToHTML(allCorrect) + "</li>");
+			out.println("</ul>");
+		} else if (task.isClozeTask()) {
+			List<String> results = DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission);
+			ClozeTaskType clozeHelper = new ClozeTaskType(task.getDescription(), results, true, true);
+			out.println("<h2>Cloze: <a href=\"#\" onclick=\"toggleVisibility('cloze'); return false;\">(+/-)</a></h2>");
+			out.println("<ul id=cloze>");
+			out.println("<li><b>Eingaben:</b><ul>");
+			int i = 0;
+			for (String result : results) {
+				out.print("<li><span class=\"cloze_studentsolution\">" + Util.escapeHTML(result) + "</span>");
+				if (clozeHelper.isAutoGradeAble(i)) {
+					out.print(" (" + Util.escapeHTML(clozeHelper.getCorrect(i)) + ")");
+				}
+				out.println("</li>");
+				++i;
+			}
+			out.println("</ul></li>");
+			out.println("<li><b>Berechnete Punkte:</b> " + Util.showPoints(clozeHelper.calculatePoints(results)) + "</li>");
+			out.println("<li>" + clozeHelper.toHTML() + "</li>");
 			out.println("</ul>");
 		} else if (task.isADynamicTask()) {
 			out.println("<h2>Dynamische Aufgabe: <a href=\"#\" onclick=\"$('#dynamictask').toggle(); return false;\">(+/-)</a></h2>");

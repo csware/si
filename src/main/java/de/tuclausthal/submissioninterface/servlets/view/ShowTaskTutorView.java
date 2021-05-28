@@ -139,7 +139,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask", response) + "\">Aufgabe bearbeiten</a></div>");
 		}
 
-		if (!task.isSCMCTask() && !task.isADynamicTask() && (participation.getRoleType() == ParticipationRole.ADVISOR || task.isTutorsCanUploadFiles()) && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
+		if (!task.isSCMCTask() && !task.isClozeTask() && !task.isADynamicTask() && (participation.getRoleType() == ParticipationRole.ADVISOR || task.isTutorsCanUploadFiles()) && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("SubmitSolution?taskid=" + task.getTaskid(), response) + "\">Abgabe für Studierenden durchführen</a> (Achtung wenn Duplikatstest bereits gelaufen ist)</div>");
 		}
 
@@ -149,7 +149,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("PerformTest?taskid=" + task.getTaskid(), response) + "\">Test (manuell) durchführen</a></div>");
 		}
 
-		if (!task.isSCMCTask() && participation.getRoleType() == ParticipationRole.ADVISOR && task.getMaxSubmitters() <= 1) {
+		if (!task.isSCMCTask() && !task.isClozeTask() && participation.getRoleType() == ParticipationRole.ADVISOR && task.getMaxSubmitters() <= 1) {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("MassMarkTask?taskid=" + task.getTaskid(), response) + "\">Bewertungen als CSV-Datei hochladen</a></div>");
 		}
 
@@ -224,7 +224,7 @@ public class ShowTaskTutorView extends HttpServlet {
 						out.println("<h3>Ohne Gruppe</h3>");
 						out.println("<div id=\"contentgroup0\">");
 						out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid() + "&action=grouplist", response) + "\" target=\"_blank\">Druckbare Liste</a></div>");
-						if (!task.isADynamicTask() && !task.isSCMCTask()) {
+						if (!task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {
 							out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("DownloadSubmissionsByGroup?taskid=" + task.getTaskid(), response) + "\">Alle Abgaben der Gruppe herunterladen (ZIP-Archiv)</a></div>");
 						}
 					} else {
@@ -235,7 +235,7 @@ public class ShowTaskTutorView extends HttpServlet {
 						}
 						out.println("<div " + defaultState + " id=\"contentgroup" + group.getGid() + "\">");
 						out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid() + "&action=grouplist&groupid=" + group.getGid(), response) + "\" target=\"_blank\">Druckbare Liste</a></div>");
-						if (!task.isADynamicTask() && !task.isSCMCTask()) {
+						if (!task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {
 							out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("DownloadSubmissionsByGroup?taskid=" + task.getTaskid() + "&groupid=" + group.getGid(), response) + "\">Alle Abgaben der Gruppe herunterladen (ZIP-Archiv)</a></div>");
 						}
 					}

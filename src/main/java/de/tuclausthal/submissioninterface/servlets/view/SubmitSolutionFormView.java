@@ -42,6 +42,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -118,7 +119,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 			}
 		}
 
-		if (task.isSCMCTask()) {
+		if (task.isSCMCTask() || task.isClozeTask()) {
 			out.println("<FORM ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid(), response) + "\">");
 			out.println(setWithUser.toString());
 		}
@@ -166,6 +167,26 @@ public class SubmitSolutionFormView extends HttpServlet {
 				return;
 			}
 			out.println("</table>");
+		} else if (task.isClozeTask()) {
+			List<String> lastResults = null;
+			if (submission != null) {
+				lastResults = DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission);
+			}
+			ClozeTaskType clozeHelper = new ClozeTaskType(task.getDescription(), lastResults, false, false);
+
+			out.println("<table class=border>");
+			out.println("<tr>");
+			out.println("<th>Aufgabe:</th>");
+			out.print("<td id=taskdescription>");
+			out.println(clozeHelper.toHTML());
+			out.println("<br>");
+			out.println("<INPUT TYPE=submit VALUE=speichern>");
+			out.println("</td>");
+			out.println("</tr>");
+			out.println("</table>");
+			out.println("</FORM>");
+			template.printTemplateFooter();
+			return;
 		}
 
 		if (!"-".equals(task.getFilenameRegexp())) {

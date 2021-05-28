@@ -71,6 +71,7 @@ public class TaskManagerView extends HttpServlet {
 		template.addHead("<script>\ntinyMCE.init({" +
 							"mode : \"textareas\"," +
 							"theme : \"advanced\"," +
+							"entity_encoding: 'raw',"+
 							"plugins : \"safari,style,table,advimage,iespell,contextmenu,paste,nonbreaking\"," +
 							"theme_advanced_buttons1 : \"newdocument,|,undo,redo,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,fontsizeselect\"," +
 							"theme_advanced_buttons2 : \"paste,pastetext,pasteword,|,bullist,numlist,|,outdent,indent,blockquote,|,link,unlink,anchor,image,cleanup,forecolor,backcolor\"," +
@@ -110,6 +111,20 @@ public class TaskManagerView extends HttpServlet {
 								"}" +
 							"}" +
 							"\n</script>");
+		template.addHead("<script>\n" +
+							"function clozePreview() {" +
+								"var request = new XMLHttpRequest();" +
+								"request.open(\"POST\", \"" + Util.generateHTMLLink("?action=clozepreview", response) + "\");" +
+								"request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');" +
+								"request.onload = function() {" +
+																"if (request.readyState === request.DONE && request.status != 200) { alert('Request failed.'); return; }" +
+																"var win = window.open('about:blank');" +
+																"win.document.write(request.responseText);" +
+																"win.document.close();" +
+															"};" +
+								"request.send('description='+encodeURIComponent(tinyMCE.activeEditor.getContent()).replace(/%20/g, '+'));" +
+							"}" +
+							"\n</script>");
 
 		if (task.getTaskid() != 0) {
 			template.printTemplateHeader("Aufgabe bearbeiten", task);
@@ -146,13 +161,13 @@ public class TaskManagerView extends HttpServlet {
 		if (task.getTaskid() == 0 || task.isSCMCTask()) {
 			out.println("<tr>");
 			out.println("<th>Multiple-Choice-Aufgabe:</th>");
-			out.println("<td><select size=1" + (task.getTaskid() != 0 ? " disabled" : "") + " name=mctask id=mctask onchange=\"if (document.getElementById('mctask').selectedIndex > 0) {document.getElementById('dynamicTask').disabled=true;document.getElementById('dynamicTask').selectedIndex=0} else {document.getElementById('dynamicTask').disabled=false;}return true;\"><option></option><option value=singlechoice" + (task.isSCTask() ? " selected" : "") + ">Single Choice (genau eine Antwort ist richtig)</option><option value=multiplechoice" + (task.isMCTask() ? " selected" : "") + ">Multiple Choice (mehrere Antworten können richtig sein)</option></select></td>");
+			out.println("<td><select size=1" + (task.getTaskid() != 0 ? " disabled" : "") + " name=mctask id=mctask onchange=\"if (document.getElementById('mctask').selectedIndex > 0) {document.getElementById('dynamicTask').disabled=true;document.getElementById('dynamicTask').selectedIndex=0;document.getElementById('cloze').disabled=true;document.getElementById('cloze').checked=false;} else {document.getElementById('dynamicTask').disabled=false;document.getElementById('cloze').disabled=false;}return true;\"><option></option><option value=singlechoice" + (task.isSCTask() ? " selected" : "") + ">Single Choice (genau eine Antwort ist richtig)</option><option value=multiplechoice" + (task.isMCTask() ? " selected" : "") + ">Multiple Choice (mehrere Antworten können richtig sein)</option></select></td>");
 			out.println("</tr>");
 		}
 		if (task.getTaskid() == 0 || task.isADynamicTask()) {
 			out.println("<tr>");
 			out.println("<th>Aufgabe mit dynamischen Werten:</th>");
-			out.println("<td><select size=1 name=dynamicTask id=dynamicTask " + (task.getTaskid() != 0 ? " disabled" : " onchange=\"if (document.getElementById('dynamicTask').selectedIndex > 0) {document.getElementById('mctask').disabled=true;document.getElementById('mctask').selectedIndex=0;} else {document.getElementById('mctask').disabled=false;} getDynamicTaskHints();\"") + ">");
+			out.println("<td><select size=1 name=dynamicTask id=dynamicTask " + (task.getTaskid() != 0 ? " disabled" : " onchange=\"if (document.getElementById('dynamicTask').selectedIndex > 0) {document.getElementById('mctask').disabled=true;document.getElementById('mctask').selectedIndex=0;document.getElementById('cloze').disabled=true;document.getElementById('cloze').checked=false;} else {document.getElementById('mctask').disabled=false;document.getElementById('cloze').disabled=false;} getDynamicTaskHints();\"") + ">");
 			out.println("<option value=\"\"" + (task.getDynamicTask() == null ? " selected" : "") + ">-</option>");
 			for (int i = 0; i < DynamicTaskStrategieFactory.STRATEGIES.length; i++) {
 				out.println("<option value=\"" + DynamicTaskStrategieFactory.STRATEGIES[i] + "\"" + (DynamicTaskStrategieFactory.STRATEGIES[i].equals(task.getDynamicTask()) ? " selected" : "") + ">" + DynamicTaskStrategieFactory.NAMES[i] + "</option>");
@@ -160,11 +175,21 @@ public class TaskManagerView extends HttpServlet {
 			out.println("</select><div id=dynamictaskhints></div></td>");
 			out.println("</tr>");
 		}
+		if (task.getTaskid() == 0 || task.isClozeTask()) {
+			out.println("<tr>");
+			out.println("<th>Cloze:</th>");
+			out.println("<td><input type=checkbox name=cloze id=cloze " + (task.isClozeTask() ? " checked" : "") + (task.getTaskid() != 0 ? " disabled" : " onchange=\"if (document.getElementById('cloze').checked == true) {document.getElementById('mctask').disabled=true;document.getElementById('mctask').selectedIndex=0;document.getElementById('dynamicTask').disabled=true;document.getElementById('dynamicTask').selectedIndex=0;document.getElementById('clozepreviewbutton').disabled=false;document.getElementById('clozepreviewbutton').style.display=null;} else {document.getElementById('clozepreviewbutton').disabled=true;document.getElementById('clozepreviewbutton').style.display='none';document.getElementById('mctask').disabled=false;document.getElementById('dynamicTask').disabled=false;}\"") + ">");
+			out.println(" <a href=\"#\" onclick=\"toggleVisibility('clozehelp'); return false;\">(?)</a><br><span style=\"display:none;\" id=clozehelp><b>Hilfe:</b><br>Jede Lücke besteht aus drei zwei Teilen, die in geschweifte Klammern eingefasst und durch Doppelpunkt getrennt sind:<ol><li><b>Teil Kennzeichnung der Art der Lücke. Es gibt folgende Typen von Lücken:</b><ul><li>Kurzantworten (SHORTANSWER), Groß-/Kleinschreibung wird berücksichtigt.</li><li>Kurzantworten (SHORTANSWER_NC), Groß-/Kleinschreibung ist unwichtig.</li><li>Multiple-Choice-Antwort (MULTICHOICE), als Dropdown-Auswahlmenü im Lückentext. KEINE Randomisierung.</li><li>Numerische Antwort (NUMERICAL).</li></ul>Es muß exakt die obige Schreibweise (Großbuchstaben!) verwendet werden. Hinter dem Typ steht immer ein Doppelpunkt.</li><li><b>Antwortoptionen sowie Festlegung der Bepunktung.</b><br>Die Antworten stehen einfach im Text hintereinander. '~' trennt zwei Antwortoptionen; '=' trennt die Punkte von der Option. Die Reihenfolge der Antwortoptionen ist relevant! Optional bei SHORTANSWER, dann jedoch keine automatische Bewertung.</li></ol><b>Beispiele:</b><br><ul><li>Die ehemalige deutsche Bundeshauptstadt {SHORTANSWER:1=Bonn} trägt heute den Titel Bundesstadt.<br>Nur die Eingabe von Bonn erhält 1 Punkt.</li><li>San Francisco: {MULTICHOICE:1=Kalifornien~0=Arizona}</li><li>4+4.5 = {NUMERICAL:1=8.5:.001~.5=8:1}<br>Werte im Bereich 8,5±0,001 erhalten 1 Punkt; 8±1 ergeben 0,5 Punkte.</li></ul></span></td>");
+			out.println("</tr>");
+		}
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
 		out.print("<td><textarea cols=60 rows=20 name=description>" + Util.escapeHTML(task.getDescription()) + "</textarea>");
 		if (task.getTaskid() != 0 && task.isADynamicTask()) {
 			out.print("<br>nach dem Speichern eine Vorschau anzeigen: <input type=checkbox name=dynamiktaskpreview checked>");
+		}
+		if (task.getTaskid() == 0 || task.isClozeTask()) {
+			out.println("<button id=clozepreviewbutton" + (!task.isClozeTask() ? " style=\"display:none;\"" : "") + " onclick=\"clozePreview(); return false;\">Preview/Check</button>");
 		}
 		out.println("</td>");
 		out.println("</tr>");
@@ -175,9 +200,9 @@ public class TaskManagerView extends HttpServlet {
 		if (task.getTaskid() != 0) {
 			out.println("<tr>");
 			out.println("<th>Filename Regexp:</th>");
-			out.println("<td><input type=text size=100 required=required" + (task.isSCMCTask() || task.isADynamicTask() ? " disabled" : "") + " id=\"filenameregexp\" name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#fileregexphelp').toggle(); return false;\">(?)</a><br><div style=\"display:none;\" id=fileregexphelp><b>Hilfe:</b><br>Dateinamen, die von Studierende hochgeladen werden, werden mit diesem regulären Ausdruck überprüft, bevor diese verarbeitet werden. Grundsätzlich gelten zusätzlich die globalen Beschränkungen (&quot;" + Util.escapeHTML(Configuration.GLOBAL_FILENAME_REGEXP) + "&quot;)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;.+&quot;<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>ARGOUml: &quot;loesung\\.(xmi|zargo|png)&quot;<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|.+\\.png)&quot;<br>&quot;-&quot; = Dateiupload nicht anbieten bzw. verbieten<p><b>Dateinamen testen:</b><br><input type=\"text\" id=\"regexptest\" name=\"regexptest\"> <button onclick=\"checkRegexp(); return false;\">Testen</button></div></td>");
+			out.println("<td><input type=text size=100 required=required" + (task.isSCMCTask() || task.isADynamicTask() || task.isClozeTask() ? " disabled" : "") + " id=\"filenameregexp\" name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#fileregexphelp').toggle(); return false;\">(?)</a><br><div style=\"display:none;\" id=fileregexphelp><b>Hilfe:</b><br>Dateinamen, die von Studierende hochgeladen werden, werden mit diesem regulären Ausdruck überprüft, bevor diese verarbeitet werden. Grundsätzlich gelten zusätzlich die globalen Beschränkungen (&quot;" + Util.escapeHTML(Configuration.GLOBAL_FILENAME_REGEXP) + "&quot;)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;.+&quot;<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>ARGOUml: &quot;loesung\\.(xmi|zargo|png)&quot;<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|.+\\.png)&quot;<br>&quot;-&quot; = Dateiupload nicht anbieten bzw. verbieten<p><b>Dateinamen testen:</b><br><input type=\"text\" id=\"regexptest\" name=\"regexptest\"> <button onclick=\"checkRegexp(); return false;\">Testen</button></div></td>");
 			out.println("</tr>");
-			if (!task.isADynamicTask() && !task.isSCMCTask()) {
+			if (!task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {
 				out.println("<tr>");
 				out.println("<th>Archiv-Filename Regexp:</th>");
 				out.println("<td><input type=text size=100 required=required name=archivefilenameregexp value=\"" + Util.escapeHTML(task.getArchiveFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#archivefileregexphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=archivefileregexphelp><b>Hilfe:</b><br>Das Hochladen von Archiven (.zip und .jar) muss im Filename-Regexp erlaubt werden, um diese Funktion nutzen zu können. Mit diesem regulären Ausdruck werden die Dateien im Archiv geprüft und nur diese extrahiert, andere werden ignoriert. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator). Grundsätzlich gelten zusätzlich die globalen Beschränkungen (&quot;" + Util.escapeHTML(Configuration.GLOBAL_ARCHIVEFILENAME_REGEXP) + "&quot;)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;.+&quot;<br>für DOC/PDF Dateien: &quot;.+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|.+\\.png)&quot;<br>&quot;-&quot; = Archive nicht automatisch entpacken</span></td>");
@@ -185,9 +210,9 @@ public class TaskManagerView extends HttpServlet {
 			}
 			out.println("<tr>");
 			out.println("<th>Text-Eingabefeld:</th>");
-			out.println("<td><input type=checkbox name=showtextarea" + (task.isADynamicTask() || task.isSCMCTask() ? " disabled" : "") + (task.isShowTextArea() ? " checked" : "") + "> (wird als textloesung.txt gespeichert)</td>");
+			out.println("<td><input type=checkbox name=showtextarea" + (task.isADynamicTask() || task.isSCMCTask() || task.isClozeTask() ? " disabled" : "") + (task.isShowTextArea() ? " checked" : "") + "> (wird als textloesung.txt gespeichert)</td>");
 			out.println("</tr>");
-			if (!task.isADynamicTask() && !task.isSCMCTask()) {
+			if (!task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {
 				out.println("<tr>");
 				out.println("<th>Dateien bei TutorInnen aufklappen:</th>");
 				out.println("<td><input type=text name=featuredfiles size=100 value=\"" + Util.escapeHTML(task.getFeaturedFiles()) + "\"> <a href=\"#\" onclick=\"$('#featuredfileshelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=featuredfileshelp><b>Hilfe:</b><br>Dieser reguläre Ausdruck bestimmt welche Dateien bei den Tutoren automatisch aufgeklappt sind. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = keine Dateien aufklappen</span></td>");
@@ -198,7 +223,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<td><input type=text size=15 required id=\"maxfilesize\" name=maxfilesize value=\"" + (task.getMaxsize() / 1024) + "\"> <a href=\"#\" onclick=\"$('#maxfilesizehelp').toggle(); return false;\">(?)</a><br><div style=\"display:none;\" id=maxfilesizehelp><b>Hilfe:</b><br>maximale Dateigröße bzw. Länge des Textfeldes, das akzeptiert wird (Systemlimit: " + (Configuration.MAX_UPLOAD_SIZE / 1024 / 1024) + " MiB). Muss &gt;= 1 KiB sein!</div></td>");
 			out.println("</tr>");
 		}
-		if (task.getTaskid() != 0 && !task.isADynamicTask() && !task.isSCMCTask()) {
+		if (task.getTaskid() != 0 && !task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {
 			out.println("<tr>");
 			out.println("<th>TutorInnen dürfen Dateien für Studierende hochladen:</th>");
 			out.println("<td><input type=checkbox name=tutorsCanUploadFiles" + (task.isSCMCTask() ? " disabled" : "") + (task.isTutorsCanUploadFiles() ? " checked" : "") + "></td>");
@@ -288,7 +313,7 @@ public class TaskManagerView extends HttpServlet {
 			}
 			out.println("<input type=submit value=hinzufügen>");
 			out.println("</form>");
-		} else if (task.getTaskid() != 0) {
+		} else if (task.getTaskid() != 0 && !task.isClozeTask()) {
 			out.println("<h2 id=pointcriteria>Punkte</h2>");
 			out.println("<p>Werden hier Kriterien angelegt, so wird den Tutoren eine differenzierte Bewertung ermöglicht (für " + Util.showPoints(task.getMinPointStep()) + " Punkte wird eine Checkbox angezeigt, für &gt; " + Util.showPoints(task.getMinPointStep()) + " Punkte erscheint ein Texteingabefeld).</p>");
 			if (!task.getPointCategories().isEmpty()) {
