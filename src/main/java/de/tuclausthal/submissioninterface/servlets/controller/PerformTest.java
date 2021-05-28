@@ -126,7 +126,7 @@ public class PerformTest extends HttpServlet {
 			return;
 		}
 
-		if (request.getParameter("sid") != null) {
+		if (request.getParameter("sid") != null || (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) && request.getParameter("modelsolution") != null) {
 			request.setAttribute("task", test.getTask());
 			request.setAttribute("test", test);
 
@@ -135,18 +135,26 @@ public class PerformTest extends HttpServlet {
 				throw new IOException("Failed to create tempdir!");
 			}
 
-			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
-			Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
-			if (submission == null || submission.getTask().getTaskid() != task.getTaskid()) {
-				request.setAttribute("title", "Abgabe nicht gefunden");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
-				return;
+			final File taskPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+			if (request.getParameter("sid") != null) {
+				SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+				Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
+				if (submission == null || submission.getTask().getTaskid() != task.getTaskid()) {
+					request.setAttribute("title", "Abgabe nicht gefunden");
+					getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+					return;
+				}
+
+				File submissionPath = new File(taskPath, String.valueOf(submission.getSubmissionid()));
+				// prepare tempdir
+				Util.recursiveCopy(submissionPath, path);
+			} else {
+				final File modelSolutionPath = new File(taskPath, "modelsolutionfiles");
+				// prepare tempdir
+				if (modelSolutionPath.isDirectory()) {
+					Util.recursiveCopy(modelSolutionPath, path);
+				}
 			}
-
-			File submissionPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-
-			// prepare tempdir
-			Util.recursiveCopy(submissionPath, path);
 
 			TestTask testTask = new TestTask(test);
 			TestExecutorTestResult testResult = new TestExecutorTestResult();
