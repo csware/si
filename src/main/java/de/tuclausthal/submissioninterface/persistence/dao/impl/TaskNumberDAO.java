@@ -20,11 +20,11 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
-import javax.persistence.LockModeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TaskNumberDAOIf;
@@ -58,6 +58,7 @@ public class TaskNumberDAO extends AbstractDAO implements TaskNumberDAOIf {
 	@Override
 	public List<TaskNumber> getTaskNumbersForTaskLocked(Task task, Participation participation) {
 		Session session = getSession();
+		session.buildLockRequest(LockOptions.UPGRADE).lock(participation);
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<TaskNumber> criteria = builder.createQuery(TaskNumber.class);
 		Root<TaskNumber> root = criteria.from(TaskNumber.class);
@@ -65,7 +66,7 @@ public class TaskNumberDAO extends AbstractDAO implements TaskNumberDAOIf {
 		criteria.where(builder.equal(root.get(TaskNumber_.task), task));
 		criteria.where(builder.equal(root.get(TaskNumber_.participation), participation));
 		criteria.orderBy(builder.asc(root.get(TaskNumber_.tasknumberid)));
-		return session.createQuery(criteria).setLockMode(LockModeType.PESSIMISTIC_WRITE).list();
+		return session.createQuery(criteria).list();
 	}
 
 	@Override

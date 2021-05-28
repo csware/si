@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
@@ -66,10 +65,14 @@ public class ResultDAO extends AbstractDAO implements ResultDAOIf {
 		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
 
 		CriteriaBuilder builder = session.getCriteriaBuilder();
-		CriteriaDelete<Result> criteria = builder.createCriteriaDelete(Result.class);
+		CriteriaQuery<Result> criteria = builder.createQuery(Result.class);
 		Root<Result> root = criteria.from(Result.class);
+		criteria.select(root);
 		criteria.where(builder.equal(root.get(Result_.submission), submission));
-		session.createQuery(criteria).executeUpdate();
+		// not nice, but issuing a delete query with a where clause might cause deadlocks and items per submission is expected to be low
+		for (Result result : session.createQuery(criteria).list()) {
+			session.delete(result);
+		}
 
 		for (String stringResult : results) {
 			session.save(new Result(submission, stringResult));
