@@ -175,7 +175,7 @@ public class ShowTaskStudentView extends HttpServlet {
 					selected.add(Integer.parseInt(checked));
 				}
 
-				boolean showResults = task.getDeadline() != null && task.getDeadline().before(Util.correctTimezone(new Date()));
+				boolean showResults = submission.isPointsVisibleToStudents();
 				MCOptionDAOIf mcOptionDAO = DAOFactory.MCOptionDAOIf(session);
 				List<MCOption> options = mcOptionDAO.getMCOptionsForTask(task);
 				Collections.shuffle(options, new Random(participation.getId()));
