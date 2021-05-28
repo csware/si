@@ -143,13 +143,13 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text size=100 required=required name=title value=\"" + Util.escapeHTML(task.getTitle()) + "\"></td>");
 		out.println("</tr>");
-		if (!task.isADynamicTask()) {
+		if (task.getTaskid() == 0 || task.isMCTask()) {
 			out.println("<tr>");
 			out.println("<th>Multiple-Choice-Aufgabe:</th>");
 			out.println("<td><input type=checkbox" + (task.getTaskid() != 0 ? " disabled" : "") + (task.isMCTask() ? " checked" : "") + " name=mctask id=mctask onchange=\"if (document.getElementById('mctask').checked) {document.getElementById('dynamicTask').disabled=true;document.getElementById('dynamicTask').selectedIndex=0} else {document.getElementById('dynamicTask').disabled=false;}return true;\"></td>");
 			out.println("</tr>");
 		}
-		if (!task.isMCTask()) {
+		if (task.getTaskid() == 0 || task.isADynamicTask()) {
 			out.println("<tr>");
 			out.println("<th>Aufgabe mit dynamischen Werten:</th>");
 			out.println("<td><select size=1 name=dynamicTask id=dynamicTask " + (task.getTaskid() != 0 ? " disabled" : " onchange=\"if (document.getElementById('dynamicTask').selectedIndex > 0) {document.getElementById('mctask').disabled=true;document.getElementById('mctask').checked=false;} else {document.getElementById('mctask').disabled=false;} getDynamicTaskHints();\"") + ">");
