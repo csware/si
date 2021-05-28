@@ -123,7 +123,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("</ul></td>");
 			out.println("</tr>");
 		}
-		if (task.isMCTask()) {
+		if (task.isSCMCTask()) {
 			out.println("<tr>");
 			out.println("<th>MC-Antworten:</th>");
 			out.println("<td><ul>");
@@ -139,7 +139,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask", response) + "\">Aufgabe bearbeiten</a></div>");
 		}
 
-		if (!task.isMCTask() && !task.isADynamicTask() && (participation.getRoleType() == ParticipationRole.ADVISOR || task.isTutorsCanUploadFiles()) && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
+		if (!task.isSCMCTask() && !task.isADynamicTask() && (participation.getRoleType() == ParticipationRole.ADVISOR || task.isTutorsCanUploadFiles()) && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("SubmitSolution?taskid=" + task.getTaskid(), response) + "\">Abgabe für Studierenden durchführen</a> (Achtung wenn Duplikatstest bereits gelaufen ist)</div>");
 		}
 
@@ -149,7 +149,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("PerformTest?taskid=" + task.getTaskid(), response) + "\">Test (manuell) durchführen</a></div>");
 		}
 
-		if (!task.isMCTask() && participation.getRoleType() == ParticipationRole.ADVISOR && task.getMaxSubmitters() <= 1) {
+		if (!task.isSCMCTask() && participation.getRoleType() == ParticipationRole.ADVISOR && task.getMaxSubmitters() <= 1) {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("MassMarkTask?taskid=" + task.getTaskid(), response) + "\">Bewertungen als CSV-Datei hochladen</a></div>");
 		}
 
@@ -166,7 +166,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			Map<Integer, Map<Integer, Boolean>> testResults = DAOFactory.TestResultDAOIf(session).getResults(task);
 			Map<Integer, Map<Integer, List<Similarity>>> similarities = DAOFactory.SimilarityDAOIf(session).getMaxSimilarities(task);
 			out.println("<p><h2>Abgaben</h2><p>");
-			if (!task.isMCTask()) {
+			if (!task.isSCMCTask()) {
 				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("SearchSubmissions?taskid=" + task.getTaskid(), response) + "\">Suchen...</a></div>");
 			}
 			Iterator<Submission> submissionIterator = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task).iterator();
@@ -224,7 +224,7 @@ public class ShowTaskTutorView extends HttpServlet {
 						out.println("<h3>Ohne Gruppe</h3>");
 						out.println("<div id=\"contentgroup0\">");
 						out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid() + "&action=grouplist", response) + "\" target=\"_blank\">Druckbare Liste</a></div>");
-						if (!task.isADynamicTask() && !task.isMCTask()) {
+						if (!task.isADynamicTask() && !task.isSCMCTask()) {
 							out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("DownloadSubmissionsByGroup?taskid=" + task.getTaskid(), response) + "\">Alle Abgaben der Gruppe herunterladen (ZIP-Archiv)</a></div>");
 						}
 					} else {
@@ -235,7 +235,7 @@ public class ShowTaskTutorView extends HttpServlet {
 						}
 						out.println("<div " + defaultState + " id=\"contentgroup" + group.getGid() + "\">");
 						out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid() + "&action=grouplist&groupid=" + group.getGid(), response) + "\" target=\"_blank\">Druckbare Liste</a></div>");
-						if (!task.isADynamicTask() && !task.isMCTask()) {
+						if (!task.isADynamicTask() && !task.isSCMCTask()) {
 							out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("DownloadSubmissionsByGroup?taskid=" + task.getTaskid() + "&groupid=" + group.getGid(), response) + "\">Alle Abgaben der Gruppe herunterladen (ZIP-Archiv)</a></div>");
 						}
 					}

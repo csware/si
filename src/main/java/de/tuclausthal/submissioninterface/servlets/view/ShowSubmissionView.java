@@ -132,7 +132,7 @@ public class ShowSubmissionView extends HttpServlet {
 			}
 		}
 
-		if ((task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isMCTask())) {
+		if ((task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask())) {
 			out.println("<h2>Bewertung: <a href=\"#\" onclick=\"$('#mark').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<table id=mark class=border>");
 			String oldPublicComment = "";
@@ -305,8 +305,12 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("</ul>");
 		}
 
-		if (task.isMCTask()) {
-			out.println("<h2>Multiple Choice: <a href=\"#\" onclick=\"$('#mctask').toggle(); return false;\">(+/-)</a></h2>");
+		if (task.isSCMCTask()) {
+			if (task.isSCTask()) {
+				out.println("<h2>Single Choice: <a href=\"#\" onclick=\"$('mctask').toggle(); return false;\">(+/-)</a></h2>");
+			} else {
+				out.println("<h2>Multiple Choice: <a href=\"#\" onclick=\"$('mctask').toggle(); return false;\">(+/-)</a></h2>");
+			}
 			out.println("<ul id=mctask>");
 			out.println("<li>Optionen:<ul>");
 			List<Integer> selected = new ArrayList<>();
@@ -320,7 +324,11 @@ public class ShowSubmissionView extends HttpServlet {
 				boolean optionSelected = selected.contains(option.getId());
 				boolean correct = (option.isCorrect() && optionSelected) || (!option.isCorrect() && !optionSelected);
 				allCorrect &= correct;
-				out.println("<li><input disabled type=checkbox " + (optionSelected ? "checked" : "") + " name=\"check" + i + "\" id=\"check" + i + "\"> <label for=\"check" + i + "\" class=" + (correct ? "mccorrect" : "mcwrong") + ">" + Util.escapeHTML(option.getTitle()) + "</label></li>");
+				if (task.isSCTask()) {
+					out.println("<li><input disabled type=radio " + (optionSelected ? "checked" : "") + " name=check value=" + i + " id=\"check" + i + "\"> <label for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + (option.isCorrect() ? " (richtige Antwort)" : "") + "</label></li>");
+				} else {
+					out.println("<li><input disabled type=checkbox " + (optionSelected ? "checked" : "") + " name=\"check" + i + "\" id=\"check" + i + "\"> <label for=\"check" + i + "\" class=" + (correct ? "mccorrect" : "mcwrong") + ">" + Util.escapeHTML(option.getTitle()) + "</label></li>");
+				}
 				++i;
 			}
 			out.println("</ul></li>");

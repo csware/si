@@ -126,7 +126,7 @@ public class SubmitSolution extends HttpServlet {
 			}
 		}
 
-		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isMCTask()) {
+		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask()) {
 			request.setAttribute("title", "Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.");
 			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
@@ -248,7 +248,7 @@ public class SubmitSolution extends HttpServlet {
 				template.printTemplateFooter();
 				return;
 			}
-			if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isMCTask()) {
+			if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask()) {
 				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.</div>");
@@ -286,7 +286,7 @@ public class SubmitSolution extends HttpServlet {
 				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 				template.printTemplateFooter();
 				return;
-			} else if (file == null && !task.isShowTextArea() && !task.isMCTask()) {
+			} else if (file == null && !task.isShowTextArea() && !task.isSCMCTask()) {
 				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Textlösungen sind für diese Aufgabe deaktiviert.</div>");
@@ -447,7 +447,7 @@ public class SubmitSolution extends HttpServlet {
 
 			response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
 			return;
-		} else if (task.isMCTask()) {
+		} else if (task.isSCMCTask()) {
 			MCOptionDAOIf mcOptionDAO = DAOFactory.MCOptionDAOIf(session);
 			List<MCOption> options = mcOptionDAO.getMCOptionsForTask(task);
 			Collections.shuffle(options, new Random(studentParticipation.getId()));
@@ -455,7 +455,7 @@ public class SubmitSolution extends HttpServlet {
 			List<Integer> resultIDs = new ArrayList<>();
 			int i = 0;
 			for (MCOption option : options) {
-				if (request.getParameter("check" + i) != null) {
+				if ((task.isMCTask() && request.getParameter("check" + i) != null) || (task.isSCMCTask() && String.valueOf(i).equals(request.getParameter("check")))) {
 					resultIDs.add(option.getId());
 					allCorrect &= option.isCorrect();
 				} else {

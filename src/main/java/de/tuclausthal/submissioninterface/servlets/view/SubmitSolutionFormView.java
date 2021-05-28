@@ -118,19 +118,19 @@ public class SubmitSolutionFormView extends HttpServlet {
 			}
 		}
 
-		if (task.isMCTask()) {
+		if (task.isSCMCTask()) {
 			out.println("<FORM ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid(), response) + "\">");
 			out.println(setWithUser.toString());
 		}
 
-		if (task.isShowTextArea() || task.isMCTask()) {
+		if (task.isShowTextArea() || task.isSCMCTask()) {
 			out.println("<table class=border>");
 			out.println("<tr>");
 			out.println("<th>Beschreibung:</th>");
 			out.println("<td id=taskdescription>" + Util.makeCleanHTML(task.getDescription()) + "</td>");
 			out.println("</tr>");
 
-			if (task.isMCTask()) {
+			if (task.isSCMCTask()) {
 				out.println("<tr>");
 				out.println("<th>Antwort:</th>");
 				out.println("<td>");
@@ -147,7 +147,11 @@ public class SubmitSolutionFormView extends HttpServlet {
 				Collections.shuffle(options, new Random(participation.getId()));
 				int i = 0;
 				for (MCOption option : options) {
-					out.println("<input type=checkbox " + (selected.contains(option.getId()) ? "checked" : "") + " name=\"check" + i + "\" id=\"check" + i + "\"> <label for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + "</label><br>");
+					if (task.isSCTask()) {
+						out.println("<input type=radio required " + (selected.contains(option.getId()) ? "checked" : "") + " name=check value=" + i + " id=\"check" + i + "\"> <label for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + "</label><br>");
+					} else {
+						out.println("<input type=checkbox " + (selected.contains(option.getId()) ? "checked" : "") + " name=\"check" + i + "\" id=\"check" + i + "\"> <label for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + "</label><br>");
+					}
 					++i;
 				}
 

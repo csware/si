@@ -102,7 +102,7 @@ public class TaskManager extends HttpServlet {
 					getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 					return;
 				}
-				if (task.isMCTask()) {
+				if (task.isSCMCTask()) {
 					request.setAttribute("mcOptions", DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task));
 				}
 			} else {
@@ -338,7 +338,7 @@ public class TaskManager extends HttpServlet {
 					getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 					return;
 				}
-				if (!task.isMCTask()) {
+				if (!task.isSCMCTask()) {
 					task.setMinPointStep(Util.convertToPoints(request.getParameter("minpointstep")));
 				}
 				if (task.getPointCategories().isEmpty()) {
@@ -349,7 +349,7 @@ public class TaskManager extends HttpServlet {
 				task.setMaxSubmitters(Util.parseInteger(request.getParameter("maxSubmitters"), 1));
 				task.setAllowSubmittersAcrossGroups(request.getParameter("allowSubmittersAcrossGroups") != null);
 				task.setMaxsize(Math.max(1024, Math.min(Configuration.MAX_UPLOAD_SIZE, 1024 * Util.parseInteger(request.getParameter("maxfilesize"), 0))));
-				if (!task.isMCTask() && !task.isADynamicTask()) {
+				if (!task.isSCMCTask() && !task.isADynamicTask()) {
 					task.setFilenameRegexp(request.getParameter("filenameregexp"));
 					task.setArchiveFilenameRegexp(request.getParameter("archivefilenameregexp"));
 					task.setFeaturedFiles(request.getParameter("featuredfiles"));
@@ -391,8 +391,12 @@ public class TaskManager extends HttpServlet {
 				}
 				String taskType = "";
 				String dynamicTask = null;
-				if (request.getParameter("mctask") != null) {
-					taskType = "mc";
+				if (request.getParameter("mctask") != null && !request.getParameter("mctask").isEmpty()) {
+					if ("singlechoice".equals(request.getParameter("mctask"))) {
+						taskType = "sc";
+					} else {
+						taskType = "mc";
+					}
 				} else {
 					if (DynamicTaskStrategieFactory.IsValidStrategieName(request.getParameter("dynamicTask"))) {
 						taskType = "dynamicTask";
@@ -400,7 +404,7 @@ public class TaskManager extends HttpServlet {
 					}
 				}
 				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), 50), startdate, deadline, request.getParameter("description"), taskGroup, pointsdate, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, taskType, dynamicTask, request.getParameter("prematureClosing") != null);
-				if (task.isMCTask()) {
+				if (task.isSCMCTask()) {
 					task.setFilenameRegexp("-");
 					task.setShowTextArea(false); // be explicit here, it's false by default
 				} else if (task.isADynamicTask()) {

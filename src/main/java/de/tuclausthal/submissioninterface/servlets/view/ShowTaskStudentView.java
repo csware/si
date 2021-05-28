@@ -165,7 +165,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				}
 				out.println("</td>");
 				out.println("</tr>");
-			} else if (task.isMCTask()) {
+			} else if (task.isSCMCTask()) {
 				out.println("<tr>");
 				out.println("<th>Antwort:</th>");
 				out.println("<td>");
@@ -190,7 +190,11 @@ public class ShowTaskStudentView extends HttpServlet {
 							resultState = "class=mcwrong";
 						}
 					}
-					out.println("<input disabled type=checkbox " + (optionSelected ? "checked" : "") + " name=\"check" + i + "\" id=\"check" + i + "\"> <label " + resultState + " for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + "</label><br>");
+					if (task.isSCTask()) {
+						out.println("<input disabled type=radio " + (optionSelected ? "checked" : "") + " name=check value=" + i + " id=\"check" + i + "\"> <label for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + (showResults && option.isCorrect() ? " (richtige Antwort)" : "") + "</label><br>");
+					} else {
+						out.println("<input disabled type=checkbox " + (optionSelected ? "checked" : "") + " name=\"check" + i + "\" id=\"check" + i + "\"> <label " + resultState + " for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + "</label><br>");
+					}
 					++i;
 				}
 
@@ -262,13 +266,13 @@ public class ShowTaskStudentView extends HttpServlet {
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
 				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"" + Util.generateHTMLLink("WebStart?tool=argouml&taskid=" + task.getTaskid(), response) + "\">ArgoUML öffnen</a></div>");
 				out.println("<script>if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
-			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isMCTask()) {
+			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isSCMCTask()) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
 			} else if (task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
 				out.println("<div class=mid>Die Abgabe wurde als endgültig abgeschlossen markiert.<br>Eine Veränderung ist jetzt nicht mehr möglich.</div>");
-			} else if (task.isMCTask()) {
+			} else if (task.isSCMCTask()) {
 				out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("SubmitSolution?taskid=" + task.getTaskid(), response) + "\">Abgabe bearbeiten</a></div>");
 			} else {
 				if (!submittedFiles.isEmpty()) {
@@ -307,7 +311,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
 				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"" + Util.generateHTMLLink("WebStart?tool=argouml&taskid=" + task.getTaskid(), response) + "\">ArgoUML öffnen</a></div>");
 				out.println("<script>if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
-			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isMCTask()) {
+			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isSCMCTask()) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
 			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");

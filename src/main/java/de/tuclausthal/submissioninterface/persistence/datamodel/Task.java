@@ -518,12 +518,30 @@ public class Task implements Serializable {
 	}
 
 	/**
-	 * Checks if the task is a multiple choice task
+	 * Checks if the task is a single choice task
+	 * @return true/false
+	 */
+	@Transient
+	public boolean isSCTask() {
+		return "sc".equals(getType());
+	}
+
+	/**
+	 * Checks if the task is a  multiple choice task
 	 * @return true/false
 	 */
 	@Transient
 	public boolean isMCTask() {
 		return "mc".equals(getType());
+	}
+
+	/**
+	 * Checks if the task is a single or  multiple choice task
+	 * @return true/false
+	 */
+	@Transient
+	public boolean isSCMCTask() {
+		return isSCTask() || isMCTask();
 	}
 
 	/**

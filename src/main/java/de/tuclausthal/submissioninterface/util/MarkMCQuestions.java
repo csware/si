@@ -61,7 +61,7 @@ public class MarkMCQuestions {
 		session.beginTransaction();
 
 		Task task = DAOFactory.TaskDAOIf(session).getTask(Integer.parseInt(args[0]));
-		if (task == null || !task.isMCTask()) {
+		if (task == null || !task.isSCMCTask()) {
 			System.err.println("Task not found OR task is not a multiple-choice task.");
 			System.exit(1);
 			return;
