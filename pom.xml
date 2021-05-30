@@ -79,11 +79,11 @@
 			<artifactId>hibernate-c3p0</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<!-- https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.24</version>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>2.7.3</version>
 		</dependency>
 		<!-- Enable Hibernate's Metamodel Generator to generate metadata model classes (ending in _ suffix) for more type-safe Criteria queries -->
 		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen -->

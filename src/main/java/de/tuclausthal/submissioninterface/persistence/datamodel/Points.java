@@ -157,7 +157,7 @@ public class Points implements Serializable {
 	/**
 	 * @return the pointStatus
 	 */
-	@Column(columnDefinition = "TINYINT")
+	@Column(columnDefinition = "bit")
 	public Integer getPointStatus() {
 		return pointStatus;
 	}

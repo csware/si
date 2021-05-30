@@ -117,7 +117,7 @@ public class SimilarityTest implements Serializable {
 	/**
 	 * @return the status
 	 */
-	@Column(nullable = false, columnDefinition="TINYINT")
+	@Column(nullable = false, columnDefinition="bit")
 	public int getStatus() {
 		return status;
 	}

@@ -29,8 +29,6 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 
-import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
-
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.MCOptionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TaskNumberDAOIf;
@@ -97,6 +95,5 @@ public class MarkMCQuestions {
 		session.getTransaction().commit();
 		session.close();
 		HibernateSessionHelper.getSessionFactory().close();
-		AbandonedConnectionCleanupThread.uncheckedShutdown();
 	}
 }

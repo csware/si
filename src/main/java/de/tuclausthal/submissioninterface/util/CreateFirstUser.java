@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -21,8 +21,6 @@ package de.tuclausthal.submissioninterface.util;
 import java.io.IOException;
 
 import org.hibernate.Session;
-
-import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
@@ -46,6 +44,5 @@ public class CreateFirstUser {
 		System.out.println("User created.");
 		session.close();
 		HibernateSessionHelper.getSessionFactory().close();
-		AbandonedConnectionCleanupThread.uncheckedShutdown();
 	}
 }

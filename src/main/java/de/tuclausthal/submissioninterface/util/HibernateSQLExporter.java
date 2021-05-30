@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -32,8 +32,6 @@ import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.hbm2ddl.SchemaExport.Action;
 import org.hibernate.tool.schema.TargetType;
 
-import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
-
 /**
  * Hibernate DDL-definition to SQL-exporter
  * @author Sven Strickroth
@@ -55,6 +53,5 @@ public class HibernateSQLExporter {
 		schemaExport.execute(enumSet, Action.CREATE, metadata);
 
 		standardRegistry.close();
-		AbandonedConnectionCleanupThread.uncheckedShutdown();
 	}
 }

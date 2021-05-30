@@ -30,8 +30,6 @@ import javax.servlet.ServletContextListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
-
 public class HibernateListener implements ServletContextListener {
 	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -51,7 +49,6 @@ public class HibernateListener implements ServletContextListener {
 			Thread.sleep(1500); // C3P0 works highly asynchronous; even closing all threads is done asynchronously; this is not nice, but there does not seem to be any better solution ATM
 		} catch (InterruptedException e) {
 		}
-		AbandonedConnectionCleanupThread.checkedShutdown();
 
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();
 		Enumeration<Driver> drivers = DriverManager.getDrivers();
