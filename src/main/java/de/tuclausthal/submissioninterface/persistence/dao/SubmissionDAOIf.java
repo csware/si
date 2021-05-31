@@ -92,4 +92,6 @@ public interface SubmissionDAOIf {
 	public Submission getUngradedSubmission(Task task, int lastSubmissionID, Group group, boolean reverse);
 
 	public List<Submission> getSubmissionsForSearch(Task task, String searchString, boolean publicComment, boolean privateComment, boolean testResults);
+
+	public List<Submission> getAllSubmissions(Participation submitter);
 }

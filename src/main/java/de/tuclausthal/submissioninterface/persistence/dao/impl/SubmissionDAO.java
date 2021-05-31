@@ -45,6 +45,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Points_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
@@ -225,6 +226,18 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 			ors.add(root.in(subQuery));
 		}
 		criteria.where(builder.and(where, builder.or(ors.toArray(new Predicate[1]))));
+		return session.createQuery(criteria).list();
+	}
+
+	@Override
+	public List<Submission> getAllSubmissions(Participation submitter) {
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Submission> criteria = builder.createQuery(Submission.class);
+		Root<Submission> root = criteria.from(Submission.class);
+		criteria.select(root);
+		criteria.where(root.join(Submission_.submitters).in(submitter));
+		criteria.orderBy(builder.asc(root.get(Submission_.task).get(Task_.taskGroup)), builder.asc(root.get(Submission_.task)));
 		return session.createQuery(criteria).list();
 	}
 }

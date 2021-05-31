@@ -71,6 +71,8 @@ public class ShowLecture extends HttpServlet {
 		request.setAttribute("participation", participation);
 		if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 			request.setAttribute("joinAbleGroups", DAOFactory.GroupDAOIf(session).getJoinAbleGroups(lecture, participation.getGroup()));
+			request.setAttribute("tasks", DAOFactory.TaskDAOIf(session).getTasks(lecture, true));
+			request.setAttribute("submissions", DAOFactory.SubmissionDAOIf(session).getAllSubmissions(participation));
 			getServletContext().getNamedDispatcher("ShowLectureStudentView").forward(request, response);
 		} else if ("list".equals(request.getParameter("show"))) {
 			getServletContext().getNamedDispatcher("ShowLectureTutorFullView").forward(request, response);

@@ -19,13 +19,22 @@
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup_;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task_;
 
 /**
  * Data Access Object implementation for the TaskDAOIf
@@ -66,5 +75,22 @@ public class TaskDAO extends AbstractDAO implements TaskDAOIf {
 		session.update(task);
 		session.delete(task);
 		tx.commit();
+	}
+
+	@Override
+	public List<Task> getTasks(Lecture lecture, boolean onlyStudentVisible) {
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Task> criteria = builder.createQuery(Task.class);
+		Root<Task> root = criteria.from(Task.class);
+		root.fetch(Task_.taskGroup);
+		criteria.select(root);
+		Predicate where = builder.equal(root.get(Task_.taskGroup).get(TaskGroup_.lecture), lecture);
+		if (onlyStudentVisible) {
+			where = builder.and(where, builder.lessThanOrEqualTo(root.get(Task_.start), new Date()));
+		}
+		criteria.where(where);
+		criteria.orderBy(builder.asc(root.get(Task_.taskGroup)), builder.asc(root));
+		return session.createQuery(criteria).list();
 	}
 }

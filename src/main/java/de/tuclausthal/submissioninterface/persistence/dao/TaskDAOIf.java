@@ -19,7 +19,9 @@
 package de.tuclausthal.submissioninterface.persistence.dao;
 
 import java.util.Date;
+import java.util.List;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 
@@ -64,4 +66,6 @@ public interface TaskDAOIf {
 	 * @param task the task to remove
 	 */
 	public void deleteTask(Task task);
+
+	public List<Task> getTasks(Lecture lecture, boolean onlyVisible);
 }
