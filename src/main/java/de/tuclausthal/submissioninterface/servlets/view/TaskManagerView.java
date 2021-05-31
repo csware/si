@@ -172,7 +172,7 @@ public class TaskManagerView extends HttpServlet {
 			for (int i = 0; i < DynamicTaskStrategieFactory.STRATEGIES.length; i++) {
 				out.println("<option value=\"" + DynamicTaskStrategieFactory.STRATEGIES[i] + "\"" + (DynamicTaskStrategieFactory.STRATEGIES[i].equals(task.getDynamicTask()) ? " selected" : "") + ">" + DynamicTaskStrategieFactory.NAMES[i] + "</option>");
 			}
-			out.println("</select><div id=dynamictaskhints></div></td>");
+			out.println("</select>" + (task.isADynamicTask() ? " <a href=\"#\" onclick=\"getDynamicTaskHints();return false;\">(?)</a>" : "") + "<div id=dynamictaskhints></div></td>");
 			out.println("</tr>");
 		}
 		if (task.getTaskid() == 0 || task.isClozeTask()) {
