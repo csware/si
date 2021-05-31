@@ -175,7 +175,7 @@ public class ShowLectureStudentView extends HttpServlet {
 			out.println("</tr>");
 			out.println("</table>");
 		} else {
-			out.println("<div class=mid>keine Aufgaben gefunden.</div>");
+			out.println("<div class=mid>Es wurden noch keine Aufgaben angelegt oder für Sie sind noch keine Aufgaben sichtbar.</div>");
 		}
 		template.printTemplateFooter();
 	}
