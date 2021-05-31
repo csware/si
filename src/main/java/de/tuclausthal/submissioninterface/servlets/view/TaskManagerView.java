@@ -185,9 +185,6 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
 		out.print("<td><textarea cols=60 rows=20 name=description>" + Util.escapeHTML(task.getDescription()) + "</textarea>");
-		if (task.getTaskid() != 0 && task.isADynamicTask()) {
-			out.print("<br>nach dem Speichern eine Vorschau anzeigen: <input type=checkbox name=dynamiktaskpreview checked>");
-		}
 		if (task.getTaskid() == 0 || task.isClozeTask()) {
 			out.println("<button id=clozepreviewbutton" + (!task.isClozeTask() ? " style=\"display:none;\"" : "") + " onclick=\"clozePreview(); return false;\">Preview/Check</button>");
 		}
