@@ -68,7 +68,7 @@ ReadWritePaths=/srv/submissioninterface/
     - For LDAP authentication set `login` to `de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Form` and `verify` to `de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.LDAPVerify`, configure LDAP related settings for the `AuthenticationFilter` (`PROVIDER_URL`, `SECURITY_AUTHENTICATION`, `SECURITY_PRINCIPAL`, `matrikelNumberAttribute` (optional), and `userAttribute`), please also look at `src/main/java/de/tuclausthal/submissioninterface/authfilter/authentication/verify/impl/LDAPVerify.java` whether special adjustments are needed (e.g. first and last name generation)
     - For Shibboleth set `login` to `de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Shibboleth` and `verify` to `de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.ShibbolethVerify`, configure Shibboleth related settings for the `AuthenticationFilter` (`userAttribute` and (optional) `matrikelNumberAttribute`); required fields from the Identity-Provider are `sn`, `givenName`, `mail`, and the configured `userAttribute` (usually `uid`).
  - `submissiondir/runtests.sh` for adjusting the paths
- - `src/main/webapp/studiengaenge.js` for updating the list of study programs that are used for auto completion for the users of GATE
+ - `src/main/webapp/WEB-INF/studiengaenge.txt` for updating the list of study programs that are used for auto completion for the users of GATE
 
 ### Building GATE for deploying to Tomcat
 

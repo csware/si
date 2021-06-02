@@ -65,7 +65,6 @@ public class TaskManagerView extends HttpServlet {
 		@SuppressWarnings("unchecked")
 		List<String> modelSolutionFiles = (List<String>) request.getAttribute("modelSolutionFiles");
 
-		template.addJQuery();
 		template.addKeepAlive();
 		template.addHead("<script src=\"" + getServletContext().getContextPath() + "/tiny_mce/tiny_mce.js\"></script>");
 		template.addHead("<script>\ntinyMCE.init({" +
@@ -84,29 +83,31 @@ public class TaskManagerView extends HttpServlet {
 							"});\n</script>");
 		template.addHead("<script>\n" +
 							"function checkRegexp() {" + 
-							"$.ajax({" +
-									"type: \"POST\"," +
-									"url: \"" + Util.generateHTMLLink("?action=regexptest", response) + "\"," +
-									"data: { regexp: document.getElementById(\"filenameregexp\").value, test: document.getElementById(\"regexptest\").value }, " +
-									"success: function(msg){" +
-										"alert(msg);" +
-									"}" +
-								"});" +
+								"var request = new XMLHttpRequest();" +
+								"request.open(\"POST\", \"" + Util.generateHTMLLink("?action=regexptest", response) + "\");" +
+								"request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');" +
+								"request.onload = function() {" +
+																"if (request.readyState === request.DONE && request.status != 200) { alert('Request failed.'); return; }" +
+																"alert(request.responseText);" +
+															"};" +
+								"request.send('regexp='+encodeURIComponent(document.getElementById('filenameregexp').value).replace(/%20/g, '+') + '&test='+encodeURIComponent(document.getElementById('regexptest').value).replace(/%20/g, '+'));" +
 							"}" +
 							"\n</script>");
 		template.addHead("<script>\n" +
 							"function getDynamicTaskHints() {" +
 								"if (document.getElementById(\"dynamicTask\").value != \"\") {"+
 									"document.getElementById(\"dynamictaskhints\").innerHTML = \"hole Hinweise...\";" +
-									"$.ajax({" +
-											"type: \"POST\"," +
-											"url: \"" + Util.generateHTMLLink("?action=dynamictaskhints", response) + "\"," +
-											"data: { dynamicTask: document.getElementById(\"dynamicTask\").value }, " +
-											"success: function(msg){" +
-												"document.getElementById(\"dynamictaskhints\").innerHTML = msg;" +
-											"}" +
-										"});" +
+									"document.getElementById(\"dynamictaskhints\").style.display='block';" +
+									"var request = new XMLHttpRequest();" +
+									"request.open(\"POST\", \"" + Util.generateHTMLLink("?action=dynamictaskhints", response) + "\");" +
+									"request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');" +
+									"request.onload = function() {" +
+																	"if (request.readyState === request.DONE && request.status != 200) { alert('Request failed.'); return; }" +
+																	"document.getElementById('dynamictaskhints').innerHTML = request.responseText;" +
+																"};" +
+									"request.send('dynamicTask='+encodeURIComponent(document.getElementById('dynamicTask').value).replace(/%20/g, '+'));" +
 								"} else {" +
+									"document.getElementById(\"dynamictaskhints\").style.display='none';" +
 									"document.getElementById(\"dynamictaskhints\").innerHTML = \"\";" +
 								"}" +
 							"}" +
@@ -172,7 +173,7 @@ public class TaskManagerView extends HttpServlet {
 			for (int i = 0; i < DynamicTaskStrategieFactory.STRATEGIES.length; i++) {
 				out.println("<option value=\"" + DynamicTaskStrategieFactory.STRATEGIES[i] + "\"" + (DynamicTaskStrategieFactory.STRATEGIES[i].equals(task.getDynamicTask()) ? " selected" : "") + ">" + DynamicTaskStrategieFactory.NAMES[i] + "</option>");
 			}
-			out.println("</select>" + (task.isADynamicTask() ? " <a href=\"#\" onclick=\"getDynamicTaskHints();return false;\">(?)</a>" : "") + "<div id=dynamictaskhints></div></td>");
+			out.println("</select>" + (task.isADynamicTask() ? " <a href=\"#\" onclick=\"if (document.getElementById('dynamictaskhints').style.display==='none') {getDynamicTaskHints();} else {toggleVisibility('dynamictaskhints');} return false;\">(?)</a>" : "") + "<div id=dynamictaskhints style=\"display:none;\"></div></td>");
 			out.println("</tr>");
 		}
 		if (task.getTaskid() == 0 || task.isClozeTask()) {
@@ -192,17 +193,17 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Abgaben von max. Personen:</th>");
-		out.println("<td><input type=text size=5 id=maxSubmitters name=\"maxSubmitters\" value=\"" + task.getMaxSubmitters() + "\" onkeyup=\"if ($('#maxSubmitters').val()>1) {$('#submitteracrossgroups').show();} else {$('#submitteracrossgroups').hide();}return true;\"><span id=submitteracrossgroups" + (task.getMaxSubmitters() > 1 ? "" : " style=\"display:none;\"") + ">, <input type=checkbox name=allowSubmittersAcrossGroups " + (task.isAllowSubmittersAcrossGroups() ? "checked" : "") + "> über Gruppengrenzen hinweg</span> <a href=\"#\" onclick=\"$('#maxsubmittershelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=maxsubmittershelp><b>Hilfe:</b><br>Sofern &quot;über Gruppengrenzen hinweg&quot; nicht gesetzt ist, müssen die Studierenden in Gruppen eingeteilt sein und können auch nur Studierende wählen, die in der gleichen Gruppe sind. Die Zahl wird als Gesamtanzahl der Studierenden, die eine Aufgabe gemeinsam bearbeiten dürfen, angesehen. Sind bei der Veranstaltung Abgabegruppen defininert und wird eine Zahl &gt; 1 angegeben, werden immer alle Studierenden der Gruppe bei der ersten Abgabe automatisch hinzugefügt (auch wenn mehr Studierende in der Gruppe sind; ist der abgebende Studierende in keiner Gruppe ist es automatisch eine Einzelabgabe, wenn gruppenübergreifende PartnerInnen verboten sind); die Angabe von &quot;1&quot; erlaubt auch bei Abgabegruppen Individualabgaben. Im Fall von Abgabegruppen können Studierende, die in einer Abgabegruppe sind, keine gruppenübergreifenden oder beliebigen Partnerabgaben durchführen (auch nicht, wenn gruppenübergreifende Partnerschaften erlaubt sind).</span></td>");
+		out.println("<td><input type=text size=5 id=maxSubmitters name=\"maxSubmitters\" value=\"" + task.getMaxSubmitters() + "\" onkeyup=\"if (document.getElementById('maxSubmitters').value>1) {document.getElementById('submitteracrossgroups').style.display=null;} else {document.getElementById('submitteracrossgroups').style.display='none';}return true;\"><span id=submitteracrossgroups" + (task.getMaxSubmitters() > 1 ? "" : " style=\"display:none;\"") + ">, <input type=checkbox name=allowSubmittersAcrossGroups " + (task.isAllowSubmittersAcrossGroups() ? "checked" : "") + "> über Gruppengrenzen hinweg</span> <a href=\"#\" onclick=\"toggleVisibility('maxsubmittershelp'); return false;\">(?)</a><br><span style=\"display:none;\" id=maxsubmittershelp><b>Hilfe:</b><br>Sofern &quot;über Gruppengrenzen hinweg&quot; nicht gesetzt ist, müssen die Studierenden in Gruppen eingeteilt sein und können auch nur Studierende wählen, die in der gleichen Gruppe sind. Die Zahl wird als Gesamtanzahl der Studierenden, die eine Aufgabe gemeinsam bearbeiten dürfen, angesehen. Sind bei der Veranstaltung Abgabegruppen defininert und wird eine Zahl &gt; 1 angegeben, werden immer alle Studierenden der Gruppe bei der ersten Abgabe automatisch hinzugefügt (auch wenn mehr Studierende in der Gruppe sind; ist der abgebende Studierende in keiner Gruppe ist es automatisch eine Einzelabgabe, wenn gruppenübergreifende PartnerInnen verboten sind); die Angabe von &quot;1&quot; erlaubt auch bei Abgabegruppen Individualabgaben. Im Fall von Abgabegruppen können Studierende, die in einer Abgabegruppe sind, keine gruppenübergreifenden oder beliebigen Partnerabgaben durchführen (auch nicht, wenn gruppenübergreifende Partnerschaften erlaubt sind).</span></td>");
 		out.println("</tr>");
 		if (task.getTaskid() != 0) {
 			out.println("<tr>");
 			out.println("<th>Filename Regexp:</th>");
-			out.println("<td><input type=text size=100 required=required" + (task.isSCMCTask() || task.isADynamicTask() || task.isClozeTask() ? " disabled" : "") + " id=\"filenameregexp\" name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#fileregexphelp').toggle(); return false;\">(?)</a><br><div style=\"display:none;\" id=fileregexphelp><b>Hilfe:</b><br>Dateinamen, die von Studierende hochgeladen werden, werden mit diesem regulären Ausdruck überprüft, bevor diese verarbeitet werden. Grundsätzlich gelten zusätzlich die globalen Beschränkungen (&quot;" + Util.escapeHTML(Configuration.GLOBAL_FILENAME_REGEXP) + "&quot;)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;.+&quot;<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>ARGOUml: &quot;loesung\\.(xmi|zargo|png)&quot;<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|.+\\.png)&quot;<br>&quot;-&quot; = Dateiupload nicht anbieten bzw. verbieten<p><b>Dateinamen testen:</b><br><input type=\"text\" id=\"regexptest\" name=\"regexptest\"> <button onclick=\"checkRegexp(); return false;\">Testen</button></div></td>");
+			out.println("<td><input type=text size=100 required=required" + (task.isSCMCTask() || task.isADynamicTask() || task.isClozeTask() ? " disabled" : "") + " id=\"filenameregexp\" name=filenameregexp value=\"" + Util.escapeHTML(task.getFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"toggleVisibility('fileregexphelp'); return false;\">(?)</a><br><div style=\"display:none;\" id=fileregexphelp><b>Hilfe:</b><br>Dateinamen, die von Studierende hochgeladen werden, werden mit diesem regulären Ausdruck überprüft, bevor diese verarbeitet werden. Grundsätzlich gelten zusätzlich die globalen Beschränkungen (&quot;" + Util.escapeHTML(Configuration.GLOBAL_FILENAME_REGEXP) + "&quot;)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;.+&quot;<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>ARGOUml: &quot;loesung\\.(xmi|zargo|png)&quot;<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|.+\\.png)&quot;<br>&quot;-&quot; = Dateiupload nicht anbieten bzw. verbieten<p><b>Dateinamen testen:</b><br><input type=\"text\" id=\"regexptest\" name=\"regexptest\"> <button onclick=\"checkRegexp(); return false;\">Testen</button></div></td>");
 			out.println("</tr>");
 			if (!task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {
 				out.println("<tr>");
 				out.println("<th>Archiv-Filename Regexp:</th>");
-				out.println("<td><input type=text size=100 required=required name=archivefilenameregexp value=\"" + Util.escapeHTML(task.getArchiveFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"$('#archivefileregexphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=archivefileregexphelp><b>Hilfe:</b><br>Das Hochladen von Archiven (.zip und .jar) muss im Filename-Regexp erlaubt werden, um diese Funktion nutzen zu können. Mit diesem regulären Ausdruck werden die Dateien im Archiv geprüft und nur diese extrahiert, andere werden ignoriert. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator). Grundsätzlich gelten zusätzlich die globalen Beschränkungen (&quot;" + Util.escapeHTML(Configuration.GLOBAL_ARCHIVEFILENAME_REGEXP) + "&quot;)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;.+&quot;<br>für DOC/PDF Dateien: &quot;.+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|.+\\.png)&quot;<br>&quot;-&quot; = Archive nicht automatisch entpacken</span></td>");
+				out.println("<td><input type=text size=100 required=required name=archivefilenameregexp value=\"" + Util.escapeHTML(task.getArchiveFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"toggleVisibility('archivefileregexphelp'); return false;\">(?)</a><br><span style=\"display:none;\" id=archivefileregexphelp><b>Hilfe:</b><br>Das Hochladen von Archiven (.zip und .jar) muss im Filename-Regexp erlaubt werden, um diese Funktion nutzen zu können. Mit diesem regulären Ausdruck werden die Dateien im Archiv geprüft und nur diese extrahiert, andere werden ignoriert. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator). Grundsätzlich gelten zusätzlich die globalen Beschränkungen (&quot;" + Util.escapeHTML(Configuration.GLOBAL_ARCHIVEFILENAME_REGEXP) + "&quot;)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;.+&quot;<br>für DOC/PDF Dateien: &quot;.+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|.+\\.png)&quot;<br>&quot;-&quot; = Archive nicht automatisch entpacken</span></td>");
 				out.println("</tr>");
 			}
 			out.println("<tr>");
@@ -212,12 +213,12 @@ public class TaskManagerView extends HttpServlet {
 			if (!task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {
 				out.println("<tr>");
 				out.println("<th>Dateien bei TutorInnen aufklappen:</th>");
-				out.println("<td><input type=text name=featuredfiles size=100 value=\"" + Util.escapeHTML(task.getFeaturedFiles()) + "\"> <a href=\"#\" onclick=\"$('#featuredfileshelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=featuredfileshelp><b>Hilfe:</b><br>Dieser reguläre Ausdruck bestimmt welche Dateien bei den Tutoren automatisch aufgeklappt sind. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = keine Dateien aufklappen</span></td>");
+				out.println("<td><input type=text name=featuredfiles size=100 value=\"" + Util.escapeHTML(task.getFeaturedFiles()) + "\"> <a href=\"#\" onclick=\"toggleVisibility('featuredfileshelp'); return false;\">(?)</a><br><span style=\"display:none;\" id=featuredfileshelp><b>Hilfe:</b><br>Dieser reguläre Ausdruck bestimmt welche Dateien bei den Tutoren automatisch aufgeklappt sind. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = keine Dateien aufklappen</span></td>");
 				out.println("</tr>");
 			}
 			out.println("<tr>");
 			out.println("<th>Maximale Dateigröße (in KiB):</th>");
-			out.println("<td><input type=text size=15 required id=\"maxfilesize\" name=maxfilesize value=\"" + (task.getMaxsize() / 1024) + "\"> <a href=\"#\" onclick=\"$('#maxfilesizehelp').toggle(); return false;\">(?)</a><br><div style=\"display:none;\" id=maxfilesizehelp><b>Hilfe:</b><br>maximale Dateigröße bzw. Länge des Textfeldes, das akzeptiert wird (Systemlimit: " + (Configuration.MAX_UPLOAD_SIZE / 1024 / 1024) + " MiB). Muss &gt;= 1 KiB sein!</div></td>");
+			out.println("<td><input type=text size=15 required id=\"maxfilesize\" name=maxfilesize value=\"" + (task.getMaxsize() / 1024) + "\"> <a href=\"#\" onclick=\"toggleVisibility('maxfilesizehelp'); return false;\">(?)</a><br><div style=\"display:none;\" id=maxfilesizehelp><b>Hilfe:</b><br>maximale Dateigröße bzw. Länge des Textfeldes, das akzeptiert wird (Systemlimit: " + (Configuration.MAX_UPLOAD_SIZE / 1024 / 1024) + " MiB). Muss &gt;= 1 KiB sein!</div></td>");
 			out.println("</tr>");
 		}
 		if (task.getTaskid() != 0 && !task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {

@@ -53,11 +53,10 @@ public class Overview extends HttpServlet {
 
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		template.addJQuery();
+		User user = RequestAdapter.getUser(request);
+
 		template.printTemplateHeader("Meine Veranstaltungen", "Meine Veranstaltungen");
 		PrintWriter out = response.getWriter();
-
-		User user = RequestAdapter.getUser(request);
 
 		if (Configuration.getInstance().isMatrikelNumberMustBeEnteredManuallyIfMissing() && !(user instanceof Student)) {
 			out.println("<p><form class=\"highlightborder mid\" action=\"" + Util.generateHTMLLink("AlterUser", response) + "\" method=post>");
@@ -68,14 +67,13 @@ public class Overview extends HttpServlet {
 			Student student = (Student) user;
 			if (student.getStudiengang() == null) {
 				out.println("<p><form class=\"highlightborder mid\" action=\"" + Util.generateHTMLLink("AlterUser", response) + "\" method=post>");
-
-				String studiengang = "";
-				if (student.getStudiengang() != null) {
-					studiengang = Util.escapeHTML(student.getStudiengang());
+				out.println("Bitte nennen Sie Ihren Studiengang: <select required name=studiengang>");
+				out.println("<option value=\"\"></option>");
+				for (String aStudiengang : Configuration.getInstance().getStudiengaenge()) {
+					out.println("<option value=\"" + Util.escapeHTML(aStudiengang) + "\"" + (aStudiengang.equals(student.getStudiengang()) ? " selected" : "") + ">" + Util.escapeHTML(aStudiengang) + "</option>");
 				}
-				out.println("Bitte nennen Sie Ihren Studiengang: <input type=text required=\"required\" name=studiengang id=studiengang size=40 value=\"" + studiengang + "\"> <input type=submit value=\"speichern...\">");
-				out.println("<script src=\"" + request.getContextPath() + "/studiengaenge.js\"></script>");
-				out.println("</form></p><br>");
+				out.println("</select>");
+				out.println("<input type=submit value=\"speichern...\"></form></p><br>");
 			}
 		}
 

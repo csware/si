@@ -43,7 +43,6 @@ public abstract class Template {
 	protected RequestAdapter requestAdapter;
 	protected String prefix;
 	private List<String> headers = new ArrayList<>();
-	private boolean jqueryadded = false;
 
 	public Template(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
 		this.servletRequest = servletRequest;
@@ -104,18 +103,7 @@ public abstract class Template {
 		}
 	}
 
-	final public void addJQuery() {
-		if (jqueryadded) {
-			return;
-		}
-		jqueryadded = true;
-		addHead("<link rel=\"stylesheet\" href=\"" + prefix + "/jquery/themes/base/jquery.ui.all.css\">");
-		addHead("<script src=\"" + prefix + "/jquery/jquery-1.4.2.min.js\"></script>");
-		addHead("<script src=\"" + prefix + "/jquery/jquery-ui-1.8.1.custom.min.js\"></script>");
-	}
-
 	final public void addDiffJs() {
-		addJQuery(); // the code in scripts.js needs JQuery ATM in "doDiff" method
 		addHead("<script src=\"" + prefix + "/diff.min.js\"></script>");
 	}
 

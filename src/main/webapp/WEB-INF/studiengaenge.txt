@@ -1,0 +1,3 @@
+# Empty lines are skipped as well as commented lines
+Informatik (Bachelor)
+Informatik (Master)

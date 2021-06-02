@@ -18,10 +18,15 @@
 
 package de.tuclausthal.submissioninterface.util;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -57,6 +62,7 @@ public class Configuration {
 	private int testFrameworkCores;
 	private ArrayList<String> intranetPrefixes = new ArrayList<>();
 	private Charset defaultZipFileCharset;
+	private List<String> studiengaenge;
 
 	private Configuration() {}
 
@@ -88,6 +94,15 @@ public class Configuration {
 		instance.fillDatapath(context);
 		instance.fillServletspath(context);
 		instance.fillTemplateConstructor(context);
+		instance.fillStudiengaenge(context);
+	}
+
+	private void fillStudiengaenge(ServletContext context) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(context.getResourceAsStream("WEB-INF/studiengaenge.txt")))) {
+			studiengaenge = reader.lines().filter(studiengang -> !studiengang.isBlank() && studiengang.charAt(0) != '#').collect(Collectors.toUnmodifiableList());
+		} catch (IOException e) {
+			throw new RuntimeException("No WEB-INF/studiengaenge.txt file found!", e);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -223,5 +238,9 @@ public class Configuration {
 
 	public Charset getDefaultZipFileCharset() {
 		return defaultZipFileCharset;
+	}
+
+	public List<String> getStudiengaenge() {
+		return studiengaenge;
 	}
 }

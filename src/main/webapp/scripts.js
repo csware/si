@@ -144,6 +144,15 @@ function dodiff(id) {
 	}
 
 	display.appendChild(fragment);
-	$('#got' + id).toggle();
-	$('#diff' + id).toggle();
+	toggleVisibility('got' + id);
+	toggleVisibility('diff' + id);
+}
+
+function toggleVisibility(id) {
+	var element = document.getElementById(id);
+	if (element.style.display === "none") {
+		element.style.display = "block";
+	} else {
+		element.style.display = "none";
+	}
 }

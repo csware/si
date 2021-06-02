@@ -59,7 +59,6 @@ public class ShowTaskTutorView extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
-		template.addJQuery();
 
 		RequestAdapter requestAdapter = new RequestAdapter(request);
 		Session session = requestAdapter.getSession();
@@ -228,7 +227,7 @@ public class ShowTaskTutorView extends HttpServlet {
 							out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("DownloadSubmissionsByGroup?taskid=" + task.getTaskid(), response) + "\">Alle Abgaben der Gruppe herunterladen (ZIP-Archiv)</a></div>");
 						}
 					} else {
-						out.println("<h3>Gruppe: " + Util.escapeHTML(group.getName()) + " <a href=\"#\" onclick=\"$('#contentgroup" + group.getGid() + "').toggle(); return false;\">(+/-)</a></h3>");
+						out.println("<h3>Gruppe: " + Util.escapeHTML(group.getName()) + " <a href=\"#\" onclick=\"toggleVisibility('contentgroup" + group.getGid() + "'); return false;\">(+/-)</a></h3>");
 						String defaultState = "";
 						if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0 && !group.getTutors().isEmpty() && !group.getTutors().contains(participation) && !!"taskWise".equals(task.getTaskGroup().getLecture().getGradingMethod())) {
 							defaultState = "style=\"display: none;\"";

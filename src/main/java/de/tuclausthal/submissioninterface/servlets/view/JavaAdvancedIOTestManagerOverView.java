@@ -45,7 +45,6 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 
 		JavaAdvancedIOTest test = (JavaAdvancedIOTest) request.getAttribute("test");
 
-		template.addJQuery();
 		template.addKeepAlive();
 		template.printTemplateHeader("Erweiteren Java-IO-Test bearbeiten", test.getTask());
 
@@ -103,7 +102,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 
 		out.println("<hr>");
 
-		out.println("<h2>Neuer Test-Schritt <a href=\"#\" onclick=\"$('#teststephelp').toggle(); return false;\">(?)</a></h2>");
+		out.println("<h2>Neuer Test-Schritt <a href=\"#\" onclick=\"toggleVisibility('teststephelp'); return false;\">(?)</a></h2>");
 
 		out.println("<div style=\"display:none;\" id=teststephelp><b>Hilfe:</b><br>");
 		out.println("<p>Diese Art von Test erlaubt es einfache Ausgabe-Tests zu definieren. Sollen Studierende z. B. in der Klasse MathFunctions die Methode leastCommonMultiple(a,b) programmieren, so kann die Methode relativ einfach mit verschiedenen Werten aufgerufen und die Ausgabe auf STDOUT mit einem erwartetem Wert überprüft werden. Der STDERR wird den Studierenden im Normalfall nicht gezeigt, ebensowenig mögliche Compiler-Fehler.</p>");

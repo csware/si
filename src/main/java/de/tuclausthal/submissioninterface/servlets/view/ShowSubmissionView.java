@@ -73,10 +73,9 @@ public class ShowSubmissionView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		template.addJQuery();
 		template.addDiffJs();
 		template.addKeepAlive();
-		template.addHead("<script>function hideCodePreview(id) { $(\"#codepreview\" + id).hide();$(\"#showbtn\" + id).show(); }</script>");
+		template.addHead("<script>function hideCodePreview(id) { document.getElementById('codepreview' + id).style.display='none';document.getElementById('showbtn' + id).style.display='block'; }</script>");
 
 		RequestAdapter requestAdapter = new RequestAdapter(request);
 		Session session = requestAdapter.getSession();
@@ -134,7 +133,7 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		if ((task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask() && !task.isClozeTask())) {
-			out.println("<h2>Bewertung: <a href=\"#\" onclick=\"$('#mark').toggle(); return false;\">(+/-)</a></h2>");
+			out.println("<h2>Bewertung: <a href=\"#\" onclick=\"toggleVisibility('mark'); return false;\">(+/-)</a></h2>");
 			out.println("<table id=mark class=border>");
 			String oldPublicComment = "";
 			String oldInternalComment = "";
@@ -222,7 +221,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<b>Öffentlicher Kommentar:</b><br><textarea cols=80 rows=8 name=publiccomment>" + Util.escapeHTML(oldPublicComment) + "</textarea><br>");
 			out.println("<b>Interner Kommentar:</b>");
 			if (requestAdapter.isPrivacyMode()) {
-				out.print(" <a id=\"\" href=\"#\" onclick=\"$('#stateInternalComment').toggle(); return false;\">(+/-)</a><br>");
+				out.print(" <a id=\"\" href=\"#\" onclick=\"toggleVisibility('stateInternalComment'); return false;\">(+/-)</a><br>");
 				out.println("<div id=\"stateInternalComment\" style=\"display:none;\">");
 			} else {
 				out.print("<br>");
@@ -233,10 +232,10 @@ public class ShowSubmissionView extends HttpServlet {
 			} else {
 				out.print("<br>");
 			}
-			out.println("<b>Best&auml;tigtes Plagiat:</b> <input type=checkbox id=isdupe name=isdupe " + (isDupe ? "checked" : "") + " onclick=\"if (!$('#isdupe').attr('checked')) {$('#duplicatespan').hide();} else {$('#duplicatespan').show();}return true;\" onchange=\"checkInternalComment()\"><span id=duplicatespan " + (isDupe ? "" : " style=\"display:none;\"") + "> <span class=\"red\"><strong>Bei einem Plagiat muss ein interner Kommentar verfasst werden!</strong></span><br><b>Plagiat-Bewertung:</b> <input type=text size=3 pattern=\"[0-9]*\" name=duplicate id=duplicate value=\"" + duplicate + "\"> (0 = keine Punkte, 2 = 1/2 Punktzahl, 3 = 1/3 Punktzahl, ...)<br></span><br>");
+			out.println("<b>Best&auml;tigtes Plagiat:</b> <input type=checkbox id=isdupe name=isdupe " + (isDupe ? "checked" : "") + " onclick=\"if (!document.getElementById('isdupe').checked) {document.getElementById('duplicatespan').style.display='none';} else {document.getElementById('duplicatespan').style.display='block';}return true;\" onchange=\"checkInternalComment()\"><span id=duplicatespan " + (isDupe ? "" : " style=\"display:none;\"") + "> <span class=\"red\"><strong>Bei einem Plagiat muss ein interner Kommentar verfasst werden!</strong></span><br><b>Plagiat-Bewertung:</b> <input type=text size=3 pattern=\"[0-9]*\" name=duplicate id=duplicate value=\"" + duplicate + "\"> (0 = keine Punkte, 2 = 1/2 Punktzahl, 3 = 1/3 Punktzahl, ...)<br></span><br>");
 			out.println("<input id=\"nbewertet\" type=radio name=pointsstatus value=\"nbewertet\"" + (pointsBewertet ? " checked" : "") + "> <b><label for=\"nbewertet\">Nicht fertig bewertet</label></b><br><input id=\"nabgen\" type=radio name=pointsstatus value=\"nabgen\"" + (!pointsBewertet && !(pointsOk || pointsFailed) ? "checked" : "") + "> <b><label for=\"nabgen\">Nicht abgenommen</label></b><br><input id=\"abgen\" type=radio name=pointsstatus value=\"ok\"" + (pointsOk ? "checked" : "") + "> <b><label for=\"abgen\">Abgenommen (ok)</label></b> <br><input id=\"failed\" type=radio name=pointsstatus value=\"failed\" " + (pointsFailed ? "checked" : "") + "> <b><label for=\"failed\">Abnahme nicht bestanden</label></b></p>");
 			out.println("<div style=\"display:none;\" id=statehelp><b>Hilfe:</b><dl><dt>Nicht fertig bewertet</dt><dd>Zeigt diese Abgabe in allen Listen als &quot;n/a&quot; bzw. &quot;noch unbenotet&quot; an (auch den Studierenden).</dd><dt>Nicht abgenommen</dt><dd>Wird in den Listen eingeklammert angezeigt, Punkte werden nicht gezählt, bei Studierendem steht &quot;0, nicht abgenommen&quot;</dd><dt>Abgenommen (ok)</dt><dd>Aufgabe wurde abschließend bewertet, Punkte werden regulär gezählt (sofern kein Plagiat; ggf. wird dem Studierenden &quot;Plagiat&quot; angezeigt)</dd><dt>Abnahme nicht bestanden</dt><dd>Aufgabe wurde abschließend bewertet, aber es werden keine Punkte gezählt (dem Studierenden wird &quot;0, Abnahme nicht bestanden&quot; angezeigt, überschreibt die Plagiat Option).</dd></dl></div>");
-			out.println("<input type=submit id=submit value=Speichern> <a href=\"#\" onclick=\"$('#statehelp').toggle(); return false;\">(?)</a>");
+			out.println("<input type=submit id=submit value=Speichern> <a href=\"#\" onclick=\"toggleVisibility('statehelp'); return false;\">(?)</a>");
 			if (!requestAdapter.isPrivacyMode() && submission.getPoints() != null) {
 				out.println("<input type=hidden name=sid value=\"" + submission.getSubmissionid() + "\">");
 				String groupAdding = "";
@@ -255,7 +254,7 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		if (!submission.getSimilarSubmissions().isEmpty()) {
-			out.println("<h2>Ähnliche Abgaben: <a href=\"#\" onclick=\"$('#similarSubmissions').toggle(); return false;\">(+/-)</a></h2>");
+			out.println("<h2>Ähnliche Abgaben: <a href=\"#\" onclick=\"toggleVisibility('similarSubmissions'); return false;\">(+/-)</a></h2>");
 			if (requestAdapter.isPrivacyMode()) {
 				out.println("<table id=similarSubmissions style=\"display:none;\">");
 			} else {
@@ -288,7 +287,7 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		if (!submission.getTestResults().isEmpty()) {
-			out.println("<h2>Tests: <a href=\"#\" onclick=\"$('#tests').toggle(); return false;\">(+/-)</a></h2>");
+			out.println("<h2>Tests: <a href=\"#\" onclick=\"toggleVisibility('tests'); return false;\">(+/-)</a></h2>");
 			out.println("<ul id=tests>");
 			for (TestResult testResult : submission.getTestResults()) {
 				out.println("<li>" + Util.escapeHTML(testResult.getTest().getTestTitle()) + "<br>");
@@ -308,9 +307,9 @@ public class ShowSubmissionView extends HttpServlet {
 
 		if (task.isSCMCTask()) {
 			if (task.isSCTask()) {
-				out.println("<h2>Single Choice: <a href=\"#\" onclick=\"$('mctask').toggle(); return false;\">(+/-)</a></h2>");
+				out.println("<h2>Single Choice: <a href=\"#\" onclick=\"toggleVisibility('mctask'); return false;\">(+/-)</a></h2>");
 			} else {
-				out.println("<h2>Multiple Choice: <a href=\"#\" onclick=\"$('mctask').toggle(); return false;\">(+/-)</a></h2>");
+				out.println("<h2>Multiple Choice: <a href=\"#\" onclick=\"toggleVisibility('mctask'); return false;\">(+/-)</a></h2>");
 			}
 			out.println("<ul id=mctask>");
 			out.println("<li>Optionen:<ul>");
@@ -355,7 +354,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<li>" + clozeHelper.toHTML() + "</li>");
 			out.println("</ul>");
 		} else if (task.isADynamicTask()) {
-			out.println("<h2>Dynamische Aufgabe: <a href=\"#\" onclick=\"$('#dynamictask').toggle(); return false;\">(+/-)</a></h2>");
+			out.println("<h2>Dynamische Aufgabe: <a href=\"#\" onclick=\"toggleVisibility('dynamictask'); return false;\">(+/-)</a></h2>");
 			DynamicTaskStrategieIf dynamicTask = task.getDynamicTaskStrategie(session);
 			out.println("<ul id=dynamictask>");
 			out.println("<li><b>Benutzer-Werte:</b><br>");
@@ -402,7 +401,7 @@ public class ShowSubmissionView extends HttpServlet {
 				out.println("</FORM>");
 			}
 
-			out.println("<h2>Dateien: <a href=\"#\" onclick=\"$('#files').toggle(); return false;\">(+/-)</a></h2>");
+			out.println("<h2>Dateien: <a href=\"#\" onclick=\"toggleVisibility('files'); return false;\">(+/-)</a></h2>");
 			out.println("<div id=files class=mid>");
 			out.println("<p><a href=\"" + Util.generateHTMLLink("DownloadAsZip?sid=" + submission.getSubmissionid(), response) + "\">alles als .zip herunterladen</a></p>");
 			Pattern pattern = null;
@@ -417,7 +416,7 @@ public class ShowSubmissionView extends HttpServlet {
 			for (String file : submittedFiles) {
 				file = file.replace(System.getProperty("file.separator"), "/");
 				if (ShowFile.isInlineAble(file.toLowerCase())) {
-					out.println("<h3 class=files>" + Util.escapeHTML(file) + " <a id=\"showbtn" + id + "\" style=\"display: none;\" href=\"#\" onclick='$(\"#codepreview" + id + "\").show();$(\"#showbtn" + id + "\").hide();return false;'>(show)</a></h3>");
+					out.println("<h3 class=files>" + Util.escapeHTML(file) + " <a id=\"showbtn" + id + "\" style=\"display: none;\" href=\"#\" onclick='document.getElementById(\"codepreview" + id + "\").style.display=\"block\";document.getElementById(\"showbtn" + id + "\").style.display=\"none\";return false;'>(show)</a></h3>");
 					out.println("<div id=\"codepreview" + id + "\" class=\"mid\">");
 					out.println("<div class=\"inlinemenu\">");
 					out.println("<a id=\"hidebtn" + id + "\" href=\"#\" onclick='hideCodePreview(\"" + id + "\");return false;'>(hide)</a>");

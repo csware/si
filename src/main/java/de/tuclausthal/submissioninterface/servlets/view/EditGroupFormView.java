@@ -50,7 +50,6 @@ public class EditGroupFormView extends HttpServlet {
 		Group group = (Group) request.getAttribute("group");
 		Participation participation = (Participation) request.getAttribute("participation");
 
-		template.addJQuery();
 		template.addKeepAlive();
 		template.printTemplateHeader(group);
 		PrintWriter out = response.getWriter();
@@ -76,7 +75,7 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Abgabegruppe:</th>");
-		out.println("<td><input type=checkbox name=submissionGroup " + (group.isSubmissionGroup() ? "checked" : "") + " " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "disabled") + "> <a href=\"#\" onclick=\"$('#submissiongrouphelp').toggle(); return false;\">(?)</a><br><span style=\"display:none;\" id=submissiongrouphelp><b>Hilfe:</b><br>Wird dieses Flag gesetzt, werden alle Mitglieder dieser Gruppe bei der ersten Abgabe automatisch als PartnerInnen hinzugefügt, sofern keine Einzelabgabe bei einer Aufgabe gefordert wird. Zudem können Studierende dieser Gruppe bzw. andere Studierende mit Studierenden dieser Gruppe, selbst wenn gruppenübergreifenden Partnerabgaben bei einer Aufgabe erlaubt sind, keine beliebigen Partnerschaften bilden.</span></td>");
+		out.println("<td><input type=checkbox name=submissionGroup " + (group.isSubmissionGroup() ? "checked" : "") + " " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "disabled") + "> <a href=\"#\" onclick=\"toggleVisibility('submissiongrouphelp'); return false;\">(?)</a><br><span style=\"display:none;\" id=submissiongrouphelp><b>Hilfe:</b><br>Wird dieses Flag gesetzt, werden alle Mitglieder dieser Gruppe bei der ersten Abgabe automatisch als PartnerInnen hinzugefügt, sofern keine Einzelabgabe bei einer Aufgabe gefordert wird. Zudem können Studierende dieser Gruppe bzw. andere Studierende mit Studierenden dieser Gruppe, selbst wenn gruppenübergreifenden Partnerabgaben bei einer Aufgabe erlaubt sind, keine beliebigen Partnerschaften bilden.</span></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Mitglieder für Studierende einsehbar:</th>");
