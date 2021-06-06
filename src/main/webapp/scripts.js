@@ -18,7 +18,7 @@
  */
 
 function confirmLink(msg) {
-    return confirm(msg);
+	return confirm(msg);
 }
 
 function sendAsPost(e, msg) {
@@ -39,7 +39,7 @@ function selectAll(divId) {
 		var div = document.body.createTextRange();
 		div.moveToElementText(document.getElementById(divId));
 		div.select();
-	} else { 
+	} else {
 		var div = document.createRange();
 		div.setStartBefore(document.getElementById(divId));
 		div.setEndAfter(document.getElementById(divId));
@@ -50,59 +50,48 @@ function selectAll(divId) {
 // KeepAlive based on http://www.808.dk/?code-ajax-session-keepalive
 var kaInterval = false;
 
-function keepAlive(url,interval)
-{
-  kaInterval = setInterval("kaAjax('"+url+"')", interval * 1000);
+function keepAlive(url, interval) {
+	kaInterval = setInterval("kaAjax('" + url + "')", interval * 1000);
 }
 
-function kaAjax(url)
-{
-  var kaHttpRequest = new XMLHttpRequest();
-  if (kaHttpRequest.overrideMimeType)
-  {
-    kaHttpRequest.overrideMimeType('text/plain');
-  }
-  var ser = Math.round(Math.random()*1000000); // Anti-caching random number
-  kaHttpRequest.open('GET', url + '?random=' + ser, true);
-  kaHttpRequest.onload = function () {
-    if (kaHttpRequest.readyState === kaHttpRequest.DONE) {
-      if (!(kaHttpRequest.status === 200 && kaHttpRequest.responseText == "still logged in"))
-      {
-        alert("Ihre Sitzung scheint nicht mehr aktiv zu sein. Bitte sichern Sie Ihre eingegebene Antwort z.B. in der Zwischenablage und melden sich erneut am GATE-System an (z.B. in einem neuen Tab)!");
-        if (kaInterval)
-        {
-          clearInterval(kaInterval);
-          kaInterval = false;
-        }
-      }
-    }
-  };
-  kaHttpRequest.send(null);
+function kaAjax(url) {
+	var kaHttpRequest = new XMLHttpRequest();
+	if (kaHttpRequest.overrideMimeType) {
+		kaHttpRequest.overrideMimeType('text/plain');
+	}
+	var ser = Math.round(Math.random() * 1000000); // Anti-caching random number
+	kaHttpRequest.open('GET', url + '?random=' + ser, true);
+	kaHttpRequest.onload = function() {
+		if (kaHttpRequest.readyState === kaHttpRequest.DONE) {
+			if (!(kaHttpRequest.status === 200 && kaHttpRequest.responseText == "still logged in")) {
+				alert("Ihre Sitzung scheint nicht mehr aktiv zu sein. Bitte sichern Sie Ihre eingegebene Antwort z.B. in der Zwischenablage und melden sich erneut am GATE-System an (z.B. in einem neuen Tab)!");
+				if (kaInterval) {
+					clearInterval(kaInterval);
+					kaInterval = false;
+				}
+			}
+		}
+	};
+	kaHttpRequest.send(null);
 }
 
 function checkInternalComment() {
-    var checkBox = document.getElementById('isdupe');
-    var internalComment = document.getElementById('internalcomment');
-    var submitButton = document.getElementById('submit');
-    var duplicateTextbox = document.getElementById('duplicate');
+	var checkBox = document.getElementById('isdupe');
+	var internalComment = document.getElementById('internalcomment');
+	var submitButton = document.getElementById('submit');
+	var duplicateTextbox = document.getElementById('duplicate');
 
-    if (checkBox.checked)
-    {
-        if (internalComment.value.length >= 10)
-        {
-            submitButton.disabled = false;
-        }
-        else
-        {
-            submitButton.disabled = true;
-        }
-        duplicateTextbox.required = true;
-    }
-    else
-    {
-        submitButton.disabled = false;
-        duplicateTextbox.required = false;
-    }
+	if (checkBox.checked) {
+		if (internalComment.value.length >= 10) {
+			submitButton.disabled = false;
+		} else {
+			submitButton.disabled = true;
+		}
+		duplicateTextbox.required = true;
+	} else {
+		submitButton.disabled = false;
+		duplicateTextbox.required = false;
+	}
 }
 
 function dodiff(id) {
