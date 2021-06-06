@@ -31,13 +31,12 @@ import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.MCOptionDAOIf;
-import de.tuclausthal.submissioninterface.persistence.dao.TaskNumberDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.ResultDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 
 /**
  * MC Question Marker
@@ -71,7 +70,7 @@ public class MarkMCQuestions {
 		criteria.select(root);
 		criteria.where(builder.equal(root.get(Submission_.task), task));
 
-		TaskNumberDAOIf tndaoif = DAOFactory.TaskNumberDAOIf(session);
+		ResultDAOIf resultDAO = DAOFactory.ResultDAOIf(session);
 		MCOptionDAOIf mcOptionDAO = DAOFactory.MCOptionDAOIf(session);
 		List<MCOption> options = mcOptionDAO.getMCOptionsForTask(task);
 		List<Integer> correctOptions = options.stream().filter(option -> option.isCorrect()).map(option -> option.getId()).collect(Collectors.toList());
@@ -82,8 +81,8 @@ public class MarkMCQuestions {
 				continue;
 			}
 
-			List<TaskNumber> taskNumbers = tndaoif.getTaskNumbersForSubmission(submission);
-			boolean allCorrect = (taskNumbers.size() == correctOptions.size()) && correctOptions.containsAll(taskNumbers.stream().map(number -> Integer.parseInt(number.getNumber())).collect(Collectors.toList()));
+			List<String> results = resultDAO.getResultsForSubmission(submission);
+			boolean allCorrect = (results.size() == correctOptions.size()) && correctOptions.containsAll(results.stream().map(result -> Integer.parseInt(result)).collect(Collectors.toList()));
 
 			int points = allCorrect ? task.getMaxPoints() : 0;
 			if (submission.getPoints() != null && submission.getPoints().getPoints() == points) {
