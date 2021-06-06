@@ -57,19 +57,10 @@ function keepAlive(url,interval)
 
 function kaAjax(url)
 {
-  var kaHttpRequest = false;
-  if (window.XMLHttpRequest)
-  { // For Mozilla, Safari, Opera, IE7+
-    kaHttpRequest = new XMLHttpRequest();
-    if (kaHttpRequest.overrideMimeType)
-    {
-      kaHttpRequest.overrideMimeType('text/plain');
-    }
-  }
-  if (!kaHttpRequest)
+  var kaHttpRequest = new XMLHttpRequest();
+  if (kaHttpRequest.overrideMimeType)
   {
-    alert('Giving up :( Cannot create an XMLHTTP instance');
-    return false;
+    kaHttpRequest.overrideMimeType('text/plain');
   }
   var ser = Math.round(Math.random()*1000000); // Anti-caching random number
   kaHttpRequest.open('GET', url + '?random=' + ser, true);
