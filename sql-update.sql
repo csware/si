@@ -109,3 +109,6 @@ ALTER TABLE `testresults` CHANGE `testOutput` `testOutput` LONGTEXT CHARACTER SE
 ALTER TABLE `tests` CHANGE `testDescription` `testDescription` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `testTitle` `testTitle` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
 ALTER TABLE `users` CHANGE `username` `username` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL, CHANGE `email` `email` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL;
 ALTER TABLE `taskgroups` CHANGE `title` `title` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+-- similarities are unique
+alter table similarities add constraint UKdtkfair4dgx3r6e6utbf1fuu1 unique (similaritytest_similaritytestid, submissionone_submissionid, submissiontwo_submissionid), DROP INDEX `FKB31AC193B8B275`;

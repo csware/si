@@ -212,7 +212,8 @@ CREATE TABLE IF NOT EXISTS `similarities` (
   PRIMARY KEY (`similarityid`),
   KEY `FKB31AC193B8B275` (`similarityTest_similarityTestId`),
   KEY `FKB31AC1B470E5BE` (`submissionOne_submissionid`),
-  KEY `FKB31AC117AAD798` (`submissionTwo_submissionid`)
+  KEY `FKB31AC117AAD798` (`submissionTwo_submissionid`),
+  UNIQUE KEY `UKdtkfair4dgx3r6e6utbf1fuu1` (`similarityTest_similarityTestId`, `submissionOne_submissionid`, `submissionTwo_submissionid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- --------------------------------------------------------
@@ -596,6 +597,7 @@ ALTER TABLE `participations` DROP INDEX `FKA301B52DDB37416`;
 ALTER TABLE `participations` DROP INDEX `FKA301B52AF18EDD1`;
 ALTER TABLE `participations` DROP FOREIGN KEY `FKA301B52DDB37416`;
 ALTER TABLE `submissions_participations` DROP INDEX `FK27F157EA5F9373D1`;
+ALTER TABLE `similarities` DROP INDEX `FKB31AC193B8B275`;
 
 -- use German sort ordering for names
 ALTER TABLE `groups` CHANGE `name` `name` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_german2_ci NOT NULL;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -26,12 +26,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@Table(name = "similarities")
+@Table(name = "similarities", uniqueConstraints = @UniqueConstraint(columnNames = { "similarityTest_similarityTestId", "submissionOne_submissionid", "submissionTwo_submissionid" }))
 public class Similarity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
