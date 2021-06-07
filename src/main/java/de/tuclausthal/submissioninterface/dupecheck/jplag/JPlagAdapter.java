@@ -74,24 +74,19 @@ public class JPlagAdapter extends DupeCheck {
 
 			File taskPath = new File(path + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
 
-			File submissionsDir;
-			if (new File(taskPath, "advisorfiles").exists()) {
-				submissionsDir = new File(tempDir, "submissions");
-				submissionsDir.mkdir();
-				for (File file : taskPath.listFiles()) {
-					if (!file.isDirectory()) {
-						continue;
-					}
-					try {
-						Integer.parseInt(file.getName());
-					} catch (NumberFormatException e) {
-						// we just want to handle submission-directories
-						continue;
-					}
-					Util.recursiveCopy(file, new File(submissionsDir, file.getName()));
+			File submissionsDir = new File(tempDir, "submissions");
+			submissionsDir.mkdir();
+			for (File file : taskPath.listFiles()) {
+				if (!file.isDirectory()) {
+					continue;
 				}
-			} else {
-				submissionsDir = taskPath;
+				try {
+					Integer.parseInt(file.getName());
+				} catch (NumberFormatException e) {
+					// we just want to handle submission-directories
+					continue;
+				}
+				Util.recursiveCopy(file, new File(submissionsDir, file.getName()));
 			}
 
 			List<String> params = new ArrayList<>();
