@@ -83,7 +83,7 @@ Alternatively you can also use GitLab CI/CD functionality and download the built
 
 - Prepare the `datapath` in which the submissions will be stored (see the "Configuration files" section above)
   - Copy `submissiondir/*` and `SecurityManager/NoExitSecurityManager.jar` to that folder
-  - If you want to use the [JPlag plagiarism system](https://github.com/jplag/jplag), compile it into a single .jar (using the maven goal `assembly:assembly` inside the `jplag` directory and copy the final `.jar` (from the target folder) as `jplag.jar` into the root of the `datapath`
+  - If you want to use the [JPlag plagiarism system](https://github.com/jplag/jplag), compile JPlag 2.12 into a single .jar (using the maven goal `assembly:assembly` inside the `jplag` directory and copy the final `.jar` (from the target folder) as `jplag.jar` into the root of the `datapath`
 - On Windows: Make sure the `JAVA_HOME` environment variable is set and points to the JDK directory (e.g. `C:\Program Files\BellSoft\LibericaJDK-11\`)
 - Prepare Tomcat
   - If you want to have the user names on the Tomcat access log, you can use `%{username}r` (as a replacement for `%u`) for configuring the `AccessLogValve` `pattern`, cf. https://tomcat.apache.org/tomcat-9.0-doc/config/valve.html#Access_Log_Valve
