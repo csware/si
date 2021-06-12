@@ -101,8 +101,9 @@ public class ShowLectureTutorView extends HttpServlet {
 					out.println("</tr>");
 					while (taskIterator.hasNext()) {
 						Task task = taskIterator.next();
-						if (task.getStart().before(Util.correctTimezone(new Date())) || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
-							out.println("<tr>");
+						boolean visibleToStudents = task.getStart().before(Util.correctTimezone(new Date()));
+						if (visibleToStudents || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+							out.println("<tr class=\"" + (!visibleToStudents ? "tasknotvisible" : "") + "\">");
 							out.println("<td><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
 							out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 							if (ungradedSubmikssions != null) {

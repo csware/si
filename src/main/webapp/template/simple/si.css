@@ -56,6 +56,10 @@ tr.notmarkedyet > td {
 	background-color: lightgrey;
 }
 
+tr.tasknotvisible > td {
+	background-color: lightyellow;
+}
+
 .bmid,.b { font-weight: bold; }
 .smallf { font-size: 75% }
 .bigf { font-size: 100%; }
