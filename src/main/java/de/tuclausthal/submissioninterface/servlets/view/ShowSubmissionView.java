@@ -169,7 +169,7 @@ public class ShowSubmissionView extends HttpServlet {
 					out.println("<tr>");
 				}
 			} else {
-				out.println("<tr bgcolor=\"lightgrey\">");
+				out.println("<tr class=\"notmarkedyet\">");
 				if (!task.getTaskGroup().getLecture().isRequiresAbhnahme()) {
 					pointsOk = true;
 				}

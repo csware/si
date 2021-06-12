@@ -52,6 +52,10 @@ h3.files { margin-bottom: 2px; }
 td.points,.right { text-align: right; }
 .jus { text-align: justify; }
 
+tr.notmarkedyet > td {
+	background-color: lightgrey;
+}
+
 .bmid,.b { font-weight: bold; }
 .smallf { font-size: 75% }
 .bigf { font-size: 100%; }
