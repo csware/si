@@ -35,13 +35,13 @@ Please read the whole procedure in advance to executing it.
   - How to configure Shibboleth:
     - Install shibd and configure it (cf. https://www.switch.ch/aai/guides/sp/installation/), make sure the `ApplicationDefault` configuration in `shibboleth2.xml` contains `attributePrefix="AJP_"` (cf. <https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPJavaInstall>; please also make sure the `AJP` connector in Tomcat `server.xml` does not block the Shibboleth request attributes, e.g. by setting `allowedRequestAttributesPattern=".*"`) and `uid` for the `REMOTE_USER` (must match `userAttribute`, see below); also make sure `/Shibboleth.sso/Logout` can be used for logout (cf. `src/main/java/de/tuclausthal/submissioninterface/servlets/controller/Logout.java`)
     - Enable Shibboleth protection for the `Overview` servlet:
-     ```
-     <Location /gate/servlets/Overview>
-        AuthType shibboleth
-        hibRequireSession On
-        require valid-user
-    </Location>
-    ```
+      ```
+      <Location /gate/servlets/Overview>
+         AuthType shibboleth
+         hibRequireSession On
+         require valid-user
+      </Location>
+      ```
    - For debugging: Please not that the Shibboleth attributes passed to Tomcat don't show up when iterating over the request variables. They need to be explicitly named (e.g., `uid` or `Shib-Identity-Provider`).
 - For building the whole package you need [maven](https://maven.apache.org/) (also often available as a package on *nix systems)
 - For running the cron task regularly with the predefined script `submissiondir/runtests.sh` you need the `lockfile` tool (usually part of the `procmail` package on *nix systems)
@@ -56,10 +56,12 @@ Please read the whole procedure in advance to executing it.
   - Set the database name, username and password here
 - `src/main/webapp/WEB-INF/web.xml` for Tomcat and GATE specific configurations
   - Adjust the `datapath` here, please make sure that this is accessible by Tomcat, use e.g. `/srv/gate/` or `c:\gate` here
-    - On *nix the system Tomcat runs as the user `tomcat`, so make sure that the user has appropriate permissions, also on Debian-based systems, Tomcat might be sandboxed by systemd. Create a file `/etc/systemd/system/tomcat9.service.d/gate.gate.conf` containing: ```
-[Service]
-ReadWritePaths=/srv/submissioninterface/
-``` (afterwards, issue `systemctl daemon-reload` and `systemctl restart tomcat`)
+    - On *nix the system Tomcat runs as the user `tomcat`, so make sure that the user has appropriate permissions, also on Debian-based systems, Tomcat might be sandboxed by systemd. Create a file `/etc/systemd/system/tomcat9.service.d/gate.conf` containing:
+      ```
+      [Service]
+      ReadWritePaths=/srv/submissioninterface/
+      ```
+      (afterwards, issue `systemctl daemon-reload` and `systemctl restart tomcat`)
   - For development:
     - Adjust `login` to `de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Form`
     - Adjust `verify` to `de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.FakeVerify` to disable any authentication

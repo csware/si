@@ -104,7 +104,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=giveDetailsToStudents></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid>Weitere Einstelungen auf zweiter Seite...</td>");
+		out.println("<td colspan=2 class=mid>Weitere Einstellungen auf zweiter Seite...</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");

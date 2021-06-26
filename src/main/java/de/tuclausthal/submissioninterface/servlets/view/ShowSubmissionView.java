@@ -291,7 +291,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<ul id=tests>");
 			for (TestResult testResult : submission.getTestResults()) {
 				out.println("<li>" + Util.escapeHTML(testResult.getTest().getTestTitle()) + "<br>");
-				out.println("Erfolgreich: " + Util.boolToHTML(testResult.getPassedTest()));
+				out.println("<b>Erfolgreich:</b> " + Util.boolToHTML(testResult.getPassedTest()));
 				if (!testResult.getTestOutput().isEmpty()) {
 					if (testResult.getTest() instanceof JavaAdvancedIOTest) {
 						out.println("<br>");
@@ -312,7 +312,7 @@ public class ShowSubmissionView extends HttpServlet {
 				out.println("<h2>Multiple Choice: <a href=\"#\" onclick=\"toggleVisibility('mctask'); return false;\">(+/-)</a></h2>");
 			}
 			out.println("<ul id=mctask>");
-			out.println("<li>Optionen:<ul>");
+			out.println("<li><b>Optionen:</b><ul>");
 			List<Integer> selected = new ArrayList<>();
 			for (String checked : DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission)) {
 				selected.add(Integer.parseInt(checked));
@@ -332,7 +332,7 @@ public class ShowSubmissionView extends HttpServlet {
 				++i;
 			}
 			out.println("</ul></li>");
-			out.println("<li>Gesamtbewertung korrekt: " + Util.boolToHTML(allCorrect) + "</li>");
+			out.println("<li><b>Gesamtbewertung korrekt:</b> " + Util.boolToHTML(allCorrect) + "</li>");
 			out.println("</ul>");
 		} else if (task.isClozeTask()) {
 			List<String> results = DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission);
@@ -384,7 +384,7 @@ public class ShowSubmissionView extends HttpServlet {
 				resultCounter++;
 			}
 			out.println("</li>");
-			out.println("<li>Ist korrekt: " + Util.boolToHTML(dynamicTask.isCorrect(submission)) + "</li>");
+			out.println("<li><b>Ist korrekt:</b> " + Util.boolToHTML(dynamicTask.isCorrect(submission)) + "</li>");
 			out.println("</ul>");
 		}
 
