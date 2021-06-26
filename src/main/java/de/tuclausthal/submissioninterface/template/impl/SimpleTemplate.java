@@ -20,6 +20,8 @@ package de.tuclausthal.submissioninterface.template.impl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -101,5 +103,10 @@ public class SimpleTemplate extends Template {
 	public void printStyleSheets(PrintWriter out) {
 		out.println("<link rel=\"stylesheet\" href=\"" + prefix + "/template/simple/formate.css\">");
 		out.println("<link rel=\"stylesheet\" href=\"" + prefix + "/template/simple/si.css\">");
+	}
+
+	@Override
+	public List<String> getStyleSheetsForWYSIWYGEditor() {
+		return Arrays.asList(prefix + "/template/simple/si.css");
 	}
 }

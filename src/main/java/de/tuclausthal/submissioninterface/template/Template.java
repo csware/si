@@ -111,6 +111,8 @@ public abstract class Template {
 		addHead("<script>keepAlive(\"" + Util.generateAbsoluteServletsHTMLLink("Noop", servletRequest, servletResponse) + "\", 120);</script>");
 	}
 
+	public abstract List<String> getStyleSheetsForWYSIWYGEditor();
+
 	public abstract void printStyleSheets(PrintWriter out);
 
 	/**

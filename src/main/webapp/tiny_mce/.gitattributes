@@ -1,4 +1,0 @@
-# don't mangle any EOL for this 'old' version
-*.css -text
-*.js -text
-*.txt -text
