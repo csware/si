@@ -186,11 +186,11 @@ pre[class*="language-"] > code {
 ** this is css3, the validator doesn't like it when validating as css2
 */
 a.external {
-	background: url(../../external.svg) center right no-repeat;
+	background: url(../../assets/external.svg) center right no-repeat;
 	padding-right: 13px;
 }
 a[href ^="mailto:"] {
-	background: url(../../mail_icon.svg) center right no-repeat;
+	background: url(../../assets/mail_icon.svg) center right no-repeat;
 	padding-right: 18px;
 }
 

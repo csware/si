@@ -49,7 +49,7 @@ public abstract class Template {
 		this.servletResponse = servletResponse;
 		prefix = servletRequest.getContextPath();
 		requestAdapter = new RequestAdapter(servletRequest);
-		addHead("<script src=\"" + prefix + "/scripts.js\"></script>");
+		addHead("<script src=\"" + prefix + "/assets/scripts.js\"></script>");
 	}
 
 	/**
@@ -104,7 +104,7 @@ public abstract class Template {
 	}
 
 	final public void addDiffJs() {
-		addHead("<script src=\"" + prefix + "/diff.min.js\"></script>");
+		addHead("<script src=\"" + prefix + "/assets/diff.min.js\"></script>");
 	}
 
 	final public void addKeepAlive() {

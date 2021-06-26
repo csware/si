@@ -96,7 +96,7 @@ public class ShowFileView extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.printStyleSheets(out);
 		out.println("<title>" + Util.escapeHTML(fileName) + "</title>");
-		out.println("<script src=\"" + request.getContextPath() + "/scripts.js\"></script>");
+		out.println("<script src=\"" + request.getContextPath() + "/assets/scripts.js\"></script>");
 		out.println("<link href=\"" + request.getContextPath() + "/assets/prism/prism.css\" rel=\"stylesheet\">");
 		out.println("</head>");
 		out.println("<body class=\"filepreview\">");
