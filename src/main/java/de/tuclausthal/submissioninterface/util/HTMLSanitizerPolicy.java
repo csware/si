@@ -105,6 +105,7 @@ public class HTMLSanitizerPolicy {
 			.allowAttributes("size").matching(NUMBER).onElements("font")
 			.allowAttributes("href").matching(ONSITE_OR_OFFSITE_URL).onElements("a")
 			.allowUrlProtocols("mailto", "data", "http", "https")
+			.allowAttributes("target").matching(false, "_blank", "_top", "_self").onElements("a")
 			.allowAttributes("nohref").onElements("a")
 			.allowAttributes("name").matching(NAME).onElements("a")
 			.requireRelNofollowOnLinks()
