@@ -125,6 +125,14 @@ public class ClozeTaskType {
 		return points;
 	}
 
+	public int calculatePoints(int index, String result) {
+		return items.get(index).calculatePoints(result);
+	}
+
+	public int maxPoints(int index) {
+		return items.get(index).maxPoints();
+	}
+
 	public int calculatePoints(List<String> results) {
 		int points = 0;
 		for (int i = 0; i < results.size(); ++i) {

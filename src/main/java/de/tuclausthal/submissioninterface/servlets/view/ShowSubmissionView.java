@@ -349,7 +349,7 @@ public class ShowSubmissionView extends HttpServlet {
 			for (String result : results) {
 				out.print("<li><span class=\"cloze_studentsolution\">" + Util.escapeHTML(result) + "</span>");
 				if (clozeHelper.isAutoGradeAble(i)) {
-					out.print(" (" + Util.escapeHTML(clozeHelper.getCorrect(i)) + ")");
+					out.print(" (" + Util.escapeHTML(clozeHelper.getCorrect(i)) + ") ➜ " + Util.showPoints(clozeHelper.calculatePoints(i, result)) + "/" + Util.showPoints(clozeHelper.maxPoints(i)) + " Punkt(e)");
 				}
 				out.println("</li>");
 				++i;
