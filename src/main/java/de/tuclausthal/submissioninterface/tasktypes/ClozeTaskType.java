@@ -195,27 +195,38 @@ public class ClozeTaskType {
 
 		@Override
 		public void appendToHTML(StringBuilder sb, int number, String oldData, boolean notEditable, boolean feedback) {
-			sb.append("<select size=1 name=\"");
-			sb.append(FORM_NAME);
-			sb.append(number);
-			sb.append("\"");
-			if (notEditable) {
-				sb.append(" disabled");
-			}
-			sb.append(">");
-			sb.append("<option></option>");
-
-			for (String option : knownOptions) {
-				sb.append("<option");
-				sb.append(" value=\"" + Util.escapeHTML(option) + "\"");
-				if (option.equals(oldData)) {
-					sb.append(" selected");
+			if (!notEditable) {
+				sb.append("<select size=1 name=\"");
+				sb.append(FORM_NAME);
+				sb.append(number);
+				sb.append("\"");
+				if (notEditable) {
+					sb.append(" disabled");
 				}
 				sb.append(">");
-				sb.append(Util.escapeHTML(option));
-				sb.append("</option>");
+				sb.append("<option value=\"\"></option>");
+
+				for (String option : knownOptions) {
+					sb.append("<option");
+					sb.append(" value=\"" + Util.escapeHTML(option) + "\"");
+					if (option.equals(oldData)) {
+						sb.append(" selected");
+					}
+					sb.append(">");
+					sb.append(Util.escapeHTML(option));
+					sb.append("</option>");
+				}
+				sb.append("</select>");
+			} else {
+				sb.append("<input name=\"");
+				sb.append(FORM_NAME);
+				sb.append(number);
+				sb.append("\" type=text disabled");
+				if (oldData != null) {
+					sb.append(" value=\"" + Util.escapeHTML(oldData) + "\"");
+				}
+				sb.append(">");
 			}
-			sb.append("</select>");
 			if (feedback) {
 				sb.append(" <span class=\"cloze_points\">(➜ ");
 				sb.append(Util.showPoints(calculatePoints(oldData)));
