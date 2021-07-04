@@ -49,34 +49,30 @@ public class ClozeTaskType {
 		try {
 			while (m.find()) {
 				sb.append(text.subSequence(start, m.start()));
-				if (oldInput == null && notEditable) {
-					sb.append("?");
-				} else {
-					Matcher outerMatcher = itemPattern.matcher(m.group(1));
-					if (!outerMatcher.matches()) {
-						throw new RuntimeException("no valid Cloze: \"" + outerMatcher.group(1) + "\"");
-					}
-					ClozeItem item;
-					String data = StringEscapeUtils.unescapeHtml4(outerMatcher.group(2));
-					switch (outerMatcher.group(1)) {
-						case "MULTICHOICE":
-							item = new MultipleChocieClozeItem(data);
-							break;
-						case "SHORTANSWER":
-							item = new ShortAnswerClozeItem(data);
-							break;
-						case "SHORTANSWER_NC":
-							item = new ShortAnswerIgnoreCaseClozeItem(data);
-							break;
-						case "NUMERICAL":
-							item = new NumericClozeItem(data);
-							break;
-						default:
-							throw new RuntimeException("no valid Cloze type: \"" + outerMatcher.group(1) + "\" in \"" + m.group(1) + "\"");
-					}
-					item.appendToHTML(sb, i, oldInput == null ? null : (oldInput.size() <= i ? "" : oldInput.get(i)), notEditable, feedback);
-					items.add(item);
+				Matcher outerMatcher = itemPattern.matcher(m.group(1));
+				if (!outerMatcher.matches()) {
+					throw new RuntimeException("no valid Cloze: \"" + outerMatcher.group(1) + "\"");
 				}
+				ClozeItem item;
+				String data = StringEscapeUtils.unescapeHtml4(outerMatcher.group(2));
+				switch (outerMatcher.group(1)) {
+					case "MULTICHOICE":
+						item = new MultipleChocieClozeItem(data);
+						break;
+					case "SHORTANSWER":
+						item = new ShortAnswerClozeItem(data);
+						break;
+					case "SHORTANSWER_NC":
+						item = new ShortAnswerIgnoreCaseClozeItem(data);
+						break;
+					case "NUMERICAL":
+						item = new NumericClozeItem(data);
+						break;
+					default:
+						throw new RuntimeException("no valid Cloze type: \"" + outerMatcher.group(1) + "\" in \"" + m.group(1) + "\"");
+				}
+				item.appendToHTML(sb, i, oldInput == null ? null : (oldInput.size() <= i ? "" : oldInput.get(i)), notEditable, feedback);
+				items.add(item);
 				start = m.end();
 				++i;
 			}

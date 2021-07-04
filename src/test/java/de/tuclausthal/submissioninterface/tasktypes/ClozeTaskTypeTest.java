@@ -39,7 +39,7 @@ public class ClozeTaskTypeTest {
 	public void testRenderingNotAnsweredNonEditable() {
 		ClozeTaskType ch = new ClozeTaskType("Ordnen Sie die folgenden Städte den richtigen US-Bundesstaaten zu:\n* San Francisco: {MULTICHOICE:1=Kalifornien~0=Arizona}\n* Tucson: {MULTICHOICE:0=Kalifornien~1=Arizona}\n* Los Angeles: {MULTICHOICE:1=Kalifornien~0=Arizona}\n* Phoenix: {MULTICHOICE:0=Kalifornien~1=Arizona}\nDie Hauptstadt von Frankreich ist {SHORTANSWER:1=Paris~.5=Marseilles}.", null, true, false);
 		assertTrue(ch.isAutoGradeAble());
-		assertEquals("Ordnen Sie die folgenden Städte den richtigen US-Bundesstaaten zu:\n* San Francisco: ?\n* Tucson: ?\n* Los Angeles: ?\n* Phoenix: ?\nDie Hauptstadt von Frankreich ist ?.", ch.toHTML());
+		assertEquals("Ordnen Sie die folgenden Städte den richtigen US-Bundesstaaten zu:\n* San Francisco: <select size=\"1\" name=\"cloze0\" disabled=\"disabled\"><option></option><option value=\"Kalifornien\">Kalifornien</option><option value=\"Arizona\">Arizona</option></select>\n* Tucson: <select size=\"1\" name=\"cloze1\" disabled=\"disabled\"><option></option><option value=\"Kalifornien\">Kalifornien</option><option value=\"Arizona\">Arizona</option></select>\n* Los Angeles: <select size=\"1\" name=\"cloze2\" disabled=\"disabled\"><option></option><option value=\"Kalifornien\">Kalifornien</option><option value=\"Arizona\">Arizona</option></select>\n* Phoenix: <select size=\"1\" name=\"cloze3\" disabled=\"disabled\"><option></option><option value=\"Kalifornien\">Kalifornien</option><option value=\"Arizona\">Arizona</option></select>\nDie Hauptstadt von Frankreich ist <input name=\"cloze4\" type=\"text\" disabled=\"disabled\" autocomplete=\"off\" />.", ch.toHTML());
 	}
 
 	@Test
