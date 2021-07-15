@@ -134,6 +134,7 @@ body.filepreview h1, .previewmenubox, .highlightborder {
 
 .cloze_studentsolution, .dt_studentsolution, .cloze_points {
 	background-color: #E5E5E5;
+	padding: 2px;
 }
 
 code {
