@@ -73,7 +73,7 @@ public class DeleteFile extends HttpServlet {
 			return;
 		}
 
-		if (task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
+		if (task.getDeadline().before(new Date()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
 			request.setAttribute("title", "Es sind keine Veränderungen an dieser Abgabe mehr möglich.");
 			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowTask?taskid=" + task.getTaskid(), request, response) + "\">zurück zur Aufgabe</a></div>");
 			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
@@ -125,7 +125,7 @@ public class DeleteFile extends HttpServlet {
 			return;
 		}
 
-		if (task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
+		if (task.getDeadline().before(new Date()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
 			request.setAttribute("title", "Es sind keine Veränderungen an dieser Abgabe mehr möglich.");
 			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;

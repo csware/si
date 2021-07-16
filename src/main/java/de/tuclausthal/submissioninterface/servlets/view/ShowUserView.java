@@ -134,7 +134,7 @@ public class ShowUserView extends HttpServlet {
 						out.println("<td class=\"points" + Util.getPointsCSSClass(submission.getPoints()) + "\"><a href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), response) + "\">(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ")");
 					}
 				} else {
-					if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
+					if (task.getDeadline().after(new Date())) {
 						out.println("<td class=points><a href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), response) + "\">(noch unbewertet)");
 					} else {
 						out.println("<td class=points><a href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), response) + "\">noch unbewertet");

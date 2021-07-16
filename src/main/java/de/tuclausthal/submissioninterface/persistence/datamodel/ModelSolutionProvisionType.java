@@ -25,7 +25,6 @@ import org.hibernate.Session;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
-import de.tuclausthal.submissioninterface.util.Util;
 
 public enum ModelSolutionProvisionType {
 	/** not available for students */
@@ -51,7 +50,7 @@ public enum ModelSolutionProvisionType {
 		if (task.getModelSolutionProvisionType() == ModelSolutionProvisionType.INTERNAL) {
 			return false;
 		}
-		if (task.getShowPoints() == null || task.getDeadline().after(Util.correctTimezone(new Date())) || task.getShowPoints().after(Util.correctTimezone(new Date()))) {
+		if (task.getShowPoints() == null || task.getDeadline().after(new Date()) || task.getShowPoints().after(new Date())) {
 			return false;
 		} else if (task.getModelSolutionProvisionType() == ModelSolutionProvisionType.ALL_STUDENTS) {
 			return true;

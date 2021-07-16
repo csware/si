@@ -40,8 +40,6 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import de.tuclausthal.submissioninterface.util.Util;
-
 @Entity
 @Table(name = "submissions")
 public class Submission implements Serializable {
@@ -95,7 +93,7 @@ public class Submission implements Serializable {
 
 	@Transient
 	public boolean isPointsVisibleToStudents() {
-		if (getTask().getShowPoints() != null && getTask().getShowPoints().before(Util.correctTimezone(new Date())) && getPoints() != null && getPoints().getPointStatus() > Points.PointStatus.NICHT_BEWERTET.ordinal()) {
+		if (getTask().getShowPoints() != null && getTask().getShowPoints().before(new Date()) && getPoints() != null && getPoints().getPointStatus() > Points.PointStatus.NICHT_BEWERTET.ordinal()) {
 			return true;
 		}
 		return false;

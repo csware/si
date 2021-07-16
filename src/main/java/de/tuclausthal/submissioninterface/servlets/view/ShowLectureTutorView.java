@@ -101,7 +101,7 @@ public class ShowLectureTutorView extends HttpServlet {
 					out.println("</tr>");
 					while (taskIterator.hasNext()) {
 						Task task = taskIterator.next();
-						boolean visibleToStudents = task.getStart().before(Util.correctTimezone(new Date()));
+						boolean visibleToStudents = task.getStart().before(new Date());
 						if (visibleToStudents || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 							out.println("<tr class=\"" + (!visibleToStudents ? "tasknotvisible" : "") + "\">");
 							out.println("<td><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");

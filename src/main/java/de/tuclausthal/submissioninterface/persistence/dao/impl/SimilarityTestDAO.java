@@ -37,7 +37,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Similarity_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task_;
-import de.tuclausthal.submissioninterface.util.Util;
 
 public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOIf {
 
@@ -90,7 +89,7 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 		CriteriaQuery<SimilarityTest> criteria = builder.createQuery(SimilarityTest.class);
 		Root<SimilarityTest> root = criteria.from(SimilarityTest.class);
 		criteria.select(root);
-		criteria.where(builder.and(builder.equal(root.get(SimilarityTest_.status), 1), builder.lessThanOrEqualTo(root.join(SimilarityTest_.task).get(Task_.deadline), Util.correctTimezone(new Date()))));
+		criteria.where(builder.and(builder.equal(root.get(SimilarityTest_.status), 1), builder.lessThan(root.join(SimilarityTest_.task).get(Task_.deadline), new Date())));
 		SimilarityTest similarityTest = session.createQuery(criteria).setLockMode(LockModeType.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
 		if (similarityTest != null) {
 			similarityTest.setStatus(2);

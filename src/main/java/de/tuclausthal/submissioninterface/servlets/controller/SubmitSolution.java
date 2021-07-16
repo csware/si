@@ -114,12 +114,12 @@ public class SubmitSolution extends HttpServlet {
 				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 				return;
 			}
-			if (task.getStart().after(Util.correctTimezone(new Date()))) {
+			if (task.getStart().after(new Date())) {
 				request.setAttribute("title", "Abgabe nicht gefunden");
 				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 				return;
 			}
-			if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+			if (task.getDeadline().before(new Date())) {
 				request.setAttribute("title", "Abgabe nicht mehr möglich");
 				request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
@@ -265,14 +265,14 @@ public class SubmitSolution extends HttpServlet {
 				return;
 			}
 			// Uploader is Student, -> hard date checks
-			if (task.getStart().after(Util.correctTimezone(new Date()))) {
+			if (task.getStart().after(new Date())) {
 				template.printTemplateHeader("Ungültige Anfrage");
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Abgabe nicht gefunden.</div>");
 				template.printTemplateFooter();
 				return;
 			}
-			if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+			if (task.getDeadline().before(new Date())) {
 				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Abgabe nicht mehr möglich.</div>");

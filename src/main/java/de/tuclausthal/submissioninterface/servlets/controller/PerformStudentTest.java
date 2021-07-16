@@ -96,7 +96,7 @@ public class PerformStudentTest extends HttpServlet {
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 		Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
 
-		if ((task.getDeadline().before(Util.correctTimezone(new Date())) || submission == null || (task.isAllowPrematureSubmissionClosing() && submission.isClosed()))) {
+		if ((task.getDeadline().before(new Date()) || submission == null || (task.isAllowPrematureSubmissionClosing() && submission.isClosed()))) {
 			request.setAttribute("title", "Testen bzw. Abruf des Ergebnisses nicht mehr möglich");
 			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
@@ -247,7 +247,7 @@ public class PerformStudentTest extends HttpServlet {
 			return;
 		}
 
-		if ((task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed()))) {
+		if ((task.getDeadline().before(new Date()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed()))) {
 			request.setAttribute("title", "Testen nicht mehr möglich");
 			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 			getServletContext().getNamedDispatcher("MessageView").forward(request, response);

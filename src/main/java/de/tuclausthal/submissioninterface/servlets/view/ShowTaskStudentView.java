@@ -149,7 +149,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				for (String file : submittedFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
 					out.println("<a target=\"_blank\" href=\"" + Util.generateHTMLLink("ShowFile/" + Util.encodeURLPathComponent(file) + "?sid=" + submission.getSubmissionid(), response) + "\">" + Util.escapeHTML(file) + "</a>");
-					if (task.getDeadline().after(Util.correctTimezone(new Date())) && !(task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
+					if (task.getDeadline().after(new Date()) && !(task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
 						out.println(" (<a href=\"" + Util.generateHTMLLink("DeleteFile/" + Util.encodeURLPathComponent(file) + "?sid=" + submission.getSubmissionid(), response) + "\">löschen</a>)");
 					}
 					out.println("<br>");
@@ -157,7 +157,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("</td>");
 				out.println("</tr>");
 			}
-			if (task.isAllowPrematureSubmissionClosing() && !submission.isClosed() && task.getDeadline().after(Util.correctTimezone(new Date()))) {
+			if (task.isAllowPrematureSubmissionClosing() && !submission.isClosed() && task.getDeadline().after(new Date())) {
 				out.println("<tr>");
 				out.println("<th>Vorzeitige finale Abgabe</th>");
 				out.println("<td>Diese Abgabe kann vor der Abgabefrist als endgültig abgeschlossen markiert werden.<br><br>");
@@ -280,7 +280,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<script>if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
 			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isSCMCTask() && !task.isClozeTask()) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
-			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+			} else if (task.getDeadline().before(new Date())) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
 			} else if (task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
 				out.println("<div class=mid>Die Abgabe wurde als endgültig abgeschlossen markiert.<br>Eine Veränderung ist jetzt nicht mehr möglich.</div>");
@@ -296,7 +296,7 @@ public class ShowTaskStudentView extends HttpServlet {
 
 			List<Test> tests = DAOFactory.TestDAOIf(session).getStudentTests(task);
 			TestCountDAOIf testCountDAO = DAOFactory.TestCountDAOIf(session);
-			if (!submittedFiles.isEmpty() && !tests.isEmpty() && task.getDeadline().after(Util.correctTimezone(new Date())) && !(task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
+			if (!submittedFiles.isEmpty() && !tests.isEmpty() && task.getDeadline().after(new Date()) && !(task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
 				out.println("<p><h2>Mögliche Tests:</h2>");
 				out.println("<table class=border>");
 				for (Test test : tests) {
@@ -325,7 +325,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<script>if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
 			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isSCMCTask() && !task.isClozeTask()) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
-			} else if (task.getDeadline().before(Util.correctTimezone(new Date()))) {
+			} else if (task.getDeadline().before(new Date())) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
 			} else {
 				out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("SubmitSolution?taskid=" + task.getTaskid(), response) + "\">Abgabe starten</a></div>");

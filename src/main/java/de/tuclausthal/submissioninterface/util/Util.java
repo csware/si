@@ -26,9 +26,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.invoke.MethodHandles;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -36,7 +36,6 @@ import java.text.NumberFormat;
 import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -451,15 +450,6 @@ public final class Util {
 		} catch (IOException e) {
 		}
 		return null;
-	}
-
-	/**
-	 * Corrects timezone if needed
-	 * @param date
-	 * @return a corrected date
-	 */
-	public static Date correctTimezone(Date date) {
-		return date;
 	}
 
 	public static String showPoints(int maxPoints) {

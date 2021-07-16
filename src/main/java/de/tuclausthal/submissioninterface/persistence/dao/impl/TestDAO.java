@@ -43,7 +43,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
-import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Data Access Object implementation for the TestDAOIf
@@ -122,7 +121,7 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 		CriteriaQuery<Test> criteria = builder.createQuery(Test.class);
 		Root<Test> root = criteria.from(Test.class);
 		criteria.select(root);
-		criteria.where(builder.and(builder.equal(root.get(Test_.forTutors), true), builder.equal(root.get(Test_.needsToRun), true), builder.lessThanOrEqualTo(root.join(Test_.task).get(Task_.deadline), Util.correctTimezone(new Date()))));
+		criteria.where(builder.and(builder.equal(root.get(Test_.forTutors), true), builder.equal(root.get(Test_.needsToRun), true), builder.lessThan(root.join(Test_.task).get(Task_.deadline), new Date())));
 		Test test = session.createQuery(criteria).setLockMode(LockModeType.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
 		if (test != null) {
 			test.setNeedsToRun(false);

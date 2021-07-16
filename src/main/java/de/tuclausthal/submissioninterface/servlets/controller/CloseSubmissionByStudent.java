@@ -69,7 +69,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 			return;
 		}
 
-		if (submission.getTask().getDeadline().before(Util.correctTimezone(new Date())) || submission.isClosed()) {
+		if (submission.getTask().getDeadline().before(new Date()) || submission.isClosed()) {
 			request.setAttribute("title", "An dieser Abgabe sind keine Veränderungen mehr möglich.");
 			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;
@@ -105,7 +105,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 
 		Transaction tx = session.beginTransaction();
 		session.refresh(submission, LockModeType.PESSIMISTIC_WRITE);
-		if (submission.getTask().getDeadline().before(Util.correctTimezone(new Date())) || submission.isClosed()) {
+		if (submission.getTask().getDeadline().before(new Date()) || submission.isClosed()) {
 			tx.rollback();
 			request.setAttribute("title", "An dieser Abgabe sind keine Veränderungen mehr möglich.");
 			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + submission.getTask().getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");

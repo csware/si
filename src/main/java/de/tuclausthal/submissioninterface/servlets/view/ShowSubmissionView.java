@@ -134,7 +134,7 @@ public class ShowSubmissionView extends HttpServlet {
 			}
 		}
 
-		if ((task.getDeadline().before(Util.correctTimezone(new Date())) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask() && !task.isClozeTask())) {
+		if ((task.getDeadline().before(new Date()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask() && !task.isClozeTask())) {
 			out.println("<h2>Bewertung: <a href=\"#\" onclick=\"toggleVisibility('mark'); return false;\">(+/-)</a></h2>");
 			out.println("<table id=mark class=border>");
 			String oldPublicComment = "";
@@ -177,7 +177,7 @@ public class ShowSubmissionView extends HttpServlet {
 				}
 			}
 			out.println("<td>");
-			if (!task.getSimularityTests().isEmpty() && (task.getDeadline().after(Util.correctTimezone(new Date())) || task.getSimularityTests().stream().anyMatch(test -> test.getStatus() > 0))) {
+			if (!task.getSimularityTests().isEmpty() && (task.getDeadline().after(new Date()) || task.getSimularityTests().stream().anyMatch(test -> test.getStatus() > 0))) {
 				out.println("<p class=\"bmid\" style=\"color: #8C1C00\">Achtung: Eine Ähnlichkeitsprüfung wurde noch nicht durchgeführt bzw. ist noch nicht vollständig abgeschlossen.</p>");
 			}
 			out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
@@ -394,7 +394,7 @@ public class ShowSubmissionView extends HttpServlet {
 		}
 
 		if (!submittedFiles.isEmpty()) {
-			if (task.getDeadline().after(Util.correctTimezone(new Date())) && task.getTests().stream().anyMatch(atest -> atest.TutorsCanRun())) {
+			if (task.getDeadline().after(new Date()) && task.getTests().stream().anyMatch(atest -> atest.TutorsCanRun())) {
 				out.println("<FORM class=mid method=POST action=\"" + Util.generateHTMLLink("PerformTest", response) + "\">");
 				out.println("<p>Test auf Abgabe ausführen: <select name=testid size=1 required>");
 				for (Test test : task.getTests()) {

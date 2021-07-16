@@ -70,7 +70,7 @@ public class MarkApproved extends HttpServlet {
 			return;
 		}
 
-		if (task.getStart().after(Util.correctTimezone(new Date())) && task.getDeadline().before(Util.correctTimezone(new Date())) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+		if (task.getStart().after(new Date()) && task.getDeadline().before(new Date()) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
 			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
 			return;

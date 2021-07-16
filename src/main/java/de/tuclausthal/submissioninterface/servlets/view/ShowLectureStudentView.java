@@ -128,7 +128,7 @@ public class ShowLectureStudentView extends HttpServlet {
 			}
 			TaskGroup lastTaskGroup = null;
 			for (Task task : tasks) {
-				if (!task.getStart().before(Util.correctTimezone(new Date()))) {
+				if (!task.getStart().before(new Date())) {
 					continue;
 				}
 				if (lastTaskGroup == null || lastTaskGroup.getTaskGroupId() != task.getTaskGroup().getTaskGroupId()) {
@@ -158,7 +158,7 @@ public class ShowLectureStudentView extends HttpServlet {
 					if (submissionIterator.hasNext()) {
 						submission = submissionIterator.next();
 					}
-				} else if (task.getDeadline().after(Util.correctTimezone(new Date()))) {
+				} else if (task.getDeadline().after(new Date())) {
 					out.println("<td class=points>(noch) nicht bearbeitet</td>");
 				} else {
 					out.println("<td class=points>nicht bearbeitet</td>");
