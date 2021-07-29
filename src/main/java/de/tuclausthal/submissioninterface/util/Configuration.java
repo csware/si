@@ -79,6 +79,9 @@ public class Configuration {
 		instance.mailServer = context.getInitParameter("mail-server");
 		instance.mailFrom = context.getInitParameter("mail-from");
 		instance.mailSubjectPrefix = context.getInitParameter("mail-subject-prefix");
+		if (!instance.mailSubjectPrefix.isBlank() && !instance.mailSubjectPrefix.endsWith(" ")) {
+			instance.mailSubjectPrefix = instance.mailSubjectPrefix + " ";
+		}
 		instance.matrikelNoAvailableToTutors = parseBooleanValue(context.getInitParameter("show-matrikelno-to-tutors"), false);
 		instance.matrikelNumberMustBeEnteredManuallyIfMissing = parseBooleanValue(context.getInitParameter("matrikelno-must-be-enterend-manually-if-missing"), false);
 		instance.testFrameworkCores = Util.parseInteger(context.getInitParameter("testframework-cores"), 2);
