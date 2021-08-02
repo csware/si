@@ -38,7 +38,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -49,8 +48,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-import org.apache.commons.fileupload.FileUploadBase;
-import org.apache.commons.fileupload.ParameterParser;
 import org.apache.commons.io.FilenameUtils;
 import org.owasp.html.Handler;
 import org.owasp.html.HtmlSanitizer;
@@ -486,32 +483,8 @@ public final class Util {
 		return pointsClass;
 	}
 
-	// taken from Apache::Commons::FileUpload, FileUploadBase
-	// Servlet API 3.1.0 has support for Part.getSubmittedFileName(), however, fails with uploads from Internet Explorer (which provides the full path of the uploaded file with backslashes, normalizing just removes all backslashes resulting in a broken filename)
 	public static String getUploadFileName(Part part) {
-		String pContentDisposition = part.getHeader(FileUploadBase.CONTENT_DISPOSITION);
-		String fileName = null;
-		if (pContentDisposition != null) {
-			String cdl = pContentDisposition.toLowerCase(Locale.ENGLISH);
-			if (cdl.startsWith(FileUploadBase.FORM_DATA) || cdl.startsWith(FileUploadBase.ATTACHMENT)) {
-				ParameterParser parser = new ParameterParser();
-				parser.setLowerCaseNames(true);
-				// Parameter parser can handle null input
-				Map<String, String> params = parser.parse(pContentDisposition, ';');
-				if (params.containsKey("filename")) {
-					fileName = params.get("filename");
-					if (fileName != null) {
-						fileName = fileName.trim();
-					} else {
-						// Even if there is no value, the parameter is present,
-						// so we return an empty file name rather than no file
-						// name.
-						fileName = "";
-					}
-				}
-			}
-		}
-		return FilenameUtils.getName(fileName);
+		return FilenameUtils.getName(part.getSubmittedFileName());
 	}
 
 	/**

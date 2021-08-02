@@ -46,7 +46,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-import org.apache.commons.fileupload.FileUploadBase;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -210,7 +209,7 @@ public class SubmitSolution extends HttpServlet {
 
 		Part file = null;
 		String contentType = request.getContentType();
-		if (contentType.toLowerCase(Locale.ENGLISH).startsWith(FileUploadBase.MULTIPART)) {
+		if (contentType.toLowerCase(Locale.ENGLISH).startsWith("multipart/")) {
 			file = request.getPart("file");
 		}
 		if (file != null) {
