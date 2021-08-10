@@ -73,4 +73,8 @@ public class LocalExecutor implements TestExecutorIf {
 			Thread.currentThread().interrupt();
 		}
 	}
+
+	public boolean isRunning() {
+		return executorService != null && !executorService.isShutdown() && !executorService.isTerminated();
+	}
 }

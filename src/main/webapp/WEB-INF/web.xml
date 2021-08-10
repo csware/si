@@ -698,4 +698,12 @@
     <servlet-name>ChecklistTestResponse</servlet-name>
     <url-pattern>/servlets/ChecklistTestResponse</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>SelfTest</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.SelfTest</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SelfTest</servlet-name>
+    <url-pattern>/servlets/SelfTest</url-pattern>
+  </servlet-mapping>
 </web-app>

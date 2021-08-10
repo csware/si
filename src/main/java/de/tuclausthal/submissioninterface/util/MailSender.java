@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class MailSender {
 	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public static void sendMail(String to, String subject, String messageText) {
+	public static boolean sendMail(String to, String subject, String messageText) {
 		MimeMessage msg;
 		Properties props = new Properties();
 		props.put("mail.smtp.host", Configuration.getInstance().getMailServer());
@@ -62,6 +62,8 @@ public class MailSender {
 			Transport.send(msg);
 		} catch (MessagingException e) {
 			LOG.error("Fehler MessagingException in MailSender: ", e);
+			return false;
 		}
+		return true;
 	}
 }

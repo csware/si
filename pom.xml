@@ -154,6 +154,35 @@
 					<failOnMissingWebXml>true</failOnMissingWebXml>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<version>4.0.4</version>
+				<executions>
+					<execution>
+						<id>get-the-git-infos</id>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+						<phase>validate</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+					<useNativeGit>true</useNativeGit>
+					<generateGitPropertiesFile>true</generateGitPropertiesFile>
+					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+					<format>properties</format>
+					<abbrevLength>10</abbrevLength>
+					<offline>true</offline>
+					<gitDescribe>
+						<skip>true</skip>
+					</gitDescribe>
+					<includeOnlyProperties>
+						<includeOnlyProperty>^(git.commit.id.abbrev|git.build.time|git.build.number)$</includeOnlyProperty>
+					</includeOnlyProperties>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
