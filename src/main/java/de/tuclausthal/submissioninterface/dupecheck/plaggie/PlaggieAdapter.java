@@ -38,6 +38,13 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
+import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.SimilarityDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.util.Util;
 import plag.parser.CachingSimpleSubmissionSimilarityChecker;
 import plag.parser.CodeExcluder;
 import plag.parser.CodeTokenizer;
@@ -57,13 +64,6 @@ import plag.parser.TokenList;
 import plag.parser.TokenSimilarityChecker;
 import plag.parser.java.InterfaceCodeExcluder;
 import plag.parser.plaggie.Configuration;
-import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
-import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.dao.SimilarityDAOIf;
-import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
-import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Plaggie adapter plagiarism test implementation
@@ -72,6 +72,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 public class PlaggieAdapter extends DupeCheck {
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	final static public String CONFIG_FILE_NAME = "plaggie.properties";
 
 	public PlaggieAdapter(File path) {
 		super(path);
@@ -88,7 +89,7 @@ public class PlaggieAdapter extends DupeCheck {
 		DAOFactory.SimilarityTestDAOIf(session).resetSimilarityTest(similarityTest);
 		try {
 			// -- Read the configuration file
-			config = new Configuration(new File(path + System.getProperty("file.separator") + "plaggie.properties"));
+			config = new Configuration(new File(path, CONFIG_FILE_NAME));
 
 			config.htmlReport = false;
 			config.minimumSubmissionSimilarityValue = similarityTest.getMinimumDifferenceInPercent() / 100.0;

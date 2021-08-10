@@ -52,6 +52,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 public class JPlagAdapter extends DupeCheck {
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	final static public String JPLAG_JAR = "jplag.jar";
 
 	public JPlagAdapter(File path) {
 		super(path);
@@ -92,7 +93,7 @@ public class JPlagAdapter extends DupeCheck {
 			List<String> params = new ArrayList<>();
 			params.add("java");
 			params.add("-jar");
-			params.add(new File(path, "jplag.jar").toString());
+			params.add(new File(path, JPLAG_JAR).toString());
 			params.add("-s");
 			if (similarityTest.getExcludeFiles() != null && !similarityTest.getExcludeFiles().isEmpty()) {
 				File excludeFile = new File(tempDir, "exclude.txt");

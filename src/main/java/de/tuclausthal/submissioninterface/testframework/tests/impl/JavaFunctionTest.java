@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -31,6 +31,8 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
  * @author Sven Strickroth
  */
 public abstract class JavaFunctionTest extends JavaSyntaxTest {
+	final static public String SECURITYMANAGER_JAR = "NoExitSecurityManager.jar";
+
 	@Override
 	final protected void performTestInTempDir(Test test, File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {
 		compileJava(tempDir, null);
@@ -44,7 +46,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			policyFile = File.createTempFile("special", ".policy");
 			BufferedWriter policyFileWriter = new BufferedWriter(new FileWriter(policyFile));
 
-			policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + "junit.jar") + "\" {\n");
+			policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + JavaJUnitTest.JUNIT_JAR) + "\" {\n");
 			policyFileWriter.write("	permission java.security.AllPermission;\n");
 			policyFileWriter.write("};\n");
 			policyFileWriter.write("\n");
@@ -72,7 +74,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			// limit memory usage
 			params.add("-Xmx128m");
 			// for security reasons, so that students cannot access the server
-			params.add("-Xbootclasspath/a:" + basePath.getAbsolutePath() + System.getProperty("file.separator") + "NoExitSecurityManager.jar");
+			params.add("-Xbootclasspath/a:" + basePath.getAbsolutePath() + System.getProperty("file.separator") + SECURITYMANAGER_JAR);
 			params.add("-Djava.security.manager=secmgr.NoExitSecurityManager");
 			params.add("-Djava.security.policy=" + policyFile.getAbsolutePath());
 			params.addAll(additionalParams);

@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.testframework.tests.impl.DockerTest;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -116,7 +117,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</form>");
 
 		// similar code in DockerTestManagerView
-		if (new File("/usr/local/bin/safe-docker").exists()) {
+		if (new File(DockerTest.SAFE_DOCKER_SCRIPT).exists()) {
 			out.println("<h2>Docker Test</h2>");
 			out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");

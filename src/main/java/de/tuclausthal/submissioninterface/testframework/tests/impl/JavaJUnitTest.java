@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -29,6 +29,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class JavaJUnitTest extends JavaFunctionTest {
+	final static public String JUNIT_JAR = "junit.jar";
+
 	@Override
 	protected boolean calculateTestResult(Test test, boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted) {
 		// append STDERR
@@ -45,7 +47,7 @@ public class JavaJUnitTest extends JavaFunctionTest {
 	@Override
 	void populateParameters(Test test, File basePath, File tempDir, List<String> params) {
 		params.add("-cp");
-		params.add(basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar" + File.pathSeparator + basePath.getAbsolutePath() + System.getProperty("file.separator") + "junit.jar" + File.pathSeparator + tempDir.getAbsolutePath());
+		params.add(basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar" + File.pathSeparator + basePath.getAbsolutePath() + System.getProperty("file.separator") + JUNIT_JAR + File.pathSeparator + tempDir.getAbsolutePath());
 		params.add("junit.textui.TestRunner");
 		params.add(Util.escapeCommandlineArguments(((JUnitTest)test).getMainClass()));
 	}

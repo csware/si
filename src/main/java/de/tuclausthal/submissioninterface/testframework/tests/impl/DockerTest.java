@@ -39,6 +39,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 public class DockerTest extends TempDirTest {
 	//final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	final static public String SAFE_DOCKER_SCRIPT = "/usr/local/bin/safe-docker";
 
 	private static final Random random = new Random();
 	private final String separator;
@@ -91,7 +92,7 @@ public class DockerTest extends TempDirTest {
 
 			List<String> params = new ArrayList<>();
 			params.add("sudo");
-			params.add("/usr/local/bin/safe-docker");
+			params.add(SAFE_DOCKER_SCRIPT);
 			params.add("--timeout=" + test.getTimeout());
 			params.add("--dir=" + Util.escapeCommandlineArguments(administrativeDir.getAbsolutePath()));
 			params.add("--");
