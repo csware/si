@@ -419,14 +419,6 @@
     <url-pattern>/servlets/DupeCheck</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>LocalExecutorStartUp</servlet-name>
-    <servlet-class>de.tuclausthal.submissioninterface.testframework.executor.impl.LocalExecutorStartUp</servlet-class>
-    <init-param>
-      <param-name>cores</param-name>
-      <param-value>4</param-value>
-    </init-param>
-  </servlet>
-  <servlet>
     <servlet-name>JoinGroup</servlet-name>
     <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.JoinGroup</servlet-class>
   </servlet>
