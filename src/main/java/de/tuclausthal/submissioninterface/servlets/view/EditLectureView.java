@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -28,58 +28,57 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
-import de.tuclausthal.submissioninterface.servlets.controller.AdminMenue;
-import de.tuclausthal.submissioninterface.servlets.controller.Overview;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowLecture;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * View-Servlet for displaying a form for adding a new lecture
+ * View-Servlet for editing a lecture for advisors
  * @author Sven Strickroth
  */
 @GATEView
-public class AdminMenueAddLectureView extends HttpServlet {
+public class EditLectureView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Template template = TemplateFactory.getTemplate(request, response);
+		Lecture lecture = (Lecture) request.getAttribute("lecture");
 
+		Template template = TemplateFactory.getTemplate(request, response);
 		template.addKeepAlive();
 		template.addTinyMCE("textarea#description");
-		template.printTemplateHeader("neue Veranstaltung", "<a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), response) + "\">Meine Veranstaltungen</a> - <a href=\"" + Util.generateHTMLLink(AdminMenue.class.getSimpleName(), response) + "\">Admin-Menü</a> &gt; neue Veranstaltung");
+		template.printTemplateHeader("Veranstaltung bearbeiten", lecture);
 		PrintWriter out = response.getWriter();
-
-		Lecture dummyLecture = new Lecture();
-		dummyLecture.setSemester(Util.getCurrentSemester());
-		out.println("<form action=\"" + Util.generateHTMLLink("?action=saveLecture", response) + "\" method=post>");
+		out.println("<form method=post action=\"" + Util.generateHTMLLink("?", response) + "\">");
+		out.println("<input type=hidden name=lecture value=" + lecture.getId() + ">");
 		out.println("<table class=border>");
 		out.println("<tr>");
 		out.println("<th>Name der Veranstaltung:</th>");
-		out.println("<td><input type=text name=name required=required></td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Lösungen müssen abgenommen werden:</th>");
-		out.println("<td><input type=checkbox name=requiresAbhnahme></td>");
+		out.println("<td><input type=text name=name required value=\"" + Util.escapeHTML(lecture.getName()) + "\" disabled></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Semester:</th>");
-		out.println("<td>" + dummyLecture.getReadableSemester() + "</td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Gruppenweise Bewertung:</th>");
-		out.println("<td><input type=checkbox name=groupWise></td>");
+		out.println("<td>" + lecture.getReadableSemester() + "</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung/Hinweise:</th>");
-		out.println("<td><textarea cols=60 rows=20 id=description name=description></textarea></td>");
+		out.println("<td><textarea cols=60 rows=20 id=description name=description>" + Util.escapeHTML(lecture.getDescription()) + "</textarea></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=anlegen> <a href=\"" + Util.generateHTMLLink("?", response) + "\">Abbrechen</a></td>");
+		out.println("<th>Gruppenweise Bewertung:</th>");
+		out.println("<td><input type=checkbox name=groupWise" + ("groupWise".equals(lecture.getGradingMethod()) ? " checked" : "") + " disabled></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Lösungen müssen abgenommen werden:</th>");
+		out.println("<td><input type=checkbox name=requiresAbhnahme" + (lecture.isRequiresAbhnahme() ? " checked" : "") + " disabled></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<td colspan=2 class=mid>");
+		out.println("<input type=submit value=\"speichern\"> <a href=\"" + Util.generateHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response) + "\">Abbrechen</a></td>");
+		out.println("</td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
-		template.printTemplateFooter();
 	}
 }

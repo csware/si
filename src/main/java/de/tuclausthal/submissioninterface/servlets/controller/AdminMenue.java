@@ -133,9 +133,25 @@ public class AdminMenue extends HttpServlet {
 		} else if ("saveLecture".equals(request.getParameter("action")) && request.getParameter("name") != null && !request.getParameter("name").trim().isEmpty()) {
 			Transaction tx = session.beginTransaction();
 			Lecture newLecture = DAOFactory.LectureDAOIf(session).newLecture(request.getParameter("name").trim(), request.getParameter("requiresAbhnahme") != null, request.getParameter("groupWise") != null);
+			newLecture.setDescription(request.getParameter("description"));
+			session.save(newLecture);
 			DAOFactory.ParticipationDAOIf(session).createParticipation(RequestAdapter.getUser(request), newLecture, ParticipationRole.ADVISOR);
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(AdminMenue.class.getSimpleName() + "?action=showLecture&lecture=" + newLecture.getId(), response));
+		} else if ("editLecture".equals(request.getParameter("action"))) {
+			Transaction tx = session.beginTransaction();
+			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+			lecture.setName(request.getParameter("name"));
+			lecture.setDescription(request.getParameter("description"));
+			if (request.getParameter("groupWise") != null) {
+				lecture.setGradingMethod("groupWise");
+			} else {
+				lecture.setGradingMethod("taskWise");
+			}
+			lecture.setRequiresAbhnahme(request.getParameter("requiresAbhnahme") != null);
+			session.save(lecture);
+			tx.commit();
+			response.sendRedirect(Util.generateRedirectURL(AdminMenue.class.getSimpleName(), response));
 		} else if ("deleteLecture".equals(request.getParameter("action")) && request.getParameter("lecture") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 			if (lecture != null) {

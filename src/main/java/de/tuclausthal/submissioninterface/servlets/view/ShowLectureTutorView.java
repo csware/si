@@ -44,6 +44,7 @@ import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.controller.AddGroup;
 import de.tuclausthal.submissioninterface.servlets.controller.EditGroup;
+import de.tuclausthal.submissioninterface.servlets.controller.EditLecture;
 import de.tuclausthal.submissioninterface.servlets.controller.EditMultipleGroups;
 import de.tuclausthal.submissioninterface.servlets.controller.EditParticipation;
 import de.tuclausthal.submissioninterface.servlets.controller.MassMail;
@@ -80,6 +81,25 @@ public class ShowLectureTutorView extends HttpServlet {
 		// list all tasks for a lecture
 		template.printTemplateHeader(lecture);
 		PrintWriter out = response.getWriter();
+
+		if (!lecture.getDescription().isBlank()) {
+			out.println("<table class=border>");
+			out.println("<tr>");
+			out.print("<th>Beschreibung/Hinweise</th>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.print("<td>");
+			out.print(Util.makeCleanHTML(lecture.getDescription()));
+			out.println("</td>");
+			out.println("</tr>");
+			out.println("</table>");
+		}
+		if (isAdvisor) {
+			out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(EditLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response) + "\">Veranstaltung bearbeiten</a></div>");
+		}
+		if (!lecture.getDescription().isBlank() || isAdvisor) {
+			out.println("<p>");
+		}
 
 		Iterator<TaskGroup> taskGroupIterator = lecture.getTaskGroups().iterator();
 		if (taskGroupIterator.hasNext()) {
@@ -128,10 +148,10 @@ public class ShowLectureTutorView extends HttpServlet {
 			if (isStartedTable) {
 				out.println("</table>");
 			} else {
-				out.println("<div class=mid>keine Aufgaben gefunden.</div>");
+				out.println("<p class=mid>Keine Aufgaben gefunden.</p>");
 			}
 		} else {
-			out.println("<div class=mid>keine Aufgaben gefunden.</div>");
+			out.println("<p class=mid>Keine Aufgaben gefunden.</p>");
 		}
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?lecture=" + lecture.getId() + "&action=newTaskGroup", response) + "\">Neue Aufgabengruppe</a></div>");

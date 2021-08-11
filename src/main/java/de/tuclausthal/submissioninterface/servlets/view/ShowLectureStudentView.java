@@ -69,6 +69,20 @@ public class ShowLectureStudentView extends HttpServlet {
 		template.printTemplateHeader(lecture);
 		PrintWriter out = response.getWriter();
 
+		if (!lecture.getDescription().isBlank()) {
+			out.println("<table class=border>");
+			out.println("<tr>");
+			out.print("<th>Beschreibung/Hinweise</th>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.print("<td>");
+			out.print(Util.makeCleanHTML(lecture.getDescription()));
+			out.println("</td>");
+			out.println("</tr>");
+			out.println("</table>");
+			out.println("<p>");
+		}
+
 		boolean canJoinGroup = !joinAbleGroups.isEmpty();
 
 		out.println("<div class=mid>");

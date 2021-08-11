@@ -49,6 +49,7 @@ public class Lecture implements Serializable {
 	private List<TaskGroup> taskGroups;
 	private Set<Group> groups;
 	private String gradingMethod = "";
+	private String description = "";
 
 	/**
 	 * @return the name
@@ -188,5 +189,20 @@ public class Lecture implements Serializable {
 	 */
 	public void setGradingMethod(String gradingMethod) {
 		this.gradingMethod = gradingMethod;
+	}
+
+	/**
+	 * @return the description
+	 */
+	@Column(nullable = false, columnDefinition="TEXT")
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

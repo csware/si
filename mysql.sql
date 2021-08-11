@@ -104,6 +104,7 @@ CREATE TABLE IF NOT EXISTS `lectures` (
   `name` varchar(255) NOT NULL COLLATE utf8mb4_unicode_ci,
   `requiresAbhnahme` bit(1) NOT NULL,
   `semester` int(11) NOT NULL,
+  `description` TEXT NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 

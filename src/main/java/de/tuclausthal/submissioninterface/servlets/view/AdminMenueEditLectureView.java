@@ -59,9 +59,46 @@ public class AdminMenueEditLectureView extends HttpServlet {
 		} else {
 			@SuppressWarnings("unchecked")
 			List<Participation> participants = (List<Participation>) request.getAttribute("participants");
+
+			template.addKeepAlive();
+			template.addTinyMCE("textarea#description");
 			template.printTemplateHeader("Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten", "<a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), response) + "\">Meine Veranstaltungen</a> - <a href=\"" + Util.generateHTMLLink(AdminMenue.class.getSimpleName(), response) + "\">Admin-Menü</a> &gt; Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten");
 			PrintWriter out = response.getWriter();
+			out.println("<h2>Eigenschaften</h2>");
+			out.println("<form method=post action=\"" + Util.generateHTMLLink("?", response) + "\">");
+			out.println("<input type=hidden name=lecture value=" + lecture.getId() + ">");
+			out.println("<input type=hidden name=action value=editLecture>");
+			out.println("<table class=border>");
+			out.println("<tr>");
+			out.println("<th>Name der Veranstaltung:</th>");
+			out.println("<td><input type=text name=name required value=\"" + Util.escapeHTML(lecture.getName()) + "\"></td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<th>Semester:</th>");
+			out.println("<td>" + lecture.getReadableSemester() + "</td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<th>Beschreibung/Hinweise:</th>");
+			out.println("<td><textarea cols=60 rows=20 id=description name=description>" + Util.escapeHTML(lecture.getDescription()) + "</textarea></td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<th>Gruppenweise Bewertung:</th>");
+			out.println("<td><input type=checkbox name=groupWise></td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<th>Lösungen müssen abgenommen werden:</th>");
+			out.println("<td><input type=checkbox name=requiresAbhnahme" + (lecture.isRequiresAbhnahme() ? " checked" : "") + "></td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<td colspan=2 class=mid>");
+			out.println("<input type=submit value=\"Speichern\">");
+			out.println("</td>");
+			out.println("</tr>");
+			out.println("</table>");
+			out.println("</form>");
+
 			out.println("<p class=mid><a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("?action=deleteLecture&lecture=" + lecture.getId(), response) + "\">Veranstaltung löschen</a></p>");
+
 			out.println("<h2>BetreuerInnen</h2>");
 			Iterator<Participation> advisorIterator = participants.iterator();
 			out.println("<table class=border>");

@@ -134,3 +134,6 @@ CREATE TABLE `checklisttestcheckitem` (
   KEY `FK81pc66uelq448v1na0u5ryetf` (`testid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 ALTER TABLE `checklisttestcheckitem` ADD CONSTRAINT `FK81pc66uelq448v1na0u5ryetf` FOREIGN KEY (`testid`) REFERENCES `tests` (`id`) ON DELETE CASCADE;
+
+-- add description to lecture
+ALTER TABLE `lectures` ADD `description` TEXT NOT NULL;

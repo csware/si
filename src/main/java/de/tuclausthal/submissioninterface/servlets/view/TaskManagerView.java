@@ -23,7 +23,6 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import javax.json.Json;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -82,42 +81,7 @@ public class TaskManagerView extends HttpServlet {
 		List<String> modelSolutionFiles = (List<String>) request.getAttribute("modelSolutionFiles");
 
 		template.addKeepAlive();
-		template.addHead("<script src=\"" + getServletContext().getContextPath() + "/assets/tiny_mce/tinymce.min.js\"></script>");
-		template.addHead("<script>\ntinyMCE.init({" +
-							"selector: 'textarea#description'," +
-							"entity_encoding: 'raw',"+
-							"branding: false," +
-							"resize: 'both'," +
-							"browser_spellcheck: true," +
-							"block_formats: 'Paragraph=p;Header 1=h1;Header 2=h2;Header 3=h3'," + 
-							"plugins: \"table,code,codesample,link,lists,hr,image,quickbars,media,searchreplace,contextmenu,charmap,paste,nonbreaking\"," +
-							"content_css: " + Json.createArrayBuilder(template.getStyleSheetsForWYSIWYGEditor()).build().toString() + "," +
-							"formats: {" +
-							"    alignleft: { selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes: 'left' }," +
-							"    aligncenter: { selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes: 'mid' }," +
-							"    alignright: { selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes: 'right' }," +
-							"    bold: { inline: 'b' }," +
-							"    italic: { inline: 'i' }," +
-							"    strikethrough: { inline: 'del' }," +
-							"    code: { inline: 'code' }," +
-							"  }," +
-							"menubar: 'edit insert view format table tools help'," +
-							"menu: {" +
-							"    edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace | newdocument' }," +
-							"    insert: { title: 'Insert', items: 'image link media codeexample | template charmap hr | nonbreaking' }," +
-							"    view: { title: 'View', items: 'code | visualaid' }," +
-							"    format: { title: 'Format', items: 'bold italic strikethrough superscript subscript | formats blockformats fontname fontsizes align | forecolor backcolor | removeformat' }," +
-							"    table: { title: 'Table', items: 'inserttable | cell row column | tableprops deletetable' }" +
-							"  },"+
-							"toolbar: [" +
-							"    { name: 'history', items: [ 'undo', 'redo' ] }," +
-							"    { name: 'styles', items: [ 'styleselect' ] }," +
-							"    { name: 'formatting', items: [ 'bold', 'italic', 'numlist', 'bullist' ] }," +
-							"    { name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ] }," +
-							"    { name: 'indentation', items: [ 'outdent', 'indent' ] }" +
-							"  ]"+
-							"});\n</script>");
-
+		template.addTinyMCE("textarea#description");
 		template.addHead("<script>\n" +
 							"function checkRegexp() {" + 
 								"var request = new XMLHttpRequest();" +
