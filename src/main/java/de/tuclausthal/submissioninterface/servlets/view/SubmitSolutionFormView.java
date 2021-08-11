@@ -41,6 +41,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.template.Template;
@@ -51,6 +52,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a form for the submission of files
  * @author Sven Strickroth
  */
+@GATEView
 public class SubmitSolutionFormView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -71,7 +73,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 
 		if (submission != null && task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
 			request.setAttribute("title", "Die Abgabe wurde bereits als endgültig abgeschlossen markiert. Eine Veränderung ist daher nicht mehr möglich.");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 

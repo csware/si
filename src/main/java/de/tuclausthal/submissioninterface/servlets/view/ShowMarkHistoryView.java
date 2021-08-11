@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointHistory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -39,6 +40,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying the startpage of the system
  * @author Sven Strickroth
  */
+@GATEView
 public class ShowMarkHistoryView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");

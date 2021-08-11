@@ -23,6 +23,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.EnumSet;
+import java.util.Set;
+
+import javax.persistence.Entity;
 
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -31,6 +34,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.hbm2ddl.SchemaExport.Action;
 import org.hibernate.tool.schema.TargetType;
+import org.reflections.Reflections;
 
 /**
  * Hibernate DDL-definition to SQL-exporter
@@ -45,7 +49,12 @@ public class HibernateSQLExporter {
 		}
 
 		StandardServiceRegistry standardRegistry = new StandardServiceRegistryBuilder().configure().build();
-		Metadata metadata = new MetadataSources(standardRegistry).getMetadataBuilder().build();
+		MetadataSources metadataSources = new MetadataSources(standardRegistry);
+		Set<Class<?>> entities = new Reflections("de.tuclausthal.submissioninterface.persistence.datamodel").getTypesAnnotatedWith(Entity.class);
+		for (Class<?> entity : entities) {
+			metadataSources.addAnnotatedClass(entity);
+		}
+		Metadata metadata = metadataSources.getMetadataBuilder().build();
 
 		EnumSet<TargetType> enumSet = EnumSet.of(TargetType.SCRIPT);
 		SchemaExport schemaExport = new SchemaExport();

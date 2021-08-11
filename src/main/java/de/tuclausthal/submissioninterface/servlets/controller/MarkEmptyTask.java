@@ -38,7 +38,10 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MarkEmptyTaskView;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -47,6 +50,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  *
  */
+@GATEController
 public class MarkEmptyTask extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -57,7 +61,7 @@ public class MarkEmptyTask extends HttpServlet {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -71,7 +75,7 @@ public class MarkEmptyTask extends HttpServlet {
 		request.setAttribute("participations", DAOFactory.ParticipationDAOIf(session).getParticipationsWithNoSubmissionToTaskOrdered(task));
 
 		request.setAttribute("task", task);
-		getServletContext().getNamedDispatcher("MarkEmptyTaskView").forward(request, response);
+		getServletContext().getNamedDispatcher(MarkEmptyTaskView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -81,7 +85,7 @@ public class MarkEmptyTask extends HttpServlet {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -100,7 +104,7 @@ public class MarkEmptyTask extends HttpServlet {
 		Participation studentParticipation = DAOFactory.ParticipationDAOIf(session).getParticipation(Util.parseInteger(request.getParameter("pid"), 0));
 		if (studentParticipation == null || studentParticipation.getLecture().getId() != participation.getLecture().getId() || studentParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) != 0) {
 			request.setAttribute("title", "Gewählte Person ist kein normaler Teilnehmer der Vorlesung.");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		Transaction tx = session.beginTransaction();
@@ -109,8 +113,8 @@ public class MarkEmptyTask extends HttpServlet {
 		Submission submission = submissionDAO.getSubmission(task, studentParticipation.getUser());
 		if (submission != null) {
 			tx.commit();
-			request.setAttribute("title", "Es existiert bereits eine Bewertung für diesen Studierenden: < href=\"" + Util.generateHTMLLink("ShowSubmission?sid=" + submission.getSubmissionid(), response) + "\">zur Bewertung</a>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			request.setAttribute("title", "Es existiert bereits eine Bewertung für diesen Studierenden: < href=\"" + Util.generateHTMLLink(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid(), response) + "\">zur Bewertung</a>");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		submission = submissionDAO.createSubmission(task, studentParticipation);
@@ -134,6 +138,6 @@ public class MarkEmptyTask extends HttpServlet {
 			pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, null);
 		}
 		tx.commit();
-		response.sendRedirect(Util.generateRedirectURL("MarkEmptyTask?taskid=" + task.getTaskid(), response));
+		response.sendRedirect(Util.generateRedirectURL(MarkEmptyTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 	}
 }

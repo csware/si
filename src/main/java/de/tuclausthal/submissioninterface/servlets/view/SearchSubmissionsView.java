@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -36,6 +38,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a form for search
  * @author Sven Strickroth
  */
+@GATEView
 public class SearchSubmissionsView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -72,7 +75,7 @@ public class SearchSubmissionsView extends HttpServlet {
 		out.println("</select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=Suchen> <a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">Abbrechen</a></td>");
+		out.println("<td colspan=2 class=mid><input type=submit value=Suchen> <a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");

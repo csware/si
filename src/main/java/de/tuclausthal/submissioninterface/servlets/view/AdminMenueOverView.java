@@ -29,6 +29,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.servlets.controller.Overview;
+import de.tuclausthal.submissioninterface.servlets.controller.SelfTest;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -37,6 +40,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying the admin-overview/startpage
  * @author Sven Strickroth
  */
+@GATEView
 public class AdminMenueOverView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -44,7 +48,7 @@ public class AdminMenueOverView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		template.printTemplateHeader("Admin-Menü", "<a href=\"" + Util.generateHTMLLink("Overview", response) + "\">Meine Veranstaltungen</a> - Admin-Menü");
+		template.printTemplateHeader("Admin-Menü", "<a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), response) + "\">Meine Veranstaltungen</a> - Admin-Menü");
 		PrintWriter out = response.getWriter();
 
 		@SuppressWarnings("unchecked")
@@ -66,7 +70,7 @@ public class AdminMenueOverView extends HttpServlet {
 		}
 		out.println("<p class=mid><a href=\"" + Util.generateHTMLLink("?action=newLecture", response) + "\">Neue Veranstaltung</a></p>");
 		out.println("<p class=mid><a href=\"" + Util.generateHTMLLink("?action=showAdminUsers", response) + "\">Super User anzeigen</a></p>");
-		out.println("<p class=mid><a href=\"" + Util.generateHTMLLink("SelfTest", response) + "\">Selbsttest</a></p>");
+		out.println("<p class=mid><a href=\"" + Util.generateHTMLLink(SelfTest.class.getSimpleName(), response) + "\">Selbsttest</a></p>");
 		out.println("<p class=mid><a onclick=\"return sendAsPost(this, 'Wirklich CleanUp durchführen?')\" href=\"" + Util.generateHTMLLink("?action=cleanup", response) + "\">Verzeichnis Cleanup</a></p>");
 
 		template.printTemplateFooter();

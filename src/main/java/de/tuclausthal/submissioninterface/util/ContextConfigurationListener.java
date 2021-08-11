@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,8 +18,18 @@
 
 package de.tuclausthal.submissioninterface.util;
 
+import java.util.Set;
+
+import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.ServletRegistration;
+import javax.servlet.http.HttpServlet;
+
+import org.reflections.Reflections;
+
+import de.tuclausthal.submissioninterface.servlets.GATEController;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 
 /**
  * Context Configuration
@@ -29,6 +39,33 @@ public class ContextConfigurationListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		Configuration.fillConfiguration(event.getServletContext());
+
+		// configure AuthenticationFilter
+		FilterRegistration authenticationFilter = event.getServletContext().getFilterRegistration("AuthenticationFilter");
+		authenticationFilter.addMappingForUrlPatterns(null, false, Configuration.SERVLETS_PATH_WITH_BOTHSLASHES + "*");
+
+		// register Views
+		Set<Class<?>> viewServlets = new Reflections("de.tuclausthal.submissioninterface.servlets.view").getTypesAnnotatedWith(GATEView.class);
+		for (Class<?> servlet : viewServlets) {
+			if (!servlet.getSuperclass().equals(HttpServlet.class)) {
+				throw new RuntimeException("Class " + servlet.getCanonicalName() + " does not extend HttpServlet");
+			}
+			event.getServletContext().addServlet(servlet.getSimpleName(), servlet.getCanonicalName());
+		}
+
+		// register Controllers
+		Set<Class<?>> controllerServlets = new Reflections("de.tuclausthal.submissioninterface.servlets.controller").getTypesAnnotatedWith(GATEController.class);
+		for (Class<?> servlet : controllerServlets) {
+			if (!servlet.getSuperclass().equals(HttpServlet.class)) {
+				throw new RuntimeException("Class " + servlet.getCanonicalName() + " does not extend HttpServlet");
+			}
+			ServletRegistration.Dynamic registration = event.getServletContext().addServlet(servlet.getSimpleName(), servlet.getCanonicalName());
+			if (servlet.getAnnotation(GATEController.class).recursive()) {
+				registration.addMapping(Configuration.SERVLETS_PATH_WITH_BOTHSLASHES + servlet.getSimpleName() + "/*");
+			} else {
+				registration.addMapping(Configuration.SERVLETS_PATH_WITH_BOTHSLASHES + servlet.getSimpleName());
+			}
+		}
 	}
 
 	@Override

@@ -28,6 +28,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTestStep;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.servlets.controller.JavaAdvancedIOTestManager;
+import de.tuclausthal.submissioninterface.servlets.controller.TaskManager;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -36,6 +39,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a form for adding/editing/deleting advanved Java IO test steps
  * @author Sven Strickroth
  */
+@GATEView
 public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -62,7 +66,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink("TaskManager?action=editTask&taskid=" + test.getTask().getTaskid() + "&lecture=" + test.getTask().getTaskGroup().getLecture().getId(), response));
+		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + test.getTask().getTaskid() + "&lecture=" + test.getTask().getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
@@ -93,7 +97,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 			out.println("<tr>");
 			out.println("<td colspan=2 class=mid>");
 			out.println("<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\"  href=\"");
-			out.println(Util.generateHTMLLink("JavaAdvancedIOTestManager?testid=" + test.getId() + "&action=deleteStep&teststepid=" + step.getTeststepid(), response));
+			out.println(Util.generateHTMLLink(JavaAdvancedIOTestManager.class.getSimpleName() + "?testid=" + test.getId() + "&action=deleteStep&teststepid=" + step.getTeststepid(), response));
 			out.println("\">Löschen</a></td>");
 			out.println("</tr>");
 			out.println("</table>");
@@ -174,7 +178,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink("TaskManager?action=editTask&taskid=" + test.getTask().getTaskid() + "&lecture=" + test.getTask().getTaskGroup().getLecture().getId(), response));
+		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + test.getTask().getTaskid() + "&lecture=" + test.getTask().getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");

@@ -36,6 +36,10 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStat
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.servlets.controller.JoinGroup;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowGroup;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -44,6 +48,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a lecture in student view
  * @author Sven Strickroth
  */
+@GATEView
 public class ShowLectureStudentView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -70,7 +75,7 @@ public class ShowLectureStudentView extends HttpServlet {
 		if (participation.getGroup() != null) {
 			out.print("Meine Gruppe: ");
 			if (participation.getGroup().isMembersVisibleToStudents()) {
-				out.print("<a href=\"" + Util.generateHTMLLink("ShowGroup?lecture=" + lecture.getId(), response) + "\">");
+				out.print("<a href=\"" + Util.generateHTMLLink(ShowGroup.class.getSimpleName() + "?lecture=" + lecture.getId(), response) + "\">");
 			}
 			out.print(Util.escapeHTML(participation.getGroup().getName()));
 			if (participation.getGroup().isMembersVisibleToStudents()) {
@@ -95,7 +100,7 @@ public class ShowLectureStudentView extends HttpServlet {
 			out.println("Sie sind derzeit in keiner Gruppe.");
 		}
 		if (canJoinGroup) {
-			out.println("<form method=post action=\"" + Util.generateHTMLLink("JoinGroup", response) + "\">");
+			out.println("<form method=post action=\"" + Util.generateHTMLLink(JoinGroup.class.getSimpleName(), response) + "\">");
 			out.println("<select name=groupid>");
 			for (Group group : joinAbleGroups) {
 				out.println("<option value=" + group.getGid() + ">" + Util.escapeHTML(group.getName()));
@@ -139,7 +144,7 @@ public class ShowLectureStudentView extends HttpServlet {
 				}
 				maxPoints += task.getMaxPoints();
 				out.println("<tr>");
-				out.println("<td><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
+				out.println("<td><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
 				out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 
 				if (submission != null && submission.getTask().getTaskid() == task.getTaskid()) {

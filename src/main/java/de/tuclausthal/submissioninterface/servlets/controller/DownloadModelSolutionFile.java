@@ -38,7 +38,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ModelSolutionPro
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -47,6 +49,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  *
  */
+@GATEController(recursive = true)
 public class DownloadModelSolutionFile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -58,7 +61,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -73,7 +76,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -91,7 +94,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 		}
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
-		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+		getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -102,7 +105,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -117,7 +120,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -131,12 +134,12 @@ public class DownloadModelSolutionFile extends HttpServlet {
 					return;
 				}
 				file.delete();
-				response.sendRedirect(Util.generateAbsoluteServletsRedirectURL("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid() + "#modelsolutionfiles", request, response));
+				response.sendRedirect(Util.generateAbsoluteServletsRedirectURL(TaskManager.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid() + "#modelsolutionfiles", request, response));
 				return;
 			}
 		}
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
-		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+		getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 	}
 }

@@ -47,13 +47,16 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Controller-Servlet for storing user results of a checklisttest
  * @author Sven Strickroth
  */
+@GATEController
 public class ChecklistTestResponse extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -64,7 +67,7 @@ public class ChecklistTestResponse extends HttpServlet {
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
 		if (tst == null || !(tst instanceof ChecklistTest)) {
 			request.setAttribute("title", "Test nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		ChecklistTest test = (ChecklistTest) tst;
@@ -98,7 +101,7 @@ public class ChecklistTestResponse extends HttpServlet {
 		tx.commit();
 
 		if (request.getParameter("ajax") == null) {
-			response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + test.getTask().getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + test.getTask().getTaskid(), response));
 		} else {
 			response.getWriter().print("ok");
 		}

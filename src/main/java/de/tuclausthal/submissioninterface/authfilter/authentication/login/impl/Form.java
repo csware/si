@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginData;
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginIf;
+import de.tuclausthal.submissioninterface.servlets.controller.Logout;
+import de.tuclausthal.submissioninterface.servlets.controller.Overview;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -56,8 +58,8 @@ public class Form implements LoginIf {
 		}
 		out.print("<form action=\"");
 		// prevent immediate logout if refresh is called on Logout page
-		if (request.getRequestURI().equals(Util.generateAbsoluteServletsRedirectURL("Logout", request, response))) {
-			out.print(Util.generateAbsoluteServletsHTMLLink("Overview", request, response));
+		if (request.getRequestURI().equals(Util.generateAbsoluteServletsRedirectURL(Logout.class.getSimpleName(), request, response))) {
+			out.print(Util.generateAbsoluteServletsHTMLLink(Overview.class.getSimpleName(), request, response));
 		}
 		out.println("\" method=POST name=login>");
 		out.println("<input type=hidden name=" + LOGONEVIDENCE + " value='1234'>");

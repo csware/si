@@ -44,6 +44,9 @@ public class Configuration {
 	final public static String GLOBAL_FILENAME_REGEXP = "^([" + GLOBAL_FILENAME_CHARS + "]+)$";
 	final public static String GLOBAL_ARCHIVEFILENAME_REGEXP = "^([" + GLOBAL_ARCHIVEFILENAME_CHARS + "]+)$";
 
+	final public static String SERVLETS_PATH_WITH_ENDSLASH = "servlets/";
+	final public static String SERVLETS_PATH_WITH_BOTHSLASHES = "/" + SERVLETS_PATH_WITH_ENDSLASH;
+
 	final public static int MAX_UPLOAD_SIZE = 100 * 1024 * 1024;
 
 	static private Configuration instance = null;
@@ -51,7 +54,6 @@ public class Configuration {
 	private String dataPath;
 	private String serverName;
 	private String fullServerURI;
-	private String servletsPath;
 	private String adminMail;
 	private String mailServer;
 	private String mailFrom;
@@ -95,7 +97,7 @@ public class Configuration {
 		}
 
 		instance.fillDatapath(context);
-		instance.fillServletspath(context);
+		instance.fillServerURI(context);
 		instance.fillTemplateConstructor(context);
 		instance.fillStudiengaenge(context);
 	}
@@ -121,7 +123,7 @@ public class Configuration {
 		} catch (NoSuchMethodException e) {
 			throw new RuntimeException("template-class does not have required constructor");
 		} catch (SecurityException e) {
-			throw new RuntimeException("Cehcking template-class threw security exception");
+			throw new RuntimeException("Checking template-class threw security exception");
 		}
 	}
 
@@ -164,24 +166,12 @@ public class Configuration {
 		}
 	}
 
-	/**
-	 * Returns the path to the servlets
-	 * @return the path
-	 */
-	public String getServletsPath() {
-		return servletsPath;
-	}
-
-	private void fillServletspath(ServletContext context) {
-		servletsPath = context.getInitParameter("servletspath");
-		if (servletsPath == null) {
-			throw new RuntimeException("servletspath not specified");
-		}
+	private void fillServerURI(ServletContext context) {
 		serverName = context.getInitParameter("servername");
 		if (serverName == null) {
 			throw new RuntimeException("servername not specified");
 		}
-		fullServerURI = "https://" + serverName + context.getContextPath() + "/" + getServletsPath();
+		fullServerURI = "https://" + serverName + context.getContextPath() + SERVLETS_PATH_WITH_BOTHSLASHES;
 	}
 
 	/**

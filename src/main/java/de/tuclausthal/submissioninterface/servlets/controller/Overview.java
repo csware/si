@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -21,36 +21,31 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Shibboleth;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
-import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
-import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.OverviewView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * Controller-Servlet for clearing up the session and redirect to a user overview page
+ * Controller servlet for displaying the startpage of the system
  * @author Sven Strickroth
  */
 @GATEController
-public class SwitchLogin extends HttpServlet {
+public class Overview extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		RequestAdapter.getSessionAdapter(request).setUser(null, null);
-		request.getSession().invalidate();
-
-		int uid = Util.parseInteger(request.getParameter("uid"), -1);
-		if (uid <= 0) {
-			request.setAttribute("title", "Invalid Request");
-			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
-		} else {
-			response.addCookie(new Cookie("privacy", "1"));
-			response.sendRedirect(Util.generateRedirectURL(ShowUser.class.getSimpleName() + "?uid=" + uid, response));
+		// redirect handler for Shibboleth, not yet perfect but works
+		if (request.getParameter(Shibboleth.REDIR_PARAMETER) != null && request.getParameter(Shibboleth.REDIR_PARAMETER).startsWith(Util.generateAbsoluteServletsRedirectURL("", request, response))) {
+			response.sendRedirect(Util.generateRedirectURL(request.getParameter(Shibboleth.REDIR_PARAMETER).replace("\r", "%0d").replace("\n", "%0a"), response));
+			return;
 		}
+
+		getServletContext().getNamedDispatcher(OverviewView.class.getSimpleName()).forward(request, response);
 	}
 }

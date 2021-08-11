@@ -45,6 +45,18 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.servlets.controller.ChecklistTestManager;
+import de.tuclausthal.submissioninterface.servlets.controller.DockerTestManager;
+import de.tuclausthal.submissioninterface.servlets.controller.DownloadModelSolutionFile;
+import de.tuclausthal.submissioninterface.servlets.controller.DownloadTaskFile;
+import de.tuclausthal.submissioninterface.servlets.controller.DupeCheck;
+import de.tuclausthal.submissioninterface.servlets.controller.JavaAdvancedIOTestManager;
+import de.tuclausthal.submissioninterface.servlets.controller.PerformTest;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowLecture;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
+import de.tuclausthal.submissioninterface.servlets.controller.TaskManager;
+import de.tuclausthal.submissioninterface.servlets.controller.TestManager;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Configuration;
@@ -54,6 +66,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a form for adding/editing a task
  * @author Sven Strickroth
  */
+@GATEView
 public class TaskManagerView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -297,9 +310,9 @@ public class TaskManagerView extends HttpServlet {
 		out.println("<tr>");
 		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
 		if (task.getTaskid() != 0) {
-			out.print(Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response));
+			out.print(Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 		} else {
-			out.print(Util.generateHTMLLink("ShowLecture?lecture=" + lecture.getId(), response));
+			out.print(Util.generateHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response));
 		}
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
@@ -307,7 +320,7 @@ public class TaskManagerView extends HttpServlet {
 		out.println("</form>");
 
 		if (task.getTaskid() != 0) {
-			out.println("<p class=mid><a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deleteTask", response) + "\">Aufgabe löschen</a></p>");
+			out.println("<p class=mid><a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deleteTask", response) + "\">Aufgabe löschen</a></p>");
 		}
 
 		if (task.isSCMCTask()) {
@@ -321,7 +334,7 @@ public class TaskManagerView extends HttpServlet {
 			if (!options.isEmpty()) {
 				out.println("<ul>");
 				for (MCOption option : options) {
-					out.println("<li>" + Util.escapeHTML(option.getTitle()) + " (" + (option.isCorrect() ? "korrekt, " : "") + "<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deleteMCOption&optionId=" + option.getId(), response) + "\">del</a>)</li>");
+					out.println("<li>" + Util.escapeHTML(option.getTitle()) + " (" + (option.isCorrect() ? "korrekt, " : "") + "<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deleteMCOption&optionId=" + option.getId(), response) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
@@ -341,7 +354,7 @@ public class TaskManagerView extends HttpServlet {
 			if (!task.getPointCategories().isEmpty()) {
 				out.println("<ul>");
 				for (PointCategory category : task.getPointCategories()) {
-					out.println("<li>" + Util.escapeHTML(category.getDescription()) + "; " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? ", optional" : "") + " (<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TaskManager?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deletePointCategory&pointCategoryId=" + category.getPointcatid(), response) + "\">del</a>)</li>");
+					out.println("<li>" + Util.escapeHTML(category.getDescription()) + "; " + Util.showPoints(category.getPoints()) + " Punkte" + (category.isOptional() ? ", optional" : "") + " (<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=deletePointCategory&pointCategoryId=" + category.getPointcatid(), response) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
@@ -362,7 +375,7 @@ public class TaskManagerView extends HttpServlet {
 				out.println("<ul>");
 				for (String file : advisorFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
-					out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DownloadTaskFile/" + Util.encodeURLPathComponent(file) + "?action=delete&taskid=" + task.getTaskid(), response) + "\">del</a>)</li>");
+					out.println("<li><a href=\"" + Util.generateHTMLLink(DownloadTaskFile.class.getSimpleName() + "/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink(DownloadTaskFile.class.getSimpleName() + "/" + Util.encodeURLPathComponent(file) + "?action=delete&taskid=" + task.getTaskid(), response) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
@@ -388,7 +401,7 @@ public class TaskManagerView extends HttpServlet {
 				out.println("<ul>");
 				for (String file : modelSolutionFiles) {
 					file = file.replace(System.getProperty("file.separator"), "/");
-					out.println("<li><a href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DownloadModelSolutionFile/" + Util.encodeURLPathComponent(file) + "?action=delete&taskid=" + task.getTaskid(), response) + "\">del</a>)</li>");
+					out.println("<li><a href=\"" + Util.generateHTMLLink(DownloadModelSolutionFile.class.getSimpleName() + "/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink(DownloadModelSolutionFile.class.getSimpleName() + "/" + Util.encodeURLPathComponent(file) + "?action=delete&taskid=" + task.getTaskid(), response) + "\">del</a>)</li>");
 				}
 				out.println("</ul>");
 			}
@@ -413,17 +426,17 @@ public class TaskManagerView extends HttpServlet {
 					} else if (similarityTest.getStatus() == 2) {
 						out.println("in Ausführung<br>");
 					} else {
-						out.println("bereits ausgeführt - <a onclick=\"return sendAsPost(this, 'Wirklich erneut ausführen?')\" href=\"" + Util.generateHTMLLink("DupeCheck?action=rerunSimilarityTest&similaritytestid=" + similarityTest.getSimilarityTestId() + "&taskid=" + task.getTaskid(), response) + "\">erneut ausführen</a><br>");
+						out.println("bereits ausgeführt - <a onclick=\"return sendAsPost(this, 'Wirklich erneut ausführen?')\" href=\"" + Util.generateHTMLLink(DupeCheck.class.getSimpleName() + "?action=rerunSimilarityTest&similaritytestid=" + similarityTest.getSimilarityTestId() + "&taskid=" + task.getTaskid(), response) + "\">erneut ausführen</a><br>");
 					}
-					out.println("<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("DupeCheck?action=deleteSimilarityTest&taskid=" + task.getTaskid() + "&similaritytestid=" + similarityTest.getSimilarityTestId(), response) + "\">löschen</a></li>");
+					out.println("<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink(DupeCheck.class.getSimpleName() + "?action=deleteSimilarityTest&taskid=" + task.getTaskid() + "&similaritytestid=" + similarityTest.getSimilarityTestId(), response) + "\">löschen</a></li>");
 				}
 				out.println("</ul>");
 			}
-			out.println("<p class=mid><a href=\"" + Util.generateHTMLLink("DupeCheck?taskid=" + task.getTaskid(), response) + "\">Ähnlichkeitsprüfung hinzufügen</a><p>");
+			out.println("<p class=mid><a href=\"" + Util.generateHTMLLink(DupeCheck.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Ähnlichkeitsprüfung hinzufügen</a><p>");
 
 			if (!task.isADynamicTask()) {
 				out.println("<h2>Funktionstests der Abgaben</h2>");
-				out.println("<p class=mid><a href=\"" + Util.generateHTMLLink("TestManager?action=newTest&taskid=" + task.getTaskid(), response) + "\">Test hinzufügen</a></p>");
+				out.println("<p class=mid><a href=\"" + Util.generateHTMLLink(TestManager.class.getSimpleName() + "?action=newTest&taskid=" + task.getTaskid(), response) + "\">Test hinzufügen</a></p>");
 				if (!task.getTests().isEmpty()) {
 					out.println("<ul>");
 					for (Test test : task.getTests()) {
@@ -453,23 +466,23 @@ public class TaskManagerView extends HttpServlet {
 							if (test.isNeedsToRun()) {
 								out.println("in Queue, noch nicht ausgeführt<br>");
 							} else {
-								out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return sendAsPost(this, 'Wirklich erneut ausführen?')\" href=\"" + Util.generateHTMLLink("TestManager?action=rerunTest&testid=" + test.getId() + "&taskid=" + task.getTaskid(), response) + "\">erneut ausführen</a><br>");
+								out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return sendAsPost(this, 'Wirklich erneut ausführen?')\" href=\"" + Util.generateHTMLLink(TestManager.class.getSimpleName() + "?action=rerunTest&testid=" + test.getId() + "&taskid=" + task.getTaskid(), response) + "\">erneut ausführen</a><br>");
 							}
 						}
 						if (test instanceof JavaAdvancedIOTest) {
 							out.println("Bestehend aus " + ((JavaAdvancedIOTest) test).getTestSteps().size() + " Schritten<br>");
-							out.println("<a href=\"" + Util.generateHTMLLink("JavaAdvancedIOTestManager?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
+							out.println("<a href=\"" + Util.generateHTMLLink(JavaAdvancedIOTestManager.class.getSimpleName() + "?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
 						} else if (test instanceof DockerTest) {
 							out.println("Bestehend aus " + ((DockerTest) test).getTestSteps().size() + " Schritten<br>");
-							out.println("<a href=\"" + Util.generateHTMLLink("DockerTestManager?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
+							out.println("<a href=\"" + Util.generateHTMLLink(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
 						} else if (test instanceof ChecklistTest) {
 							out.println("Bestehend aus " + ((ChecklistTest) test).getCheckItems().size() + " Checklist-Einträgen<br>");
-							out.println("<a href=\"" + Util.generateHTMLLink("ChecklistTestManager?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
+							out.println("<a href=\"" + Util.generateHTMLLink(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
 						}
 						if (test.TutorsCanRun() && !modelSolutionFiles.isEmpty()) {
-							out.println("<a onclick=\"return sendAsPost(this, 'Wirklich testen?')\" href=\"" + Util.generateHTMLLink("PerformTest?modelsolution=true&testid=" + test.getId(), response) + "\">Mit Musterlösung testen...</a><br>");
+							out.println("<a onclick=\"return sendAsPost(this, 'Wirklich testen?')\" href=\"" + Util.generateHTMLLink(PerformTest.class.getSimpleName() + "?modelsolution=true&testid=" + test.getId(), response) + "\">Mit Musterlösung testen...</a><br>");
 						}
-						out.println("<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("TestManager?action=deleteTest&testid=" + test.getId() + "&taskid=" + task.getTaskid(), response) + "\">Test löschen</a>");
+						out.println("<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink(TestManager.class.getSimpleName() + "?action=deleteTest&testid=" + test.getId() + "&taskid=" + task.getTaskid(), response) + "\">Test löschen</a>");
 						out.println("</li>");
 					}
 					out.println("</ul>");

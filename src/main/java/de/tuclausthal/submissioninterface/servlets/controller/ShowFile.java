@@ -41,7 +41,10 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.ShowFileView;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -50,6 +53,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  *
  */
+@GATEController(recursive = true)
 public class ShowFile extends HttpServlet {
 	private final static long serialVersionUID = 1L;
 	private final static String[] plainTextFiles = new String[] { "xml", "htm", "html", "jsp", "txt", "css", "js", "java", "c", "cpp", "h", "hs", "project", "classpath", "patch", "diff", "sql", "php", "pl", "py", "rb", "tex", "log", "bib", "cfg", "sml", "lcirc" };
@@ -63,7 +67,7 @@ public class ShowFile extends HttpServlet {
 
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -79,8 +83,8 @@ public class ShowFile extends HttpServlet {
 
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowTask?taskid=" + task.getTaskid(), request, response) + "\">zurück zur Aufgabe</a></div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), request, response) + "\">zurück zur Aufgabe</a></div>");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -96,7 +100,7 @@ public class ShowFile extends HttpServlet {
 					request.setAttribute("submission", submission);
 					request.setAttribute("code", code);
 					request.setAttribute("fileName", Util.escapeHTML(file.getName()));
-					getServletContext().getNamedDispatcher("ShowFileView").forward(request, response);
+					getServletContext().getNamedDispatcher(ShowFileView.class.getSimpleName()).forward(request, response);
 					return;
 				}
 				setContentTypeBasedonFilenameExtension(response, file.getName(), "true".equals(request.getParameter("download")));
@@ -108,8 +112,8 @@ public class ShowFile extends HttpServlet {
 		}
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
-		request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowTask?taskid=" + task.getTaskid(), request, response) + "\">zurück zur Aufgabe</a></div>");
-		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+		request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), request, response) + "\">zurück zur Aufgabe</a></div>");
+		getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 	}
 
 	private boolean isPlainTextFile(String lowercaseFilename) {

@@ -27,6 +27,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.servlets.controller.AdminMenue;
+import de.tuclausthal.submissioninterface.servlets.controller.Logout;
+import de.tuclausthal.submissioninterface.servlets.controller.SwitchLogin;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -65,14 +68,14 @@ public class SimpleTemplate extends Template {
 		if (user != null) {
 			out.println("Angemeldet als: " + Util.escapeHTML(user.getEmail()));
 			if (user.isSuperUser()) {
-				out.println(" - <a href=\"" + Util.generateAbsoluteServletsHTMLLink("AdminMenue", servletRequest, servletResponse) + "\">Admin-Menü</a>");
+				out.println(" - <a href=\"" + Util.generateAbsoluteServletsHTMLLink(AdminMenue.class.getSimpleName(), servletRequest, servletResponse) + "\">Admin-Menü</a>");
 			}
 			if (requestAdapter.isPrivacyMode()) {
 				out.println(" - Privacy-Mode");
 			} else if (requestAdapter.isIntranet()) {
-				out.println(" - <a href=\"" + Util.generateAbsoluteServletsHTMLLink("SwitchLogin?uid=" + user.getUid(), servletRequest, servletResponse) + "\">Tutor Login</a>");
+				out.println(" - <a href=\"" + Util.generateAbsoluteServletsHTMLLink(SwitchLogin.class.getSimpleName() + "?uid=" + user.getUid(), servletRequest, servletResponse) + "\">Tutor Login</a>");
 			}
-			out.println(" - <a href=\"" + Util.generateAbsoluteServletsHTMLLink("Logout", servletRequest, servletResponse) + "\">LogOut</a>");
+			out.println(" - <a href=\"" + Util.generateAbsoluteServletsHTMLLink(Logout.class.getSimpleName(), servletRequest, servletResponse) + "\">LogOut</a>");
 		} else {
 			out.println("nicht eingeloggt");
 		}

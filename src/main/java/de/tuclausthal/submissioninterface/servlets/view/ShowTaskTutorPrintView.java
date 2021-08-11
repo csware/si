@@ -31,9 +31,10 @@ import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -41,6 +42,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a task in tutor view
  * @author Sven Strickroth
  */
+@GATEView
 public class ShowTaskTutorPrintView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

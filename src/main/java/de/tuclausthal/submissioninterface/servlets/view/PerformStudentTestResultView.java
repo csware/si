@@ -33,6 +33,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTe
 import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.servlets.controller.ChecklistTestResponse;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowDockerTestResult;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowJavaAdvancedIOTestResult;
 import de.tuclausthal.submissioninterface.template.Template;
@@ -44,6 +47,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a testresult
  * @author Sven Strickroth
  */
+@GATEView
 public class PerformStudentTestResultView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -66,7 +70,7 @@ public class PerformStudentTestResultView extends HttpServlet {
 
 			out.println("<p><strong>Bitte überprüfen Sie Ihre Lösung hinsichtlich der folgenden Punkte und haken alle erfolgreichen Tests an:</strong></p>");
 
-			out.println("<FORM method=POST action=\"" + Util.generateHTMLLink("ChecklistTestResponse", response) + "\" id=manualcheckform>");
+			out.println("<FORM method=POST action=\"" + Util.generateHTMLLink(ChecklistTestResponse.class.getSimpleName(), response) + "\" id=manualcheckform>");
 			out.println("<input type=hidden name=testid value=" + test.getId() + ">");
 			out.println("<input type=hidden name=logid value=" + logEntry.getId() + ">");
 			out.println("<table class=border>");
@@ -106,7 +110,7 @@ public class PerformStudentTestResultView extends HttpServlet {
 			}
 		}
 
-		out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+		out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 
 		template.printTemplateFooter();
 	}

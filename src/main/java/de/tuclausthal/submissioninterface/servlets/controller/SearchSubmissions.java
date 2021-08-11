@@ -40,7 +40,11 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRol
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.SearchSubmissionsResultView;
+import de.tuclausthal.submissioninterface.servlets.view.SearchSubmissionsView;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -48,6 +52,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for searching a task
  * @author Sven Strickroth
  */
+@GATEController
 public class SearchSubmissions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -58,7 +63,7 @@ public class SearchSubmissions extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -71,7 +76,7 @@ public class SearchSubmissions extends HttpServlet {
 		}
 
 		request.setAttribute("task", task);
-		getServletContext().getNamedDispatcher("SearchSubmissionsView").forward(request, response);
+		getServletContext().getNamedDispatcher(SearchSubmissionsView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -81,7 +86,7 @@ public class SearchSubmissions extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -95,7 +100,7 @@ public class SearchSubmissions extends HttpServlet {
 
 		if (request.getParameterValues("search") == null || request.getParameterValues("search").length == 0 || request.getParameter("q") == null || request.getParameter("search").trim().isEmpty()) {
 			request.setAttribute("title", "Nicht gesucht");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -150,7 +155,7 @@ public class SearchSubmissions extends HttpServlet {
 
 		request.setAttribute("task", task);
 		request.setAttribute("results", foundSubmissions);
-		getServletContext().getNamedDispatcher("SearchSubmissionsResultView").forward(request, response);
+		getServletContext().getNamedDispatcher(SearchSubmissionsResultView.class.getSimpleName()).forward(request, response);
 	}
 
 	static private boolean arrayContains(String array[], String searchFor) {

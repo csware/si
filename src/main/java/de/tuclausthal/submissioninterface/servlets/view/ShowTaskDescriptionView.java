@@ -27,12 +27,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * View-Servlet for displaying a task in only-description view
  * @author Sven Strickroth
  */
+@GATEView
 public class ShowTaskDescriptionView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

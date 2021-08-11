@@ -49,7 +49,13 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageArgoUMLView;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.PerformStudentTestArgoUMLView;
+import de.tuclausthal.submissioninterface.servlets.view.PerformStudentTestResultView;
+import de.tuclausthal.submissioninterface.servlets.view.PerformStudentTestRunningView;
 import de.tuclausthal.submissioninterface.testframework.TestExecutor;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
@@ -59,6 +65,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for performing a test
  * @author Sven Strickroth
  */
+@GATEController
 public class PerformStudentTest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -75,7 +82,7 @@ public class PerformStudentTest extends HttpServlet {
 				sa.setQueuedTest(null);
 			}
 			request.setAttribute("title", "Test nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -98,8 +105,8 @@ public class PerformStudentTest extends HttpServlet {
 
 		if ((task.getDeadline().before(new Date()) || submission == null || (task.isAllowPrematureSubmissionClosing() && submission.isClosed()))) {
 			request.setAttribute("title", "Testen bzw. Abruf des Ergebnisses nicht mehr möglich");
-			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			QueuedTest resultFuture = sa.getQueuedTest();
 			if (resultFuture != null && resultFuture.testId == test.getId()) {
 				sa.setQueuedTest(null);
@@ -115,7 +122,7 @@ public class PerformStudentTest extends HttpServlet {
 		if (test instanceof UMLConstraintTest && request.getParameter("argouml") != null) {
 			if (testCountDAO.canStillRunXTimes(test, submission) == 0) {
 				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
-				getServletContext().getNamedDispatcher("MessageArgoUMLView").forward(request, response);
+				getServletContext().getNamedDispatcher(MessageArgoUMLView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 			Future<TestExecutorTestResult> resultFuture = TestExecutor.executeTask(new TestTask(test, submission));
@@ -140,30 +147,30 @@ public class PerformStudentTest extends HttpServlet {
 			if (!testCountDAO.canSeeResultAndIncrementCounterTransaction(test, submission)) {
 				tx.commit();
 				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
-				getServletContext().getNamedDispatcher("MessageArgoUMLView").forward(request, response);
+				getServletContext().getNamedDispatcher(MessageArgoUMLView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 			tx.commit();
 
 			new LogDAO(session).createLogEntryForStudentTest(participation.getUser(), test, test.getTask(), result.isTestPassed(), result.getTestOutput());
 			request.setAttribute("testresult", result);
-			getServletContext().getNamedDispatcher("PerformStudentTestArgoUMLView").forward(request, response);
+			getServletContext().getNamedDispatcher(PerformStudentTestArgoUMLView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
 		QueuedTest resultFuture = sa.getQueuedTest();
 		if (resultFuture == null) {
 			request.setAttribute("title", "Testergebnis nicht (mehr) verfügbar");
-			request.setAttribute("message", "<div class=mid>Das Testergebnis konnte nicht abgerufen werden. Entweder wurde es bereits abgerufen oder es wurde eine neue Sitzung gestartet.<p><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			request.setAttribute("message", "<div class=mid>Das Testergebnis konnte nicht abgerufen werden. Entweder wurde es bereits abgerufen oder es wurde eine neue Sitzung gestartet.<p><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
 		if (test.getId() != resultFuture.testId) {
 			LOG.warn("Mismatching testid in session " + resultFuture.testId + " and on request " + test.getId());
 			request.setAttribute("title", "Es kann immer nur ein Test zu einer Zeit angefordert werden.");
-			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("PerformStudentTest?testid=" + resultFuture.testId, response) + "\">weiter zum bereits angefragten Test</a></div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink(PerformStudentTest.class.getSimpleName() + "?testid=" + resultFuture.testId, response) + "\">weiter zum bereits angefragten Test</a></div>");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -172,8 +179,8 @@ public class PerformStudentTest extends HttpServlet {
 			LOG.warn("testResult future was null");
 			sa.setQueuedTest(null);
 			request.setAttribute("title", "Testergebnis nicht mehr verfügbar");
-			request.setAttribute("message", "<div class=mid>Auf Grund eines technischen Fehlers ist das Testergebnis nicht mehr abrufbar. Bitte fordern Sie den Test erneut an.<p><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			request.setAttribute("message", "<div class=mid>Auf Grund eines technischen Fehlers ist das Testergebnis nicht mehr abrufbar. Bitte fordern Sie den Test erneut an.<p><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -194,15 +201,15 @@ public class PerformStudentTest extends HttpServlet {
 			if (!resultFuture.submissionLastChanged.equals(submission.getLastModified()) || submission.isClosed()) {
 				tx.commit();
 				request.setAttribute("title", "Das Testergebnis wurde durch eine zwischenzeitlich modifizierte Abgabe ungültig.");
-				request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 			if (!testCountDAO.canSeeResultAndIncrementCounterTransaction(test, submission)) {
 				tx.commit();
 				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
-				request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 			tx.commit();
@@ -211,11 +218,11 @@ public class PerformStudentTest extends HttpServlet {
 			request.setAttribute("logentry", logEntry);
 			request.setAttribute("testresult", result);
 
-			getServletContext().getNamedDispatcher("PerformStudentTestResultView").forward(request, response);
+			getServletContext().getNamedDispatcher(PerformStudentTestResultView.class.getSimpleName()).forward(request, response);
 		} else {
-			request.setAttribute("refreshurl", Util.generateRedirectURL("PerformStudentTest?testid=" + resultFuture.testId, response));
+			request.setAttribute("refreshurl", Util.generateRedirectURL(PerformStudentTest.class.getSimpleName() + "?testid=" + resultFuture.testId, response));
 			request.setAttribute("redirectTime", 5);
-			getServletContext().getNamedDispatcher("PerformStudentTestRunningView").forward(request, response);
+			getServletContext().getNamedDispatcher(PerformStudentTestRunningView.class.getSimpleName()).forward(request, response);
 		}
 	}
 
@@ -225,7 +232,7 @@ public class PerformStudentTest extends HttpServlet {
 		Test test = DAOFactory.TestDAOIf(session).getTest(Util.parseInteger(request.getParameter("testid"), 0));
 		if (test == null) {
 			request.setAttribute("title", "Test nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -243,14 +250,14 @@ public class PerformStudentTest extends HttpServlet {
 		Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
 		if ((task.getDeadline().before(new Date()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed()))) {
 			request.setAttribute("title", "Testen nicht mehr möglich");
-			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -261,8 +268,8 @@ public class PerformStudentTest extends HttpServlet {
 
 		if (testCountDAO.canStillRunXTimes(test, submission) == 0) {
 			request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
-			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -273,12 +280,12 @@ public class PerformStudentTest extends HttpServlet {
 		if (resultFuture != null) {
 			tx.commit();
 			request.setAttribute("title", "Es kann immer nur ein Test zu einer Zeit angefragt werden.");
-			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("PerformStudentTest?testid=" + resultFuture.testId, response) + "\">weiter zum bereits angefragten Test</a></div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink(PerformStudentTest.class.getSimpleName() + "?testid=" + resultFuture.testId, response) + "\">weiter zum bereits angefragten Test</a></div>");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		sa.setQueuedTest(new QueuedTest(test.getId(), submission.getLastModified(), TestExecutor.executeTask(new TestTask(test, submission))));
 		tx.commit();
-		response.sendRedirect(Util.generateRedirectURL("PerformStudentTest?testid=" + test.getId(), response));
+		response.sendRedirect(Util.generateRedirectURL(PerformStudentTest.class.getSimpleName() + "?testid=" + test.getId(), response));
 	}
 }

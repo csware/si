@@ -30,6 +30,9 @@ import javax.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.dto.SubmissionAssignPointsDTO;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowUser;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -38,6 +41,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Mass mark task
  * @author Sven Strickroth
  */
+@GATEView
 public class MassMarkTaskView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -72,7 +76,7 @@ public class MassMarkTaskView extends HttpServlet {
 		out.println("<td><input type=checkbox name=dryrun checked></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><INPUT TYPE=submit VALUE=upload> <a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">Abbrechen</a></td>");
+		out.println("<td colspan=2 class=mid><INPUT TYPE=submit VALUE=upload> <a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Abbrechen</a></td>");
 		out.println("</table>");
 		out.println("</FORM>");
 
@@ -86,7 +90,7 @@ public class MassMarkTaskView extends HttpServlet {
 			out.print(";Punkte");
 		}
 		out.println("</p>");
-		out.println("<p><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid() + "&show=markingcsv", response) + "\">Download Template/aktuelle Bewertungen</a></p>");
+		out.println("<p><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&show=markingcsv", response) + "\">Download Template/aktuelle Bewertungen</a></p>");
 		out.println("<p>Die Datei ist UTF-8 kodiert, enthält eine Überschriftenzeile, die Felder sind durch \";\" getrennt, Punkte haben \",\" oder \".\" als Dezimaltrennzeichen und Werte mit Zeilenumbruch, doppelte Anführungszeichen oder Semikolon sind in doppelte Anführungszeichen eingeschlossen (Escaping von Anführungszeichen mit \"\\\").</p>");
 
 		template.printTemplateFooter();
@@ -128,7 +132,7 @@ public class MassMarkTaskView extends HttpServlet {
 		out.println("</tr>");
 		for (SubmissionAssignPointsDTO submissionAssignPointsDTO : points) {
 			out.println("<tr>");
-			out.println("<td><a href=\"" + Util.generateHTMLLink("ShowUser?uid=" + submissionAssignPointsDTO.getParticipation().getUser().getUid(), response) + "\">" + Util.escapeHTML(submissionAssignPointsDTO.getParticipation().getUser().getFullName()) + "</a></td>");
+			out.println("<td><a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + submissionAssignPointsDTO.getParticipation().getUser().getUid(), response) + "\">" + Util.escapeHTML(submissionAssignPointsDTO.getParticipation().getUser().getFullName()) + "</a></td>");
 			out.println("<td>" + Util.escapeHTML(submissionAssignPointsDTO.getPoints().getInternalComment()) + "</td>");
 			out.println("<td>" + Util.escapeHTML(submissionAssignPointsDTO.getPoints().getPublicComment()) + "</td>");
 			out.println("<td>" + Util.boolToHTML(submissionAssignPointsDTO.getPoints().getPointsOk()) + "</td>");

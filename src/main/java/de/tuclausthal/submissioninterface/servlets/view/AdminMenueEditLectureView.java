@@ -32,6 +32,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.servlets.controller.AdminMenue;
+import de.tuclausthal.submissioninterface.servlets.controller.Overview;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -40,6 +43,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a form for editing a lecture
  * @author Sven Strickroth
  */
+@GATEView
 public class AdminMenueEditLectureView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -55,7 +59,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 		} else {
 			@SuppressWarnings("unchecked")
 			List<Participation> participants = (List<Participation>) request.getAttribute("participants");
-			template.printTemplateHeader("Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten", "<a href=\"" + Util.generateHTMLLink("Overview", response) + "\">Meine Veranstaltungen</a> - <a href=\"" + Util.generateHTMLLink("AdminMenue", response) + "\">Admin-Menü</a> &gt; Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten");
+			template.printTemplateHeader("Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten", "<a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), response) + "\">Meine Veranstaltungen</a> - <a href=\"" + Util.generateHTMLLink(AdminMenue.class.getSimpleName(), response) + "\">Admin-Menü</a> &gt; Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten");
 			PrintWriter out = response.getWriter();
 			out.println("<p class=mid><a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("?action=deleteLecture&lecture=" + lecture.getId(), response) + "\">Veranstaltung löschen</a></p>");
 			out.println("<h2>BetreuerInnen</h2>");

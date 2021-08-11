@@ -34,7 +34,9 @@ import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -42,6 +44,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  *
  */
+@GATEController
 public class JoinGroup extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -53,7 +56,7 @@ public class JoinGroup extends HttpServlet {
 		Group group = groupDAO.getGroupLocked(Util.parseInteger(request.getParameter("groupid"), 0));
 		if (group == null) {
 			request.setAttribute("title", "Gruppe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			tx.commit();
 			return;
 		}
@@ -72,7 +75,7 @@ public class JoinGroup extends HttpServlet {
 			participation.setGroup(group);
 			participationDAO.saveParticipation(participation);
 		}
-		response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + group.getLecture().getId(), response));
+		response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + group.getLecture().getId(), response));
 		tx.commit();
 		return;
 	}

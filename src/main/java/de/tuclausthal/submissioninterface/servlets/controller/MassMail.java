@@ -37,7 +37,10 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MassMailView;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.MailSender;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -45,6 +48,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Controller-Servlet for mass mails
  * @author Sven Strickroth
  */
+@GATEController
 public class MassMail extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -56,7 +60,7 @@ public class MassMail extends HttpServlet {
 
 		if (request.getParameter("groupid") == null && request.getParameter("lectureid") == null) {
 			request.setAttribute("title", "ungültiger Aufruf");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -65,7 +69,7 @@ public class MassMail extends HttpServlet {
 			group = groupDAO.getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
 			if (group == null) {
 				request.setAttribute("title", "Gruppe nicht gefunden");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 			lecture = group.getLecture();
@@ -74,7 +78,7 @@ public class MassMail extends HttpServlet {
 			lecture = lectureDAO.getLecture(Util.parseInteger(request.getParameter("lectureid"), 0));
 			if (lecture == null) {
 				request.setAttribute("title", "Vorlesung nicht gefunden");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 		}
@@ -89,7 +93,7 @@ public class MassMail extends HttpServlet {
 
 		request.setAttribute("lecture", lecture);
 		request.setAttribute("group", group);
-		getServletContext().getNamedDispatcher("MassMailView").forward(request, response);
+		getServletContext().getNamedDispatcher(MassMailView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -98,7 +102,7 @@ public class MassMail extends HttpServlet {
 
 		if (request.getParameter("subject") == null && request.getParameter("message") == null) {
 			request.setAttribute("title", "ungültiger Aufruf");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -106,7 +110,7 @@ public class MassMail extends HttpServlet {
 		Lecture lecture = lectureDAO.getLecture(Util.parseInteger(request.getParameter("lectureid"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Vorlesung nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -145,13 +149,13 @@ public class MassMail extends HttpServlet {
 		}
 		if (receipients.isEmpty()) {
 			request.setAttribute("title", "Keine Empfänger ausgewählt");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		for (String receipient : receipients) {
 			MailSender.sendMail(receipient, request.getParameter("subject"), request.getParameter("message").trim() + "\n\n-- \nGesendet von: " + participation.getUser().getFullName() + " <" + participation.getUser().getEmail() + ">\nDirect reply is not possible.");
 		}
 		request.setAttribute("title", "Mail gesendet");
-		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+		getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 	}
 }

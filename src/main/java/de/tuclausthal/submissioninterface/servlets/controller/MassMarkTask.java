@@ -55,7 +55,10 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.persistence.dto.SubmissionAssignPointsDTO;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MassMarkTaskView;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -65,6 +68,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  *
  */
 @MultipartConfig(maxFileSize = Configuration.MAX_UPLOAD_SIZE)
+@GATEController
 public class MassMarkTask extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -75,7 +79,7 @@ public class MassMarkTask extends HttpServlet {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -87,7 +91,7 @@ public class MassMarkTask extends HttpServlet {
 		}
 
 		request.setAttribute("task", task);
-		getServletContext().getNamedDispatcher("MassMarkTaskView").forward(request, response);
+		getServletContext().getNamedDispatcher(MassMarkTaskView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -97,7 +101,7 @@ public class MassMarkTask extends HttpServlet {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -110,7 +114,7 @@ public class MassMarkTask extends HttpServlet {
 
 		if (request.getPart("file") == null) {
 			request.setAttribute("title", "Keine Datei gefunden.");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -123,7 +127,7 @@ public class MassMarkTask extends HttpServlet {
 				lines = reader.readAll();
 			} catch (CsvException e) {
 				request.setAttribute("title", "Fehler beim Lesen der CSV-Datei.");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 		}
@@ -132,7 +136,7 @@ public class MassMarkTask extends HttpServlet {
 
 		if (lines.size() != lines.stream().map(line -> line[0]).collect(Collectors.toSet()).size()) {
 			request.setAttribute("title", "Doppelte E-Mail-Adresse(n) gefunden.");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -149,7 +153,7 @@ public class MassMarkTask extends HttpServlet {
 			String[] line = lines.get(i);
 			if (line.length != columns) {
 				request.setAttribute("title", "Zeile mit ungültigem Format gefunden.");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 			User user = userDAO.getUserByEmail(line[0]);
@@ -231,7 +235,7 @@ public class MassMarkTask extends HttpServlet {
 			request.setAttribute("errors", errors);
 			request.setAttribute("task", task);
 			request.setAttribute("points", points);
-			getServletContext().getNamedDispatcher("MassMarkTaskView").forward(request, response);
+			getServletContext().getNamedDispatcher(MassMarkTaskView.class.getSimpleName()).forward(request, response);
 			tx.rollback();
 			return;
 		}
@@ -251,6 +255,6 @@ public class MassMarkTask extends HttpServlet {
 			}
 		}
 		tx.commit();
-		response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
+		response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 	}
 }

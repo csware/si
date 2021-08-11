@@ -34,12 +34,16 @@ import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.WebStartArgoUMLView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Controller-Servlet für den ArgoUML WebStart
  */
+@GATEController
 public class WebStart extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -51,7 +55,7 @@ public class WebStart extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -65,18 +69,18 @@ public class WebStart extends HttpServlet {
 
 		if (task.getStart().after(new Date()) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
 		if ("argouml".equals(request.getParameter("tool"))) {
 			response.setContentType("application/x-java-jnlp-file");
 			request.setAttribute("task", task);
-			getServletContext().getNamedDispatcher("WebStartArgoUMLView").forward(request, response);
+			getServletContext().getNamedDispatcher(WebStartArgoUMLView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
-		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+		getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 	}
 }

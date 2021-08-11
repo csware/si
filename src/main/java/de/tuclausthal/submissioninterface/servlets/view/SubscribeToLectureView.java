@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.servlets.controller.Overview;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -36,6 +38,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying the list of lectures a user can subscribe to
  * @author Sven Strickroth
  */
+@GATEView
 public class SubscribeToLectureView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -46,7 +49,7 @@ public class SubscribeToLectureView extends HttpServlet {
 		@SuppressWarnings("unchecked")
 		List<Lecture> lectures = (List<Lecture>) request.getAttribute("lectures");
 
-		template.printTemplateHeader("Veranstaltungen", "<a href=\"" + Util.generateHTMLLink("Overview", response) + "\">Meine Veranstaltungen</a> &gt; Veranstaltungen");
+		template.printTemplateHeader("Veranstaltungen", "<a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), response) + "\">Meine Veranstaltungen</a> &gt; Veranstaltungen");
 		PrintWriter out = response.getWriter();
 
 		if (!lectures.isEmpty()) {

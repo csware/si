@@ -69,7 +69,12 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.SubmitSolutionAdvisorFormView;
+import de.tuclausthal.submissioninterface.servlets.view.SubmitSolutionFormView;
+import de.tuclausthal.submissioninterface.servlets.view.SubmitSolutionPossiblePartnersView;
 import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -81,6 +86,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 @MultipartConfig(maxFileSize = Configuration.MAX_UPLOAD_SIZE)
+@GATEController
 public class SubmitSolution extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -92,7 +98,7 @@ public class SubmitSolution extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -110,25 +116,25 @@ public class SubmitSolution extends HttpServlet {
 		if (!canUploadForStudents) {
 			if (participation.getRoleType() == ParticipationRole.TUTOR) {
 				request.setAttribute("title", "TutorInnen können keine eigenen Lösungen einsenden.");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 			if (task.getStart().after(new Date())) {
 				request.setAttribute("title", "Abgabe nicht gefunden");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 			if (task.getDeadline().before(new Date())) {
 				request.setAttribute("title", "Abgabe nicht mehr möglich");
-				request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 		}
 
 		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask() && !task.isClozeTask()) {
 			request.setAttribute("title", "Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -136,7 +142,7 @@ public class SubmitSolution extends HttpServlet {
 
 		if (canUploadForStudents) {
 			request.setAttribute("participants", DAOFactory.ParticipationDAOIf(session).getLectureParticipations(task.getTaskGroup().getLecture()));
-			getServletContext().getNamedDispatcher("SubmitSolutionAdvisorFormView").forward(request, response);
+			getServletContext().getNamedDispatcher(SubmitSolutionAdvisorFormView.class.getSimpleName()).forward(request, response);
 		} else {
 			request.setAttribute("participation", participation);
 
@@ -159,9 +165,9 @@ public class SubmitSolution extends HttpServlet {
 					}
 					request.setAttribute("textsolution", textsolution);
 				}
-				getServletContext().getNamedDispatcher("SubmitSolutionFormView").forward(request, response);
+				getServletContext().getNamedDispatcher(SubmitSolutionFormView.class.getSimpleName()).forward(request, response);
 			} else {
-				getServletContext().getNamedDispatcher("SubmitSolutionPossiblePartnersView").forward(request, response);
+				getServletContext().getNamedDispatcher(SubmitSolutionPossiblePartnersView.class.getSimpleName()).forward(request, response);
 			}
 		}
 	}
@@ -189,7 +195,7 @@ public class SubmitSolution extends HttpServlet {
 			template.printTemplateHeader("Ungültige Anfrage");
 			PrintWriter out = response.getWriter();
 			out.println("<div class=mid>Sie nehmen an dieser Veranstaltung nicht teil.</div>");
-			out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("Overview", response) + "\">zur Übersicht</a></div>");
+			out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), response) + "\">zur Übersicht</a></div>");
 			template.printTemplateFooter();
 			return;
 		}
@@ -216,14 +222,14 @@ public class SubmitSolution extends HttpServlet {
 			if (!request.getParts().stream().allMatch(part -> part.getSize() <= task.getMaxsize())) {
 				request.setAttribute("title", "Datei ist zu groß (maximum sind " + task.getMaxsize() + " Bytes)");
 				request.setAttribute("message", "<div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 			long fileParts = request.getParts().stream().filter(part -> "file".equals(part.getName())).count();
 			if (fileParts > 1 && fileParts != request.getParts().stream().filter(part -> "file".equals(part.getName())).map(part -> Util.getUploadFileName(part)).collect(Collectors.toSet()).size()) {
 				request.setAttribute("title", "Mehrere Dateien mit identischem Namen im Upload gefunden.");
 				request.setAttribute("message", "<div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
-				getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 		}
@@ -275,7 +281,7 @@ public class SubmitSolution extends HttpServlet {
 				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Abgabe nicht mehr möglich.</div>");
-				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 				template.printTemplateFooter();
 				return;
 			}
@@ -283,7 +289,7 @@ public class SubmitSolution extends HttpServlet {
 				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Dateiupload ist für diese Aufgabe deaktiviert.</div>");
-				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 				template.printTemplateFooter();
 				return;
 			} else if (file == null && !task.isShowTextArea() && !task.isSCMCTask() && !task.isClozeTask()) {
@@ -304,8 +310,8 @@ public class SubmitSolution extends HttpServlet {
 
 		if (task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
 			request.setAttribute("title", "Die Abgabe wurde bereits als endgültig abgeschlossen markiert. Eine Veränderung ist daher nicht mehr möglich.");
-			request.setAttribute("message", "<p><div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			request.setAttribute("message", "<p><div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -432,7 +438,7 @@ public class SubmitSolution extends HttpServlet {
 				}
 				out.println("Dateiname ungültig war bzw. nicht der Vorgabe entsprach (ist z.B. ein Klassenname vorgegeben, so muss die Datei genauso heißen, Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten).");
 				out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur Abgabeseite</a></div>");
-				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 				template.printTemplateFooter();
 				return;
 			}
@@ -445,7 +451,7 @@ public class SubmitSolution extends HttpServlet {
 				}
 			}
 
-			response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 			return;
 		} else if (task.isSCMCTask()) {
 			MCOptionDAOIf mcOptionDAO = DAOFactory.MCOptionDAOIf(session);
@@ -473,7 +479,7 @@ public class SubmitSolution extends HttpServlet {
 			submissionDAO.saveSubmission(submission);
 			new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, Json.createObjectBuilder().add("mc", Json.createArrayBuilder(results)).build().toString());
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 		} else if (task.isClozeTask()) {
 			ClozeTaskType clozeHelper = new ClozeTaskType(task.getDescription(), null, false, false);
 			List<String> results = clozeHelper.parseResults(request);
@@ -485,7 +491,7 @@ public class SubmitSolution extends HttpServlet {
 			submissionDAO.saveSubmission(submission);
 			new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, Json.createObjectBuilder().add("cloze", Json.createArrayBuilder(results)).build().toString());
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 		} else if (request.getParameter("textsolution") != null) {
 			LogEntry logEntry = new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null);
 			File logPath = new File(taskPath, "logs" + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
@@ -529,7 +535,7 @@ public class SubmitSolution extends HttpServlet {
 			submission.setLastModified(new Date());
 			submissionDAO.saveSubmission(submission);
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("ShowTask?taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 		} else {
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 				submission.setLastModified(new Date());

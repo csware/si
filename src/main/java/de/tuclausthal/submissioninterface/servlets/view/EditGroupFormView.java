@@ -31,7 +31,10 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.controller.AddGroup;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowLecture;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -40,6 +43,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for displaying a form for editing a group
  * @author Sven Strickroth
  */
+@GATEView
 public class EditGroupFormView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -114,12 +118,12 @@ public class EditGroupFormView extends HttpServlet {
 			out.println("</tr>");
 		}
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=zuordnen> <a href=\"" + Util.generateHTMLLink("ShowLecture?lecture=" + group.getLecture().getId(), response) + "\">Abbrechen</a></td>");
+		out.println("<td colspan=2 class=mid><input type=submit value=zuordnen> <a href=\"" + Util.generateHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + group.getLecture().getId(), response) + "\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
 		if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
-			out.println("<p class=mid><a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink("AddGroup?lecture=" + group.getLecture().getId() + "&action=deleteGroup&gid=" + group.getGid(), response) + "\">Gruppe löschen</a></td>");
+			out.println("<p class=mid><a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + Util.generateHTMLLink(AddGroup.class.getSimpleName() + "?lecture=" + group.getLecture().getId() + "&action=deleteGroup&gid=" + group.getGid(), response) + "\">Gruppe löschen</a></td>");
 		}
 		template.printTemplateFooter();
 	}

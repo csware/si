@@ -38,7 +38,10 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTe
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.JavaAdvancedIOTestManagerOverView;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -47,6 +50,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 @MultipartConfig(maxFileSize = Configuration.MAX_UPLOAD_SIZE)
+@GATEController
 public class JavaAdvancedIOTestManager extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -57,7 +61,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
 		if (tst == null || !(tst instanceof JavaAdvancedIOTest)) {
 			request.setAttribute("title", "Test nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		JavaAdvancedIOTest test = (JavaAdvancedIOTest) tst;
@@ -70,7 +74,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 		}
 
 		request.setAttribute("test", test);
-		getServletContext().getNamedDispatcher("JavaAdvancedIOTestManagerOverView").forward(request, response);
+		getServletContext().getNamedDispatcher(JavaAdvancedIOTestManagerOverView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -80,7 +84,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
 		if (tst == null || !(tst instanceof JavaAdvancedIOTest)) {
 			request.setAttribute("title", "Test nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		JavaAdvancedIOTest test = (JavaAdvancedIOTest) tst;
@@ -97,7 +101,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 			test.setTestTitle(request.getParameter("title"));
 			session.update(test);
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(JavaAdvancedIOTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
 		} else if ("addNewStep".equals(request.getParameter("action"))) {
 			String title = request.getParameter("title");
@@ -108,7 +112,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 			session.save(newStep);
 			test.getTestSteps().add(newStep);
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(JavaAdvancedIOTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
 		} else if ("updateStep".equals(request.getParameter("action"))) {
 			JavaAdvancedIOTestStep step = null;
@@ -128,7 +132,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 				session.saveOrUpdate(step);
 				tx.commit();
 			}
-			response.sendRedirect(Util.generateRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(JavaAdvancedIOTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
 		} else if ("deleteStep".equals(request.getParameter("action"))) {
 			JavaAdvancedIOTestStep step = null;
@@ -144,7 +148,7 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 				session.delete(step);
 				tx.commit();
 			}
-			response.sendRedirect(Util.generateRedirectURL("JavaAdvancedIOTestManager?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(JavaAdvancedIOTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
 		}
 

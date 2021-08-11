@@ -35,7 +35,10 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.AddGroupFormView;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -43,6 +46,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  *
  */
+@GATEController
 public class AddGroup extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -52,7 +56,7 @@ public class AddGroup extends HttpServlet {
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -64,7 +68,7 @@ public class AddGroup extends HttpServlet {
 		}
 
 		request.setAttribute("lecture", DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0)));
-		getServletContext().getNamedDispatcher("AddGroupFormView").forward(request, response);
+		getServletContext().getNamedDispatcher(AddGroupFormView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -73,7 +77,7 @@ public class AddGroup extends HttpServlet {
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -89,7 +93,7 @@ public class AddGroup extends HttpServlet {
 			Transaction tx = session.beginTransaction();
 			Group group = groupDAO.createGroup(lecture, request.getParameter("name"), request.getParameter("allowStudentsToSignup") != null, request.getParameter("allowStudentsToQuit") != null, Util.parseInteger(request.getParameter("maxStudents"), 0), request.getParameter("membersvisible") != null);
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL("EditGroup?groupid=" + group.getGid(), response));
+			response.sendRedirect(Util.generateRedirectURL(EditGroup.class.getSimpleName() + "?groupid=" + group.getGid(), response));
 			return;
 		} else if ("deleteGroup".equals(request.getParameter("action")) && request.getParameter("gid") != null) {
 			GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
@@ -99,7 +103,7 @@ public class AddGroup extends HttpServlet {
 				groupDAO.deleteGroup(group);
 				tx.commit();
 			}
-			response.sendRedirect(Util.generateRedirectURL("ShowLecture?lecture=" + lecture.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response));
 			return;
 		}
 

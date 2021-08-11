@@ -39,7 +39,10 @@ import de.tuclausthal.submissioninterface.persistence.dao.impl.LogDAO;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.DeleteFileView;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -48,6 +51,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  *
  */
+@GATEController(recursive = true)
 public class DeleteFile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -59,7 +63,7 @@ public class DeleteFile extends HttpServlet {
 
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -75,15 +79,15 @@ public class DeleteFile extends HttpServlet {
 
 		if (task.getDeadline().before(new Date()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
 			request.setAttribute("title", "Es sind keine Veränderungen an dieser Abgabe mehr möglich.");
-			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowTask?taskid=" + task.getTaskid(), request, response) + "\">zurück zur Aufgabe</a></div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), request, response) + "\">zurück zur Aufgabe</a></div>");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowTask?taskid=" + task.getTaskid(), request, response) + "\">zurück zur Aufgabe</a></div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), request, response) + "\">zurück zur Aufgabe</a></div>");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -94,13 +98,13 @@ public class DeleteFile extends HttpServlet {
 			if (file.exists() && file.isFile()) {
 				request.setAttribute("submission", submission);
 				request.setAttribute("filename", relativeFile);
-				getServletContext().getNamedDispatcher("DeleteFileView").forward(request, response);
+				getServletContext().getNamedDispatcher(DeleteFileView.class.getSimpleName()).forward(request, response);
 				return;
 			}
 		}
 
 		request.setAttribute("title", "Datei nicht gefunden");
-		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+		getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 	}
 
 	@Override
@@ -111,7 +115,7 @@ public class DeleteFile extends HttpServlet {
 
 		if (submission == null) {
 			request.setAttribute("title", "Abgabe nicht gefunden");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -127,13 +131,13 @@ public class DeleteFile extends HttpServlet {
 
 		if (task.getDeadline().before(new Date()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
 			request.setAttribute("title", "Es sind keine Veränderungen an dieser Abgabe mehr möglich.");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
 		if (request.getPathInfo() == null) {
 			request.setAttribute("title", "Ungültige Anfrage");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 
@@ -151,14 +155,14 @@ public class DeleteFile extends HttpServlet {
 				new LogDAO(session).createLogDeleteEntryTransaction(participation.getUser(), submission.getTask(), relativeFile);
 				tx.commit();
 
-				response.sendRedirect(Util.generateAbsoluteServletsRedirectURL("ShowTask?taskid=" + task.getTaskid(), request, response));
+				response.sendRedirect(Util.generateAbsoluteServletsRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), request, response));
 				return;
 			}
 			tx.rollback();
 		}
 
 		request.setAttribute("title", "Datei nicht gefunden");
-		request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink("ShowTask?taskid=" + task.getTaskid(), request, response) + "\">zurück zur Aufgabe</a></div>");
-		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+		request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), request, response) + "\">zurück zur Aufgabe</a></div>");
+		getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 	}
 }

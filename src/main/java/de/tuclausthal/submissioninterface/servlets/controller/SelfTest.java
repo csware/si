@@ -48,7 +48,10 @@ import de.tuclausthal.submissioninterface.dupecheck.jplag.JPlagAdapter;
 import de.tuclausthal.submissioninterface.dupecheck.plaggie.PlaggieAdapter;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.SelfTestView;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.executor.impl.LocalExecutor;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.DockerTest;
@@ -63,8 +66,8 @@ import de.tuclausthal.submissioninterface.util.Util;
 /**
  * Controller for a short Self-Test
  * @author Sven Strickroth
- *
  */
+@GATEController
 public class SelfTest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -75,7 +78,7 @@ public class SelfTest extends HttpServlet {
 			LOG.error("SelfTest was accessed without proper authentication. AuthenticationFilter does not seem to be working correctly!");
 			request.setAttribute("title", "Selbsttest");
 			request.setAttribute("message", "<div class=red>Selbsttest OHNE Authentifizierung erreichbar!</div>");
-			getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 		if (!RequestAdapter.getUser(request).isSuperUser()) {
@@ -179,26 +182,9 @@ public class SelfTest extends HttpServlet {
 		} else {
 			testresults.add(new TestResult("\"" + DockerTest.SAFE_DOCKER_SCRIPT + "\" Skript ist nicht installiert: DockerIOTests nicht verfügbar (grundsätzlich nur verfügbar für Linux).", null));
 		}
-		StringBuilder output = new StringBuilder();
-		output.append("<table class=border>");
-		output.append("<tr>");
-		output.append("<th>Test</th>");
-		output.append("<th>OK?</th>");
-		output.append("</tr>\n");
-		for (TestResult testresult : testresults) {
-			output.append("<tr>");
-			output.append("<td>" + testresult.test);
-			if (testresult.details != null) {
-				output.append("<pre style=\"white-space: break-spaces;\">" + testresult.details + "</pre>");
-			}
-			output.append("</td>");
-			output.append("<td>" + (testresult.result == null ? "n/a" : Util.boolToHTML(testresult.result)) + "</td>");
-			output.append("</tr>\n");
-		}
-		output.append("</table>");
-		request.setAttribute("title", "Selbsttest");
-		request.setAttribute("message", output.toString());
-		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+
+		request.setAttribute("testresults", testresults);
+		getServletContext().getNamedDispatcher(SelfTestView.class.getSimpleName()).forward(request, response);
 	}
 
 	private boolean checkDataDir() {
@@ -324,7 +310,7 @@ public class SelfTest extends HttpServlet {
 		Util.recursiveDelete(tempDir);
 	}
 
-	protected static class TestResult {
+	public static class TestResult {
 		public String test;
 		public String details;
 		public Boolean result;

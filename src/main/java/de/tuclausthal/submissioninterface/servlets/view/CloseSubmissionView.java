@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -35,6 +37,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * View-Servlet for closing a submission
  * @author Sven Strickroth
  */
+@GATEView
 public class CloseSubmissionView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -49,7 +52,7 @@ public class CloseSubmissionView extends HttpServlet {
 		out.println("<FORM class=mid method=POST action=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">");
 		out.println("<p>Sie Sie sicher, dass Sie Ihre Lösung wirklich final abgeben möchten?</p>");
 		out.println("<p><span class=b>Wichtig</span>: Nach der finalen Abgabe sind keine weiteren Änderungen mehr möglich.<br>Dieser Vorgang kann von Ihnen nicht rückgängig gemacht werden.</span></p>");
-		out.println("<INPUT TYPE=submit VALUE=\"final abgeben\"> <a href=\"" + Util.generateHTMLLink("ShowTask?taskid=" + submission.getTask().getTaskid(), response) + "\">Abbrechen</a>");
+		out.println("<INPUT TYPE=submit VALUE=\"final abgeben\"> <a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid(), response) + "\">Abbrechen</a>");
 		out.println("</FORM>");
 		template.printTemplateFooter();
 	}

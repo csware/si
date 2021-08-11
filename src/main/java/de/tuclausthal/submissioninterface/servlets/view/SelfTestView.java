@@ -20,57 +20,51 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.servlets.controller.SelfTest.TestResult;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * View-Servlet for displaying a task in tutor view
+ * View for the SelfTest
  * @author Sven Strickroth
  */
 @GATEView
-public class ShowGroupStudentView extends HttpServlet {
+public class SelfTestView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		@SuppressWarnings("unchecked")
+		List<TestResult> testresults = (List<TestResult>) request.getAttribute("testresults");
+
 		Template template = TemplateFactory.getTemplate(request, response);
-
-		Group group = (Group) request.getAttribute("group");
-
-		template.printTemplateHeader(group);
-
+		template.printTemplateHeader("Selbsttest");
 		PrintWriter out = response.getWriter();
-
-		if (group.getTutors() != null && !group.getTutors().isEmpty()) {
-			if (group.getTutors().size() > 1) {
-				out.println("<h2>Meine TutorInnen</h2>");
-			} else {
-				out.println("<h2>Mein(e) TutorIn</h2>");
+		out.println("<table class=border>");
+		out.println("<tr>");
+		out.println("<th>Test</th>");
+		out.println("<th>OK?</th>");
+		out.println("</tr>");
+		for (TestResult testresult : testresults) {
+			out.println("<tr>");
+			out.println("<td>" + testresult.test);
+			if (testresult.details != null && !testresult.details.isBlank()) {
+				out.println("<pre style=\"white-space: break-spaces;\">" + testresult.details + "</pre>");
 			}
-			out.println("<ul>");
-			for (Participation tutor : group.getTutors()) {
-				out.print("<li><a href=\"mailto:" + Util.escapeHTML(tutor.getUser().getEmail()) + "\">" + Util.escapeHTML(tutor.getUser().getFullName()) + "</a></li>");
-			}
-			out.println("</ul>");
+			out.println("</td>");
+			out.println("<td>" + (testresult.result == null ? "n/a" : Util.boolToHTML(testresult.result)) + "</td>");
+			out.println("</tr>");
 		}
-
-		out.println("<h2>Gruppenmitglieder</h2>");
-		out.println("<ul>");
-		for (Participation tutor : group.getMembers()) {
-			out.print("<li><a href=\"mailto:" + Util.escapeHTML(tutor.getUser().getEmail()) + "\">" + Util.escapeHTML(tutor.getUser().getFullName()) + "</a></li>");
-		}
-		out.println("</ul>");
-
+		out.println("</table>");
 		template.printTemplateFooter();
 	}
 }
