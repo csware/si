@@ -136,7 +136,11 @@
   </servlet>
   <servlet>
     <servlet-name>Overview</servlet-name>
-    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.Overview</servlet-class>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.controller.Overview</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>OverviewView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.OverviewView</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>ShowLecture</servlet-name>
@@ -698,4 +702,8 @@
     <servlet-name>SelfTest</servlet-name>
     <url-pattern>/servlets/SelfTest</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>SelfTestView</servlet-name>
+    <servlet-class>de.tuclausthal.submissioninterface.servlets.view.SelfTestView</servlet-class>
+  </servlet>
 </web-app>

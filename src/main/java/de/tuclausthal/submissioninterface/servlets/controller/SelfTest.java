@@ -179,26 +179,9 @@ public class SelfTest extends HttpServlet {
 		} else {
 			testresults.add(new TestResult("\"" + DockerTest.SAFE_DOCKER_SCRIPT + "\" Skript ist nicht installiert: DockerIOTests nicht verfügbar (grundsätzlich nur verfügbar für Linux).", null));
 		}
-		StringBuilder output = new StringBuilder();
-		output.append("<table class=border>");
-		output.append("<tr>");
-		output.append("<th>Test</th>");
-		output.append("<th>OK?</th>");
-		output.append("</tr>\n");
-		for (TestResult testresult : testresults) {
-			output.append("<tr>");
-			output.append("<td>" + testresult.test);
-			if (testresult.details != null) {
-				output.append("<pre style=\"white-space: break-spaces;\">" + testresult.details + "</pre>");
-			}
-			output.append("</td>");
-			output.append("<td>" + (testresult.result == null ? "n/a" : Util.boolToHTML(testresult.result)) + "</td>");
-			output.append("</tr>\n");
-		}
-		output.append("</table>");
-		request.setAttribute("title", "Selbsttest");
-		request.setAttribute("message", output.toString());
-		getServletContext().getNamedDispatcher("MessageView").forward(request, response);
+
+		request.setAttribute("testresults", testresults);
+		getServletContext().getNamedDispatcher("SelfTestView").forward(request, response);
 	}
 
 	private boolean checkDataDir() {
@@ -324,7 +307,7 @@ public class SelfTest extends HttpServlet {
 		Util.recursiveDelete(tempDir);
 	}
 
-	protected static class TestResult {
+	public static class TestResult {
 		public String test;
 		public String details;
 		public Boolean result;
