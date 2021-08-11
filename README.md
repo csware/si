@@ -16,8 +16,8 @@ Please read the whole procedure in advance to executing it.
 - Install [Apache Tomcat](https://tomcat.apache.org) (e.g., on Debian-based systems use the `tomcat9` package)
   - After installation Tomcat usually listens on locahost:8080
   - For development it is recommended to integrate Tomcat into the used IDE, e.g. into Eclipse.
-- Install MariaDB (recommended on *nix) or MySQL (on Windows, <https://dev.mysql.com/downloads/mysql/>)
-  - For a development machine on Windows [XAMPP](https://www.apachefriends.org/) is recommended which comes with [phpMyAdmin](https://www.phpmyadmin.net/) a nice administration interface for MySQL
+- Install MariaDB
+  - For a development machine on Windows [XAMPP](https://www.apachefriends.org/) is recommended which comes with [phpMyAdmin](https://www.phpmyadmin.net/) a nice administration interface for MariaDB
 - For development [Eclipse](https://www.eclipse.org/downloads/packages/) (IDE for Enterprise Java Developers) is recommended with the plugin `m2e-apt`
 - For production use, it is recommended to run Apache Tomcat behind Apache httpd, connecting Tomcat using [mod_proxy_ajp](https://httpd.apache.org/docs/2.4/mod/mod_proxy_ajp.html), terminate SSL/TLS in httpd and probably use Shibboleth for Single-Sign on.
   - Configure the VHost with mod_proxy_ajp:
