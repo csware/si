@@ -45,6 +45,6 @@ compile-jdk11:
   artifacts:
     paths:
       - target/*.war
-      - 1.sql
+      - db-schema.sql
     expire_in: 1 week
 

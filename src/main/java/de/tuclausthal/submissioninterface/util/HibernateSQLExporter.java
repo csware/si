@@ -41,7 +41,7 @@ import org.reflections.Reflections;
  * @author Sven Strickroth
  */
 public class HibernateSQLExporter {
-	public static final String FILENAME = "1.sql";
+	public static final String FILENAME = "db-schema.sql";
 
 	public static void main(String[] fdf) throws FileNotFoundException, IOException {
 		try (FileOutputStream fos = new FileOutputStream(new File(FILENAME), false)) {
