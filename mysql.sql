@@ -105,6 +105,7 @@ CREATE TABLE IF NOT EXISTS `lectures` (
   `requiresAbhnahme` bit(1) NOT NULL,
   `semester` int(11) NOT NULL,
   `description` TEXT NOT NULL,
+  `allowselfsubscribe` BIT(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 

@@ -55,7 +55,7 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 	}
 
 	@Override
-	public void createParticipation(User user, Lecture lecture, ParticipationRole type) {
+	public boolean createParticipation(User user, Lecture lecture, ParticipationRole type) {
 		Session session = getSession();
 		Participation participation = null;
 		session.lock(user, LockModeType.PESSIMISTIC_WRITE);
@@ -67,7 +67,9 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 			participation.setLecture(lecture);
 			participation.setRoleType(type);
 			session.save(participation);
+			return true;
 		}
+		return false;
 	}
 
 	@Override

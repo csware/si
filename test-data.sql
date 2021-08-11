@@ -46,9 +46,10 @@ INSERT INTO `javaadvancedioteststep` (`teststepid`, `expect`, `testcode`, `title
 -- Daten für Tabelle `lectures`
 --
 
-INSERT INTO `lectures` (`id`, `gradingMethod`, `name`, `requiresAbhnahme`, `semester`) VALUES
-(1, 'taskWise', 'Lecture 1', b'1', 20201),
-(2, 'groupWise', 'Lecture 2 Groupwise', b'0', 20201);
+INSERT INTO `lectures` (`id`, `gradingMethod`, `name`, `requiresAbhnahme`, `semester`, `allowselfsubscribe`) VALUES
+(1, 'taskWise', 'Lecture 1', b'1', 20201, b'1'),
+(2, 'groupWise', 'Lecture 2 Groupwise', b'0', 20201, b'1'),
+(3, 'taskWise', 'No self-subscribe', b'0', 20201, b'0');
 
 --
 -- Daten für Tabelle `logs`
@@ -98,6 +99,7 @@ INSERT INTO `mcoptions` (`id`, `correct`, `title`, `taskid`) VALUES
 INSERT INTO `participations` (`id`, `role`, `groupid`, `lectureid`, `uid`) VALUES
 (1, 'ADVISOR', NULL, 1, 1),
 (2, 'ADVISOR', NULL, 2, 1),
+(3, 'ADVISOR', NULL, 3, 1),
 (4, 'NORMAL', 1, 1, 3),
 (5, 'NORMAL', NULL, 2, 3),
 (6, 'NORMAL', 1, 1, 4),
@@ -115,7 +117,8 @@ INSERT INTO `participations` (`id`, `role`, `groupid`, `lectureid`, `uid`) VALUE
 (18, 'NORMAL', NULL, 2, 10),
 (19, 'NORMAL', 1, 1, 10),
 (20, 'TUTOR', NULL, 1, 11),
-(21, 'NORMAL', NULL, 2, 11);
+(21, 'NORMAL', NULL, 2, 11),
+(22, 'NORMAL', NULL, 3, 4);
 
 --
 -- Daten für Tabelle `pointcategories`

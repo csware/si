@@ -37,8 +37,9 @@ public interface ParticipationDAOIf {
 	 * @param user the user
 	 * @param lecture the lecture
 	 * @param type the role-type
+	 * @return true if a new participation was created
 	 */
-	public void createParticipation(User user, Lecture lecture, ParticipationRole type);
+	public boolean createParticipation(User user, Lecture lecture, ParticipationRole type);
 
 	/**
 	 * Fetch a participation for a user in a specific lecture

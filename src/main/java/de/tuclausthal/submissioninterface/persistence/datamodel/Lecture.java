@@ -50,6 +50,7 @@ public class Lecture implements Serializable {
 	private Set<Group> groups;
 	private String gradingMethod = "";
 	private String description = "";
+	private boolean allowSelfSubscribe = true;
 
 	/**
 	 * @return the name
@@ -204,5 +205,19 @@ public class Lecture implements Serializable {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	/**
+	 * @return the allowSelfSubscribe
+	 */
+	public boolean isAllowSelfSubscribe() {
+		return allowSelfSubscribe;
+	}
+
+	/**
+	 * @param allowSelfSubscribe the allowSelfSubscribe to set
+	 */
+	public void setAllowSelfSubscribe(boolean allowSelfSubscribe) {
+		this.allowSelfSubscribe = allowSelfSubscribe;
 	}
 }

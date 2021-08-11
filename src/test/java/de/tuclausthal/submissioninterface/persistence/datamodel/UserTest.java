@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -37,7 +37,7 @@ class UserTest extends BasicTest {
 		User user = DAOFactory.UserDAOIf(session).getUser(1);
 		assertFalse(user instanceof Student);
 		Set<Participation> lectureParcicipations = user.getLectureParticipant();
-		assertEquals(2, lectureParcicipations.size());
+		assertEquals(3, lectureParcicipations.size());
 		for (Participation participation : lectureParcicipations) {
 			assertEquals(participation.getRoleType(), ParticipationRole.ADVISOR);
 		}
@@ -68,5 +68,29 @@ class UserTest extends BasicTest {
 			}
 		}
 		assertTrue(found1 && found2);
+	}
+
+	@Test
+	void getParticipationsUser2() {
+		User user = DAOFactory.UserDAOIf(session).getUser(4);
+		assertFalse(user instanceof Student);
+		Set<Participation> lectureParcicipations = user.getLectureParticipant();
+		assertEquals(3, lectureParcicipations.size());
+		boolean found1 = false;
+		boolean found2 = false;
+		boolean found3 = false;
+		for (Participation participation : lectureParcicipations) {
+			assertEquals(participation.getRoleType(), ParticipationRole.NORMAL);
+			if (participation.getLecture().getId() == 1) {
+				found1 = true;
+			}
+			if (participation.getLecture().getId() == 2) {
+				found2 = true;
+			}
+			if (participation.getLecture().getId() == 3) {
+				found3 = true;
+			}
+		}
+		assertTrue(found1 && found2 && found3);
 	}
 }

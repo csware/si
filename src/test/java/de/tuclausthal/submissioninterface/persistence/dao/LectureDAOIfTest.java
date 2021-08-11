@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -36,7 +36,7 @@ class LectureDAOIfTest extends BasicTest {
 
 	@Test
 	void testGetLectures() {
-		assertEquals(2, DAOFactory.LectureDAOIf(session).getLectures().size());
+		assertEquals(3, DAOFactory.LectureDAOIf(session).getLectures().size());
 	}
 
 	@Test

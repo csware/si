@@ -134,6 +134,7 @@ public class AdminMenue extends HttpServlet {
 			Transaction tx = session.beginTransaction();
 			Lecture newLecture = DAOFactory.LectureDAOIf(session).newLecture(request.getParameter("name").trim(), request.getParameter("requiresAbhnahme") != null, request.getParameter("groupWise") != null);
 			newLecture.setDescription(request.getParameter("description"));
+			newLecture.setAllowSelfSubscribe(request.getParameter("allowselfsubscribe") != null);
 			session.save(newLecture);
 			DAOFactory.ParticipationDAOIf(session).createParticipation(RequestAdapter.getUser(request), newLecture, ParticipationRole.ADVISOR);
 			tx.commit();
@@ -143,6 +144,7 @@ public class AdminMenue extends HttpServlet {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 			lecture.setName(request.getParameter("name"));
 			lecture.setDescription(request.getParameter("description"));
+			lecture.setAllowSelfSubscribe(request.getParameter("allowselfsubscribe") != null);
 			if (request.getParameter("groupWise") != null) {
 				lecture.setGradingMethod("groupWise");
 			} else {
@@ -214,6 +216,55 @@ public class AdminMenue extends HttpServlet {
 			}
 			output.append("<h2>Ergebnis</h2>");
 			output.append("<p>Zu TutorInnen befördert: " + count + "</p>");
+			output.append("<p class=mid><a href=\"" + Util.generateHTMLLink(AdminMenue.class.getSimpleName() + "?action=showLecture&lecture=" + lecture.getId(), response) + "\">zurück zur Übersicht</a></p>");
+			request.setAttribute("title", "Batch-Ergebnisse");
+			request.setAttribute("message", output.toString());
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
+		} else if ("addParticipants".equals(request.getParameter("action")) && request.getParameter("mailadresses") != null && request.getParameter("lecture") != null) {
+			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+			ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+			UserDAOIf userDAO = DAOFactory.UserDAOIf(session);
+			Transaction tx = session.beginTransaction();
+			int count = 0;
+			List<String> errors = new ArrayList<>();
+			if (lecture == null) {
+				response.sendRedirect(Util.generateRedirectURL(AdminMenue.class.getSimpleName(), response));
+			} else {
+				String mailadresses[] = request.getParameter("mailadresses").replaceAll("\r\n", "\n").split("\n");
+				for (String mailaddress : mailadresses) {
+					if (mailaddress.isEmpty()) {
+						continue;
+					}
+					User user = userDAO.getUserByEmail(mailaddress);
+					if (user == null) {
+						errors.add("\"" + mailaddress + "\" nicht gefunden.");
+						continue;
+					}
+					if (!participationDAO.createParticipation(user, lecture, ParticipationRole.NORMAL)) {
+						errors.add("\"" + mailaddress + "\" ist bereits Teilnehmender der Veranstaltung.");
+						continue;
+					}
+					++count;
+				}
+			}
+			StringBuilder output = new StringBuilder();
+			if (!errors.isEmpty()) {
+				output.append("<h2>Fehler</h2><ul>");
+				for (String string : errors) {
+					output.append("<li>" + Util.escapeHTML(string) + "</li>");
+				}
+				output.append("</ul>");
+				if (request.getParameter("failonerror") != null) {
+					tx.rollback();
+					count = 0;
+				} else {
+					tx.commit();
+				}
+			} else {
+				tx.commit();
+			}
+			output.append("<h2>Ergebnis</h2>");
+			output.append("<p>Teilnehmende hinzugefügt: " + count + "</p>");
 			output.append("<p class=mid><a href=\"" + Util.generateHTMLLink(AdminMenue.class.getSimpleName() + "?action=showLecture&lecture=" + lecture.getId(), response) + "\">zurück zur Übersicht</a></p>");
 			request.setAttribute("title", "Batch-Ergebnisse");
 			request.setAttribute("message", output.toString());

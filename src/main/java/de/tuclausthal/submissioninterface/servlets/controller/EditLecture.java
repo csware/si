@@ -19,6 +19,8 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,9 +32,11 @@ import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.UserDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.view.EditLectureView;
@@ -88,7 +92,53 @@ public class EditLecture extends HttpServlet {
 		}
 
 		Transaction tx = session.beginTransaction();
+		if ("addParticipants".equals(request.getParameter("action"))) {
+			UserDAOIf userDAO = DAOFactory.UserDAOIf(session);
+			int count = 0;
+			List<String> errors = new ArrayList<>();
+			String mailadresses[] = request.getParameter("mailadresses").replaceAll("\r\n", "\n").split("\n");
+			for (String mailaddress : mailadresses) {
+				if (mailaddress.isEmpty()) {
+					continue;
+				}
+				User user = userDAO.getUserByEmail(mailaddress);
+				if (user == null) {
+					errors.add("\"" + mailaddress + "\" nicht gefunden.");
+					continue;
+				}
+				if (!participationDAO.createParticipation(user, lecture, ParticipationRole.NORMAL)) {
+					errors.add("\"" + mailaddress + "\" ist bereits Teilnehmender der Veranstaltung.");
+					continue;
+				}
+				++count;
+			}
+
+			StringBuilder output = new StringBuilder();
+			if (!errors.isEmpty()) {
+				output.append("<h2>Fehler</h2><ul>");
+				for (String string : errors) {
+					output.append("<li>" + Util.escapeHTML(string) + "</li>");
+				}
+				output.append("</ul>");
+				if (request.getParameter("failonerror") != null) {
+					tx.rollback();
+					count = 0;
+				} else {
+					tx.commit();
+				}
+			} else {
+				tx.commit();
+			}
+			output.append("<h2>Ergebnis</h2>");
+			output.append("<p>Teilnehmende hinzugefügt: " + count + "</p>");
+			output.append("<p class=mid><a href=\"" + Util.generateHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response) + "\">zurück zur Veranstaltung</a></p>");
+			request.setAttribute("title", "Teilnehmende hinzufügen");
+			request.setAttribute("message", output.toString());
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
+			return;
+		}
 		lecture.setDescription(request.getParameter("description"));
+		lecture.setAllowSelfSubscribe(request.getParameter("allowselfsubscribe") != null);
 		session.save(lecture);
 		tx.commit();
 		response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response));

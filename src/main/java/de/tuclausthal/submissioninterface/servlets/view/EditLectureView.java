@@ -74,11 +74,26 @@ public class EditLectureView extends HttpServlet {
 		out.println("<td><input type=checkbox name=requiresAbhnahme" + (lecture.isRequiresAbhnahme() ? " checked" : "") + " disabled></td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Selbstanmeldung durch Studierende erlauben:</th>");
+		out.println("<td><input type=checkbox name=allowselfsubscribe" + (lecture.isAllowSelfSubscribe() ? " checked" : "") + "> <a href=\"#\" onclick=\"toggleVisibility('selfsubscribehelp'); return false;\">(?)</a><br><span style=\"display:none;\" id=selfsubscribehelp><b>Hilfe:</b><br>Wenn deaktiviert, können sich Studierende nicht mehr selbst in die Veranstaltung eintragen. Nach dem Speichern können Studierende über ihre E-Mail-Adressen hier manuell zur Veranstaltung hinzugefügt werden. Es können ausschließlich Studierende hinzugefügt werden, die bereits einen Account in GATE besitzen.</span></td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<td colspan=2 class=mid>");
 		out.println("<input type=submit value=\"speichern\"> <a href=\"" + Util.generateHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response) + "\">Abbrechen</a></td>");
 		out.println("</td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
+
+		if (!lecture.isAllowSelfSubscribe()) {
+			out.println("<h2>Teilnehmende hinzufügen</h2>");
+			out.println("<form method=post action=\"" + Util.generateHTMLLink("?", response) + "\">");
+			out.println("<input type=hidden name=action value=addParticipants>");
+			out.println("<input type=hidden name=lecture value=" + lecture.getId() + ">");
+			out.println("<textarea name=mailadresses cols=60 placeholder=\"E-Mail-Adressen, eine pro Zeile\"></textarea><br>");
+			out.println("<input type=checkbox name=failonerror checked id=failonerror> <label for=failonerror>Bei Fehler abbrechen</label><br>");
+			out.println("<input type=submit value=\"Teilnehmende hinzufügen\">");
+			out.println("</form>");
+		}
 	}
 }

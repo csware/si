@@ -137,3 +137,6 @@ ALTER TABLE `checklisttestcheckitem` ADD CONSTRAINT `FK81pc66uelq448v1na0u5ryetf
 
 -- add description to lecture
 ALTER TABLE `lectures` ADD `description` TEXT NOT NULL;
+
+-- allow to toggle self subscribe
+ALTER TABLE `lectures` ADD `allowselfsubscribe` BIT(1) NOT NULL DEFAULT b'1';

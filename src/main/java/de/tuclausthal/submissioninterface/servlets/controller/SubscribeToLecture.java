@@ -64,7 +64,7 @@ public class SubscribeToLecture extends HttpServlet {
 			return;
 		}
 
-		if (lecture.getSemester() != Util.getCurrentSemester()) {
+		if (lecture.getSemester() != Util.getCurrentSemester() || !lecture.isAllowSelfSubscribe()) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}

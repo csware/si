@@ -65,13 +65,15 @@ public class ShowLecture extends HttpServlet {
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), lecture);
 		if (participation == null) {
-			if (lecture.getSemester() == Util.getCurrentSemester()) {
+			if (lecture.getSemester() == Util.getCurrentSemester() && lecture.isAllowSelfSubscribe()) {
 				request.setAttribute("title", "Zugriff verweigert (403)");
-				request.setAttribute("message", "<p>Sie versuchen auf eine Vorlesung zuzugreifen, für die Sie nicht angemeldet sind.</p><p>Sie können Sie <a href=\"" + Util.generateHTMLLink(SubscribeToLecture.class.getSimpleName(), response) + "\">hier</a> für die Vorlesung anmelden.</p>");
+				request.setAttribute("message", "<p>Sie versuchen auf eine Veranstaltung zuzugreifen, für die Sie nicht angemeldet sind.</p><p>Sie können Sie <a href=\"" + Util.generateHTMLLink(SubscribeToLecture.class.getSimpleName(), response) + "\">hier</a> für die Veranstaltung anmelden.</p>");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
-			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			request.setAttribute("title", "Zugriff verweigert (403)");
+			request.setAttribute("message", "<p>Sie versuchen auf eine Veranstaltung zuzugreifen, für die Sie nicht angemeldet sind.</p><p>Eine Anmeldung ist nicht (mehr) möglich.</p><");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
 

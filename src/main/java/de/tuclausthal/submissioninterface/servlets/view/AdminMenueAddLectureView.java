@@ -76,6 +76,10 @@ public class AdminMenueAddLectureView extends HttpServlet {
 		out.println("<td><textarea cols=60 rows=20 id=description name=description></textarea></td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Selbstanmeldung durch Studierende erlauben:</th>");
+		out.println("<td><input type=checkbox name=allowselfsubscribe checked> <a href=\"#\" onclick=\"toggleVisibility('selfsubscribehelp'); return false;\">(?)</a><br><span style=\"display:none;\" id=selfsubscribehelp><b>Hilfe:</b><br>Wenn deaktiviert, können sich Studierende nicht selbst in die Veranstaltung eintragen. Studierende können über ihre E-Mail-Adressen manuell zur Veranstaltung hinzugefügt werden. Es können ausschließlich Studierende hinzugefügt werden, die bereits einen Account in GATE besitzen.</span></td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<td colspan=2 class=mid><input type=submit value=anlegen> <a href=\"" + Util.generateHTMLLink("?", response) + "\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
