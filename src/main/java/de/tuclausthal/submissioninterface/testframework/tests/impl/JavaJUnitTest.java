@@ -18,7 +18,9 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
@@ -50,5 +52,18 @@ public class JavaJUnitTest extends JavaFunctionTest {
 		params.add(basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar" + File.pathSeparator + basePath.getAbsolutePath() + System.getProperty("file.separator") + JUNIT_JAR + File.pathSeparator + tempDir.getAbsolutePath());
 		params.add("junit.textui.TestRunner");
 		params.add(Util.escapeCommandlineArguments(((JUnitTest)test).getMainClass()));
+	}
+
+	@Override
+	void populateJavaPolicyFile(Test test, File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException {
+		policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + JavaJUnitTest.JUNIT_JAR) + "\" {\n");
+		policyFileWriter.write("	permission java.security.AllPermission;\n");
+		policyFileWriter.write("};\n");
+		policyFileWriter.write("\n");
+		policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar") + "\" {\n");
+		policyFileWriter.write("	permission java.lang.RuntimePermission \"setIO\";\n");
+		policyFileWriter.write("	permission java.lang.RuntimePermission \"exitTheVM.*\";\n");
+		policyFileWriter.write("	permission java.lang.reflect.ReflectPermission \"suppressAccessChecks\";\n");
+		policyFileWriter.write("};\n");
 	}
 }

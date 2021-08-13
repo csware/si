@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,18 +46,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			// prepare policy file
 			policyFile = File.createTempFile("special", ".policy");
 			BufferedWriter policyFileWriter = new BufferedWriter(new FileWriter(policyFile));
-
-			policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + JavaJUnitTest.JUNIT_JAR) + "\" {\n");
-			policyFileWriter.write("	permission java.security.AllPermission;\n");
-			policyFileWriter.write("};\n");
-			policyFileWriter.write("\n");
-			if (test.getTask() != null) {
-				policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar") + "\" {\n");
-				policyFileWriter.write("	permission java.lang.RuntimePermission \"setIO\";\n");
-				policyFileWriter.write("	permission java.lang.RuntimePermission \"exitTheVM.*\";\n");
-				policyFileWriter.write("	permission java.lang.reflect.ReflectPermission \"suppressAccessChecks\";\n");
-				policyFileWriter.write("};\n");
-			}
+			populateJavaPolicyFile(test, basePath, tempDir, policyFileWriter);
 			policyFileWriter.write("\n");
 			policyFileWriter.write("grant {\n");
 			policyFileWriter.write("	permission java.util.PropertyPermission \"*\", \"read\";\n");
@@ -113,4 +103,6 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 	abstract protected boolean calculateTestResult(Test test, boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted);
 
 	abstract void populateParameters(Test test, File basePath, File tempDir, List<String> params);
+
+	abstract void populateJavaPolicyFile(Test test, File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,7 +18,9 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -60,5 +62,9 @@ public class JavaIORegexpTest extends JavaFunctionTest {
 		if (regExpTest.getCommandLineParameter() != null && !regExpTest.getCommandLineParameter().isEmpty()) {
 			params.addAll(Arrays.asList(Util.escapeCommandlineArguments(regExpTest.getCommandLineParameter()).split(" ")));
 		}
+	}
+
+	@Override
+	void populateJavaPolicyFile(Test test, File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException {
 	}
 }
