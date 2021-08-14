@@ -32,8 +32,6 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
-import de.tuclausthal.submissioninterface.servlets.controller.AdminMenue;
-import de.tuclausthal.submissioninterface.servlets.controller.Overview;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -50,7 +48,7 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		template.printTemplateHeader("Super User", "<a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), response) + "\">Meine Veranstaltungen</a> - <a href=\"" + Util.generateHTMLLink(AdminMenue.class.getSimpleName(), response) + "\">Admin-Menü</a> &gt; Super User");
+		template.printAdminMenueTemplateHeader("Super User");
 		PrintWriter out = response.getWriter();
 
 		@SuppressWarnings("unchecked")

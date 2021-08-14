@@ -33,8 +33,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
-import de.tuclausthal.submissioninterface.servlets.controller.AdminMenue;
-import de.tuclausthal.submissioninterface.servlets.controller.Overview;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -53,7 +51,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 
 		Lecture lecture = (Lecture) request.getAttribute("lecture");
 		if (lecture == null) {
-			template.printTemplateHeader("Veranstaltung nicht gefunden");
+			template.printAdminMenueTemplateHeader("Veranstaltung nicht gefunden");
 			PrintWriter out = response.getWriter();
 			out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("?", response) + "\">zur Übersicht</a></div>");
 		} else {
@@ -62,7 +60,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 
 			template.addKeepAlive();
 			template.addTinyMCE("textarea#description");
-			template.printTemplateHeader("Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten", "<a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), response) + "\">Meine Veranstaltungen</a> - <a href=\"" + Util.generateHTMLLink(AdminMenue.class.getSimpleName(), response) + "\">Admin-Menü</a> &gt; Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten");
+			template.printAdminMenueTemplateHeader("Veranstaltung \"" + Util.escapeHTML(lecture.getName()) + "\" bearbeiten");
 			PrintWriter out = response.getWriter();
 			out.println("<h2>Eigenschaften</h2>");
 			out.println("<form method=post action=\"" + Util.generateHTMLLink("?", response) + "\">");

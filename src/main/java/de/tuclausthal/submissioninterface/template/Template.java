@@ -34,6 +34,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.controller.AdminMenue;
 import de.tuclausthal.submissioninterface.servlets.controller.Noop;
 import de.tuclausthal.submissioninterface.servlets.controller.Overview;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowLecture;
@@ -73,6 +74,14 @@ public abstract class Template {
 			return;
 		}
 		printTemplateHeader(title, "<a href=\"" + Util.generateAbsoluteServletsHTMLLink(Overview.class.getSimpleName(), servletRequest, servletResponse) + "\">Meine Veranstaltungen</a> &gt; " + title);
+	}
+
+	public void printAdminMenueTemplateHeader() throws IOException {
+		printTemplateHeader("Admin-Menü", "<a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), servletResponse) + "\">Meine Veranstaltungen</a> – Admin-Menü");
+	}
+
+	public void printAdminMenueTemplateHeader(String title) throws IOException {
+		printTemplateHeader(title, "<a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), servletResponse) + "\">Meine Veranstaltungen</a> – <a href=\"" + Util.generateHTMLLink(AdminMenue.class.getSimpleName(), servletResponse) + "\">Admin-Menü</a> &gt; " + title);
 	}
 
 	public void printTemplateHeader(Lecture lecture) throws IOException {

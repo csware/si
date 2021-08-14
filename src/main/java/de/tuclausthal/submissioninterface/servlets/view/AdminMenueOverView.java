@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
-import de.tuclausthal.submissioninterface.servlets.controller.Overview;
 import de.tuclausthal.submissioninterface.servlets.controller.SelfTest;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -48,7 +47,7 @@ public class AdminMenueOverView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 
-		template.printTemplateHeader("Admin-Menü", "<a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), response) + "\">Meine Veranstaltungen</a> - Admin-Menü");
+		template.printAdminMenueTemplateHeader();
 		PrintWriter out = response.getWriter();
 
 		@SuppressWarnings("unchecked")
