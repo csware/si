@@ -83,7 +83,7 @@
 		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
-			<version>2.7.3</version>
+			<version>2.7.4</version>
 		</dependency>
 		<!-- Enable Hibernate's Metamodel Generator to generate metadata model classes (ending in _ suffix) for more type-safe Criteria queries -->
 		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen -->
