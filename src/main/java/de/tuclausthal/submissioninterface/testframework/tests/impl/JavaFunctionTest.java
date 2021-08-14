@@ -24,9 +24,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * @author Sven Strickroth
@@ -35,18 +37,29 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 	final static public String SECURITYMANAGER_JAR = "NoExitSecurityManager.jar";
 
 	@Override
-	final protected void performTestInTempDir(Test test, File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {
-		compileJava(tempDir, null, null);
-		runJava(test, basePath, tempDir, testResult);
+	final protected void performTestInTempDir(Test test, File basePath, File javaSourceDir, TestExecutorTestResult testResult) throws Exception {
+		File tempClassesDir = Util.createTemporaryDirectory("test");
+		if (tempClassesDir == null) {
+			throw new IOException("Failed to create tempdir!");
+		}
+		try {
+			compileJava(javaSourceDir, null, tempClassesDir, null);
+			List<File> classPath = new ArrayList<>();
+			populateClassPathForRunningtests(test, basePath, classPath);
+			classPath.add(tempClassesDir);
+			runJava(test, basePath, javaSourceDir, classPath, testResult);
+		} finally {
+			Util.recursiveDelete(tempClassesDir);
+		}
 	}
 
-	protected void runJava(Test test, File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {
+	protected void runJava(Test test, File basePath, File cwd, List<File> classPath, TestExecutorTestResult testResult) throws Exception {
 		File policyFile = null;
 		try {
 			// prepare policy file
 			policyFile = File.createTempFile("special", ".policy");
 			BufferedWriter policyFileWriter = new BufferedWriter(new FileWriter(policyFile));
-			populateJavaPolicyFile(test, basePath, tempDir, policyFileWriter);
+			populateJavaPolicyFile(test, basePath, cwd, policyFileWriter);
 			policyFileWriter.write("\n");
 			policyFileWriter.write("grant {\n");
 			policyFileWriter.write("	permission java.util.PropertyPermission \"*\", \"read\";\n");
@@ -56,7 +69,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			policyFileWriter.close();
 
 			List<String> additionalParams = new ArrayList<>();
-			populateParameters(test, basePath, tempDir, additionalParams);
+			populateParameters(test, additionalParams);
 
 			// check what kind of test it is
 			List<String> params = new ArrayList<>();
@@ -69,10 +82,16 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			params.add("-Xbootclasspath/a:" + basePath.getAbsolutePath() + System.getProperty("file.separator") + SECURITYMANAGER_JAR);
 			params.add("-Djava.security.manager=secmgr.NoExitSecurityManager");
 			params.add("-Djava.security.policy=" + policyFile.getAbsolutePath());
+			if (!classPath.isEmpty()) {
+				params.add("-cp");
+				StringJoiner joiner = new StringJoiner(File.pathSeparator);
+				classPath.stream().forEach(path -> joiner.add(path.getAbsolutePath()));
+				params.add(joiner.toString());
+			}
 			params.addAll(additionalParams);
 
 			ProcessBuilder pb = new ProcessBuilder(params);
-			pb.directory(tempDir);
+			pb.directory(cwd);
 			/* only forward explicitly specified environment variables to test processes */
 			pb.environment().keySet().removeIf(key -> !("PATH".equalsIgnoreCase(key) || "USER".equalsIgnoreCase(key) || "JAVA_HOME".equalsIgnoreCase(key) || "LANG".equalsIgnoreCase(key)));
 			Process process = pb.start();
@@ -102,7 +121,9 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 
 	abstract protected boolean calculateTestResult(Test test, boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted);
 
-	abstract void populateParameters(Test test, File basePath, File tempDir, List<String> params);
+	abstract void populateParameters(Test test, List<String> params);
 
 	abstract void populateJavaPolicyFile(Test test, File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException;
+
+	void populateClassPathForRunningtests(Test test, File basePath, List<File> classPath) {}
 }

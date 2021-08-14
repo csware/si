@@ -42,10 +42,10 @@ public class JavaSyntaxTest extends TempDirTest {
 
 	@Override
 	protected void performTestInTempDir(Test test, File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {
-		compileJava(tempDir, null, testResult);
+		compileJava(tempDir, null, tempDir, testResult);
 	}
 
-	static final public boolean compileJava(File javaDir, List<File> additionalClassPath, TestExecutorTestResult testResult) throws Exception {
+	static final public boolean compileJava(File javaSourcesDir, List<File> additionalClassPath, File destDir, TestExecutorTestResult testResult) throws Exception {
 		// http://forums.java.net/jive/message.jspa?messageID=325269
 		int compiles = 1;
 		JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
@@ -53,7 +53,7 @@ public class JavaSyntaxTest extends TempDirTest {
 			ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
 
 			List<String> javaFiles = new ArrayList<>();
-			getRecursivelyAllJavaFiles(javaDir, javaFiles);
+			getRecursivelyAllJavaFiles(javaSourcesDir, javaFiles);
 
 			if (!javaFiles.isEmpty()) {
 				ArrayList<String> parameters = new ArrayList<>();
@@ -63,12 +63,14 @@ public class JavaSyntaxTest extends TempDirTest {
 					additionalClassPath.stream().forEach(path -> joiner.add(path.getAbsolutePath()));
 					parameters.add(joiner.toString());
 				}
+				parameters.add("-d");
+				parameters.add(destDir.getAbsolutePath());
 				parameters.addAll(javaFiles);
 				compiles = jc.run(null, null, errorOutputStream, parameters.toArray(new String[0]));
 			}
 			if (testResult != null) {
 				testResult.setTestPassed(compiles == 0);
-				testResult.setTestOutput(errorOutputStream.toString().replace(javaDir.getAbsolutePath() + System.getProperty("file.separator"), ""));
+				testResult.setTestOutput(errorOutputStream.toString().replace(javaSourcesDir.getAbsolutePath() + System.getProperty("file.separator"), ""));
 			}
 		} catch (Exception e) {
 			LOG.error("System.getProperty(\"java.home\") should point to a jre in a jdk directory and tools.jar must be in the classpath", e);

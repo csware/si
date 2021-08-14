@@ -56,7 +56,7 @@ public class JavaIORegexpTest extends JavaFunctionTest {
 	}
 
 	@Override
-	void populateParameters(Test test, File basePath, File tempDir, List<String> params) {
+	void populateParameters(Test test, List<String> params) {
 		RegExpTest regExpTest = (RegExpTest) test;
 		params.add(Util.escapeCommandlineArguments(regExpTest.getMainClass()));
 		if (regExpTest.getCommandLineParameter() != null && !regExpTest.getCommandLineParameter().isEmpty()) {

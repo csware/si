@@ -47,11 +47,9 @@ public class JavaJUnitTest extends JavaFunctionTest {
 	}
 
 	@Override
-	void populateParameters(Test test, File basePath, File tempDir, List<String> params) {
-		params.add("-cp");
-		params.add(basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar" + File.pathSeparator + basePath.getAbsolutePath() + System.getProperty("file.separator") + JUNIT_JAR + File.pathSeparator + tempDir.getAbsolutePath());
+	void populateParameters(Test test, List<String> params) {
 		params.add("junit.textui.TestRunner");
-		params.add(Util.escapeCommandlineArguments(((JUnitTest)test).getMainClass()));
+		params.add(Util.escapeCommandlineArguments(((JUnitTest) test).getMainClass()));
 	}
 
 	@Override
@@ -65,5 +63,11 @@ public class JavaJUnitTest extends JavaFunctionTest {
 		policyFileWriter.write("	permission java.lang.RuntimePermission \"exitTheVM.*\";\n");
 		policyFileWriter.write("	permission java.lang.reflect.ReflectPermission \"suppressAccessChecks\";\n");
 		policyFileWriter.write("};\n");
+	}
+
+	@Override
+	void populateClassPathForRunningtests(Test test, File basePath, List<File> classPath) {
+		classPath.add(new File(basePath, JavaJUnitTest.JUNIT_JAR));
+		classPath.add(new File(basePath, test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar"));
 	}
 }

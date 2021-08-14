@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.StringJoiner;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -42,6 +41,8 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 	private final String separator;
 	private static final String STUDENT_CODE_DIRNAME = "studentcode";
 	private static final String TEST_CODE_DIRNAME = "testcode";
+	private static final String STUDENT_CLASSES_DIRNAME = STUDENT_CODE_DIRNAME + "_classes";
+	private static final String TEST_CLASSES_DIRNAME = TEST_CODE_DIRNAME + "_classes";
 
 	public JavaAdvancedIOTest() {
 		separator = "#<GATE@" + random.nextLong() + "#@>#";
@@ -59,9 +60,13 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 			codeDir.mkdir();
 			File testerDir = new File(tempDir, TEST_CODE_DIRNAME);
 			testerDir.mkdir();
+			File studentClassesDir = new File(tempDir, STUDENT_CLASSES_DIRNAME);
+			studentClassesDir.mkdir();
+			File testClassesDir = new File(tempDir, TEST_CLASSES_DIRNAME);
+			testClassesDir.mkdir();
 
 			Util.recursiveCopy(submissionPath, codeDir);
-			if (!compileJava(codeDir, null, null)) { // TODO student solution has syntax error, provide more info?
+			if (!compileJava(codeDir, null, studentClassesDir, null)) { // TODO student solution has syntax error, provide more info?
 				StringBuffer stdOut = new StringBuffer();
 				StringBuffer stdErr = new StringBuffer();
 				testResult.setTestPassed(calculateTestResult(test, false, stdOut, stdErr, false));
@@ -93,14 +98,14 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 			fw.write(teacherTemplate.toString());
 			fw.close();
 
-			if (!compileJava(testerDir, Arrays.asList(codeDir), null)) { // TODO test code has syntax error or cannot call student solution, provide more info?
+			if (!compileJava(testerDir, Arrays.asList(studentClassesDir), testClassesDir, null)) { // TODO test code has syntax error or cannot call student solution, provide more info?
 				StringBuffer stdOut = new StringBuffer();
 				StringBuffer stdErr = new StringBuffer();
 				testResult.setTestPassed(calculateTestResult(test, false, stdOut, stdErr, false));
 				testResult.setTestOutput(stdOut.toString());
 				return;
 			}
-			runJava(test, basePath, codeDir, testResult);
+			runJava(test, basePath, codeDir, Arrays.asList(testClassesDir, studentClassesDir), testResult);
 		} finally {
 			if (tempDir != null) {
 				Util.recursiveDelete(tempDir);
@@ -158,18 +163,13 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 	}
 
 	@Override
-	void populateParameters(Test test, File basePath, File tempDir, List<String> params) {
-		params.add("-cp");
-		StringJoiner joiner = new StringJoiner(File.pathSeparator);
-		joiner.add(new File(tempDir.getParentFile(), TEST_CODE_DIRNAME).getAbsolutePath());
-		joiner.add(tempDir.getAbsolutePath());
-		params.add(joiner.toString());
+	void populateParameters(Test test, List<String> params) {
 		params.add("Tester");
 	}
 
 	@Override
 	void populateJavaPolicyFile(Test test, File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException {
-		policyFileWriter.write("grant codeBase \"file:" + mkPath(new File(tempDir.getParentFile(), TEST_CODE_DIRNAME).getAbsolutePath()) + "\" {\n");
+		policyFileWriter.write("grant codeBase \"file:" + mkPath(new File(tempDir.getParentFile(), TEST_CLASSES_DIRNAME).getAbsolutePath()) + "\" {\n");
 		policyFileWriter.write("	permission java.lang.RuntimePermission \"setIO\";\n");
 		policyFileWriter.write("	permission java.lang.reflect.ReflectPermission \"suppressAccessChecks\";\n");
 		policyFileWriter.write("};\n");

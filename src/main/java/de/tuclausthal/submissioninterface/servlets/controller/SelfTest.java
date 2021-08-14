@@ -238,7 +238,7 @@ public class SelfTest extends HttpServlet {
 
 		try {
 			TestExecutorTestResult result = new TestExecutorTestResult();
-			boolean compileResult = JavaSyntaxTest.compileJava(tempDir, null, result);
+			boolean compileResult = JavaSyntaxTest.compileJava(tempDir, null, tempDir, result);
 			testresults.add(new TestResult("Java-Syntax-Test erfolgreich.", Util.escapeHTML(result.getTestOutput()), compileResult && compileResult == result.isTestPassed()));
 		} catch (Exception e) {
 			testresults.add(new TestResult("Java-Syntax-Test erfolgreich.", Util.escapeHTML(e.getMessage()), false));
@@ -253,7 +253,7 @@ public class SelfTest extends HttpServlet {
 			fw.close();
 
 			TestExecutorTestResult result = new TestExecutorTestResult();
-			boolean compileResult = JavaSyntaxTest.compileJava(tempDir, null, result);
+			boolean compileResult = JavaSyntaxTest.compileJava(tempDir, null, tempDir, result);
 			testresults.add(new TestResult("Java-Syntaxtest erkennt syntaktisch falsche Lösung (\"HelloWorld.java:3: error: unclosed string literal\").", Util.escapeHTML(result.getTestOutput()), !compileResult && compileResult == result.isTestPassed() && result.getTestOutput().contains("HelloWorld.java:3: error: unclosed string literal")));
 		} catch (Exception e) {
 			testresults.add(new TestResult("Java-Syntaxtest erkennt syntaktisch falsche Lösung.", Util.escapeHTML(e.getMessage()), false));
