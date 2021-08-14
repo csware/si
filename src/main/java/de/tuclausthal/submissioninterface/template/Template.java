@@ -39,6 +39,7 @@ import de.tuclausthal.submissioninterface.servlets.controller.Overview;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowLecture;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowSubmission;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
+import de.tuclausthal.submissioninterface.servlets.controller.TaskManager;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -87,6 +88,18 @@ public abstract class Template {
 	}
 
 	public void printTemplateHeader(String title, Task task) throws IOException {
+		printTaskTemplateHeader(title, task, false);
+	}
+
+	public void printEditTaskTemplateHeader(String title, Task task) throws IOException {
+		printTaskTemplateHeader(title, task, true);
+	}
+
+	private void printTaskTemplateHeader(String title, Task task, boolean editTask) throws IOException {
+		if (editTask) {
+			printTemplateHeader(title, "<a href=\"" + Util.generateAbsoluteServletsHTMLLink(Overview.class.getSimpleName(), servletRequest, servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId(), servletRequest, servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(task.getTaskGroup().getLecture().getName()) + "\"</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), servletRequest, servletResponse) + "\">Aufgabe \"" + Util.escapeHTML(task.getTitle()) + "\"</a> &gt;  <a href=\"" + Util.generateAbsoluteServletsHTMLLink(TaskManager.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask", servletRequest, servletResponse) + "\">Aufgabe bearbeiten</a> &gt; " + title);
+			return;
+		}
 		printTemplateHeader(title, "<a href=\"" + Util.generateAbsoluteServletsHTMLLink(Overview.class.getSimpleName(), servletRequest, servletResponse) + "\">Meine Veranstaltungen</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId(), servletRequest, servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(task.getTaskGroup().getLecture().getName()) + "\"</a> &gt; <a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), servletRequest, servletResponse) + "\">Aufgabe \"" + Util.escapeHTML(task.getTitle()) + "\"</a> &gt; " + title);
 	}
 

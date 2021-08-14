@@ -50,7 +50,7 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 		ChecklistTest test = (ChecklistTest) request.getAttribute("test");
 
 		template.addKeepAlive();
-		template.printTemplateHeader("Checklist Test bearbeiten", test.getTask());
+		template.printEditTaskTemplateHeader("Checklist Test bearbeiten", test.getTask());
 
 		PrintWriter out = response.getWriter();
 

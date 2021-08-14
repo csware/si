@@ -50,7 +50,7 @@ public class DockerTestManagerOverView extends HttpServlet {
 		DockerTest test = (DockerTest) request.getAttribute("test");
 
 		template.addKeepAlive();
-		template.printTemplateHeader("Docker Test bearbeiten", test.getTask());
+		template.printEditTaskTemplateHeader("Docker Test bearbeiten", test.getTask());
 
 		PrintWriter out = response.getWriter();
 

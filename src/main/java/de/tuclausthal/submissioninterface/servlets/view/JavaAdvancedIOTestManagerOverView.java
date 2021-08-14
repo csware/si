@@ -50,7 +50,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 		JavaAdvancedIOTest test = (JavaAdvancedIOTest) request.getAttribute("test");
 
 		template.addKeepAlive();
-		template.printTemplateHeader("Erweiteren Java-IO-Test bearbeiten", test.getTask());
+		template.printEditTaskTemplateHeader("Erweiteren Java-IO-Test bearbeiten", test.getTask());
 
 		PrintWriter out = response.getWriter();
 

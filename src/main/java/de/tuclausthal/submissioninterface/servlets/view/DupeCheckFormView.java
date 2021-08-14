@@ -49,7 +49,7 @@ public class DupeCheckFormView extends HttpServlet {
 
 		Task task = (Task) request.getAttribute("task");
 
-		template.printTemplateHeader("Ähnlichkeitsprüfung", task);
+		template.printEditTaskTemplateHeader("Ähnlichkeitsprüfung", task);
 		PrintWriter out = response.getWriter();
 
 		if (new File(Configuration.getInstance().getDataPath(), "jplag.jar").exists()) {
