@@ -18,12 +18,15 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.StringJoiner;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -37,6 +40,8 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class JavaAdvancedIOTest extends JavaFunctionTest {
 	private static final Random random = new Random();
 	private final String separator;
+	private static final String STUDENT_CODE_DIRNAME = "studentcode";
+	private static final String TEST_CODE_DIRNAME = "testcode";
 
 	public JavaAdvancedIOTest() {
 		separator = "#<GATE@" + random.nextLong() + "#@>#";
@@ -50,9 +55,13 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 			if (tempDir == null) {
 				throw new IOException("Failed to create tempdir!");
 			}
+			File codeDir = new File(tempDir, STUDENT_CODE_DIRNAME);
+			codeDir.mkdir();
+			File testerDir = new File(tempDir, TEST_CODE_DIRNAME);
+			testerDir.mkdir();
 
-			Util.recursiveCopy(submissionPath, tempDir);
-			if (!compileJava(tempDir, null)) { // TODO student solution has syntax error, provide more info?
+			Util.recursiveCopy(submissionPath, codeDir);
+			if (!compileJava(codeDir, null, null)) { // TODO student solution has syntax error, provide more info?
 				StringBuffer stdOut = new StringBuffer();
 				StringBuffer stdErr = new StringBuffer();
 				testResult.setTestPassed(calculateTestResult(test, false, stdOut, stdErr, false));
@@ -80,18 +89,18 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 			if (insertionPoint >= 0) {
 				teacherTemplate.replace(insertionPoint, insertionPoint + "{{TESTCODE}}".length(), testCode.toString());
 			}
-			FileWriter fw = new FileWriter(new File(tempDir, "Tester.java"));
+			FileWriter fw = new FileWriter(new File(testerDir, "Tester.java"));
 			fw.write(teacherTemplate.toString());
 			fw.close();
 
-			if (!compileJava(tempDir, null)) { // TODO test code has syntax error or cannot call student solution, provide more info?
+			if (!compileJava(testerDir, Arrays.asList(codeDir), null)) { // TODO test code has syntax error or cannot call student solution, provide more info?
 				StringBuffer stdOut = new StringBuffer();
 				StringBuffer stdErr = new StringBuffer();
 				testResult.setTestPassed(calculateTestResult(test, false, stdOut, stdErr, false));
 				testResult.setTestOutput(stdOut.toString());
 				return;
 			}
-			runJava(test, basePath, tempDir, testResult);
+			runJava(test, basePath, codeDir, testResult);
 		} finally {
 			if (tempDir != null) {
 				Util.recursiveDelete(tempDir);
@@ -150,6 +159,19 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 
 	@Override
 	void populateParameters(Test test, File basePath, File tempDir, List<String> params) {
+		params.add("-cp");
+		StringJoiner joiner = new StringJoiner(File.pathSeparator);
+		joiner.add(new File(tempDir.getParentFile(), TEST_CODE_DIRNAME).getAbsolutePath());
+		joiner.add(tempDir.getAbsolutePath());
+		params.add(joiner.toString());
 		params.add("Tester");
+	}
+
+	@Override
+	void populateJavaPolicyFile(Test test, File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException {
+		policyFileWriter.write("grant codeBase \"file:" + mkPath(new File(tempDir.getParentFile(), TEST_CODE_DIRNAME).getAbsolutePath()) + "\" {\n");
+		policyFileWriter.write("	permission java.lang.RuntimePermission \"setIO\";\n");
+		policyFileWriter.write("	permission java.lang.reflect.ReflectPermission \"suppressAccessChecks\";\n");
+		policyFileWriter.write("};\n");
 	}
 }

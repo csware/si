@@ -23,6 +23,7 @@ import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
@@ -41,10 +42,10 @@ public class JavaSyntaxTest extends TempDirTest {
 
 	@Override
 	protected void performTestInTempDir(Test test, File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {
-		compileJava(tempDir, testResult);
+		compileJava(tempDir, null, testResult);
 	}
 
-	static final public boolean compileJava(File javaDir, TestExecutorTestResult testResult) throws Exception {
+	static final public boolean compileJava(File javaDir, List<File> additionalClassPath, TestExecutorTestResult testResult) throws Exception {
 		// http://forums.java.net/jive/message.jspa?messageID=325269
 		int compiles = 1;
 		JavaCompiler jc = ToolProvider.getSystemJavaCompiler();
@@ -55,7 +56,15 @@ public class JavaSyntaxTest extends TempDirTest {
 			getRecursivelyAllJavaFiles(javaDir, javaFiles);
 
 			if (!javaFiles.isEmpty()) {
-				compiles = jc.run(null, null, errorOutputStream, javaFiles.toArray(new String[] {}));
+				ArrayList<String> parameters = new ArrayList<>();
+				if (additionalClassPath != null && !additionalClassPath.isEmpty()) {
+					parameters.add("-cp");
+					StringJoiner joiner = new StringJoiner(File.pathSeparator);
+					additionalClassPath.stream().forEach(path -> joiner.add(path.getAbsolutePath()));
+					parameters.add(joiner.toString());
+				}
+				parameters.addAll(javaFiles);
+				compiles = jc.run(null, null, errorOutputStream, parameters.toArray(new String[0]));
 			}
 			if (testResult != null) {
 				testResult.setTestPassed(compiles == 0);

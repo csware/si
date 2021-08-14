@@ -36,7 +36,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 
 	@Override
 	final protected void performTestInTempDir(Test test, File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {
-		compileJava(tempDir, null);
+		compileJava(tempDir, null, null);
 		runJava(test, basePath, tempDir, testResult);
 	}
 
