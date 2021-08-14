@@ -35,7 +35,7 @@ public class CompileTest extends Test {
 	@Override
 	@Transient
 	public AbstractTest getTestImpl() {
-		return new JavaSyntaxTest();
+		return new JavaSyntaxTest(this);
 	}
 
 	@Override

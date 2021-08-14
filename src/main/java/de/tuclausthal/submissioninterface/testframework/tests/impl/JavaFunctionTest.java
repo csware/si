@@ -36,8 +36,12 @@ import de.tuclausthal.submissioninterface.util.Util;
 public abstract class JavaFunctionTest extends JavaSyntaxTest {
 	final static public String SECURITYMANAGER_JAR = "NoExitSecurityManager.jar";
 
+	public JavaFunctionTest(Test test) {
+		super(test);
+	}
+
 	@Override
-	final protected void performTestInTempDir(Test test, File basePath, File javaSourceDir, TestExecutorTestResult testResult) throws Exception {
+	final protected void performTestInTempDir(File basePath, File javaSourceDir, TestExecutorTestResult testResult) throws Exception {
 		File tempClassesDir = Util.createTemporaryDirectory("test");
 		if (tempClassesDir == null) {
 			throw new IOException("Failed to create tempdir!");
@@ -45,21 +49,21 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 		try {
 			compileJava(javaSourceDir, null, tempClassesDir, null);
 			List<File> classPath = new ArrayList<>();
-			populateClassPathForRunningtests(test, basePath, classPath);
+			populateClassPathForRunningtests(basePath, classPath);
 			classPath.add(tempClassesDir);
-			runJava(test, basePath, javaSourceDir, classPath, testResult);
+			runJava(basePath, javaSourceDir, classPath, testResult);
 		} finally {
 			Util.recursiveDelete(tempClassesDir);
 		}
 	}
 
-	protected void runJava(Test test, File basePath, File cwd, List<File> classPath, TestExecutorTestResult testResult) throws Exception {
+	protected void runJava(File basePath, File cwd, List<File> classPath, TestExecutorTestResult testResult) throws Exception {
 		File policyFile = null;
 		try {
 			// prepare policy file
 			policyFile = File.createTempFile("special", ".policy");
 			BufferedWriter policyFileWriter = new BufferedWriter(new FileWriter(policyFile));
-			populateJavaPolicyFile(test, basePath, cwd, policyFileWriter);
+			populateJavaPolicyFile(basePath, cwd, policyFileWriter);
 			policyFileWriter.write("\n");
 			policyFileWriter.write("grant {\n");
 			policyFileWriter.write("	permission java.util.PropertyPermission \"*\", \"read\";\n");
@@ -69,7 +73,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			policyFileWriter.close();
 
 			List<String> additionalParams = new ArrayList<>();
-			populateParameters(test, additionalParams);
+			populateParameters(additionalParams);
 
 			// check what kind of test it is
 			List<String> params = new ArrayList<>();
@@ -110,7 +114,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			outputGrapper.waitFor();
 
 			boolean exitedCleanly = (exitValue == 0);
-			testResult.setTestPassed(calculateTestResult(test, exitedCleanly, outputGrapper.getStdOutBuffer(), outputGrapper.getStdErrBuffer(), aborted));
+			testResult.setTestPassed(calculateTestResult(exitedCleanly, outputGrapper.getStdOutBuffer(), outputGrapper.getStdErrBuffer(), aborted));
 			testResult.setTestOutput(outputGrapper.getStdOutBuffer().toString());
 		} finally {
 			if (policyFile != null) {
@@ -119,11 +123,11 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 		}
 	}
 
-	abstract protected boolean calculateTestResult(Test test, boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted);
+	abstract protected boolean calculateTestResult(boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted);
 
-	abstract void populateParameters(Test test, List<String> params);
+	abstract void populateParameters(List<String> params);
 
-	abstract void populateJavaPolicyFile(Test test, File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException;
+	abstract void populateJavaPolicyFile(File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException;
 
-	void populateClassPathForRunningtests(Test test, File basePath, List<File> classPath) {}
+	void populateClassPathForRunningtests(File basePath, List<File> classPath) {}
 }

@@ -33,8 +33,12 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class JavaJUnitTest extends JavaFunctionTest {
 	final static public String JUNIT_JAR = "junit.jar";
 
+	public JavaJUnitTest(Test test) {
+		super(test);
+	}
+
 	@Override
-	protected boolean calculateTestResult(Test test, boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted) {
+	protected boolean calculateTestResult(boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted) {
 		// append STDERR
 		if (stdErr.length() > 0) {
 			processOutput.append("\nFehlerausgabe (StdErr)\n");
@@ -47,13 +51,13 @@ public class JavaJUnitTest extends JavaFunctionTest {
 	}
 
 	@Override
-	void populateParameters(Test test, List<String> params) {
+	void populateParameters(List<String> params) {
 		params.add("junit.textui.TestRunner");
 		params.add(Util.escapeCommandlineArguments(((JUnitTest) test).getMainClass()));
 	}
 
 	@Override
-	void populateJavaPolicyFile(Test test, File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException {
+	void populateJavaPolicyFile(File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException {
 		policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + JavaJUnitTest.JUNIT_JAR) + "\" {\n");
 		policyFileWriter.write("	permission java.security.AllPermission;\n");
 		policyFileWriter.write("};\n");
@@ -66,7 +70,7 @@ public class JavaJUnitTest extends JavaFunctionTest {
 	}
 
 	@Override
-	void populateClassPathForRunningtests(Test test, File basePath, List<File> classPath) {
+	void populateClassPathForRunningtests(File basePath, List<File> classPath) {
 		classPath.add(new File(basePath, JavaJUnitTest.JUNIT_JAR));
 		classPath.add(new File(basePath, test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar"));
 	}

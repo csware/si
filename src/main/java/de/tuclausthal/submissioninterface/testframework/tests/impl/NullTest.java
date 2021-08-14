@@ -20,7 +20,6 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
 import java.io.File;
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 
@@ -28,7 +27,10 @@ import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
  * @author Sven Strickroth
  */
 public class NullTest extends AbstractTest {
-	@Override
-	public void performTest(Test test, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
+	public NullTest() {
+		super(null);
 	}
+
+	@Override
+	public void performTest(File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {}
 }

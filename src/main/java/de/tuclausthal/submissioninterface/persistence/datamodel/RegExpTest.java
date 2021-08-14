@@ -78,7 +78,7 @@ public class RegExpTest extends Test {
 	@Override
 	@Transient
 	public AbstractTest getTestImpl() {
-		return new JavaIORegexpTest();
+		return new JavaIORegexpTest(this);
 	}
 
 	@Override

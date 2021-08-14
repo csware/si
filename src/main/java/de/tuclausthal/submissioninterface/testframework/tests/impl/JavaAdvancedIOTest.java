@@ -32,24 +32,27 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTestStep;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.util.Util;
 
 public class JavaAdvancedIOTest extends JavaFunctionTest {
 	private static final Random random = new Random();
-	private final String separator;
 	private static final String STUDENT_CODE_DIRNAME = "studentcode";
 	private static final String TEST_CODE_DIRNAME = "testcode";
 	private static final String STUDENT_CLASSES_DIRNAME = STUDENT_CODE_DIRNAME + "_classes";
 	private static final String TEST_CLASSES_DIRNAME = TEST_CODE_DIRNAME + "_classes";
+	private final String separator;
+	private final de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest test;
 
-	public JavaAdvancedIOTest() {
+
+	public JavaAdvancedIOTest(de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest test) {
+		super(test);
 		separator = "#<GATE@" + random.nextLong() + "#@>#";
+		this.test = test;
 	}
 
 	@Override
-	public void performTest(Test test, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
+	public void performTest(File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
 		File tempDir = null;
 		try {
 			tempDir = Util.createTemporaryDirectory("test");
@@ -69,15 +72,14 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 			if (!compileJava(codeDir, null, studentClassesDir, null)) { // TODO student solution has syntax error, provide more info?
 				StringBuffer stdOut = new StringBuffer();
 				StringBuffer stdErr = new StringBuffer();
-				testResult.setTestPassed(calculateTestResult(test, false, stdOut, stdErr, false));
+				testResult.setTestPassed(calculateTestResult(false, stdOut, stdErr, false));
 				testResult.setTestOutput(stdOut.toString());
 				return;
 			}
 
-			de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest jtt = (de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest) test;
 			StringBuffer testCode = new StringBuffer();
 			boolean isFirst = true;
-			for (JavaAdvancedIOTestStep testStep : jtt.getTestSteps()) {
+			for (JavaAdvancedIOTestStep testStep : test.getTestSteps()) {
 				if (!isFirst) {
 					testCode.append("System.out.println(\"" + separator + "\");");
 					testCode.append("System.err.println(\"" + separator + "\");");
@@ -101,11 +103,11 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 			if (!compileJava(testerDir, Arrays.asList(studentClassesDir), testClassesDir, null)) { // TODO test code has syntax error or cannot call student solution, provide more info?
 				StringBuffer stdOut = new StringBuffer();
 				StringBuffer stdErr = new StringBuffer();
-				testResult.setTestPassed(calculateTestResult(test, false, stdOut, stdErr, false));
+				testResult.setTestPassed(calculateTestResult(false, stdOut, stdErr, false));
 				testResult.setTestOutput(stdOut.toString());
 				return;
 			}
-			runJava(test, basePath, codeDir, Arrays.asList(testClassesDir, studentClassesDir), testResult);
+			runJava(basePath, codeDir, Arrays.asList(testClassesDir, studentClassesDir), testResult);
 		} finally {
 			if (tempDir != null) {
 				Util.recursiveDelete(tempDir);
@@ -115,9 +117,7 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 
 	// similar code in DockerTest
 	@Override
-	protected boolean calculateTestResult(Test test, boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted) {
-		de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest jtt = (de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest) test;
-
+	protected boolean calculateTestResult(boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted) {
 		JsonObjectBuilder builder = Json.createObjectBuilder();
 		builder.add("stdout", processOutput.toString());
 		if (stdErr.length() > 0) {
@@ -139,12 +139,12 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 		outputs.add(processOutput.substring(start));
 		int i = 0;
 		JsonArrayBuilder arrb = Json.createArrayBuilder();
-		for (i = 0; i < jtt.getTestSteps().size() && i < outputs.size(); ++i) {
+		for (i = 0; i < test.getTestSteps().size() && i < outputs.size(); ++i) {
 			JsonObjectBuilder job = Json.createObjectBuilder();
-			job.add("id", jtt.getTestSteps().get(i).getTeststepid());
+			job.add("id", test.getTestSteps().get(i).getTeststepid());
 			job.add("got", outputs.get(i));
-			job.add("expected", jtt.getTestSteps().get(i).getExpect());
-			if (!outputs.get(i).trim().equals(jtt.getTestSteps().get(i).getExpect().trim())) {
+			job.add("expected", test.getTestSteps().get(i).getExpect());
+			if (!outputs.get(i).trim().equals(test.getTestSteps().get(i).getExpect().trim())) {
 				exitedCleanly = false;
 				job.add("ok", false);
 			} else {
@@ -153,7 +153,7 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 			arrb.add(job);
 		}
 		builder.add("steps", arrb);
-		if (i < jtt.getTestSteps().size()) {
+		if (i < test.getTestSteps().size()) {
 			builder.add("missing-tests", true);
 			exitedCleanly = false;
 		}
@@ -163,12 +163,12 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 	}
 
 	@Override
-	void populateParameters(Test test, List<String> params) {
+	void populateParameters(List<String> params) {
 		params.add("Tester");
 	}
 
 	@Override
-	void populateJavaPolicyFile(Test test, File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException {
+	void populateJavaPolicyFile(File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException {
 		policyFileWriter.write("grant codeBase \"file:" + mkPath(new File(tempDir.getParentFile(), TEST_CLASSES_DIRNAME).getAbsolutePath()) + "\" {\n");
 		policyFileWriter.write("	permission java.lang.RuntimePermission \"setIO\";\n");
 		policyFileWriter.write("	permission java.lang.reflect.ReflectPermission \"suppressAccessChecks\";\n");

@@ -43,13 +43,16 @@ public class DockerTest extends TempDirTest {
 
 	private static final Random random = new Random();
 	private final String separator;
+	private final de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest test;
 
-	public DockerTest() {
+	public DockerTest(de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest test) {
+		super(test);
 		separator = "#<GATE@" + random.nextLong() + "#@>#";
+		this.test = test;
 	}
 
 	@Override
-	public void performTest(Test test, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
+	public void performTest(File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
 		File tempDir = null;
 		try {
 			tempDir = Util.createTemporaryDirectory("test");
@@ -66,8 +69,6 @@ public class DockerTest extends TempDirTest {
 
 			Util.recursiveCopy(submissionPath, studentDir);
 
-			de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest dt = (de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest) test;
-
 			StringBuilder testCode = new StringBuilder();
 			testCode.append("#!/bin/bash\n");
 			testCode.append("set -e\n");
@@ -75,10 +76,10 @@ public class DockerTest extends TempDirTest {
 			testCode.append(separator);
 			testCode.append("'\n\n");
 
-			testCode.append(dt.getPreparationShellCode());
+			testCode.append(test.getPreparationShellCode());
 			testCode.append("\n");
 
-			for (DockerTestStep testStep : dt.getTestSteps()) {
+			for (DockerTestStep testStep : test.getTestSteps()) {
 				testCode.append("echo $separator\n");
 				testCode.append("echo $separator >&2\n");
 				testCode.append("set -e\n");
@@ -180,5 +181,5 @@ public class DockerTest extends TempDirTest {
 	}
 
 	@Override
-	protected void performTestInTempDir(Test test, File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {}
+	protected void performTestInTempDir(File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {}
 }

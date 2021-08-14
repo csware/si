@@ -27,16 +27,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * @author Sven Strickroth
  */
 public class JavaIORegexpTest extends JavaFunctionTest {
+	private final RegExpTest regExpTest;
+
+	public JavaIORegexpTest(RegExpTest regExpTest) {
+		super(regExpTest);
+		this.regExpTest = regExpTest;
+	}
+
 	@Override
-	protected boolean calculateTestResult(Test test, boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted) {
-		Pattern testPattern = Pattern.compile(((RegExpTest) test).getRegularExpression());
+	protected boolean calculateTestResult(boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted) {
+		Pattern testPattern = Pattern.compile(regExpTest.getRegularExpression());
 		Matcher testMatcher = testPattern.matcher(processOutput.toString().trim());
 		if (!testMatcher.matches()) {
 			processOutput.insert(0, "Ausgabe stimmt nicht mit erwarteter Ausgabe überein. Ausgabe folgt (StdIn zuerst):\n");
@@ -56,8 +62,7 @@ public class JavaIORegexpTest extends JavaFunctionTest {
 	}
 
 	@Override
-	void populateParameters(Test test, List<String> params) {
-		RegExpTest regExpTest = (RegExpTest) test;
+	void populateParameters(List<String> params) {
 		params.add(Util.escapeCommandlineArguments(regExpTest.getMainClass()));
 		if (regExpTest.getCommandLineParameter() != null && !regExpTest.getCommandLineParameter().isEmpty()) {
 			params.addAll(Arrays.asList(Util.escapeCommandlineArguments(regExpTest.getCommandLineParameter()).split(" ")));
@@ -65,6 +70,5 @@ public class JavaIORegexpTest extends JavaFunctionTest {
 	}
 
 	@Override
-	void populateJavaPolicyFile(Test test, File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException {
-	}
+	void populateJavaPolicyFile(File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException {}
 }

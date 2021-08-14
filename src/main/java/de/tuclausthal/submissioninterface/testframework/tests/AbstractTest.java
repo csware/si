@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -27,14 +27,22 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
  * @author Sven Strickroth
  */
 public abstract class AbstractTest {
+	final protected Test test;
+
 	/**
 	 * @param test
+	 */
+	public AbstractTest(Test test) {
+		this.test = test;
+	}
+
+	/**
 	 * @param basePath
 	 * @param submissionPath
 	 * @param testResult
 	 * @throws Exception
 	 */
-	public abstract void performTest(Test test, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception;
+	public abstract void performTest(File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception;
 
 	/**
 	 * Prepares a windows path (windows needs double backslash)

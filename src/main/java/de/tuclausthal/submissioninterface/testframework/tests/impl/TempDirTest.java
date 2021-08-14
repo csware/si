@@ -30,8 +30,12 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public abstract class TempDirTest extends AbstractTest {
+	public TempDirTest(Test test) {
+		super(test);
+	}
+
 	@Override
-	public void performTest(Test test, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
+	public void performTest(File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
 		// check if we are already in an tempdir, i.e., we're executing a student test as Tutor
 		File checkPath = submissionPath;
 		boolean isAlreadyTempDir = true;
@@ -43,7 +47,7 @@ public abstract class TempDirTest extends AbstractTest {
 			checkPath = checkPath.getParentFile();
 		}
 		if (isAlreadyTempDir) {
-			performTestInTempDir(test, basePath, submissionPath, testResult);
+			performTestInTempDir(basePath, submissionPath, testResult);
 		} else {
 			File tempDir = null;
 			try {
@@ -55,7 +59,7 @@ public abstract class TempDirTest extends AbstractTest {
 				// prepare tempdir
 				Util.recursiveCopy(submissionPath, tempDir);
 
-				performTestInTempDir(test, basePath, tempDir, testResult);
+				performTestInTempDir(basePath, tempDir, testResult);
 			} finally {
 				if (tempDir != null) {
 					Util.recursiveDelete(tempDir);
@@ -64,5 +68,5 @@ public abstract class TempDirTest extends AbstractTest {
 		}
 	}
 
-	abstract protected void performTestInTempDir(Test test, File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception;
+	abstract protected void performTestInTempDir(File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception;
 }

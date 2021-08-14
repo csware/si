@@ -32,7 +32,7 @@ public class UMLConstraintTest extends Test {
 	@Override
 	@Transient
 	public AbstractTest getTestImpl() {
-		return new JavaUMLConstraintTest();
+		return new JavaUMLConstraintTest(this);
 	}
 
 	@Override

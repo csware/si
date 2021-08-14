@@ -161,18 +161,18 @@ public class SelfTest extends HttpServlet {
 			testresults.add(new TestResult("\"" + DockerTest.SAFE_DOCKER_SCRIPT + "\" Skript ist installiert: DockerIOTests prinzipiell verfügbar.", null));
 			File tempDir = Util.createTemporaryDirectory("emptydir");
 			try {
-				DockerTest dockerTest = new DockerTest();
 				de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest dockerTestSpec = new de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest();
 				dockerTestSpec.setPreparationShellCode("");
 				dockerTestSpec.setTestSteps(new ArrayList<>());
 				dockerTestSpec.getTestSteps().add(new DockerTestStep(dockerTestSpec, "HelloWorld", "echo \"Hello World\"", "Hello World"));
+				DockerTest dockerTest = new DockerTest(dockerTestSpec);
 				TestExecutorTestResult result = new TestExecutorTestResult();
-				dockerTest.performTest(dockerTestSpec, Configuration.getInstance().getDataPath(), tempDir, result);
+				dockerTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
 				testresults.add(new TestResult("DockerIOTest erfolgreich.", Util.escapeHTML(result.getTestOutput()), result.isTestPassed()));
 
 				dockerTestSpec.setTestSteps(new ArrayList<>());
 				dockerTestSpec.getTestSteps().add(new DockerTestStep(dockerTestSpec, "HelloWorld", "echo \"Hello old World\"", "Hello World"));
-				dockerTest.performTest(dockerTestSpec, Configuration.getInstance().getDataPath(), tempDir, result);
+				dockerTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
 				testresults.add(new TestResult("DockerIOTest erfolgreich Fehler erkannt.", Util.escapeHTML(result.getTestOutput()), !result.isTestPassed()));
 			} catch (Exception e) {
 				testresults.add(new TestResult("DockerIOTest erfolgreich.", Util.escapeHTML(e.getMessage()), false));
@@ -271,28 +271,28 @@ public class SelfTest extends HttpServlet {
 			regexpTest.setMainClass("HelloWorld");
 			regexpTest.setCommandLineParameter("");
 			regexpTest.setRegularExpression("^Hello World!$");
-			JavaIORegexpTest javaFunctionTest = new JavaIORegexpTest();
+			JavaIORegexpTest javaFunctionTest = new JavaIORegexpTest(regexpTest);
 			TestExecutorTestResult result = new TestExecutorTestResult();
-			javaFunctionTest.performTest(regexpTest, Configuration.getInstance().getDataPath(), tempDir, result);
+			javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
 			testresults.add(new TestResult("Java-Funktionstest erfolgreich.", Util.escapeHTML(result.getTestOutput()), result.isTestPassed()));
 			boolean functionTestGenerallyOK = result.isTestPassed();
 
 			regexpTest.setRegularExpression("No Match");
-			javaFunctionTest.performTest(regexpTest, Configuration.getInstance().getDataPath(), tempDir, result);
+			javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
 			testresults.add(new TestResult("Java-Funktionstest erkennt erfolgreich Fehler.", Util.escapeHTML(result.getTestOutput()), !result.isTestPassed()));
 
 			regexpTest.setTimeout(2);
 			fw = new FileWriter(new File(tempDir, "HelloWorld.java"));
 			fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		while (true) {\n			try {\n				Thread.sleep(1000);\n			} catch (InterruptedException e) {\n				System.out.println(\"Ignore InterruptedException\");\n			}\n		}\n	}\n}\n");
 			fw.close();
-			javaFunctionTest.performTest(regexpTest, Configuration.getInstance().getDataPath(), tempDir, result);
+			javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
 			testresults.add(new TestResult("Java-Funktionstest erkennt erfolgreich Timeout.", Util.escapeHTML(result.getTestOutput()), !result.isTestPassed() && result.getTestOutput().contains("aborted due to too long execution time")));
 
 			if (functionTestGenerallyOK) {
 				fw = new FileWriter(new File(tempDir, "HelloWorld.java"));
 				fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		System.out.println(\"----start here----\\n\" + System.getProperty(\"java.runtime.name\", \"-\") + \" \" + System.getProperty(\"java.runtime.version\", \"-\") + \" (\" + System.getProperty(\"java.version\", \"-\") + \"; \" + System.getProperty(\"java.vm.name\", \"-\") + \" \" + System.getProperty(\"java.vm.version\", \"-\")+ \"; \" + System.getProperty(\"java.vendor\", \"-\") + \")\\n----to here----\");\n	}\n}\n");
 				fw.close();
-				javaFunctionTest.performTest(regexpTest, Configuration.getInstance().getDataPath(), tempDir, result);
+				javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
 				String output = result.getTestOutput();
 				if (output.contains("----start here----") && output.contains("----to here----")) {
 					int start = output.indexOf("----start here----\n") + "----start here----\n".length();

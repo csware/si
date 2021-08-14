@@ -48,7 +48,7 @@ public class CommentsMetricTest extends Test {
 	@Override
 	@Transient
 	public AbstractTest getTestImpl() {
-		return new JavaCommentsMetricTest();
+		return new JavaCommentsMetricTest(this);
 	}
 
 	/**

@@ -38,10 +38,14 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
  * @author Sven Strickroth
  */
 public class JavaSyntaxTest extends TempDirTest {
+	public JavaSyntaxTest(Test test) {
+		super(test);
+	}
+
 	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	@Override
-	protected void performTestInTempDir(Test test, File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {
+	protected void performTestInTempDir(File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {
 		compileJava(tempDir, null, tempDir, testResult);
 	}
 

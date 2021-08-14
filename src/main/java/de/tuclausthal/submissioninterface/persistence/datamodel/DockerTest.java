@@ -45,7 +45,7 @@ public class DockerTest extends Test {
 	@Override
 	@Transient
 	public AbstractTest getTestImpl() {
-		return new de.tuclausthal.submissioninterface.testframework.tests.impl.DockerTest();
+		return new de.tuclausthal.submissioninterface.testframework.tests.impl.DockerTest(this);
 	}
 
 	/**

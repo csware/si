@@ -110,7 +110,7 @@ public class TestTask implements Serializable {
 
 		AbstractTest testImpl = test.getTestImpl();
 		try {
-			testImpl.performTest(test, basePath, path, testResult);
+			testImpl.performTest(basePath, path, testResult);
 		} catch (Exception e) {
 			LoggerFactory.getLogger(MethodHandles.lookup().lookupClass()).error("Performing test failed.", e);
 			testResult.setTestOutput(e.getMessage());

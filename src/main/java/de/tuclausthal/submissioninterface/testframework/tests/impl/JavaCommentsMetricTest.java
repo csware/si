@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -26,7 +26,6 @@ import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.SpacesTabsN
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCodeNormalizer;
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -35,10 +34,16 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class JavaCommentsMetricTest extends AbstractTest {
+	final private CommentsMetricTest test;
+
+	public JavaCommentsMetricTest(CommentsMetricTest test) {
+		super(test);
+		this.test = test;
+	}
+
 	@Override
-	public void performTest(Test test, File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
-		CommentsMetricTest commentsMetricTest = (CommentsMetricTest) test;
-		List<String> excludedFileNames = Arrays.asList(commentsMetricTest.getExcludedFiles().split(","));
+	public void performTest(File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
+		List<String> excludedFileNames = Arrays.asList(test.getExcludedFiles().split(","));
 
 		long charsOfCode = 0;
 		long charsOfComment = 0;
@@ -64,7 +69,7 @@ public class JavaCommentsMetricTest extends AbstractTest {
 			ratio = Math.round(100.0d * charsOfComment / charsOfCode);
 		}
 
-		testResult.setTestPassed(ratio >= commentsMetricTest.getMinProzent());
+		testResult.setTestPassed(ratio >= test.getMinProzent());
 		testResult.setTestOutput("Code: " + charsOfCode + "\nComment: " + charsOfComment + "\nRatio: " + ratio + "%");
 	}
 }
