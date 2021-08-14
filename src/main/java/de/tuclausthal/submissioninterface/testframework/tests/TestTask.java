@@ -19,7 +19,6 @@
 package de.tuclausthal.submissioninterface.testframework.tests;
 
 import java.io.File;
-import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 
 import org.hibernate.Session;
@@ -37,9 +36,7 @@ import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
  * Logic for tests
  * @author Sven Strickroth
  */
-public class TestTask implements Serializable {
-	private static final long serialVersionUID = 1L;
-
+public class TestTask {
 	private int testId;
 	private int submissionid;
 	private boolean saveTestResult = false;
