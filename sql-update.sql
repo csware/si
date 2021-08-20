@@ -45,6 +45,7 @@ ALTER TABLE `logs` ADD `uploadFilename` varchar(255) DEFAULT NULL AFTER `userId`
 
 -- b527092749a8f5e2b718c267d43ef8ff919a8772
 ALTER TABLE `similaritytests` CHANGE `status` `status` TINYINT(4) NOT NULL; 
+ALTER TABLE `submissions` CHANGE `pointStatus` `pointStatus` TINYINT(4) DEFAULT NULL;
 
 -- Allow to upload model solution and provide it to students
 ALTER TABLE `tasks` ADD `modelSolutionProvision` VARCHAR(255) AFTER `taskgroupid`;
