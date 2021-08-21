@@ -85,9 +85,14 @@ public class MarkMCQuestions {
 			boolean allCorrect = (results.size() == correctOptions.size()) && correctOptions.containsAll(results.stream().map(result -> Integer.parseInt(result)).collect(Collectors.toList()));
 
 			int points = allCorrect ? task.getMaxPoints() : 0;
-			if (submission.getPoints() != null && submission.getPoints().getPoints() == points) {
-				continue;
+			int oldPoints = 0;
+			if (submission.getPoints() != null) {
+				oldPoints = submission.getPoints().getPoints();
+				if (submission.getPoints().getPoints() == points) {
+					continue;
+				}
 			}
+			System.out.println("Update " + submission.getSubmissionid() + ": " + oldPoints + " -> " + points);
 			DAOFactory.PointsDAOIf(session).createMCPoints(points, submission, "", task.getTaskGroup().getLecture().isRequiresAbhnahme() ? PointStatus.NICHT_ABGENOMMEN : PointStatus.ABGENOMMEN);
 		}
 

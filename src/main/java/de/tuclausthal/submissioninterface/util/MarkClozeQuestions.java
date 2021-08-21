@@ -31,10 +31,10 @@ import org.hibernate.Session;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ResultDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
-import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 
 /**
  * Cloze Marker
@@ -84,9 +84,14 @@ public class MarkClozeQuestions {
 
 			List<String> results = resultDAO.getResultsForSubmission(submission);
 			int points = clozeHelper.calculatePoints(results);
-			if (submission.getPoints() != null && submission.getPoints().getPoints() == points) {
-				continue;
+			int oldPoints = 0;
+			if (submission.getPoints() != null) {
+				oldPoints = submission.getPoints().getPoints();
+				if (submission.getPoints().getPoints() == points) {
+					continue;
+				}
 			}
+			System.out.println("Update " + submission.getSubmissionid() + ": " + oldPoints + " -> " + points);
 			DAOFactory.PointsDAOIf(session).createMCPoints(points, submission, "", task.getTaskGroup().getLecture().isRequiresAbhnahme() ? PointStatus.NICHT_ABGENOMMEN : PointStatus.ABGENOMMEN);
 		}
 
