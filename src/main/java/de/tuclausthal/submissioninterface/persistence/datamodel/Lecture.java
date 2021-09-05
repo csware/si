@@ -88,13 +88,10 @@ public class Lecture implements Serializable {
 	@Transient
 	public String getReadableSemester() {
 		String semester = ((Integer) getSemester()).toString();
-		StringBuilder ret = new StringBuilder(8);
-		if (getSemester() % 2 == 1) {
-			ret.insert(0, "WS " + semester.substring(0, 4) + "/" + ((getSemester() - 1) / 10 + 1));
-		} else {
-			ret.insert(0, "SS " + semester.substring(0, 4));
+		if (getSemester() % 2 != 0) {
+			return "WS " + semester.substring(0, 4) + "/" + ((getSemester() - 1) / 10 + 1);
 		}
-		return ret.toString();
+		return "SS " + semester.substring(0, 4);
 	}
 
 	/**
