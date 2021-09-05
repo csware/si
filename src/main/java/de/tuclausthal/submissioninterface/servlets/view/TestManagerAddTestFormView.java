@@ -79,8 +79,8 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=giveDetailsToStudents></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
@@ -112,8 +112,8 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td colspan=2 class=mid>Weitere Einstellungen auf zweiter Seite...</td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
@@ -151,8 +151,8 @@ public class TestManagerAddTestFormView extends HttpServlet {
 			out.println("<td colspan=2 class=mid>Weitere Einstellungen auf zweiter Seite...</td>");
 			out.println("</tr>");
 			out.println("<tr>");
-			out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-			out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+			out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+			out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 			out.println("\">Abbrechen</a></td>");
 			out.println("</tr>");
 			out.println("</table>");
@@ -180,8 +180,8 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td colspan=2 class=mid>Weitere Einstellungen auf zweiter Seite...</td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
@@ -216,8 +216,8 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
@@ -266,8 +266,8 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=giveDetailsToStudents></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
@@ -309,8 +309,8 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=giveDetailsToStudents></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
@@ -351,8 +351,8 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=giveDetailsToStudents></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");

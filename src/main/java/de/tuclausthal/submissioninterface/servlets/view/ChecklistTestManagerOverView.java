@@ -65,8 +65,8 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 		out.println("<td><input type=text name=title maxlength=250 size=60 value=\"" + Util.escapeHTML(test.getTestTitle()) + "\" required></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + test.getTask().getTaskid() + "&lecture=" + test.getTask().getTaskGroup().getLecture().getId(), response));
+		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + test.getTask().getTaskid() + "&lecture=" + test.getTask().getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
@@ -91,8 +91,8 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<td colspan=2 class=mid>");
-			out.println("<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"");
-			out.println(Util.generateHTMLLink(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId() + "&action=deleteCheckItem&checkitemid=" + checkItem.getCheckitemid(), response));
+			out.print("<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"");
+			out.print(Util.generateHTMLLink(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId() + "&action=deleteCheckItem&checkitemid=" + checkItem.getCheckitemid(), response));
 			out.println("\">Löschen</a></td>");
 			out.println("</tr>");
 			out.println("</table>");
@@ -139,8 +139,8 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 		out.println("<td><input type=text name=title maxlength=250 value=\"\" size=60 required></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + test.getTask().getTaskid() + "&lecture=" + test.getTask().getTaskGroup().getLecture().getId(), response));
+		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + test.getTask().getTaskid() + "&lecture=" + test.getTask().getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");

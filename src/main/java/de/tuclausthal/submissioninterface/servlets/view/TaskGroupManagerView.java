@@ -71,15 +71,15 @@ public class TaskGroupManagerView extends HttpServlet {
 		out.println("<td><input type=text name=title value=\"" + Util.escapeHTML(taskGroup.getTitle()) + "\" required=required ></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response));
+		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.print(Util.generateHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
 		if (taskGroup.getTaskGroupId() != 0) {
-			out.println("<p class=mid><a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"");
-			out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=deleteTaskGroup&taskgroupid=" + taskGroup.getTaskGroupId() + "&lecture=" + lecture.getId(), response));
+			out.print("<p class=mid><a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"");
+			out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=deleteTaskGroup&taskgroupid=" + taskGroup.getTaskGroupId() + "&lecture=" + lecture.getId(), response));
 			out.println("\">Löschen</a></p>");
 		}
 		template.printTemplateFooter();

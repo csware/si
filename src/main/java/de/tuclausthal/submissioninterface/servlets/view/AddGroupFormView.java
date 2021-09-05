@@ -74,8 +74,8 @@ public class AddGroupFormView extends HttpServlet {
 		out.println("<td><input type=checkbox name=membersvisible></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response));
+		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.print(Util.generateHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");

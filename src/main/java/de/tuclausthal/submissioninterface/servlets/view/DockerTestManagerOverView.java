@@ -69,8 +69,8 @@ public class DockerTestManagerOverView extends HttpServlet {
 		out.println("<td><textarea cols=60 rows=10 name=preparationcode>" + Util.escapeHTML(test.getPreparationShellCode()) + "</textarea></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + test.getTask().getTaskid() + "&lecture=" + test.getTask().getTaskGroup().getLecture().getId(), response));
+		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + test.getTask().getTaskid() + "&lecture=" + test.getTask().getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
@@ -103,8 +103,8 @@ public class DockerTestManagerOverView extends HttpServlet {
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<td colspan=2 class=mid>");
-			out.println("<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"");
-			out.println(Util.generateHTMLLink(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId() + "&action=deleteStep&teststepid=" + step.getTeststepid(), response));
+			out.print("<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"");
+			out.print(Util.generateHTMLLink(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId() + "&action=deleteStep&teststepid=" + step.getTeststepid(), response));
 			out.println("\">Löschen</a></td>");
 			out.println("</tr>");
 			out.println("</table>");
@@ -182,8 +182,8 @@ public class DockerTestManagerOverView extends HttpServlet {
 		out.println("<td><textarea cols=60 rows=10 name=expect></textarea></td>");
 		out.println("</tr>");
 		out.println("<tr>");
-		out.println("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.println(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + test.getTask().getTaskid() + "&lecture=" + test.getTask().getTaskGroup().getLecture().getId(), response));
+		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+		out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + test.getTask().getTaskid() + "&lecture=" + test.getTask().getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");
