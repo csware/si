@@ -117,9 +117,8 @@ public class DockerTestManagerOverView extends HttpServlet {
 
 		out.println("<div style=\"display:none;\" id=teststephelp><b>Hilfe:</b><br>");
 		out.println("<p>Diese Art von Test erlaubt es beliebige einfache Ausgabe-Tests zu definieren. Mit dem Preparation-Code können vorbereitende Schritte als Bash-Skript programmiert werden. Schlägt dieser Schritt fehl, wird den Studierenden dies als Syntaxfehler angezeigt und der Inhalt von STDERR bereitgestellt. Ist dieser Schritt erfolgreich, werden die einzelnen Testschritte nacheinander aufgerufen, wobei für jeden Testschritt die Ausgabe auf STDOUT mit einem erwartetem Wert überprüft werden.</p>");
-		out.println("<p>Preparation-Code z. B.:<br>"+
-				"<textarea cols=80 rows=2 name=testcode disabled>echo -e \"hallo servus\\nsehr sakrisch\\ngut guad\" > woerterbuch.txt\n"
-				+ "ghc uebersetzer-a.hs</textarea></p>");
+		out.println("<p>Preparation-Code z. B.:<br><textarea cols=80 rows=2 name=testcode disabled>echo -e \"hallo servus\\nsehr sakrisch\\ngut guad\" > woerterbuch.txt\nghc uebersetzer-a.hs</textarea></p>");
+		/* @formatter:off */
 		out.println("<p>Test-Schritt-Definition z. B.:<br>"+
 				"<table class=border>" + 
 				"<tr>" + 
@@ -160,6 +159,7 @@ public class DockerTestManagerOverView extends HttpServlet {
 				"<td><span class=green>ja</span></td>" + 
 				"</tr>" + 
 				"</table></p>");
+		/* @formatter:on */
 		out.println("<p>Die erwartete Ausgabe und tatsächliche Ausgabe wird getrimmt und hinsichtlich der Zeilenenden auf \"\\n\" normalisiert und mittels exaktem Stringvergleich verglichen. Im Testcode kann beliebiger Bash-Code verwendet werden. In der Umgebung ist per Default \"set -e\" gesetzt, so dass das Skript nach einem nicht behandelten Fehler sofort abgebrochen wird.</p>");
 		out.println("<p>Wird das Bash-Skript vorzeitig beendet, erhalten die Studierenden die Ausgabe \"Nicht alle Tests wurden durchlaufen. Das Program wurde nicht ordentlich beendet.\", wobei die Tabelle alle bisherigen zzgl. den zuletzt ausgeführten Test zeigt (die Spalte \"Erhalten\" ist dann ggf. leer). Bricht das Testskript nach der Preparation-Code-Phase ab, wird dies den Studierenden als Laufzeitfehler angezeigt und der Inhalt von STDERR seit dem Beginn des Testschritts bereitgestellt. Bricht das Testskript beim Preparationcode ab, wird den Studierenden ein Syntaxfehler angezeigt inkl. Inhalt von STDERR.</p>");
 		out.println("<p>Diese Art von Test ist für einfache Ausgabetests ausgerichtet, es können aber auch approximative Tests oder nahezu beliebige Überprüfungen durchgefühert werden, z.B. erwartet \"True\" und Testcode \"ghci -e \"pi_approx 6 < 3.0 && pi_approx 6 > 2.99\" pi_approx.hs\".</p>");

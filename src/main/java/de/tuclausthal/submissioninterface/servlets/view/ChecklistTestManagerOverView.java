@@ -105,8 +105,8 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 
 		out.println("<div style=\"display:none;\" id=teststephelp><b>Hilfe:</b><br>");
 		out.println("<p>Diese Art von Test erlaubt es den Studierenden eine Checkliste von zu prüfenden Punkten bereitzustellen.</p>");
-		out.println("<p>Eintrag z. B.:<br>"+
-				"<textarea cols=120 rows=1 name=testcode disabled>Der Aufruf von <pre>ghci -e \"reverse'' [3,1,7,6]\" reverse.hs</pre> gibt <pre>[6, 7, 1, 3]</pre> zurück.</textarea></p>");
+		out.println("<p>Eintrag z. B.:<br><textarea cols=120 rows=1 name=testcode disabled>Der Aufruf von <pre>ghci -e \"reverse'' [3,1,7,6]\" reverse.hs</pre> gibt <pre>[6, 7, 1, 3]</pre> zurück.</textarea></p>");
+		/* @formatter:off */
 		out.println("<p>Ausgabe bei Testanforderung z. B.:<br>" +
 				"<p><strong>Bitte überprüfen Sie Ihre Lösung hinsichtlich der folgenden Punkte und haken alle erfolgreichen Tests an:</strong></p>" + 
 				"<table class=\"border\">\n"
@@ -127,6 +127,7 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 				+ "<td colspan=\"2\"><input type=\"submit\" disabled value=\"Ergebnis meiner Überprüfung speichern\"></td>\n"
 				+ "</tr>\n"
 				+ "</tbody></table></p>");
+		/* @formatter:on */
 		out.println("<p>Einfaches HTML ist erlaubt (z.B. \"&lt;pre&gt;\").</p>");
 		out.println("</div>");
 

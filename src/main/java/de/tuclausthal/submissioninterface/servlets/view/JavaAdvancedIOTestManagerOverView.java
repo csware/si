@@ -110,6 +110,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 
 		out.println("<div style=\"display:none;\" id=teststephelp><b>Hilfe:</b><br>");
 		out.println("<p>Diese Art von Test erlaubt es einfache Ausgabe-Tests zu definieren. Sollen Studierende z. B. in der Klasse MathFunctions die Methode leastCommonMultiple(a,b) programmieren, so kann die Methode relativ einfach mit verschiedenen Werten aufgerufen und die Ausgabe auf STDOUT mit einem erwartetem Wert überprüft werden. Der STDERR wird den Studierenden im Normalfall nicht gezeigt, ebensowenig mögliche Compiler-Fehler.</p>");
+		/* @formatter:off */
 		out.println("<p>Test-Schritt-Definition z. B.:<br>"+
 				"<table class=border>" + 
 				"<tr>" + 
@@ -155,6 +156,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 				"<td><span class=\"red\">nein</span></td>" + 
 				"</tr>" + 
 				"</table></p>");
+		/* @formatter:on */
 		out.println("<p>Schlägt die Kompilierung des studentischen Codes oder der definierten Tests fehl oder wird ein Laufzeitfehler geworfen, erhalten die Studierenden die Ausgabe \"Nicht alle Tests wurden durchlaufen. Das Program wurde nicht ordentlich beendet.\", wobei die Tabelle alle bisherigen inkl. des zuletzt ausgeführten Tests zeigt (die Spalte \"Erhalten\" ist dann ggf. leer). Für genauere Ausgaben bei Syntaxfehlern bitte einen Syntaxtest nutzen. Syntaxfehler im Testcode treten z. B. dann auf, wenn eine Methode aufgerufen werden soll, die im studentischen Code nicht existiert. Bei einem Laufzeitfehler wird der STDERR (Stacktrace) separat für Studierende und TutorInnen angezeigt.</p>");
 		out.println("<p>Die erwartete Ausgabe und tatsächliche Ausgabe wird getrimmt und hinsichtlich der Zeilenenden auf \"\\n\" normalisiert und mittels exaktem Stringvergleich verglichen. Im Testcode kann beliebiger Java-Code verwendet werden, der auch in einer normalen Block-Umgebung erlaubt ist (da keine imports möglich sind, sind ggf. absolute Klassennamen notwendig).</p>");
 		out.println("<p>Diese Art von Test ist für einfache Ausgabetests ausgerichtet, es können aber auch approximative Tests oder nahezu beliebige Überprüfungen durchgefühert werden, z.B. erwartet \"ca. 0.13\" und Testcode \"float f = StudentCode.getFloat(); if (Math.abs(f - 0.13) < 0.01) { System.out.println(\"ca. 0.13\"); } else { System.out.println(f); }\".</p>");

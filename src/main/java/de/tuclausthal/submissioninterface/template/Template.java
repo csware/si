@@ -165,6 +165,7 @@ public abstract class Template {
 			addHead("<script src=\"" + prefix + "/assets/tiny_mce/tinymce.min.js\"></script>");
 			tinyMCEAdded = true;
 		}
+		/* @formatter:off */
 		addHead("<script>\ntinyMCE.init({" +
 							"selector: '" + StringEscapeUtils.escapeEcmaScript(selector) + "'," +
 							"entity_encoding: 'raw',"+
@@ -199,5 +200,6 @@ public abstract class Template {
 							"    { name: 'indentation', items: [ 'outdent', 'indent' ] }" +
 							"  ]"+
 							"});\n</script>");
+		/* @formatter:on */
 	}
 }

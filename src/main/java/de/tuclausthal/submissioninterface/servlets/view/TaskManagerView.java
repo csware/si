@@ -82,6 +82,7 @@ public class TaskManagerView extends HttpServlet {
 
 		template.addKeepAlive();
 		template.addTinyMCE("textarea#description");
+		/* @formatter:off */
 		template.addHead("<script>\n" +
 							"function checkRegexp() {" + 
 								"var request = new XMLHttpRequest();" +
@@ -127,6 +128,7 @@ public class TaskManagerView extends HttpServlet {
 								"request.send('description='+encodeURIComponent(tinyMCE.activeEditor.getContent()).replace(/%20/g, '+'));" +
 							"}" +
 							"\n</script>");
+		/* @formatter:on */
 
 		if (task.getTaskid() != 0) {
 			template.printTemplateHeader("Aufgabe bearbeiten", task);
