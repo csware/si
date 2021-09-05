@@ -50,7 +50,6 @@ public class AdminMenueAddLectureView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		Lecture dummyLecture = new Lecture();
-		dummyLecture.setSemester(Util.getCurrentSemester());
 		out.println("<form action=\"" + Util.generateHTMLLink("?action=saveLecture", response) + "\" method=post>");
 		out.println("<table class=border>");
 		out.println("<tr>");
@@ -63,7 +62,17 @@ public class AdminMenueAddLectureView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Semester:</th>");
-		out.println("<td>" + dummyLecture.getReadableSemester() + "</td>");
+		out.println("<td><select size=1 name=semester>");
+		int currentSemester = Util.getCurrentSemester();
+		int lastSemester = Util.decreaseSemester(currentSemester);
+		dummyLecture.setSemester(lastSemester);
+		out.println("<option value=" + lastSemester + ">" + dummyLecture.getReadableSemester() + "</option>");
+		dummyLecture.setSemester(currentSemester);
+		out.println("<option value=" + currentSemester + " selected>" + dummyLecture.getReadableSemester() + "</option>");
+		int nextSemester = Util.increaseSemester(currentSemester);
+		dummyLecture.setSemester(nextSemester);
+		out.println("<option value=" + nextSemester + ">" + dummyLecture.getReadableSemester() + "</option>");
+		out.println("</select> (Studierende können nur Veranstaltungen im aktuellen Semester selbst beitreten.)</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Gruppenweise Bewertung:</th>");

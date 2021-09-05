@@ -403,6 +403,20 @@ public final class Util {
 		return ZonedDateTime.now(CLOCK).getYear() * 10;
 	}
 
+	public static int decreaseSemester(int semester) {
+		if (semester % 2 != 0) {
+			return semester - 1;
+		}
+		return semester - 10 + 1;
+	}
+
+	public static int increaseSemester(int semester) {
+		if (semester % 2 == 0) {
+			return semester + 1;
+		}
+		return semester + 10 - 1;
+	}
+
 	/**
 	 * Opens the specified file and returns its contents as string buffer
 	 * @param file the file to open

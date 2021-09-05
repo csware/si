@@ -133,6 +133,10 @@ public class AdminMenue extends HttpServlet {
 		} else if ("saveLecture".equals(request.getParameter("action")) && request.getParameter("name") != null && !request.getParameter("name").trim().isEmpty()) {
 			Transaction tx = session.beginTransaction();
 			Lecture newLecture = DAOFactory.LectureDAOIf(session).newLecture(request.getParameter("name").trim(), request.getParameter("requiresAbhnahme") != null, request.getParameter("groupWise") != null);
+			int wantedSemester = Util.parseInteger(request.getParameter("semester"), 0);
+			if (wantedSemester != newLecture.getSemester() && wantedSemester >= Util.decreaseSemester(Util.getCurrentSemester()) && wantedSemester <= Util.increaseSemester(Util.getCurrentSemester())) {
+				newLecture.setSemester(wantedSemester);
+			}
 			newLecture.setDescription(request.getParameter("description"));
 			newLecture.setAllowSelfSubscribe(request.getParameter("allowselfsubscribe") != null);
 			session.save(newLecture);

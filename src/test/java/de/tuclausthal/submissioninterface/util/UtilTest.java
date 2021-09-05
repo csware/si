@@ -64,6 +64,18 @@ public class UtilTest {
 	}
 
 	@Test
+	public void testDecreaseSemester() {
+		assertEquals(20200, Util.decreaseSemester(20201));
+		assertEquals(20191, Util.decreaseSemester(20200));
+	}
+
+	@Test
+	public void testIncreaseSemester() {
+		assertEquals(20210, Util.increaseSemester(20201));
+		assertEquals(20201, Util.increaseSemester(20200));
+	}
+
+	@Test
 	public void testEscapeHTML() {
 		assertEquals("", Util.escapeHTML(""));
 		assertEquals("", Util.escapeHTML(null));
