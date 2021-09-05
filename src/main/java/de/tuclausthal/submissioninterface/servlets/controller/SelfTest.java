@@ -131,9 +131,9 @@ public class SelfTest extends HttpServlet {
 		testresults.add(new TestResult("Ermittelte genutzte Server-Adresse:", Util.escapeHTML(guessedServerAddress), null));
 		testresults.add(new TestResult("Servername ist in web.xml gesetzt und sieht gültig aus (eigentlich nur wichtig für Links in Mails).", Util.escapeHTML(Configuration.getInstance().getFullServletsURI()), Configuration.getInstance().getFullServletsURI().startsWith(guessedServerAddress)));
 		testresults.add(new TestResult("Session-Tracking Mode ist Cookie.", Util.escapeHTML(getServletContext().getEffectiveSessionTrackingModes().toString()), getServletContext().getEffectiveSessionTrackingModes().size() == 1 && getServletContext().getEffectiveSessionTrackingModes().contains(SessionTrackingMode.COOKIE)));
-		testresults.add(new TestResult("Admin-E-Mail-Adresse ist ist in web.xml gesetzt.", Util.escapeHTML(Configuration.getInstance().getAdminMail()), !Configuration.getInstance().getAdminMail().isBlank() && !"admin@localhost".equals(Configuration.getInstance().getAdminMail())));
-		testresults.add(new TestResult("Mail-Server ist ist in web.xml gesetzt.", Util.escapeHTML(Configuration.getInstance().getMailServer()), !Configuration.getInstance().getMailServer().isBlank()));
-		testresults.add(new TestResult("Absender-Adresse ist ist in web.xml gesetzt.", Util.escapeHTML(Configuration.getInstance().getMailFrom()), !Configuration.getInstance().getMailFrom().isBlank() && !"noreply@localhost".equals(Configuration.getInstance().getMailFrom())));
+		testresults.add(new TestResult("Admin-E-Mail-Adresse ist in web.xml gesetzt.", Util.escapeHTML(Configuration.getInstance().getAdminMail()), !Configuration.getInstance().getAdminMail().isBlank() && !"admin@localhost".equals(Configuration.getInstance().getAdminMail())));
+		testresults.add(new TestResult("Mail-Server ist in web.xml gesetzt.", Util.escapeHTML(Configuration.getInstance().getMailServer()), !Configuration.getInstance().getMailServer().isBlank()));
+		testresults.add(new TestResult("Absender-Adresse ist in web.xml gesetzt.", Util.escapeHTML(Configuration.getInstance().getMailFrom()), !Configuration.getInstance().getMailFrom().isBlank() && !"noreply@localhost".equals(Configuration.getInstance().getMailFrom())));
 		if (MailSender.sendMail(Configuration.getInstance().getAdminMail(), "Test-Mail", "Test-Inhalt.")) {
 			testresults.add(new TestResult("Test-Mail wurde an Admin-E-Mail-Adresse gesendet. Empfang manuell prüfen!", null));
 		} else {
