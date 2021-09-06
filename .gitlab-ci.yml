@@ -30,11 +30,13 @@ compile-jdk11:
   before_script:
     - echo -e "section_start:`date +%s`:install_packages[collapsed=true]\r\e[0K\e[1;96mInstalling packages\e[0m"
     - apt-get update -qq
-    - apt-get install -qq -y mariadb-client
+    - apt-get install -qq -y mariadb-client xmlstarlet
     - echo -e "section_end:`date +%s`:install_packages\r\e[0K"
     - perl -pi -e 's|localhost/[a-zA-Z0-9]+|mariadb/abgabesystem|g' src/main/resources/hibernate.cfg.xml
     - perl -pi -e 's|hibernate.show_sql">true|hibernate.show_sql">false|g' src/main/resources/hibernate.cfg.xml
   script:
+    - xmlstarlet val -w -e -s http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd src/main/webapp/WEB-INF/web.xml
+    - xmlstarlet val -w -e -d http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd src/main/resources/hibernate.cfg.xml
     - 'mvn $MAVEN_CLI_OPTS verify'
     - mysql -u root -h mariadb -e 'create database abgabesystem CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin;'
     - mysql -u root -h mariadb abgabesystem < mysql.sql
