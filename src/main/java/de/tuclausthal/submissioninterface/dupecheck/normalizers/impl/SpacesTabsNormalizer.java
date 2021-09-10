@@ -46,7 +46,7 @@ public class SpacesTabsNormalizer implements NormalizerIf {
 			}
 			++i;
 		}
-		i = stringBuffer.length() - 1; 
+		i = stringBuffer.length() - 1;
 		if (i >= 0 && stringBuffer.charAt(i) == ' ') {
 			stringBuffer.setLength(i);
 		}

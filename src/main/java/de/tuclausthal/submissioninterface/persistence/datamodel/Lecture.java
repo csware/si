@@ -192,7 +192,7 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the description
 	 */
-	@Column(nullable = false, columnDefinition="TEXT")
+	@Column(nullable = false, columnDefinition = "TEXT")
 	public String getDescription() {
 		return description;
 	}

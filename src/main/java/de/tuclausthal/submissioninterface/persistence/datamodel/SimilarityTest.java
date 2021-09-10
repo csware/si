@@ -117,7 +117,7 @@ public class SimilarityTest implements Serializable {
 	/**
 	 * @return the status
 	 */
-	@Column(nullable = false, columnDefinition="TINYINT")
+	@Column(nullable = false, columnDefinition = "TINYINT")
 	public int getStatus() {
 		return status;
 	}
@@ -216,7 +216,7 @@ public class SimilarityTest implements Serializable {
 		if ("plaggie".equals(getType())) {
 			return new PlaggieAdapter(path);
 		} else if ("jplag".equals(getType())) {
-				return new JPlagAdapter(path);
+			return new JPlagAdapter(path);
 		} else if ("compression".equals(getType())) {
 			return new CompressionDistance(path);
 		} else if ("levenshtein".equals(getType())) {

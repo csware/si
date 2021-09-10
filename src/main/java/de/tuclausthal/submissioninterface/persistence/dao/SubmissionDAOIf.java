@@ -89,6 +89,7 @@ public interface SubmissionDAOIf {
 	public boolean deleteIfNoFiles(Submission submission, File submissionPath);
 
 	public Submission getUngradedSubmission(Task task, int lastSubmissionID, boolean reverse);
+
 	public Submission getUngradedSubmission(Task task, int lastSubmissionID, Group group, boolean reverse);
 
 	public List<Submission> getSubmissionsForSearch(Task task, String searchString, boolean publicComment, boolean privateComment, boolean testResults);

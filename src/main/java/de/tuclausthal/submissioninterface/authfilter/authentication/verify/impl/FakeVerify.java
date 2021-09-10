@@ -40,6 +40,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.User;
  */
 public class FakeVerify implements VerifyIf {
 	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	public FakeVerify(FilterConfig filterConfig) {
 		LOG.warn("Using FakeVerify as authenticator! No passwords will be validated!");
 	}

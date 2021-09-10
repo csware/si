@@ -337,7 +337,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		Join<Submission, Task> taskJoin = root.join(Submission_.task);
 		Join<Submission, Participation> submittersJoin = root.join(Submission_.submitters);
 		criteria.select(builder.construct(SubmissionPointsDTO.class, root.get(Submission_.submissionid), submittersJoin.get(Participation_.id), root.get(Submission_.points).get(Points_.points), root.get(Submission_.points).get(Points_.duplicate), taskJoin.get(Task_.minPointStep)));
-		criteria.where(builder.and(builder.isNotNull(root.get(Submission_.points)),builder.gt(root.get(Submission_.points).get(Points_.points), 0), builder.ge(root.get(Submission_.points).get(Points_.pointStatus), PointStatus.ABGENOMMEN.ordinal()), builder.equal(taskJoin.join(Task_.taskGroup).get(TaskGroup_.lecture), lecture)));
+		criteria.where(builder.and(builder.isNotNull(root.get(Submission_.points)), builder.gt(root.get(Submission_.points).get(Points_.points), 0), builder.ge(root.get(Submission_.points).get(Points_.pointStatus), PointStatus.ABGENOMMEN.ordinal()), builder.equal(taskJoin.join(Task_.taskGroup).get(TaskGroup_.lecture), lecture)));
 		Query<SubmissionPointsDTO> query = session.createQuery(criteria);
 
 		return query.list().stream().collect(Collectors.groupingBy(SubmissionPointsDTO::getParticipationid, Collectors.reducing(0, SubmissionPointsDTO::getPlagiarismPoints, Integer::sum)));

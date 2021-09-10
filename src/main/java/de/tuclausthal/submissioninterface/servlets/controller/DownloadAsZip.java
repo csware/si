@@ -77,8 +77,7 @@ public class DownloadAsZip extends HttpServlet {
 
 		if (path.exists()) {
 			ShowFile.setContentTypeBasedonFilenameExtension(response, "submission-id" + submission.getSubmissionid() + ".zip", true);
-			try (ZipOutputStream out = new ZipOutputStream(response.getOutputStream()))
-			{
+			try (ZipOutputStream out = new ZipOutputStream(response.getOutputStream())) {
 				//out.setMethod(ZipOutputStream.STORED);
 				Util.recursivelyZip(out, path, "");
 			}

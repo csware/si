@@ -33,7 +33,7 @@ public class JUnitTest extends Test {
 	private static final long serialVersionUID = 1L;
 
 	private String mainClass = "AllTests";
-	
+
 	/**
 	 * @return the mainClass
 	 */
@@ -47,7 +47,7 @@ public class JUnitTest extends Test {
 	public void setMainClass(String mainClass) {
 		this.mainClass = mainClass;
 	}
-	
+
 	@Override
 	@Transient
 	public AbstractTest getTestImpl() {

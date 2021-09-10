@@ -331,7 +331,7 @@ public class Task implements Serializable {
 	/**
 	 * @return the featuredFiles
 	 */
-	@Column(nullable = false, columnDefinition="TEXT")
+	@Column(nullable = false, columnDefinition = "TEXT")
 	public String getFeaturedFiles() {
 		return featuredFiles;
 	}

@@ -77,7 +77,7 @@ public class DupeCheckFormView extends HttpServlet {
 			out.println("</tr>");
 			out.println("</table>");
 			out.println("</form>");
-		}else {
+		} else {
 			out.println("<p>(JPlag-Tests sind nicht verfügbar, da JPlag nicht gefunden wurde.)</p>");
 		}
 

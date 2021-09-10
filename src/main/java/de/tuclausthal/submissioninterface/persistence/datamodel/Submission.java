@@ -53,7 +53,7 @@ public class Submission implements Serializable {
 	private Set<Similarity> similarSubmissions;
 	private Date lastModified = null;
 	private Date closedTime = null;
-	private Participation closedBy= null;
+	private Participation closedBy = null;
 
 	// for Hibernate
 	protected Submission() {}
@@ -218,7 +218,7 @@ public class Submission implements Serializable {
 	 * @return user id of the student
 	 */
 	@ManyToOne
-	@JoinColumn(name="closedBy")
+	@JoinColumn(name = "closedBy")
 	public Participation getClosedBy() {
 		return closedBy;
 	}

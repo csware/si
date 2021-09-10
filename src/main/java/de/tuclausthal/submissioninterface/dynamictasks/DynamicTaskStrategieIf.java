@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 - 2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -43,7 +43,7 @@ public interface DynamicTaskStrategieIf {
 	public abstract List<TaskNumber> getVariables(Submission submission);
 
 	public abstract String getExampleTaskDescription();
-	
+
 	public abstract String getTranslatedDescription(Participation participation);
 
 	public abstract String getTranslatedDescription(List<TaskNumber> taskNumbers);
