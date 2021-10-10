@@ -32,6 +32,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.OrderBy;
@@ -207,6 +208,7 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the allowSelfSubscribe
 	 */
+	@ColumnDefault("1")
 	public boolean isAllowSelfSubscribe() {
 		return allowSelfSubscribe;
 	}
