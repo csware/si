@@ -20,7 +20,10 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -29,6 +32,7 @@ import javax.persistence.criteria.Subquery;
 
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import de.tuclausthal.submissioninterface.persistence.dao.GroupDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
@@ -112,5 +116,27 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 		}
 		criteria.where(where);
 		return session.createQuery(criteria).list();
+	}
+
+	@Override
+	public Map<Integer, Integer> getGroupSizes(List<Group> groupsToConsider, Group participationGroup) {
+		if (groupsToConsider.isEmpty() && participationGroup == null) {
+			return Collections.emptyMap();
+		}
+
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Tuple> criteria = builder.createTupleQuery();
+		Root<Participation> root = criteria.from(Participation.class);
+		criteria.groupBy(root.get(Participation_.group));
+		criteria.select(builder.tuple(root.get(Participation_.group).get(Group_.gid), builder.count(root.get(Participation_.id))));
+		if (participationGroup != null) {
+			criteria.where(builder.or(root.get(Participation_.group).in(groupsToConsider), builder.equal(root.get(Participation_.group), participationGroup)));
+		} else {
+			criteria.where(root.get(Participation_.group).in(groupsToConsider));
+		}
+		Query<Tuple> query = session.createQuery(criteria);
+
+		return query.list().stream().collect(Collectors.toMap(tupel -> tupel.get(0, Integer.class), tupel -> tupel.get(1, Long.class).intValue()));
 	}
 }

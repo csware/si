@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
@@ -62,4 +63,6 @@ public interface GroupDAOIf {
 	public void saveGroup(Group group);
 
 	public List<Group> getJoinAbleGroups(Lecture lecture, Group participationGroup);
+
+	public Map<Integer, Integer> getGroupSizes(List<Group> groupsToConsider, Group participationGroup);
 }

@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,7 +29,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.GroupDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
@@ -79,7 +82,10 @@ public class ShowLecture extends HttpServlet {
 
 		request.setAttribute("participation", participation);
 		if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
-			request.setAttribute("joinAbleGroups", DAOFactory.GroupDAOIf(session).getJoinAbleGroups(lecture, participation.getGroup()));
+			GroupDAOIf groupDao = DAOFactory.GroupDAOIf(session);
+			List<Group> joinAbleGroups = groupDao.getJoinAbleGroups(lecture, participation.getGroup());
+			request.setAttribute("joinAbleGroups", joinAbleGroups);
+			request.setAttribute("groupSizes", groupDao.getGroupSizes(joinAbleGroups, participation.getGroup()));
 			request.setAttribute("tasks", DAOFactory.TaskDAOIf(session).getTasks(lecture, true));
 			request.setAttribute("submissions", DAOFactory.SubmissionDAOIf(session).getAllSubmissions(participation));
 			getServletContext().getNamedDispatcher(ShowLectureStudentView.class.getSimpleName()).forward(request, response);

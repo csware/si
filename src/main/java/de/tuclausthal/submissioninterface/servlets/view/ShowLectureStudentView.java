@@ -23,6 +23,7 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -61,6 +62,8 @@ public class ShowLectureStudentView extends HttpServlet {
 		@SuppressWarnings("unchecked")
 		List<Group> joinAbleGroups = (List<Group>) request.getAttribute("joinAbleGroups");
 		@SuppressWarnings("unchecked")
+		Map<Integer, Integer> groupSizes = (Map<Integer, Integer>) request.getAttribute("groupSizes");
+		@SuppressWarnings("unchecked")
 		List<Task> tasks = (List<Task>) request.getAttribute("tasks");
 		@SuppressWarnings("unchecked")
 		List<Submission> submissions = (List<Submission>) request.getAttribute("submissions");
@@ -95,6 +98,7 @@ public class ShowLectureStudentView extends HttpServlet {
 			if (participation.getGroup().isMembersVisibleToStudents()) {
 				out.println("</a>");
 			}
+			out.println("<br>Studierende in der Gruppe: " + groupSizes.getOrDefault(participation.getGroup().getGid(), 0) + "/" + participation.getGroup().getMaxStudents());
 			if (participation.getGroup().getTutors() != null && !participation.getGroup().getTutors().isEmpty()) {
 				if (participation.getGroup().getTutors().size() > 1) {
 					out.println("<br>Meine TutorInnen: ");
@@ -117,7 +121,7 @@ public class ShowLectureStudentView extends HttpServlet {
 			out.println("<form method=post action=\"" + Util.generateHTMLLink(JoinGroup.class.getSimpleName(), response) + "\">");
 			out.println("<select name=groupid>");
 			for (Group group : joinAbleGroups) {
-				out.println("<option value=" + group.getGid() + ">" + Util.escapeHTML(group.getName()));
+				out.println("<option value=" + group.getGid() + ">" + Util.escapeHTML(group.getName()) + " (" + groupSizes.getOrDefault(group.getGid(), 0) + "/" + group.getMaxStudents() + ")");
 			}
 			out.println("</select>");
 			if (participation.getGroup() != null) {
