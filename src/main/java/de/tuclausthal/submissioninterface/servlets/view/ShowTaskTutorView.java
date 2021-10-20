@@ -235,7 +235,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					first = false;
 					hasUnapprochedPoints = false;
 					if (group == null) {
-						out.println("<h3>Ohne Gruppe</h3>");
+						out.println("<h3>Teilnehmende ohne Gruppenzugehörigkeit</h3>");
 						out.println("<div id=\"contentgroup0\">");
 						out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&action=grouplist", response) + "\" target=\"_blank\">Druckbare Liste</a></div>");
 						if (!task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {
