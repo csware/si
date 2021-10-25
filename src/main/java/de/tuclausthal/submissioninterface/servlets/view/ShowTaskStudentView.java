@@ -190,7 +190,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			} else if (task.isSCMCTask()) {
 				out.println("<tr>");
 				out.println("<th>Antwort:</th>");
-				out.println("<td>");
+				out.println("<td><ul>");
 
 				List<Integer> selected = new ArrayList<>();
 				for (String checked : DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission)) {
@@ -201,23 +201,48 @@ public class ShowTaskStudentView extends HttpServlet {
 				MCOptionDAOIf mcOptionDAO = DAOFactory.MCOptionDAOIf(session);
 				List<MCOption> options = mcOptionDAO.getMCOptionsForTask(task);
 				Collections.shuffle(options, new Random(participation.getId()));
+				boolean allCorrect = true;
 				int i = 0;
 				for (MCOption option : options) {
-					String resultState = "";
 					boolean optionSelected = selected.contains(option.getId());
-					if (showResults) {
-						if ((option.isCorrect() && optionSelected) || (!option.isCorrect() && !optionSelected)) {
-							resultState = "class=mccorrect";
-						} else {
-							resultState = "class=mcwrong";
+					boolean correct = (option.isCorrect() && optionSelected) || (!option.isCorrect() && !optionSelected);
+					allCorrect &= correct;
+					if (task.isSCTask()) {
+						out.println("<li><input disabled type=radio " + (optionSelected ? "checked" : "") + " name=check value=" + i + " id=\"check" + i + "\"> <label for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + "</label>");
+					} else {
+						out.println("<li><input disabled type=checkbox " + (optionSelected ? "checked" : "") + " name=\"check" + i + "\" id=\"check" + i + "\"> <label for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + "</label>");
+						if (showResults) {
+							out.print("<ul>");
+							out.print("<li>");
+							if ((option.isCorrect() && optionSelected) || (!option.isCorrect() && !optionSelected)) {
+								out.print("Ihre Antwort ist <span class=green>korrekt</span>.");
+							} else {
+								out.print("Ihre Antwort ist <span class=red>falsch</span>.");
+								if (option.isCorrect()) {
+									out.print("</li><li>Korrektur: Diese Aussage ist korrekt und hätte ausgewählt werden müssen.");
+								} else {
+									out.print("</li><li>Korrektur: Diese Aussage ist falsch und hätte nicht ausgewählt werden dürfen.");
+								}
+							}
+							out.print("</li>");
+							out.print("</ul>");
 						}
 					}
-					if (task.isSCTask()) {
-						out.println("<input disabled type=radio " + (optionSelected ? "checked" : "") + " name=check value=" + i + " id=\"check" + i + "\"> <label for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + (showResults && option.isCorrect() ? " (richtige Antwort)" : "") + "</label><br>");
-					} else {
-						out.println("<input disabled type=checkbox " + (optionSelected ? "checked" : "") + " name=\"check" + i + "\" id=\"check" + i + "\"> <label " + resultState + " for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + "</label><br>");
-					}
+					out.println("</li>");
 					++i;
+				}
+				out.println("</ul>");
+
+				if (task.isSCTask() && showResults) {
+					if (allCorrect) {
+						out.print("Ihre Antwort ist <span class=green>korrekt</span>.");
+					} else {
+						out.print("Ihre Antwort ist <span class=red>falsch</span>.");
+						MCOption correctOption = options.stream().filter(option -> option.isCorrect()).findFirst().orElse(null);
+						if (correctOption != null) {
+							out.print("<br>Die richtige Antwort lautet: \"" + Util.escapeHTML(correctOption.getTitle()) + "\"");
+						}
+					}
 				}
 
 				out.println("</td>");

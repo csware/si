@@ -338,14 +338,24 @@ public class ShowSubmissionView extends HttpServlet {
 				boolean correct = (option.isCorrect() && optionSelected) || (!option.isCorrect() && !optionSelected);
 				allCorrect &= correct;
 				if (task.isSCTask()) {
-					out.println("<li><input disabled type=radio " + (optionSelected ? "checked" : "") + " name=check value=" + i + " id=\"check" + i + "\"> <label for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + (option.isCorrect() ? " (richtige Antwort)" : "") + "</label></li>");
+					out.println("<li><input disabled type=radio " + (optionSelected ? "checked" : "") + " name=check value=" + i + " id=\"check" + i + "\"> <label for=\"check" + i + "\">" + Util.escapeHTML(option.getTitle()) + (option.isCorrect() ? " (richtige Antwort)" : "") + "</label>");
 				} else {
-					out.println("<li><input disabled type=checkbox " + (optionSelected ? "checked" : "") + " name=\"check" + i + "\" id=\"check" + i + "\"> <label for=\"check" + i + "\" class=" + (correct ? "mccorrect" : "mcwrong") + ">" + Util.escapeHTML(option.getTitle()) + "</label></li>");
+					out.println("<li><input disabled type=checkbox " + (optionSelected ? "checked" : "") + " name=\"check" + i + "\" id=\"check" + i + "\"> <label for=\"check" + i + "\" class=" + (correct ? "mccorrect" : "mcwrong") + ">" + Util.escapeHTML(option.getTitle()) + "</label>");
+					out.print("<ul>");
+					out.print("<li>");
+					if (correct) {
+						out.print("Die Antwort des Studierenden ist <span class=green>korrekt</span>.");
+					} else {
+						out.print("Die Antwort des Studierenden ist <span class=red>falsch</span>.");
+					}
+					out.print("</li>");
+					out.print("</ul>");
 				}
+				out.print("</li>");
 				++i;
 			}
 			out.println("</ul></li>");
-			out.println("<li><b>Gesamtbewertung korrekt:</b> " + Util.boolToHTML(allCorrect) + "</li>");
+			out.println("<li><b>Korrekt beantwortet:</b> " + Util.boolToHTML(allCorrect) + "</li>");
 			out.println("</ul>");
 		} else if (task.isClozeTask()) {
 			List<String> results = DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission);
