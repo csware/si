@@ -51,14 +51,14 @@ public class Logout extends HttpServlet {
 		Cookie privacyCookie = new Cookie("privacy", "0");
 		privacyCookie.setMaxAge(0);
 		response.addCookie(privacyCookie);
-		if (wasShibbolethLogin) {
-			response.sendRedirect("/Shibboleth.sso/Logout");
-			return;
-		}
+
 		Template template = TemplateFactory.getTemplate(request, response);
-		template.printTemplateHeader("Logged out");
+		template.printTemplateHeader("Sind wurden von GATE abgemeldet.");
 		PrintWriter out = response.getWriter();
-		out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), response) + "\">zur Übersicht</a></div>");
+		if (wasShibbolethLogin) {
+			out.println("<p class=mid><a href=\"/Shibboleth.sso/Logout\">Von allen Diensten per Single Logout abmelden.</a></p>");
+		}
+		out.println("<p class=mid><a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), response) + "\">zurück zur Übersicht</a></p>");
 		template.printTemplateFooter();
 	}
 }
