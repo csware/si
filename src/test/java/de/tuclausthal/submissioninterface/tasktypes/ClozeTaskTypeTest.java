@@ -169,4 +169,11 @@ public class ClozeTaskTypeTest {
 		assertEquals("4&#43;4.5 &#61; <input name=\"cloze0\" type=\"text\" disabled=\"disabled\" value=\"5\" autocomplete=\"off\" /> <span class=\"cloze_points\">(➜ 0 Punkt(e))</span>.", ch.toHTML());
 		assertEquals(0, ch.calculatePoints(results));
 	}
+
+	@Test
+	public void testProgramCode() {
+		ClozeTaskType ch = new ClozeTaskType("<p>Aufgabenstellung</p><pre>public {SHORTANSWER:1=class} Dreieck {<br />      {SHORTANSWER:1=private} int laengeGrundseite;<br /><br />      // Konstruktor<br />      public {SHORTANSWER:1=Dreieck}(int laengeGrundseite, int hoeheGrundseite) {<br />            {SHORTANSWER:1=this.laengeGrundseite} = laengeGrundseite;<br />            {SHORTANSWER:1=this.hoeheGrundseite} = hoeheGrundseite;<br />      }<br /><br />      public double flaeche() {<br />            {SHORTANSWER:1=return hoeheGrundseite * laengeGrundseite * 0.5~1=return (0.5 * laengeGrundseite * hoeheGrundseite)};<br />      }<br />}</pre>", null, false, false);
+		assertTrue(ch.isAutoGradeAble());
+		assertEquals("<p>Aufgabenstellung</p><pre>public <input name=\"cloze0\" type=\"text\" autocomplete=\"off\" /> Dreieck {<!-- --><br />      <input name=\"cloze1\" type=\"text\" autocomplete=\"off\" /> int laengeGrundseite;<br /><br />      // Konstruktor<br />      public <input name=\"cloze2\" type=\"text\" autocomplete=\"off\" />(int laengeGrundseite, int hoeheGrundseite) {<!-- --><br />            <input name=\"cloze3\" type=\"text\" autocomplete=\"off\" /> &#61; laengeGrundseite;<br />            <input name=\"cloze4\" type=\"text\" autocomplete=\"off\" /> &#61; hoeheGrundseite;<br />      }<br /><br />      public double flaeche() {<!-- --><br />            <input name=\"cloze5\" type=\"text\" autocomplete=\"off\" />;<br />      }<br />}</pre>", ch.toHTML());
+	}
 }

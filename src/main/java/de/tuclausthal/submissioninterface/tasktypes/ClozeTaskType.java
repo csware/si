@@ -31,7 +31,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import de.tuclausthal.submissioninterface.util.Util;
 
 public class ClozeTaskType {
-	private final static Pattern itemsPattern = Pattern.compile("\\{(.+?)\\}", Pattern.MULTILINE | Pattern.DOTALL);
+	private final static Pattern itemsPattern = Pattern.compile("\\{((?:MULTICHOICE|SHORTANSWER|SHORTANSWER_NC|NUMERICAL).+?)\\}", Pattern.MULTILINE | Pattern.DOTALL);
 	private final static Pattern itemPattern = Pattern.compile("^([^:]+):(.*$)", Pattern.MULTILINE | Pattern.DOTALL);
 
 	private final static String FORM_NAME = "cloze";
@@ -92,6 +92,9 @@ public class ClozeTaskType {
 	}
 
 	public boolean isAutoGradeAble() {
+		if (items.isEmpty()) {
+			return false;
+		}
 		return items.stream().allMatch(item -> item.isAutoGradeAble());
 	}
 
