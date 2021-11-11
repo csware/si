@@ -122,9 +122,21 @@ public class TaskManager extends HttpServlet {
 				}
 				// temp. Task for code-reuse
 				task = new Task();
-				task.setStart(ZonedDateTime.now());
-				task.setDeadline(ZonedDateTime.now().plusWeeks(1));
-				task.setShowPoints(task.getDeadline());
+				// guess start and end times
+				TaskGroup potentialTaskGroup = lecture.getTaskGroups().get(lecture.getTaskGroups().size() - 1);
+				if (!potentialTaskGroup.getTasks().isEmpty()) {
+					task.setStart(potentialTaskGroup.getTasks().get(0).getStart());
+					task.setDeadline(potentialTaskGroup.getTasks().get(0).getDeadline());
+					task.setShowPoints(potentialTaskGroup.getTasks().get(0).getShowPoints());
+				} else if (lecture.getTaskGroups().size() > 1 && (potentialTaskGroup = lecture.getTaskGroups().get(lecture.getTaskGroups().size() - 2)) != null) {
+					task.setStart(potentialTaskGroup.getTasks().get(0).getStart().plusWeeks(1));
+					task.setDeadline(potentialTaskGroup.getTasks().get(0).getDeadline().plusWeeks(1));
+					task.setShowPoints(potentialTaskGroup.getTasks().get(0).getShowPoints().plusWeeks(1));
+				} else {
+					task.setStart(ZonedDateTime.now());
+					task.setDeadline(ZonedDateTime.now().plusWeeks(1));
+					task.setShowPoints(task.getDeadline());
+				}
 				task.setTaskGroup(lecture.getTaskGroups().get(lecture.getTaskGroups().size() - 1));
 			}
 
