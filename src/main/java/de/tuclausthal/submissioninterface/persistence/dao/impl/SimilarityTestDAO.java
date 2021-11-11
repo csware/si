@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import javax.persistence.LockModeType;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -89,7 +89,7 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 		CriteriaQuery<SimilarityTest> criteria = builder.createQuery(SimilarityTest.class);
 		Root<SimilarityTest> root = criteria.from(SimilarityTest.class);
 		criteria.select(root);
-		criteria.where(builder.and(builder.equal(root.get(SimilarityTest_.status), 1), builder.lessThan(root.join(SimilarityTest_.task).get(Task_.deadline), new Date())));
+		criteria.where(builder.and(builder.equal(root.get(SimilarityTest_.status), 1), builder.lessThan(root.join(SimilarityTest_.task).get(Task_.deadline), ZonedDateTime.now())));
 		SimilarityTest similarityTest = session.createQuery(criteria).setLockMode(LockModeType.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
 		if (similarityTest != null) {
 			similarityTest.setStatus(2);

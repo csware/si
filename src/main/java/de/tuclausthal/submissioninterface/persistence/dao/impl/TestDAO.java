@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import javax.persistence.LockModeType;
@@ -121,7 +121,7 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 		CriteriaQuery<Test> criteria = builder.createQuery(Test.class);
 		Root<Test> root = criteria.from(Test.class);
 		criteria.select(root);
-		criteria.where(builder.and(builder.equal(root.get(Test_.forTutors), true), builder.equal(root.get(Test_.needsToRun), true), builder.lessThan(root.join(Test_.task).get(Task_.deadline), new Date())));
+		criteria.where(builder.and(builder.equal(root.get(Test_.forTutors), true), builder.equal(root.get(Test_.needsToRun), true), builder.lessThan(root.join(Test_.task).get(Task_.deadline), ZonedDateTime.now())));
 		Test test = session.createQuery(criteria).setLockMode(LockModeType.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
 		if (test != null) {
 			test.setNeedsToRun(false);

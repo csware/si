@@ -19,11 +19,12 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,9 +58,9 @@ public class Task implements Serializable {
 	private int maxsize = 10485760;
 	private int maxPoints = 0;
 	private int minPointStep = 50;
-	private Date start;
-	private Date deadline;
-	private Date showPoints;
+	private ZonedDateTime start;
+	private ZonedDateTime deadline;
+	private ZonedDateTime showPoints;
 	private String description = "";
 	private Set<Submission> submissions;
 	private TaskGroup taskGroup;
@@ -93,7 +94,7 @@ public class Task implements Serializable {
 	 * @param dynamicTask 
 	 * @param allowPrematureSubmissionClosing 
 	 */
-	public Task(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, boolean allowPrematureSubmissionClosing) {
+	public Task(String title, int maxPoints, ZonedDateTime start, ZonedDateTime deadline, String description, TaskGroup taskGroup, ZonedDateTime showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, boolean allowPrematureSubmissionClosing) {
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.start = start;
@@ -156,30 +157,32 @@ public class Task implements Serializable {
 	/**
 	 * @return the start
 	 */
+	@Basic
 	@Column(nullable = false)
-	public Date getStart() {
+	public ZonedDateTime getStart() {
 		return start;
 	}
 
 	/**
 	 * @param start the start to set
 	 */
-	public void setStart(Date start) {
+	public void setStart(ZonedDateTime start) {
 		this.start = start;
 	}
 
 	/**
 	 * @return the deadline
 	 */
+	@Basic
 	@Column(nullable = false)
-	public Date getDeadline() {
+	public ZonedDateTime getDeadline() {
 		return deadline;
 	}
 
 	/**
 	 * @param deadline the deadline to set
 	 */
-	public void setDeadline(Date deadline) {
+	public void setDeadline(ZonedDateTime deadline) {
 		this.deadline = deadline;
 	}
 
@@ -252,14 +255,15 @@ public class Task implements Serializable {
 	/**
 	 * @return the showPoints
 	 */
-	public Date getShowPoints() {
+	@Basic
+	public ZonedDateTime getShowPoints() {
 		return showPoints;
 	}
 
 	/**
 	 * @param showPoints the showPoints to set
 	 */
-	public void setShowPoints(Date showPoints) {
+	public void setShowPoints(ZonedDateTime showPoints) {
 		this.showPoints = showPoints;
 	}
 

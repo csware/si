@@ -23,9 +23,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.invoke.MethodHandles;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -119,12 +119,12 @@ public class SubmitSolution extends HttpServlet {
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
-			if (task.getStart().after(new Date())) {
+			if (task.getStart().isAfter(ZonedDateTime.now())) {
 				request.setAttribute("title", "Abgabe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
-			if (task.getDeadline().before(new Date())) {
+			if (task.getDeadline().isBefore(ZonedDateTime.now())) {
 				request.setAttribute("title", "Abgabe nicht mehr möglich");
 				request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
@@ -270,14 +270,14 @@ public class SubmitSolution extends HttpServlet {
 				return;
 			}
 			// Uploader is Student, -> hard date checks
-			if (task.getStart().after(new Date())) {
+			if (task.getStart().isAfter(ZonedDateTime.now())) {
 				template.printTemplateHeader("Ungültige Anfrage");
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Abgabe nicht gefunden.</div>");
 				template.printTemplateFooter();
 				return;
 			}
-			if (task.getDeadline().before(new Date())) {
+			if (task.getDeadline().isBefore(ZonedDateTime.now())) {
 				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Abgabe nicht mehr möglich.</div>");
@@ -395,7 +395,7 @@ public class SubmitSolution extends HttpServlet {
 					uploadedFilenames.add(fileName);
 				} catch (IOException | IllegalArgumentException e) {
 					if (!submissionDAO.deleteIfNoFiles(submission, path)) {
-						submission.setLastModified(new Date());
+						submission.setLastModified(ZonedDateTime.now());
 						submissionDAO.saveSubmission(submission);
 					}
 					LOG.error("Problem on processing uploaded file", e);
@@ -416,7 +416,7 @@ public class SubmitSolution extends HttpServlet {
 				}
 			}
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
-				submission.setLastModified(new Date());
+				submission.setLastModified(ZonedDateTime.now());
 				submissionDAO.saveSubmission(submission);
 			}
 			if (!uploadedFilenames.isEmpty()) {
@@ -475,7 +475,7 @@ public class SubmitSolution extends HttpServlet {
 
 			DAOFactory.PointsDAOIf(session).createMCPoints(allCorrect ? task.getMaxPoints() : 0, submission, "", task.getTaskGroup().getLecture().isRequiresAbhnahme() ? PointStatus.NICHT_ABGENOMMEN : PointStatus.ABGENOMMEN);
 
-			submission.setLastModified(new Date());
+			submission.setLastModified(ZonedDateTime.now());
 			submissionDAO.saveSubmission(submission);
 			new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, Json.createObjectBuilder().add("mc", Json.createArrayBuilder(results)).build().toString());
 			tx.commit();
@@ -487,7 +487,7 @@ public class SubmitSolution extends HttpServlet {
 			if (clozeHelper.isAutoGradeAble()) {
 				DAOFactory.PointsDAOIf(session).createMCPoints(clozeHelper.calculatePoints(results), submission, "", task.getTaskGroup().getLecture().isRequiresAbhnahme() ? PointStatus.NICHT_ABGENOMMEN : PointStatus.ABGENOMMEN);
 			}
-			submission.setLastModified(new Date());
+			submission.setLastModified(ZonedDateTime.now());
 			submissionDAO.saveSubmission(submission);
 			new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, Json.createObjectBuilder().add("cloze", Json.createArrayBuilder(results)).build().toString());
 			tx.commit();
@@ -532,13 +532,13 @@ public class SubmitSolution extends HttpServlet {
 			logEntry.setAdditionalData(jsonBuilder.add("filename", uploadedFile.getName()).build().toString());
 			session.save(logEntry);
 
-			submission.setLastModified(new Date());
+			submission.setLastModified(ZonedDateTime.now());
 			submissionDAO.saveSubmission(submission);
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 		} else {
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
-				submission.setLastModified(new Date());
+				submission.setLastModified(ZonedDateTime.now());
 				submissionDAO.saveSubmission(submission);
 			}
 			LOG.error("Found no data on upload.");

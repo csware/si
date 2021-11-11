@@ -20,7 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -103,7 +103,7 @@ public class PerformStudentTest extends HttpServlet {
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 		Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
 
-		if ((task.getDeadline().before(new Date()) || submission == null || (task.isAllowPrematureSubmissionClosing() && submission.isClosed()))) {
+		if ((task.getDeadline().isBefore(ZonedDateTime.now()) || submission == null || (task.isAllowPrematureSubmissionClosing() && submission.isClosed()))) {
 			request.setAttribute("title", "Testen bzw. Abruf des Ergebnisses nicht mehr möglich");
 			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
@@ -254,7 +254,7 @@ public class PerformStudentTest extends HttpServlet {
 			return;
 		}
 
-		if ((task.getDeadline().before(new Date()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed()))) {
+		if ((task.getDeadline().isBefore(ZonedDateTime.now()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed()))) {
 			request.setAttribute("title", "Testen nicht mehr möglich");
 			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);

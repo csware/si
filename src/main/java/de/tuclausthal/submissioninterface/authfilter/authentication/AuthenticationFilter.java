@@ -20,7 +20,7 @@ package de.tuclausthal.submissioninterface.authfilter.authentication;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -111,7 +111,7 @@ public class AuthenticationFilter implements Filter {
 			}
 
 			Transaction tx = session.beginTransaction();
-			verifyResult.verifiedUser.setLastLoggedIn(new Date());
+			verifyResult.verifiedUser.setLastLoggedIn(ZonedDateTime.now());
 			DAOFactory.UserDAOIf(session).saveUser(verifyResult.verifiedUser);
 			tx.commit();
 			sa.setUser(verifyResult.verifiedUser, request.getRemoteAddr());

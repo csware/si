@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import org.hibernate.Session;
 
@@ -50,7 +50,7 @@ public enum ModelSolutionProvisionType {
 		if (task.getModelSolutionProvisionType() == ModelSolutionProvisionType.INTERNAL) {
 			return false;
 		}
-		if (task.getShowPoints() == null || task.getDeadline().after(new Date()) || task.getShowPoints().after(new Date())) {
+		if (task.getShowPoints() == null || task.getDeadline().isAfter(ZonedDateTime.now()) || task.getShowPoints().isAfter(ZonedDateTime.now())) {
 			return false;
 		} else if (task.getModelSolutionProvisionType() == ModelSolutionProvisionType.ALL_STUDENTS) {
 			return true;

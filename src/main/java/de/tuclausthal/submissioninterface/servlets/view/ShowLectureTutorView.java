@@ -20,7 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -132,7 +132,7 @@ public class ShowLectureTutorView extends HttpServlet {
 					out.println("</tr>");
 					while (taskIterator.hasNext()) {
 						Task task = taskIterator.next();
-						boolean visibleToStudents = task.getStart().before(new Date());
+						boolean visibleToStudents = task.getStart().isBefore(ZonedDateTime.now());
 						if (visibleToStudents || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 							out.println("<tr class=\"" + (!visibleToStudents ? "tasknotvisible" : "") + "\">");
 							out.println("<td><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");

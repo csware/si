@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
@@ -46,7 +46,7 @@ public interface TaskDAOIf {
 	 * @param allowPrematureSubmissionClosing set the flag to enable the feature that students can close the submission before the deadline ends to allow tutors grading the task
 	 * @return a new Task
 	 */
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, boolean allowPrematureSubmissionClosing);
+	public Task newTask(String title, int maxPoints, ZonedDateTime start, ZonedDateTime deadline, String description, TaskGroup taskGroup, ZonedDateTime showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, boolean allowPrematureSubmissionClosing);
 
 	/**
 	 * Fetch a task based on it's id

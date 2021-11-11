@@ -25,9 +25,9 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -99,7 +99,7 @@ public class SelfTest extends HttpServlet {
 			testresults.add(new TestResult("Selbsttest ausgeführt mit GATE-Version:", Util.escapeHTML(versionInfo), null));
 		} catch (IOException | NullPointerException ex) {
 		}
-		testresults.add(new TestResult("Selbsttest ausgeführt am:", Util.escapeHTML(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date())), null));
+		testresults.add(new TestResult("Selbsttest ausgeführt am:", Util.escapeHTML(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").format(ZonedDateTime.now())), null));
 		try {
 			testresults.add(new TestResult("Selbsttest ausgeführt auf:", Util.escapeHTML(InetAddress.getLocalHost().getHostName()), null));
 		} catch (UnknownHostException e) {

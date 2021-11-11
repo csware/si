@@ -19,7 +19,7 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -73,7 +73,7 @@ public class PublishGrades extends HttpServlet {
 			return;
 		}
 
-		if (task.getDeadline().after(new Date()) || task.getShowPoints() != null) {
+		if (task.getDeadline().isAfter(ZonedDateTime.now()) || task.getShowPoints() != null) {
 			request.setAttribute("title", "Ungültige Anfrage");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -103,7 +103,7 @@ public class PublishGrades extends HttpServlet {
 			return;
 		}
 
-		if (task.getDeadline().after(new Date()) || task.getShowPoints() != null) {
+		if (task.getDeadline().isAfter(ZonedDateTime.now()) || task.getShowPoints() != null) {
 			request.setAttribute("title", "Ungültige Anfrage");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;

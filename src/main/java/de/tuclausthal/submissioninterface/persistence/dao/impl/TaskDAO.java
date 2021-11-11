@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -51,7 +51,7 @@ public class TaskDAO extends AbstractDAO implements TaskDAOIf {
 	}
 
 	@Override
-	public Task newTask(String title, int maxPoints, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, boolean allowPrematureSubmissionClosing) {
+	public Task newTask(String title, int maxPoints, ZonedDateTime start, ZonedDateTime deadline, String description, TaskGroup taskGroup, ZonedDateTime showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, boolean allowPrematureSubmissionClosing) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		Task task = new Task(title, maxPoints, start, deadline, description, taskGroup, showPoints, maxSubmitters, allowSubmittersAcrossGroups, taskType, dynamicTask, allowPrematureSubmissionClosing);
@@ -87,7 +87,7 @@ public class TaskDAO extends AbstractDAO implements TaskDAOIf {
 		criteria.select(root);
 		Predicate where = builder.equal(root.get(Task_.taskGroup).get(TaskGroup_.lecture), lecture);
 		if (onlyStudentVisible) {
-			where = builder.and(where, builder.lessThanOrEqualTo(root.get(Task_.start), new Date()));
+			where = builder.and(where, builder.lessThanOrEqualTo(root.get(Task_.start), ZonedDateTime.now()));
 		}
 		criteria.where(where);
 		criteria.orderBy(builder.asc(root.get(Task_.taskGroup)), builder.asc(root));

@@ -20,7 +20,7 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import javax.persistence.LockModeType;
 import javax.servlet.ServletException;
@@ -73,7 +73,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 			return;
 		}
 
-		if (submission.getTask().getDeadline().before(new Date()) || submission.isClosed()) {
+		if (submission.getTask().getDeadline().isBefore(ZonedDateTime.now()) || submission.isClosed()) {
 			request.setAttribute("title", "An dieser Abgabe sind keine Veränderungen mehr möglich.");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -109,7 +109,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 
 		Transaction tx = session.beginTransaction();
 		session.refresh(submission, LockModeType.PESSIMISTIC_WRITE);
-		if (submission.getTask().getDeadline().before(new Date()) || submission.isClosed()) {
+		if (submission.getTask().getDeadline().isBefore(ZonedDateTime.now()) || submission.isClosed()) {
 			tx.rollback();
 			request.setAttribute("title", "An dieser Abgabe sind keine Veränderungen mehr möglich.");
 			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
@@ -118,7 +118,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 		}
 
 		// update submission information
-		submission.setClosedTime(new Date());
+		submission.setClosedTime(ZonedDateTime.now());
 		submission.setClosedBy(participation);
 
 		// update submission into database

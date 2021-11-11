@@ -20,7 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.Iterator;
 import java.util.List;
 
@@ -139,7 +139,7 @@ public class ShowUserView extends HttpServlet {
 						out.println("<td class=\"points" + Util.getPointsCSSClass(submission.getPoints()) + "\"><a href=\"" + Util.generateHTMLLink(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid(), response) + "\">(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ")");
 					}
 				} else {
-					if (task.getDeadline().after(new Date())) {
+					if (task.getDeadline().isAfter(ZonedDateTime.now())) {
 						out.println("<td class=points><a href=\"" + Util.generateHTMLLink(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid(), response) + "\">(noch unbewertet)");
 					} else {
 						out.println("<td class=points><a href=\"" + Util.generateHTMLLink(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid(), response) + "\">noch unbewertet");

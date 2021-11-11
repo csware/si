@@ -20,7 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -77,7 +77,7 @@ public class DeleteFile extends HttpServlet {
 			return;
 		}
 
-		if (task.getDeadline().before(new Date()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
+		if (task.getDeadline().isBefore(ZonedDateTime.now()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
 			request.setAttribute("title", "Es sind keine Veränderungen an dieser Abgabe mehr möglich.");
 			request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), request, response) + "\">zurück zur Aufgabe</a></div>");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
@@ -129,7 +129,7 @@ public class DeleteFile extends HttpServlet {
 			return;
 		}
 
-		if (task.getDeadline().before(new Date()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
+		if (task.getDeadline().isBefore(ZonedDateTime.now()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
 			request.setAttribute("title", "Es sind keine Veränderungen an dieser Abgabe mehr möglich.");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -149,7 +149,7 @@ public class DeleteFile extends HttpServlet {
 			session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
 			if (file.exists() && file.isFile() && file.delete()) {
 				if (!submissionDAO.deleteIfNoFiles(submission, path)) {
-					submission.setLastModified(new Date());
+					submission.setLastModified(ZonedDateTime.now());
 					submissionDAO.saveSubmission(submission);
 				}
 				new LogDAO(session).createLogDeleteEntryTransaction(participation.getUser(), submission.getTask(), relativeFile);

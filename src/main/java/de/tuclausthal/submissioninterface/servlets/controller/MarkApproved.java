@@ -19,7 +19,7 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.Enumeration;
 
 import javax.servlet.ServletException;
@@ -73,7 +73,7 @@ public class MarkApproved extends HttpServlet {
 			return;
 		}
 
-		if (task.getStart().after(new Date()) && task.getDeadline().before(new Date()) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+		if (task.getStart().isAfter(ZonedDateTime.now()) && task.getDeadline().isBefore(ZonedDateTime.now()) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;

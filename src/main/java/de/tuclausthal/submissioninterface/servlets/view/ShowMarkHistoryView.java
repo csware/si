@@ -20,7 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +43,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 @GATEView
 public class ShowMarkHistoryView extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+	private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

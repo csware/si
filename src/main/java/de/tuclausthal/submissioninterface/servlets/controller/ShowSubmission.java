@@ -21,7 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -105,7 +105,7 @@ public class ShowSubmission extends HttpServlet {
 			return;
 		}
 
-		if (((task.getDeadline().before(new Date()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()))) && request.getParameter("points") != null) {
+		if (((task.getDeadline().isBefore(ZonedDateTime.now()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()))) && request.getParameter("points") != null) {
 			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf(session);
 			String publicComment = "";
 			if (request.getParameter("publiccomment") != null) {

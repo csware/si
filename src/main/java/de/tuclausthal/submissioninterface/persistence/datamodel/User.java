@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,9 +19,10 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.Set;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -49,7 +50,7 @@ public class User implements Serializable {
 	private String firstName = "";
 	private boolean superUser = false;
 	private Set<Participation> lectureParticipant;
-	private Date lastLoggedIn;
+	private ZonedDateTime lastLoggedIn;
 
 	/**
 	 * @return the email
@@ -173,14 +174,15 @@ public class User implements Serializable {
 	/**
 	 * @return the lastLoggedIn
 	 */
-	public Date getLastLoggedIn() {
+	@Basic
+	public ZonedDateTime getLastLoggedIn() {
 		return lastLoggedIn;
 	}
 
 	/**
 	 * @param lastLoggedIn the lastLoggedIn to set
 	 */
-	public void setLastLoggedIn(Date lastLoggedIn) {
+	public void setLastLoggedIn(ZonedDateTime lastLoggedIn) {
 		this.lastLoggedIn = lastLoggedIn;
 	}
 }

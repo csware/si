@@ -20,8 +20,8 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -92,14 +92,14 @@ public class ShowTaskTutorView extends HttpServlet {
 		out.println("<th>Beschreibung:</th>");
 		out.println("<td id=taskdescription>" + Util.makeCleanHTML(task.getDescription()) + "</td>");
 		out.println("</tr>");
-		if (task.isAllowPrematureSubmissionClosing() && task.getDeadline().after(new Date())) {
+		if (task.isAllowPrematureSubmissionClosing() && task.getDeadline().isAfter(ZonedDateTime.now())) {
 			out.println("<tr><th>Vorzeitige finale Abgabe:</th><td>Studierende können vor der Deadline die Abgabe als endgültig abgegeben markieren.");
 			if (!task.getSimularityTests().isEmpty()) {
 				out.println("<br>Achtung: Die Ergebnisse der Ähnlichkeitsprüfung stehen erst nach Abgabeschluss zur Verfügung.");
 			}
 			out.println("</td></tr>");
 		}
-		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");
 		out.println("<td>" + Util.escapeHTML(dateFormatter.format(task.getStart())) + "</td>");
@@ -107,7 +107,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Enddatum:</th>");
 		out.println("<td>" + Util.escapeHTML(dateFormatter.format(task.getDeadline())));
-		if (task.getDeadline().before(new Date())) {
+		if (task.getDeadline().isBefore(ZonedDateTime.now())) {
 			out.println(" Keine Abgabe mehr möglich");
 		}
 		out.println("</td>");
@@ -194,8 +194,8 @@ public class ShowTaskTutorView extends HttpServlet {
 			int lastSID = 0;
 			List<Test> tests = DAOFactory.TestDAOIf(session).getTutorTests(task);
 			boolean hasUnapprochedPoints = false;
-			boolean showAllColumns = (task.getDeadline().before(new Date()) || task.isAllowPrematureSubmissionClosing()) && !requestAdapter.isPrivacyMode();
-			boolean showPrematureSubmissionColumn = task.isAllowPrematureSubmissionClosing() && task.getDeadline().after(new Date());
+			boolean showAllColumns = (task.getDeadline().isBefore(ZonedDateTime.now()) || task.isAllowPrematureSubmissionClosing()) && !requestAdapter.isPrivacyMode();
+			boolean showPrematureSubmissionColumn = task.isAllowPrematureSubmissionClosing() && task.getDeadline().isAfter(ZonedDateTime.now());
 			// dynamic splitter for groups
 			while (submissionIterator.hasNext()) {
 				Submission submission = submissionIterator.next();
@@ -214,7 +214,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					if (first == false) {
 						if (showAllColumns) {
 							out.println("<tr>");
-							out.println("<td colspan=" + (1 + (task.isADynamicTask() ? 1 : 0) + ((task.getDeadline().before(new Date())) ? tests.size() + task.getSimularityTests().size() : 0)) + ">Anzahl: " + groupSumOfAllSubmissions + " / Durchschnittspunkte:</td>");
+							out.println("<td colspan=" + (1 + (task.isADynamicTask() ? 1 : 0) + ((task.getDeadline().isBefore(ZonedDateTime.now())) ? tests.size() + task.getSimularityTests().size() : 0)) + ">Anzahl: " + groupSumOfAllSubmissions + " / Durchschnittspunkte:</td>");
 							out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
 							if (hasUnapprochedPoints) {
 								out.println("<td><input type=submit value=Save></td>");
@@ -262,7 +262,7 @@ public class ShowTaskTutorView extends HttpServlet {
 							out.println("<th>Berechnung</th>");
 						}
 						// show test columns only if the deadline is over
-						if (task.getDeadline().before(new Date())) {
+						if (task.getDeadline().isBefore(ZonedDateTime.now())) {
 							for (Test test : tests) {
 								out.println("<th>" + Util.escapeHTML(test.getTestTitle()) + "</th>");
 							}
@@ -298,7 +298,7 @@ public class ShowTaskTutorView extends HttpServlet {
 							out.println("<td>" + Util.boolToHTML(task.getDynamicTaskStrategie(session).isCorrect(submission)) + "</td>");
 						}
 						// show columns only if the results are in the database after the deadline
-						if (task.getDeadline().before(new Date())) {
+						if (task.getDeadline().isBefore(ZonedDateTime.now())) {
 							for (Test test : tests) {
 								Map<Integer, Boolean> testResultsSubmission = testResults.get(submission.getSubmissionid());
 								if (testResultsSubmission != null && testResultsSubmission.containsKey(test.getId())) {
@@ -350,7 +350,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			if (first == false) {
 				if (showAllColumns) {
 					out.println("<tr>");
-					out.println("<td colspan=" + (1 + (task.isADynamicTask() ? 1 : 0) + ((task.getDeadline().before(new Date())) ? tests.size() + task.getSimularityTests().size() : 0)) + ">Anzahl: " + groupSumOfAllSubmissions + " / Durchschnittspunkte:</td>");
+					out.println("<td colspan=" + (1 + (task.isADynamicTask() ? 1 : 0) + ((task.getDeadline().isBefore(ZonedDateTime.now())) ? tests.size() + task.getSimularityTests().size() : 0)) + ">Anzahl: " + groupSumOfAllSubmissions + " / Durchschnittspunkte:</td>");
 					out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
 					if (hasUnapprochedPoints) {
 						out.println("<td><input type=submit value=Save></td>");

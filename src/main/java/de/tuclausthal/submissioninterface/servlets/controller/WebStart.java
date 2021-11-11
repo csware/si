@@ -19,7 +19,7 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -67,7 +67,7 @@ public class WebStart extends HttpServlet {
 			return;
 		}
 
-		if (task.getStart().after(new Date()) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
+		if (task.getStart().isAfter(ZonedDateTime.now()) && participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0) {
 			request.setAttribute("title", "Aufgabe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;

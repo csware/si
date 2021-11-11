@@ -20,7 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -151,7 +151,7 @@ public class ShowLectureStudentView extends HttpServlet {
 			}
 			TaskGroup lastTaskGroup = null;
 			for (Task task : tasks) {
-				if (!task.getStart().before(new Date())) {
+				if (!task.getStart().isBefore(ZonedDateTime.now())) {
 					continue;
 				}
 				if (lastTaskGroup == null || lastTaskGroup.getTaskGroupId() != task.getTaskGroup().getTaskGroupId()) {
@@ -181,7 +181,7 @@ public class ShowLectureStudentView extends HttpServlet {
 					if (submissionIterator.hasNext()) {
 						submission = submissionIterator.next();
 					}
-				} else if (task.getDeadline().after(new Date())) {
+				} else if (task.getDeadline().isAfter(ZonedDateTime.now())) {
 					out.println("<td class=points>(noch) nicht bearbeitet</td>");
 				} else {
 					out.println("<td class=points>nicht bearbeitet</td>");

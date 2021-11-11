@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -19,8 +19,9 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,7 +45,7 @@ public class PointHistory implements Serializable {
 	private String removed;
 	private String added;
 	private Participation who;
-	private Date date = new Date();
+	private ZonedDateTime date = ZonedDateTime.now();
 
 	public PointHistory() {}
 
@@ -104,17 +105,18 @@ public class PointHistory implements Serializable {
 	}
 
 	/**
-	 * @return the date
+	 * @return the ZonedDateTime
 	 */
+	@Basic
 	@Column(nullable = false)
-	public Date getDate() {
+	public ZonedDateTime getDate() {
 		return date;
 	}
 
 	/**
 	 * @param date the date to set
 	 */
-	public void setDate(Date date) {
+	public void setDate(ZonedDateTime date) {
 		this.date = date;
 	}
 

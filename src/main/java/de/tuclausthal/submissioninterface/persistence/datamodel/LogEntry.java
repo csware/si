@@ -19,7 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,7 +42,7 @@ public class LogEntry implements Serializable {
 	private User user;
 	private Test test;
 	private Task task;
-	private Date timeStamp = new Date();
+	private ZonedDateTime timeStamp = ZonedDateTime.now();
 	private int action;
 	private Boolean result;
 	private String testOutput;
@@ -128,14 +128,14 @@ public class LogEntry implements Serializable {
 	/**
 	 * @return the timeStamp
 	 */
-	public Date getTimeStamp() {
+	public ZonedDateTime getTimeStamp() {
 		return timeStamp;
 	}
 
 	/**
 	 * @param timeStamp the timeStamp to set
 	 */
-	public void setTimeStamp(Date timeStamp) {
+	public void setTimeStamp(ZonedDateTime timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 

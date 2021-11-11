@@ -20,7 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -65,7 +65,7 @@ public class SearchSubmissionsView extends HttpServlet {
 			out.println("<option value=\"dyntasksolution\" selected>Dynamische Daten der Lösung</option>");
 		}
 		out.println("<option value=\"files\" selected>Abgegebene Dateien</option>");
-		if (task.getDeadline().before(new Date())) {
+		if (task.getDeadline().isBefore(ZonedDateTime.now())) {
 			out.println("<option value=\"publiccomments\" selected>Öffentliche Bewertungs-Kommentare</option>");
 			out.println("<option value=\"privatecomments\" selected>Interne Bewertungs-Kommentare</option>");
 			if (!task.getTests().isEmpty()) {

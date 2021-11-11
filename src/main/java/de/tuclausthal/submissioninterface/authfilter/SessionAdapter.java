@@ -19,7 +19,7 @@
 package de.tuclausthal.submissioninterface.authfilter;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.concurrent.Future;
 
 import javax.servlet.http.HttpServletRequest;
@@ -87,10 +87,10 @@ public class SessionAdapter {
 		private static final long serialVersionUID = 1L;
 
 		public int testId;
-		public Date submissionLastChanged;
+		public ZonedDateTime submissionLastChanged;
 		public transient Future<TestExecutorTestResult> testResult;
 
-		public QueuedTest(int testId, Date submissionLastChanged, Future<TestExecutorTestResult> testResult) {
+		public QueuedTest(int testId, ZonedDateTime submissionLastChanged, Future<TestExecutorTestResult> testResult) {
 			this.testId = testId;
 			this.submissionLastChanged = submissionLastChanged;
 			this.testResult = testResult;

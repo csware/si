@@ -20,7 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -230,7 +230,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<td><input type=checkbox name=tutorsCanUploadFiles" + (task.isSCMCTask() ? " disabled" : "") + (task.isTutorsCanUploadFiles() ? " checked" : "") + "></td>");
 			out.println("</tr>");
 		}
-		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 		out.println("<tr>");
 		out.println("<th>Startdatum (sichtbar für Studierende ab):</th>");
 		out.println("<td><input type=text required=required pattern=\"([012][1-9]|[123][01])\\.[01][0-9]\\.[0-9]{4}( ([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])?\" name=startdate value=\"" + Util.escapeHTML(dateFormatter.format(task.getStart())) + "\"> (dd.MM.yyyy oder dd.MM.yyyy HH:mm:ss)</td>");

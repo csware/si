@@ -19,7 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,8 +51,8 @@ public class Submission implements Serializable {
 	private Points points;
 	private Set<TestResult> testResults;
 	private Set<Similarity> similarSubmissions;
-	private Date lastModified = null;
-	private Date closedTime = null;
+	private ZonedDateTime lastModified = null;
+	private ZonedDateTime closedTime = null;
 	private Participation closedBy = null;
 
 	// for Hibernate
@@ -93,7 +93,7 @@ public class Submission implements Serializable {
 
 	@Transient
 	public boolean isPointsVisibleToStudents() {
-		if (getTask().getShowPoints() != null && getTask().getShowPoints().before(new Date()) && getPoints() != null && getPoints().getPointStatus() > Points.PointStatus.NICHT_BEWERTET.ordinal()) {
+		if (getTask().getShowPoints() != null && getTask().getShowPoints().isBefore(ZonedDateTime.now()) && getPoints() != null && getPoints().getPointStatus() > Points.PointStatus.NICHT_BEWERTET.ordinal()) {
 			return true;
 		}
 		return false;
@@ -183,14 +183,14 @@ public class Submission implements Serializable {
 	/**
 	 * @return the lastModified
 	 */
-	public Date getLastModified() {
+	public ZonedDateTime getLastModified() {
 		return lastModified;
 	}
 
 	/**
 	 * @param lastModified the lastModified to set
 	 */
-	public void setLastModified(Date lastModified) {
+	public void setLastModified(ZonedDateTime lastModified) {
 		this.lastModified = lastModified;
 	}
 
@@ -199,7 +199,7 @@ public class Submission implements Serializable {
 	 *
 	 * @return time of the final submission
 	 */
-	public Date getClosedTime() {
+	public ZonedDateTime getClosedTime() {
 		return closedTime;
 	}
 
@@ -208,7 +208,7 @@ public class Submission implements Serializable {
 	 *
 	 * @param closedTime time
 	 */
-	public void setClosedTime(Date closedTime) {
+	public void setClosedTime(ZonedDateTime closedTime) {
 		this.closedTime = closedTime;
 	}
 
