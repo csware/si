@@ -121,7 +121,7 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 		CriteriaQuery<Test> criteria = builder.createQuery(Test.class);
 		Root<Test> root = criteria.from(Test.class);
 		criteria.select(root);
-		criteria.where(builder.and(builder.equal(root.get(Test_.forTutors), true), builder.equal(root.get(Test_.needsToRun), true), builder.lessThan(root.join(Test_.task).get(Task_.deadline), ZonedDateTime.now())));
+		criteria.where(builder.and(builder.equal(root.get(Test_.forTutors), true), builder.equal(root.get(Test_.needsToRun), true), builder.lessThan(root.join(Test_.task).get(Task_.deadline), ZonedDateTime.now().minusMinutes(2))));
 		Test test = session.createQuery(criteria).setLockMode(LockModeType.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
 		if (test != null) {
 			test.setNeedsToRun(false);

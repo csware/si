@@ -89,7 +89,7 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 		CriteriaQuery<SimilarityTest> criteria = builder.createQuery(SimilarityTest.class);
 		Root<SimilarityTest> root = criteria.from(SimilarityTest.class);
 		criteria.select(root);
-		criteria.where(builder.and(builder.equal(root.get(SimilarityTest_.status), 1), builder.lessThan(root.join(SimilarityTest_.task).get(Task_.deadline), ZonedDateTime.now())));
+		criteria.where(builder.and(builder.equal(root.get(SimilarityTest_.status), 1), builder.lessThan(root.join(SimilarityTest_.task).get(Task_.deadline), ZonedDateTime.now().minusMinutes(2))));
 		SimilarityTest similarityTest = session.createQuery(criteria).setLockMode(LockModeType.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
 		if (similarityTest != null) {
 			similarityTest.setStatus(2);
