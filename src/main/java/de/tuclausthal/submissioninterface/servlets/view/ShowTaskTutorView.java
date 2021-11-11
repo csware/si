@@ -302,7 +302,7 @@ public class ShowTaskTutorView extends HttpServlet {
 							for (Test test : tests) {
 								Map<Integer, Boolean> testResultsSubmission = testResults.get(submission.getSubmissionid());
 								if (testResultsSubmission != null && testResultsSubmission.containsKey(test.getId())) {
-									out.println("<td>" + Util.boolToHTML(testResultsSubmission.get(test.getId())) + "</td>");
+									out.println("<td>" + Util.boolToHTML(testResultsSubmission.get(test.getId()), "wird gerade getestet, bitte Seite neu laden") + "</td>");
 								} else {
 									out.println("<td>n/a</td>");
 								}

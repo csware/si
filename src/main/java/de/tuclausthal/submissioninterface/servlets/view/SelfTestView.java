@@ -61,7 +61,7 @@ public class SelfTestView extends HttpServlet {
 				out.println("<pre style=\"white-space: break-spaces;\">" + testresult.details + "</pre>");
 			}
 			out.println("</td>");
-			out.println("<td>" + (testresult.result == null ? "n/a" : Util.boolToHTML(testresult.result)) + "</td>");
+			out.println("<td>" + Util.boolToHTML(testresult.result, "n/a") + "</td>");
 			out.println("</tr>");
 		}
 		out.println("</table>");

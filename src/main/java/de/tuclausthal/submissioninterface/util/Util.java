@@ -438,16 +438,24 @@ public final class Util {
 	/**
 	 * Converts a boolean to a better readable html code
 	 * @param bool
+	 * @param nullValue String to output if bool is null
 	 * @return a string representing the value of bool
 	 */
-	public static String boolToHTML(Boolean bool) {
-		if (bool == null) {
-			return "wird gerade getestet, bitte Seite neu laden";
-		} else if (bool) {
+	public static String boolToHTML(Boolean bool, String nullValue) {
+		if (bool == null)
+			return nullValue;
+		return boolToHTML(bool.booleanValue());
+	}
+
+	/**
+	 * Converts a boolean to a better readable html code
+	 * @param bool
+	 * @return a string representing the value of bool
+	 */
+	public static String boolToHTML(boolean bool) {
+		if (bool)
 			return "<span class=green>ja</span>";
-		} else {
-			return "<span class=red>nein</span>";
-		}
+		return "<span class=red>nein</span>";
 	}
 
 	/**
