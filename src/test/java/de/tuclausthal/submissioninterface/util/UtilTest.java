@@ -114,6 +114,7 @@ public class UtilTest {
 		assertEquals("", Util.textToHTML(null));
 		assertEquals("some<br>thing", Util.textToHTML("some\nthing"));
 		assertEquals("some\r<br>thing", Util.textToHTML("some\r\nthing"));
+		assertEquals("some&lt;b&gt;HTML in<br>Text", Util.textToHTML("some<b>HTML in\nText"));
 	}
 
 	@Test
