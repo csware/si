@@ -66,6 +66,10 @@ tr.tasknotvisible > td {
 
 form { padding-bottom: 0px; margin-bottom: 0px; }
 
+img.inlineicon {
+	margin-bottom: -3px;
+}
+
 .error { color:red; font-weight: bold; margin-left: auto; margin-right: auto; }
 
 .green { color:green; }
