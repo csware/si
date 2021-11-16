@@ -102,7 +102,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 		out.println("<tr>");
 		out.println("<th>Startdatum:</th>");
-		out.println("<td>" + Util.escapeHTML(dateFormatter.format(task.getStart())) + "</td>");
+		out.println("<td>" + Util.escapeHTML(dateFormatter.format(task.getStart())) + (task.getStart().isAfter(ZonedDateTime.now()) ? " <img src=\"" + getServletContext().getContextPath() + "/assets/eyeslash.svg\" width=16 height=16 class=inlineicon border=0 alt=\"für Studierende nicht sichtbar\" title=\"für Studierende nicht sichtbar\">" : "") + "</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Enddatum:</th>");
@@ -115,7 +115,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Punktedatum:</th>");
 		if (task.getShowPoints() != null) {
-			out.println("<td>" + Util.escapeHTML(dateFormatter.format(task.getShowPoints())) + "</td>");
+			out.println("<td>" + Util.escapeHTML(dateFormatter.format(task.getShowPoints())) + (task.getShowPoints().isAfter(ZonedDateTime.now()) ? " <img src=\"" + getServletContext().getContextPath() + "/assets/eyeslash.svg\" width=16 height=16 class=inlineicon border=0 alt=\"für Studierende nicht sichtbar\" title=\"für Studierende nicht sichtbar\">" : "") + "</td>");
 		} else if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 			out.println("<td><a href=\"" + Util.generateHTMLLink(PublishGrades.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Punkte freigeben</a></td>");
 		} else {

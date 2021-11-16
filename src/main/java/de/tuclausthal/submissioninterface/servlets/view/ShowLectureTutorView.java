@@ -135,7 +135,7 @@ public class ShowLectureTutorView extends HttpServlet {
 						boolean visibleToStudents = task.getStart().isBefore(ZonedDateTime.now());
 						if (visibleToStudents || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 							out.println("<tr class=\"" + (!visibleToStudents ? "tasknotvisible" : "") + "\">");
-							out.println("<td><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></td>");
+							out.println("<td><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(task.getTitle()) + "</a>" + (visibleToStudents ? "" : " <img src=\"" + getServletContext().getContextPath() + "/assets/eyeslash.svg\" width=16 height=16 class=inlineicon border=0 alt=\"für Studierende nicht sichtbar\" title=\"für Studierende nicht sichtbar\">") + "</td>");
 							out.println("<td class=points>" + Util.showPoints(task.getMaxPoints()) + "</td>");
 							if (ungradedSubmikssions != null) {
 								out.println("<td class=points>" + ungradedSubmikssions.getOrDefault(task.getTaskid(), 0) + "</td>");
