@@ -23,6 +23,7 @@ import java.io.PrintWriter;
 import java.time.ZonedDateTime;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -93,7 +94,7 @@ public class ShowUserView extends HttpServlet {
 				continue;
 			}
 
-			List<Task> tasks = DAOFactory.TaskDAOIf(session).getTasks(participation.getLecture(), false);
+			List<Task> tasks = DAOFactory.TaskDAOIf(session).getTasks(participation.getLecture(), false).stream().filter(t -> t.getStart().isBefore(ZonedDateTime.now())).collect(Collectors.toList());
 			List<Submission> submissions = DAOFactory.SubmissionDAOIf(session).getAllSubmissions(participation);
 			if (tasks.isEmpty()) {
 				out.println("<div class=mid>keine Aufgaben gefunden.</div>");
