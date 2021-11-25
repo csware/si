@@ -47,10 +47,25 @@ public class Logout extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		boolean wasShibbolethLogin = request.getSession().getAttribute(Shibboleth.SHIBBOLETH_LOGIN_KEY) != null;
 		RequestAdapter.getSessionAdapter(request).setUser(null, null);
-		request.getSession().invalidate();
 		Cookie privacyCookie = new Cookie("privacy", "0");
 		privacyCookie.setMaxAge(0);
 		response.addCookie(privacyCookie);
+
+		String cookieName = null;
+		if (getServletContext().getSessionCookieConfig() != null) {
+			cookieName = getServletContext().getSessionCookieConfig().getName();
+		}
+		if (cookieName == null) {
+			cookieName = "JSESSIONID";
+		}
+		Cookie jsessionid = new Cookie(cookieName, "");
+		jsessionid.setMaxAge(0);
+		if (getServletContext().getSessionCookieConfig() != null && getServletContext().getSessionCookieConfig().getPath() != null) {
+			jsessionid.setPath(getServletContext().getSessionCookieConfig().getPath());
+		} else {
+			jsessionid.setPath(getServletContext().getContextPath());
+		}
+		response.addCookie(jsessionid);
 
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.printTemplateHeader("Sind wurden von GATE abgemeldet.");
