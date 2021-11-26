@@ -44,6 +44,11 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 	private final String separator;
 	private final de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest test;
 
+	public enum FAILSTATE {
+		SYNTAX_ERROR_STUDENT_SOLUTION,
+		SYNTAX_ERROR_WITH_TEST_CODE,
+	}
+	private FAILSTATE errorState = null;
 
 	public JavaAdvancedIOTest(de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest test) {
 		super(test);
@@ -69,10 +74,11 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 			testClassesDir.mkdir();
 
 			Util.recursiveCopy(submissionPath, codeDir);
-			if (!compileJava(codeDir, null, studentClassesDir, null)) { // TODO student solution has syntax error, provide more info?
+			TestExecutorTestResult compileTestResult = new TestExecutorTestResult();
+			if (!compileJava(codeDir, null, studentClassesDir, compileTestResult)) {
 				StringBuffer stdOut = new StringBuffer();
-				StringBuffer stdErr = new StringBuffer();
-				testResult.setTestPassed(calculateTestResult(false, stdOut, stdErr, false));
+				errorState = FAILSTATE.SYNTAX_ERROR_STUDENT_SOLUTION;
+				testResult.setTestPassed(calculateTestResult(false, stdOut, new StringBuffer(compileTestResult.getTestOutput()), false));
 				testResult.setTestOutput(stdOut.toString());
 				return;
 			}
@@ -100,10 +106,11 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 			fw.write(teacherTemplate.toString());
 			fw.close();
 
-			if (!compileJava(testerDir, Arrays.asList(studentClassesDir), testClassesDir, null)) { // TODO test code has syntax error or cannot call student solution, provide more info?
+			TestExecutorTestResult compileTestResultFull = new TestExecutorTestResult();
+			if (!compileJava(testerDir, Arrays.asList(studentClassesDir), testClassesDir, compileTestResultFull)) {
 				StringBuffer stdOut = new StringBuffer();
-				StringBuffer stdErr = new StringBuffer();
-				testResult.setTestPassed(calculateTestResult(false, stdOut, stdErr, false));
+				errorState = FAILSTATE.SYNTAX_ERROR_WITH_TEST_CODE;
+				testResult.setTestPassed(calculateTestResult(false, stdOut, new StringBuffer(compileTestResultFull.getTestOutput()), false));
 				testResult.setTestOutput(stdOut.toString());
 				return;
 			}
@@ -119,9 +126,21 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 	@Override
 	protected boolean calculateTestResult(boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted) {
 		JsonObjectBuilder builder = Json.createObjectBuilder();
+		builder.add("v", 1);
 		builder.add("stdout", processOutput.toString());
 		if (stdErr.length() > 0) {
 			builder.add("stderr", stdErr.toString());
+		}
+		if (errorState == FAILSTATE.SYNTAX_ERROR_STUDENT_SOLUTION) {
+			builder.add("syntaxerror", "student-code");
+			processOutput.setLength(0);
+			processOutput.append(builder.build().toString());
+			return exitedCleanly;
+		} else if (errorState == FAILSTATE.SYNTAX_ERROR_WITH_TEST_CODE) {
+			builder.add("syntaxerror", "with-test-code");
+			processOutput.setLength(0);
+			processOutput.append(builder.build().toString());
+			return exitedCleanly;
 		}
 		builder.add("separator", separator + "\n");
 		builder.add("exitedCleanly", exitedCleanly);

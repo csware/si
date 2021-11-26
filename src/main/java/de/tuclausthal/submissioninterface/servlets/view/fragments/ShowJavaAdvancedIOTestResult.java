@@ -44,6 +44,13 @@ public class ShowJavaAdvancedIOTestResult { // similar code in ShowDockerTestRes
 			} else {
 				out.println("<textarea id=\"testresultjtt" + jtt.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(testOutput) + "</textarea>");
 			}
+		} else if (object.containsKey("syntaxerror")) {
+			out.println("<p>");
+			if ("student-code".equals(object.getString("syntaxerror"))) {
+				out.println("<b>Der zu testende Code ist syntaktisch nicht korrekt und kann daher nicht getestet werden.</b><br>");
+			} else {
+				out.println("<b>Der Test konnte nicht erfolgreich ausgeführt werden.</b><br>Es fehlt eine erforderliche Datei oder der abgegebene Code entspricht nicht der Spezifikation. Mögliche Ursachen sind z. B.:<ul><li>falsches Package</li><li>geforderte Methode oder Instanzvariable<ul><li>fehlt</li><li>ist falsch geschrieben</li><li>hat falschen (Rückgabe-)Typ</li><li>hat die falschen Parameter</li><li>besitzt die falsche Sichtbarkeit</li></ul></ul>");
+			}
 		} else if (object.containsKey("steps")) {
 			JsonValue arr = object.get("steps");
 			if (arr.getValueType().equals(JsonValue.ValueType.ARRAY)) {
