@@ -1,4 +1,4 @@
-table.border th, table.border td {
+table th, table td {
 	border-collapse:separate;
 	border-spacing:2px;
 	border-top-style:inset;
@@ -23,7 +23,7 @@ table,.mid {
 	margin-left: auto; margin-right: auto;
 }
 
-table.border {
+table {
 	border-collapse:collapse;
 	border-spacing:2px;
 	border-width:1px;

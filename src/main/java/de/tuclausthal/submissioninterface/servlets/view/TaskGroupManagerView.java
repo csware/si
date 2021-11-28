@@ -65,7 +65,7 @@ public class TaskGroupManagerView extends HttpServlet {
 			out.println("<input type=hidden name=action value=saveNewTaskGroup>");
 		}
 		out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title value=\"" + Util.escapeHTML(taskGroup.getTitle()) + "\" required=required ></td>");

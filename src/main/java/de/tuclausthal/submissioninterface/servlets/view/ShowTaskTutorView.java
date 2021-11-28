@@ -87,7 +87,7 @@ public class ShowTaskTutorView extends HttpServlet {
 
 		template.printTemplateHeader(task);
 		PrintWriter out = response.getWriter();
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
 		out.println("<td id=taskdescription>" + Util.makeCleanHTML(task.getDescription()) + "</td>");
@@ -254,7 +254,7 @@ public class ShowTaskTutorView extends HttpServlet {
 						}
 					}
 					out.println("<form method=post action=\"" + Util.generateHTMLLink(MarkApproved.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">");
-					out.println("<table class=border>");
+					out.println("<table>");
 					out.println("<tr>");
 					out.println("<th>Abgabe von</th>");
 					if (showAllColumns) {

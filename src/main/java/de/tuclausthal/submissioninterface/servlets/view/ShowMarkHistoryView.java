@@ -57,7 +57,7 @@ public class ShowMarkHistoryView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		out.println("<h1>Aktivitätslog</h1>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Wer</th>");
 		out.println("<th>Wann</th>");

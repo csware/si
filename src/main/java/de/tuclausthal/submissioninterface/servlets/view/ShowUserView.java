@@ -101,7 +101,7 @@ public class ShowUserView extends HttpServlet {
 				continue;
 			}
 
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Aufgabe</th>");
 			out.println("<th>Max. Punkte</th>");

@@ -59,7 +59,7 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");
 		out.println("<input type=hidden name=action value=edittest>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title maxlength=250 size=60 value=\"" + Util.escapeHTML(test.getTestTitle()) + "\" required></td>");
@@ -81,7 +81,7 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 			out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");
 			out.println("<input type=hidden name=checkitemid value=\"" + checkItem.getCheckitemid() + "\">");
 			out.println("<input type=hidden name=action value=updateCheckItem>");
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Eintrag:</th>");
 			out.println("<td><input type=text name=title maxlength=250 size=60 value=\"" + Util.escapeHTML(checkItem.getTitle()) + "\" required></td>");
@@ -109,7 +109,7 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 		/* @formatter:off */
 		out.println("<p>Ausgabe bei Testanforderung z. B.:<br>" +
 				"<p><strong>Bitte überprüfen Sie Ihre Lösung hinsichtlich der folgenden Punkte und haken alle erfolgreichen Tests an:</strong></p>" + 
-				"<table class=\"border\">\n"
+				"<table>\n"
 				+ "<tbody><tr>\n"
 				+ "<th>Test</th>\n"
 				+ "<th>OK?</th>\n"
@@ -134,7 +134,7 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");
 		out.println("<input type=hidden name=action value=addNewCheckItem>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Eintrag:</th>");
 		out.println("<td><input type=text name=title maxlength=250 value=\"\" size=60 required></td>");

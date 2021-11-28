@@ -51,7 +51,7 @@ public class AdminMenueAddLectureView extends HttpServlet {
 
 		Lecture dummyLecture = new Lecture();
 		out.println("<form action=\"" + Util.generateHTMLLink("?action=saveLecture", response) + "\" method=post>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Name der Veranstaltung:</th>");
 		out.println("<td><input type=text name=name required=required></td>");

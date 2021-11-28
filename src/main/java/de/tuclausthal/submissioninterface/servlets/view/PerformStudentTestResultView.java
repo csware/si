@@ -73,7 +73,7 @@ public class PerformStudentTestResultView extends HttpServlet {
 			out.println("<FORM method=POST action=\"" + Util.generateHTMLLink(ChecklistTestResponse.class.getSimpleName(), response) + "\" id=manualcheckform>");
 			out.println("<input type=hidden name=testid value=" + test.getId() + ">");
 			out.println("<input type=hidden name=logid value=" + logEntry.getId() + ">");
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Test</th>");
 			out.println("<th>OK?</th>");

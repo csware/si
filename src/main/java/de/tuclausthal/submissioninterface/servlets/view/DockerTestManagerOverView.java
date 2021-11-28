@@ -59,7 +59,7 @@ public class DockerTestManagerOverView extends HttpServlet {
 		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");
 		out.println("<input type=hidden name=action value=edittest>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title maxlength=250 size=60 value=\"" + Util.escapeHTML(test.getTestTitle()) + "\" required></td>");
@@ -85,7 +85,7 @@ public class DockerTestManagerOverView extends HttpServlet {
 			out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");
 			out.println("<input type=hidden name=teststepid value=\"" + step.getTeststepid() + "\">");
 			out.println("<input type=hidden name=action value=updateStep>");
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Titel:</th>");
 			out.println("<td><input type=text name=title maxlength=250 size=60 value=\"" + Util.escapeHTML(step.getTitle()) + "\" required></td>");
@@ -120,7 +120,7 @@ public class DockerTestManagerOverView extends HttpServlet {
 		out.println("<p>Preparation-Code z. B.:<br><textarea cols=80 rows=2 name=testcode disabled>echo -e \"hallo servus\\nsehr sakrisch\\ngut guad\" > woerterbuch.txt\nghc uebersetzer-a.hs</textarea></p>");
 		/* @formatter:off */
 		out.println("<p>Test-Schritt-Definition z. B.:<br>"+
-				"<table class=border>" + 
+				"<table>" + 
 				"<tr>" + 
 				"<th>Titel:</th>" + 
 				"<td><input type=text name=title disabled size=60 value=\"Eingabe &quot;gut&quot;\"></td>" + 
@@ -168,7 +168,7 @@ public class DockerTestManagerOverView extends HttpServlet {
 		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");
 		out.println("<input type=hidden name=action value=addNewStep>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title maxlength=250 value=\"\" size=60 required></td>");

@@ -52,7 +52,7 @@ public class EditMultipleGroupsFormView extends HttpServlet {
 		template.printTemplateHeader("Mehrere Gruppen bearbeiten", lecture);
 		PrintWriter out = response.getWriter();
 		out.println("<form action=\"" + Util.generateHTMLLink("?lecture=" + lecture.getId(), response) + "\" method=post>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Studierende können sich eintragen:</th>");
 		out.println("<td><input type=checkbox name=allowStudentsToSignup></td>");

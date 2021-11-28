@@ -53,7 +53,7 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 
 		@SuppressWarnings("unchecked")
 		Iterator<User> userIterator = ((List<User>) request.getAttribute("superusers")).iterator();
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>BenutzerInnen</th>");
 		out.println("<th>Entfernen</th>");

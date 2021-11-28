@@ -54,7 +54,7 @@ public class ShowJavaAdvancedIOTestResult { // similar code in ShowDockerTestRes
 		} else if (object.containsKey("steps")) {
 			JsonValue arr = object.get("steps");
 			if (arr.getValueType().equals(JsonValue.ValueType.ARRAY)) {
-				out.println("<table class=border>");
+				out.println("<table>");
 				out.println("<tr>");
 				out.println("<th>Test</th>");
 				out.println("<th>Erwartet</th>");

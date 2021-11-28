@@ -63,7 +63,7 @@ public class Form implements LoginIf {
 		}
 		out.println("\" method=POST name=login>");
 		out.println("<input type=hidden name=" + LOGONEVIDENCE + " value='1234'>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>");
 		out.println("Benutzername:");

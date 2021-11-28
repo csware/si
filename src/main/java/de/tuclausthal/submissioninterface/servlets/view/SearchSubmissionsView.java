@@ -52,7 +52,7 @@ public class SearchSubmissionsView extends HttpServlet {
 		template.printTemplateHeader("Abgaben durchsuchen", task);
 		PrintWriter out = response.getWriter();
 		out.println("<form action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid(), response) + "\" method=post>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Suchen nach:</th>");
 		out.println("<td><input type=input name=q></td>");

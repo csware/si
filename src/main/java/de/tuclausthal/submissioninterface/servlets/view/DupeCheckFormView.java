@@ -61,7 +61,7 @@ public class DupeCheckFormView extends HttpServlet {
 			out.println("<input type=hidden name=normalizer1 value=\"\">");
 			out.println("<input type=hidden name=normalizer2 value=\"\">");
 			out.println("<input type=hidden name=normalizer3 value=\"\">");
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Minimale Ähnlichkeit:</th>");
 			out.println("<td><input size=5 type=text value=80 name=minsimilarity> %</td>");
@@ -89,7 +89,7 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("<input type=hidden name=normalizer1 value=\"\">");
 		out.println("<input type=hidden name=normalizer2 value=\"\">");
 		out.println("<input type=hidden name=normalizer3 value=\"\">");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Minimale Ähnlichkeit:</th>");
 		out.println("<td><input size=5 type=text value=80 name=minsimilarity> %</td>");
@@ -110,7 +110,7 @@ public class DupeCheckFormView extends HttpServlet {
 		out.println("<form action=\"" + Util.generateHTMLLink("?action=savesimilaritytest", response) + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		out.println("<input type=hidden name=action value=performCheck>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Typ:</th>");
 		out.println("<td><select size=1 name=type>");

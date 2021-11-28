@@ -76,7 +76,7 @@ public class OverviewView extends HttpServlet {
 		}
 
 		if (!user.getLectureParticipant().isEmpty()) {
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Veranstaltung</th>");
 			out.println("<th>Semester</th>");

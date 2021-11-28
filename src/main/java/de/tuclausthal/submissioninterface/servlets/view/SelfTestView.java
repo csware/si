@@ -49,7 +49,7 @@ public class SelfTestView extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.printAdminMenueTemplateHeader("Selbsttest");
 		PrintWriter out = response.getWriter();
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Test</th>");
 		out.println("<th>OK?</th>");

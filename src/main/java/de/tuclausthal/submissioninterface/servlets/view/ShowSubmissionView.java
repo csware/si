@@ -144,7 +144,7 @@ public class ShowSubmissionView extends HttpServlet {
 
 		if ((task.getDeadline().isBefore(ZonedDateTime.now()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask() && !task.isClozeTask())) {
 			out.println("<h2>Bewertung: <a href=\"#\" onclick=\"toggleVisibility('mark'); return false;\">(+/-)</a></h2>");
-			out.println("<table id=mark class=border>");
+			out.println("<table id=mark>");
 			String oldPublicComment = "";
 			String oldInternalComment = "";
 			int points = 0;
@@ -278,7 +278,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<tr>");
 			for (SimilarityTest similarityTest : task.getSimularityTests()) {
 				out.println("<td>");
-				out.println("<table class=border>");
+				out.println("<table>");
 				out.println("<tr>");
 				out.println("<th>Abgabe von</th>");
 				out.println("<th>Ähnlichkeit</th>");

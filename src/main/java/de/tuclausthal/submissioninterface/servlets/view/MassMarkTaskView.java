@@ -55,7 +55,7 @@ public class MassMarkTaskView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid(), response) + "\">");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th colspan=2>Aufgabe \"" + Util.escapeHTML(task.getTitle()) + "\" bewerten</th>");
 		out.println("</tr>");
@@ -119,7 +119,7 @@ public class MassMarkTaskView extends HttpServlet {
 			out.println("<hr>");
 		}
 
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>TeilnehmerIn</th>");
 		out.println("<th>Interner Kommentar</th>");

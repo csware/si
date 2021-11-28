@@ -53,7 +53,7 @@ public class MassMailView extends HttpServlet {
 		template.printTemplateHeader("E-Mail senden", lecture);
 		PrintWriter out = response.getWriter();
 		out.println("<form action=\"" + Util.generateHTMLLink("?lectureid=" + lecture.getId(), response) + "\" method=post>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Betreff:</th>");
 		out.println("<td><input type=input required=required name=subject></td>");

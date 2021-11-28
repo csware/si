@@ -52,7 +52,7 @@ public class AddGroupFormView extends HttpServlet {
 		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=action value=saveNewGroup>");
 		out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Name:</th>");
 		out.println("<td><input type=text required=required name=name></td>");

@@ -73,7 +73,7 @@ public class ShowLectureStudentView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		if (!lecture.getDescription().isBlank()) {
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.print("<th>Beschreibung/Hinweise</th>");
 			out.println("</tr>");
@@ -137,7 +137,7 @@ public class ShowLectureStudentView extends HttpServlet {
 			int points = 0;
 			int maxPoints = 0;
 
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Aufgabe</th>");
 			out.println("<th>Max. Punkte</th>");

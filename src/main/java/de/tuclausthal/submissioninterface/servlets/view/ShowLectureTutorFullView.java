@@ -72,7 +72,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 
 		List<TaskGroup> taskGroupList = lecture.getTaskGroups();
 
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		if (showMatNo) {
 			out.println("<th rowspan=2>MatrikelNo</th>");

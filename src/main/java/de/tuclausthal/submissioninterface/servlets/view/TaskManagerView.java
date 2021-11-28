@@ -145,7 +145,7 @@ public class TaskManagerView extends HttpServlet {
 			out.println("<input type=hidden name=action value=saveNewTask>");
 		}
 		out.println("<input type=hidden name=lecture value=\"" + lecture.getId() + "\">");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th width=\"30%\">Aufgabengruppe:</th>");
 		out.println("<td><select size=1 name=taskGroup required=required>");

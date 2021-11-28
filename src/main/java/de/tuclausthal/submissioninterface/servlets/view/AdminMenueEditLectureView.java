@@ -66,7 +66,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			out.println("<form method=post action=\"" + Util.generateHTMLLink("?", response) + "\">");
 			out.println("<input type=hidden name=lecture value=" + lecture.getId() + ">");
 			out.println("<input type=hidden name=action value=editLecture>");
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Name der Veranstaltung:</th>");
 			out.println("<td><input type=text name=name required value=\"" + Util.escapeHTML(lecture.getName()) + "\"></td>");
@@ -103,7 +103,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 
 			out.println("<h2>BetreuerInnen</h2>");
 			Iterator<Participation> advisorIterator = participants.iterator();
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>BenutzerInnen</th>");
 			out.println("<th>Entfernen</th>");
@@ -127,7 +127,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 
 			out.println("<h2>TutorInnen</h2>");
 			Iterator<Participation> tutorIterator = participants.iterator();
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>BenutzerInnen</th>");
 			out.println("<th>Entfernen</th>");

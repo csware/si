@@ -52,7 +52,7 @@ public class EditLectureView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.println("<form method=post action=\"" + Util.generateHTMLLink("?", response) + "\">");
 		out.println("<input type=hidden name=lecture value=" + lecture.getId() + ">");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Name der Veranstaltung:</th>");
 		out.println("<td><input type=text name=name required value=\"" + Util.escapeHTML(lecture.getName()) + "\" disabled></td>");

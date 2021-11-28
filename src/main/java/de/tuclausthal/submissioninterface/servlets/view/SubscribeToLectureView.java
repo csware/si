@@ -53,7 +53,7 @@ public class SubscribeToLectureView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 
 		if (!lectures.isEmpty()) {
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Veranstaltung</th>");
 			out.println("<th>Anmelden</th>");

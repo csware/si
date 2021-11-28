@@ -127,7 +127,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 		}
 
 		if (task.isShowTextArea() || task.isSCMCTask()) {
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Beschreibung:</th>");
 			out.println("<td id=taskdescription>" + Util.makeCleanHTML(task.getDescription()) + "</td>");
@@ -176,7 +176,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 			}
 			ClozeTaskType clozeHelper = new ClozeTaskType(task.getDescription(), lastResults, false, false);
 
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Aufgabe:</th>");
 			out.print("<td id=taskdescription>");

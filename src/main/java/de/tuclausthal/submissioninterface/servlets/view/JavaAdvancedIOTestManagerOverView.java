@@ -59,7 +59,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");
 		out.println("<input type=hidden name=action value=edittest>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title maxlength=250 size=60 value=\"" + Util.escapeHTML(test.getTestTitle()) + "\" required=required></td>");
@@ -78,7 +78,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 			out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");
 			out.println("<input type=hidden name=teststepid value=\"" + step.getTeststepid() + "\">");
 			out.println("<input type=hidden name=action value=updateStep>");
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Titel:</th>");
 			out.println("<td><input type=text name=title maxlength=250 size=60 value=\"" + Util.escapeHTML(step.getTitle()) + "\" required=required></td>");
@@ -112,7 +112,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 		out.println("<p>Diese Art von Test erlaubt es einfache Ausgabe-Tests zu definieren. Sollen Studierende z. B. in der Klasse MathFunctions die Methode leastCommonMultiple(a,b) programmieren, so kann die Methode relativ einfach mit verschiedenen Werten aufgerufen und die Ausgabe auf STDOUT mit einem erwartetem Wert überprüft werden. Der STDERR wird den Studierenden im Normalfall nicht gezeigt, ebensowenig mögliche Compiler-Fehler.</p>");
 		/* @formatter:off */
 		out.println("<p>Test-Schritt-Definition z. B.:<br>"+
-				"<table class=border>" + 
+				"<table>" + 
 				"<tr>" + 
 				"<th>Titel:</th>" + 
 				"<td><input type=text name=title disabled size=60 value=\"leastCommonMultiple(26,61)\"></td>" + 
@@ -165,7 +165,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");
 		out.println("<input type=hidden name=action value=addNewStep>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title maxlength=250 value=\"\" size=60 required=required></td>");

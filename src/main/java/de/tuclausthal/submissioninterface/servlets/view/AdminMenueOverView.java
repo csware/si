@@ -53,7 +53,7 @@ public class AdminMenueOverView extends HttpServlet {
 		@SuppressWarnings("unchecked")
 		Iterator<Lecture> lectureIterator = ((List<Lecture>) request.getAttribute("lectures")).iterator();
 		if (lectureIterator.hasNext()) {
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Veranstaltung</th>");
 			out.println("<th>Semester</th>");

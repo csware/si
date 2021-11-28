@@ -57,7 +57,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		out.println("<input type=hidden name=action value=saveNewTest>");
 		out.println("<input type=hidden name=type value=compile>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title value=\"Syntax-Test\" required=required></td>");
@@ -91,7 +91,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		out.println("<input type=hidden name=action value=saveNewTest>");
 		out.println("<input type=hidden name=type value=advancedjavaio>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title value=\"Testen\" required=required></td>");
@@ -126,7 +126,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 			out.println("<input type=hidden name=action value=saveNewTest>");
 			out.println("<input type=hidden name=type value=docker>");
-			out.println("<table class=border>");
+			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Titel:</th>");
 			out.println("<td><input type=text name=title value=\"Testen\" required></td>");
@@ -167,7 +167,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		out.println("<input type=hidden name=action value=saveNewTest>");
 		out.println("<input type=hidden name=type value=checklist>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title value=\"Testen\" required></td>");
@@ -190,7 +190,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		//Formular um UML Constraint Test anzulegen
 		out.println("<h2>UML Constraint Test</h2>");
 		out.println("<form ENCTYPE=\"multipart/form-data\" action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid() + "&action=saveNewTest&type=umlConstraint", response) + "\" method=post>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title value=\"UML Vergleichstest\" required=required></td>");
@@ -228,7 +228,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		out.println("<input type=hidden name=action value=saveNewTest>");
 		out.println("<input type=hidden name=type value=regexp>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title value=\"Funktionstest\" required=required></td>");
@@ -275,7 +275,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 
 		out.println("<h2>JUnit Test</h2>");
 		out.println("<form ENCTYPE=\"multipart/form-data\" action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid() + "&action=saveNewTest&type=junit", response) + "\" method=post>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title value=\"Funktionstest\" required=required></td>");
@@ -321,7 +321,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		out.println("<input type=hidden name=action value=saveNewTest>");
 		out.println("<input type=hidden name=type value=commentmetric>");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title value=\"Kommentar-Metrik\"></td>");

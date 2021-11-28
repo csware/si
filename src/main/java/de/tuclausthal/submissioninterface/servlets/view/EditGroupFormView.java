@@ -60,7 +60,7 @@ public class EditGroupFormView extends HttpServlet {
 		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=action value=editGroup>");
 		out.println("<input type=hidden name=groupid value=" + group.getGid() + ">");
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Gruppe:</th>");
 		out.println("<td><input type=text name=title required=required value=\"" + Util.escapeHTML(group.getName()) + "\" " + ((participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) ? "" : "readonly") + "></td>");

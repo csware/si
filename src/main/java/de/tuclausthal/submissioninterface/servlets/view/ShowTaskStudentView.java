@@ -90,7 +90,7 @@ public class ShowTaskStudentView extends HttpServlet {
 
 		template.printTemplateHeader(task);
 		PrintWriter out = response.getWriter();
-		out.println("<table class=border>");
+		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Beschreibung:</th>");
 		out.print("<td id=taskdescription>");
@@ -135,7 +135,7 @@ public class ShowTaskStudentView extends HttpServlet {
 
 		if (submission != null) {
 			out.println("<p><h2>Informationen zu meiner Abgabe:</h2>");
-			out.println("<table class=border>");
+			out.println("<table>");
 			if (submission.getSubmitters().size() > 1) {
 				out.println("<tr>");
 				out.println("<th>Bearbeitet von:</th>");
@@ -333,7 +333,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			TestCountDAOIf testCountDAO = DAOFactory.TestCountDAOIf(session);
 			if (!submittedFiles.isEmpty() && !tests.isEmpty() && task.getDeadline().isAfter(ZonedDateTime.now()) && !(task.isAllowPrematureSubmissionClosing() && submission.isClosed())) {
 				out.println("<p><h2>Mögliche Tests:</h2>");
-				out.println("<table class=border>");
+				out.println("<table>");
 				for (Test test : tests) {
 					out.println("<tr>");
 					out.println("<th>" + Util.escapeHTML(test.getTestTitle()) + "</th>");
