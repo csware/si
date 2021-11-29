@@ -36,6 +36,9 @@ public class ClozeTaskType {
 
 	private final static String FORM_NAME = "cloze";
 
+	private final static int MAX_INPUTLENGTH = 200;
+	public final static String FIXED_LIMIT = " maxlength=\"" + MAX_INPUTLENGTH + "\"";
+
 	final private StringBuilder sb;
 	final private List<ClozeItem> items = new ArrayList<>();
 
@@ -271,6 +274,9 @@ public class ClozeTaskType {
 				knownPoints.add(parsedOption.group(1));
 				knownOptions.add(parsedOption.group(2));
 				longestEntry = Math.max(longestEntry, parsedOption.group(2).length());
+				if (longestEntry > MAX_INPUTLENGTH) {
+					throw new RuntimeException("Option is longer than allowed maxlength " + MAX_INPUTLENGTH + ": \"" + parsedOption.group(2) + "\"");
+				}
 			}
 		}
 
@@ -298,6 +304,7 @@ public class ClozeTaskType {
 				maxCurrentLength = Math.max(20, maxCurrentLength + 3);
 				sb.append(" size=" + maxCurrentLength);
 			}
+			sb.append(FIXED_LIMIT);
 			sb.append(" autocomplete=off>");
 			if (feedback && isAutoGradeAble()) {
 				sb.append(" <span class=\"cloze_points\">(➜ ");
@@ -333,6 +340,9 @@ public class ClozeTaskType {
 				knownPoints.add(parsedOption.group(1));
 				knownOptions.add(parsedOption.group(2));
 				longestEntry = Math.max(longestEntry, parsedOption.group(2).length());
+				if (longestEntry > MAX_INPUTLENGTH) {
+					throw new RuntimeException("Option is longer than allowed maxlength " + MAX_INPUTLENGTH + ": \"" + option + "\"");
+				}
 			}
 		}
 
