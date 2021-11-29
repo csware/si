@@ -242,6 +242,9 @@ public class ClozeTaskType {
 				sb.append("\" type=text disabled");
 				if (oldData != null) {
 					sb.append(" value=\"" + Util.escapeHTML(oldData) + "\"");
+					sb.append(" size=" + (oldData.length() + 3));
+				} else {
+					sb.append(" size=20");
 				}
 				sb.append(">");
 			}
@@ -254,6 +257,8 @@ public class ClozeTaskType {
 	}
 
 	public static class ShortAnswerClozeItem extends ClozeItem {
+		int longestEntry = 0;
+
 		public ShortAnswerClozeItem(String data) {
 			if (data.isEmpty()) {
 				return;
@@ -265,6 +270,7 @@ public class ClozeTaskType {
 				}
 				knownPoints.add(parsedOption.group(1));
 				knownOptions.add(parsedOption.group(2));
+				longestEntry = Math.max(longestEntry, parsedOption.group(2).length());
 			}
 		}
 
@@ -280,8 +286,17 @@ public class ClozeTaskType {
 			if (notEditable) {
 				sb.append(" disabled");
 			}
+			int maxCurrentLength = longestEntry;
 			if (oldData != null) {
 				sb.append(" value=\"" + Util.escapeHTML(oldData) + "\"");
+				maxCurrentLength = Math.max(maxCurrentLength, oldData.length());
+				if (notEditable) {
+					sb.append(" size=" + (oldData.length() + 3));
+				}
+			}
+			if (!notEditable || oldData == null) {
+				maxCurrentLength = Math.max(20, maxCurrentLength + 3);
+				sb.append(" size=" + maxCurrentLength);
 			}
 			sb.append(" autocomplete=off>");
 			if (feedback && isAutoGradeAble()) {
@@ -317,6 +332,7 @@ public class ClozeTaskType {
 				}
 				knownPoints.add(parsedOption.group(1));
 				knownOptions.add(parsedOption.group(2));
+				longestEntry = Math.max(longestEntry, parsedOption.group(2).length());
 			}
 		}
 
