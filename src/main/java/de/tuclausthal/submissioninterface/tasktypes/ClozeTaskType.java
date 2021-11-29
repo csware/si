@@ -181,19 +181,34 @@ public class ClozeTaskType {
 		}
 	}
 
+	public static class StringTuple {
+		String element1;
+		String element2;
+
+		public StringTuple(String element1, String element2) {
+			this.element1 = element1;
+			this.element2 = element2;
+		}
+	}
+
 	public static class MultipleChocieClozeItem extends ClozeItem {
 		public MultipleChocieClozeItem(String data) {
+			ArrayList<StringTuple> options = new ArrayList<>();
 			for (String option : data.split("~")) {
 				Matcher parsedOption = optionPattern.matcher(option);
 				if (!parsedOption.matches() || parsedOption.group(2).isBlank()) {
 					throw new RuntimeException("Unparseable option \"" + option + "\"found in \"" + data + "\"");
 				}
-				knownOptions.add(parsedOption.group(2));
-				knownPoints.add(Objects.toString(parsedOption.group(1), "0"));
+				options.add(new StringTuple(parsedOption.group(2), Objects.toString(parsedOption.group(1), "0")));
 			}
-			if (knownOptions.isEmpty()) {
+			if (options.isEmpty()) {
 				throw new RuntimeException("No options found in \"" + data + "\"");
 			}
+			options.sort((o1, o2) -> o1.element1.compareTo(o2.element1));
+			options.forEach(option -> {
+				knownOptions.add(option.element1);
+				knownPoints.add(option.element2);
+			});
 		}
 
 		@Override
