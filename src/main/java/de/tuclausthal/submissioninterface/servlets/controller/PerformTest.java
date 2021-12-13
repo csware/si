@@ -218,7 +218,7 @@ public class PerformTest extends HttpServlet {
 				fileName = m.group(1);
 			}
 			try {
-				SubmitSolution.handleUploadedFile(LOG, path, task, fileName, file);
+				SubmitSolution.handleUploadedFile(LOG, path, task, fileName, file, Configuration.getInstance().getDefaultZipFileCharset());
 			} catch (IOException e) {
 				LOG.error("Problem on processing uploaded file.", e);
 				template.printTemplateHeader("Ungültige Anfrage", task);

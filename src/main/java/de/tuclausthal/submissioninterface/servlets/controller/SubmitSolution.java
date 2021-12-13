@@ -23,6 +23,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.invoke.MethodHandles;
+import java.nio.charset.Charset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -388,7 +389,7 @@ public class SubmitSolution extends HttpServlet {
 					continue;
 				}
 				try {
-					if (!handleUploadedFile(LOG, path, task, fileName, aFile)) {
+					if (!handleUploadedFile(LOG, path, task, fileName, aFile, Configuration.getInstance().getDefaultZipFileCharset())) {
 						skippedFiles = true;
 					}
 					Util.copyInputStreamAndClose(aFile.getInputStream(), new File(logPath, fileName));
@@ -573,11 +574,11 @@ public class SubmitSolution extends HttpServlet {
 		return patterns;
 	}
 
-	public static boolean handleUploadedFile(Logger log, File submissionPath, Task task, String fileName, Part item) throws IOException {
+	public static boolean handleUploadedFile(Logger log, File submissionPath, Task task, String fileName, Part item, Charset zipFileCharset) throws IOException {
 		if (!"-".equals(task.getArchiveFilenameRegexp()) && (fileName.endsWith(".zip") || fileName.endsWith(".jar"))) {
 			boolean skippedFiles = false;
 			Vector<Pattern> patterns = getArchiveFileNamePatterns(task);
-			try (ZipInputStream zipFile = new ZipInputStream(item.getInputStream(), Configuration.getInstance().getDefaultZipFileCharset())) {
+			try (ZipInputStream zipFile = new ZipInputStream(item.getInputStream(), zipFileCharset)) {
 				ZipEntry entry = null;
 				while ((entry = zipFile.getNextEntry()) != null) {
 					if (entry.isDirectory()) {
