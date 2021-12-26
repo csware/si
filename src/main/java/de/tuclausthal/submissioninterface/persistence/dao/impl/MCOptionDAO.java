@@ -20,12 +20,15 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.MCOptionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
+import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 
 /**
@@ -37,11 +40,16 @@ public class MCOptionDAO extends AbstractDAO implements MCOptionDAOIf {
 		super(session);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<MCOption> getMCOptionsForTask(Task task) {
 		Session session = getSession();
-		return session.createCriteria(MCOption.class).add(Restrictions.eq("task", task)).addOrder(Order.asc("id")).list();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<MCOption> criteria = builder.createQuery(MCOption.class);
+		Root<MCOption> root = criteria.from(MCOption.class);
+		criteria.select(root);
+		criteria.where(builder.equal(root.get(MCOption_.task), task));
+		criteria.orderBy(builder.asc(root.get(MCOption_.id)));
+		return session.createQuery(criteria).list();
 	}
 
 	@Override

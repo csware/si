@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -23,6 +23,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -40,7 +41,7 @@ public class PointCategory implements Serializable {
 	private boolean optional = false;
 
 	// for Hibernate
-	private PointCategory() {}
+	protected PointCategory() {}
 
 	public PointCategory(Task task, int points, String description, boolean optional) {
 		this.task = task;
@@ -53,7 +54,7 @@ public class PointCategory implements Serializable {
 	 * @return the pointcatid
 	 */
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getPointcatid() {
 		return pointcatid;
 	}

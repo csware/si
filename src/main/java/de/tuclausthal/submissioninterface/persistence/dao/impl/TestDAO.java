@@ -21,11 +21,14 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.LockMode;
+import javax.persistence.LockModeType;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
@@ -34,7 +37,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Test_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -89,12 +94,12 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 
 	@Override
 	public Test getTest(int testId) {
-		return (Test) getSession().get(Test.class, testId);
+		return getSession().get(Test.class, testId);
 	}
 
 	@Override
 	public Test getTestLocked(int testId) {
-		return (Test) getSession().get(Test.class, testId, LockOptions.UPGRADE);
+		return getSession().get(Test.class, testId, LockOptions.UPGRADE);
 	}
 
 	@Override
@@ -110,7 +115,13 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 	public Test takeTest() {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		Test test = (Test) session.createCriteria(Test.class).add(Restrictions.eq("forTutors", true)).add(Restrictions.eq("needsToRun", true)).setLockMode(LockMode.PESSIMISTIC_WRITE).createCriteria("task").add(Restrictions.le("deadline", Util.correctTimezone(new Date()))).setMaxResults(1).uniqueResult();
+
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Test> criteria = builder.createQuery(Test.class);
+		Root<Test> root = criteria.from(Test.class);
+		criteria.select(root);
+		criteria.where(builder.and(builder.equal(root.get(Test_.forTutors), true), builder.equal(root.get(Test_.needsToRun), true), builder.lessThanOrEqualTo(root.join(Test_.task).get(Task_.deadline), Util.correctTimezone(new Date()))));
+		Test test = session.createQuery(criteria).setLockMode(LockModeType.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
 		if (test != null) {
 			test.setNeedsToRun(false);
 			session.save(test);
@@ -119,16 +130,26 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 		return test;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Test> getStudentTests(Task task) {
-		return getSession().createCriteria(Test.class).add(Restrictions.eq("task", task)).add(Restrictions.gt("timesRunnableByStudents", 0)).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Test> criteria = builder.createQuery(Test.class);
+		Root<Test> root = criteria.from(Test.class);
+		criteria.select(root);
+		criteria.where(builder.and(builder.equal(root.get(Test_.task), task), builder.gt(root.get(Test_.timesRunnableByStudents), 0)));
+		return session.createQuery(criteria).list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Test> getTutorTests(Task task) {
-		return getSession().createCriteria(Test.class).add(Restrictions.eq("task", task)).add(Restrictions.eq("forTutors", true)).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Test> criteria = builder.createQuery(Test.class);
+		Root<Test> root = criteria.from(Test.class);
+		criteria.select(root);
+		criteria.where(builder.and(builder.equal(root.get(Test_.task), task), builder.equal(root.get(Test_.forTutors), true)));
+		return session.createQuery(criteria).list();
 	}
 
 	@Override

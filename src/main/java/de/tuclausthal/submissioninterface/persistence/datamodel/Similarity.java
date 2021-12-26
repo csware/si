@@ -22,6 +22,7 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -41,7 +42,7 @@ public class Similarity implements Serializable {
 	private SimilarityTest similarityTest;
 
 	// for Hibernate
-	private Similarity() {}
+	protected Similarity() {}
 
 	/**
 	 * @param similarityTest 
@@ -60,7 +61,7 @@ public class Similarity implements Serializable {
 	 * @return the similarityid
 	 */
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getSimilarityid() {
 		return similarityid;
 	}
@@ -107,14 +108,14 @@ public class Similarity implements Serializable {
 	/**
 	 * @param submissionOne the submissionOne to set
 	 */
-	private void setSubmissionOne(Submission submissionOne) {
+	protected void setSubmissionOne(Submission submissionOne) {
 		this.submissionOne = submissionOne;
 	}
 
 	/**
 	 * @param submissionTwo the submissionTwo to set
 	 */
-	private void setSubmissionTwo(Submission submissionTwo) {
+	protected void setSubmissionTwo(Submission submissionTwo) {
 		this.submissionTwo = submissionTwo;
 	}
 

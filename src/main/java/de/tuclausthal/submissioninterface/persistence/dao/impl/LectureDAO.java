@@ -20,13 +20,19 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 
 import de.tuclausthal.submissioninterface.persistence.dao.LectureDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture_;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Participation_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -39,10 +45,15 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 		super(session);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Lecture> getLectures() {
-		return getSession().createCriteria(Lecture.class).addOrder(Order.desc("semester")).addOrder(Order.asc("name")).list();
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Lecture> criteria = builder.createQuery(Lecture.class);
+		Root<Lecture> root = criteria.from(Lecture.class);
+		criteria.select(root);
+		criteria.orderBy(builder.desc(root.get(Lecture_.semester)), builder.asc(root.get(Lecture_.name)));
+		return session.createQuery(criteria).list();
 	}
 
 	@Override
@@ -63,15 +74,26 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 
 	@Override
 	public Lecture getLecture(int lectureId) {
-		return (Lecture) getSession().get(Lecture.class, lectureId);
+		return getSession().get(Lecture.class, lectureId);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Lecture> getCurrentLecturesWithoutUser(User user) {
 		Session session = getSession();
-		// Criteria a = session.createCriteria(Lecture.class).createCriteria("participants").add(Restrictions.isNull("lecture")).createCriteria("user", Criteria.FULL_JOIN);
-		return session.createCriteria(Lecture.class).add(Restrictions.ge("semester", Util.getCurrentSemester())).addOrder(Order.asc("name")).add(Restrictions.sqlRestriction("{alias}.id not in (select lectureid from participations part where part.uid=" + user.getUid() + ")")).list();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Lecture> criteria = builder.createQuery(Lecture.class);
+		Root<Lecture> root = criteria.from(Lecture.class);
+		criteria.select(root);
+		criteria.orderBy(builder.asc(root.get(Lecture_.name)));
+
+		Subquery<Lecture> countSubQuery = criteria.subquery(Lecture.class);
+		Root<Participation> lecturesTakingPartIn = countSubQuery.from(Participation.class);
+		countSubQuery.select(lecturesTakingPartIn.get(Participation_.lecture));
+		countSubQuery.where(builder.equal(lecturesTakingPartIn.get(Participation_.user), user));
+
+		criteria.where(builder.and(builder.equal(root.get(Lecture_.semester), Util.getCurrentSemester()), builder.not(root.get(Lecture_.id).in(countSubQuery))));
+
+		return session.createQuery(criteria).list();
 	}
 
 	@Override

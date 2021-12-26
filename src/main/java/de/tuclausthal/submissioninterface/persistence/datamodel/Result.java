@@ -24,6 +24,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -42,7 +43,7 @@ public class Result implements Serializable {
 	private String result;
 
 	// for Hibernate
-	private Result() {}
+	protected Result() {}
 
 	/**
 	 * @param submission 
@@ -72,7 +73,7 @@ public class Result implements Serializable {
 	 * @return the resultID
 	 */
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getResultid() {
 		return resultid;
 	}

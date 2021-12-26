@@ -18,15 +18,20 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import org.hibernate.LockMode;
+import javax.persistence.LockModeType;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.query.Query;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TestResultDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult_;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 
 /**
@@ -63,13 +68,27 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 		session.update(testResult);
 	}
 
+	private TestResult getResult(Test test, Submission submission, boolean locked) {
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<TestResult> criteria = builder.createQuery(TestResult.class);
+		Root<TestResult> root = criteria.from(TestResult.class);
+		criteria.select(root);
+		criteria.where(builder.and(builder.equal(root.get(TestResult_.test), test), builder.equal(root.get(TestResult_.submission), submission)));
+		Query<TestResult> query = session.createQuery(criteria);
+		if (locked) {
+			query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
+		}
+		return query.uniqueResult();
+	}
+
 	@Override
 	public TestResult getResult(Test test, Submission submission) {
-		return (TestResult) getSession().createCriteria(TestResult.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("submission", submission)).uniqueResult();
+		return getResult(test, submission, false);
 	}
 
 	@Override
 	public TestResult getResultLocked(Test test, Submission submission) {
-		return (TestResult) getSession().createCriteria(TestResult.class).add(Restrictions.eq("test", test)).add(Restrictions.eq("submission", submission)).setLockMode(LockMode.PESSIMISTIC_WRITE).uniqueResult();
+		return getResult(test, submission, true);
 	}
 }

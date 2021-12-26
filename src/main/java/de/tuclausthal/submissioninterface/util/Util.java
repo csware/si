@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.NumberFormat;
+import java.time.Clock;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,6 +61,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStat
  */
 public final class Util {
 	final private static Logger log = LoggerFactory.getLogger(Util.class);
+	public static Clock CLOCK = Clock.systemDefaultZone();
 
 	/**
 	 * Escapes HTML sequences
@@ -339,12 +342,11 @@ public final class Util {
 	 * @return the semester encoded as integer
 	 */
 	public static int getCurrentSemester() {
-		Date date = new Date();
-		if (date.getMonth() > 7) {
+		if (ZonedDateTime.now(CLOCK).getMonth().getValue() > 7) {
 			// winter lecture
-			return date.getYear() * 10 + 19001;
+			return ZonedDateTime.now(CLOCK).getYear() * 10 + 1;
 		}
-		return date.getYear() * 10 + 19000;
+		return ZonedDateTime.now(CLOCK).getYear() * 10;
 	}
 
 	/**

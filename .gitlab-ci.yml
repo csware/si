@@ -32,11 +32,13 @@ cache:
     - apt-get install -qq -y mariadb-client
     - echo -e "section_end:`date +%s`:install_packages\r\e[0K"
     - perl -pi -e 's|localhost/[a-zA-Z0-9]+|mariadb/abgabesystem|g' src/main/resources/hibernate.cfg.xml
+    - perl -pi -e 's|hibernate.show_sql">true|hibernate.show_sql">false|g' src/main/resources/hibernate.cfg.xml
   script:
     - 'mvn $MAVEN_CLI_OPTS verify'
     - mysql -u root -h mariadb -e 'create database abgabesystem CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin;'
     - mysql -u root -h mariadb abgabesystem < mysql.sql
-    - mvn exec:java -Dexec.mainClass="de.tuclausthal.submissioninterface.util.CreateFirstUser" -Dexec.args="admin admin@localhost Firstname Lastname"
+    - mysql -u root -h mariadb abgabesystem < test-data.sql
+    - GATE_DB_TESTS=1 mvn $MAVEN_CLI_OPTS test
     - mvn exec:java -Dexec.mainClass="de.tuclausthal.submissioninterface.util.HibernateSQLExporter"
   # keep built artifacts
   artifacts:

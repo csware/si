@@ -25,6 +25,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -51,7 +52,7 @@ public class Group implements Serializable {
 	 * @return the gid
 	 */
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getGid() {
 		return gid;
 	}
@@ -155,7 +156,7 @@ public class Group implements Serializable {
 	 * @return the tutors
 	 */
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "groups_tutors")
+	@JoinTable(name = "groups_tutors", joinColumns = @JoinColumn(name = "groups_gid"))
 	public Set<Participation> getTutors() {
 		return tutors;
 	}
