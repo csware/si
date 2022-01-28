@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -174,6 +174,7 @@ public abstract class Template {
 							"browser_spellcheck: true," +
 							"block_formats: 'Paragraph=p;Header 1=h1;Header 2=h2;Header 3=h3'," + 
 							"plugins: \"table,code,codesample,link,lists,hr,image,quickbars,media,searchreplace,contextmenu,charmap,paste,nonbreaking\"," +
+							"paste_data_images: true," + 
 							"content_css: " + Json.createArrayBuilder(getStyleSheetsForWYSIWYGEditor()).build().toString() + "," +
 							"formats: {" +
 							"    alignleft: { selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes: 'left' }," +
