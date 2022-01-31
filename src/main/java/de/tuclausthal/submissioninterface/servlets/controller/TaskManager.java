@@ -258,7 +258,7 @@ public class TaskManager extends HttpServlet {
 	 * @param def the default date to return if parsing fails
 	 * @return the parsed or default date
 	 */
-	public ZonedDateTime parseDate(String dateString, ZonedDateTime def) {
+	static public ZonedDateTime parseDate(String dateString, ZonedDateTime def) {
 		ZonedDateTime date = null;
 		try {
 			date = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")).atZone(ZoneId.systemDefault());
