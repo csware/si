@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -42,6 +42,8 @@ public class ClozeTaskType {
 	final private StringBuilder sb;
 	final private List<ClozeItem> items = new ArrayList<>();
 
+	private String error;
+
 	public ClozeTaskType(String text, List<String> oldInput, boolean notEditable, boolean feedback) {
 		assert (notEditable || !feedback);
 		Matcher m = itemsPattern.matcher(text);
@@ -83,7 +85,16 @@ public class ClozeTaskType {
 		} catch (RuntimeException e) {
 			sb.setLength(0);
 			sb.append("Konnte Cloze nicht parsen.");
+			error = e.getMessage();
 		}
+	}
+
+	public boolean hasError() {
+		return error != null;
+	}
+
+	public String getError() {
+		return error;
 	}
 
 	public int getClozeEntries() {

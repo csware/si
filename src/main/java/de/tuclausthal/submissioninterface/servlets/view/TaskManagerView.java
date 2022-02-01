@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -127,7 +127,42 @@ public class TaskManagerView extends HttpServlet {
 															"};" +
 								"request.send('description='+encodeURIComponent(tinyMCE.activeEditor.getContent()).replace(/%20/g, '+'));" +
 							"}" +
+							"function checkCloze() {" +
+								"var request = new XMLHttpRequest();" +
+								"request.open(\"POST\", \"" + Util.generateHTMLLink("?action=clozecheck", response) + "\", false);" +
+								"request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');" +
+								"try {" +
+									"request.send('description='+encodeURIComponent(tinyMCE.activeEditor.getContent()).replace(/%20/g, '+'));" +
+									"if (request.responseText === 'ok') { return true; } " +
+									"alert('Die Cloze kann nicht geparst werden.\\n' + request.responseText);" + 
+								"} catch(err) {" +
+									"alert('Request failed');" +
+								"}" +
+								"return false;" +
+							"}" +
 							"\n</script>");
+		template.addHead("<script>\n" +
+				"function validateForm() {" +
+					"if ("+ (task.getTaskid() == 0 || task.isClozeTask() ? "true" : "false") +" &&  document.getElementById('cloze').checked == true) {" +
+						"return checkCloze();" + 
+					"}" +
+					"if (" + (task.getTaskid() != 0 && !task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask() ? "true" : "false") + ") {" +
+
+						"var request = new XMLHttpRequest();" +
+						"request.open(\"POST\", \"" + Util.generateHTMLLink("?action=checkregexps", response) + "\", false);" +
+						"request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');" +
+						"try {" +
+							"request.send('regexps='+encodeURIComponent(document.getElementById('filenameregexp').value + '\\n' + document.getElementById('archivefilenameregexp').value + '\\n' + document.getElementById('featuredfiles').value + '\\n').replace(/%20/g, '+'));" +
+							"if (request.responseText === 'ok') { return true; } " +
+							"alert('Ein regulärer Ausdruck ist ungültig:\\n' + request.responseText);" + 
+						"} catch(err) {" +
+							"alert('Request failed');" +
+						"}" +
+						"return false;" +
+					"}" +
+					"return true;" +
+				"}" +
+				"\n</script>");
 		/* @formatter:on */
 
 		if (task.getTaskid() != 0) {
@@ -137,7 +172,7 @@ public class TaskManagerView extends HttpServlet {
 		}
 
 		PrintWriter out = response.getWriter();
-		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
+		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post onsubmit=\"return validateForm();\">");
 		if (task.getTaskid() != 0) {
 			out.println("<input type=hidden name=action value=saveTask>");
 			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
@@ -206,7 +241,7 @@ public class TaskManagerView extends HttpServlet {
 			if (!task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {
 				out.println("<tr>");
 				out.println("<th>Archiv-Filename Regexp:</th>");
-				out.println("<td><input type=text size=100 required=required name=archivefilenameregexp value=\"" + Util.escapeHTML(task.getArchiveFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"toggleVisibility('archivefileregexphelp'); return false;\">(?)</a><br><span style=\"display:none;\" id=archivefileregexphelp><b>Hilfe:</b><br>Das Hochladen von Archiven (.zip und .jar) muss im Filename-Regexp erlaubt werden, um diese Funktion nutzen zu können. Mit diesem regulären Ausdruck werden die Dateien im Archiv geprüft und nur diese extrahiert, andere werden ignoriert. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator). Grundsätzlich gelten zusätzlich die globalen Beschränkungen (&quot;" + Util.escapeHTML(Configuration.GLOBAL_ARCHIVEFILENAME_REGEXP) + "&quot;)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;.+&quot;<br>für DOC/PDF Dateien: &quot;.+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|.+\\.png)&quot;<br>&quot;-&quot; = Archive nicht automatisch entpacken</span></td>");
+				out.println("<td><input type=text size=100 required=required name=archivefilenameregexp id=archivefilenameregexp value=\"" + Util.escapeHTML(task.getArchiveFilenameRegexp()) + "\"> <a href=\"#\" onclick=\"toggleVisibility('archivefileregexphelp'); return false;\">(?)</a><br><span style=\"display:none;\" id=archivefileregexphelp><b>Hilfe:</b><br>Das Hochladen von Archiven (.zip und .jar) muss im Filename-Regexp erlaubt werden, um diese Funktion nutzen zu können. Mit diesem regulären Ausdruck werden die Dateien im Archiv geprüft und nur diese extrahiert, andere werden ignoriert. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator). Grundsätzlich gelten zusätzlich die globalen Beschränkungen (&quot;" + Util.escapeHTML(Configuration.GLOBAL_ARCHIVEFILENAME_REGEXP) + "&quot;)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;.+&quot;<br>für DOC/PDF Dateien: &quot;.+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|.+\\.png)&quot;<br>&quot;-&quot; = Archive nicht automatisch entpacken</span></td>");
 				out.println("</tr>");
 			}
 			out.println("<tr>");
@@ -216,7 +251,7 @@ public class TaskManagerView extends HttpServlet {
 			if (!task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {
 				out.println("<tr>");
 				out.println("<th>Dateien bei TutorInnen aufklappen:</th>");
-				out.println("<td><input type=text name=featuredfiles size=100 value=\"" + Util.escapeHTML(task.getFeaturedFiles()) + "\"> <a href=\"#\" onclick=\"toggleVisibility('featuredfileshelp'); return false;\">(?)</a><br><span style=\"display:none;\" id=featuredfileshelp><b>Hilfe:</b><br>Dieser reguläre Ausdruck bestimmt welche Dateien bei den Tutoren automatisch aufgeklappt sind. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = keine Dateien aufklappen</span></td>");
+				out.println("<td><input type=text name=featuredfiles id=featuredfiles size=100 value=\"" + Util.escapeHTML(task.getFeaturedFiles()) + "\"> <a href=\"#\" onclick=\"toggleVisibility('featuredfileshelp'); return false;\">(?)</a><br><span style=\"display:none;\" id=featuredfileshelp><b>Hilfe:</b><br>Dieser reguläre Ausdruck bestimmt welche Dateien bei den Tutoren automatisch aufgeklappt sind. RegExp mit &quot;^&quot; beginnen, um Dateinamen inkl. Pfad festzulegen (&quot;/&quot; ist der Pfad-Separator)<br><br><b>Beispiele (ohne Anführungszeichen):</b><br>Für Java-Dateien: &quot;[A-Z][A-Za-z0-9_]+\\.java&quot;<br>für alle Dateien: &quot;[A-Za-z0-9. _-]+&quot; oder leer<br>für DOC/PDF Dateien: &quot;[A-Za-z0-9 _-]+\\.(pdf|doc)&quot; (enthält nicht docx!)<br>Java-Dateien und png-Bilder: &quot;([A-Z][A-Za-z0-9_]+\\.java|[A-Za-z0-9 _-]+\\.png)&quot;<br>&quot;-&quot; = keine Dateien aufklappen</span></td>");
 				out.println("</tr>");
 			}
 			out.println("<tr>");

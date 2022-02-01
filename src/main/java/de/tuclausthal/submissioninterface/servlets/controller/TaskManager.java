@@ -30,6 +30,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
@@ -290,8 +291,14 @@ public class TaskManager extends HttpServlet {
 				out.println("nicht OK (blockiert vom globalen System-Regexp)");
 				return;
 			}
-			if (regexp != null && !regexp.isEmpty() && !Pattern.compile("^(" + regexp + ")$").matcher(request.getParameter("test")).matches()) {
-				out.println("nicht OK");
+			try {
+				if (regexp != null && !regexp.isEmpty() && !Pattern.compile("^(" + regexp + ")$").matcher(request.getParameter("test")).matches()) {
+					out.println("nicht OK");
+					return;
+				}
+			} catch (PatternSyntaxException e) {
+				out.println("Regulärer Ausdruck ungültig:");
+				out.println(e.getLocalizedMessage());
 				return;
 			}
 			out.println("OK");
@@ -327,6 +334,30 @@ public class TaskManager extends HttpServlet {
 				out.println("</dl>");
 			}
 			return;
+		} else if ("checkregexps".equals(request.getParameter("action"))) {
+			response.setContentType("text/plain");
+			response.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			try {
+				for (String regexp : request.getParameter("regexps").split("\n")) {
+					Pattern.compile(regexp);
+				}
+			} catch (PatternSyntaxException e) {
+				out.print(e.getLocalizedMessage());
+			}
+			out.print("ok");
+			return;
+		} else if ("clozecheck".equals(request.getParameter("action"))) {
+			response.setContentType("text/plain");
+			response.setCharacterEncoding("UTF-8");
+			ClozeTaskType clozeHelper = new ClozeTaskType(request.getParameter("description"), null, false, false);
+			PrintWriter out = response.getWriter();
+			if (clozeHelper.hasError()) {
+				out.print(clozeHelper.getError());
+			} else {
+				out.print("ok");
+			}
+			return;
 		} else if ("clozepreview".equals(request.getParameter("action"))) {
 			response.setContentType("text/html");
 			response.setCharacterEncoding("UTF-8");
@@ -334,6 +365,12 @@ public class TaskManager extends HttpServlet {
 			Template template = TemplateFactory.getTemplate(request, response);
 			template.printTemplateHeader("Close testen...");
 			PrintWriter out = response.getWriter();
+			if (clozeHelper.hasError()) {
+				out.println("Cloze konnte nicht geparsed werden:<br>");
+				out.print(Util.escapeHTML(clozeHelper.getError()));
+				template.printTemplateFooter();
+				return;
+			}
 			out.println("<form action=\"" + Util.generateHTMLLink("?action=clozepreviewtest", response) + "\" method=post>");
 			out.println(clozeHelper.toHTML());
 			out.println("<input type=hidden name=description value=\"" + Util.escapeHTML(request.getParameter("description")) + "\">");
