@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2013, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -73,7 +73,6 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 		final String[] empty = new String[0];
 		try (CSVWriter writer = new CSVWriter(new PrintWriter(response.getWriter()), ';', CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
 			List<String> header = new ArrayList<>();
-			header.add("Teilnahme");
 			if (showMatNo) {
 				header.add("MatrikelNo");
 			}
@@ -91,9 +90,11 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 			writer.writeNext(header.toArray(empty), false);
 
 			for (Participation lectureParticipation : DAOFactory.ParticipationDAOIf(session).getLectureParticipations(lecture)) {
+				if (lectureParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+					continue;
+				}
 				String[] line = new String[header.size()];
 				int column = 0;
-				line[column++] = lectureParticipation.getRoleType().toString();
 				if (lectureParticipation.getUser() instanceof Student) {
 					if (showMatNo) {
 						line[column++] = String.valueOf(((Student) lectureParticipation.getUser()).getMatrikelno());

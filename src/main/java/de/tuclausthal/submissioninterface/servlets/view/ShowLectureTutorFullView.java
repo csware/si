@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -99,6 +99,9 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		out.println("</tr>");
 
 		for (Participation lectureParticipation : DAOFactory.ParticipationDAOIf(session).getLectureParticipations(lecture)) {
+			if (lectureParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
+				continue;
+			}
 			out.println("<tr>");
 			if (lectureParticipation.getUser() instanceof Student) {
 				if (showMatNo) {
