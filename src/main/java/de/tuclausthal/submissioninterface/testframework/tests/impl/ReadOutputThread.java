@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -35,7 +35,7 @@ public class ReadOutputThread extends Thread {
 	final private StringBuffer stringBuffer = new StringBuffer();
 
 	final private static int BUFFER_LENGTH = 8 * 1024;
-	final private static int MAX_LENGTH = 1024 * 1024;
+	final private static int MAX_LENGTH = 64 * 1024;
 
 	public ReadOutputThread(InputStream is) {
 		streamReader = new CrLfFilterReader(new BufferedReader(new InputStreamReader(is)));
