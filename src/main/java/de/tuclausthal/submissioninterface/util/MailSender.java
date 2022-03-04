@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,16 +18,23 @@
 
 package de.tuclausthal.submissioninterface.util;
 
+import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.activation.FileDataSource;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +42,7 @@ import org.slf4j.LoggerFactory;
 public class MailSender {
 	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public static boolean sendMail(String to, String subject, String messageText) {
+	public static boolean sendMail(String to, String subject, String messageText, List<File> attachments) {
 		MimeMessage msg;
 		Properties props = new Properties();
 		props.put("mail.smtp.host", Configuration.getInstance().getMailServer());
@@ -56,8 +63,26 @@ public class MailSender {
 			msg.setSubject(Configuration.getInstance().getMailSubjectPrefix() + subject, "UTF-8");
 			msg.setHeader("X-Mailer", "GATE");
 
-			// kein Anhang, Mailtext wird direkt der Mail hinzugefügt.
-			msg.setText(messageText, "UTF-8");
+			if (attachments == null || attachments.isEmpty()) {
+				// kein Anhang, Mailtext wird direkt der Mail hinzugefügt.
+				msg.setText(messageText, "UTF-8");
+			} else {
+				MimeBodyPart messageBodyPart = new MimeBodyPart();
+				messageBodyPart.setText(messageText, "UTF-8");
+
+				MimeMultipart multipart = new MimeMultipart();
+				multipart.addBodyPart(messageBodyPart);
+
+				for (File file : attachments) {
+					MimeBodyPart messagePart = new MimeBodyPart();
+					DataSource source = new FileDataSource(file);
+					messagePart.setDataHandler(new DataHandler(source));
+					messagePart.setFileName(file.getName());
+					multipart.addBodyPart(messagePart);
+				}
+
+				msg.setContent(multipart);
+			}
 
 			Transport.send(msg);
 		} catch (MessagingException e) {
@@ -65,5 +90,9 @@ public class MailSender {
 			return false;
 		}
 		return true;
+	}
+
+	public static boolean sendMail(String to, String subject, String messageText) {
+		return sendMail(to, subject, messageText, null);
 	}
 }
