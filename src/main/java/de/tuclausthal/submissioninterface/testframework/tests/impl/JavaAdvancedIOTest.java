@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -128,6 +128,7 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 		JsonObjectBuilder builder = Json.createObjectBuilder();
 		builder.add("v", 1);
 		builder.add("stdout", processOutput.toString());
+		JavaFunctionTest.cleanupStdErr(stdErr);
 		if (stdErr.length() > 0) {
 			builder.add("stderr", stdErr.toString());
 		}

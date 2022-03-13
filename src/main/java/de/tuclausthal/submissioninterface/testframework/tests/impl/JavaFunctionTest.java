@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -124,6 +124,37 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 	}
 
 	abstract protected boolean calculateTestResult(boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted);
+
+	static final protected void cleanupStdErr(StringBuffer stdErr) {
+		/* Security Manager is deprecated with Java 17 and outputs a warning: https://openjdk.java.net/jeps/411 */
+		int startsWith = startsWith(stdErr, "WARNING: A command line option has enabled the Security Manager\nWARNING: The Security Manager is deprecated and will be removed in a future release\n");
+		if (startsWith > 0) {
+			stdErr.delete(0, startsWith);
+		}
+	}
+
+	public static int startsWith(StringBuffer stdErr, String prefix) {
+		if (0 > stdErr.length() - prefix.length()) {
+			return -1;
+		}
+		int pp = 0;
+		int pc = 0;
+		boolean escaped = false;
+		while (pp < stdErr.length() && pc < prefix.length()) {
+			if (stdErr.charAt(pp) != prefix.charAt(pc)) {
+				if (prefix.charAt(pc) == '\n' && stdErr.charAt(pp) == '\r' && escaped == false) {
+					++pp;
+					escaped = true;
+					continue;
+				}
+				return -1;
+			}
+			escaped = false;
+			++pp;
+			++pc;
+		}
+		return pp;
+	}
 
 	abstract void populateParameters(List<String> params);
 

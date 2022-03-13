@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2021-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -39,6 +39,7 @@ public class JavaJUnitTest extends JavaFunctionTest {
 
 	@Override
 	protected boolean calculateTestResult(boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, boolean aborted) {
+		JavaFunctionTest.cleanupStdErr(stdErr);
 		// append STDERR
 		if (stdErr.length() > 0) {
 			processOutput.append("\nFehlerausgabe (StdErr)\n");

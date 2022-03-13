@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2017, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2021-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -49,6 +49,7 @@ public class JavaIORegexpTest extends JavaFunctionTest {
 			exitedCleanly = false;
 		}
 
+		JavaFunctionTest.cleanupStdErr(stdErr);
 		// append STDERR
 		if (stdErr.length() > 0) {
 			processOutput.append("\nFehlerausgabe (StdErr)\n");
