@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -66,7 +66,7 @@ public class Task implements Serializable {
 	private TaskGroup taskGroup;
 	private Set<PointCategory> pointCategories;
 	private Set<Test> tests;
-	private Set<SimilarityTest> simularityTests;
+	private Set<SimilarityTest> similarityTests;
 	private String filenameRegexp = "[A-Z][A-Za-z0-9_]+\\.java";
 	private String archiveFilenameRegexp = "-";
 	private boolean showTextArea = false;
@@ -268,20 +268,20 @@ public class Task implements Serializable {
 	}
 
 	/**
-	 * @return the simularityTests
+	 * @return the similarityTests
 	 */
 	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OrderBy(clause = "similarityTestId asc")
-	public Set<SimilarityTest> getSimularityTests() {
-		return simularityTests;
+	public Set<SimilarityTest> getSimilarityTests() {
+		return similarityTests;
 	}
 
 	/**
-	 * @param simularityTests the simularityTests to set
+	 * @param similarityTests the similarityTests to set
 	 */
-	public void setSimularityTests(Set<SimilarityTest> simularityTests) {
-		this.simularityTests = simularityTests;
+	public void setSimilarityTests(Set<SimilarityTest> similarityTests) {
+		this.similarityTests = similarityTests;
 	}
 
 	/**

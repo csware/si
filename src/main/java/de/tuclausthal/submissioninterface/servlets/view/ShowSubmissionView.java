@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -185,7 +185,7 @@ public class ShowSubmissionView extends HttpServlet {
 				}
 			}
 			out.println("<td>");
-			if (!task.getSimularityTests().isEmpty() && (task.getDeadline().isAfter(ZonedDateTime.now()) || task.getSimularityTests().stream().anyMatch(test -> test.getStatus() > 0))) {
+			if (!task.getSimilarityTests().isEmpty() && (task.getDeadline().isAfter(ZonedDateTime.now()) || task.getSimilarityTests().stream().anyMatch(test -> test.getStatus() > 0))) {
 				out.println("<p class=\"bmid\" style=\"color: #8C1C00\">Achtung: Eine Ähnlichkeitsprüfung wurde noch nicht durchgeführt bzw. ist noch nicht vollständig abgeschlossen.</p>");
 			}
 			out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
@@ -271,12 +271,12 @@ public class ShowSubmissionView extends HttpServlet {
 				out.println("<table id=similarSubmissions>");
 			}
 			out.println("<tr>");
-			for (SimilarityTest similarityTest : task.getSimularityTests()) {
+			for (SimilarityTest similarityTest : task.getSimilarityTests()) {
 				out.println("<th><span title=\"Ähnlichkeit zu\">" + Util.escapeHTML(similarityTest.toString()) + "</span></th>");
 			}
 			out.println("</tr>");
 			out.println("<tr>");
-			for (SimilarityTest similarityTest : task.getSimularityTests()) {
+			for (SimilarityTest similarityTest : task.getSimilarityTests()) {
 				out.println("<td>");
 				out.println("<table>");
 				out.println("<tr>");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -94,7 +94,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		out.println("</tr>");
 		if (task.isAllowPrematureSubmissionClosing() && task.getDeadline().isAfter(ZonedDateTime.now())) {
 			out.println("<tr><th>Vorzeitige finale Abgabe:</th><td>Studierende können vor der Deadline die Abgabe als endgültig abgegeben markieren.");
-			if (!task.getSimularityTests().isEmpty()) {
+			if (!task.getSimilarityTests().isEmpty()) {
 				out.println("<br>Achtung: Die Ergebnisse der Ähnlichkeitsprüfung stehen erst nach Abgabeschluss zur Verfügung.");
 			}
 			out.println("</td></tr>");
@@ -214,7 +214,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					if (first == false) {
 						if (showAllColumns) {
 							out.println("<tr>");
-							out.println("<td colspan=" + (1 + (task.isADynamicTask() ? 1 : 0) + ((task.getDeadline().isBefore(ZonedDateTime.now())) ? tests.size() + task.getSimularityTests().size() : 0)) + ">Anzahl: " + groupSumOfAllSubmissions + " / Durchschnittspunkte:</td>");
+							out.println("<td colspan=" + (1 + (task.isADynamicTask() ? 1 : 0) + ((task.getDeadline().isBefore(ZonedDateTime.now())) ? tests.size() + task.getSimilarityTests().size() : 0)) + ">Anzahl: " + groupSumOfAllSubmissions + " / Durchschnittspunkte:</td>");
 							out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
 							if (hasUnapprochedPoints) {
 								out.println("<td><input type=submit value=Save></td>");
@@ -266,7 +266,7 @@ public class ShowTaskTutorView extends HttpServlet {
 							for (Test test : tests) {
 								out.println("<th>" + Util.escapeHTML(test.getTestTitle()) + "</th>");
 							}
-							for (SimilarityTest similarityTest : task.getSimularityTests()) {
+							for (SimilarityTest similarityTest : task.getSimilarityTests()) {
 								String color = "\"\"";
 								String hint = "";
 								if (similarityTest.getStatus() > 0) {
@@ -308,7 +308,7 @@ public class ShowTaskTutorView extends HttpServlet {
 								}
 							}
 							Map<Integer, List<Similarity>> similaritiesSubmission = similarities.get(submission.getSubmissionid());
-							for (SimilarityTest similarityTest : task.getSimularityTests()) {
+							for (SimilarityTest similarityTest : task.getSimilarityTests()) {
 								String users = "";
 								int maxSimilarity = 0;
 								if (similaritiesSubmission != null) {
@@ -350,7 +350,7 @@ public class ShowTaskTutorView extends HttpServlet {
 			if (first == false) {
 				if (showAllColumns) {
 					out.println("<tr>");
-					out.println("<td colspan=" + (1 + (task.isADynamicTask() ? 1 : 0) + ((task.getDeadline().isBefore(ZonedDateTime.now())) ? tests.size() + task.getSimularityTests().size() : 0)) + ">Anzahl: " + groupSumOfAllSubmissions + " / Durchschnittspunkte:</td>");
+					out.println("<td colspan=" + (1 + (task.isADynamicTask() ? 1 : 0) + ((task.getDeadline().isBefore(ZonedDateTime.now())) ? tests.size() + task.getSimilarityTests().size() : 0)) + ">Anzahl: " + groupSumOfAllSubmissions + " / Durchschnittspunkte:</td>");
 					out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
 					if (hasUnapprochedPoints) {
 						out.println("<td><input type=submit value=Save></td>");

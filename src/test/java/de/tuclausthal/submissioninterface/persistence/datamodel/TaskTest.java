@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020, 2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -33,7 +33,7 @@ class TaskTest extends BasicTest {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(3);
 		assertEquals(2, task.getTaskGroup().getTaskGroupId());
 		assertEquals(2, task.getPointCategories().size());
-		assertEquals(2, task.getSimularityTests().size());
+		assertEquals(2, task.getSimilarityTests().size());
 		assertEquals(4, task.getSubmissions().size());
 		assertEquals(4, task.getTests().size());
 	}
@@ -43,7 +43,7 @@ class TaskTest extends BasicTest {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(4);
 		assertEquals(2, task.getTaskGroup().getTaskGroupId());
 		assertEquals(0, task.getPointCategories().size());
-		assertEquals(0, task.getSimularityTests().size());
+		assertEquals(0, task.getSimilarityTests().size());
 		assertEquals(0, task.getSubmissions().size());
 		assertEquals(0, task.getTests().size());
 	}
@@ -54,7 +54,7 @@ class TaskTest extends BasicTest {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(1);
 		assertEquals(1, task.getTaskGroup().getTaskGroupId());
 		assertEquals(2, task.getPointCategories().size());
-		assertEquals(1, task.getSimularityTests().size());
+		assertEquals(1, task.getSimilarityTests().size());
 		assertEquals(4, task.getSubmissions().size());
 		assertEquals(0, task.getTests().size());
 	}
