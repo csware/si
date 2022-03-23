@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -89,7 +89,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 				partnerField.append("<option value=0>-</option>");
 				List<Participation> participations;
 				if (task.isAllowSubmittersAcrossGroups()) {
-					participations = DAOFactory.ParticipationDAOIf(session).getLectureParticipations(task.getTaskGroup().getLecture());
+					participations = DAOFactory.ParticipationDAOIf(session).getLectureParticipationsOrderedByName(task.getTaskGroup().getLecture());
 				} else {
 					participations = DAOFactory.ParticipationDAOIf(session).getParticipationsOfGroup(participation.getGroup());
 				}

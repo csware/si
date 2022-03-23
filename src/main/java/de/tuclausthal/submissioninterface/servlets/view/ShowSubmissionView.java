@@ -125,7 +125,7 @@ public class ShowSubmissionView extends HttpServlet {
 			int cnt = 0;
 			List<Participation> participations;
 			if (task.isAllowSubmittersAcrossGroups()) {
-				participations = DAOFactory.ParticipationDAOIf(session).getLectureParticipations(task.getTaskGroup().getLecture());
+				participations = DAOFactory.ParticipationDAOIf(session).getLectureParticipationsOrderedByName(task.getTaskGroup().getLecture());
 			} else {
 				Participation participation = submission.getSubmitters().iterator().next();
 				participations = DAOFactory.ParticipationDAOIf(session).getParticipationsOfGroup(participation.getGroup());

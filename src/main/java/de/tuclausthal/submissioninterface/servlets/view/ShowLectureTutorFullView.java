@@ -98,7 +98,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		}
 		out.println("</tr>");
 
-		for (Participation lectureParticipation : DAOFactory.ParticipationDAOIf(session).getLectureParticipations(lecture)) {
+		for (Participation lectureParticipation : DAOFactory.ParticipationDAOIf(session).getLectureParticipationsOrderedByName(lecture)) {
 			if (lectureParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 				continue;
 			}

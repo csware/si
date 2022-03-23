@@ -89,7 +89,7 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 			header.add("Gesamt");
 			writer.writeNext(header.toArray(empty), false);
 
-			for (Participation lectureParticipation : DAOFactory.ParticipationDAOIf(session).getLectureParticipations(lecture)) {
+			for (Participation lectureParticipation : DAOFactory.ParticipationDAOIf(session).getLectureParticipationsOrderedByName(lecture)) {
 				if (lectureParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 					continue;
 				}

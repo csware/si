@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -196,7 +196,7 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 	}
 
 	@Override
-	public List<Participation> getLectureParticipations(Lecture lecture) {
+	public List<Participation> getLectureParticipationsOrderedByName(Lecture lecture) {
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Participation> criteria = builder.createQuery(Participation.class);

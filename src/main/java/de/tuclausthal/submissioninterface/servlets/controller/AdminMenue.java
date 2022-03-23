@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -72,7 +72,7 @@ public class AdminMenue extends HttpServlet {
 		} else if ("showLecture".equals(request.getParameter("action")) && request.getParameter("lecture") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 			request.setAttribute("lecture", lecture);
-			request.setAttribute("participants", DAOFactory.ParticipationDAOIf(session).getLectureParticipations(lecture));
+			request.setAttribute("participants", DAOFactory.ParticipationDAOIf(session).getLectureParticipationsOrderedByName(lecture));
 			getServletContext().getNamedDispatcher(AdminMenueEditLectureView.class.getSimpleName()).forward(request, response);
 		} else if ("showAdminUsers".equals(request.getParameter("action"))) {
 			request.setAttribute("superusers", DAOFactory.UserDAOIf(session).getSuperUsers());

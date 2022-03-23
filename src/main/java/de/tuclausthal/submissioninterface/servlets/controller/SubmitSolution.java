@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2014, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2014, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -142,7 +142,7 @@ public class SubmitSolution extends HttpServlet {
 		request.setAttribute("task", task);
 
 		if (canUploadForStudents) {
-			request.setAttribute("participants", DAOFactory.ParticipationDAOIf(session).getLectureParticipations(task.getTaskGroup().getLecture()));
+			request.setAttribute("participants", DAOFactory.ParticipationDAOIf(session).getLectureParticipationsOrderedByName(task.getTaskGroup().getLecture()));
 			getServletContext().getNamedDispatcher(SubmitSolutionAdvisorFormView.class.getSimpleName()).forward(request, response);
 		} else {
 			request.setAttribute("participation", participation);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020, 2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -95,7 +95,7 @@ class ParticipationDAOIfTest extends BasicTest {
 	@Test
 	void testGetLectureParticipations() {
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(1);
-		List<Participation> list = DAOFactory.ParticipationDAOIf(session).getLectureParticipations(lecture);
+		List<Participation> list = DAOFactory.ParticipationDAOIf(session).getLectureParticipationsOrderedByName(lecture);
 		assertEquals(10, list.size());
 		assertEquals("Lastname1", list.get(0).getUser().getLastName());
 		assertEquals("Lastname2", list.get(1).getUser().getLastName());
