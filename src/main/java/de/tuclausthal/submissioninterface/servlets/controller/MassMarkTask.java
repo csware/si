@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -143,7 +143,7 @@ public class MassMarkTask extends HttpServlet {
 		List<SubmissionAssignPointsDTO> points = new ArrayList<>();
 
 		boolean dryRun = request.getParameter("dryrun") != null;
-		boolean onlyExistingSubmission = request.getParameter("create") == null || !(task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()));
+		boolean onlyExistingSubmission = request.getParameter("create") == null || !(task.showTextArea() == false && "-".equals(task.getFilenameRegexp()));
 		boolean overrideExistingMarks = request.getParameter("override") != null;
 
 		int columns = 4 + (!task.getPointCategories().isEmpty() ? task.getPointCategories().size() : 1);

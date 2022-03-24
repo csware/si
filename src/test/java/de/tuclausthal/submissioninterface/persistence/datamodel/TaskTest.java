@@ -19,6 +19,8 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -36,6 +38,7 @@ class TaskTest extends BasicTest {
 		assertEquals(2, task.getSimilarityTests().size());
 		assertEquals(4, task.getSubmissions().size());
 		assertEquals(4, task.getTests().size());
+		assertFalse(task.showTextArea());
 	}
 
 	@Test
@@ -46,6 +49,7 @@ class TaskTest extends BasicTest {
 		assertEquals(0, task.getSimilarityTests().size());
 		assertEquals(0, task.getSubmissions().size());
 		assertEquals(0, task.getTests().size());
+		assertFalse(task.showTextArea());
 	}
 
 
@@ -57,5 +61,6 @@ class TaskTest extends BasicTest {
 		assertEquals(1, task.getSimilarityTests().size());
 		assertEquals(4, task.getSubmissions().size());
 		assertEquals(0, task.getTests().size());
+		assertTrue(task.showTextArea());
 	}
 }

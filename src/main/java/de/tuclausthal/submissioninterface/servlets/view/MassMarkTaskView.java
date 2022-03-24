@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -65,7 +65,7 @@ public class MassMarkTaskView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Leere Abgaben anlegen:</th>");
-		out.println("<td><input type=checkbox name=create" + (!(task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) ? " disabled" : "") + "></td>");
+		out.println("<td><input type=checkbox name=create" + (!(task.showTextArea() == false && "-".equals(task.getFilenameRegexp())) ? " disabled" : "") + "></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Existierende Bewertungen aktualisieren:</th>");

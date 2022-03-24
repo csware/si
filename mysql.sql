@@ -376,7 +376,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `maxsize` int(11) NOT NULL,
   `minPointStep` int(11) NOT NULL,
   `showPoints` datetime DEFAULT NULL,
-  `showTextArea` bit(1) NOT NULL,
+  `showTextArea` VARCHAR(255) NOT NULL,
   `start` datetime NOT NULL,
   `type` VARCHAR(255) NOT NULL,
   `title` varchar(255) NOT NULL COLLATE utf8mb4_unicode_ci,

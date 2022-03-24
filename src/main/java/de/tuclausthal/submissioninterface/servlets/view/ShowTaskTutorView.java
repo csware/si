@@ -153,11 +153,11 @@ public class ShowTaskTutorView extends HttpServlet {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask", response) + "\">Aufgabe bearbeiten</a></div>");
 		}
 
-		if (!task.isSCMCTask() && !task.isClozeTask() && !task.isADynamicTask() && (participation.getRoleType() == ParticipationRole.ADVISOR || task.isTutorsCanUploadFiles()) && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
+		if (!task.isSCMCTask() && !task.isClozeTask() && !task.isADynamicTask() && (participation.getRoleType() == ParticipationRole.ADVISOR || task.isTutorsCanUploadFiles()) && (task.showTextArea() || !"-".equals(task.getFilenameRegexp()))) {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(SubmitSolution.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Abgabe für Studierenden durchführen</a> (Achtung wenn Duplikatstest bereits gelaufen ist)</div>");
 		}
 
-		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
+		if (task.showTextArea() == false && "-".equals(task.getFilenameRegexp())) {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(MarkEmptyTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Punkte vergeben</a></div>");
 		} else if (!task.getTests().isEmpty() && task.getTests().stream().anyMatch(test -> test.TutorsCanRun())) {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(PerformTest.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Test (manuell) durchführen</a></div>");

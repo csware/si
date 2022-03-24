@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -313,7 +313,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
 				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"" + Util.generateHTMLLink(WebStart.class.getSimpleName() + "?tool=argouml&taskid=" + task.getTaskid(), response) + "\">ArgoUML öffnen</a></div>");
 				out.println("<script>if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
-			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isSCMCTask() && !task.isClozeTask()) {
+			} else if ("-".equals(task.getFilenameRegexp()) && task.showTextArea() == false && !task.isSCMCTask() && !task.isClozeTask()) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
 			} else if (task.getDeadline().isBefore(ZonedDateTime.now())) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");
@@ -358,7 +358,7 @@ public class ShowTaskStudentView extends HttpServlet {
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
 				out.println("<p><div class=mid><a onclick=\"return confirmLink('ArgoUML öffnen')\" href=\"" + Util.generateHTMLLink(WebStart.class.getSimpleName() + "?tool=argouml&taskid=" + task.getTaskid(), response) + "\">ArgoUML öffnen</a></div>");
 				out.println("<script>if (!navigator.javaEnabled() || document.applets[0].Version < 1.4){ document.write(\"Sie benötigen mindestens Java 1.6 (JRE), um diese Funktion nutzen zu können. <a href=\"http://www.java.com/\">Download</a>\");</script>");
-			} else if ("-".equals(task.getFilenameRegexp()) && task.isShowTextArea() == false && !task.isSCMCTask() && !task.isClozeTask()) {
+			} else if ("-".equals(task.getFilenameRegexp()) && task.showTextArea() == false && !task.isSCMCTask() && !task.isClozeTask()) {
 				out.println("<div class=mid>Keine Abgabe möglich.</div>");
 			} else if (task.getDeadline().isBefore(ZonedDateTime.now())) {
 				out.println("<div class=mid>Keine Abgabe mehr möglich.</div>");

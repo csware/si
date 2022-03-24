@@ -246,7 +246,7 @@ public class TaskManagerView extends HttpServlet {
 			}
 			out.println("<tr>");
 			out.println("<th>Text-Eingabefeld:</th>");
-			out.println("<td><input type=checkbox name=showtextarea" + (task.isADynamicTask() || task.isSCMCTask() || task.isClozeTask() ? " disabled" : "") + (task.isShowTextArea() ? " checked" : "") + "> (wird als textloesung.txt gespeichert)</td>");
+			out.println("<td><input type=input name=showtextarea" + (task.isADynamicTask() || task.isSCMCTask() || task.isClozeTask() ? " disabled" : "") + " value=\"" + Util.escapeHTML(task.getShowTextArea()) + "\"> (\"-\" kein Textfeld, ansonsten Dateiname)</td>");
 			out.println("</tr>");
 			if (!task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {
 				out.println("<tr>");
@@ -414,7 +414,7 @@ public class TaskManagerView extends HttpServlet {
 		}
 
 		// don't show for new tasks
-		if (task.getTaskid() != 0 && (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
+		if (task.getTaskid() != 0 && (task.showTextArea() || !"-".equals(task.getFilenameRegexp()))) {
 			out.println("<h2>Ähnlichkeitsprüfungen</h2>");
 			if (!task.getSimilarityTests().isEmpty()) {
 				out.println("<ul>");

@@ -141,3 +141,8 @@ ALTER TABLE `lectures` ADD `description` TEXT NOT NULL;
 
 -- allow to toggle self subscribe
 ALTER TABLE `lectures` ADD `allowselfsubscribe` BIT(1) NOT NULL DEFAULT b'1';
+
+-- change textarea from boolean to filename
+ALTER TABLE `tasks` CHANGE `showTextArea` `showTextArea` varchar(255) not null;
+update tasks set showTextArea='-' where showTextArea='0';
+update tasks set showTextArea='textsolution.txt' where showTextArea='1';

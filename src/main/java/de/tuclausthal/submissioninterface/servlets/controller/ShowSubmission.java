@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -105,7 +105,7 @@ public class ShowSubmission extends HttpServlet {
 			return;
 		}
 
-		if (((task.getDeadline().isBefore(ZonedDateTime.now()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()))) && request.getParameter("points") != null) {
+		if (((task.getDeadline().isBefore(ZonedDateTime.now()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.showTextArea() == false && "-".equals(task.getFilenameRegexp()))) && request.getParameter("points") != null) {
 			PointsDAOIf pointsDAO = DAOFactory.PointsDAOIf(session);
 			String publicComment = "";
 			if (request.getParameter("publiccomment") != null) {

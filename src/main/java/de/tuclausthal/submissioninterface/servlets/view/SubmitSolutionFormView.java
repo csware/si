@@ -126,7 +126,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 			out.println(setWithUser.toString());
 		}
 
-		if (task.isShowTextArea() || task.isSCMCTask()) {
+		if (task.showTextArea() || task.isSCMCTask()) {
 			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Beschreibung:</th>");
@@ -199,12 +199,12 @@ public class SubmitSolutionFormView extends HttpServlet {
 			out.println("<INPUT TYPE=submit VALUE=upload>");
 			out.println("<p>Hinweis: Bestehende Dateien werden überschrieben.</p>");
 			out.println("</FORM>");
-			if (task.isShowTextArea()) {
+			if (task.showTextArea()) {
 				out.println("<p><hr>");
 			}
 		}
 
-		if (task.isShowTextArea()) {
+		if (task.showTextArea()) {
 			out.println("<FORM class=mid method=POST action=\"" + Util.generateHTMLLink("?taskid=" + task.getTaskid(), response) + "\">");
 			out.println(setWithUser.toString());
 			if (task.isADynamicTask()) {

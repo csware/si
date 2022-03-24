@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2015, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2015, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -116,17 +116,10 @@ public class PerformTest extends HttpServlet {
 			return;
 		}
 
-		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp())) {
+		if (task.showTextArea() == false && "-".equals(task.getFilenameRegexp())) {
 			template.printTemplateHeader("Ungültige Anfrage");
 			PrintWriter out = response.getWriter();
 			out.println("<div class=mid>Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.</div>");
-			template.printTemplateFooter();
-			return;
-		}
-		if ("-".equals(task.getFilenameRegexp())) {
-			template.printTemplateHeader("Ungültige Anfrage");
-			PrintWriter out = response.getWriter();
-			out.println("<div class=mid>Dateiupload ist für diese Aufgabe deaktiviert.</div>");
 			template.printTemplateFooter();
 			return;
 		}
@@ -203,7 +196,7 @@ public class PerformTest extends HttpServlet {
 			StringBuffer submittedFileName = new StringBuffer(Util.getUploadFileName(file));
 			Util.lowerCaseExtension(submittedFileName);
 			String fileName = null;
-			for (Pattern pattern : SubmitSolution.getTaskFileNamePatterns(task, false)) {
+			for (Pattern pattern : SubmitSolution.getTaskFileNamePatterns(task, true)) {
 				Matcher m = pattern.matcher(submittedFileName);
 				if (!m.matches()) {
 					template.printTemplateHeader("Dateiname ungültig", task);

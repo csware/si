@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -67,7 +67,7 @@ public class MarkEmptyTask extends HttpServlet {
 
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
-		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0 || (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
+		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0 || (task.showTextArea() || !"-".equals(task.getFilenameRegexp()))) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}
@@ -91,7 +91,7 @@ public class MarkEmptyTask extends HttpServlet {
 
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), task.getTaskGroup().getLecture());
-		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0 || (task.isShowTextArea() == true || !"-".equals(task.getFilenameRegexp()))) {
+		if (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0 || (task.showTextArea() || !"-".equals(task.getFilenameRegexp()))) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
 			return;
 		}

@@ -449,7 +449,7 @@ public class TaskManager extends HttpServlet {
 					task.setFilenameRegexp(request.getParameter("filenameregexp"));
 					task.setArchiveFilenameRegexp(request.getParameter("archivefilenameregexp"));
 					task.setFeaturedFiles(request.getParameter("featuredfiles"));
-					task.setShowTextArea(request.getParameter("showtextarea") != null);
+					task.setShowTextArea(request.getParameter("showtextarea"));
 					task.setTutorsCanUploadFiles(request.getParameter("tutorsCanUploadFiles") != null);
 				}
 				task.setStart(parseDate(request.getParameter("startdate"), ZonedDateTime.now()));
@@ -504,10 +504,10 @@ public class TaskManager extends HttpServlet {
 				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), 50), startdate, deadline, request.getParameter("description"), taskGroup, pointsdate, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, taskType, dynamicTask, request.getParameter("prematureClosing") != null);
 				if (task.isSCMCTask() || task.isClozeTask()) {
 					task.setFilenameRegexp("-");
-					task.setShowTextArea(false); // be explicit here, it's false by default
+					task.setShowTextArea("-"); // be explicit here, it's false by default
 				} else if (task.isADynamicTask()) {
 					task.setFilenameRegexp("-");
-					task.setShowTextArea(true);
+					task.setShowTextArea("textloesung.txt");
 				}
 				if (task.isClozeTask()) {
 					ClozeTaskType clozeHelper = new ClozeTaskType(request.getParameter("description"), null, false, false);

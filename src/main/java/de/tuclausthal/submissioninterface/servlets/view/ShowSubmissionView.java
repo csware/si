@@ -142,7 +142,7 @@ public class ShowSubmissionView extends HttpServlet {
 			}
 		}
 
-		if ((task.getDeadline().isBefore(ZonedDateTime.now()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask() && !task.isClozeTask())) {
+		if ((task.getDeadline().isBefore(ZonedDateTime.now()) || (task.isAllowPrematureSubmissionClosing() && submission.isClosed())) || (task.showTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask() && !task.isClozeTask())) {
 			out.println("<h2>Bewertung: <a href=\"#\" onclick=\"toggleVisibility('mark'); return false;\">(+/-)</a></h2>");
 			out.println("<table id=mark>");
 			String oldPublicComment = "";

@@ -133,7 +133,7 @@ public class SubmitSolution extends HttpServlet {
 			}
 		}
 
-		if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask() && !task.isClozeTask()) {
+		if (task.showTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask() && !task.isClozeTask()) {
 			request.setAttribute("title", "Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -148,11 +148,11 @@ public class SubmitSolution extends HttpServlet {
 			request.setAttribute("participation", participation);
 
 			if (request.getParameter("onlypartners") == null) {
-				if (task.isShowTextArea()) {
+				if (task.showTextArea()) {
 					String textsolution = "";
 					Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, RequestAdapter.getUser(request));
 					if (submission != null) {
-						File textSolutionFile = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + "textloesung.txt");
+						File textSolutionFile = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + task.getShowTextArea());
 						if (textSolutionFile.exists()) {
 							textsolution = Util.loadFile(textSolutionFile).toString();
 						}
@@ -255,7 +255,7 @@ public class SubmitSolution extends HttpServlet {
 				template.printTemplateFooter();
 				return;
 			}
-			if (task.isShowTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask() && !task.isClozeTask()) {
+			if (task.showTextArea() == false && "-".equals(task.getFilenameRegexp()) && !task.isSCMCTask() && !task.isClozeTask()) {
 				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Das Einsenden von Lösungen ist für diese Aufgabe deaktiviert.</div>");
@@ -293,7 +293,7 @@ public class SubmitSolution extends HttpServlet {
 				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 				template.printTemplateFooter();
 				return;
-			} else if (file == null && !task.isShowTextArea() && !task.isSCMCTask() && !task.isClozeTask()) {
+			} else if (file == null && !task.showTextArea() && !task.isSCMCTask() && !task.isClozeTask()) {
 				template.printTemplateHeader("Ungültige Anfrage", task);
 				PrintWriter out = response.getWriter();
 				out.println("<div class=mid>Textlösungen sind für diese Aufgabe deaktiviert.</div>");
@@ -522,14 +522,14 @@ public class SubmitSolution extends HttpServlet {
 				jsonBuilder.add("taskNumbers", taskNumbersArrayBuilder);
 			}
 
-			File uploadedFile = new File(path, "textloesung.txt");
+			File uploadedFile = new File(path, task.getShowTextArea());
 			try (FileWriter fileWriter = new FileWriter(uploadedFile)) {
 				if (request.getParameter("textsolution") != null && request.getParameter("textsolution").length() <= task.getMaxsize()) {
 					fileWriter.write(request.getParameter("textsolution"));
 				}
 			}
 
-			Util.recursiveCopy(uploadedFile, new File(logPath, "textloesung.txt"));
+			Util.recursiveCopy(uploadedFile, new File(logPath, task.getShowTextArea()));
 			logEntry.setAdditionalData(jsonBuilder.add("filename", uploadedFile.getName()).build().toString());
 			session.save(logEntry);
 

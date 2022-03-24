@@ -38,6 +38,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.io.FilenameUtils;
 import org.hibernate.Session;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -45,6 +46,7 @@ import org.hibernate.annotations.OrderBy;
 
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieFactory;
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
+import de.tuclausthal.submissioninterface.util.Configuration;
 
 @Entity
 @Table(name = "tasks")
@@ -68,7 +70,7 @@ public class Task implements Serializable {
 	private Set<SimilarityTest> similarityTests;
 	private String filenameRegexp = "[A-Z][A-Za-z0-9_]+\\.java";
 	private String archiveFilenameRegexp = "-";
-	private boolean showTextArea = false;
+	private String showTextArea = "-";
 	private String featuredFiles = "";
 	private boolean tutorsCanUploadFiles = false;
 	private boolean allowSubmittersAcrossGroups = false;
@@ -306,15 +308,30 @@ public class Task implements Serializable {
 	/**
 	 * @return the showTextArea
 	 */
-	public boolean isShowTextArea() {
+	@Column(nullable = false)
+	public String getShowTextArea() {
 		return showTextArea;
 	}
 
 	/**
 	 * @param showTextArea the showTextArea to set
 	 */
-	public void setShowTextArea(boolean showTextArea) {
+	public void setShowTextArea(String showTextArea) {
+		if (showTextArea.isBlank() || !Pattern.compile(Configuration.GLOBAL_FILENAME_REGEXP).matcher(showTextArea).matches()) {
+			this.showTextArea = "-";
+			return;
+		}
+		showTextArea = FilenameUtils.normalizeNoEndSeparator(showTextArea);
+		if (showTextArea == null) {
+			this.showTextArea = "-";
+			return;
+		}
 		this.showTextArea = showTextArea;
+	}
+
+	@Transient
+	public boolean showTextArea() {
+		return !"-".equals(getShowTextArea());
 	}
 
 	/**
