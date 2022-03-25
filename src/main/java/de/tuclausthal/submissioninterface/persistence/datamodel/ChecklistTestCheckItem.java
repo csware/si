@@ -41,6 +41,8 @@ public class ChecklistTestCheckItem implements Serializable {
 	private int checkitemid;
 	private ChecklistTest test;
 	private String title;
+	private boolean correct;
+	private String feedback;
 
 	/**
 	 * @return the checkid
@@ -87,5 +89,34 @@ public class ChecklistTestCheckItem implements Serializable {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	/**
+	 * @return the correct
+	 */
+	public boolean isCorrect() {
+		return correct;
+	}
+
+	/**
+	 * @param correct the correct to set
+	 */
+	public void setCorrect(boolean correct) {
+		this.correct = correct;
+	}
+
+	/**
+	 * @return the feedback
+	 */
+	@Column(nullable = false, length = 65536)
+	public String getFeedback() {
+		return feedback;
+	}
+
+	/**
+	 * @param feedback the feedback to set
+	 */
+	public void setFeedback(String feedback) {
+		this.feedback = feedback;
 	}
 }

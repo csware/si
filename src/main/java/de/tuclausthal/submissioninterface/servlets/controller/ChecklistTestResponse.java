@@ -51,6 +51,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.servlets.view.PerformStudentTestChecklistPart2ResultView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -91,6 +92,13 @@ public class ChecklistTestResponse extends HttpServlet {
 		query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
 		LogEntry logEntry = query.uniqueResult();
 
+		if (logEntry.getAdditionalData() != null) {
+			request.setAttribute("title", "Testergebnis nicht (mehr) verfügbar");
+			request.setAttribute("message", "<div class=mid>Das Testergebnis konnte nicht abgerufen werden. Entweder wurde es bereits abgerufen oder es wurde eine neue Sitzung gestartet.<p><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + test.getTask().getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
+			tx.rollback();
+			return;
+		}
 		JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
 		long now = Instant.now().getEpochSecond();
 		jsonObjectBuilder.add("secondsneeded", now - logEntry.getTimeStamp().toInstant().getEpochSecond());
@@ -101,10 +109,8 @@ public class ChecklistTestResponse extends HttpServlet {
 		logEntry.setResult(test.getCheckItems().stream().allMatch(checkItem -> request.getParameter("checkitem" + checkItem.getCheckitemid()) != null));
 		tx.commit();
 
-		if (request.getParameter("ajax") == null) {
-			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + test.getTask().getTaskid(), response));
-		} else {
-			response.getWriter().print("ok");
-		}
+		request.setAttribute("test", test);
+		request.setAttribute("checkedByStudent", checkedByStudent);
+		getServletContext().getNamedDispatcher(PerformStudentTestChecklistPart2ResultView.class.getSimpleName()).forward(request, response);
 	}
 }

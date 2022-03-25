@@ -104,6 +104,8 @@ public class ChecklistTestManager extends HttpServlet {
 			ChecklistTestCheckItem newCheckItem = new ChecklistTestCheckItem();
 			newCheckItem.setTest(test);
 			newCheckItem.setTitle(request.getParameter("title"));
+			newCheckItem.setCorrect(request.getParameter("correct") != null);
+			newCheckItem.setFeedback(request.getParameter("feedback"));
 			Transaction tx = session.beginTransaction();
 			session.save(newCheckItem);
 			tx.commit();
@@ -120,6 +122,8 @@ public class ChecklistTestManager extends HttpServlet {
 			if (checkItem != null) {
 				Transaction tx = session.beginTransaction();
 				checkItem.setTitle(request.getParameter("title"));
+				checkItem.setCorrect(request.getParameter("correct") != null);
+				checkItem.setFeedback(request.getParameter("feedback"));
 				tx.commit();
 			}
 			response.sendRedirect(Util.generateRedirectURL(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));

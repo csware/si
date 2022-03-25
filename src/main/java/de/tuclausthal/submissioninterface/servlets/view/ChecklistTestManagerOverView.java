@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -87,6 +87,14 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 			out.println("<td><input type=text name=title maxlength=250 size=60 value=\"" + Util.escapeHTML(checkItem.getTitle()) + "\" required></td>");
 			out.println("</tr>");
 			out.println("<tr>");
+			out.println("<th>Korrekt:</th>");
+			out.println("<td><input type=checkbox name=correct" + (checkItem.isCorrect() ? " checked" : "") + "></td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<th>Feedback:</th>");
+			out.println("<td><input type=text name=feedback maxlength=250 size=60 value=\"" + Util.escapeHTML(checkItem.getFeedback()) + "\"></td>");
+			out.println("</tr>");
+			out.println("<tr>");
 			out.println("<td colspan=2 class=mid><input type=submit value=speichern></td>");
 			out.println("</tr>");
 			out.println("<tr>");
@@ -108,11 +116,11 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 		out.println("<p>Eintrag z. B.:<br><textarea cols=120 rows=1 name=testcode disabled>Der Aufruf von <pre>ghci -e \"reverse'' [3,1,7,6]\" reverse.hs</pre> gibt <pre>[6, 7, 1, 3]</pre> zurück.</textarea></p>");
 		/* @formatter:off */
 		out.println("<p>Ausgabe bei Testanforderung z. B.:<br>" +
-				"<p><strong>Bitte überprüfen Sie Ihre Lösung hinsichtlich der folgenden Punkte und haken alle erfolgreichen Tests an:</strong></p>" + 
+				"<p><strong>Bitte überprüfen Sie Ihre Lösung hinsichtlich der folgenden Punkte und haken alle Tests an, die Ihre Lösung erfüllt:</strong></p>" + 
 				"<table>\n"
 				+ "<tbody><tr>\n"
 				+ "<th>Test</th>\n"
-				+ "<th>OK?</th>\n"
+				+ "<th>Erfüllt meine Lösung</th>\n"
 				+ "<tr>\n"
 				+ "<td><label for=\"checkitem0\">Befindet sich der Funktionsname auch im Funktionsrumpf?</label></td><td><input type=\"checkbox\" disabled name=\"checkitem0\" id=\"checkitem2\"></td>\n"
 				+ "</tr>\n"
@@ -124,10 +132,40 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 				+ "<td><label for=\"checkitem2\">Der Aufruf von <pre>ghci -e \"reverse'' [3,1,7,6]\" reverse.hs</pre> gibt <pre>[6, 7, 1, 3]</pre> zurück.</label></td><td><input type=\"checkbox\" disabled name=\"checkitem2\" id=\"checkitem2\"></td>\n"
 				+ "</tr>\n"
 				+ "<tr>\n"
-				+ "<td colspan=\"2\"><input type=\"submit\" disabled value=\"Ergebnis meiner Überprüfung speichern\"></td>\n"
+				+ "<td colspan=\"2\"><input type=\"submit\" disabled value=\"Ergebnis meiner Überprüfung anfordern\"></td>\n"
 				+ "</tr>\n"
 				+ "</tbody></table></p>");
 		/* @formatter:on */
+		out.println("Beispiel-Testergebnis:<br>"
+				+ "<table>\n"
+				+ "<tbody><tr>\n"
+				+ "<th>Test</th>\n"
+				+ "<th>Richtige<br>Antwort</th>\n"
+				+ "<th>Ihre<br>Antwort</th>\n"
+				+ "<th>OK?</th>\n"
+				+ "</tr>\n"
+				+ "<tr>\n"
+				+ "<td>Befindet sich der Funktionsname auch im Funktionsrumpf?<br><br><b>Hinweis:</b><br>Bitte schauen Sie sich das Konzept Rekursion in der Vorlesung 2 noch einmal genauer an.\n"
+				+ "</td>\n"
+				+ "<td>ja</td>\n"
+				+ "<td>nein</td>\n"
+				+ "<td><span class=\"red\">nein</span></td>\n"
+				+ "</tr>\n"
+				+ "<tr>\n"
+				+ "<td>Gibt es zwei Regeln für die Funktion?</td>\n"
+				+ "<td>nein</td>\n"
+				+ "<td>ja</td>\n"
+				+ "<td><span class=\"red\">nein</span></td>\n"
+				+ "</tr>\n"
+				+ "<tr>\n"
+				+ "<td>Hat die Funktion zwei Argumente?</td>\n"
+				+ "<td>nein</td>\n"
+				+ "<td>nein</td>\n"
+				+ "<td><span class=\"green\">ja</span></td>\n"
+				+ "</tr>\n"
+				+ "</tbody></table>\n"
+				+ "<b>Bestanden:</b> <span class=\"red\">nein</span><br>\n"
+				+ "");
 		out.println("<p>Einfaches HTML ist erlaubt (z.B. \"&lt;pre&gt;\").</p>");
 		out.println("</div>");
 
@@ -138,6 +176,14 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Eintrag:</th>");
 		out.println("<td><input type=text name=title maxlength=250 value=\"\" size=60 required></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Korrekt:</th>");
+		out.println("<td><input type=checkbox name=correct></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Feedback:</th>");
+		out.println("<td><input type=text name=feedback maxlength=250 size=60></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");

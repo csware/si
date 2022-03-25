@@ -146,3 +146,6 @@ ALTER TABLE `lectures` ADD `allowselfsubscribe` BIT(1) NOT NULL DEFAULT b'1';
 ALTER TABLE `tasks` CHANGE `showTextArea` `showTextArea` varchar(255) not null;
 update tasks set showTextArea='-' where showTextArea='0';
 update tasks set showTextArea='textsolution.txt' where showTextArea='1';
+
+-- checktestitem mit feedback
+ALTER TABLE checklisttestcheckitem add column (`correct` bit(1) NOT NULL DEFAULT 1,`feedback` longtext NOT NULL DEFAULT '');

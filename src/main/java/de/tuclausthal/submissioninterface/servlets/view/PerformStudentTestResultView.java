@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -68,7 +68,7 @@ public class PerformStudentTestResultView extends HttpServlet {
 			ChecklistTest checklistTest = (ChecklistTest) test;
 			LogEntry logEntry = (LogEntry) request.getAttribute("logentry");
 
-			out.println("<p><strong>Bitte überprüfen Sie Ihre Lösung hinsichtlich der folgenden Punkte und haken alle erfolgreichen Tests an:</strong></p>");
+			out.println("<p><strong>Bitte überprüfen Sie Ihre Lösung hinsichtlich der folgenden Punkte und haken alle Tests an, die Ihre Lösung erfüllt:</strong></p>");
 
 			out.println("<FORM method=POST action=\"" + Util.generateHTMLLink(ChecklistTestResponse.class.getSimpleName(), response) + "\" id=manualcheckform>");
 			out.println("<input type=hidden name=testid value=" + test.getId() + ">");
@@ -76,15 +76,15 @@ public class PerformStudentTestResultView extends HttpServlet {
 			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Test</th>");
-			out.println("<th>OK?</th>");
+			out.println("<th>Erfüllt meine Lösung</th>");
 			out.println("</tr>");
 			for (ChecklistTestCheckItem checkItem : checklistTest.getCheckItems()) {
 				out.println("<tr>");
-				out.println("<td><label for=\"checkitem" + checkItem.getCheckitemid() + "\">" + Util.makeCleanHTML(checkItem.getTitle()) + "</label></td><td><input type=checkbox onchange=\"storeCheckbox()\" name=\"checkitem" + checkItem.getCheckitemid() + "\" id=\"checkitem" + checkItem.getCheckitemid() + "\"></td>");
+				out.println("<td><label for=\"checkitem" + checkItem.getCheckitemid() + "\">" + Util.makeCleanHTML(checkItem.getTitle()) + "</label></td><td><input type=checkbox name=\"checkitem" + checkItem.getCheckitemid() + "\" id=\"checkitem" + checkItem.getCheckitemid() + "\"></td>");
 				out.println("</tr>");
 			}
 			out.println("<tr>");
-			out.println("<td colspan=2><input type=submit value=\"Ergebnis meiner Überprüfung speichern\"></td>");
+			out.println("<td colspan=2><input type=submit value=\"Ergebnis meiner Überprüfung anfordern\"></td>");
 			out.println("</tr>");
 			out.println("</table>");
 			out.println("</form>");

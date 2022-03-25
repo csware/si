@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `checklisttestcheckitem`;
 CREATE TABLE `checklisttestcheckitem` (
   `checkitemid` int(11) NOT NULL AUTO_INCREMENT,
+  `correct` bit(1) NOT NULL,
+  `feedback` longtext NOT NULL,
   `title` longtext NOT NULL,
   `testid` int(11) NOT NULL,
   PRIMARY KEY (`checkitemid`),
