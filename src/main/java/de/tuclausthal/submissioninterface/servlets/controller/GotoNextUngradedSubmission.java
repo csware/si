@@ -1,5 +1,5 @@
 /*
- * Copyright 2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -66,12 +66,15 @@ public class GotoNextUngradedSubmission extends HttpServlet {
 			return;
 		}
 
-		int lastSubmissionID = Util.parseInteger(request.getParameter("sid"), 0);
+		calculcateRedirect(response, session, task, Util.parseInteger(request.getParameter("sid"), 0), request.getParameter("groupid"), request.getParameter("prev") != null);
+	}
+
+	public static void calculcateRedirect(HttpServletResponse response, Session session, Task task, int lastSubmissionID, String groupId, boolean reverse) throws IOException {
 		if (!"taskWise".equals(task.getTaskGroup().getLecture().getGradingMethod())) {
-			Group group = DAOFactory.GroupDAOIf(session).getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
-			Submission submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, lastSubmissionID, group, request.getParameter("prev") != null);
+			Group group = DAOFactory.GroupDAOIf(session).getGroup(Util.parseInteger(groupId, 0));
+			Submission submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, lastSubmissionID, group, reverse);
 			if (submission == null && lastSubmissionID > 0) {
-				submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 0, group, request.getParameter("prev") != null);
+				submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 0, group, reverse);
 			}
 			if (submission != null) {
 				if (group != null) {
@@ -83,9 +86,9 @@ public class GotoNextUngradedSubmission extends HttpServlet {
 				response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 			}
 		} else {
-			Submission submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, lastSubmissionID, request.getParameter("prev") != null);
+			Submission submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, lastSubmissionID, reverse);
 			if (submission == null && lastSubmissionID > 0) {
-				submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 0, request.getParameter("prev") != null);
+				submission = DAOFactory.SubmissionDAOIf(session).getUngradedSubmission(task, 0, reverse);
 			}
 			if (submission != null) {
 				response.sendRedirect(Util.generateRedirectURL(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid(), response));

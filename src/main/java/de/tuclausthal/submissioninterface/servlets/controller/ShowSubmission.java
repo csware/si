@@ -135,6 +135,14 @@ public class ShowSubmission extends HttpServlet {
 				pointsDAO.createPoints(Util.convertToPoints(request.getParameter("points")), submission, participation, publicComment, internalComment, pointStatus, duplicate);
 			}
 			tx.commit();
+			switch (request.getParameter("submit")) {
+				case "Speichern & nächste":
+					GotoNextUngradedSubmission.calculcateRedirect(response, session, task, submission.getSubmissionid(), request.getParameter("groupid"), false);
+					return;
+				case "Speichern & vorherige":
+					GotoNextUngradedSubmission.calculcateRedirect(response, session, task, submission.getSubmissionid(), request.getParameter("groupid"), true);
+					return;
+			}
 			String groupAdding = "";
 			if (request.getParameter("groupid") != null && Util.parseInteger(request.getParameter("groupid"), 0) > 0) {
 				groupAdding = "&groupid=" + Util.parseInteger(request.getParameter("groupid"), 0);

@@ -248,14 +248,17 @@ public class ShowSubmissionView extends HttpServlet {
 			if (request.getParameter("groupid") != null && Util.parseInteger(request.getParameter("groupid"), 0) > 0) {
 				out.println("<input type=hidden name=groupid value=" + Util.parseInteger(request.getParameter("groupid"), 0) + ">");
 			}
-			out.println("<input type=submit id=submit value=Speichern> <a href=\"#\" onclick=\"toggleVisibility('statehelp'); return false;\">(?)</a>");
-			if (!requestAdapter.isPrivacyMode() && submission.getPoints() != null) {
-				String groupAdding = "";
-				if (request.getParameter("groupid") != null && Util.parseInteger(request.getParameter("groupid"), 0) > 0) {
-					groupAdding = "&groupid=" + Util.parseInteger(request.getParameter("groupid"), 0);
+			out.println("<input type=submit name=submit value=Speichern> <a href=\"#\" onclick=\"toggleVisibility('statehelp'); return false;\">(?)</a>");
+			if (!requestAdapter.isPrivacyMode()) {
+				out.println("<input type=submit name=submit value=\"Speichern &amp; nächste\"> <input type=submit name=submit value=\"Speichern &amp; vorherige\">");
+				if (submission.getPoints() != null) {
+					String groupAdding = "";
+					if (request.getParameter("groupid") != null && Util.parseInteger(request.getParameter("groupid"), 0) > 0) {
+						groupAdding = "&groupid=" + Util.parseInteger(request.getParameter("groupid"), 0);
+					}
+					out.println("- <a href=\"" + Util.generateHTMLLink(GotoNextUngradedSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid() + "&taskid=" + task.getTaskid() + groupAdding, response) + "\">nächste</a>");
+					out.println("- <a href=\"" + Util.generateHTMLLink(GotoNextUngradedSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid() + "&taskid=" + task.getTaskid() + groupAdding + "&prev", response) + "\">vorherige</a>");
 				}
-				out.println("- <a href=\"" + Util.generateHTMLLink(GotoNextUngradedSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid() + "&taskid=" + task.getTaskid() + groupAdding, response) + "\">nächste</a>");
-				out.println("- <a href=\"" + Util.generateHTMLLink(GotoNextUngradedSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid() + "&taskid=" + task.getTaskid() + groupAdding + "&prev", response) + "\">vorherige</a>");
 			}
 			out.println("</form>");
 			out.println("</td>");
