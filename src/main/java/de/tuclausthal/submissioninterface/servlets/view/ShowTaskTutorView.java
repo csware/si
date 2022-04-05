@@ -57,6 +57,7 @@ import de.tuclausthal.submissioninterface.servlets.controller.PublishGrades;
 import de.tuclausthal.submissioninterface.servlets.controller.SearchSubmissions;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowSubmission;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowTaskAllSubmissions;
 import de.tuclausthal.submissioninterface.servlets.controller.SubmitSolution;
 import de.tuclausthal.submissioninterface.servlets.controller.TaskManager;
 import de.tuclausthal.submissioninterface.template.Template;
@@ -180,6 +181,12 @@ public class ShowTaskTutorView extends HttpServlet {
 			Map<Integer, Map<Integer, Boolean>> testResults = DAOFactory.TestResultDAOIf(session).getResults(task);
 			Map<Integer, Map<Integer, List<Similarity>>> similarities = DAOFactory.SimilarityDAOIf(session).getMaxSimilarities(task);
 			out.println("<p><h2>Abgaben</h2><p>");
+			out.println("<p class=mid>");
+			out.println("<a href=\"" + Util.generateHTMLLink(ShowTaskAllSubmissions.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">alle Abgaben anzeigen</a><br>");
+			if (task.isClozeTask() || task.isSCMCTask()) {
+				out.println("<a href=\"" + Util.generateHTMLLink(ShowTaskAllSubmissions.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&schematic", response) + "\">alle Abgaben anzeigen mehr schematisch</a>");
+			}
+			out.println("</p>");
 			if (!task.isSCMCTask()) {
 				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(SearchSubmissions.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Suchen...</a></div>");
 			}
