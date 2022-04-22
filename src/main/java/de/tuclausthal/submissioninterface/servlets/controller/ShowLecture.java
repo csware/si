@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -75,7 +75,7 @@ public class ShowLecture extends HttpServlet {
 				return;
 			}
 			request.setAttribute("title", "Zugriff verweigert (403)");
-			request.setAttribute("message", "<p>Sie versuchen auf eine Veranstaltung zuzugreifen, für die Sie nicht angemeldet sind.</p><p>Eine Anmeldung ist nicht (mehr) möglich.</p><");
+			request.setAttribute("message", "<p>Sie versuchen auf eine Veranstaltung zuzugreifen, für die Sie nicht angemeldet sind.</p><p>Eine Anmeldung ist nicht (mehr) möglich.</p>");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
