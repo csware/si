@@ -64,7 +64,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		Session session = RequestAdapter.getSession(request);
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 
-		boolean showMatNo = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) || Configuration.getInstance().isMatrikelNoAvailableToTutors();
+		boolean showMatNo = Configuration.getInstance().isMatrikelNoAvailable() && (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0 || Configuration.getInstance().isMatrikelNoAvailableToTutors());
 
 		// list all tasks for a lecture
 		template.printTemplateHeader("Gesamtübersicht", lecture);

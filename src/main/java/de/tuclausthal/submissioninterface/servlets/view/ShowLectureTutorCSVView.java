@@ -62,7 +62,7 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 		Session session = RequestAdapter.getSession(request);
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 
-		boolean showMatNo = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) || Configuration.getInstance().isMatrikelNoAvailableToTutors();
+		boolean showMatNo = Configuration.getInstance().isMatrikelNoAvailable() && (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0 || Configuration.getInstance().isMatrikelNoAvailableToTutors());
 
 		response.setContentType("text/csv");
 		response.setCharacterEncoding("UTF-8");

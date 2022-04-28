@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -76,7 +76,7 @@ public class ShowLectureTutorView extends HttpServlet {
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 
 		boolean isAdvisor = (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0);
-		boolean showMatNo = isAdvisor || Configuration.getInstance().isMatrikelNoAvailableToTutors();
+		boolean showMatNo = Configuration.getInstance().isMatrikelNoAvailable() && (isAdvisor || Configuration.getInstance().isMatrikelNoAvailableToTutors());
 
 		// list all tasks for a lecture
 		template.printTemplateHeader(lecture);

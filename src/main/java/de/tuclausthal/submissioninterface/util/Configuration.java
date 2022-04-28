@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2013, 2015, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2013, 2015, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -58,6 +58,7 @@ public class Configuration {
 	private String mailServer;
 	private String mailFrom;
 	private String mailSubjectPrefix;
+	private boolean matrikelNoAvailable;
 	private boolean matrikelNoAvailableToTutors;
 	private boolean matrikelNumberMustBeEnteredManuallyIfMissing;
 	private boolean mailLastGradingTutorOnGradeChange;
@@ -84,8 +85,9 @@ public class Configuration {
 		if (!instance.mailSubjectPrefix.isBlank() && !instance.mailSubjectPrefix.endsWith(" ")) {
 			instance.mailSubjectPrefix = instance.mailSubjectPrefix + " ";
 		}
-		instance.matrikelNoAvailableToTutors = parseBooleanValue(context.getInitParameter("show-matrikelno-to-tutors"), false);
-		instance.matrikelNumberMustBeEnteredManuallyIfMissing = parseBooleanValue(context.getInitParameter("matrikelno-must-be-enterend-manually-if-missing"), false);
+		instance.matrikelNoAvailable = parseBooleanValue(context.getInitParameter("matrikelno-available"), false);
+		instance.matrikelNoAvailableToTutors = instance.matrikelNoAvailable && parseBooleanValue(context.getInitParameter("show-matrikelno-to-tutors"), false);
+		instance.matrikelNumberMustBeEnteredManuallyIfMissing = instance.matrikelNoAvailable && parseBooleanValue(context.getInitParameter("matrikelno-must-be-enterend-manually-if-missing"), false);
 		instance.testFrameworkCores = Util.parseInteger(context.getInitParameter("testframework-cores"), 2);
 		instance.mailLastGradingTutorOnGradeChange = parseBooleanValue(context.getInitParameter("mail-last-grading-tutor-on-grade-change"), true);
 		instance.defaultZipFileCharset = Charset.forName(context.getInitParameter("default-zipfile-charset"));
@@ -216,6 +218,10 @@ public class Configuration {
 	 */
 	public String getFullServletsURI() {
 		return fullServerURI;
+	}
+
+	public boolean isMatrikelNoAvailable() {
+		return matrikelNoAvailable;
 	}
 
 	public boolean isMailLastGradingTutorOnGradeChange() {

@@ -41,6 +41,10 @@
     <param-value>[GATE] </param-value>
   </context-param>
   <context-param>
+    <param-name>matrikelno-available</param-name>
+    <param-value>no</param-value>
+  </context-param>
+  <context-param>
     <param-name>show-matrikelno-to-tutors</param-name>
     <param-value>no</param-value>
   </context-param>
