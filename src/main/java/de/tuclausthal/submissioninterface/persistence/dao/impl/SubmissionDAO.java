@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -41,6 +41,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation_;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission_;
@@ -164,7 +165,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 			mainPred = builder.gt(root.get(Submission_.submissionid), lastSubmissionID);
 			criteria.orderBy(builder.asc(root.get(Submission_.submissionid)));
 		}
-		criteria.where(builder.and(mainPred, builder.equal(root.get(Submission_.task), task), builder.isNull(root.get(Submission_.points))));
+		criteria.where(builder.and(mainPred, builder.equal(root.get(Submission_.task), task), builder.or(builder.isNull(root.get(Submission_.points)), builder.equal(root.get(Submission_.points).get(Points_.pointStatus), PointStatus.NICHT_BEWERTET.ordinal()))));
 		return session.createQuery(criteria).setMaxResults(1).uniqueResult();
 	}
 
@@ -186,7 +187,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 			mainOrder = builder.asc(root.get(Submission_.submissionid));
 		}
 
-		Predicate where = builder.and(mainPred, builder.equal(root.get(Submission_.task), task), builder.isNull(root.get(Submission_.points)));
+		Predicate where = builder.and(mainPred, builder.equal(root.get(Submission_.task), task), builder.or(builder.isNull(root.get(Submission_.points)), builder.equal(root.get(Submission_.points).get(Points_.pointStatus), PointStatus.NICHT_BEWERTET.ordinal())));
 		SetJoin<Submission, Participation> submittersJoin = root.join(Submission_.submitters);
 		if (group == null) {
 			where = builder.and(where, builder.isNull(submittersJoin.get(Participation_.group)));
