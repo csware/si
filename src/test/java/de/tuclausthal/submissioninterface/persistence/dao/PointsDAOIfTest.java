@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import de.tuclausthal.submissioninterface.BasicTest;
 import de.tuclausthal.submissioninterface.GATEDBTest;
+import de.tuclausthal.submissioninterface.servlets.view.ShowLectureTutorView;
 
 @GATEDBTest
 class PointsDAOIfTest extends BasicTest {
@@ -53,13 +54,13 @@ class PointsDAOIfTest extends BasicTest {
 
 	@Test
 	void testGetUngradedSubmissionsPerTasks() {
-		assertTrue(DAOFactory.PointsDAOIf(session).getUngradedSubmissionsPerTasks(DAOFactory.LectureDAOIf(session).getLecture(2)).isEmpty());
+		assertTrue(DAOFactory.PointsDAOIf(session).getSubmissionStatisticsPerTasks(DAOFactory.LectureDAOIf(session).getLecture(2)).isEmpty());
 
-		Map<Integer, Integer> lecture1Ungraded = DAOFactory.PointsDAOIf(session).getUngradedSubmissionsPerTasks(DAOFactory.LectureDAOIf(session).getLecture(1));
-		assertEquals(2, lecture1Ungraded.size());
-		assertEquals(2, lecture1Ungraded.getOrDefault(1, 0));
-		assertEquals(0, lecture1Ungraded.getOrDefault(2, 0));
-		assertEquals(1, lecture1Ungraded.getOrDefault(3, 0));
-		assertEquals(0, lecture1Ungraded.getOrDefault(4, 0));
+		Map<Integer, int[]> lecture1Ungraded = DAOFactory.PointsDAOIf(session).getSubmissionStatisticsPerTasks(DAOFactory.LectureDAOIf(session).getLecture(1));
+		assertEquals(4, lecture1Ungraded.size());
+		assertEquals("2/4", ShowLectureTutorView.showTaskSubmissionStats(lecture1Ungraded.get(1)));
+		assertEquals("0/5", ShowLectureTutorView.showTaskSubmissionStats(lecture1Ungraded.get(2)));
+		assertEquals("1/4", ShowLectureTutorView.showTaskSubmissionStats(lecture1Ungraded.get(3)));
+		assertEquals("0/0", ShowLectureTutorView.showTaskSubmissionStats(lecture1Ungraded.get(4)));
 	}
 }

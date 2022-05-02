@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -56,5 +56,5 @@ public interface PointsDAOIf {
 
 	public Map<Integer, Integer> getAllPointsForLecture(Lecture lecture);
 
-	public Map<Integer, Integer> getUngradedSubmissionsPerTasks(Lecture lecture);
+	public Map<Integer, int[]> getSubmissionStatisticsPerTasks(Lecture lecture);
 }

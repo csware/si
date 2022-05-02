@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -29,6 +29,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
@@ -344,17 +345,27 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	}
 
 	@Override
-	public Map<Integer, Integer> getUngradedSubmissionsPerTasks(Lecture lecture) {
+	public Map<Integer, int[]> getSubmissionStatisticsPerTasks(Lecture lecture) {
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
+
 		CriteriaQuery<Tuple> criteria = builder.createTupleQuery();
-		Root<Submission> root = criteria.from(Submission.class);
-		Join<Submission, Task> taskJoin = root.join(Submission_.task);
-		criteria.groupBy(root.get(Submission_.task).get(Task_.taskid));
-		criteria.select(builder.tuple(root.get(Submission_.task).get(Task_.taskid), builder.count(root.get(Submission_.submissionid))));
-		criteria.where(builder.and(builder.or(builder.isNull(root.get(Submission_.points)), builder.equal(root.get(Submission_.points).get(Points_.pointStatus), PointStatus.NICHT_BEWERTET.ordinal())), builder.equal(taskJoin.join(Task_.taskGroup).get(TaskGroup_.lecture), lecture)));
+		Root<Task> root = criteria.from(Task.class);
+
+		Subquery<Long> criteriaUngradedSubmissions = criteria.subquery(Long.class);
+		Root<Submission> rootUngradedSubmissions = criteriaUngradedSubmissions.from(Submission.class);
+		criteriaUngradedSubmissions.where(builder.and(builder.equal(root, rootUngradedSubmissions.get(Submission_.task)), builder.or(builder.isNull(rootUngradedSubmissions.get(Submission_.points)), builder.equal(rootUngradedSubmissions.get(Submission_.points).get(Points_.pointStatus), PointStatus.NICHT_BEWERTET.ordinal()))));
+		criteriaUngradedSubmissions.select(builder.count(rootUngradedSubmissions));
+
+		Subquery<Long> criteriaAllSubmissions = criteria.subquery(Long.class);
+		Root<Submission> rootAllSubmissions = criteriaAllSubmissions.from(Submission.class);
+		criteriaAllSubmissions.where(builder.equal(root, rootAllSubmissions.get(Submission_.task)));
+		criteriaAllSubmissions.select(builder.count(rootAllSubmissions));
+
+		criteria.select(builder.tuple(root.get(Task_.taskid), criteriaUngradedSubmissions, criteriaAllSubmissions));
+		criteria.where(builder.equal(root.join(Task_.taskGroup).get(TaskGroup_.lecture), lecture));
 		Query<Tuple> query = session.createQuery(criteria);
 
-		return query.list().stream().collect(Collectors.toMap(tupel -> tupel.get(0, Integer.class), tupel -> tupel.get(1, Long.class).intValue()));
+		return query.list().stream().collect(Collectors.toMap(tupel -> tupel.get(0, Integer.class), tupel -> new int[] { tupel.get(1, Long.class).intValue(), tupel.get(2, Long.class).intValue() }));
 	}
 }
