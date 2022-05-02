@@ -110,11 +110,13 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 				line[column++] = lectureParticipation.getUser().getFirstName();
 				line[column++] = lectureParticipation.getUser().getEmail();
 				int points = 0;
+				boolean noshow = true;
 				for (TaskGroup taskGroup : taskGroupList) {
 					List<Task> taskList = taskGroup.getTasks();
 					for (Task task : taskList) {
 						Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
 						if (submission != null) {
+							noshow = false;
 							if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 								if (submission.getPoints().getPointsOk()) {
 									line[column++] = Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep()));
@@ -130,7 +132,7 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 						}
 					}
 				}
-				if (points > 0) {
+				if (!noshow) {
 					line[column++] = Util.showPoints(points);
 				} else {
 					line[column++] = "n/a";

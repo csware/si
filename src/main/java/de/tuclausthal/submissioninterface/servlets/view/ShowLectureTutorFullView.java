@@ -117,11 +117,13 @@ public class ShowLectureTutorFullView extends HttpServlet {
 			out.println("<td><a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + lectureParticipation.getUser().getUid(), response) + "\">" + Util.escapeHTML(lectureParticipation.getUser().getLastName()) + "</a></td>");
 			out.println("<td><a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + lectureParticipation.getUser().getUid(), response) + "\">" + Util.escapeHTML(lectureParticipation.getUser().getFirstName()) + "</a></td>");
 			int points = 0;
+			boolean noshow = true;
 			for (TaskGroup taskGroup : taskGroupList) {
 				List<Task> taskList = taskGroup.getTasks();
 				for (Task task : taskList) {
 					Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
 					if (submission != null) {
+						noshow = false;
 						if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 							if (submission.getPoints().getPointsOk()) {
 								out.println("<td class=points>" + Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + "</td>");
@@ -137,7 +139,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 					}
 				}
 			}
-			if (points > 0) {
+			if (!noshow) {
 				out.println("<td class=points>" + Util.showPoints(points) + "</td>");
 			} else {
 				out.println("<td>n/a</td>");
