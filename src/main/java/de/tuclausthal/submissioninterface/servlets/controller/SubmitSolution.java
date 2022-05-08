@@ -310,6 +310,7 @@ public class SubmitSolution extends HttpServlet {
 		Submission submission = submissionDAO.createSubmission(task, studentParticipation);
 
 		if (task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
+			tx.rollback();
 			request.setAttribute("title", "Die Abgabe wurde bereits als endgültig abgeschlossen markiert. Eine Veränderung ist daher nicht mehr möglich.");
 			request.setAttribute("message", "<p><div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
@@ -326,7 +327,6 @@ public class SubmitSolution extends HttpServlet {
 					Submission partnerSubmission = submissionDAO.getSubmission(task, partnerParticipation.getUser());
 					if (partnerSubmission == null) {
 						submission.getSubmitters().add(partnerParticipation);
-						session.update(submission);
 					} else if (partnerSubmission.getSubmissionid() != submission.getSubmissionid()) {
 						tx.rollback();
 						template.printTemplateHeader("Ungültige Anfrage", task);
@@ -342,7 +342,6 @@ public class SubmitSolution extends HttpServlet {
 					session.buildLockRequest(LockOptions.UPGRADE).lock(partnerParticipation); // creating submissions is serialized by locking the participation, see above
 					if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getRoleType().equals(ParticipationRole.NORMAL) && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && ((task.isAllowSubmittersAcrossGroups() && (partnerParticipation.getGroup() == null || !partnerParticipation.getGroup().isSubmissionGroup())) || (!task.isAllowSubmittersAcrossGroups() && partnerParticipation.getGroup() != null && studentParticipation.getGroup() != null && partnerParticipation.getGroup().getGid() == studentParticipation.getGroup().getGid())) && submissionDAO.getSubmission(task, partnerParticipation.getUser()) == null) {
 						submission.getSubmitters().add(partnerParticipation);
-						session.update(submission);
 					} else {
 						tx.rollback();
 						template.printTemplateHeader("Ungültige Anfrage", task);
@@ -397,7 +396,6 @@ public class SubmitSolution extends HttpServlet {
 				} catch (IOException | IllegalArgumentException e) {
 					if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 						submission.setLastModified(ZonedDateTime.now());
-						submissionDAO.saveSubmission(submission);
 					}
 					LOG.error("Problem on processing uploaded file", e);
 					Util.recursiveDeleteEmptyDirectories(logPath);
@@ -405,7 +403,6 @@ public class SubmitSolution extends HttpServlet {
 						session.remove(logEntry);
 					} else {
 						logEntry.setAdditionalData(Json.createObjectBuilder().add("filenames", Json.createArrayBuilder(uploadedFilenames)).build().toString());
-						session.update(logEntry);
 					}
 					tx.commit();
 					template.printTemplateHeader("Fehler beim Upload", task);
@@ -418,11 +415,9 @@ public class SubmitSolution extends HttpServlet {
 			}
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 				submission.setLastModified(ZonedDateTime.now());
-				submissionDAO.saveSubmission(submission);
 			}
 			if (!uploadedFilenames.isEmpty()) {
 				logEntry.setAdditionalData(Json.createObjectBuilder().add("filenames", Json.createArrayBuilder(uploadedFilenames)).build().toString());
-				session.update(logEntry);
 			} else {
 				session.remove(logEntry);
 				Util.recursiveDeleteEmptyDirectories(logPath);
@@ -477,7 +472,6 @@ public class SubmitSolution extends HttpServlet {
 			DAOFactory.PointsDAOIf(session).createMCPoints(allCorrect ? task.getMaxPoints() : 0, submission, "", task.getTaskGroup().getLecture().isRequiresAbhnahme() ? PointStatus.NICHT_ABGENOMMEN : PointStatus.ABGENOMMEN);
 
 			submission.setLastModified(ZonedDateTime.now());
-			submissionDAO.saveSubmission(submission);
 			new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, Json.createObjectBuilder().add("mc", Json.createArrayBuilder(results)).build().toString());
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
@@ -489,7 +483,6 @@ public class SubmitSolution extends HttpServlet {
 				DAOFactory.PointsDAOIf(session).createMCPoints(clozeHelper.calculatePoints(results), submission, "", task.getTaskGroup().getLecture().isRequiresAbhnahme() ? PointStatus.NICHT_ABGENOMMEN : PointStatus.ABGENOMMEN);
 			}
 			submission.setLastModified(ZonedDateTime.now());
-			submissionDAO.saveSubmission(submission);
 			new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, Json.createObjectBuilder().add("cloze", Json.createArrayBuilder(results)).build().toString());
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
@@ -531,16 +524,13 @@ public class SubmitSolution extends HttpServlet {
 
 			Util.recursiveCopy(uploadedFile, new File(logPath, task.getShowTextArea()));
 			logEntry.setAdditionalData(jsonBuilder.add("filename", uploadedFile.getName()).build().toString());
-			session.save(logEntry);
 
 			submission.setLastModified(ZonedDateTime.now());
-			submissionDAO.saveSubmission(submission);
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 		} else {
 			if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 				submission.setLastModified(ZonedDateTime.now());
-				submissionDAO.saveSubmission(submission);
 			}
 			LOG.error("Found no data on upload.");
 			tx.commit();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -139,7 +139,6 @@ public class EditLecture extends HttpServlet {
 		}
 		lecture.setDescription(request.getParameter("description"));
 		lecture.setAllowSelfSubscribe(request.getParameter("allowselfsubscribe") != null);
-		session.save(lecture);
 		tx.commit();
 		response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response));
 	}

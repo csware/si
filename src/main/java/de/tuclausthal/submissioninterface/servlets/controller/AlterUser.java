@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2013, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -67,11 +67,10 @@ public class AlterUser extends HttpServlet {
 		if (user instanceof Student) {
 			Student student = (Student) user;
 			if (request.getParameter("studiengang") != null && !"".equals(request.getParameter("studiengang").trim())) {
+				Transaction tx = session.beginTransaction();
 				student.setStudiengang(request.getParameter("studiengang"));
+				tx.commit();
 			}
-			Transaction tx = session.beginTransaction();
-			userDAO.saveUser(student);
-			tx.commit();
 		}
 
 		response.sendRedirect(Util.generateRedirectURL(Overview.class.getSimpleName(), response));

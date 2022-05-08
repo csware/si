@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2021-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -55,12 +55,6 @@ public interface GroupDAOIf {
 	 * @param group the group to delete
 	 */
 	public void deleteGroup(Group group);
-
-	/**
-	 * Updates a group and store it in the DB
-	 * @param group
-	 */
-	public void saveGroup(Group group);
 
 	public List<Group> getJoinAbleGroups(Lecture lecture, Group participationGroup);
 

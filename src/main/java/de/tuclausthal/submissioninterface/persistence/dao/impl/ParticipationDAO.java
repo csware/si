@@ -152,12 +152,6 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 	}
 
 	@Override
-	public void saveParticipation(Participation participation) {
-		Session session = getSession();
-		session.save(participation);
-	}
-
-	@Override
 	public List<Participation> getParticipationsWithNoSubmissionToTaskOrdered(Task task) {
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();

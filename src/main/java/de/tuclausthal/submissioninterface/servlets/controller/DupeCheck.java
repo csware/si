@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -113,7 +113,6 @@ public class DupeCheck extends HttpServlet {
 			SimilarityTest similarityTest = semilarityTestDAO.getSimilarityTestLocked(Util.parseInteger(request.getParameter("similaritytestid"), 0));
 			if (similarityTest != null && similarityTest.getTask().getTaskid() == task.getTaskid()) {
 				similarityTest.setStatus(1);
-				semilarityTestDAO.saveSimilarityTest(similarityTest);
 			}
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&action=editTask&lecture=" + task.getTaskGroup().getLecture().getId(), response));

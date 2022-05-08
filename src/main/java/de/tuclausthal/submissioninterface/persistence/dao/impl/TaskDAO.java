@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -53,26 +53,15 @@ public class TaskDAO extends AbstractDAO implements TaskDAOIf {
 	@Override
 	public Task newTask(String title, int maxPoints, ZonedDateTime start, ZonedDateTime deadline, String description, TaskGroup taskGroup, ZonedDateTime showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, boolean allowPrematureSubmissionClosing) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		Task task = new Task(title, maxPoints, start, deadline, description, taskGroup, showPoints, maxSubmitters, allowSubmittersAcrossGroups, taskType, dynamicTask, allowPrematureSubmissionClosing);
 		session.save(task);
-		tx.commit();
 		return task;
-	}
-
-	@Override
-	public void saveTask(Task task) {
-		Session session = getSession();
-		Transaction tx = session.beginTransaction();
-		session.saveOrUpdate(task);
-		tx.commit();
 	}
 
 	@Override
 	public void deleteTask(Task task) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		session.update(task);
 		session.delete(task);
 		tx.commit();
 	}

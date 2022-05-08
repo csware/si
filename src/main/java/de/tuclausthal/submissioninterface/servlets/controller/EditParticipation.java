@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -75,7 +75,6 @@ public class EditParticipation extends HttpServlet {
 		} else {
 			participation.setRoleType(ParticipationRole.NORMAL);
 		}
-		participationDAO.saveParticipation(participation);
 		tx.commit();
 		response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?action=showLecture&lecture=" + callerParticipation.getLecture().getId(), response));
 	}

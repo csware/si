@@ -91,7 +91,6 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		submission.setPoints(points);
 		points.setPublicComment(publicComment);
 		points.setInternalComment(internalComment);
-		session.save(submission);
 
 		// TODO: Attention: see @MarkApproved.java and below!!!
 		if (oldPoints != null) {
@@ -296,7 +295,6 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 
 	@Override
 	public Points createMCPoints(int issuedPoints, Submission submission, String publicComment, PointStatus pointStatus) {
-		Session session = getSession();
 		if (issuedPoints % submission.getTask().getMinPointStep() != 0) {
 			issuedPoints = (issuedPoints / submission.getTask().getMinPointStep()) * submission.getTask().getMinPointStep();
 		}
@@ -313,7 +311,6 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		submission.setPoints(points);
 		points.setPublicComment(publicComment);
 		points.setInternalComment("");
-		session.save(submission);
 		return points;
 	}
 

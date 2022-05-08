@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -73,12 +73,6 @@ public interface SubmissionDAOIf {
 	 * @return the list of submissions
 	 */
 	public List<Submission> getSubmissionsForTaskOfGroupOrdered(Task task, Group group);
-
-	/**
-	 * Updates/saves a submission in the DB
-	 * @param submission the submission to update
-	 */
-	public void saveSubmission(Submission submission);
 
 	/**
 	 * Deletes a submission if it contains no files

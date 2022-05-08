@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -100,7 +100,6 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 	public void deleteLecture(Lecture lecture) {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
-		session.update(lecture);
 		session.delete(lecture);
 		tx.commit();
 	}

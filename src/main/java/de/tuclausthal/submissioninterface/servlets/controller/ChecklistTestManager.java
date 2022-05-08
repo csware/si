@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -95,7 +95,6 @@ public class ChecklistTestManager extends HttpServlet {
 		if ("edittest".equals(request.getParameter("action"))) {
 			Transaction tx = session.beginTransaction();
 			test.setTestTitle(request.getParameter("title"));
-			session.update(test);
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
@@ -105,7 +104,6 @@ public class ChecklistTestManager extends HttpServlet {
 			newCheckItem.setTitle(request.getParameter("title"));
 			Transaction tx = session.beginTransaction();
 			session.save(newCheckItem);
-			test.getCheckItems().add(newCheckItem);
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
@@ -120,7 +118,6 @@ public class ChecklistTestManager extends HttpServlet {
 			if (checkItem != null) {
 				Transaction tx = session.beginTransaction();
 				checkItem.setTitle(request.getParameter("title"));
-				session.saveOrUpdate(checkItem);
 				tx.commit();
 			}
 			response.sendRedirect(Util.generateRedirectURL(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
@@ -135,7 +132,6 @@ public class ChecklistTestManager extends HttpServlet {
 			}
 			if (checkItem != null) {
 				Transaction tx = session.beginTransaction();
-				test.getCheckItems().remove(checkItem);
 				session.delete(checkItem);
 				tx.commit();
 			}

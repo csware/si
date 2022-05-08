@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2015, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2015, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * Copyright 2011 Joachim Schramm
  * 
@@ -128,7 +128,6 @@ public class TestManager extends HttpServlet {
 			test.setTestDescription(description);
 			test.setTimeout(timeout);
 			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
-			testDAO.saveTest(test);
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(JavaAdvancedIOTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "docker".equals(request.getParameter("type"))) {
@@ -150,7 +149,6 @@ public class TestManager extends HttpServlet {
 			test.setTimeout(timeout);
 			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			test.setPreparationShellCode(preparationcode.replaceAll("\r\n", "\n"));
-			testDAO.saveTest(test);
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "checklist".equals(request.getParameter("type"))) {
@@ -167,7 +165,6 @@ public class TestManager extends HttpServlet {
 			test.setGiveDetailsToStudents(true);
 			test.setTestTitle(title);
 			test.setTestDescription(description);
-			testDAO.saveTest(test);
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "umlConstraint".equals(request.getParameter("type"))) {
@@ -203,7 +200,6 @@ public class TestManager extends HttpServlet {
 			test.setTestDescription(description);
 			test.setTimeout(timeout);
 			test.setGiveDetailsToStudents(true);
-			testDAO.saveTest(test);
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "junit".equals(request.getParameter("type"))) {
@@ -242,7 +238,6 @@ public class TestManager extends HttpServlet {
 			test.setTestDescription(description);
 			test.setGiveDetailsToStudents(giveDetailsToStudents);
 			test.setTimeout(timeout);
-			testDAO.saveTest(test);
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "regexp".equals(request.getParameter("type"))) {
@@ -267,7 +262,6 @@ public class TestManager extends HttpServlet {
 			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			test.setTestTitle(request.getParameter("title"));
 			test.setTestDescription(request.getParameter("description"));
-			testDAO.saveTest(test);
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "compile".equals(request.getParameter("type"))) {
@@ -280,7 +274,6 @@ public class TestManager extends HttpServlet {
 			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			test.setTestTitle(request.getParameter("title"));
 			test.setTestDescription(request.getParameter("description"));
-			testDAO.saveTest(test);
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "commentmetric".equals(request.getParameter("type"))) {
@@ -299,7 +292,6 @@ public class TestManager extends HttpServlet {
 			test.setExcludedFiles(request.getParameter("excludedFiles"));
 			test.setTestDescription(request.getParameter("description"));
 			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
-			testDAO.saveTest(test);
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("deleteTest".equals(request.getParameter("action"))) {
@@ -318,7 +310,6 @@ public class TestManager extends HttpServlet {
 			Test test = testDAO.getTestLocked(Util.parseInteger(request.getParameter("testid"), 0));
 			if (test != null && test.getTask().getTaskid() == task.getTaskid()) {
 				test.setNeedsToRun(true);
-				testDAO.saveTest(test);
 			}
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));

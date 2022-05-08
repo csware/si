@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2021-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -38,12 +38,6 @@ public interface TestResultDAOIf {
 	 * @param testExecutorTestResult 
 	 */
 	public void storeTestResult(Test test, Submission submission, TestExecutorTestResult testExecutorTestResult);
-
-	/**
-	 * Update/save a testresult
-	 * @param testResult the testresult to update
-	 */
-	public void saveTestResult(TestResult testResult);
 
 	public TestResult getResult(Test test, Submission submission);
 

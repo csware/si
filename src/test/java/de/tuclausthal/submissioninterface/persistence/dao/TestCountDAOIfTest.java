@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -59,12 +59,10 @@ class TestCountDAOIfTest extends BasicTest {
 		session.getTransaction().begin();
 		de.tuclausthal.submissioninterface.persistence.datamodel.Test test = DAOFactory.TestDAOIf(session).createCompileTest(submission.getTask());
 		test.setTimesRunnableByStudents(0);
-		DAOFactory.TestDAOIf(session).saveTest(test);
 		session.getTransaction().commit();
 		assertEquals(0, DAOFactory.TestCountDAOIf(session).canStillRunXTimes(test, submission));
 		session.getTransaction().begin();
 		test.setTimesRunnableByStudents(2);
-		DAOFactory.TestDAOIf(session).saveTest(test);
 		session.getTransaction().commit();
 		assertEquals(2, DAOFactory.TestCountDAOIf(session).canStillRunXTimes(test, submission));
 		session.getTransaction().begin();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020, 2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -41,7 +41,6 @@ public class PointCategoryDAO extends AbstractDAO implements PointCategoryDAOIf 
 	@Override
 	public void deletePointCategory(PointCategory pointCategory) {
 		Session session = getSession();
-		session.update(pointCategory);
 		session.delete(pointCategory);
 	}
 

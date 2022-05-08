@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -55,7 +55,6 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 	@Override
 	public void deleteSimilarityTest(SimilarityTest similarityTest) {
 		Session session = getSession();
-		session.update(similarityTest);
 		session.delete(similarityTest);
 	}
 
@@ -93,16 +92,9 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 		SimilarityTest similarityTest = session.createQuery(criteria).setLockMode(LockModeType.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
 		if (similarityTest != null) {
 			similarityTest.setStatus(2);
-			session.save(similarityTest);
 		}
 		tx.commit();
 		return similarityTest;
-	}
-
-	@Override
-	public void saveSimilarityTest(SimilarityTest similarityTest) {
-		Session session = getSession();
-		session.update(similarityTest);
 	}
 
 	@Override
@@ -112,7 +104,6 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 		SimilarityTest TheSimilarityTest = getSimilarityTestLocked(similarityTest.getSimilarityTestId());
 		if (TheSimilarityTest != null) {
 			TheSimilarityTest.setStatus(0);
-			session.save(TheSimilarityTest);
 		}
 		tx.commit();
 	}

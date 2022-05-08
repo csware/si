@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -102,7 +102,6 @@ public class EditGroup extends HttpServlet {
 			Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(request.getParameter("participationid"), 0));
 			if (memberParticipation != null && memberParticipation.getGroup() != null && memberParticipation.getGroup().getGid() == group.getGid() && (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0 || memberParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0)) {
 				memberParticipation.setGroup(null);
-				participationDAO.saveParticipation(memberParticipation);
 			}
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response));
@@ -114,7 +113,6 @@ public class EditGroup extends HttpServlet {
 				Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(request.getParameter("participationid"), 0));
 				if (memberParticipation != null) {
 					group.getTutors().remove(memberParticipation);
-					groupDAO.saveGroup(group);
 				}
 				tx.commit();
 				response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + group.getLecture().getId() + "#group" + group.getGid(), response));
@@ -133,7 +131,6 @@ public class EditGroup extends HttpServlet {
 				group.setSubmissionGroup(request.getParameter("submissionGroup") != null);
 				group.setMaxStudents(Util.parseInteger(request.getParameter("maxStudents"), 0));
 				group.setMembersVisibleToStudents(request.getParameter("membersvisible") != null);
-				groupDAO.saveGroup(group);
 
 				// add tutors
 				if (request.getParameterValues("tutors") != null && request.getParameterValues("tutors").length > 0) {
@@ -141,7 +138,6 @@ public class EditGroup extends HttpServlet {
 						Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(newMember, 0));
 						if (memberParticipation != null && memberParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0 && memberParticipation.getLecture().getId() == group.getLecture().getId()) {
 							group.getTutors().add(memberParticipation);
-							groupDAO.saveGroup(group);
 						}
 					}
 				}
@@ -151,7 +147,6 @@ public class EditGroup extends HttpServlet {
 					Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(newMember, 0));
 					if (memberParticipation != null && memberParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0 && memberParticipation.getLecture().getId() == group.getLecture().getId()) {
 						memberParticipation.setGroup(group);
-						participationDAO.saveParticipation(memberParticipation);
 					}
 				}
 			}
@@ -183,7 +178,6 @@ public class EditGroup extends HttpServlet {
 						continue;
 					}
 					memberParticipation.setGroup(group);
-					participationDAO.saveParticipation(memberParticipation);
 					++count;
 				}
 				tx.commit();

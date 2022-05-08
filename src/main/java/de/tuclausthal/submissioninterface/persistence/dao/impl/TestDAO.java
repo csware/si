@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -81,15 +81,8 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 	}
 
 	@Override
-	public void saveTest(Test test) {
-		Session session = getSession();
-		session.update(test);
-	}
-
-	@Override
 	public void deleteTest(Test test) {
 		Session session = getSession();
-		session.update(test);
 		session.delete(test);
 	}
 
@@ -125,7 +118,6 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 		Test test = session.createQuery(criteria).setLockMode(LockModeType.PESSIMISTIC_WRITE).setMaxResults(1).uniqueResult();
 		if (test != null) {
 			test.setNeedsToRun(false);
-			session.save(test);
 		}
 		tx.commit();
 		return test;

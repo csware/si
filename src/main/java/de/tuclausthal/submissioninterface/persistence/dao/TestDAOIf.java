@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2021-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -71,12 +71,6 @@ public interface TestDAOIf {
 	public DockerTest createDockerTest(Task task);
 
 	public ChecklistTest createChecklistTest(Task task);
-
-	/**
-	 * Update/save a test
-	 * @param test the test to update
-	 */
-	public void saveTest(Test test);
 
 	/**
 	 * Remove a specific test from the DB

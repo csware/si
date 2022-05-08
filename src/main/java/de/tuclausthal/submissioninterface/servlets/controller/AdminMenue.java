@@ -139,7 +139,6 @@ public class AdminMenue extends HttpServlet {
 			}
 			newLecture.setDescription(request.getParameter("description"));
 			newLecture.setAllowSelfSubscribe(request.getParameter("allowselfsubscribe") != null);
-			session.save(newLecture);
 			DAOFactory.ParticipationDAOIf(session).createParticipation(RequestAdapter.getUser(request), newLecture, ParticipationRole.ADVISOR);
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(AdminMenue.class.getSimpleName() + "?action=showLecture&lecture=" + newLecture.getId(), response));
@@ -155,7 +154,6 @@ public class AdminMenue extends HttpServlet {
 				lecture.setGradingMethod("taskWise");
 			}
 			lecture.setRequiresAbhnahme(request.getParameter("requiresAbhnahme") != null);
-			session.save(lecture);
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(AdminMenue.class.getSimpleName(), response));
 		} else if ("deleteLecture".equals(request.getParameter("action")) && request.getParameter("lecture") != null) {
@@ -171,7 +169,6 @@ public class AdminMenue extends HttpServlet {
 			User user = userDAO.getUser(Util.parseInteger(request.getParameter("userid"), 0));
 			if (user != null) {
 				user.setSuperUser("addSuperUser".equals(request.getParameter("action")));
-				userDAO.saveUser(user);
 			}
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(AdminMenue.class.getSimpleName() + "?action=showAdminUsers", response));
@@ -205,7 +202,6 @@ public class AdminMenue extends HttpServlet {
 						continue;
 					}
 					participation.setRoleType(ParticipationRole.TUTOR);
-					participationDAO.saveParticipation(participation);
 					++count;
 				}
 			}
@@ -290,7 +286,6 @@ public class AdminMenue extends HttpServlet {
 				} else { // dregregate user
 					participation.setRoleType(ParticipationRole.NORMAL);
 				}
-				participationDAO.saveParticipation(participation);
 				response.sendRedirect(Util.generateRedirectURL(AdminMenue.class.getSimpleName() + "?action=showLecture&lecture=" + lecture.getId(), response));
 			}
 			tx.commit();

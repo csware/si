@@ -427,6 +427,7 @@ public class TaskManager extends HttpServlet {
 					getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 					return;
 				}
+				Transaction tx = session.beginTransaction();
 				if (!task.isSCMCTask()) {
 					task.setMinPointStep(Util.convertToPoints(request.getParameter("minpointstep")));
 				}
@@ -467,7 +468,7 @@ public class TaskManager extends HttpServlet {
 					}
 				}
 				task.setTaskGroup(taskGroup);
-				taskDAO.saveTask(task);
+				tx.commit();
 				if (request.getParameter("dynamictaskpreview") != null) {
 					response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=dynamictaskpreview", response));
 				} else {
@@ -501,6 +502,7 @@ public class TaskManager extends HttpServlet {
 						dynamicTask = request.getParameter("dynamicTask");
 					}
 				}
+				Transaction tx = session.beginTransaction();
 				task = taskDAO.newTask(request.getParameter("title"), Util.convertToPoints(request.getParameter("maxpoints"), 50), startdate, deadline, request.getParameter("description"), taskGroup, pointsdate, Util.parseInteger(request.getParameter("maxSubmitters"), 1), request.getParameter("allowSubmittersAcrossGroups") != null, taskType, dynamicTask, request.getParameter("prematureClosing") != null);
 				if (task.isSCMCTask() || task.isClozeTask()) {
 					task.setFilenameRegexp("-");
@@ -516,7 +518,7 @@ public class TaskManager extends HttpServlet {
 						task.setMaxPoints(points);
 					}
 				}
-				taskDAO.saveTask(task);
+				tx.commit();
 				response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask", response));
 			}
 			return;
@@ -547,9 +549,8 @@ public class TaskManager extends HttpServlet {
 					getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 					return;
 				}
-				taskGroup.setTitle(request.getParameter("title"));
 				Transaction tx = session.beginTransaction();
-				taskGroupDAO.saveTaskGroup(taskGroup);
+				taskGroup.setTitle(request.getParameter("title"));
 				tx.commit();
 			} else {
 				Transaction tx = session.beginTransaction();
@@ -585,7 +586,6 @@ public class TaskManager extends HttpServlet {
 			session.buildLockRequest(LockOptions.UPGRADE).lock(task);
 			pointCategoryDAO.deletePointCategory(pointCategory);
 			task.setMaxPoints(pointCategoryDAO.countPoints(task));
-			session.update(task);
 			tx.commit();
 
 			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?lecture=" + pointCategory.getTask().getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + pointCategory.getTask().getTaskid() + "#pointcriteria", response));
@@ -605,7 +605,6 @@ public class TaskManager extends HttpServlet {
 				session.buildLockRequest(LockOptions.UPGRADE).lock(task);
 				pointCategoryDAO.newPointCategory(task, Util.convertToPoints(request.getParameter("points")), request.getParameter("description"), request.getParameter("optional") != null);
 				task.setMaxPoints(pointCategoryDAO.countPoints(task));
-				session.update(task);
 				tx.commit();
 				response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid() + "#pointcriteria", response));
 			} else {
@@ -625,7 +624,6 @@ public class TaskManager extends HttpServlet {
 			Transaction tx = session.beginTransaction();
 			session.buildLockRequest(LockOptions.UPGRADE).lock(task);
 			task.setModelSolutionProvisionType(ModelSolutionProvisionType.valueOf(request.getParameter("modelsolutiontype")));
-			session.update(task);
 			tx.commit();
 
 			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid() + "#modelsolutions", response));

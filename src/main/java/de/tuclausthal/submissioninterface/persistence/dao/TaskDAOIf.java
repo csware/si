@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -54,12 +54,6 @@ public interface TaskDAOIf {
 	 * @return the task or null
 	 */
 	public Task getTask(int taskid);
-
-	/**
-	 * Update/save the task <i>task</i>
-	 * @param task the task to update
-	 */
-	public void saveTask(Task task);
 
 	/**
 	 * Deletes a specific task from the DB

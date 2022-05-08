@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -147,11 +147,5 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 		criteria.where(builder.equal(root.get(User_.superUser), true));
 		criteria.orderBy(builder.asc(root.get(User_.lastName)), builder.asc(root.get(User_.firstName)));
 		return session.createQuery(criteria).list();
-	}
-
-	@Override
-	public void saveUser(User user) {
-		Session session = getSession();
-		session.save(user);
 	}
 }

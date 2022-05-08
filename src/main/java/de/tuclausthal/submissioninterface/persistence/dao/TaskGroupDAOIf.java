@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -40,12 +40,6 @@ public interface TaskGroupDAOIf {
 	 * @return the TaskGroup or null
 	 */
 	public TaskGroup getTaskGroup(int taskGroupId);
-
-	/**
-	 * Saves a taskGroup
-	 * @param taskGroup the taskGroup
-	 */
-	public void saveTaskGroup(TaskGroup taskGroup);
 
 	/**
 	 * Deletes a specific taskGroup from the DB

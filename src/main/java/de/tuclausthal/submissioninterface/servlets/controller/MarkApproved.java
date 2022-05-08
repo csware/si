@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -90,7 +90,6 @@ public class MarkApproved extends HttpServlet {
 				if (submission != null && submission.getTask().getTaskid() == task.getTaskid() && submission.getPoints() != null && submission.getPoints().getPoints() != null && submission.getPoints().getPointStatus() != null && submission.getPoints().getPointStatus() == PointStatus.NICHT_ABGENOMMEN.ordinal()) {
 					submission.getPoints().setPointStatus(PointStatus.ABGENOMMEN);
 					submission.getPoints().setIssuedBy(participation);
-					session.save(submission);
 					// TODO: Attention! Manual update
 					PointHistory ph = new PointHistory(submission, "status", PointStatus.NICHT_ABGENOMMEN.toString(), PointStatus.ABGENOMMEN.toString(), participation);
 					session.save(ph);

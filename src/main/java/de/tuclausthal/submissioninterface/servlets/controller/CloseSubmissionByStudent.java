@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
  * Copyright 2019 Dustin Reineke <dustin.reineke@tu-clausthal.de>
  *
  * This file is part of the SubmissionInterface.
@@ -121,8 +121,6 @@ public class CloseSubmissionByStudent extends HttpServlet {
 		submission.setClosedTime(ZonedDateTime.now());
 		submission.setClosedBy(participation);
 
-		// update submission into database
-		session.update(submission);
 		tx.commit();
 
 		response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid(), response));

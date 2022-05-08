@@ -87,12 +87,6 @@ public interface ParticipationDAOIf {
 	public void deleteParticipation(Participation participation);
 
 	/**
-	 * Update/Save a given participation
-	 * @param participation the participation to update
-	 */
-	public void saveParticipation(Participation participation);
-
-	/**
 	 * Remove a participation based on the user-lecture association
 	 * @param user the user of the participation
 	 * @param lecture the lecture

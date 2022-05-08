@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -112,7 +112,7 @@ public class AuthenticationFilter implements Filter {
 
 			Transaction tx = session.beginTransaction();
 			verifyResult.verifiedUser.setLastLoggedIn(ZonedDateTime.now());
-			DAOFactory.UserDAOIf(session).saveUser(verifyResult.verifiedUser);
+			session.save(verifyResult.verifiedUser);
 			tx.commit();
 			sa.setUser(verifyResult.verifiedUser, request.getRemoteAddr());
 			if (login.redirectAfterLogin() == true) {

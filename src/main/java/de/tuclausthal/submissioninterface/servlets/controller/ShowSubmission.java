@@ -157,7 +157,6 @@ public class ShowSubmission extends HttpServlet {
 			session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
 			if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getRoleType().equals(ParticipationRole.NORMAL) && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && ((task.isAllowSubmittersAcrossGroups() && (partnerParticipation.getGroup() == null || !partnerParticipation.getGroup().isSubmissionGroup())) || (!task.isAllowSubmittersAcrossGroups() && partnerParticipation.getGroup() != null && submission.getSubmitters().iterator().next().getGroup() != null && partnerParticipation.getGroup().getGid() == submission.getSubmitters().iterator().next().getGroup().getGid())) && submissionDAO.getSubmission(task, partnerParticipation.getUser()) == null) {
 				submission.getSubmitters().add(partnerParticipation);
-				session.update(submission);
 				tx.commit();
 				response.sendRedirect(Util.generateRedirectURL(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid(), response));
 				return;

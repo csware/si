@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -36,7 +36,6 @@ public class TaskGroupDAO extends AbstractDAO implements TaskGroupDAOIf {
 	@Override
 	public void deleteTaskGroup(TaskGroup taskGroup) {
 		Session session = getSession();
-		session.update(taskGroup);
 		session.delete(taskGroup);
 	}
 
@@ -51,11 +50,5 @@ public class TaskGroupDAO extends AbstractDAO implements TaskGroupDAOIf {
 		TaskGroup taskGroup = new TaskGroup(title, lecture);
 		session.save(taskGroup);
 		return taskGroup;
-	}
-
-	@Override
-	public void saveTaskGroup(TaskGroup taskGroup) {
-		Session session = getSession();
-		session.saveOrUpdate(taskGroup);
 	}
 }

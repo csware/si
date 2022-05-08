@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -97,7 +97,6 @@ public class ChecklistTestResponse extends HttpServlet {
 		jsonObjectBuilder.add("checked", Json.createArrayBuilder(checkedByStudent));
 		logEntry.setAdditionalData(jsonObjectBuilder.build().toString());
 		logEntry.setResult(test.getCheckItems().stream().allMatch(checkItem -> request.getParameter("checkitem" + checkItem.getCheckitemid()) != null));
-		session.update(logEntry);
 		tx.commit();
 
 		if (request.getParameter("ajax") == null) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -73,10 +73,8 @@ public class JoinGroup extends HttpServlet {
 		boolean canJoin = group.isAllowStudentsToSignup() && group.getMembers().size() < group.getMaxStudents();
 		if ((participation.getGroup() == null || participation.getGroup().isAllowStudentsToQuit()) && canJoin) {
 			participation.setGroup(group);
-			participationDAO.saveParticipation(participation);
 		}
-		response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + group.getLecture().getId(), response));
 		tx.commit();
-		return;
+		response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + group.getLecture().getId(), response));
 	}
 }

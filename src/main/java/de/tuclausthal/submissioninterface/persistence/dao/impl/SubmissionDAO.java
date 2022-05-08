@@ -98,12 +98,6 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 	}
 
 	@Override
-	public void saveSubmission(Submission submission) {
-		Session session = getSession();
-		session.saveOrUpdate(submission);
-	}
-
-	@Override
 	public List<Submission> getSubmissionsForTaskOrdered(Task task) {
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();

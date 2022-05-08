@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2021-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -75,12 +75,6 @@ public interface UserDAOIf {
 	 * @return list of admin-users
 	 */
 	public List<User> getSuperUsers();
-
-	/**
-	 * Update/save the user <i>user</i>
-	 * @param user the user to update
-	 */
-	public void saveUser(User user);
 
 	public void makeUserStudent(int uid, int matrikelno);
 }

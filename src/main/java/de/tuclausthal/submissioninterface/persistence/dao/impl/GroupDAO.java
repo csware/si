@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -70,9 +70,7 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 		session.buildLockRequest(LockOptions.UPGRADE).lock(group);
 		for (Participation participation : group.getMembers()) {
 			participation.setGroup(null);
-			session.update(participation);
 		}
-		session.update(group);
 		session.delete(group);
 	}
 
@@ -84,12 +82,6 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 	@Override
 	public Group getGroupLocked(int groupid) {
 		return getSession().get(Group.class, groupid, LockOptions.UPGRADE);
-	}
-
-	@Override
-	public void saveGroup(Group group) {
-		Session session = getSession();
-		session.update(group);
 	}
 
 	@Override

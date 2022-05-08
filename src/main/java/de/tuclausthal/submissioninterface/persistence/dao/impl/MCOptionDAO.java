@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020, 2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -57,7 +57,7 @@ public class MCOptionDAO extends AbstractDAO implements MCOptionDAOIf {
 		Session session = getSession();
 		session.beginTransaction();
 		MCOption mcoption = new MCOption(task, option, correct);
-		session.saveOrUpdate(mcoption);
+		session.save(mcoption);
 		session.getTransaction().commit();
 		return mcoption;
 	}

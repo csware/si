@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -150,7 +150,6 @@ public class DeleteFile extends HttpServlet {
 			if (file.exists() && file.isFile() && file.delete()) {
 				if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 					submission.setLastModified(ZonedDateTime.now());
-					submissionDAO.saveSubmission(submission);
 				}
 				new LogDAO(session).createLogDeleteEntryTransaction(participation.getUser(), submission.getTask(), relativeFile);
 				tx.commit();
