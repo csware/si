@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -21,12 +21,12 @@ package de.tuclausthal.submissioninterface.servlets.view.fragments;
 import java.io.PrintWriter;
 import java.io.StringReader;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonValue;
-import javax.json.stream.JsonParsingException;
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonValue;
+import jakarta.json.stream.JsonParsingException;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
 import de.tuclausthal.submissioninterface.util.Util;

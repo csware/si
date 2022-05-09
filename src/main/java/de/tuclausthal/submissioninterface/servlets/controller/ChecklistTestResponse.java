@@ -23,8 +23,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
 import javax.persistence.LockModeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -33,6 +31,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import jakarta.json.Json;
+import jakarta.json.JsonObjectBuilder;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;

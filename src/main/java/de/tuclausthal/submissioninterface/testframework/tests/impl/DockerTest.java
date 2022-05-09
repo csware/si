@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObjectBuilder;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;

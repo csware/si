@@ -23,9 +23,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.json.Json;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import jakarta.json.Json;
 
 import org.apache.commons.text.StringEscapeUtils;
 

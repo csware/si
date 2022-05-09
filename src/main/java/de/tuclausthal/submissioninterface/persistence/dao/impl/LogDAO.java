@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2022 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import javax.json.Json;
+import jakarta.json.Json;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;

@@ -27,9 +27,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObjectBuilder;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTestStep;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
