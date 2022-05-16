@@ -7,7 +7,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-sources/annotations"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-test-sources/test-annotations"/>
-        <property name="context-root" value="SubmissionInterface"/>
-        <property name="java-output-path" value="/SubmissionInterface/target/classes"/>
+        <property name="context-root" value="GATE"/>
+        <property name="java-output-path" value="/GATE/target/classes"/>
     </wb-module>
 </project-modules>

@@ -2,19 +2,19 @@
  * Copyright 2010-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
  * Copyright 2019 Dustin Reineke <dustin.reineke@tu-clausthal.de>
  *
- * This file is part of the SubmissionInterface.
+ * This file is part of the GATE.
  *
- * SubmissionInterface is free software: you can redistribute it and/or modify
+ * GATE is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
  * published by the Free Software Foundation.
  *
- * SubmissionInterface is distributed in the hope that it will be useful,
+ * GATE is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with SubmissionInterface. If not, see <http://www.gnu.org/licenses/>.
+ * along with GATE. If not, see <http://www.gnu.org/licenses/>.
  */
 
 function confirmLink(msg) {

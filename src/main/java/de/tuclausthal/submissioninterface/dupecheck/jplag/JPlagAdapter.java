@@ -1,7 +1,7 @@
-/* 
+/*
  *  Copyright (C) 2020-2021 Sven Strickroth <email@cs-ware.de> 
- * 
- * This file is part of the SubmissionInterface.
+ *
+ * This file is part of the GATE.
  *
  *  Plaggie is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published

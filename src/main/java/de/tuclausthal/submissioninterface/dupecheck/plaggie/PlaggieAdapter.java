@@ -1,7 +1,7 @@
-/* 
+/*
  *  Copyright (C) 2006 Aleksi Ahtiainen, Mikko Rahikainen.
  *  Copyright (C) 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de> 
- * 
+ *
  *  This file is part of the homework submission interface.
  *
  *  Plaggie is free software; you can redistribute it and/or modify
