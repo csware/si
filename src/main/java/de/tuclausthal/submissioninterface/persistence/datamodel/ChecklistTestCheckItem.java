@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -26,7 +26,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -78,8 +77,7 @@ public class ChecklistTestCheckItem implements Serializable {
 	/**
 	 * @return the title
 	 */
-	@Lob
-	@Column(nullable = false)
+	@Column(nullable = false, length = 65536)
 	public String getTitle() {
 		return title;
 	}

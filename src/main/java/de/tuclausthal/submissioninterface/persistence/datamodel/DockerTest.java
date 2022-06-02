@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,8 +20,8 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
@@ -51,7 +51,7 @@ public class DockerTest extends Test {
 	/**
 	 * @return the preparationShellCode
 	 */
-	@Lob
+	@Column(length = 65536)
 	public String getPreparationShellCode() {
 		return preparationShellCode;
 	}

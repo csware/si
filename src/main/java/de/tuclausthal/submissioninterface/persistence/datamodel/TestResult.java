@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020, 2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -25,7 +25,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -60,8 +59,7 @@ public class TestResult implements Serializable {
 	/**
 	 * @return the testOutput
 	 */
-	@Lob
-	@Column(nullable = false)
+	@Column(nullable = false, length = 16777215)
 	public String getTestOutput() {
 		return testOutput;
 	}

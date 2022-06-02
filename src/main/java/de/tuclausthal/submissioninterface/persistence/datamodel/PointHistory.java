@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -27,7 +27,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -123,8 +122,7 @@ public class PointHistory implements Serializable {
 	/**
 	 * @return the removed
 	 */
-	@Lob
-	@Column(nullable = false)
+	@Column(nullable = false, length = 65536)
 	public String getRemoved() {
 		return removed;
 	}
@@ -139,8 +137,7 @@ public class PointHistory implements Serializable {
 	/**
 	 * @return the added
 	 */
-	@Lob
-	@Column(nullable = false)
+	@Column(nullable = false, length = 65536)
 	public String getAdded() {
 		return added;
 	}

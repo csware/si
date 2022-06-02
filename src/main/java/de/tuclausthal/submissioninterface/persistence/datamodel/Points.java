@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -23,7 +23,6 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
@@ -83,7 +82,7 @@ public class Points implements Serializable {
 	/**
 	 * @return the comment
 	 */
-	@Lob
+	@Column(length = 65536)
 	public String getPublicComment() {
 		return publicComment;
 	}
@@ -106,7 +105,7 @@ public class Points implements Serializable {
 	/**
 	 * @return the internalComment
 	 */
-	@Lob
+	@Column(length = 65536)
 	public String getInternalComment() {
 		return internalComment;
 	}

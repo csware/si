@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,12 +21,12 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -113,7 +113,7 @@ public class LogEntry implements Serializable {
 	/**
 	 * @return the testOutput
 	 */
-	@Lob
+	@Column(length = 16777215)
 	public String getTestOutput() {
 		return testOutput;
 	}
@@ -193,7 +193,7 @@ public class LogEntry implements Serializable {
 	/**
 	 * @return the additionalData
 	 */
-	@Lob
+	@Column(length = 16777215)
 	public String getAdditionalData() {
 		return additionalData;
 	}
