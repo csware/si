@@ -35,8 +35,8 @@ compile-jdk11:
     - perl -pi -e 's|localhost/[a-zA-Z0-9]+|mariadb/abgabesystem|g' src/main/resources/hibernate.cfg.xml
     - perl -pi -e 's|hibernate.show_sql">true|hibernate.show_sql">false|g' src/main/resources/hibernate.cfg.xml
   script:
-    - xmlstarlet val -w -e -s http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd src/main/webapp/WEB-INF/web.xml
-    - xmlstarlet val -w -e -d http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd src/main/resources/hibernate.cfg.xml
+    - '[ -z "$SKIP_ONLINE_TESTS" ] && xmlstarlet val -w -e -s http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd src/main/webapp/WEB-INF/web.xml || echo "Skipped"'
+    - '[ -z "$SKIP_ONLINE_TESTS" ] && xmlstarlet val -w -e -d http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd src/main/resources/hibernate.cfg.xml || echo "Skipped"'
     - 'mvn $MAVEN_CLI_OPTS verify'
     - mysql -u root -h mariadb -e 'create database abgabesystem CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin;'
     - mysql -u root -h mariadb abgabesystem < mysql.sql
