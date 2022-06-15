@@ -26,6 +26,7 @@ import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
@@ -48,6 +49,7 @@ public class Configuration {
 	final public static String SERVLETS_PATH_WITH_BOTHSLASHES = "/" + SERVLETS_PATH_WITH_ENDSLASH;
 
 	final public static int MAX_UPLOAD_SIZE = 100 * 1024 * 1024;
+	public static String VERSION_INFO = "unknown";
 
 	static private Configuration instance = null;
 	private Constructor<Template> templateConstructor;
@@ -66,6 +68,16 @@ public class Configuration {
 	private ArrayList<String> intranetPrefixes = new ArrayList<>();
 	private Charset defaultZipFileCharset;
 	private List<String> studiengaenge;
+
+	static {
+		Properties versionProperties = new Properties();
+		try {
+			versionProperties.load(Configuration.class.getClassLoader().getResourceAsStream("git.properties"));
+			VERSION_INFO = versionProperties.getProperty("git.commit.id.abbrev") + " (" + versionProperties.getProperty("git.build.time") + ")";
+		} catch (IOException | NullPointerException ex) {
+			VERSION_INFO = "unknown";
+		}
+	}
 
 	private Configuration() {}
 

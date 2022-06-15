@@ -45,6 +45,9 @@ public class ContextConfigurationListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent event) {
 		LOG.info("Initializing Configuration in context [{}]", event.getServletContext().getContextPath());
 
+		if (!Configuration.VERSION_INFO.isEmpty()) {
+			LOG.info("GATE version: {}", Configuration.VERSION_INFO);
+		}
 		Configuration.fillConfiguration(event.getServletContext());
 
 		// configure AuthenticationFilter
