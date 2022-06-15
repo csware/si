@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2013, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.util;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Set;
 
 import javax.servlet.FilterRegistration;
@@ -27,6 +28,8 @@ import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpServlet;
 
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
@@ -36,8 +39,12 @@ import de.tuclausthal.submissioninterface.servlets.GATEView;
  * @author Sven Strickroth
  */
 public class ContextConfigurationListener implements ServletContextListener {
+	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
+		LOG.info("Initializing Configuration in context [{}]", event.getServletContext().getContextPath());
+
 		Configuration.fillConfiguration(event.getServletContext());
 
 		// configure AuthenticationFilter
@@ -66,8 +73,13 @@ public class ContextConfigurationListener implements ServletContextListener {
 				registration.addMapping(Configuration.SERVLETS_PATH_WITH_BOTHSLASHES + servlet.getSimpleName());
 			}
 		}
+
+		LOG.info("Initializing Configuration in context [{}] finished", event.getServletContext().getContextPath());
 	}
 
 	@Override
-	public void contextDestroyed(ServletContextEvent event) {}
+	public void contextDestroyed(ServletContextEvent event) {
+		LOG.info("Destroying Configuration in context [{}]", event.getServletContext().getContextPath());
+		LOG.info("Destroying Configuration in context [{}] finished", event.getServletContext().getContextPath());
+	}
 }

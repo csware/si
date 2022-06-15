@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -35,14 +35,14 @@ public class HibernateListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
-		LOG.info("Initializing context [{}]", event.getServletContext().getContextPath());
+		LOG.info("Initializing Hibernate Listener in context [{}]", event.getServletContext().getContextPath());
 		HibernateSessionHelper.getSessionFactory(); // Just call the static initializer of that class
-		LOG.info("Initializing context [{}] finished", event.getServletContext().getContextPath());
+		LOG.info("Initializing Hibernate Listener in context [{}] finished", event.getServletContext().getContextPath());
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
-		LOG.info("Destroying context [{}]", event.getServletContext().getContextPath());
+		LOG.info("Destroying Hibernate Listener in context [{}]", event.getServletContext().getContextPath());
 
 		HibernateSessionHelper.getSessionFactory().close(); // Free all resources
 		try {
@@ -66,6 +66,6 @@ public class HibernateListener implements ServletContextListener {
 				LOG.error("Error deregistering JDBC driver \"{}\"", driver.toString());
 			}
 		}
-		LOG.info("Destroying context [{}] finished", event.getServletContext().getContextPath());
+		LOG.info("Destroying Hibernate Listener in context [{}] finished", event.getServletContext().getContextPath());
 	}
 }
