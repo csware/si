@@ -146,12 +146,14 @@ public class SubmitSolution extends HttpServlet {
 			request.setAttribute("participants", DAOFactory.ParticipationDAOIf(session).getLectureParticipationsOrderedByName(task.getTaskGroup().getLecture()));
 			getServletContext().getNamedDispatcher(SubmitSolutionAdvisorFormView.class.getSimpleName()).forward(request, response);
 		} else {
+			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+			Submission submission = submissionDAO.getSubmission(task, participation.getUser());
+			request.setAttribute("submission", submission);
 			request.setAttribute("participation", participation);
 
 			if (request.getParameter("onlypartners") == null) {
 				if (task.showTextArea()) {
 					String textsolution = "";
-					Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(task, RequestAdapter.getUser(request));
 					if (submission != null) {
 						File textSolutionFile = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + task.getShowTextArea());
 						if (textSolutionFile.exists()) {

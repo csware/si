@@ -61,10 +61,7 @@ public class SubmitSolutionPossiblePartnersView extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Task task = (Task) request.getAttribute("task");
 		Participation participation = (Participation) request.getAttribute("participation");
-
-		Session session = RequestAdapter.getSession(request);
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
-		Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
+		Submission submission = (Submission) request.getAttribute("submission");
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
@@ -82,6 +79,8 @@ public class SubmitSolutionPossiblePartnersView extends HttpServlet {
 				info.setTextContent("Diese Abgabe wird automatisch für alle Studierenden in Ihrer Gruppe durchgeführt.");
 				rootElement.appendChild(info);
 			} else if (task.isAllowSubmittersAcrossGroups() || participation.getGroup() != null) {
+				Session session = RequestAdapter.getSession(request);
+				SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 				Element partners = document.createElement("partners");
 
 				List<Participation> participations;

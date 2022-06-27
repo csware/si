@@ -58,24 +58,16 @@ public class SubmitSolutionFormView extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Session session = RequestAdapter.getSession(request);
 		Template template = TemplateFactory.getTemplate(request, response);
 
 		Task task = (Task) request.getAttribute("task");
 		Participation participation = (Participation) request.getAttribute("participation");
+		Submission submission = (Submission) request.getAttribute("submission");
 
 		template.addKeepAlive();
 		template.printTemplateHeader("Abgabe starten", task);
 		PrintWriter out = response.getWriter();
-
-		Session session = RequestAdapter.getSession(request);
-		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
-		Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
-
-		if (submission != null && task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
-			request.setAttribute("title", "Die Abgabe wurde bereits als endgültig abgeschlossen markiert. Eine Veränderung ist daher nicht mehr möglich.");
-			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
-			return;
-		}
 
 		StringBuilder setWithUser = new StringBuilder();
 		if (task.getMaxSubmitters() > 1 && submission == null) {
@@ -93,6 +85,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 				} else {
 					participations = DAOFactory.ParticipationDAOIf(session).getParticipationsOfGroup(participation.getGroup());
 				}
+				SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 				for (Participation part : participations) {
 					// filter out students which already have a submission and users which are in a submissiongroup (otherwise the other participants of the submissiongroup cannot submit a solution any more)
 					if (part.getId() != participation.getId() && part.getRoleType().equals(ParticipationRole.NORMAL) && (!task.isAllowSubmittersAcrossGroups() || part.getGroup() == null || !part.getGroup().isSubmissionGroup()) && submissionDAO.getSubmission(task, part.getUser()) == null) {
