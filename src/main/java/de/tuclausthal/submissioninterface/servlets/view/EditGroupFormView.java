@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -92,7 +92,7 @@ public class EditGroupFormView extends HttpServlet {
 		int cnt = 0;
 		while (participationIterator.hasNext()) {
 			Participation thisParticipation = participationIterator.next();
-			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0 || thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
+			if (thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 				out.println("<option value=" + thisParticipation.getId() + ">" + Util.escapeHTML(thisParticipation.getUser().getFullName()) + "</option>");
 				++cnt;
 			}
