@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -50,7 +50,7 @@ public class CloseSubmissionView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		out.println("<FORM class=mid method=POST action=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">");
-		out.println("<p>Sie Sie sicher, dass Sie Ihre Lösung wirklich final abgeben möchten?</p>");
+		out.println("<p>Sind Sie sicher, dass Sie Ihre Lösung wirklich final abgeben möchten?</p>");
 		out.println("<p><span class=b>Wichtig</span>: Nach der finalen Abgabe sind keine weiteren Änderungen mehr möglich.<br>Dieser Vorgang kann von Ihnen nicht rückgängig gemacht werden.</span></p>");
 		out.println("<INPUT TYPE=submit VALUE=\"final abgeben\"> <a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid(), response) + "\">Abbrechen</a>");
 		out.println("</FORM>");
