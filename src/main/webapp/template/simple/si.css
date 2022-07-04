@@ -137,7 +137,7 @@ body.filepreview h1, .previewmenubox, .highlightborder {
 	padding: 2px;
 }
 
-code {
+code, #taskdescription pre, #taskdescription input.cloze {
 	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
 }
 

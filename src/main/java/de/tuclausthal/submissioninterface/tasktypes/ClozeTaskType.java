@@ -231,7 +231,7 @@ public class ClozeTaskType {
 				sb.append("<select size=1 name=\"");
 				sb.append(FORM_NAME);
 				sb.append(number);
-				sb.append("\"");
+				sb.append("\" class=cloze");
 				if (notEditable) {
 					sb.append(" disabled");
 				}
@@ -253,7 +253,7 @@ public class ClozeTaskType {
 				sb.append("<input name=\"");
 				sb.append(FORM_NAME);
 				sb.append(number);
-				sb.append("\" type=text disabled");
+				sb.append("\" type=text class=cloze disabled");
 				if (oldData != null) {
 					sb.append(" value=\"" + Util.escapeHTML(oldData) + "\"");
 					sb.append(" size=" + (oldData.length() + 3));
@@ -299,7 +299,7 @@ public class ClozeTaskType {
 			sb.append(FORM_NAME);
 			sb.append(number);
 			sb.append("\"");
-			sb.append(" type=text");
+			sb.append(" type=text class=cloze");
 			if (notEditable) {
 				sb.append(" disabled");
 			}
