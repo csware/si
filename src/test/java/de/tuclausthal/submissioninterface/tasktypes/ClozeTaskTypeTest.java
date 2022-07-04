@@ -52,6 +52,15 @@ public class ClozeTaskTypeTest {
 	}
 
 	@Test
+	public void testRenderingOldResultsNonEditableAllOK() {
+		List<String> results = Arrays.asList("Kalifornien", "Arizona", "Kalifornien", "Arizona", "Paris");
+		ClozeTaskType ch = new ClozeTaskType("Ordnen Sie die folgenden Städte den richtigen US-Bundesstaaten zu:\n* San Francisco: {MULTICHOICE:1=Kalifornien~0=Arizona}\n* Tucson: {MULTICHOICE:0=Kalifornien~1=Arizona}\n* Los Angeles: {MULTICHOICE:1=Kalifornien~0=Arizona}\n* Phoenix: {MULTICHOICE:0=Kalifornien~1=Arizona}\nDie Hauptstadt von Frankreich ist {SHORTANSWER:1=Paris~.5=Marseilles}.", results, true, false);
+		assertTrue(ch.isAutoGradeAble());
+		assertEquals("Ordnen Sie die folgenden Städte den richtigen US-Bundesstaaten zu:\n* San Francisco: <input name=\"cloze0\" type=\"text\" class=\"cloze\" disabled=\"disabled\" value=\"Kalifornien\" size=\"14\" />\n* Tucson: <input name=\"cloze1\" type=\"text\" class=\"cloze\" disabled=\"disabled\" value=\"Arizona\" size=\"10\" />\n* Los Angeles: <input name=\"cloze2\" type=\"text\" class=\"cloze\" disabled=\"disabled\" value=\"Kalifornien\" size=\"14\" />\n* Phoenix: <input name=\"cloze3\" type=\"text\" class=\"cloze\" disabled=\"disabled\" value=\"Arizona\" size=\"10\" />\nDie Hauptstadt von Frankreich ist <input name=\"cloze4\" type=\"text\" class=\"cloze\" disabled=\"disabled\" value=\"Paris\" size=\"8\"" + ClozeTaskType.FIXED_LIMIT + " autocomplete=\"off\" />.", ch.toHTML());
+		assertEquals(500, ch.calculatePoints(results));
+	}
+
+	@Test
 	public void testRenderingOldResultsEditable() {
 		List<String> results = Arrays.asList("Kalifornien", "Arizona", "Kalifornien", "Kalifornien", "Something");
 		ClozeTaskType ch = new ClozeTaskType("Ordnen Sie die folgenden Städte den richtigen US-Bundesstaaten zu:\n* San Francisco: {MULTICHOICE:1=Kalifornien~0=Arizona}\n* Tucson: {MULTICHOICE:0=Kalifornien~1=Arizona}\n* Los Angeles: {MULTICHOICE:1=Kalifornien~0=Arizona}\n* Phoenix: {MULTICHOICE:0=Kalifornien~1=Arizona}\nDie Hauptstadt von Frankreich ist {SHORTANSWER:1=Paris~.5=Marseilles}.", results, false, false);
