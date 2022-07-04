@@ -59,7 +59,7 @@ public class TaskManagerDynamicTaskPreView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.println("<dl>");
 		out.println("<dt><b>Aufgabenstellung:</b></dt>");
-		out.println("<dd>" + Util.makeCleanHTML(task.getDescription()) + "</dd>");
+		out.println("<dd><div id=taskdescription>" + Util.makeCleanHTML(task.getDescription()) + "</div></dd>");
 
 		out.println("<dt><b>Werte:</b></dt>");
 		out.println("<dd>");

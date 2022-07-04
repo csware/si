@@ -371,9 +371,9 @@ public class TaskManager extends HttpServlet {
 				template.printTemplateFooter();
 				return;
 			}
-			out.println("<form action=\"" + Util.generateHTMLLink("?action=clozepreviewtest", response) + "\" method=post>");
+			out.println("<form action=\"" + Util.generateHTMLLink("?action=clozepreviewtest", response) + "\" method=post><div id=taskdescription>");
 			out.println(clozeHelper.toHTML());
-			out.println("<input type=hidden name=description value=\"" + Util.escapeHTML(request.getParameter("description")) + "\">");
+			out.println("</div><input type=hidden name=description value=\"" + Util.escapeHTML(request.getParameter("description")) + "\">");
 			out.println("<input type=submit value=testen...>");
 			out.println("</form>");
 			template.printTemplateFooter();

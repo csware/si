@@ -379,7 +379,7 @@ public class ShowSubmissionView extends HttpServlet {
 			}
 			out.println("</ul></li>");
 			out.println("<li><b>Berechnete Punkte:</b> " + Util.showPoints(clozeHelper.calculatePoints(results)) + "</li>");
-			out.println("<li>" + clozeHelper.toHTML() + "</li>");
+			out.println("<li><div id=taskdescription>" + clozeHelper.toHTML() + "</div></li>");
 			out.println("</ul>");
 		} else if (task.isADynamicTask()) {
 			out.println("<h2>Dynamische Aufgabe: <a href=\"#\" onclick=\"toggleVisibility('dynamictask'); return false;\">(+/-)</a></h2>");
