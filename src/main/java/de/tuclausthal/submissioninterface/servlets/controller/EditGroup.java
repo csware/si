@@ -60,6 +60,7 @@ public class EditGroup extends HttpServlet {
 		GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
 		Group group = groupDAO.getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
 		if (group == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Gruppe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -84,6 +85,7 @@ public class EditGroup extends HttpServlet {
 		GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
 		Group group = groupDAO.getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
 		if (group == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Gruppe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;

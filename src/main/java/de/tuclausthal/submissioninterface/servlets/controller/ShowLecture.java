@@ -60,6 +60,7 @@ public class ShowLecture extends HttpServlet {
 
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2013, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2013, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -66,6 +66,7 @@ public class ShowUser extends HttpServlet {
 
 		User user = DAOFactory.UserDAOIf(session).getUser(Util.parseInteger(request.getParameter("uid"), 0));
 		if (user == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "BenutzerIn nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;

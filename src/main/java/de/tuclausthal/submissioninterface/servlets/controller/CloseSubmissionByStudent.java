@@ -56,6 +56,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 
 		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Abgabe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -90,6 +91,7 @@ public class CloseSubmissionByStudent extends HttpServlet {
 
 		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 		if (submission == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Abgabe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;

@@ -89,6 +89,7 @@ public class TaskManager extends HttpServlet {
 		Session session = RequestAdapter.getSession(request);
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -108,6 +109,7 @@ public class TaskManager extends HttpServlet {
 				TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 				task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 				if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 					request.setAttribute("title", "Aufgabe nicht gefunden");
 					getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 					return;
@@ -156,6 +158,7 @@ public class TaskManager extends HttpServlet {
 				TaskGroupDAOIf taskDAO = DAOFactory.TaskGroupDAOIf(session);
 				taskGroup = taskDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
 				if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
+					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 					request.setAttribute("title", "Aufgabengruppe nicht gefunden");
 					getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 					return;
@@ -171,6 +174,7 @@ public class TaskManager extends HttpServlet {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Aufgabe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
@@ -206,6 +210,7 @@ public class TaskManager extends HttpServlet {
 		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null || task.getTaskGroup().getLecture().getId() != lecture.getId()) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Aufgabe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -400,6 +405,7 @@ public class TaskManager extends HttpServlet {
 		Session session = RequestAdapter.getSession(request);
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 		if (lecture == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Veranstaltung nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -416,6 +422,7 @@ public class TaskManager extends HttpServlet {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 			TaskGroup taskGroup = DAOFactory.TaskGroupDAOIf(session).getTaskGroup(Util.parseInteger(request.getParameter("taskGroup"), 0));
 			if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Aufgabengruppe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			}
@@ -423,6 +430,7 @@ public class TaskManager extends HttpServlet {
 			if (request.getParameter("action").equals("saveTask")) {
 				task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 				if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 					request.setAttribute("title", "Aufgabe nicht gefunden");
 					getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 					return;
@@ -526,6 +534,7 @@ public class TaskManager extends HttpServlet {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Aufgabe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			} else {
@@ -545,6 +554,7 @@ public class TaskManager extends HttpServlet {
 			if (request.getParameter("action").equals("saveTaskGroup")) {
 				taskGroup = taskGroupDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
 				if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
+					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 					request.setAttribute("title", "Aufgabengruppe nicht gefunden");
 					getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 					return;
@@ -563,6 +573,7 @@ public class TaskManager extends HttpServlet {
 			TaskGroupDAOIf taskGroupDAO = DAOFactory.TaskGroupDAOIf(session);
 			TaskGroup taskGroup = taskGroupDAO.getTaskGroup(Util.parseInteger(request.getParameter("taskgroupid"), 0));
 			if (taskGroup == null || taskGroup.getLecture().getId() != participation.getLecture().getId()) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Aufgabengruppe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			} else {
@@ -576,6 +587,7 @@ public class TaskManager extends HttpServlet {
 			PointCategoryDAOIf pointCategoryDAO = DAOFactory.PointCategoryDAOIf(session);
 			PointCategory pointCategory = pointCategoryDAO.getPointCategory(Util.parseInteger(request.getParameter("pointCategoryId"), 0));
 			if (pointCategory == null || pointCategory.getTask().getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Punktkategorie nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
@@ -595,6 +607,7 @@ public class TaskManager extends HttpServlet {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Aufgabe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
@@ -616,6 +629,7 @@ public class TaskManager extends HttpServlet {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Aufgabe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
@@ -631,6 +645,7 @@ public class TaskManager extends HttpServlet {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Aufgabe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
@@ -641,6 +656,7 @@ public class TaskManager extends HttpServlet {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 			Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 			if (task == null || task.getTaskGroup().getLecture().getId() != participation.getLecture().getId()) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Aufgabe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;

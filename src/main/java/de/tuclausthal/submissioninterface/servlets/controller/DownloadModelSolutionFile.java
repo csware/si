@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2014, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2014, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -60,6 +60,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 
 		if (task == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Aufgabe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -93,6 +94,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 			}
 		}
 
+		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
 		getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 	}
@@ -104,6 +106,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 
 		if (task == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Aufgabe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -139,6 +142,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 			}
 		}
 
+		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
 		getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 	}

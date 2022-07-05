@@ -62,6 +62,7 @@ public class DeleteFile extends HttpServlet {
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 
 		if (submission == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Abgabe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -103,6 +104,7 @@ public class DeleteFile extends HttpServlet {
 			}
 		}
 
+		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 		request.setAttribute("title", "Datei nicht gefunden");
 		getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 	}
@@ -114,6 +116,7 @@ public class DeleteFile extends HttpServlet {
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 
 		if (submission == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Abgabe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -160,6 +163,7 @@ public class DeleteFile extends HttpServlet {
 			tx.rollback();
 		}
 
+		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 		request.setAttribute("title", "Datei nicht gefunden");
 		request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), request, response) + "\">zurück zur Aufgabe</a></div>");
 		getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);

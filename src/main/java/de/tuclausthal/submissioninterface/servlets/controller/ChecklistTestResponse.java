@@ -67,6 +67,7 @@ public class ChecklistTestResponse extends HttpServlet {
 		TestDAOIf testDAOIf = DAOFactory.TestDAOIf(session);
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
 		if (tst == null || !(tst instanceof ChecklistTest)) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Test nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;

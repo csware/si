@@ -74,6 +74,7 @@ public class MassMail extends HttpServlet {
 			GroupDAOIf groupDAO = DAOFactory.GroupDAOIf(session);
 			group = groupDAO.getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
 			if (group == null) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Gruppe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
@@ -83,6 +84,7 @@ public class MassMail extends HttpServlet {
 			LectureDAOIf lectureDAO = DAOFactory.LectureDAOIf(session);
 			lecture = lectureDAO.getLecture(Util.parseInteger(request.getParameter("lectureid"), 0));
 			if (lecture == null) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Vorlesung nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
@@ -115,6 +117,7 @@ public class MassMail extends HttpServlet {
 		LectureDAOIf lectureDAO = DAOFactory.LectureDAOIf(session);
 		Lecture lecture = lectureDAO.getLecture(Util.parseInteger(request.getParameter("lectureid"), 0));
 		if (lecture == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Vorlesung nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;

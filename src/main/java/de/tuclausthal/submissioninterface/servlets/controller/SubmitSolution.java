@@ -99,6 +99,7 @@ public class SubmitSolution extends HttpServlet {
 		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Aufgabe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -122,7 +123,8 @@ public class SubmitSolution extends HttpServlet {
 				return;
 			}
 			if (task.getStart().isAfter(ZonedDateTime.now())) {
-				request.setAttribute("title", "Abgabe nicht gefunden");
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				request.setAttribute("title", "Aufgabe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
@@ -184,6 +186,7 @@ public class SubmitSolution extends HttpServlet {
 		TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		Task task = taskDAO.getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			template.printTemplateHeader("Aufgabe nicht gefunden");
 			PrintWriter out = response.getWriter();
 			out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("?", response) + "\">zur Übersicht</a></div>");
@@ -275,9 +278,10 @@ public class SubmitSolution extends HttpServlet {
 			}
 			// Uploader is Student, -> hard date checks
 			if (task.getStart().isAfter(ZonedDateTime.now())) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				template.printTemplateHeader("Ungültige Anfrage");
 				PrintWriter out = response.getWriter();
-				out.println("<div class=mid>Abgabe nicht gefunden.</div>");
+				out.println("<div class=mid>Aufgabe nicht gefunden.</div>");
 				template.printTemplateFooter();
 				return;
 			}

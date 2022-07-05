@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
  * Copyright 2019 Dustin Reineke <dustin.reineke@tu-clausthal.de>
  *
  * This file is part of the GATE.
@@ -58,6 +58,7 @@ public class DownloadSubmissionsByGroup extends HttpServlet {
 
 		Task task = DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(request.getParameter("taskid"), 0));
 		if (task == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Aufgabe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -75,6 +76,7 @@ public class DownloadSubmissionsByGroup extends HttpServlet {
 		if (request.getParameter("groupid") != null) {
 			group = DAOFactory.GroupDAOIf(session).getGroup(Util.parseInteger(request.getParameter("groupid"), 0));
 			if (group == null || group.getLecture().getId() != participation.getLecture().getId()) {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Gruppe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;

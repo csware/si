@@ -55,6 +55,7 @@ public class JoinGroup extends HttpServlet {
 		Transaction tx = session.beginTransaction();
 		Group group = groupDAO.getGroupLocked(Util.parseInteger(request.getParameter("groupid"), 0));
 		if (group == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Gruppe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			tx.commit();

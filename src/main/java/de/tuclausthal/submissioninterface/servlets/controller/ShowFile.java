@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -66,6 +66,7 @@ public class ShowFile extends HttpServlet {
 		Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
 
 		if (submission == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Abgabe nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
@@ -111,6 +112,7 @@ public class ShowFile extends HttpServlet {
 			}
 		}
 
+		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 		request.setAttribute("title", "Datei/Pfad nicht gefunden");
 		request.setAttribute("message", "<div class=mid><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), request, response) + "\">zurück zur Aufgabe</a></div>");
 		getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
