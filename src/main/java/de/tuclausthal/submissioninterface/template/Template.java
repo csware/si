@@ -174,8 +174,7 @@ public abstract class Template {
 							"resize: 'both'," +
 							"browser_spellcheck: true," +
 							"block_formats: 'Paragraph=p;Header 1=h1;Header 2=h2;Header 3=h3'," + 
-							"plugins: \"table,code,codesample,link,lists,hr,image,quickbars,media,searchreplace,contextmenu,charmap,paste,nonbreaking\"," +
-							"paste_data_images: true," + 
+							"plugins: \"table,code,codesample,link,lists,image,quickbars,media,searchreplace,charmap,nonbreaking\"," +
 							"content_css: " + Json.createArrayBuilder(getStyleSheetsForWYSIWYGEditor()).build().toString() + "," +
 							"formats: {" +
 							"    alignleft: { selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes: 'left' }," +
@@ -191,12 +190,12 @@ public abstract class Template {
 							"    edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace | newdocument' }," +
 							"    insert: { title: 'Insert', items: 'image link media codeexample | template charmap hr | nonbreaking' }," +
 							"    view: { title: 'View', items: 'code | visualaid' }," +
-							"    format: { title: 'Format', items: 'bold italic strikethrough superscript subscript | formats blockformats fontname fontsizes align | forecolor backcolor | removeformat' }," +
+							"    format: { title: 'Format', items: 'bold italic strikethrough superscript subscript | styles fontfamily fontsize align | forecolor backcolor | removeformat' }," +
 							"    table: { title: 'Table', items: 'inserttable | cell row column | tableprops deletetable' }" +
 							"  },"+
 							"toolbar: [" +
 							"    { name: 'history', items: [ 'undo', 'redo' ] }," +
-							"    { name: 'styles', items: [ 'styleselect' ] }," +
+							"    { name: 'styles', items: [ 'styles' ] }," +
 							"    { name: 'formatting', items: [ 'bold', 'italic', 'numlist', 'bullist' ] }," +
 							"    { name: 'alignment', items: [ 'alignleft', 'aligncenter', 'alignright', 'alignjustify' ] }," +
 							"    { name: 'indentation', items: [ 'outdent', 'indent' ] }" +
