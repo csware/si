@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -95,5 +95,6 @@ public class EditLectureView extends HttpServlet {
 			out.println("<input type=submit value=\"Teilnehmende hinzufügen\">");
 			out.println("</form>");
 		}
+		template.printTemplateFooter();
 	}
 }
