@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -93,6 +94,12 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 				if (lectureParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 					continue;
 				}
+				List<Submission> studentSubmissions = submissionDAO.getAllSubmissions(lectureParticipation);
+				Iterator<Submission> submissionIterator = studentSubmissions.iterator();
+				Submission submission = null;
+				if (submissionIterator.hasNext()) {
+					submission = submissionIterator.next();
+				}
 				String[] line = new String[header.size()];
 				int column = 0;
 				if (lectureParticipation.getUser() instanceof Student) {
@@ -114,8 +121,7 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 				for (TaskGroup taskGroup : taskGroupList) {
 					List<Task> taskList = taskGroup.getTasks();
 					for (Task task : taskList) {
-						Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
-						if (submission != null) {
+						if (submission != null && submission.getTask() == task) {
 							noshow = false;
 							if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 								if (submission.getPoints().getPointsOk()) {
@@ -126,6 +132,9 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 								}
 							} else {
 								line[column++] = "n.b.";
+							}
+							if (submissionIterator.hasNext()) {
+								submission = submissionIterator.next();
 							}
 						} else {
 							line[column++] = "k.A.";

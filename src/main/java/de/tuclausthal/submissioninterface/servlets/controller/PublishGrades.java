@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
+import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -115,7 +116,14 @@ public class PublishGrades extends HttpServlet {
 		session.buildLockRequest(LockOptions.UPGRADE).lock(task);
 		if (request.getParameter("mail") != null) {
 			String baseURI = Configuration.getInstance().getFullServletsURI();
-			for (Submission submission : task.getSubmissions()) {
+			int lastSID = 0;
+			Iterator<Submission> submissionIterator = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task).iterator();
+			while (submissionIterator.hasNext()) {
+				Submission submission = submissionIterator.next();
+				if (lastSID == submission.getSubmissionid()) {
+					continue;
+				}
+				lastSID = submission.getSubmissionid();
 				for (Participation submitterParticipation : submission.getSubmitters()) {
 					if (submission.getPoints() != null && submission.getPoints().getPointsOk()) {
 						MailSender.sendMail(submitterParticipation.getUser().getEmail(), "Bewertung erfolgt", "Hallo " + submitterParticipation.getUser().getFullName() + ",\n\neine Ihrer Abgaben wurde bewertet.\n\nEinsehen: <" + baseURI + "/" + ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid() + ">.\n\n-- \nReply is not possible.");

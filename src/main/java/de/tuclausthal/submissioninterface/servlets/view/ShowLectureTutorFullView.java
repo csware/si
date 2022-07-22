@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -102,6 +103,12 @@ public class ShowLectureTutorFullView extends HttpServlet {
 			if (lectureParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 				continue;
 			}
+			List<Submission> studentSubmissions = submissionDAO.getAllSubmissions(lectureParticipation);
+			Iterator<Submission> submissionIterator = studentSubmissions.iterator();
+			Submission submission = null;
+			if (submissionIterator.hasNext()) {
+				submission = submissionIterator.next();
+			}
 			out.println("<tr>");
 			if (lectureParticipation.getUser() instanceof Student) {
 				if (showMatNo) {
@@ -121,8 +128,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 			for (TaskGroup taskGroup : taskGroupList) {
 				List<Task> taskList = taskGroup.getTasks();
 				for (Task task : taskList) {
-					Submission submission = submissionDAO.getSubmission(task, lectureParticipation.getUser());
-					if (submission != null) {
+					if (submission != null && submission.getTask() == task) {
 						noshow = false;
 						if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 							if (submission.getPoints().getPointsOk()) {
@@ -133,6 +139,9 @@ public class ShowLectureTutorFullView extends HttpServlet {
 							}
 						} else {
 							out.println("<td><span title=\"nicht bewertet\">n.b.</span></td>");
+						}
+						if (submissionIterator.hasNext()) {
+							submission = submissionIterator.next();
 						}
 					} else {
 						out.println("<td><span title=\"keine Abgabe des Studierenden\">k.A.</span></td>");

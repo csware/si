@@ -133,7 +133,9 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 		Root<Submission> root = criteria.from(Submission.class);
 		criteria.select(root);
 		Predicate where = builder.equal(root.get(Submission_.task), task);
-		SetJoin<Submission, Participation> submittersJoin = root.join(Submission_.submitters);
+		@SuppressWarnings("unchecked")
+		Join<Submission, Participation> submittersJoin = (Join<Submission, Participation>) root.fetch(Submission_.submitters, JoinType.LEFT);
+		submittersJoin.fetch(Participation_.user);
 		if (group == null) {
 			where = builder.and(where, builder.isNull(submittersJoin.get(Participation_.group)));
 		} else {
