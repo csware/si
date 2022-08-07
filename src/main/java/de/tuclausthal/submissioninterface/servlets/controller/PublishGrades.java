@@ -131,7 +131,7 @@ public class PublishGrades extends HttpServlet {
 				}
 			}
 		}
-		task.setShowPoints(task.getDeadline());
+		task.setShowPoints(ZonedDateTime.now());
 		tx.commit();
 
 		response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
