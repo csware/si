@@ -44,6 +44,7 @@ public class DockerTest extends TempDirTest {
 	private static final Random random = new Random();
 	private final String separator;
 	private final de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest test;
+	private File tempDir;
 
 	public DockerTest(de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest test) {
 		super(test);
@@ -53,7 +54,6 @@ public class DockerTest extends TempDirTest {
 
 	@Override
 	public void performTest(File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
-		File tempDir = null;
 		try {
 			tempDir = Util.createTemporaryDirectory("test");
 			//Configuration.getInstance().getDataPath()
@@ -139,6 +139,9 @@ public class DockerTest extends TempDirTest {
 			builder.add("stderr", stdErr.toString());
 		}
 		builder.add("separator", separator + "\n");
+		if (tempDir != null) {
+			builder.add("tmpdir", tempDir.getAbsolutePath());
+		}
 		builder.add("exitCode", exitCode);
 		builder.add("exitedCleanly", exitedCleanly);
 		if (aborted) {

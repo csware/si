@@ -46,7 +46,7 @@ public class ShowDockerTestResult { // similar code in ShowJavaAdvancedIOTestRes
 				if ((object.containsKey("exitedCleanly") && object.getBoolean("exitedCleanly") == false) || (object.containsKey("time-exceeded") && object.getBoolean("time-exceeded") == true) || (object.containsKey("missing-tests") && object.getBoolean("missing-tests") == true)) {
 					if (object.containsKey("stderr")) {
 						if (forStudent) { // TODO show stderr to students?
-							out.println("<b>Syntaxfehler:</b><br><pre>" + Util.escapeHTML(object.getString("stderr")) + "</pre>");
+							out.println("<b>Syntaxfehler:</b><br><pre>" + Util.escapeHTML(cleanup(object, object.getString("stderr"))) + "</pre>");
 						} else {
 							out.println("<textarea id=\"testresultajtt1\" cols=80 rows=15>" + Util.escapeHTML(object.getString("stderr")) + "</textarea>");
 						}
@@ -77,7 +77,7 @@ public class ShowDockerTestResult { // similar code in ShowJavaAdvancedIOTestRes
 						out.println("<tr>");
 						out.println("<td>" + Util.escapeHTML(dt.getTestSteps().get(foundTest).getTitle()) + "</td>");
 						out.println("<td><pre id=\"exp" + dt.getId() + "-" + i + "\">" + Util.escapeHTML(stepObject.getString("expected")) + "</pre></td>");
-						out.println("<td><pre id=\"got" + dt.getId() + "-" + i + "\">" + Util.escapeHTML(stepObject.getString("got")) + "</pre><pre id=\"diff" + dt.getId() + "-" + i + "\" style=\"display:none;\"></pre></td>");
+						out.println("<td><pre id=\"got" + dt.getId() + "-" + i + "\">" + Util.escapeHTML(cleanup(object, stepObject.getString("got"))) + "</pre><pre id=\"diff" + dt.getId() + "-" + i + "\" style=\"display:none;\"></pre></td>");
 						out.println("<td>" + Util.boolToHTML(stepObject.getBoolean("ok")) + (stepObject.getBoolean("ok") ? "" : " (<a href=\"javascript:dodiff('" + dt.getId() + "-" + i + "')\">Diff</a>)") + "</td>");
 						out.println("</tr>");
 					}
@@ -107,7 +107,7 @@ public class ShowDockerTestResult { // similar code in ShowJavaAdvancedIOTestRes
 					}
 					if (!stderr.trim().isEmpty()) {
 						if (forStudent) { // TODO show stderr to students?
-							out.println("<b>Laufzeitfehler/Warnungen:</b><br><pre>" + Util.escapeHTML(stderr) + "</pre>");
+							out.println("<b>Laufzeitfehler/Warnungen:</b><br><pre>" + Util.escapeHTML(cleanup(object, stderr)) + "</pre>");
 						} else {
 							out.println("<textarea id=\"testresultadtt" + dt.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(stderr) + "</textarea>");
 						}
@@ -115,5 +115,16 @@ public class ShowDockerTestResult { // similar code in ShowJavaAdvancedIOTestRes
 				}
 			}
 		}
+	}
+
+	private static String cleanup(JsonObject object, String string) {
+		if (object.containsKey("tmpdir")) {
+			string = string.replace(object.getString("tmpdir") + "/administrative/", "");
+			string = string.replace(object.getString("tmpdir") + "/administrative", "");
+			string = string.replace(object.getString("tmpdir") + "/student/", "");
+			string = string.replace(object.getString("tmpdir") + "/student", "");
+			string = string.replace(object.getString("tmpdir"), "");
+		}
+		return string;
 	}
 }
