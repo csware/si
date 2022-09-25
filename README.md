@@ -28,6 +28,15 @@ Please read the whole procedure in advance to executing it.
     ProxyPass / ajp://localhost:8009/ secret=SECRET
     ```
     - Make sure Tomcat is not accessible directly (e.g., ports 8080, 8009, 8443); e.g. make port `8009` listen on `::1` only and comment all other `Connector`s in `server.xml`.
+    - Clustering is possible (needs in `Server/Engine[@jvmRoute]` to be configured in `server.xml` as `jvm1` or `jvm2`):
+      ```
+      <Proxy "balancer://mycluster">
+          BalancerMember ajp://srv1:8009 secret=SECRET route=jvm1
+          BalancerMember ajp://srv2:8009 secret=SECRET route=jvm2
+          ProxySet lbmethod=byrequests stickysession=JSESSIONID
+      </Proxy>
+      ProxyPass "/" "balancer://mycluster/"
+      ```
   - How to configure Shibboleth:
     - Install shibd and configure it (cf. https://www.switch.ch/aai/guides/sp/installation-2.5/), make sure the `ApplicationDefault` configuration in `shibboleth2.xml` contains `attributePrefix="AJP_"` (cf. <https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPJavaInstall>; please also make sure the `AJP` connector in Tomcat `server.xml` does not block the Shibboleth request attributes, e.g. by setting `allowedRequestAttributesPattern=".*"` or more restrictive `"^(Shib-.*|givenName|eppn|sn|mail|persistent-id)$"`), has a large enough proxys packet size (`packetSize="65536"`), and `eppn` is set for the `REMOTE_USER` in `shibboleth2.xml` (should match `userAttribute`, see below); also make sure `/Shibboleth.sso/Logout` can be used for logout (cf. `src/main/java/de/tuclausthal/submissioninterface/servlets/controller/Logout.java`)
     - Enable Shibboleth protection for the `Overview` servlet:
