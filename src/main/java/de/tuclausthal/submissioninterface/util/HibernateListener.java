@@ -27,6 +27,7 @@ import java.util.Enumeration;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,9 @@ public class HibernateListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		LOG.info("Initializing Hibernate Listener in context [{}]", event.getServletContext().getContextPath());
-		HibernateSessionHelper.getSessionFactory(); // Just call the static initializer of that class
+		if (HibernateSessionHelper.getSessionFactory() == null) { // Just call the static initializer of that class
+			throw new RuntimeException("HibernateSessionHelper could not build SessionFactory, see error before");
+		}
 		LOG.info("Initializing Hibernate Listener in context [{}] finished", event.getServletContext().getContextPath());
 	}
 
@@ -44,10 +47,13 @@ public class HibernateListener implements ServletContextListener {
 	public void contextDestroyed(ServletContextEvent event) {
 		LOG.info("Destroying Hibernate Listener in context [{}]", event.getServletContext().getContextPath());
 
-		HibernateSessionHelper.getSessionFactory().close(); // Free all resources
-		try {
-			Thread.sleep(1500); // C3P0 works highly asynchronous; even closing all threads is done asynchronously; this is not nice, but there does not seem to be any better solution ATM
-		} catch (InterruptedException e) {
+		SessionFactory sf = HibernateSessionHelper.getSessionFactory();
+		if (sf != null) {
+			sf.close(); // Free all resources
+			try {
+				Thread.sleep(1500); // C3P0 works highly asynchronous; even closing all threads is done asynchronously; this is not nice, but there does not seem to be any better solution ATM
+			} catch (InterruptedException e) {
+			}
 		}
 
 		ClassLoader cl = Thread.currentThread().getContextClassLoader();

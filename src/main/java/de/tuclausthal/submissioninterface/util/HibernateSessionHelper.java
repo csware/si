@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,16 +18,20 @@
 
 package de.tuclausthal.submissioninterface.util;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Set;
 
 import javax.persistence.Entity;
 
+import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Hibernate Session Helper Singleton+Facade
@@ -35,6 +39,7 @@ import org.reflections.Reflections;
  *
  */
 public class HibernateSessionHelper {
+	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	private static final SessionFactory sessionFactory;
 
 	static {
@@ -45,7 +50,17 @@ public class HibernateSessionHelper {
 			metadataSources.addAnnotatedClass(entity);
 		}
 		Metadata metadata = metadataSources.getMetadataBuilder().build();
-		sessionFactory = metadata.getSessionFactoryBuilder().build();
+		SessionFactory sf = null;
+		try {
+			sf = metadata.getSessionFactoryBuilder().build();
+		} catch (HibernateException e) {
+			LOG.error("Hibernate SessionFactory Builder failed:", e);
+			try {
+				Thread.sleep(5000); // HACK to allow some cleanup in background
+			} catch (InterruptedException e1) {
+			}
+		}
+		sessionFactory = sf;
 	}
 
 	public static SessionFactory getSessionFactory() {
