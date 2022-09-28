@@ -126,7 +126,7 @@ public class PublishGrades extends HttpServlet {
 				lastSID = submission.getSubmissionid();
 				for (Participation submitterParticipation : submission.getSubmitters()) {
 					if (submission.getPoints() != null && submission.getPoints().getPointsOk()) {
-						MailSender.sendMail(submitterParticipation.getUser().getEmail(), "Bewertung erfolgt", "Hallo " + submitterParticipation.getUser().getFullName() + ",\n\neine Ihrer Abgaben wurde bewertet.\n\nEinsehen: <" + baseURI + "/" + ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid() + ">.\n\n-- \nReply is not possible.");
+						MailSender.sendMail(submitterParticipation.getUser().getEmail(), "Bewertung erfolgt", "Hallo " + submitterParticipation.getUser().getFullName() + ",\n\neine Ihrer Abgaben wurde bewertet.\n\nEinsehen: <" + baseURI + ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid() + ">.\n\n-- \nReply is not possible.");
 					}
 				}
 			}
