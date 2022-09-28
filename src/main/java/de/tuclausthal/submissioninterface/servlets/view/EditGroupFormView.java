@@ -93,7 +93,7 @@ public class EditGroupFormView extends HttpServlet {
 		while (participationIterator.hasNext()) {
 			Participation thisParticipation = participationIterator.next();
 			if (thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
-				out.println("<option value=" + thisParticipation.getId() + ">" + Util.escapeHTML(thisParticipation.getUser().getFullName()) + "</option>");
+				out.println("<option value=" + thisParticipation.getId() + ">" + Util.escapeHTML(thisParticipation.getUser().getLastNameFirstName()) + "</option>");
 				++cnt;
 			}
 		}
@@ -111,7 +111,7 @@ public class EditGroupFormView extends HttpServlet {
 			while (participationIterator.hasNext()) {
 				Participation thisParticipation = participationIterator.next();
 				if (!group.getTutors().contains(thisParticipation)) {
-					out.println("<option value=" + thisParticipation.getId() + ">" + Util.escapeHTML(thisParticipation.getUser().getFullName()) + "</option>");
+					out.println("<option value=" + thisParticipation.getId() + ">" + Util.escapeHTML(thisParticipation.getUser().getLastNameFirstName()) + "</option>");
 				}
 			}
 			out.println("</select></td>");

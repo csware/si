@@ -104,11 +104,11 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<p>Letzte Änderung: " + Util.escapeHTML(dateFormatter.format(submission.getLastModified())) + "</p>");
 		}
 		if (task.isAllowPrematureSubmissionClosing() && submission.isClosed()) {
-			out.println("<p>Abgabe endgültig eingereicht: " + Util.escapeHTML(dateFormatter.format(submission.getClosedTime())) + " von " + Util.escapeHTML(submission.getClosedBy().getUser().getFullName()) + "</p>");
+			out.println("<p>Abgabe endgültig eingereicht: " + Util.escapeHTML(dateFormatter.format(submission.getClosedTime())) + " von " + Util.escapeHTML(submission.getClosedBy().getUser().getLastNameFirstName()) + "</p>");
 		}
 
 		for (Participation participation : submission.getSubmitters()) {
-			out.println("<a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + participation.getUser().getUid(), response) + "\">" + Util.escapeHTML(participation.getUser().getFullName()) + "</a><br>");
+			out.println("<a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + participation.getUser().getUid(), response) + "\">" + Util.escapeHTML(participation.getUser().getLastNameFirstName()) + "</a><br>");
 		}
 
 		if (!task.isAllowSubmittersAcrossGroups() && submission.getSubmitters().iterator().next().getGroup() != null) {
@@ -133,7 +133,7 @@ public class ShowSubmissionView extends HttpServlet {
 			for (Participation part : participations) {
 				if (part.getRoleType().equals(ParticipationRole.NORMAL) && (!task.isAllowSubmittersAcrossGroups() || part.getGroup() == null || !part.getGroup().isSubmissionGroup()) && submissionDAO.getSubmission(task, part.getUser()) == null) {
 					cnt++;
-					setWithUser.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getFullName()) + "</option>");
+					setWithUser.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getLastNameFirstName()) + "</option>");
 				}
 			}
 			setWithUser.append("</select> <input type=submit value= \"Hinzufügen\"></p></form>");
@@ -169,7 +169,7 @@ public class ShowSubmissionView extends HttpServlet {
 				if (submission.getPoints().getIssuedBy() == null) {
 					pointsGivenBy += "GATE, <a href=\"" + Util.generateHTMLLink(ShowMarkHistory.class.getSimpleName() + "?sid=" + submission.getSubmissionid(), response) + "\">History</a>)";
 				} else {
-					pointsGivenBy += "<a href=\"mailto:" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getEmail()) + "\">" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getFullName()) + "</a>, <a href=\"" + Util.generateHTMLLink(ShowMarkHistory.class.getSimpleName() + "?sid=" + submission.getSubmissionid(), response) + "\">History</a>)";
+					pointsGivenBy += "<a href=\"mailto:" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getEmail()) + "\">" + Util.escapeHTML(submission.getPoints().getIssuedBy().getUser().getLastNameFirstName()) + "</a>, <a href=\"" + Util.generateHTMLLink(ShowMarkHistory.class.getSimpleName() + "?sid=" + submission.getSubmissionid(), response) + "\">History</a>)";
 				}
 				pointsClass = Util.getPointsCSSClass(submission.getPoints());
 				if (submission.getPoints().getPointStatus() == PointStatus.NICHT_BEWERTET.ordinal()) {

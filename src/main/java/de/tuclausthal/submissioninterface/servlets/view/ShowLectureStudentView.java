@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -111,7 +111,7 @@ public class ShowLectureStudentView extends HttpServlet {
 						out.print(", ");
 					}
 					isFirst = false;
-					out.print("<a href=\"mailto:" + Util.escapeHTML(tutor.getUser().getEmail()) + "\">" + Util.escapeHTML(tutor.getUser().getFullName()) + "</a>");
+					out.print("<a href=\"mailto:" + Util.escapeHTML(tutor.getUser().getEmail()) + "\">" + Util.escapeHTML(tutor.getUser().getLastNameFirstName()) + "</a>");
 				}
 			}
 		} else if (canJoinGroup) {

@@ -90,7 +90,7 @@ public class SubmitSolutionFormView extends HttpServlet {
 					// filter out students which already have a submission and users which are in a submissiongroup (otherwise the other participants of the submissiongroup cannot submit a solution any more)
 					if (part.getId() != participation.getId() && part.getRoleType().equals(ParticipationRole.NORMAL) && (!task.isAllowSubmittersAcrossGroups() || part.getGroup() == null || !part.getGroup().isSubmissionGroup()) && submissionDAO.getSubmission(task, part.getUser()) == null) {
 						cnt++;
-						partnerField.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getFullName()) + "</option>");
+						partnerField.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getLastNameFirstName()) + "</option>");
 					}
 				}
 				partnerField.append("</select><br>");

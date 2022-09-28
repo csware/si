@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -175,7 +175,7 @@ public class Submission implements Serializable {
 	public String getSubmitterNames() {
 		StringBuilder sb = new StringBuilder();
 		for (Participation submitter : getSubmitters()) {
-			sb.append("; " + submitter.getUser().getFullName());
+			sb.append("; " + submitter.getUser().getLastNameFirstName());
 		}
 		return sb.substring(2).toString();
 	}

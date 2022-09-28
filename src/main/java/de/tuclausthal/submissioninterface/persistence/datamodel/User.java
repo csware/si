@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -149,11 +149,23 @@ public class User implements Serializable {
 	 * @return the full name string
 	 */
 	@Transient
-	public String getFullName() {
+	public String getLastNameFirstName() {
 		if (getFirstName().isEmpty()) {
 			return getLastName();
 		}
 		return getLastName() + ", " + getFirstName();
+	}
+
+	/**
+	 * Returns the full name of a user
+	 * @return the full name string
+	 */
+	@Transient
+	public String getFullName() {
+		if (getFirstName().isEmpty()) {
+			return getLastName();
+		}
+		return getFirstName() + " " + getLastName();
 	}
 
 	/**

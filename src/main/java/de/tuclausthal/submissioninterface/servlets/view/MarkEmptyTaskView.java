@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -60,7 +60,7 @@ public class MarkEmptyTaskView extends HttpServlet {
 		out.println("<option value=\"\">-</option>");
 		for (Participation participation : participations) {
 			if (participation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
-				out.println("<option value=\"" + participation.getId() + "\">" + Util.escapeHTML(participation.getUser().getFullName()) + "</option>");
+				out.println("<option value=\"" + participation.getId() + "\">" + Util.escapeHTML(participation.getUser().getLastNameFirstName()) + "</option>");
 			}
 		}
 		out.println("</select><br>");

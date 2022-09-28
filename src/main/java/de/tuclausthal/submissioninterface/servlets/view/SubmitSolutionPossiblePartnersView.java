@@ -94,7 +94,7 @@ public class SubmitSolutionPossiblePartnersView extends HttpServlet {
 					// filter out students which already have a submission and users which are in a submissiongroup (otherwise the other participants of the submissiongroup cannot submit a solution any more)
 					if (part.getId() != participation.getId() && part.getRoleType().equals(ParticipationRole.NORMAL) && (!task.isAllowSubmittersAcrossGroups() || part.getGroup() == null || !part.getGroup().isSubmissionGroup()) && submissionDAO.getSubmission(task, part.getUser()) == null) {
 						Element partner = document.createElement("partner");
-						partner.setTextContent(Util.escapeHTML(part.getUser().getFullName()));
+						partner.setTextContent(Util.escapeHTML(part.getUser().getLastNameFirstName()));
 						partner.setAttribute("id", String.valueOf(part.getId()));
 						partners.appendChild(partner);
 						cnt++;

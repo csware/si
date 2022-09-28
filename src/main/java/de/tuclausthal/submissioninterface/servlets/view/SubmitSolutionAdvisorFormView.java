@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -58,7 +58,7 @@ public class SubmitSolutionAdvisorFormView extends HttpServlet {
 		setWithUser.append("<p>Abgabe erstellen für: <select name=uploadFor size=1 required=required>");
 		for (Participation part : participants) {
 			if (part.getRoleType().equals(ParticipationRole.NORMAL)) {
-				setWithUser.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getFullName()) + "</option>");
+				setWithUser.append("<option value=" + part.getId() + ">" + Util.escapeHTML(part.getUser().getLastNameFirstName()) + "</option>");
 			}
 		}
 		setWithUser.append("</select><p>");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -59,7 +59,7 @@ public class ShowGroupStudentView extends HttpServlet {
 			}
 			out.println("<ul>");
 			for (Participation tutor : group.getTutors()) {
-				out.print("<li><a href=\"mailto:" + Util.escapeHTML(tutor.getUser().getEmail()) + "\">" + Util.escapeHTML(tutor.getUser().getFullName()) + "</a></li>");
+				out.print("<li><a href=\"mailto:" + Util.escapeHTML(tutor.getUser().getEmail()) + "\">" + Util.escapeHTML(tutor.getUser().getLastNameFirstName()) + "</a></li>");
 			}
 			out.println("</ul>");
 		}
@@ -67,7 +67,7 @@ public class ShowGroupStudentView extends HttpServlet {
 		out.println("<h2>Gruppenmitglieder</h2>");
 		out.println("<ul>");
 		for (Participation tutor : group.getMembers()) {
-			out.print("<li><a href=\"mailto:" + Util.escapeHTML(tutor.getUser().getEmail()) + "\">" + Util.escapeHTML(tutor.getUser().getFullName()) + "</a></li>");
+			out.print("<li><a href=\"mailto:" + Util.escapeHTML(tutor.getUser().getEmail()) + "\">" + Util.escapeHTML(tutor.getUser().getLastNameFirstName()) + "</a></li>");
 		}
 		out.println("</ul>");
 

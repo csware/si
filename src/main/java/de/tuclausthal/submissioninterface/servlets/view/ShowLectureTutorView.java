@@ -208,7 +208,7 @@ public class ShowLectureTutorView extends HttpServlet {
 				out.println("</tr>");
 				for (Participation tutorParticipation : group.getTutors()) {
 					out.println("<tr>");
-					out.println("<td><a href=\"mailto:" + Util.escapeHTML(tutorParticipation.getUser().getEmail()) + "\">" + Util.escapeHTML(tutorParticipation.getUser().getFullName()) + "</a>");
+					out.println("<td><a href=\"mailto:" + Util.escapeHTML(tutorParticipation.getUser().getEmail()) + "\">" + Util.escapeHTML(tutorParticipation.getUser().getLastNameFirstName()) + "</a>");
 					if (isAdvisor) {
 						out.println(" <a onclick=\"return sendAsPost(this, 'Tutor-Gruppen-Zugehöhrigkeit entfernen?')\" href=\"" + Util.generateHTMLLink(EditGroup.class.getSimpleName() + "?groupid=" + group.getGid() + "&participationid=" + tutorParticipation.getId() + "&action=removeTutorFromGroup", response) + "\"><img src=\"" + getServletContext().getContextPath() + "/assets/log-out.svg\" width=16 height=16 class=inlineicon border=0 alt=\"Tutor-Gruppen-Zugehöhrigkeit entfernen\" title=\"Tutor-Gruppen-Zugehöhrigkeit entfernen\"></a>");
 					}
@@ -249,7 +249,7 @@ public class ShowLectureTutorView extends HttpServlet {
 						out.println("<td>n/a</td>");
 					}
 				}
-				out.println("<td><a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + thisParticipation.getUser().getUid(), response) + "\">" + Util.escapeHTML(thisParticipation.getUser().getFullName()) + "</a></td>");
+				out.println("<td><a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + thisParticipation.getUser().getUid(), response) + "\">" + Util.escapeHTML(thisParticipation.getUser().getLastNameFirstName()) + "</a></td>");
 				if (thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 					out.println("<td>" + Util.escapeHTML(thisParticipation.getRoleType().toString()));
 					if (isAdvisor) {

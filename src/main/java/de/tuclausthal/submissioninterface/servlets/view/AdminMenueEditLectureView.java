@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -113,7 +113,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 				if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 					User user = participation.getUser();
 					out.println("<tr>");
-					out.println("<td>" + Util.escapeHTML(user.getFullName()) + "</td>");
+					out.println("<td>" + Util.escapeHTML(user.getLastNameFirstName()) + "</td>");
 					out.println("<td><a onclick=\"return sendAsPost(this, 'Wirklich degradieren?')\" href=\"" + Util.generateHTMLLink("?action=removeUser&lecture=" + lecture.getId() + "&participationid=" + participation.getId(), response) + "\">degradieren</a></td>");
 					out.println("</tr>");
 				}
@@ -137,7 +137,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 				if (participation.getRoleType() == ParticipationRole.TUTOR) {
 					User user = participation.getUser();
 					out.println("<tr>");
-					out.println("<td>" + Util.escapeHTML(user.getFullName()) + "</td>");
+					out.println("<td>" + Util.escapeHTML(user.getLastNameFirstName()) + "</td>");
 					out.println("<td><a onclick=\"return sendAsPost(this, 'Wirklich degradieren?')\" href=\"" + Util.generateHTMLLink("?action=removeUser&lecture=" + lecture.getId() + "&participationid=" + participation.getId(), response) + "\">degradieren</a></td>");
 					out.println("</tr>");
 				}
@@ -186,7 +186,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			Participation participation = iterator.next();
 			if (participation.getRoleType() == ParticipationRole.NORMAL) {
 				User user = participation.getUser();
-				out.println("<option value=" + participation.getId() + ">" + Util.escapeHTML(user.getFullName()));
+				out.println("<option value=" + participation.getId() + ">" + Util.escapeHTML(user.getLastNameFirstName()));
 			}
 		}
 		out.println("</select>");

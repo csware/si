@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -86,7 +86,7 @@ public class ShowMarkHistoryView extends HttpServlet {
 		for (PointHistory entry : ph) {
 			out.println("<tr>");
 			if (isFirst) {
-				out.println("<td valign=top rowspan=" + ph.size() + "><a href=\"mailto:" + Util.escapeHTML(entry.getWho().getUser().getEmail()) + "\">" + Util.escapeHTML(entry.getWho().getUser().getFullName()) + "</a></td>");
+				out.println("<td valign=top rowspan=" + ph.size() + "><a href=\"mailto:" + Util.escapeHTML(entry.getWho().getUser().getEmail()) + "\">" + Util.escapeHTML(entry.getWho().getUser().getLastNameFirstName()) + "</a></td>");
 				out.println("<td valign=top rowspan=" + ph.size() + ">" + Util.escapeHTML(dateFormatter.format(entry.getDate())) + "</td>");
 				isFirst = false;
 			}

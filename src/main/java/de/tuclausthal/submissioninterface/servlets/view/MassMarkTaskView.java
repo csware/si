@@ -132,7 +132,7 @@ public class MassMarkTaskView extends HttpServlet {
 		out.println("</tr>");
 		for (SubmissionAssignPointsDTO submissionAssignPointsDTO : points) {
 			out.println("<tr>");
-			out.println("<td><a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + submissionAssignPointsDTO.getParticipation().getUser().getUid(), response) + "\">" + Util.escapeHTML(submissionAssignPointsDTO.getParticipation().getUser().getFullName()) + "</a></td>");
+			out.println("<td><a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + submissionAssignPointsDTO.getParticipation().getUser().getUid(), response) + "\">" + Util.escapeHTML(submissionAssignPointsDTO.getParticipation().getUser().getLastNameFirstName()) + "</a></td>");
 			out.println("<td>" + Util.escapeHTML(submissionAssignPointsDTO.getPoints().getInternalComment()) + "</td>");
 			out.println("<td>" + Util.escapeHTML(submissionAssignPointsDTO.getPoints().getPublicComment()) + "</td>");
 			out.println("<td>" + Util.boolToHTML(submissionAssignPointsDTO.getPoints().getPointsOk()) + "</td>");

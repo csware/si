@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -68,7 +68,7 @@ public class ShowUserView extends HttpServlet {
 		Boolean isAtLeastAdvisorOnce = (Boolean) request.getAttribute("isAtLeastAdvisorOnce");
 		Session session = RequestAdapter.getSession(request);
 
-		template.printTemplateHeader("BenutzerIn \"" + Util.escapeHTML(user.getFullName()) + "\"");
+		template.printTemplateHeader("BenutzerIn \"" + Util.escapeHTML(user.getLastNameFirstName()) + "\"");
 		PrintWriter out = response.getWriter();
 		out.println("<p><a href=\"mailto:" + Util.escapeHTML(user.getEmail()) + "\">" + Util.escapeHTML(user.getEmail()) + "</a></p>");
 
