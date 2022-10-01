@@ -62,6 +62,7 @@ public class MailSender {
 			subject = subject.replace("\n", " ");
 			msg.setSubject(Configuration.getInstance().getMailSubjectPrefix() + subject, "UTF-8");
 			msg.setHeader("X-Mailer", "GATE");
+			msg.setHeader("X-Auto-Response-Suppress", "All");
 
 			if (attachments == null || attachments.isEmpty()) {
 				// kein Anhang, Mailtext wird direkt der Mail hinzugefügt.
