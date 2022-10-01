@@ -161,11 +161,12 @@ public class MassMail extends HttpServlet {
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
+		MailSender.MailOptions mailOptions = MailSender.newMailOptions().setReplyTo(participation.getUser().getFullName(), participation.getUser().getEmail());
 		for (User receipient : receipients) {
 			if (receipient.getUid() == participation.getUser().getUid()) {
 				continue;
 			}
-			MailSender.sendMail(receipient.getEmail(), request.getParameter("subject"), request.getParameter("message").trim() + "\n\n-- \nGesendet von: " + participation.getUser().getFullName() + " <" + participation.getUser().getEmail() + ">\nDirect reply is not possible.");
+			MailSender.sendMail(receipient.getEmail(), request.getParameter("subject"), request.getParameter("message").trim() + "\n\n-- \nGesendet von: " + participation.getUser().getFullName() + " <" + participation.getUser().getEmail() + ">", mailOptions);
 		}
 
 		final String[] fixedHeader = { "Name", "E-Mail" };
