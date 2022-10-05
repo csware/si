@@ -323,7 +323,7 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(SubmitSolution.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Abgabe bearbeiten</a></div>");
 			} else {
 				if (!submittedFiles.isEmpty()) {
-					out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(SubmitSolution.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Abgabe erweitern</a></div>");
+					out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(SubmitSolution.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Abgabe bearbeiten/erweitern</a></div>");
 				} else {
 					out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(SubmitSolution.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Abgabe starten</a></div>");
 				}
