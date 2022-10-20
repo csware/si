@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>com.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
-			<version>5.7.0</version>
+			<version>5.7.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
 		<dependency>
@@ -181,9 +181,9 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>pl.project13.maven</groupId>
-				<artifactId>git-commit-id-plugin</artifactId>
-				<version>4.0.4</version>
+				<groupId>io.github.git-commit-id</groupId>
+				<artifactId>git-commit-id-maven-plugin</artifactId>
+				<version>5.0.0</version>
 				<executions>
 					<execution>
 						<id>get-the-git-infos</id>
@@ -200,7 +200,6 @@
 					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
 					<format>properties</format>
 					<abbrevLength>10</abbrevLength>
-					<offline>true</offline>
 					<gitDescribe>
 						<skip>true</skip>
 					</gitDescribe>
