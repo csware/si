@@ -95,13 +95,21 @@ public class EditMultipleGroups extends HttpServlet {
 			for (String gid : request.getParameterValues("gids")) {
 				Group group = groupDAO.getGroupLocked(Util.parseInteger(gid, 0));
 				if (group != null && group.getLecture().getId() == lecture.getId()) {
-					group.setAllowStudentsToSignup(request.getParameter("allowStudentsToSignup") != null);
-					group.setAllowStudentsToQuit(request.getParameter("allowStudentsToQuit") != null);
+					if ("0".equals(request.getParameter("allowStudentsToSignup")) || "1".equals(request.getParameter("allowStudentsToSignup"))) {
+						group.setAllowStudentsToSignup("1".equals(request.getParameter("allowStudentsToSignup")));
+					}
+					if ("0".equals(request.getParameter("allowStudentsToQuit")) || "1".equals(request.getParameter("allowStudentsToQuit"))) {
+						group.setAllowStudentsToQuit("1".equals(request.getParameter("allowStudentsToQuit")));
+					}
 					if (request.getParameter("maxStudents") != null && !request.getParameter("maxStudents").isEmpty()) {
 						group.setMaxStudents(Util.parseInteger(request.getParameter("maxStudents"), 0));
 					}
-					group.setMembersVisibleToStudents(request.getParameter("membersvisible") != null);
-					group.setSubmissionGroup(request.getParameter("submissionGroup") != null);
+					if ("0".equals(request.getParameter("membersvisible")) || "1".equals(request.getParameter("membersvisible"))) {
+						group.setMembersVisibleToStudents("1".equals(request.getParameter("membersvisible")));
+					}
+					if ("0".equals(request.getParameter("submissionGroup")) || "1".equals(request.getParameter("submissionGroup"))) {
+						group.setSubmissionGroup("1".equals(request.getParameter("submissionGroup")));
+					}
 				}
 			}
 			tx.commit();

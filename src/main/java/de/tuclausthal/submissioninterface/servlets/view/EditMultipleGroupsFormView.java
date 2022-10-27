@@ -55,11 +55,11 @@ public class EditMultipleGroupsFormView extends HttpServlet {
 		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Studierende können sich eintragen:</th>");
-		out.println("<td><input type=checkbox name=allowStudentsToSignup></td>");
+		out.println("<td><select name=allowStudentsToSignup><option value=''>keine Änderung</option><option value=1>ja</option><option value=0>nein</option></select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Studierende können wechseln:</th>");
-		out.println("<td><input type=checkbox name=allowStudentsToQuit></td>");
+		out.println("<td><select name=allowStudentsToQuit><option value=''>keine Änderung</option><option value=1>ja</option><option value=0>nein</option></select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Max. Studierende:</th>");
@@ -67,11 +67,11 @@ public class EditMultipleGroupsFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Abgabegruppe:</th>");
-		out.println("<td><input type=checkbox name=submissionGroup></td>");
+		out.println("<td><select name=submissionGroup><option value=''>keine Änderung</option><option value=1>ja</option><option value=0>nein</option></select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Mitglieder für Studierende einsehbar:</th>");
-		out.println("<td><input type=checkbox name=membersvisible></td>");
+		out.println("<td><select name=membersvisible><option value=''>keine Änderung</option><option value=1>ja</option><option value=0>nein</option></select></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Setzen für:</th>");
