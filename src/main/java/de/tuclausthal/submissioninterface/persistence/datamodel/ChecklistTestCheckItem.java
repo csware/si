@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -118,5 +119,10 @@ public class ChecklistTestCheckItem implements Serializable {
 	 */
 	public void setFeedback(String feedback) {
 		this.feedback = feedback;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): checkitemid:" + getCheckitemid() + "; testid: " + (getTest() == null ? "null" : getTest().getId());
 	}
 }

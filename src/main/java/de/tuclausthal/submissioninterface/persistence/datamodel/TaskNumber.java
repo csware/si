@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Giselle Rodriguez
- * Copyright 2011, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020, 2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,6 +20,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -153,5 +154,10 @@ public class TaskNumber implements Serializable {
 	 */
 	public String getOrigNumber() {
 		return origNumber;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): tasknumberid:" + getTasknumberid() + "; participationid:" + (getParticipation() == null ? "null" : getParticipation().getId()) + "; taskid:" + (getTask() == null ? "null" : getTask().getTaskid()) + "; submissionid:" + (getSubmission() == null ? "null" : getSubmission().getSubmissionid()) + "; number:" + getNumber() + "; origNumber:" + getOrigNumber();
 	}
 }

@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 import java.time.ZonedDateTime;
 
 import javax.persistence.Basic;
@@ -162,5 +163,10 @@ public class PointHistory implements Serializable {
 	 */
 	public void setWho(Participation who) {
 		this.who = who;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): id:" + getId() + "; who:" + (getWho() == null ? "null" : getWho().getId()) + "; date:" + getDate();
 	}
 }

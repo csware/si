@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -196,5 +197,10 @@ public class Group implements Serializable {
 	 */
 	public void setMembersVisibleToStudents(boolean membersVisibleToStudents) {
 		this.membersVisibleToStudents = membersVisibleToStudents;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): gid:" + getGid() + "; name:" + getName() + "; lectureid:" + (getLecture() == null ? "null" : getLecture().getId());
 	}
 }

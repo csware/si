@@ -419,7 +419,7 @@ public class TaskManagerView extends HttpServlet {
 			if (!task.getSimilarityTests().isEmpty()) {
 				out.println("<ul>");
 				for (SimilarityTest similarityTest : task.getSimilarityTests()) {
-					out.print("<li>" + Util.escapeHTML(similarityTest.toString()) + "<br>");
+					out.print("<li>" + Util.escapeHTML(similarityTest.details()) + "<br>");
 					out.println("Ignored Files: " + Util.escapeHTML(similarityTest.getExcludeFiles()) + "<br>");
 					out.print("Status: ");
 					if (similarityTest.getStatus() == 1) {

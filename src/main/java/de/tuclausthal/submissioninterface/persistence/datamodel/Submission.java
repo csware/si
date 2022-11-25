@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -240,5 +241,10 @@ public class Submission implements Serializable {
 	@Transient
 	public boolean isClosed() {
 		return getClosedBy() != null;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): submissionid:" + getSubmissionid() + "; taskid:" + (getTask() == null ? "null" : getTask().getTaskid()) + "; lastModified:" + getLastModified() + "; " + getSubmitterNames();
 	}
 }

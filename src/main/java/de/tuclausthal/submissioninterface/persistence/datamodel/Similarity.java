@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -134,5 +135,10 @@ public class Similarity implements Serializable {
 	 */
 	public void setSimilarityTest(SimilarityTest similarityTest) {
 		this.similarityTest = similarityTest;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): similarityid:" + getSimilarityid() + "; similarityTestId:" + (getSimilarityTest() == null ? "null" : getSimilarityTest().getSimilarityTestId()) + "; submissionOne:" + (getSubmissionOne() == null ? "null" : getSubmissionOne().getSubmissionid()) + "; submissionTwo:" + (getSubmissionTwo() == null ? "null" : getSubmissionTwo().getSubmissionid()) + "; percent:" + getPercentage();
 	}
 }

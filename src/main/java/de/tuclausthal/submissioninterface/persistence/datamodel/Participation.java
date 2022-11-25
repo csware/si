@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -150,5 +151,10 @@ public class Participation implements Serializable {
 	 */
 	public void setSubmissions(Set<Submission> submissions) {
 		this.submissions = submissions;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): id:" + getId() + "; userid:" + (getUser() == null ? "null" : getUser().getUid()) + "; lectureid:" + (getLecture() == null ? "null" : getLecture().getId()) + "; role:" + getRoleType();
 	}
 }

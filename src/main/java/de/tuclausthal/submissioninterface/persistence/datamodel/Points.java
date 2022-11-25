@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -183,5 +184,10 @@ public class Points implements Serializable {
 
 	public static enum PointStatus {
 		NICHT_BEWERTET, NICHT_ABGENOMMEN, ABGENOMMEN_FAILED, ABGENOMMEN
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): points:" + getPoints() + "; pointstatus:" + getTypedPointStatus() + "; issuedBy:" + (getIssuedBy() == null ? "null" : getIssuedBy().getId());
 	}
 }

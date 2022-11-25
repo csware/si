@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -125,5 +126,10 @@ public class JavaAdvancedIOTestStep implements Serializable {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): teststepid:" + getTeststepid() + "; testid: " + (getTest() == null ? "null" : getTest().getId());
 	}
 }

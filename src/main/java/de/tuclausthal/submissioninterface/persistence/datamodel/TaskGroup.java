@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020, 2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -122,5 +123,10 @@ public class TaskGroup implements Serializable {
 	 */
 	public void setLecture(Lecture lecture) {
 		this.lecture = lecture;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): taskgroupid:" + getTaskGroupId() + "; title:" + getTitle() + "; lectureid:" + (getLecture() == null ? "null" : getLecture().getId());
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020, 2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -17,6 +17,8 @@
  */
 
 package de.tuclausthal.submissioninterface.persistence.datamodel;
+
+import java.lang.invoke.MethodHandles;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -55,5 +57,10 @@ public class Student extends User {
 	 */
 	public void setStudiengang(String studiengang) {
 		this.studiengang = studiengang;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): userid:" + getUid() + "; username:" + getUsername();
 	}
 }

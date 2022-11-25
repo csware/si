@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -116,5 +117,10 @@ public class TestResult implements Serializable {
 	 */
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): id:" + getId() + "; passed:" + getPassedTest() + "; submissionid:" + (getSubmission() == null ? "null" : getSubmission().getSubmissionid()) + "; testid:" + (getTest() == null ? "null" : getTest().getId());
 	}
 }

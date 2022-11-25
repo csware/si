@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020, 2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -104,5 +105,10 @@ public class TestCount implements Serializable {
 	 */
 	public void setTimesExecuted(int timesExecuted) {
 		this.timesExecuted = timesExecuted;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): id:" + getId() + "; userid:" + (getUser() == null ? "null" : getUser().getUid()) + "; testid:" + (getTest() == null ? "null" : getTest().getId()) + "; timesExecuted:" + getTimesExecuted();
 	}
 }

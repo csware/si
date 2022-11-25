@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
@@ -203,5 +204,10 @@ public class LogEntry implements Serializable {
 	 */
 	public void setAdditionalData(String additionalData) {
 		this.additionalData = additionalData;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): id:" + getId() + "; action:" + getAction();
 	}
 }

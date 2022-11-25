@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
  * Copyright 2011 Joachim Schramm
  *
  * This file is part of the GATE.
@@ -18,6 +18,8 @@
  */
 
 package de.tuclausthal.submissioninterface.persistence.datamodel;
+
+import java.lang.invoke.MethodHandles;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -39,5 +41,10 @@ public class UMLConstraintTest extends Test {
 	@Transient
 	public boolean TutorsCanRun() {
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): id:" + getId() + "; testtitle:" + getTestTitle() + "; taskid:" + (getTask() == null ? "null" : getTask().getTaskid());
 	}
 }

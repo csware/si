@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.File;
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -261,11 +262,7 @@ public class SimilarityTest implements Serializable {
 		return normalizer;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
+	public String details() {
 		if ("jplag".equals(getType())) {
 			return "JPlag-Test, min. Übereinstimmung: " + getMinimumDifferenceInPercent() + "%";
 		}
@@ -330,5 +327,10 @@ public class SimilarityTest implements Serializable {
 		} else {
 			this.excludeFiles = "";
 		}
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): similaritytestid:" + getSimilarityTestId() + "; taskid:" + (getTask() == null ? "null" : getTask().getTaskid()) + "; " + details();
 	}
 }

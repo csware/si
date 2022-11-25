@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -587,5 +588,10 @@ public class Task implements Serializable {
 	 */
 	public void setAllowPrematureSubmissionClosing(boolean allowPrematureSubmissionClosing) {
 		this.allowPrematureSubmissionClosing = allowPrematureSubmissionClosing;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "):  taskid:" + getTaskid() + "; title:" + getTitle() + "; taskgroupid:" + (getTaskGroup() == null ? "null" : getTaskGroup().getTaskGroupId());
 	}
 }

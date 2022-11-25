@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
@@ -196,5 +197,10 @@ public class User implements Serializable {
 	 */
 	public void setLastLoggedIn(ZonedDateTime lastLoggedIn) {
 		this.lastLoggedIn = lastLoggedIn;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): uid:" + getUid() + "; username:" + getUsername();
 	}
 }

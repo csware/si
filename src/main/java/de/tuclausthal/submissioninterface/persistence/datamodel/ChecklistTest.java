@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -68,5 +69,10 @@ public class ChecklistTest extends Test {
 	@Transient
 	public boolean TutorsCanRun() {
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): id:" + getId() + "; testtitle:" + getTestTitle() + "; taskid:" + (getTask() == null ? "null" : getTask().getTaskid());
 	}
 }

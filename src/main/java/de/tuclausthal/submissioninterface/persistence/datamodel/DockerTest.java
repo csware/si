@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -84,5 +85,10 @@ public class DockerTest extends Test {
 	@Transient
 	public boolean TutorsCanRun() {
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): id:" + getId() + "; testtitle:" + getTestTitle() + "; taskid:" + (getTask() == null ? "null" : getTask().getTaskid());
 	}
 }

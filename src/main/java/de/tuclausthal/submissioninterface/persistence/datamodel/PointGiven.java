@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020, 2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -112,5 +113,10 @@ public class PointGiven implements Serializable {
 	 */
 	public void setCategory(PointCategory category) {
 		this.category = category;
+	}
+
+	@Override
+	public String toString() {
+		return MethodHandles.lookup().lookupClass().getSimpleName() + " (" + Integer.toHexString(hashCode()) + "): pointgivenid:" + getPointgivenid() + "; points:" + getPoints() + "; categoryid:" + (getCategory() == null ? "null" : getCategory().getPointcatid()) + "; submissionid:" + (getSubmission() == null ? "null" : getSubmission().getSubmissionid());
 	}
 }
