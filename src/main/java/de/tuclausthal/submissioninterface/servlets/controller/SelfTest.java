@@ -111,7 +111,7 @@ public class SelfTest extends HttpServlet {
 		try {
 			Session session = RequestAdapter.getSession(request);
 			@SuppressWarnings("rawtypes")
-			NativeQuery query = session.createSQLQuery("SELECT VERSION();");
+			NativeQuery query = session.createNativeQuery("SELECT VERSION();");
 			testresults.add(new TestResult("Datenbank-Software:", Util.escapeHTML(query.uniqueResult().toString()), null));
 		} catch (PersistenceException e) {
 			testresults.add(new TestResult("Datenbank-Software:", Util.escapeHTML(e.getMessage()), false));

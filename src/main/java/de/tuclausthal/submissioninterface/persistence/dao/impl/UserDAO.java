@@ -122,7 +122,7 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 	@Override
 	public void makeUserStudent(int uid, int matrikelno) {
 		Transaction tx = getSession().beginTransaction();
-		getSession().createSQLQuery("update users set " + Student_.MATRIKELNO + " = :matrikelno where " + Student_.UID + " = :uid").setParameter("matrikelno", matrikelno, StandardBasicTypes.INTEGER).setParameter("uid", uid, StandardBasicTypes.INTEGER).executeUpdate();
+		getSession().createNativeQuery("update users set " + Student_.MATRIKELNO + " = :matrikelno where " + Student_.UID + " = :uid").setParameter("matrikelno", matrikelno, StandardBasicTypes.INTEGER).setParameter("uid", uid, StandardBasicTypes.INTEGER).executeUpdate();
 		tx.commit();
 	}
 
