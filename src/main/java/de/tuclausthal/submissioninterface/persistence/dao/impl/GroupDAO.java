@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -129,6 +130,8 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 		}
 		Query<Tuple> query = session.createQuery(criteria);
 
-		return query.list().stream().collect(Collectors.toMap(tupel -> tupel.get(0, Integer.class), tupel -> tupel.get(1, Long.class).intValue()));
+		try (Stream<Tuple> stream = query.stream()) {
+			return stream.collect(Collectors.toMap(tupel -> tupel.get(0, Integer.class), tupel -> tupel.get(1, Long.class).intValue()));
+		}
 	}
 }

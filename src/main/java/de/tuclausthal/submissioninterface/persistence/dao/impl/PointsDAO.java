@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -338,7 +339,9 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		criteria.where(builder.and(builder.isNotNull(root.get(Submission_.points)), builder.gt(root.get(Submission_.points).get(Points_.points), 0), builder.ge(root.get(Submission_.points).get(Points_.pointStatus), PointStatus.ABGENOMMEN.ordinal()), builder.equal(taskJoin.join(Task_.taskGroup).get(TaskGroup_.lecture), lecture)));
 		Query<SubmissionPointsDTO> query = session.createQuery(criteria);
 
-		return query.list().stream().collect(Collectors.groupingBy(SubmissionPointsDTO::getParticipationid, Collectors.reducing(0, SubmissionPointsDTO::getPlagiarismPoints, Integer::sum)));
+		try (Stream<SubmissionPointsDTO> stream = query.stream()) {
+			return stream.collect(Collectors.groupingBy(SubmissionPointsDTO::getParticipationid, Collectors.reducing(0, SubmissionPointsDTO::getPlagiarismPoints, Integer::sum)));
+		}
 	}
 
 	@Override
@@ -363,6 +366,8 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		criteria.where(builder.equal(root.join(Task_.taskGroup).get(TaskGroup_.lecture), lecture));
 		Query<Tuple> query = session.createQuery(criteria);
 
-		return query.list().stream().collect(Collectors.toMap(tupel -> tupel.get(0, Integer.class), tupel -> new int[] { tupel.get(1, Long.class).intValue(), tupel.get(2, Long.class).intValue() }));
+		try (Stream<Tuple> stream = query.stream()) {
+			return stream.collect(Collectors.toMap(tupel -> tupel.get(0, Integer.class), tupel -> new int[] { tupel.get(1, Long.class).intValue(), tupel.get(2, Long.class).intValue() }));
+		}
 	}
 }
