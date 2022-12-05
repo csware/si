@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,10 +18,10 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
@@ -101,8 +101,6 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 
 	@Override
 	public Map<Integer, Map<Integer, List<Similarity>>> getMaxSimilarities(Task task) {
-		Map<Integer, Map<Integer, List<Similarity>>> ret = new HashMap<>();
-
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Similarity> criteria = builder.createQuery(Similarity.class);
@@ -118,21 +116,8 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 		criteria.orderBy(builder.asc(root.get(Similarity_.submissionOne)), builder.asc(root.get(Similarity_.similarityTest)));
 		Query<Similarity> query = session.createQuery(criteria);
 
-		int lastSid = -1;
-		Map<Integer, List<Similarity>> sidMap = null;
-		for (Similarity similarity : query.list()) {
-			if (lastSid != similarity.getSubmissionOne().getSubmissionid()) {
-				lastSid = similarity.getSubmissionOne().getSubmissionid();
-				sidMap = new HashMap<>();
-				ret.put(lastSid, sidMap);
-			}
-			List<Similarity> similarities = sidMap.get(similarity.getSimilarityTest().getSimilarityTestId());
-			if (similarities == null) {
-				similarities = new ArrayList<>();
-				sidMap.put(similarity.getSimilarityTest().getSimilarityTestId(), similarities);
-			}
-			similarities.add(similarity);
+		try (Stream<Similarity> stream = query.stream()) {
+			return stream.collect(Collectors.groupingBy(sim -> sim.getSubmissionOne().getSubmissionid(), Collectors.groupingBy(sim -> sim.getSimilarityTest().getSimilarityTestId(), Collectors.toList())));
 		}
-		return ret;
 	}
 }

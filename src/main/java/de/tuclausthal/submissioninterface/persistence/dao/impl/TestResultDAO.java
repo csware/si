@@ -18,8 +18,9 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.LockModeType;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -95,8 +96,6 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 
 	@Override
 	public Map<Integer, Map<Integer, Boolean>> getResults(Task task) {
-		Map<Integer, Map<Integer, Boolean>> ret = new HashMap<>();
-
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<TestResult> criteria = builder.createQuery(TestResult.class);
@@ -106,16 +105,8 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 		criteria.orderBy(builder.asc(root.get(TestResult_.submission)), builder.asc(root.get(TestResult_.test)));
 		Query<TestResult> query = session.createQuery(criteria);
 
-		int lastSid = -1;
-		Map<Integer, Boolean> sidMap = null;
-		for (TestResult testResult : query.list()) {
-			if (lastSid != testResult.getSubmission().getSubmissionid()) {
-				lastSid = testResult.getSubmission().getSubmissionid();
-				sidMap = new HashMap<>();
-				ret.put(lastSid, sidMap);
-			}
-			sidMap.put(testResult.getTest().getId(), testResult.getPassedTest());
+		try (Stream<TestResult> stream = query.stream()) {
+			return stream.collect(Collectors.groupingBy(tr -> tr.getSubmission().getSubmissionid(), Collectors.toMap(tr -> tr.getTest().getId(), tr -> tr.getPassedTest())));
 		}
-		return ret;
 	}
 }
