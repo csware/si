@@ -369,7 +369,7 @@ public class SubmitSolution extends HttpServlet {
 		}
 
 		if (file != null) {
-			LogEntry logEntry = new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null);
+			LogEntry logEntry = new LogDAO(session).createLogUploadEntry(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null);
 			File logPath = new File(taskPath, "logs" + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
 			logPath.mkdirs();
 			boolean skippedFiles = false;
@@ -479,7 +479,7 @@ public class SubmitSolution extends HttpServlet {
 			DAOFactory.PointsDAOIf(session).createMCPoints(allCorrect ? task.getMaxPoints() : 0, submission, "", task.getTaskGroup().getLecture().isRequiresAbhnahme() ? PointStatus.NICHT_ABGENOMMEN : PointStatus.ABGENOMMEN);
 
 			submission.setLastModified(ZonedDateTime.now());
-			new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, Json.createObjectBuilder().add("mc", Json.createArrayBuilder(results)).build().toString());
+			new LogDAO(session).createLogUploadEntry(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, Json.createObjectBuilder().add("mc", Json.createArrayBuilder(results)).build().toString());
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 		} else if (task.isClozeTask()) {
@@ -490,11 +490,11 @@ public class SubmitSolution extends HttpServlet {
 				DAOFactory.PointsDAOIf(session).createMCPoints(clozeHelper.calculatePoints(results), submission, "", task.getTaskGroup().getLecture().isRequiresAbhnahme() ? PointStatus.NICHT_ABGENOMMEN : PointStatus.ABGENOMMEN);
 			}
 			submission.setLastModified(ZonedDateTime.now());
-			new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, Json.createObjectBuilder().add("cloze", Json.createArrayBuilder(results)).build().toString());
+			new LogDAO(session).createLogUploadEntry(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, Json.createObjectBuilder().add("cloze", Json.createArrayBuilder(results)).build().toString());
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 		} else if (request.getParameter("textsolution") != null) {
-			LogEntry logEntry = new LogDAO(session).createLogUploadEntryTransaction(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null);
+			LogEntry logEntry = new LogDAO(session).createLogUploadEntry(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null);
 			File logPath = new File(taskPath, "logs" + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
 			logPath.mkdirs();
 

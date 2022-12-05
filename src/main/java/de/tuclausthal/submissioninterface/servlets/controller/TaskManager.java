@@ -538,7 +538,9 @@ public class TaskManager extends HttpServlet {
 				request.setAttribute("title", "Aufgabe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			} else {
+				Transaction tx = session.beginTransaction();
 				taskDAO.deleteTask(task);
+				tx.commit();
 			}
 			response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response));
 			return;
@@ -650,7 +652,9 @@ public class TaskManager extends HttpServlet {
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
+			Transaction tx = session.beginTransaction();
 			DAOFactory.MCOptionDAOIf(session).createMCOption(task, request.getParameter("option"), request.getParameter("correkt") != null);
+			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?lecture=" + lecture.getId() + "&action=editTask&taskid=" + task.getTaskid() + "#mcoptions", response));
 		} else if ("deleteMCOption".equals(request.getParameter("action"))) {
 			TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
@@ -663,7 +667,9 @@ public class TaskManager extends HttpServlet {
 			}
 			for (MCOption option : DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task)) {
 				if (option.getId() == Util.parseInteger(request.getParameter("optionId"), -1)) {
+					Transaction tx = session.beginTransaction();
 					DAOFactory.MCOptionDAOIf(session).deleteMCOption(option);
+					tx.commit();
 					break;
 				}
 			}

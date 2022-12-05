@@ -159,7 +159,9 @@ public class AdminMenue extends HttpServlet {
 		} else if ("deleteLecture".equals(request.getParameter("action")) && request.getParameter("lecture") != null) {
 			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
 			if (lecture != null) {
+				Transaction tx = session.beginTransaction();
 				DAOFactory.LectureDAOIf(session).deleteLecture(lecture);
+				tx.commit();
 			}
 			// do a redirect, so that refreshing the page in a browser doesn't create duplicates
 			response.sendRedirect(Util.generateRedirectURL(AdminMenue.class.getSimpleName(), response));

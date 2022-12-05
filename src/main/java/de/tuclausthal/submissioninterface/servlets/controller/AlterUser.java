@@ -62,7 +62,9 @@ public class AlterUser extends HttpServlet {
 
 		if (Configuration.getInstance().isMatrikelNumberMustBeEnteredManuallyIfMissing() && !(user instanceof Student)) {
 			if (request.getParameter("matrikelno") != null && Util.parseInteger(request.getParameter("matrikelno"), 0) > 0) {
+				Transaction tx = session.beginTransaction();
 				userDAO.makeUserStudent(RequestAdapter.getUser(request).getUid(), Util.parseInteger(request.getParameter("matrikelno"), 0));
+				tx.commit();
 			}
 		}
 		if (user instanceof Student) {

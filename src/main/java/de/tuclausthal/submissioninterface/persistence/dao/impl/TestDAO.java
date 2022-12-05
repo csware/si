@@ -106,7 +106,7 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 	}
 
 	@Override
-	public Test takeTest() {
+	public Test takeTestTransacted() {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 

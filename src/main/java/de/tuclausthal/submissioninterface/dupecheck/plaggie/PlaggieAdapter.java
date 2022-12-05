@@ -1,6 +1,6 @@
 /*
  *  Copyright (C) 2006 Aleksi Ahtiainen, Mikko Rahikainen.
- *  Copyright (C) 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de> 
+ *  Copyright (C) 2009-2010, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de> 
  *
  *  This file is part of the homework submission interface.
  *
@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,7 +87,9 @@ public class PlaggieAdapter extends DupeCheck {
 		SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf(session);
 		Task task = similarityTest.getTask();
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+		Transaction tx = session.beginTransaction();
 		DAOFactory.SimilarityTestDAOIf(session).resetSimilarityTest(similarityTest);
+		tx.commit();
 		try {
 			// -- Read the configuration file
 			config = new Configuration(new File(path, CONFIG_FILE_NAME));
@@ -114,6 +117,7 @@ public class PlaggieAdapter extends DupeCheck {
 			detResults = generateDetectionResults(submissions);
 			Iterator<SubmissionDetectionResult> resultsIterator = detResults.iterator();
 
+			tx = session.beginTransaction();
 			while (resultsIterator.hasNext()) {
 				SubmissionDetectionResult detResult = resultsIterator.next();
 				double maxSimilarity = detResult.getMaxFileSimilarityProduct() * 100.0;
@@ -121,10 +125,10 @@ public class PlaggieAdapter extends DupeCheck {
 					similarityDAO.addSimilarityResult(similarityTest, submissionDAO.getSubmission(Util.parseInteger(detResult.getSubmissionA().getName(), 0)), submissionDAO.getSubmission(Util.parseInteger(detResult.getSubmissionB().getName(), 0)), (int) maxSimilarity);
 				}
 			}
+			DAOFactory.SimilarityTestDAOIf(session).finish(similarityTest);
+			tx.commit();
 		} catch (Exception e) {
 			LOG.error("Plaggy failed", e);
-		} finally {
-			DAOFactory.SimilarityTestDAOIf(session).finish(similarityTest);
 		}
 	}
 

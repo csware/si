@@ -27,7 +27,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.persistence.dao.TaskDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
@@ -61,9 +60,7 @@ public class TaskDAO extends AbstractDAO implements TaskDAOIf {
 	@Override
 	public void deleteTask(Task task) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		session.delete(task);
-		tx.commit();
 	}
 
 	@Override

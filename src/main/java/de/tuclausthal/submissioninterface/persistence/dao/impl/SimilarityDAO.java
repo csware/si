@@ -31,7 +31,6 @@ import javax.persistence.criteria.Subquery;
 
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import de.tuclausthal.submissioninterface.persistence.dao.SimilarityDAOIf;
@@ -52,7 +51,6 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 	public void addSimilarityResult(SimilarityTest similarityTest, Submission submissionOne, Submission submissionTwo, int percentage) {
 		if (submissionOne != null && submissionTwo != null) {
 			Session session = getSession();
-			Transaction tx = session.beginTransaction();
 			session.buildLockRequest(LockOptions.UPGRADE).lock(similarityTest);
 
 			CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -66,7 +64,6 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 			session.save(simularity);
 			simularity = new Similarity(similarityTest, submissionTwo, submissionOne, percentage);
 			session.save(simularity);
-			tx.commit();
 		}
 	}
 

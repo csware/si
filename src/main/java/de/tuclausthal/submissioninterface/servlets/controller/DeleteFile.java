@@ -154,7 +154,7 @@ public class DeleteFile extends HttpServlet {
 				if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 					submission.setLastModified(ZonedDateTime.now());
 				}
-				new LogDAO(session).createLogDeleteEntryTransaction(participation.getUser(), submission.getTask(), relativeFile);
+				new LogDAO(session).createLogDeleteEntry(participation.getUser(), submission.getTask(), relativeFile);
 				tx.commit();
 
 				response.sendRedirect(Util.generateAbsoluteServletsRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), request, response));

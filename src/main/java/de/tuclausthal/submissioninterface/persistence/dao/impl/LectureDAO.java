@@ -26,7 +26,6 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import de.tuclausthal.submissioninterface.persistence.dao.LectureDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
@@ -99,8 +98,6 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 	@Override
 	public void deleteLecture(Lecture lecture) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		session.delete(lecture);
-		tx.commit();
 	}
 }

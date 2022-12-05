@@ -26,7 +26,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.hibernate.type.StandardBasicTypes;
 
@@ -84,7 +83,6 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 	@Override
 	public User createUser(String username, String email, String firstName, String lastName) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		User user = getUserByUsername(username, true);
 		if (user == null) {
 			user = new User();
@@ -95,14 +93,12 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 			session.save(user);
 			session.refresh(user); // make sure all fields are populated from DB
 		}
-		tx.commit();
 		return user;
 	}
 
 	@Override
 	public User createUser(String username, String email, String firstName, String lastName, int matrikelno) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		User user = getUserByUsername(username, true);
 		if (user == null) {
 			Student student = new Student();
@@ -115,15 +111,12 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 			session.refresh(student); // make sure all fields are populated from DB
 			user = student;
 		}
-		tx.commit();
 		return user;
 	}
 
 	@Override
 	public void makeUserStudent(int uid, int matrikelno) {
-		Transaction tx = getSession().beginTransaction();
 		getSession().createNativeQuery("update users set " + Student_.MATRIKELNO + " = :matrikelno where " + Student_.UID + " = :uid").setParameter("matrikelno", matrikelno, StandardBasicTypes.INTEGER).setParameter("uid", uid, StandardBasicTypes.INTEGER).executeUpdate();
-		tx.commit();
 	}
 
 	@Override

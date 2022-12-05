@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -76,7 +76,6 @@ class SimilarityDAOIfTest extends BasicTest {
 		Submission submission5 = DAOFactory.SubmissionDAOIf(session).getSubmission(5);
 		session.getTransaction().begin();
 		SimilarityTest simTest = DAOFactory.SimilarityTestDAOIf(session).addSimilarityTest(submission2.getTask(), "", "", false,"" , 0, "");
-		session.getTransaction().commit();
 		DAOFactory.SimilarityDAOIf(session).addSimilarityResult(simTest, submission2, submission3, 23);
 		DAOFactory.SimilarityDAOIf(session).addSimilarityResult(simTest, submission4, submission5, 10);
 		assertEquals(1, DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(simTest, submission2).size());
@@ -114,9 +113,8 @@ class SimilarityDAOIfTest extends BasicTest {
 		assertEquals(0, DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(simTest, submission4).size());
 		assertEquals(0, DAOFactory.SimilarityDAOIf(session).getUsersWithSimilarity(simTest, submission5).size());
 		assertEquals(0, DAOFactory.SimilarityDAOIf(session).getUsersWithMaxSimilarity(simTest, submission5).size());
-		session.getTransaction().begin();
-		DAOFactory.SimilarityTestDAOIf(session).deleteSimilarityTest(simTest);
-		session.getTransaction().commit();
+		DAOFactory.SimilarityDAOIf(session).addSimilarityResult(simTest, submission2, submission4, 42);
+		session.getTransaction().rollback();
 	}
 
 	@Test

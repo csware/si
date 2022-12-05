@@ -151,9 +151,9 @@ public class PerformStudentTest extends HttpServlet {
 				getServletContext().getNamedDispatcher(MessageArgoUMLView.class.getSimpleName()).forward(request, response);
 				return;
 			}
+			new LogDAO(session).createLogEntryForStudentTest(participation.getUser(), test, test.getTask(), result.isTestPassed(), result.getTestOutput());
 			tx.commit();
 
-			new LogDAO(session).createLogEntryForStudentTest(participation.getUser(), test, test.getTask(), result.isTestPassed(), result.getTestOutput());
 			request.setAttribute("testresult", result);
 			getServletContext().getNamedDispatcher(PerformStudentTestArgoUMLView.class.getSimpleName()).forward(request, response);
 			return;
@@ -213,9 +213,9 @@ public class PerformStudentTest extends HttpServlet {
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
+			LogEntry logEntry = new LogDAO(session).createLogEntryForStudentTest(participation.getUser(), test, test.getTask(), result.isTestPassed(), result.getTestOutput());
 			tx.commit();
 
-			LogEntry logEntry = new LogDAO(session).createLogEntryForStudentTest(participation.getUser(), test, test.getTask(), result.isTestPassed(), result.getTestOutput());
 			request.setAttribute("logentry", logEntry);
 			request.setAttribute("testresult", result);
 

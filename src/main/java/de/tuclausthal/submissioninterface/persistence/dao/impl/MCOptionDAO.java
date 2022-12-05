@@ -55,18 +55,14 @@ public class MCOptionDAO extends AbstractDAO implements MCOptionDAOIf {
 	@Override
 	public MCOption createMCOption(Task task, String option, boolean correct) {
 		Session session = getSession();
-		session.beginTransaction();
 		MCOption mcoption = new MCOption(task, option, correct);
 		session.save(mcoption);
-		session.getTransaction().commit();
 		return mcoption;
 	}
 
 	@Override
 	public void deleteMCOption(MCOption mcoption) {
 		Session session = getSession();
-		session.beginTransaction();
 		session.delete(mcoption);
-		session.getTransaction().commit();
 	}
 }

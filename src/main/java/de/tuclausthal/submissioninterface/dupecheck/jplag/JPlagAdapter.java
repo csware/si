@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020-2021 Sven Strickroth <email@cs-ware.de> 
+ *  Copyright (C) 2020-2022 Sven Strickroth <email@cs-ware.de> 
  *
  * This file is part of the GATE.
  *
@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +64,9 @@ public class JPlagAdapter extends DupeCheck {
 		SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf(session);
 		Task task = similarityTest.getTask();
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
+		Transaction tx = session.beginTransaction();
 		DAOFactory.SimilarityTestDAOIf(session).resetSimilarityTest(similarityTest);
+		tx.commit();
 		File tempDir = null;
 		try {
 			tempDir = Util.createTemporaryDirectory("jplag");
@@ -127,6 +130,7 @@ public class JPlagAdapter extends DupeCheck {
 			outputGrapper.waitFor();
 			if (exitValue == 0) {
 				try (BufferedReader resultsFile = new BufferedReader(new FileReader(new File(resultsDir, "matches_avg.csv")))) {
+					tx = session.beginTransaction();
 					String line;
 					while ((line = resultsFile.readLine()) != null) {
 						String[] results = line.split(";");
@@ -141,6 +145,7 @@ public class JPlagAdapter extends DupeCheck {
 						}
 					}
 					DAOFactory.SimilarityTestDAOIf(session).finish(similarityTest);
+					tx.commit();
 				}
 			} else {
 				LOG.error("Executing \"" + new File(path, "jplag.jar").toString() + "\" failed: Exit code: " + exitValue);

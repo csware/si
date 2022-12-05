@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -29,6 +29,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +69,9 @@ public abstract class DupeCheck {
 	 * @param session 
 	 */
 	public void performDupeCheck(SimilarityTest similarityTest, Session session) {
+		Transaction tx = session.beginTransaction();
 		DAOFactory.SimilarityTestDAOIf(session).resetSimilarityTest(similarityTest);
+		tx.commit();
 		Task task = similarityTest.getTask();
 		File taskPath = new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
 		NormalizerCache normalizerCache = null;
@@ -127,7 +130,9 @@ public abstract class DupeCheck {
 							}
 						}
 						if (similarityTest.getMinimumDifferenceInPercent() <= maxSimilarity) {
+							Transaction tx = session.beginTransaction();
 							similarityDAO.addSimilarityResult(similarityTest, submissions.get(i), submissions.get(j), maxSimilarity);
+							tx.commit();
 						}
 					}
 					session.close();
@@ -142,7 +147,9 @@ public abstract class DupeCheck {
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
+		tx = session.beginTransaction();
 		DAOFactory.SimilarityTestDAOIf(session).finish(similarityTest);
+		tx.commit();
 		normalizerCache.cleanUp();
 	}
 

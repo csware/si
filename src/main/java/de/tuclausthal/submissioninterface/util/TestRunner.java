@@ -51,7 +51,7 @@ public class TestRunner {
 		File dataPath = new File(args[0]);
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
 		SimilarityTest similarityTest;
-		while ((similarityTest = DAOFactory.SimilarityTestDAOIf(session).takeSimilarityTest()) != null) {
+		while ((similarityTest = DAOFactory.SimilarityTestDAOIf(session).takeSimilarityTestTransacted()) != null) {
 			DupeCheck dupeCheck = similarityTest.getDupeCheck(dataPath);
 			dupeCheck.performDupeCheck(similarityTest, session);
 		}
@@ -61,7 +61,7 @@ public class TestRunner {
 		LocalExecutor.getInstance();
 		session = HibernateSessionHelper.getSessionFactory().openSession();
 		Test test;
-		while ((test = DAOFactory.TestDAOIf(session).takeTest()) != null) {
+		while ((test = DAOFactory.TestDAOIf(session).takeTestTransacted()) != null) {
 			for (Submission submission : test.getTask().getSubmissions()) {
 				TestExecutor.executeTask(new TestTask(test, submission, true));
 			}

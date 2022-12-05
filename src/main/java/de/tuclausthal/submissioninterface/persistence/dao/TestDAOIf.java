@@ -87,7 +87,7 @@ public interface TestDAOIf {
 	 * ALERT: this method starts it's own transaction!
 	 * @return Test or null if none is "queued".
 	 */
-	public Test takeTest();
+	public Test takeTestTransacted();
 
 	public List<Test> getStudentTests(Task task);
 

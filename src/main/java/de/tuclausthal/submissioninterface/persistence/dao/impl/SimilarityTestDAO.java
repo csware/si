@@ -61,13 +61,11 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 	@Override
 	public void resetSimilarityTest(SimilarityTest similarityTest) {
 		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaDelete<Similarity> criteria = builder.createCriteriaDelete(Similarity.class);
 		Root<Similarity> root = criteria.from(Similarity.class);
 		criteria.where(builder.equal(root.get(Similarity_.similarityTest), similarityTest));
 		session.createQuery(criteria).executeUpdate();
-		tx.commit();
 	}
 
 	@Override
@@ -81,7 +79,7 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 	}
 
 	@Override
-	public SimilarityTest takeSimilarityTest() {
+	public SimilarityTest takeSimilarityTestTransacted() {
 		Session session = getSession();
 		Transaction tx = session.beginTransaction();
 		CriteriaBuilder builder = session.getCriteriaBuilder();

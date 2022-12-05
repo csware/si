@@ -98,9 +98,13 @@ public class AuthenticationFilter implements Filter {
 			if (verifyResult.wasLoginSuccessful() && verifyResult.verifiedUser == null) {
 				// need to create user
 				if (verifyResult.matrikelNumber != null) {
+					Transaction tx = session.beginTransaction();
 					verifyResult.verifiedUser = DAOFactory.UserDAOIf(session).createUser(verifyResult.username, verifyResult.mail, verifyResult.firstName, verifyResult.lastName, verifyResult.matrikelNumber);
+					tx.commit();
 				} else {
+					Transaction tx = session.beginTransaction();
 					verifyResult.verifiedUser = DAOFactory.UserDAOIf(session).createUser(verifyResult.username, verifyResult.mail, verifyResult.firstName, verifyResult.lastName);
+					tx.commit();
 				}
 				if (verifyResult.verifiedUser == null) {
 					LOG.error("Creating new user failed!");
