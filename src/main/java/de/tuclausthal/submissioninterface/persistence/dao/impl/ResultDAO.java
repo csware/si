@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,7 +18,6 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -46,17 +45,12 @@ public class ResultDAO extends AbstractDAO implements ResultDAOIf {
 	public List<String> getResultsForSubmission(Submission submission) {
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
-		CriteriaQuery<Result> criteria = builder.createQuery(Result.class);
+		CriteriaQuery<String> criteria = builder.createQuery(String.class);
 		Root<Result> root = criteria.from(Result.class);
-		criteria.select(root);
+		criteria.select(root.get(Result_.result));
 		criteria.where(builder.equal(root.get(Result_.submission), submission));
 		criteria.orderBy(builder.asc(root.get(Result_.resultid)));
-
-		List<String> results = new ArrayList<>();
-		for (Result result : session.createQuery(criteria).list()) {
-			results.add(result.getResult());
-		}
-		return results;
+		return session.createQuery(criteria).list();
 	}
 
 	@Override
