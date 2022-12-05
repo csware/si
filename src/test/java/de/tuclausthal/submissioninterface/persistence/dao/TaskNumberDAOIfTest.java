@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020, 2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -27,6 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import de.tuclausthal.submissioninterface.BasicTest;
 import de.tuclausthal.submissioninterface.GATEDBTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 
 @GATEDBTest
@@ -108,4 +109,29 @@ class TaskNumberDAOIfTest extends BasicTest {
 		session.getTransaction().rollback();
 	}
 
+	@Test
+	void testAssignTaskNumbersToSubmission() {
+		session.getTransaction().begin();
+		List<TaskNumber> taskNubmers = DAOFactory.TaskNumberDAOIf(session).getTaskNumbersForTaskLocked(DAOFactory.TaskDAOIf(session).getTask(1), DAOFactory.ParticipationDAOIf(session).getParticipation(12));
+		assertEquals(1, taskNubmers.size());
+		assertEquals("110", taskNubmers.get(0).getNumber());
+		assertEquals("6", taskNubmers.get(0).getOrigNumber());
+		assertNull(taskNubmers.get(0).getSubmission());
+
+		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(3);
+		DAOFactory.TaskNumberDAOIf(session).assignTaskNumbersToSubmission(submission, taskNubmers.get(0).getParticipation());
+
+		taskNubmers = DAOFactory.TaskNumberDAOIf(session).getTaskNumbersForSubmission(submission);
+		assertEquals(1, taskNubmers.size());
+		assertEquals("110", taskNubmers.get(0).getNumber());
+		assertEquals("6", taskNubmers.get(0).getOrigNumber());
+		assertEquals(submission, taskNubmers.get(0).getSubmission());
+
+		taskNubmers = DAOFactory.TaskNumberDAOIf(session).getTaskNumbersForTaskLocked(DAOFactory.TaskDAOIf(session).getTask(1), DAOFactory.ParticipationDAOIf(session).getParticipation(12));
+		assertEquals(1, taskNubmers.size());
+		assertEquals("110", taskNubmers.get(0).getNumber());
+		assertEquals("6", taskNubmers.get(0).getOrigNumber());
+		assertEquals(submission, taskNubmers.get(0).getSubmission());
+		session.getTransaction().rollback();
+	}
 }

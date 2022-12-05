@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020, 2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import de.tuclausthal.submissioninterface.BasicTest;
 import de.tuclausthal.submissioninterface.GATEDBTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 
 @GATEDBTest
 class ResultDAOIfTest extends BasicTest {
@@ -39,5 +40,19 @@ class ResultDAOIfTest extends BasicTest {
 		List<String> results = DAOFactory.ResultDAOIf(session).getResultsForSubmission(DAOFactory.SubmissionDAOIf(session).getSubmission(1));
 		assertEquals(1, results.size());
 		assertEquals("60", results.get(0));
+	}
+
+	@Test
+	void testCreateResults() {
+		session.beginTransaction();
+		Submission submissionDrei = DAOFactory.SubmissionDAOIf(session).getSubmission(3);
+		assertEquals(0, DAOFactory.ResultDAOIf(session).getResultsForSubmission(submissionDrei).size());
+		DAOFactory.ResultDAOIf(session).createResults(submissionDrei, List.of("a", "v", "fddsf", "dsf"));
+		assertEquals(List.of("a", "v", "fddsf", "dsf"), DAOFactory.ResultDAOIf(session).getResultsForSubmission(submissionDrei));
+		DAOFactory.ResultDAOIf(session).createResults(submissionDrei, List.of("asf"));
+		assertEquals(List.of("asf"), DAOFactory.ResultDAOIf(session).getResultsForSubmission(submissionDrei));
+		DAOFactory.ResultDAOIf(session).createResults(submissionDrei, List.of());
+		assertEquals(0, DAOFactory.ResultDAOIf(session).getResultsForSubmission(submissionDrei).size());
+		session.getTransaction().rollback();
 	}
 }

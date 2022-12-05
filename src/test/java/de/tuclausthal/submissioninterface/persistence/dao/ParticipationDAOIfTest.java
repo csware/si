@@ -19,9 +19,12 @@
 package de.tuclausthal.submissioninterface.persistence.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.List;
 
+import org.hibernate.Transaction;
 import org.junit.jupiter.api.Test;
 
 import de.tuclausthal.submissioninterface.BasicTest;
@@ -29,7 +32,9 @@ import de.tuclausthal.submissioninterface.GATEDBTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
+import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 
 @GATEDBTest
 class ParticipationDAOIfTest extends BasicTest {
@@ -101,5 +106,24 @@ class ParticipationDAOIfTest extends BasicTest {
 		assertEquals("Lastname2", list.get(1).getUser().getLastName());
 		assertEquals("Lastname3", list.get(2).getUser().getLastName());
 		assertEquals("User", list.get(9).getUser().getLastName());
+	}
+
+	@Test
+	void testGetAndCreateAndDeleteParticipation() {
+		Transaction tx = session.beginTransaction();
+		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(1);
+		User user = DAOFactory.UserDAOIf(session).getUser(14);
+		assertNull(DAOFactory.ParticipationDAOIf(session).getParticipation(user, lecture));
+		assertEquals(true, DAOFactory.ParticipationDAOIf(session).createParticipation(user, lecture, ParticipationRole.NORMAL));
+		assertNotNull(DAOFactory.ParticipationDAOIf(session).getParticipation(user, lecture));
+		assertEquals(false, DAOFactory.ParticipationDAOIf(session).createParticipation(user, lecture, ParticipationRole.NORMAL));
+		DAOFactory.ParticipationDAOIf(session).deleteParticipation(user, lecture);
+		assertNull(DAOFactory.ParticipationDAOIf(session).getParticipation(user, lecture));
+
+		assertEquals(true, DAOFactory.ParticipationDAOIf(session).createParticipation(user, lecture, ParticipationRole.NORMAL));
+		assertNotNull(DAOFactory.ParticipationDAOIf(session).getParticipation(user, lecture));
+		DAOFactory.ParticipationDAOIf(session).deleteParticipation(DAOFactory.ParticipationDAOIf(session).getParticipation(user, lecture));
+		assertNull(DAOFactory.ParticipationDAOIf(session).getParticipation(user, lecture));
+		tx.rollback();
 	}
 }

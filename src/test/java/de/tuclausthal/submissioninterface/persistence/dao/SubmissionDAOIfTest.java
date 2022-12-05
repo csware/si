@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,14 +21,17 @@ package de.tuclausthal.submissioninterface.persistence.dao;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
+import org.hibernate.Transaction;
 import org.junit.jupiter.api.Test;
 
 import de.tuclausthal.submissioninterface.BasicTest;
 import de.tuclausthal.submissioninterface.GATEDBTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 
@@ -176,5 +179,38 @@ class SubmissionDAOIfTest extends BasicTest {
 		assertEquals(1, DAOFactory.SubmissionDAOIf(session).getSubmissionsForSearch(task3, "GaussscheSummenFormel", false, false, true).size());
 		assertEquals(4, DAOFactory.SubmissionDAOIf(session).getSubmissionsForSearch(task3, "Hello World", false, false, true).size());
 		assertEquals(1, DAOFactory.SubmissionDAOIf(session).getSubmissionsForSearch(task3, "HelloWorld", false, false, true).size());
+	}
+
+	@Test
+	void testGetAllSubmissions() {
+		assertEquals(0, DAOFactory.SubmissionDAOIf(session).getAllSubmissions(DAOFactory.ParticipationDAOIf(session).getParticipation(1)).size());
+
+		List<Submission> submissions = DAOFactory.SubmissionDAOIf(session).getAllSubmissions(DAOFactory.ParticipationDAOIf(session).getParticipation(8));
+		assertEquals(2, submissions.size());
+
+		submissions = DAOFactory.SubmissionDAOIf(session).getAllSubmissions(DAOFactory.ParticipationDAOIf(session).getParticipation(14));
+		assertEquals(3, submissions.size());
+	}
+
+	@Test
+	void testCreateSubmission() {
+		Transaction tx = session.beginTransaction();
+		Task task = DAOFactory.TaskDAOIf(session).getTask(1);
+		Participation participation = DAOFactory.ParticipationDAOIf(session).getParticipation(DAOFactory.UserDAOIf(session).getUser(7), task.getTaskGroup().getLecture());
+		assertNull(DAOFactory.SubmissionDAOIf(session).getSubmission(task, participation.getUser()));
+		Submission newSubmission = DAOFactory.SubmissionDAOIf(session).createSubmission(task, participation);
+		assertNotNull(newSubmission);
+		assertTrue(newSubmission.getSubmissionid()> 0);
+		assertEquals(1, newSubmission.getSubmitters().size());
+		assertTrue(newSubmission.getSubmitters().contains(participation));
+		assertEquals(newSubmission, DAOFactory.SubmissionDAOIf(session).createSubmission(task, participation));
+
+		Participation part2 = DAOFactory.ParticipationDAOIf(session).getParticipation(DAOFactory.UserDAOIf(session).getUser(11), task.getTaskGroup().getLecture());
+		assertNull(DAOFactory.SubmissionDAOIf(session).getSubmission(task, part2.getUser()));
+		newSubmission.getSubmitters().add(part2);
+		assertEquals(newSubmission, DAOFactory.SubmissionDAOIf(session).createSubmission(task, participation));
+		assertEquals(newSubmission, DAOFactory.SubmissionDAOIf(session).createSubmission(task, part2));
+		assertEquals(2, newSubmission.getSubmitters().size());
+		tx.rollback();
 	}
 }

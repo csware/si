@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020, 2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.hibernate.Transaction;
 import org.junit.jupiter.api.Test;
 
 import de.tuclausthal.submissioninterface.BasicTest;
@@ -75,5 +76,44 @@ class UserDAOIfTest extends BasicTest {
 	@Test
 	void testGetSuperUsers() {
 		assertEquals(1, DAOFactory.UserDAOIf(session).getSuperUsers().size());
+	}
+
+	@Test
+	void testGetUserByEmail() {
+		assertEquals(1, DAOFactory.UserDAOIf(session).getUserByEmail("admin@localhost").getUid());
+		assertEquals(1, DAOFactory.UserDAOIf(session).getUserByEmail("admin@LocalHost").getUid());
+		assertNull(DAOFactory.UserDAOIf(session).getUserByEmail("gibbed@Net"));
+	}
+
+	@Test
+	void testMakeUserStudent() {
+		Transaction tx = session.beginTransaction();
+		User user = DAOFactory.UserDAOIf(session).getUserByUsername("user2");
+		assertFalse(user instanceof Student);
+		session.detach(user); // force user to be reloaded
+		DAOFactory.UserDAOIf(session).makeUserStudent(user.getUid(), 4566);
+		user = DAOFactory.UserDAOIf(session).getUserByUsername("user2");
+		assertTrue(user instanceof Student);
+		assertEquals(4566, ((Student)user).getMatrikelno());
+		tx.rollback();
+	}
+
+	@Test
+	void testCreateUser() {
+		Transaction tx = session.beginTransaction();
+		User user = DAOFactory.UserDAOIf(session).createUser("ausername", "a@mail", "First", "Last");
+		assertFalse(user instanceof Student);
+		assertTrue(user.getUid() > 0);
+		tx.rollback();
+	}
+
+	@Test
+	void testCreateStudent() {
+		Transaction tx = session.beginTransaction();
+		User user = DAOFactory.UserDAOIf(session).createUser("ausername", "a@mail", "First", "Last", 4711);
+		assertTrue(user.getUid() > 0);
+		assertTrue(user instanceof Student);
+		assertEquals(4711, ((Student)user).getMatrikelno());
+		tx.rollback();
 	}
 }

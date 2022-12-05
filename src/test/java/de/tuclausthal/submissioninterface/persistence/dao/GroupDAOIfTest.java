@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,6 +19,10 @@
 package de.tuclausthal.submissioninterface.persistence.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -42,5 +46,31 @@ public class GroupDAOIfTest extends BasicTest {
 
 		Group g3 = DAOFactory.GroupDAOIf(session).getGroup(3);
 		assertEquals(1, DAOFactory.GroupDAOIf(session).getJoinAbleGroups(lecture, g3).size());
+	}
+
+	@Test
+	public void testGetGroupSizes() {
+		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(1);
+		Map<Integer, Integer> groupSizes = DAOFactory.GroupDAOIf(session).getGroupSizes(List.copyOf(lecture.getGroups()), null);
+		assertEquals(3, groupSizes.size());
+		assertEquals(3, groupSizes.get(1));
+		assertEquals(2, groupSizes.get(2));
+		assertEquals(1, groupSizes.get(3));
+
+		groupSizes = DAOFactory.GroupDAOIf(session).getGroupSizes(DAOFactory.GroupDAOIf(session).getJoinAbleGroups(lecture, null), null);
+		assertEquals(1, groupSizes.size());
+		assertEquals(1, groupSizes.get(3));
+
+		Group g1 = DAOFactory.GroupDAOIf(session).getGroup(1);
+		groupSizes = DAOFactory.GroupDAOIf(session).getGroupSizes(Collections.emptyList(), g1);
+		assertEquals(1, groupSizes.size());
+		assertEquals(3, groupSizes.get(1));
+
+		groupSizes = DAOFactory.GroupDAOIf(session).getGroupSizes(DAOFactory.GroupDAOIf(session).getJoinAbleGroups(lecture, null), g1);
+		assertEquals(2, groupSizes.size());
+		assertEquals(3, groupSizes.get(1));
+		assertEquals(1, groupSizes.get(3));
+
+		assertEquals(0, DAOFactory.GroupDAOIf(session).getGroupSizes(Collections.emptyList(), null).size());
 	}
 }
