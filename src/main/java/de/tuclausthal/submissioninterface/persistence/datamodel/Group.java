@@ -32,6 +32,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -100,7 +101,7 @@ public class Group implements Serializable {
 	/**
 	 * @return the members
 	 */
-	@ManyToMany(mappedBy = "group", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
 	public Set<Participation> getMembers() {
 		return members;
 	}
