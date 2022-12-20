@@ -166,7 +166,7 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 		subQuery.select(lecturesTakingPartIn.join(Submission_.submitters));
 		subQuery.where(builder.equal(lecturesTakingPartIn.get(Submission_.task), task));
 
-		criteria.where(builder.and(builder.equal(root.get(Participation_.lecture), task.getTaskGroup().getLecture()), builder.not(root.get(Participation_.id).in(subQuery))));
+		criteria.where(builder.and(builder.equal(root.get(Participation_.lecture), task.getTaskGroup().getLecture()), builder.not(root.in(subQuery))));
 		criteria.orderBy(builder.asc(userJoin.get(User_.lastName)), builder.asc(userJoin.get(User_.firstName)));
 		return session.createQuery(criteria).list();
 	}

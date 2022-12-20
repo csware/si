@@ -90,7 +90,7 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 		countSubQuery.select(lecturesTakingPartIn.get(Participation_.lecture));
 		countSubQuery.where(builder.equal(lecturesTakingPartIn.get(Participation_.user), user));
 
-		criteria.where(builder.and(builder.equal(root.get(Lecture_.semester), Util.getCurrentSemester()), builder.equal(root.get(Lecture_.allowSelfSubscribe), true), builder.not(root.get(Lecture_.id).in(countSubQuery))));
+		criteria.where(builder.and(builder.equal(root.get(Lecture_.semester), Util.getCurrentSemester()), builder.equal(root.get(Lecture_.allowSelfSubscribe), true), builder.not(root.in(countSubQuery))));
 
 		return session.createQuery(criteria).list();
 	}
