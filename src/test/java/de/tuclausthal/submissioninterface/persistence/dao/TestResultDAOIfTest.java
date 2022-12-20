@@ -36,7 +36,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 class TestResultDAOIfTest extends BasicTest {
 	@Test
 	void testGetResultNone() {
-		assertNull(DAOFactory.TestResultDAOIf(session).getResult(DAOFactory.TestDAOIf(session).getTest(5), DAOFactory.SubmissionDAOIf(session).getSubmission(7)));
+		assertNull(DAOFactory.TestResultDAOIf(session).getResult(DAOFactory.TestDAOIf(session).getTest(4), DAOFactory.SubmissionDAOIf(session).getSubmission(7)));
 	}
 
 	@Test
