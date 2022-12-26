@@ -185,4 +185,16 @@ public class ClozeTaskTypeTest {
 		assertTrue(ch.isAutoGradeAble());
 		assertEquals("<p>Aufgabenstellung</p><pre>public <input name=\"cloze0\" type=\"text\" class=\"cloze\" size=\"20\"" + ClozeTaskType.FIXED_LIMIT + " autocomplete=\"off\" /> Dreieck {<!-- --><br />      <input name=\"cloze1\" type=\"text\" class=\"cloze\" size=\"20\"" + ClozeTaskType.FIXED_LIMIT + " autocomplete=\"off\" /> int laengeGrundseite;<br /><br />      // Konstruktor<br />      public <input name=\"cloze2\" type=\"text\" class=\"cloze\" size=\"20\"" + ClozeTaskType.FIXED_LIMIT + " autocomplete=\"off\" />(int laengeGrundseite, int hoeheGrundseite) {<!-- --><br />            <input name=\"cloze3\" type=\"text\" class=\"cloze\" size=\"24\"" + ClozeTaskType.FIXED_LIMIT + " autocomplete=\"off\" /> &#61; laengeGrundseite;<br />            <input name=\"cloze4\" type=\"text\" class=\"cloze\" size=\"23\"" + ClozeTaskType.FIXED_LIMIT + " autocomplete=\"off\" /> &#61; hoeheGrundseite;<br />      }<br /><br />      public double flaeche() {<!-- --><br />            <input name=\"cloze5\" type=\"text\" class=\"cloze\" size=\"52\"" + ClozeTaskType.FIXED_LIMIT + " autocomplete=\"off\" />;<br />      }<br />}</pre>", ch.toHTML());
 	}
+
+	@Test
+	public void testUnicode() {
+		List<String> results = Arrays.asList("5");
+		ClozeTaskType ch = new ClozeTaskType("{SHORTANSWER:1=שּׂ}.", results, true, true);
+		assertTrue(ch.isAutoGradeAble());
+		assertEquals(0, ch.calculatePoints(results));
+
+		assertEquals(100, ch.calculatePoints(Arrays.asList("שּׂ")));
+		assertEquals(100, ch.calculatePoints(Arrays.asList("\u05E9\u05C2\u05BC")));
+		assertEquals(100, ch.calculatePoints(Arrays.asList("\u05E9\u05BC\u05C2")));
+	}
 }

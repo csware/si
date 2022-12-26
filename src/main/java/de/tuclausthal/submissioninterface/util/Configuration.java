@@ -40,10 +40,10 @@ import de.tuclausthal.submissioninterface.template.Template;
  * @author Sven Strickroth
  */
 public class Configuration {
-	final public static String GLOBAL_FILENAME_CHARS = "0-9._`´#§$%^&() \\p{L}}\\p{Sc}}\\p{No}[\\p{Sm}}\\p{So}&&[^<>:|]]-";
+	final public static String GLOBAL_FILENAME_CHARS = "0-9._`´#§$%^&() \\p{Sc}\\p{No}[\\p{Sm}\\p{So}&&[^<>:|]]-";
 	final public static String GLOBAL_ARCHIVEFILENAME_CHARS = "/" + GLOBAL_FILENAME_CHARS;
-	final public static String GLOBAL_FILENAME_REGEXP = "^([" + GLOBAL_FILENAME_CHARS + "]+)$";
-	final public static String GLOBAL_ARCHIVEFILENAME_REGEXP = "^([" + GLOBAL_ARCHIVEFILENAME_CHARS + "]+)$";
+	final public static String GLOBAL_FILENAME_REGEXP = "^((?:[\\p{L}][\\p{Mn}]*+|[" + GLOBAL_FILENAME_CHARS + "])++)$";
+	final public static String GLOBAL_ARCHIVEFILENAME_REGEXP = "^((?:[\\p{L}][\\p{Mn}]*+|[" + GLOBAL_ARCHIVEFILENAME_CHARS + "])++)$";
 
 	final public static String SERVLETS_PATH_WITH_ENDSLASH = "servlets/";
 	final public static String SERVLETS_PATH_WITH_BOTHSLASHES = "/" + SERVLETS_PATH_WITH_ENDSLASH;

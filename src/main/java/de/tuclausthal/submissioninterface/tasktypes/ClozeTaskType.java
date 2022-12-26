@@ -18,6 +18,8 @@
 
 package de.tuclausthal.submissioninterface.tasktypes;
 
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -46,6 +48,9 @@ public class ClozeTaskType {
 
 	public ClozeTaskType(String text, List<String> oldInput, boolean notEditable, boolean feedback) {
 		assert (notEditable || !feedback);
+		if (!Normalizer.isNormalized(text, Form.NFC)) {
+			text = Normalizer.normalize(text, Form.NFC);
+		}
 		Matcher m = itemsPattern.matcher(text);
 
 		int i = 0;
@@ -180,6 +185,9 @@ public class ClozeTaskType {
 
 		public int calculatePoints(String input) {
 			for (int i = 0; i < knownOptions.size(); ++i) {
+				if (!Normalizer.isNormalized(input, Form.NFC)) {
+					input = Normalizer.normalize(input, Form.NFC);
+				}
 				if (knownOptions.get(i).equals(input)) {
 					return Util.convertToPoints(knownPoints.get(i));
 				}

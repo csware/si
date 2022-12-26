@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -213,6 +213,7 @@ public class UtilTest {
 		assertTrue(pattern.matcher("Hal lo)").matches());
 		assertTrue(pattern.matcher("Hal lo=").matches()); // included in \\p{Sm}
 		assertTrue(pattern.matcher("Hallo").matches());
+		assertTrue(pattern.matcher("François").matches());
 		assertTrue(pattern.matcher("Halloü").matches());
 		assertTrue(pattern.matcher("HalloŇ").matches());
 		assertTrue(pattern.matcher("HalloḦ").matches());
@@ -223,6 +224,16 @@ public class UtilTest {
 		assertTrue(pattern.matcher("Hallo€").matches()); // included in \\p{Sc}
 		assertTrue(pattern.matcher("Hallo²").matches()); // included in \\p{No}
 		assertTrue(pattern.matcher("Hallo❻").matches()); // included in \\p{No}
+		assertTrue(pattern.matcher("Übungsblatt EIP.pdf").matches()); // non NFC, but NFD encoding; requires \p{Mn}
+		assertTrue(pattern.matcher("ÜÜ̈bungsblatt EIP.pdf").matches()); // non NFC, but NFD encoding; requires \p{Mn}
+		assertTrue(pattern.matcher("Some\u0308thing.pdf").matches()); // https://www.compart.com/de/unicode/U+0308
+		assertTrue(pattern.matcher("Somet\u0308hing.pdf").matches());
+		assertTrue(pattern.matcher("יִמְלֹךְ.pdf").matches());
+		assertTrue(pattern.matcher("שּׂ.pdf").matches());
+		assertTrue(pattern.matcher("\u05E9\u05C2\u05BC.pdf").matches()); // requires \p{Mn}
+		assertTrue(pattern.matcher("\u05E9\u05BC\u05C2.pdf").matches());
+		assertTrue(pattern.matcher("\uFB2D.pdf").matches());
+		assertTrue(pattern.matcher("Some\u05BCthing.pdf").matches());
 
 		// don't care:
 		/*
@@ -240,6 +251,11 @@ public class UtilTest {
 		*/
 
 		// must fail:
+		assertFalse(pattern.matcher("\u05BC.pdf").matches()); // niqqud alone should fail, included in \p{Mn}
+		assertFalse(pattern.matcher("\u0308.pdf").matches()); // umlaut dots without letter before, included in \p{Mn}
+		assertFalse(pattern.matcher("ffjdhdh%\u05BC.pdf").matches()); // niqqud alone should fail, included in \p{Mn}
+		assertFalse(pattern.matcher("^\u0308.pdf").matches()); // umlauts only after letters
+		assertFalse(pattern.matcher("Hal\u0000lo").matches());
 		assertFalse(pattern.matcher("Hal\blo").matches());
 		assertFalse(pattern.matcher("Hal\tlo").matches());
 		assertFalse(pattern.matcher("<fjf").matches()); // included in \\p{Sm}
@@ -250,6 +266,7 @@ public class UtilTest {
 		assertFalse(pattern.matcher("fjf\"jh").matches());
 		assertFalse(pattern.matcher("d*").matches());
 		assertFalse(pattern.matcher("d{d").matches());
+		assertFalse(pattern.matcher("d}d").matches());
 		assertFalse(pattern.matcher("d!d").matches());
 		assertFalse(pattern.matcher("s]fg").matches());
 		assertFalse(pattern.matcher("jh>s").matches()); // included in \\p{Sm}
