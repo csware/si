@@ -32,7 +32,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import org.hibernate.LockOptions;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -73,8 +73,8 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate) {
 		Session session = getSession();
 
-		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
-		session.buildLockRequest(LockOptions.UPGRADE).lock(submission.getTask());
+		session.lock(submission, LockMode.PESSIMISTIC_WRITE);
+		session.lock(submission.getTask(), LockMode.PESSIMISTIC_WRITE);
 		if (issuedPoints % submission.getTask().getMinPointStep() != 0) {
 			issuedPoints = (issuedPoints / submission.getTask().getMinPointStep()) * submission.getTask().getMinPointStep();
 		}
@@ -158,8 +158,8 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	public Points createPoints(List<Integer> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate) {
 		Session session = getSession();
 
-		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
-		session.buildLockRequest(LockOptions.UPGRADE).lock(submission.getTask());
+		session.lock(submission, LockMode.PESSIMISTIC_WRITE);
+		session.lock(submission.getTask(), LockMode.PESSIMISTIC_WRITE);
 
 		boolean changed = false;
 
@@ -278,8 +278,8 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 	@Override
 	public Points createPointsFromRequestParameters(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate) {
 		Session session = getSession();
-		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
-		session.buildLockRequest(LockOptions.UPGRADE).lock(submission.getTask());
+		session.lock(submission, LockMode.PESSIMISTIC_WRITE);
+		session.lock(submission.getTask(), LockMode.PESSIMISTIC_WRITE);
 
 		List<Integer> pointsGivenList = new ArrayList<>();
 

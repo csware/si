@@ -31,6 +31,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -68,7 +69,7 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 	@Override
 	public void deleteGroup(Group group) {
 		Session session = getSession();
-		session.buildLockRequest(LockOptions.UPGRADE).lock(group);
+		session.lock(group, LockMode.PESSIMISTIC_WRITE);
 		for (Participation participation : group.getMembers()) {
 			participation.setGroup(null);
 		}

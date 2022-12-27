@@ -48,7 +48,7 @@ import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObjectBuilder;
 
-import org.hibernate.LockOptions;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
@@ -327,7 +327,7 @@ public class SubmitSolution extends HttpServlet {
 		if (task.getMaxSubmitters() > 1 && (task.isAllowSubmittersAcrossGroups() || studentParticipation.getGroup() != null)) {
 			if (studentParticipation.getGroup() != null && studentParticipation.getGroup().isSubmissionGroup()) {
 				for (Participation partnerParticipation : studentParticipation.getGroup().getMembers()) {
-					session.buildLockRequest(LockOptions.UPGRADE).lock(partnerParticipation); // creating submissions is serialized by locking the participation, see above
+					session.lock(partnerParticipation, LockMode.PESSIMISTIC_WRITE); // creating submissions is serialized by locking the participation, see above
 					if (partnerParticipation.getRoleType().ordinal() >= ParticipationRole.TUTOR.ordinal()) {
 						continue;
 					}
@@ -346,7 +346,7 @@ public class SubmitSolution extends HttpServlet {
 			} else {
 				for (int partnerID : partnerIDs) {
 					Participation partnerParticipation = participationDAO.getParticipation(partnerID);
-					session.buildLockRequest(LockOptions.UPGRADE).lock(partnerParticipation); // creating submissions is serialized by locking the participation, see above
+					session.lock(partnerParticipation, LockMode.PESSIMISTIC_WRITE); // creating submissions is serialized by locking the participation, see above
 					if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getRoleType().equals(ParticipationRole.NORMAL) && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && ((task.isAllowSubmittersAcrossGroups() && (partnerParticipation.getGroup() == null || !partnerParticipation.getGroup().isSubmissionGroup())) || (!task.isAllowSubmittersAcrossGroups() && partnerParticipation.getGroup() != null && studentParticipation.getGroup() != null && partnerParticipation.getGroup().getGid() == studentParticipation.getGroup().getGid())) && submissionDAO.getSubmission(task, partnerParticipation.getUser()) == null) {
 						submission.getSubmitters().add(partnerParticipation);
 					} else {

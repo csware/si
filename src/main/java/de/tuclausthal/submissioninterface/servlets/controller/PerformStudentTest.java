@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.LockOptions;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
@@ -144,7 +144,7 @@ public class PerformStudentTest extends HttpServlet {
 			}
 
 			Transaction tx = session.beginTransaction();
-			session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
+			session.lock(submission, LockMode.PESSIMISTIC_WRITE);
 			if (!testCountDAO.canSeeResultAndIncrementCounterTransaction(test, submission)) {
 				tx.commit();
 				request.setAttribute("title", "Dieser Test kann nicht mehr ausgeführt werden. Limit erreicht.");
@@ -278,7 +278,7 @@ public class PerformStudentTest extends HttpServlet {
 
 		SessionAdapter sa = RequestAdapter.getSessionAdapter(request);
 		Transaction tx = session.beginTransaction();
-		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
+		session.lock(submission, LockMode.PESSIMISTIC_WRITE);
 		QueuedTest resultFuture = sa.getQueuedTest();
 		if (resultFuture != null) {
 			tx.commit();

@@ -24,7 +24,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.LockOptions;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.ResultDAOIf;
@@ -56,7 +56,7 @@ public class ResultDAO extends AbstractDAO implements ResultDAOIf {
 	@Override
 	public void createResults(Submission submission, List<String> results) {
 		Session session = getSession();
-		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
+		session.lock(submission, LockMode.PESSIMISTIC_WRITE);
 
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Result> criteria = builder.createQuery(Result.class);

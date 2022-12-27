@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
-import org.hibernate.LockOptions;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -149,7 +149,7 @@ public class DeleteFile extends HttpServlet {
 		if (relativeFile != null && !relativeFile.isEmpty()) {
 			File file = new File(path, relativeFile);
 			Transaction tx = session.beginTransaction();
-			session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
+			session.lock(submission, LockMode.PESSIMISTIC_WRITE);
 			if (file.exists() && file.isFile() && file.delete()) {
 				if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 					submission.setLastModified(ZonedDateTime.now());

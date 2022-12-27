@@ -27,7 +27,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.LockOptions;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -52,7 +52,7 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 	@Override
 	public void storeTestResult(Test test, Submission submission, TestExecutorTestResult testExecutorTestResult) {
 		Session session = getSession();
-		session.buildLockRequest(LockOptions.UPGRADE).lock(test);
+		session.lock(test, LockMode.PESSIMISTIC_WRITE);
 		TestResult testResult = getResultLocked(test, submission);
 		if (testExecutorTestResult == null && testResult != null) {
 			session.delete(testResult);

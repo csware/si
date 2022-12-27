@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.LockOptions;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -110,7 +110,7 @@ public class MarkEmptyTask extends HttpServlet {
 			return;
 		}
 		Transaction tx = session.beginTransaction();
-		session.buildLockRequest(LockOptions.UPGRADE).lock(studentParticipation);
+		session.lock(studentParticipation, LockMode.PESSIMISTIC_WRITE);
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 		Submission submission = submissionDAO.getSubmission(task, studentParticipation.getUser());
 		if (submission != null) {

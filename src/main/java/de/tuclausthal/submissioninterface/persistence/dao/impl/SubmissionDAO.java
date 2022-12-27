@@ -34,6 +34,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
 import javax.persistence.criteria.Subquery;
 
+import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 
@@ -86,7 +87,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 	public Submission createSubmission(Task task, Participation submitter) {
 		Session session = getSession();
 		// lock participation, because locking of not-existing entries in InnoDB might lock the whole table (submissions AND tasks) causing a strict serialization of ALL requests
-		session.buildLockRequest(LockOptions.UPGRADE).lock(submitter);
+		session.lock(submitter, LockMode.PESSIMISTIC_WRITE);
 		Submission submission = getSubmission(task, submitter.getUser());
 		if (submission == null) {
 			submission = new Submission(task, submitter);
@@ -115,7 +116,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 	@Override
 	public boolean deleteIfNoFiles(Submission submission, File submissionPath) {
 		Session session = getSession();
-		session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
+		session.lock(submission, LockMode.PESSIMISTIC_WRITE);
 		boolean result = false;
 		Util.recursiveDeleteEmptySubDirectories(submissionPath);
 		if (submissionPath.listFiles().length == 0 && submissionPath.delete()) {

@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.LockOptions;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -111,7 +111,7 @@ public class EditGroup extends HttpServlet {
 		} else if ("removeTutorFromGroup".equals(request.getParameter("action"))) {
 			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
 				Transaction tx = session.beginTransaction();
-				session.buildLockRequest(LockOptions.UPGRADE).lock(group);
+				session.lock(group, LockMode.PESSIMISTIC_WRITE);
 				Participation memberParticipation = participationDAO.getParticipationLocked(Util.parseInteger(request.getParameter("participationid"), 0));
 				if (memberParticipation != null) {
 					group.getTutors().remove(memberParticipation);
@@ -124,8 +124,8 @@ public class EditGroup extends HttpServlet {
 			return;
 		} else if ("editGroup".equals(request.getParameter("action"))) { // add member or edit group
 			Transaction tx = session.beginTransaction();
-			session.buildLockRequest(LockOptions.UPGRADE).lock(group);
-			session.buildLockRequest(LockOptions.UPGRADE).lock(participation);
+			session.lock(group, LockMode.PESSIMISTIC_WRITE);
+			session.lock(participation, LockMode.PESSIMISTIC_WRITE);
 			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) == 0) {
 				group.setName(request.getParameter("title"));
 				group.setAllowStudentsToSignup(request.getParameter("allowStudentsToSignup") != null);

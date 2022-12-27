@@ -29,7 +29,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import org.hibernate.LockOptions;
+import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -51,7 +51,7 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 	public void addSimilarityResult(SimilarityTest similarityTest, Submission submissionOne, Submission submissionTwo, int percentage) {
 		if (submissionOne != null && submissionTwo != null) {
 			Session session = getSession();
-			session.buildLockRequest(LockOptions.UPGRADE).lock(similarityTest);
+			session.lock(similarityTest, LockMode.PESSIMISTIC_WRITE);
 
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaDelete<Similarity> criteria = builder.createCriteriaDelete(Similarity.class);
