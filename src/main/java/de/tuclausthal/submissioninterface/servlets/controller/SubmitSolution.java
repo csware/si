@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2014, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2014, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -384,7 +384,7 @@ public class SubmitSolution extends HttpServlet {
 				for (Pattern pattern : getTaskFileNamePatterns(task, uploadFor > 0)) {
 					Matcher m = pattern.matcher(submittedFileName);
 					if (!m.matches()) {
-						LOG.debug("File does not match pattern: file;" + submittedFileName + ";" + pattern.pattern());
+						LOG.debug("File does not match pattern (taskid={}): filename:\"{}\"; pattern:\"{}\"", task.getTaskid(), submittedFileName, pattern.pattern());
 						skippedFiles = true;
 						fileName = null;
 						break;
@@ -404,7 +404,7 @@ public class SubmitSolution extends HttpServlet {
 					if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 						submission.setLastModified(ZonedDateTime.now());
 					}
-					LOG.error("Problem on processing uploaded file", e);
+					LOG.warn("Problem on processing uploaded file", e);
 					Util.recursiveDeleteEmptyDirectories(logPath);
 					if (!logPath.exists()) {
 						session.remove(logEntry);
@@ -585,19 +585,19 @@ public class SubmitSolution extends HttpServlet {
 					boolean fileNameOk = true;
 					for (Pattern pattern : patterns) {
 						if (!pattern.matcher(archivedFileName).matches()) {
-							log.debug("Ignored entry: " + archivedFileName + ";" + pattern.pattern());
+							log.debug("Ignored entry (taskid={}): archivedFileName:\"{}\"; pattern:\"{}\"", task.getTaskid(), archivedFileName, pattern.pattern());
 							fileNameOk = false;
 							break;
 						}
 					}
 					if (!fileNameOk || archivedFileName.length() == 0 || archivedFileName.charAt(0) == '/' || archivedFileName.charAt(archivedFileName.length() - 1) == '/') {
-						log.debug("Ignored entry: " + archivedFileName);
+						log.debug("Ignored entry in archive for taskid={}: archivedFileName:\"{}\"", task.getTaskid(), archivedFileName);
 						skippedFiles = true;
 						continue;
 					}
 					try {
 						if (!new File(submissionPath, archivedFileName.toString()).getCanonicalPath().startsWith(submissionPath.getCanonicalPath())) {
-							log.debug("Ignored entry: " + archivedFileName + "; tries to escape submissiondir");
+							log.warn("Ignored entry for taskid={}: archivedFileName:\"{}\"; tries to escape submissiondir", task.getTaskid(), archivedFileName);
 							skippedFiles = true;
 							continue;
 						}
