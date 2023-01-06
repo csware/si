@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -291,14 +291,6 @@ public class AdminMenue extends HttpServlet {
 				response.sendRedirect(Util.generateRedirectURL(AdminMenue.class.getSimpleName() + "?action=showLecture&lecture=" + lecture.getId(), response));
 			}
 			tx.commit();
-		} else if ("su".equals(request.getParameter("action")) && request.getParameter("userid") != null) {
-			User user = DAOFactory.UserDAOIf(session).getUser(Util.parseInteger(request.getParameter("userid"), 0));
-			if (user != null) {
-				RequestAdapter.getSessionAdapter(request).setUser(user, request.getRemoteAddr());
-				response.sendRedirect(Util.generateRedirectURL(Overview.class.getSimpleName(), response));
-			} else {
-				response.sendRedirect(Util.generateRedirectURL(AdminMenue.class.getSimpleName(), response));
-			}
 		} else {
 			request.setAttribute("title", "Ungültiger Aufruf");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
