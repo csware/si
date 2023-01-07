@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -219,7 +219,7 @@ public class ClozeTaskType {
 			for (String option : data.split("~")) {
 				Matcher parsedOption = optionPattern.matcher(option);
 				if (!parsedOption.matches() || parsedOption.group(2).isBlank()) {
-					throw new RuntimeException("Unparseable option \"" + option + "\"found in \"" + data + "\"");
+					throw new RuntimeException("Unparseable option \"" + option + "\" found in \"" + data + "\"");
 				}
 				options.add(new StringTuple(parsedOption.group(2), Objects.toString(parsedOption.group(1), "0")));
 			}
@@ -288,7 +288,7 @@ public class ClozeTaskType {
 			for (String option : data.split("~")) {
 				Matcher parsedOption = optionPattern.matcher(option);
 				if (!parsedOption.matches()) {
-					throw new RuntimeException("Unparseable option \"" + option + "\"found in \"" + data + "\"");
+					throw new RuntimeException("Unparseable option \"" + option + "\" found in \"" + data + "\"");
 				}
 				knownPoints.add(parsedOption.group(1));
 				knownOptions.add(parsedOption.group(2));
@@ -354,7 +354,7 @@ public class ClozeTaskType {
 			for (String option : data.split("~")) {
 				Matcher parsedOption = optionPattern.matcher(option);
 				if (!parsedOption.matches()) {
-					throw new RuntimeException("Unparseable option \"" + option + "\"found in \"" + data + "\"");
+					throw new RuntimeException("Unparseable option \"" + option + "\" found in \"" + data + "\"");
 				}
 				knownPoints.add(parsedOption.group(1));
 				knownOptions.add(parsedOption.group(2));
