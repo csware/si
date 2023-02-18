@@ -15,8 +15,7 @@ table th, table td {
 th { background-color:#DDDDDD; }
 
 textarea {
-	white-space: pre;
-	overflow-x: scroll;
+	white-space: pre-wrap;
 }
 
 table,.mid {
