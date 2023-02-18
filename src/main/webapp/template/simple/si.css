@@ -48,7 +48,7 @@ td > p:first-child { margin-top: 0; }
 td > p:last-child { margin-bottom: 0; }
 
 .left { text-align: left; }
-td.points,.right { text-align: right; }
+td.points, td.similarity, .right { text-align: right; }
 .jus { text-align: justify; }
 
 tr.notmarkedyet > td {
@@ -129,6 +129,10 @@ body.filepreview h1, .previewmenubox, .highlightborder {
 	position: fixed;
 	right: 0px;
 	top: 0px;
+}
+
+.feedback, td.feedback {
+	white-space: pre-wrap;
 }
 
 .cloze_studentsolution, .dt_studentsolution, .cloze_points {

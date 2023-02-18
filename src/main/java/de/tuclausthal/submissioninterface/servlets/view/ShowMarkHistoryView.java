@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -91,8 +91,8 @@ public class ShowMarkHistoryView extends HttpServlet {
 				isFirst = false;
 			}
 			out.println("<td valign=top>" + Util.escapeHTML(entry.getField()) + "</td>");
-			out.println("<td valign=top>" + Util.textToHTML(entry.getRemoved()) + "</td>");
-			out.println("<td valign=top>" + Util.textToHTML(entry.getAdded()) + "</td>");
+			out.println("<td valign=top class=feedback>" + Util.escapeHTML(entry.getRemoved()) + "</td>");
+			out.println("<td valign=top class=feedback>" + Util.escapeHTML(entry.getAdded()) + "</td>");
 			out.println("</tr>");
 		}
 		ph.clear();

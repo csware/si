@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -301,8 +301,8 @@ public class ShowTaskStudentView extends HttpServlet {
 				if (submission.getPoints().getPublicComment() != null && !"".equals(submission.getPoints().getPublicComment())) {
 					out.println("<tr>");
 					out.println("<th>Kommentar:</th>");
-					out.println("<td>");
-					out.println(Util.textToHTML(submission.getPoints().getPublicComment()));
+					out.print("<td class=feedback>");
+					out.print(Util.escapeHTML(submission.getPoints().getPublicComment()));
 					out.println("</td>");
 					out.println("</tr>");
 				}

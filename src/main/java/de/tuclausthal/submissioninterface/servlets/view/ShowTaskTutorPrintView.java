@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021, 2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -87,8 +87,8 @@ public class ShowTaskTutorPrintView extends HttpServlet {
 					out.println("<td>" + Util.escapeHTML(submission.getSubmitterNames()) + "</td>");
 					lastSID = submission.getSubmissionid();
 					if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
-						out.println("<td>" + Util.textToHTML(submission.getPoints().getPublicComment()) + "</td>");
-						out.println("<td align=right>" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + "</td>");
+						out.println("<td class=feedback>" + Util.escapeHTML(submission.getPoints().getPublicComment()) + "</td>");
+						out.println("<td class=similarity>" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + "</td>");
 						if (submission.getPoints().getPointsOk()) {
 							out.println("<td>ok</td>");
 						} else {

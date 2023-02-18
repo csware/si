@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -320,7 +320,7 @@ public class ShowTaskTutorView extends HttpServlet {
 										}
 									}
 								}
-								out.println("<td align=right><span title=\"" + users + "\">" + maxSimilarity + "</span></td>");
+								out.println("<td class=similarity><span title=\"" + users + "\">" + maxSimilarity + "</span></td>");
 							}
 						}
 						if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
