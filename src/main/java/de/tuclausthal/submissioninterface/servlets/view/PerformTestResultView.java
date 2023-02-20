@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowDockerTestResult;
@@ -49,6 +51,7 @@ public class PerformTestResultView extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		TestExecutorTestResult testResult = (TestExecutorTestResult) request.getAttribute("testresult");
 		Test test = (Test) request.getAttribute("test");
+		Participation participation = (Participation) request.getAttribute("participation");
 
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.addDiffJs();
@@ -62,9 +65,9 @@ public class PerformTestResultView extends HttpServlet {
 		out.println("<b>Bestanden:</b> " + Util.boolToHTML(testResult.isTestPassed()) + "<br>");
 		if (!testResult.getTestOutput().isEmpty()) {
 			if (test instanceof JavaAdvancedIOTest) {
-				ShowJavaAdvancedIOTestResult.printTestResults(out, (JavaAdvancedIOTest) test, testResult.getTestOutput(), true, null);
+				ShowJavaAdvancedIOTestResult.printTestResults(out, (JavaAdvancedIOTest) test, testResult.getTestOutput(), (participation == null || !participation.getRoleType().equals(ParticipationRole.ADVISOR)), null);
 			} else if (test instanceof DockerTest) {
-				ShowDockerTestResult.printTestResults(out, (DockerTest) test, testResult.getTestOutput(), true, null);
+				ShowDockerTestResult.printTestResults(out, (DockerTest) test, testResult.getTestOutput(), (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0), null);
 			} else {
 				out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
 			}

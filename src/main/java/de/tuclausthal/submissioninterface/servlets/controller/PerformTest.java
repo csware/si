@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2015, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2015, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -163,6 +163,7 @@ public class PerformTest extends HttpServlet {
 			Util.recursiveDelete(path);
 
 			request.setAttribute("testresult", testResult);
+			request.setAttribute("participation", participation);
 			getServletContext().getNamedDispatcher(PerformTestResultView.class.getSimpleName()).forward(request, response);
 			return;
 		}
@@ -228,6 +229,7 @@ public class PerformTest extends HttpServlet {
 
 		request.setAttribute("task", test.getTask());
 		request.setAttribute("test", test);
+		request.setAttribute("participation", participation);
 
 		TestTask testTask = new TestTask(test);
 		TestExecutorTestResult testResult = new TestExecutorTestResult();

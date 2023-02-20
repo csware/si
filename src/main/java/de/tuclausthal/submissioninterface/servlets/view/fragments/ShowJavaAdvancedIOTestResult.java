@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -50,6 +50,19 @@ public class ShowJavaAdvancedIOTestResult { // similar code in ShowDockerTestRes
 				out.println("<b>Der zu testende Code ist syntaktisch nicht korrekt und kann daher nicht getestet werden.</b><br>");
 			} else {
 				out.println("<b>Der Test konnte nicht erfolgreich ausgeführt werden.</b><br>Es fehlt eine erforderliche Datei oder der abgegebene Code entspricht nicht der Spezifikation. Mögliche Ursachen sind z. B.:<ul><li>falsches Package</li><li>geforderte Methode oder Instanzvariable<ul><li>fehlt</li><li>ist falsch geschrieben</li><li>hat falschen (Rückgabe-)Typ</li><li>hat die falschen Parameter</li><li>besitzt die falsche Sichtbarkeit</li></ul></ul>");
+			}
+			if (!forStudent && object.containsKey("stderr")) {
+				String stderr = object.getString("stderr");
+				if (object.containsKey("separator")) {
+					String separator = object.getString("separator");
+					int lastIndex = stderr.lastIndexOf(separator);
+					if (lastIndex >= 0) {
+						stderr = stderr.substring(lastIndex + separator.length());
+					}
+				}
+				if (!stderr.trim().isEmpty()) {
+					out.println("<textarea id=\"testresultajtt" + jtt.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(stderr) + "</textarea>");
+				}
 			}
 		} else if (object.containsKey("steps")) {
 			JsonValue arr = object.get("steps");
