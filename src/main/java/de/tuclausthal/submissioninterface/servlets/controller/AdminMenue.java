@@ -183,29 +183,29 @@ public class AdminMenue extends HttpServlet {
 			List<String> errors = new ArrayList<>();
 			if (lecture == null) {
 				response.sendRedirect(Util.generateRedirectURL(AdminMenue.class.getSimpleName(), response));
-			} else {
-				String mailadresses[] = request.getParameter("mailadresses").replaceAll("\r\n", "\n").split("\n");
-				for (String mailaddress : mailadresses) {
-					if (mailaddress.isEmpty()) {
-						continue;
-					}
-					User user = userDAO.getUserByEmail(mailaddress);
-					if (user == null) {
-						errors.add("\"" + mailaddress + "\" nicht gefunden.");
-						continue;
-					}
-					Participation participation = participationDAO.getParticipationLocked(user, lecture);
-					if (participation == null) {
-						errors.add("\"" + mailaddress + "\" ist kein Teilnehmer der Veranstaltung.");
-						continue;
-					}
-					if (!participation.getRoleType().equals(ParticipationRole.NORMAL)) {
-						errors.add("\"" + mailaddress + "\" ist kein normaler Teilnehmer der Veranstaltung.");
-						continue;
-					}
-					participation.setRoleType(ParticipationRole.TUTOR);
-					++count;
+				return;
+			}
+			String mailadresses[] = request.getParameter("mailadresses").replaceAll("\r\n", "\n").split("\n");
+			for (String mailaddress : mailadresses) {
+				if (mailaddress.isEmpty()) {
+					continue;
 				}
+				User user = userDAO.getUserByEmail(mailaddress);
+				if (user == null) {
+					errors.add("\"" + mailaddress + "\" nicht gefunden.");
+					continue;
+				}
+				Participation participation = participationDAO.getParticipationLocked(user, lecture);
+				if (participation == null) {
+					errors.add("\"" + mailaddress + "\" ist kein Teilnehmer der Veranstaltung.");
+					continue;
+				}
+				if (!participation.getRoleType().equals(ParticipationRole.NORMAL)) {
+					errors.add("\"" + mailaddress + "\" ist kein normaler Teilnehmer der Veranstaltung.");
+					continue;
+				}
+				participation.setRoleType(ParticipationRole.TUTOR);
+				++count;
 			}
 			tx.commit();
 			StringBuilder output = new StringBuilder();
@@ -231,23 +231,23 @@ public class AdminMenue extends HttpServlet {
 			List<String> errors = new ArrayList<>();
 			if (lecture == null) {
 				response.sendRedirect(Util.generateRedirectURL(AdminMenue.class.getSimpleName(), response));
-			} else {
-				String mailadresses[] = request.getParameter("mailadresses").replaceAll("\r\n", "\n").split("\n");
-				for (String mailaddress : mailadresses) {
-					if (mailaddress.isEmpty()) {
-						continue;
-					}
-					User user = userDAO.getUserByEmail(mailaddress);
-					if (user == null) {
-						errors.add("\"" + mailaddress + "\" nicht gefunden.");
-						continue;
-					}
-					if (!participationDAO.createParticipation(user, lecture, ParticipationRole.NORMAL)) {
-						errors.add("\"" + mailaddress + "\" ist bereits Teilnehmender der Veranstaltung.");
-						continue;
-					}
-					++count;
+				return;
+			}
+			String mailadresses[] = request.getParameter("mailadresses").replaceAll("\r\n", "\n").split("\n");
+			for (String mailaddress : mailadresses) {
+				if (mailaddress.isEmpty()) {
+					continue;
 				}
+				User user = userDAO.getUserByEmail(mailaddress);
+				if (user == null) {
+					errors.add("\"" + mailaddress + "\" nicht gefunden.");
+					continue;
+				}
+				if (!participationDAO.createParticipation(user, lecture, ParticipationRole.NORMAL)) {
+					errors.add("\"" + mailaddress + "\" ist bereits Teilnehmender der Veranstaltung.");
+					continue;
+				}
+				++count;
 			}
 			StringBuilder output = new StringBuilder();
 			if (!errors.isEmpty()) {
