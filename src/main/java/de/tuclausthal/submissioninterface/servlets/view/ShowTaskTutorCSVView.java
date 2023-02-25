@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -81,7 +81,7 @@ public class ShowTaskTutorCSVView extends HttpServlet {
 			writer.writeNext(header.toArray(empty), false);
 
 			PointGivenDAOIf pointGivenDAO = DAOFactory.PointGivenDAOIf(session);
-			for (Submission submission : DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task)) {
+			for (Submission submission : DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task, true)) {
 				String[] line = new String[header.size()];
 				if (submission.getPoints() == null) {
 					for (int i = 1; i < header.size(); ++i) {

@@ -133,7 +133,7 @@ class SubmissionDAOIfTest extends BasicTest {
 	@Test
 	void testGetSubmissionsForTaskOrderedA() {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(1);
-		List<Submission> submissions = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task);
+		List<Submission> submissions = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task, true);
 		assertEquals(4, submissions.size());
 		assertEquals(1, submissions.get(0).getSubmissionid());
 		assertEquals(4, submissions.get(1).getSubmissionid());
@@ -144,7 +144,7 @@ class SubmissionDAOIfTest extends BasicTest {
 	@Test
 	void testGetSubmissionsForTaskOrderedB() {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(2);
-		List<Submission> submissions = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task);
+		List<Submission> submissions = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task, true);
 		assertEquals(5, submissions.size());
 		assertEquals(2, submissions.get(0).getSubmissionid());
 		assertEquals(5, submissions.get(1).getSubmissionid());

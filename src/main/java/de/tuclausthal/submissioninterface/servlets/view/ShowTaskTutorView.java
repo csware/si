@@ -191,7 +191,8 @@ public class ShowTaskTutorView extends HttpServlet {
 			if (!task.isSCMCTask()) {
 				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(SearchSubmissions.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Suchen...</a></div>");
 			}
-			Iterator<Submission> submissionIterator = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task).iterator();
+			boolean honorGroups = !task.isAllowSubmittersAcrossGroups();
+			Iterator<Submission> submissionIterator = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task, honorGroups).iterator();
 			Group lastGroup = null;
 			boolean first = true;
 			int sumOfSubmissions = 0;
@@ -209,7 +210,7 @@ public class ShowTaskTutorView extends HttpServlet {
 				Submission submission = submissionIterator.next();
 				Group group = null;
 				for (Participation submitter : submission.getSubmitters()) {
-					if (submitter.getGroup() != null && (lastGroup == null || lastGroup.getGid() <= submitter.getGroup().getGid())) {
+					if (honorGroups && submitter.getGroup() != null && (lastGroup == null || lastGroup.getGid() <= submitter.getGroup().getGid())) {
 						if (group == null) {
 							group = submitter.getGroup();
 						} else if (group.getGid() > submitter.getGroup().getGid()) {
@@ -243,11 +244,17 @@ public class ShowTaskTutorView extends HttpServlet {
 					first = false;
 					hasUnapprochedPoints = false;
 					if (group == null) {
-						out.println("<h3>Teilnehmende ohne Gruppenzugehörigkeit</h3>");
+						if (honorGroups) {
+							out.println("<h3>Teilnehmende ohne Gruppenzugehörigkeit</h3>");
+						} else {
+							out.println("<h3>Alle Abgaben</h3>");
+						}
 						out.println("<div id=\"contentgroup0\">");
-						out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&action=grouplist", response) + "\" target=\"_blank\">Druckbare Liste</a></div>");
-						if (!task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {
-							out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(DownloadSubmissionsByGroup.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Alle Abgaben der Gruppe herunterladen (ZIP-Archiv)</a></div>");
+						if (honorGroups) {
+							out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&action=grouplist", response) + "\" target=\"_blank\">Druckbare Liste</a></div>");
+							if (!task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {
+								out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(DownloadSubmissionsByGroup.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Alle Abgaben der Gruppe herunterladen (ZIP-Archiv)</a></div>");
+							}
 						}
 					} else {
 						out.println("<h3>Gruppe: " + Util.escapeHTML(group.getName()) + " <a href=\"#\" onclick=\"toggleVisibility('contentgroup" + group.getGid() + "'); return false;\">(+/-)</a></h3>");

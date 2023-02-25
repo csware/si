@@ -99,7 +99,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 	}
 
 	@Override
-	public List<Submission> getSubmissionsForTaskOrdered(Task task) {
+	public List<Submission> getSubmissionsForTaskOrdered(Task task, boolean honourGroups) {
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Submission> criteria = builder.createQuery(Submission.class);
@@ -109,7 +109,11 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 		Join<Submission, Participation> joinSubmitters = (Join<Submission, Participation>) root.fetch(Submission_.submitters, JoinType.LEFT);
 		joinSubmitters.fetch(Participation_.user);
 		criteria.where(builder.equal(root.get(Submission_.task), task));
-		criteria.orderBy(builder.asc(joinSubmitters.get(Participation_.group)), builder.asc(root.get(Submission_.submissionid)));
+		if (honourGroups) {
+			criteria.orderBy(builder.asc(joinSubmitters.get(Participation_.group)), builder.asc(root.get(Submission_.submissionid)));
+		} else {
+			criteria.orderBy(builder.asc(root.get(Submission_.submissionid)));
+		}
 		return session.createQuery(criteria).list();
 	}
 

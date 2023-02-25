@@ -60,9 +60,10 @@ public interface SubmissionDAOIf {
 	/**
 	 * Returns the submission of a task orderd by name
 	 * @param task
+	 * @param honourGroups
 	 * @return the list of submissions
 	 */
-	public List<Submission> getSubmissionsForTaskOrdered(Task task);
+	public List<Submission> getSubmissionsForTaskOrdered(Task task, boolean honourGroups);
 
 	/**
 	 * Returns the submission of a group for a specific task orderd by name
