@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -54,10 +54,12 @@ public class SubscribeToLectureView extends HttpServlet {
 
 		if (!lectures.isEmpty()) {
 			out.println("<table>");
+			out.println("<thead>");
 			out.println("<tr>");
 			out.println("<th>Veranstaltung</th>");
 			out.println("<th>Anmelden</th>");
 			out.println("</tr>");
+			out.println("</thead>");
 			for (Lecture lecture : lectures) {
 				out.println("<tr>");
 				out.println("<td>" + Util.escapeHTML(lecture.getName()) + "</td>");

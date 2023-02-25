@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021, 2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -54,10 +54,12 @@ public class AdminMenueOverView extends HttpServlet {
 		Iterator<Lecture> lectureIterator = ((List<Lecture>) request.getAttribute("lectures")).iterator();
 		if (lectureIterator.hasNext()) {
 			out.println("<table>");
+			out.println("<thead>");
 			out.println("<tr>");
 			out.println("<th>Veranstaltung</th>");
 			out.println("<th>Semester</th>");
 			out.println("</tr>");
+			out.println("</thead>");
 			while (lectureIterator.hasNext()) {
 				Lecture lecture = lectureIterator.next();
 				out.println("<tr>");

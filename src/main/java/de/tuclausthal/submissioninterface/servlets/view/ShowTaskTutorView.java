@@ -221,7 +221,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					lastGroup = group;
 					if (first == false) {
 						if (showAllColumns) {
-							out.println("<tr>");
+							out.println("<tfoot><tr>");
 							out.println("<td colspan=" + (1 + (task.isADynamicTask() ? 1 : 0) + ((task.getDeadline().isBefore(ZonedDateTime.now())) ? tests.size() + task.getSimilarityTests().size() : 0)) + ">Anzahl: " + groupSumOfAllSubmissions + " / Durchschnittspunkte:</td>");
 							out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
 							if (hasUnapprochedPoints) {
@@ -232,7 +232,7 @@ public class ShowTaskTutorView extends HttpServlet {
 							if (showPrematureSubmissionColumn) {
 								out.println("<td></td>");
 							}
-							out.println("</tr>");
+							out.println("</tr></tfoot>");
 						}
 						out.println("</table><p>");
 						out.println("</form></div>");
@@ -263,6 +263,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					}
 					out.println("<form method=post action=\"" + Util.generateHTMLLink(MarkApproved.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">");
 					out.println("<table class=sortable>");
+					out.println("<thead>");
 					out.println("<tr>");
 					out.println("<th>Abgabe von</th>");
 					if (showAllColumns) {
@@ -291,6 +292,7 @@ public class ShowTaskTutorView extends HttpServlet {
 						}
 					}
 					out.println("</tr>");
+					out.println("</thead>");
 				}
 				if (lastSID != submission.getSubmissionid()) {
 					groupSumOfAllSubmissions++;
@@ -299,7 +301,7 @@ public class ShowTaskTutorView extends HttpServlet {
 					if (group != null) {
 						groupAdding = "&groupid=" + group.getGid();
 					}
-					out.println("<td><a href=\"" + Util.generateHTMLLink(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid() + groupAdding, response) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
+						out.println("<td><a href=\"" + Util.generateHTMLLink(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid() + groupAdding, response) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
 					lastSID = submission.getSubmissionid();
 					if (showAllColumns) {
 						if (task.isADynamicTask()) {
@@ -356,8 +358,8 @@ public class ShowTaskTutorView extends HttpServlet {
 				}
 			}
 			if (first == false) {
+				out.println("<tfoot><tr>");
 				if (showAllColumns) {
-					out.println("<tr>");
 					out.println("<td colspan=" + (1 + (task.isADynamicTask() ? 1 : 0) + ((task.getDeadline().isBefore(ZonedDateTime.now())) ? tests.size() + task.getSimilarityTests().size() : 0)) + ">Anzahl: " + groupSumOfAllSubmissions + " / Durchschnittspunkte:</td>");
 					out.println("<td class=points>" + Util.showPoints(Float.valueOf(groupSumOfPoints / (float) groupSumOfSubmissions).intValue()) + "</td>");
 					if (hasUnapprochedPoints) {
@@ -368,12 +370,10 @@ public class ShowTaskTutorView extends HttpServlet {
 					if (showPrematureSubmissionColumn) {
 						out.println("<td></td>");
 					}
-					out.println("</tr>");
 				} else {
-					out.println("<tr>");
 					out.println("<td>Anzahl: " + groupSumOfAllSubmissions + "</td>");
-					out.println("</tr>");
 				}
+				out.println("</tr></tfoot>");
 				out.println("</table><p>");
 				out.println("</form></div>");
 				if (showAllColumns) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -54,10 +54,12 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 		@SuppressWarnings("unchecked")
 		Iterator<User> userIterator = ((List<User>) request.getAttribute("superusers")).iterator();
 		out.println("<table>");
+		out.println("<thead>");
 		out.println("<tr>");
 		out.println("<th>BenutzerInnen</th>");
 		out.println("<th>Entfernen</th>");
 		out.println("</tr>");
+		out.println("</thead>");
 		while (userIterator.hasNext()) {
 			User user = userIterator.next();
 			out.println("<tr>");
@@ -65,6 +67,7 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 			out.println("<td><a onclick=\"return sendAsPost(this, 'Wirklich entfernen?')\" href=\"" + Util.generateHTMLLink("?action=removeSuperUser&userid=" + user.getUid(), response) + "\">degradieren</a></td>");
 			out.println("</tr>");
 		}
+		out.println("<tfoot>");
 		out.println("<tr>");
 		out.println("<td colspan=2>");
 		userIterator = DAOFactory.UserDAOIf(RequestAdapter.getSession(request)).getUsers().iterator();
@@ -82,6 +85,7 @@ public class AdminMenueShowAdminUsersView extends HttpServlet {
 		out.println("</form>");
 		out.println("</td>");
 		out.println("</tr>");
+		out.println("</tfoot>");
 		out.println("</table><p>");
 
 		out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("?", response) + "\">zur Übersicht</a></div>");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -50,10 +50,12 @@ public class SelfTestView extends HttpServlet {
 		template.printAdminMenueTemplateHeader("Selbsttest");
 		PrintWriter out = response.getWriter();
 		out.println("<table>");
+		out.println("<thead>");
 		out.println("<tr>");
 		out.println("<th>Test</th>");
 		out.println("<th>OK?</th>");
 		out.println("</tr>");
+		out.println("</thead>");
 		for (TestResult testresult : testresults) {
 			out.println("<tr>");
 			out.println("<td>" + testresult.test);

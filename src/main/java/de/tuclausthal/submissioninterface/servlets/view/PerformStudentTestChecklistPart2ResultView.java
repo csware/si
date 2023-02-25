@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2022-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -57,12 +57,14 @@ public class PerformStudentTestChecklistPart2ResultView extends HttpServlet {
 		boolean passedTest = true;
 
 		out.println("<table>");
+		out.println("<thead>");
 		out.println("<tr>");
 		out.println("<th>Test</th>");
 		out.println("<th>Richtige<br>Antwort</th>");
 		out.println("<th>Ihre<br>Antwort</th>");
 		out.println("<th>OK?</th>");
 		out.println("</tr>");
+		out.println("</thead>");
 		for (ChecklistTestCheckItem checkItem : test.getCheckItems()) {
 			boolean checked = checkedByStudent.contains(checkItem.getCheckitemid());
 			boolean correct = checked == checkItem.isCorrect();

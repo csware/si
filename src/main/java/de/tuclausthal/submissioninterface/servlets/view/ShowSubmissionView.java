@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -95,7 +95,7 @@ public class ShowSubmissionView extends HttpServlet {
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
 		Task task = submission.getTask();
 
-		template.printTemplateHeader(submission);
+			template.printTemplateHeader(submission);
 		PrintWriter out = response.getWriter();
 		StringBuilder javaScript = new StringBuilder();
 
@@ -107,13 +107,13 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<p>Abgabe endgültig eingereicht: " + Util.escapeHTML(dateFormatter.format(submission.getClosedTime())) + " von " + Util.escapeHTML(submission.getClosedBy().getUser().getLastNameFirstName()) + "</p>");
 		}
 
-		for (Participation participation : submission.getSubmitters()) {
-			out.println("<a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + participation.getUser().getUid(), response) + "\">" + Util.escapeHTML(participation.getUser().getLastNameFirstName()) + "</a><br>");
-		}
+			for (Participation participation : submission.getSubmitters()) {
+				out.println("<a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + participation.getUser().getUid(), response) + "\">" + Util.escapeHTML(participation.getUser().getLastNameFirstName()) + "</a><br>");
+			}
 
-		if (!task.isAllowSubmittersAcrossGroups() && submission.getSubmitters().iterator().next().getGroup() != null) {
-			out.println("<h2>Gruppe: " + Util.escapeHTML(submission.getSubmitters().iterator().next().getGroup().getName()) + "</h2>");
-		}
+			if (!task.isAllowSubmittersAcrossGroups() && submission.getSubmitters().iterator().next().getGroup() != null) {
+				out.println("<h2>Gruppe: " + Util.escapeHTML(submission.getSubmitters().iterator().next().getGroup().getName()) + "</h2>");
+			}
 
 		if (task.getMaxSubmitters() > 1 && submission.getSubmitters().size() < task.getMaxSubmitters() && (task.isAllowSubmittersAcrossGroups() || submission.getSubmitters().iterator().next().getGroup() != null)) {
 			StringBuilder setWithUser = new StringBuilder();
@@ -275,11 +275,13 @@ public class ShowSubmissionView extends HttpServlet {
 			} else {
 				out.println("<table id=similarSubmissions>");
 			}
+			out.println("<thead>");
 			out.println("<tr>");
 			for (SimilarityTest similarityTest : task.getSimilarityTests()) {
 				out.println("<th><span title=\"Ähnlichkeit zu\">" + Util.escapeHTML(similarityTest.details()) + "</span></th>");
 			}
 			out.println("</tr>");
+			out.println("</thead>");
 			out.println("<tr>");
 			for (SimilarityTest similarityTest : task.getSimilarityTests()) {
 				out.println("<td>");
@@ -320,8 +322,8 @@ public class ShowSubmissionView extends HttpServlet {
 				}
 				out.println("</li>");
 			}
-			out.println("</ul>");
-		}
+					out.println("</ul>");
+				}
 
 		if (task.isSCMCTask()) {
 			if (task.isSCTask()) {

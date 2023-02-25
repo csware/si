@@ -58,6 +58,7 @@ public class ShowMarkHistoryView extends HttpServlet {
 
 		out.println("<h1>Aktivitätslog</h1>");
 		out.println("<table>");
+		out.println("<thead>");
 		out.println("<tr>");
 		out.println("<th>Wer</th>");
 		out.println("<th>Wann</th>");
@@ -65,6 +66,7 @@ public class ShowMarkHistoryView extends HttpServlet {
 		out.println("<th>Entfernt</th>");
 		out.println("<th>Hinzugefügt</th>");
 		out.println("</tr>");
+		out.println("</thead>");
 
 		List<PointHistory> ph = new ArrayList<>();
 		for (PointHistory pointHistory : data) {

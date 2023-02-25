@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -120,6 +120,7 @@ public class MassMarkTaskView extends HttpServlet {
 		}
 
 		out.println("<table>");
+		out.println("<thead>");
 		out.println("<tr>");
 		out.println("<th>TeilnehmerIn</th>");
 		out.println("<th>Interner Kommentar</th>");
@@ -130,6 +131,7 @@ public class MassMarkTaskView extends HttpServlet {
 		}
 		out.println("<th>Gesamt Punkte</th>");
 		out.println("</tr>");
+		out.println("</thead>");
 		for (SubmissionAssignPointsDTO submissionAssignPointsDTO : points) {
 			out.println("<tr>");
 			out.println("<td><a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + submissionAssignPointsDTO.getParticipation().getUser().getUid(), response) + "\">" + Util.escapeHTML(submissionAssignPointsDTO.getParticipation().getUser().getLastNameFirstName()) + "</a></td>");

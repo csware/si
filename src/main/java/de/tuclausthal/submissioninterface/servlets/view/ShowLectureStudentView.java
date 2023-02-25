@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -138,11 +138,13 @@ public class ShowLectureStudentView extends HttpServlet {
 			int maxPoints = 0;
 
 			out.println("<table>");
+			out.println("<thead>");
 			out.println("<tr>");
 			out.println("<th>Aufgabe</th>");
 			out.println("<th>Max. Punkte</th>");
 			out.println("<th>Meine Punkte</th>");
 			out.println("</tr>");
+			out.println("</thead>");
 
 			Iterator<Submission> submissionIterator = submissions.iterator();
 			Submission submission = null;
@@ -191,11 +193,11 @@ public class ShowLectureStudentView extends HttpServlet {
 			out.println("<tr>");
 			out.println("<td colspan=3 style=\"height: 1px\"></td>");
 			out.println("</tr>");
-			out.println("<tr>");
+			out.println("<tfoot><tr>");
 			out.println("<td><b>Gesamt:</b></td>");
 			out.println("<td class=points>" + Util.showPoints(maxPoints) + "</td>");
 			out.println("<td class=points>" + Util.showPoints(points) + "</td>");
-			out.println("</tr>");
+			out.println("</tr></tfoot>");
 			out.println("</table>");
 		} else {
 			out.println("<div class=mid>Es wurden noch keine Aufgaben angelegt oder für Sie sind noch keine Aufgaben sichtbar.</div>");

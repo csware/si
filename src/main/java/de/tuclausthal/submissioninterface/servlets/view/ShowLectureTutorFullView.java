@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -74,6 +74,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 		List<TaskGroup> taskGroupList = lecture.getTaskGroups();
 
 		out.println("<table>");
+		out.println("<thead>");
 		out.println("<tr>");
 		if (showMatNo) {
 			out.println("<th rowspan=2>MatrikelNo</th>");
@@ -98,6 +99,7 @@ public class ShowLectureTutorFullView extends HttpServlet {
 			}
 		}
 		out.println("</tr>");
+		out.println("</thead>");
 
 		for (Participation lectureParticipation : DAOFactory.ParticipationDAOIf(session).getLectureParticipationsOrderedByName(lecture)) {
 			if (lectureParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {

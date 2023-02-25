@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -104,10 +104,12 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			out.println("<h2>BetreuerInnen</h2>");
 			Iterator<Participation> advisorIterator = participants.iterator();
 			out.println("<table>");
+			out.println("<thead>");
 			out.println("<tr>");
 			out.println("<th>BenutzerInnen</th>");
 			out.println("<th>Entfernen</th>");
 			out.println("</tr>");
+			out.println("</thead>");
 			while (advisorIterator.hasNext()) {
 				Participation participation = advisorIterator.next();
 				if (participation.getRoleType() == ParticipationRole.ADVISOR) {
@@ -118,20 +120,24 @@ public class AdminMenueEditLectureView extends HttpServlet {
 					out.println("</tr>");
 				}
 			}
+			out.println("<tfoot>");
 			out.println("<tr>");
 			out.println("<td colspan=2>");
 			printAddUserForm(out, response, lecture, participants, "advisor");
 			out.println("</td>");
 			out.println("</tr>");
+			out.println("</tfoot>");
 			out.println("</table><p>");
 
 			out.println("<h2>TutorInnen</h2>");
 			Iterator<Participation> tutorIterator = participants.iterator();
 			out.println("<table>");
+			out.println("<thead>");
 			out.println("<tr>");
 			out.println("<th>BenutzerInnen</th>");
 			out.println("<th>Entfernen</th>");
 			out.println("</tr>");
+			out.println("</thead>");
 			while (tutorIterator.hasNext()) {
 				Participation participation = tutorIterator.next();
 				if (participation.getRoleType() == ParticipationRole.TUTOR) {
@@ -147,6 +153,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			printAddUserForm(out, response, lecture, participants, "tutor");
 			out.println("</td>");
 			out.println("</tr>");
+			out.println("<tfoot>");
 			out.println("<tr>");
 			out.println("<td colspan=2>");
 			out.println("<form method=post action=\"" + Util.generateHTMLLink("?", response) + "\">");
@@ -158,6 +165,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			out.println("</form>");
 			out.println("</td>");
 			out.println("</tr>");
+			out.println("</tfoot>");
 			out.println("</table><p>");
 
 			if (!lecture.isAllowSelfSubscribe()) {

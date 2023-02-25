@@ -68,12 +68,14 @@ public class ShowJavaAdvancedIOTestResult { // similar code in ShowDockerTestRes
 			JsonValue arr = object.get("steps");
 			if (arr.getValueType().equals(JsonValue.ValueType.ARRAY)) {
 				out.println("<table>");
+				out.println("<thead>");
 				out.println("<tr>");
 				out.println("<th>Test</th>");
 				out.println("<th>Erwartet</th>");
 				out.println("<th>Erhalten</th>");
 				out.println("<th>OK?</th>");
 				out.println("</tr>");
+				out.println("</thead>");
 				JsonArray array = arr.asJsonArray();
 				for (int i = 0; i < array.size(); ++i) {
 					// TODO make nicer!

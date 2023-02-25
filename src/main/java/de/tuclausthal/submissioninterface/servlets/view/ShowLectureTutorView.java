@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -115,6 +115,7 @@ public class ShowLectureTutorView extends HttpServlet {
 					if (!isStartedTable) {
 						isStartedTable = true;
 						out.println("<table>");
+						out.println("<thead>");
 						out.println("<tr>");
 						out.println("<th>Aufgabe</th>");
 						out.println("<th>Max. Punkte</th>");
@@ -122,6 +123,7 @@ public class ShowLectureTutorView extends HttpServlet {
 							out.println("<th># unbewertet/Abgaben</th>");
 						}
 						out.println("</tr>");
+						out.println("</thead>");
 					}
 					out.println("<tr>");
 					String editLink = "";
@@ -199,6 +201,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			}
 			if (!group.getTutors().isEmpty()) {
 				out.println("<table>");
+				out.println("<thead>");
 				out.println("<tr>");
 				if (group.getTutors().size() > 1) {
 					out.println("<th>TutorInnen</th>");
@@ -206,6 +209,7 @@ public class ShowLectureTutorView extends HttpServlet {
 					out.println("<th>TutorIn</th>");
 				}
 				out.println("</tr>");
+				out.println("</thead>");
 				for (Participation tutorParticipation : group.getTutors()) {
 					out.println("<tr>");
 					out.println("<td><a href=\"mailto:" + Util.escapeHTML(tutorParticipation.getUser().getEmail()) + "\">" + Util.escapeHTML(tutorParticipation.getUser().getLastNameFirstName()) + "</a>");
@@ -231,6 +235,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			int sumOfPoints = 0;
 			int usersCount = 0;
 			out.println("<table>");
+			out.println("<thead>");
 			out.println("<tr>");
 			if (showMatNo) {
 				out.println("<th>MatNo</th>");
@@ -239,6 +244,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			out.println("<th>Rolle</th>");
 			out.println("<th>Punkte</th>");
 			out.println("</tr>");
+			out.println("</thead>");
 			while (participationIterator.hasNext()) {
 				Participation thisParticipation = participationIterator.next();
 				out.println("<tr>");
@@ -286,17 +292,15 @@ public class ShowLectureTutorView extends HttpServlet {
 
 				out.println("</tr>");
 			}
+			out.println("<tfoot><tr>");
 			if (sumOfPoints > 0 && usersCount > 0) {
-				out.println("<tr>");
 				out.println("<td colspan=" + (2 + (showMatNo ? 1 : 0)) + ">Anzahl: " + usersCount + " / Durchschnittspunkte:</td>");
 				out.println("<td class=points>" + Util.showPoints(Float.valueOf(sumOfPoints / (float) usersCount).intValue()) + "</td>");
-				out.println("</tr>");
 			} else {
-				out.println("<tr>");
 				out.println("<td colspan=" + (2 + (showMatNo ? 1 : 0)) + ">Anzahl:</td>");
 				out.println("<td class=points>" + usersCount + "</td>");
-				out.println("</tr>");
 			}
+			out.println("</tr></tfoot>");
 			studentsPoints[0] += usersCount;
 			studentsPoints[1] += sumOfPoints;
 			out.println("</table><p>");

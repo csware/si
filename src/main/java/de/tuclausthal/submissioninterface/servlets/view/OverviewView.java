@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -77,10 +77,12 @@ public class OverviewView extends HttpServlet {
 
 		if (!user.getLectureParticipant().isEmpty()) {
 			out.println("<table>");
+			out.println("<thead>");
 			out.println("<tr>");
 			out.println("<th>Veranstaltung</th>");
 			out.println("<th>Semester</th>");
 			out.println("</tr>");
+			out.println("</thead>");
 			for (Participation participation : user.getLectureParticipant()) {
 				out.println("<tr>");
 				out.println("<td><a href=\"" + Util.generateHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + participation.getLecture().getId(), response) + "\">" + Util.escapeHTML(participation.getLecture().getName()) + "</a></td>");

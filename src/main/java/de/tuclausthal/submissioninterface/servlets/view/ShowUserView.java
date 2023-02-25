@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -102,11 +102,13 @@ public class ShowUserView extends HttpServlet {
 			}
 
 			out.println("<table>");
+			out.println("<thead>");
 			out.println("<tr>");
 			out.println("<th>Aufgabe</th>");
 			out.println("<th>Max. Punkte</th>");
 			out.println("<th>Meine Punkte</th>");
 			out.println("</tr>");
+			out.println("</thead>");
 
 			int points = 0;
 			int maxPoints = 0;

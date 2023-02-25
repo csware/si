@@ -71,12 +71,14 @@ public class ShowTaskTutorPrintView extends HttpServlet {
 
 		if (task.getSubmissions() != null && !task.getSubmissions().isEmpty()) {
 			out.println("<table border=1>");
+			out.println("<thead>");
 			out.println("<tr>");
 			out.println("<th>Abgabe von</th>");
 			out.println("<th>Bemerkungen</th>");
 			out.println("<th>Punkte</th>");
 			out.println("<th>OK?</th>");
 			out.println("</tr>");
+			out.println("</thead>");
 			Iterator<Submission> submissionIterator = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOfGroupOrdered(task, group).iterator();
 
 			int lastSID = 0;

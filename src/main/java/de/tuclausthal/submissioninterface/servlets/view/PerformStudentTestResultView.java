@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -74,18 +74,22 @@ public class PerformStudentTestResultView extends HttpServlet {
 			out.println("<input type=hidden name=testid value=" + test.getId() + ">");
 			out.println("<input type=hidden name=logid value=" + logEntry.getId() + ">");
 			out.println("<table>");
+			out.println("<thead>");
 			out.println("<tr>");
 			out.println("<th>Test</th>");
 			out.println("<th>Erfüllt meine Lösung</th>");
 			out.println("</tr>");
+			out.println("</thead>");
 			for (ChecklistTestCheckItem checkItem : checklistTest.getCheckItems()) {
 				out.println("<tr>");
 				out.println("<td><label for=\"checkitem" + checkItem.getCheckitemid() + "\">" + Util.makeCleanHTML(checkItem.getTitle()) + "</label></td><td><input type=checkbox name=\"checkitem" + checkItem.getCheckitemid() + "\" id=\"checkitem" + checkItem.getCheckitemid() + "\"></td>");
 				out.println("</tr>");
 			}
+			out.println("<tfoot>");
 			out.println("<tr>");
 			out.println("<td colspan=2><input type=submit value=\"Ergebnis meiner Überprüfung anfordern\"></td>");
 			out.println("</tr>");
+			out.println("<tfoot>");
 			out.println("</table>");
 			out.println("</form>");
 
