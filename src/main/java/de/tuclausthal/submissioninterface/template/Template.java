@@ -206,5 +206,6 @@ public abstract class Template {
 
 	public void addSortTableJs() {
 		addHead("<script src=\"" + prefix + "/assets/sorttable.min.js\"></script>");
+		addHead("<script>sorttable.sort_alpha = function(a,b) { return a[0].localeCompare(b[0], 'de'); }</script>");
 	}
 }
