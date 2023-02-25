@@ -86,6 +86,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		@SuppressWarnings("unchecked")
 		List<String> modelSolutionFiles = (List<String>) request.getAttribute("modelSolutionFiles");
 
+		template.addSortTableJs();
 		template.printTemplateHeader(task);
 		PrintWriter out = response.getWriter();
 		out.println("<table>");
@@ -261,7 +262,7 @@ public class ShowTaskTutorView extends HttpServlet {
 						}
 					}
 					out.println("<form method=post action=\"" + Util.generateHTMLLink(MarkApproved.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">");
-					out.println("<table>");
+					out.println("<table class=sortable>");
 					out.println("<tr>");
 					out.println("<th>Abgabe von</th>");
 					if (showAllColumns) {
@@ -280,7 +281,7 @@ public class ShowTaskTutorView extends HttpServlet {
 									color = "red";
 									hint = " (läuft)";
 								}
-								out.println("<th><span class=" + color + " title=\"Max. Ähnlichkeit\">" + Util.escapeHTML(similarityTest.details() + hint) + "</span></th>");
+								out.println("<th class=sorttable_numeric><span class=" + color + " title=\"Max. Ähnlichkeit\">" + Util.escapeHTML(similarityTest.details() + hint) + "</span></th>");
 							}
 						}
 						out.println("<th>Punkte</th>");
@@ -332,14 +333,14 @@ public class ShowTaskTutorView extends HttpServlet {
 						}
 						if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
 							if (submission.getPoints().getPointsOk()) {
-								out.println("<td class=\"points" + Util.getPointsCSSClass(submission.getPoints()) + "\">" + Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + "</td>");
+								out.println("<td class=\"points" + Util.getPointsCSSClass(submission.getPoints()) + "\" sorttable_customkey=\"" + submission.getPoints().getPoints() + "\">" + Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + "</td>");
 								out.println("<td></td>");
 								sumOfPoints += submission.getPoints().getPointsByStatus(task.getMinPointStep());
 								groupSumOfPoints += submission.getPoints().getPointsByStatus(task.getMinPointStep());
 								sumOfSubmissions++;
 								groupSumOfSubmissions++;
 							} else {
-								out.println("<td class=\"points" + Util.getPointsCSSClass(submission.getPoints()) + "\">(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ")</td>");
+								out.println("<td sorttable_customkey=\"-" + submission.getPoints().getPoints() + "\" class=\"points" + Util.getPointsCSSClass(submission.getPoints()) + "\">(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ")</td>");
 								out.println("<td><input type=checkbox name=\"sid" + submission.getSubmissionid() + "\"></td>");
 								hasUnapprochedPoints = true;
 							}

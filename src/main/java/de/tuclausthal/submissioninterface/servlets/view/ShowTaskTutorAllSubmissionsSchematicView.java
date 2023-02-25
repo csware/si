@@ -62,6 +62,7 @@ public class ShowTaskTutorAllSubmissionsSchematicView extends HttpServlet {
 		Task task = (Task) request.getAttribute("task");
 
 		Template template = TemplateFactory.getTemplate(request, response);
+		template.addSortTableJs();
 		template.printTemplateHeader("Alle Abgaben (schematisch)", task);
 		PrintWriter out = response.getWriter();
 		out.println("<h2><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(task.getTitle()) + "</a></h2>");
@@ -79,27 +80,27 @@ public class ShowTaskTutorAllSubmissionsSchematicView extends HttpServlet {
 		out.println("</table>");
 
 		List<MCOption> options = DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task);
-		out.println("<table>");
+		out.println("<table class=sortable>");
 		out.println("<thead>");
 		out.println("<tr>");
 		out.println("<th>Submission</th>");
 		if (task.isSCMCTask()) {
 			for (MCOption mcOption : options) {
-				out.println("<th>" + Util.escapeHTML(mcOption.getTitle()) + "</th>");
+				out.println("<th class=sorttable_alpha>" + Util.escapeHTML(mcOption.getTitle()) + "</th>");
 			}
 			out.println("<th>Korrekt?</th>");
 		} else if (task.isClozeTask()) {
 			ClozeTaskType clozeHelper = new ClozeTaskType(task.getDescription(), null, true, false);
 			for (int i = 0; i < clozeHelper.getClozeEntries(); ++i) {
-				out.println("<th>Lücke " + (i + 1) + "</th>");
+				out.println("<th class=sorttable_alpha>Lücke " + (i + 1) + "</th>");
 			}
 		}
 		out.println("<th>Autopoints</th>");
 		if (showGrading) {
 			out.println("<th>Points</th>");
-			out.println("<th>Öff. Comment</th>");
-			out.println("<th>Int. Comment</th>");
-			out.println("<th>Bewerter</th>");
+			out.println("<th class=sorttable_alpha>Öff. Comment</th>");
+			out.println("<th class=sorttable_alpha>Int. Comment</th>");
+			out.println("<th class=sorttable_alpha>Bewerter</th>");
 		}
 		out.println("</tr>");
 		out.println("</thead>");

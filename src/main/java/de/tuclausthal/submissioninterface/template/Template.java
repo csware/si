@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -202,5 +202,9 @@ public abstract class Template {
 							"  ]"+
 							"});\n</script>");
 		/* @formatter:on */
+	}
+
+	public void addSortTableJs() {
+		addHead("<script src=\"" + prefix + "/assets/sorttable.min.js\"></script>");
 	}
 }
