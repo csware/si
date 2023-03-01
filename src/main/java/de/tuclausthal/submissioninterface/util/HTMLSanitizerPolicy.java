@@ -27,7 +27,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 // "EbayPolicyExample" of the OWASP HTML Satinizer project extended by:
-// Copyright (c) 2021-2022 Sven Strickroth <email@cs-ware.de>
+// Copyright (c) 2021-2023 Sven Strickroth <email@cs-ware.de>
 
 package de.tuclausthal.submissioninterface.util;
 
@@ -69,7 +69,7 @@ public class HTMLSanitizerPolicy {
 	private static final Pattern HTML_CLASS = Pattern.compile("[a-zA-Z0-9\\s\\-_]+");
 
 	private static final Pattern ONSITE_URL = Pattern.compile("(?:[\\p{L}\\p{N}\\\\\\.\\#@\\$%\\+&;\\-_~,\\?=/!]+|\\#(\\w)+)");
-	private static final Pattern OFFSITE_URL = Pattern.compile("\\s*(?:(?:ht|f)tps?://|mailto:)[\\p{L}\\p{N}][\\p{L}\\p{N}\\p{Zs}\\.\\#@\\$%\\+&;:\\-_~,\\?=/!\\(\\)]*+\\s*");
+	private static final Pattern OFFSITE_URL = Pattern.compile("\\s*(?:https?://|mailto:)[\\p{L}\\p{N}][\\p{L}\\p{N}\\p{Zs}\\.\\#@\\$%\\+&;:\\-_~,\\?=/!\\(\\)]*+\\s*");
 	private static final Pattern DATA_URL = Pattern.compile("data:image/[^,]+,.+");//
 
 	private static final Pattern NUMBER = Pattern.compile("[0-9]+");
