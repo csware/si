@@ -200,7 +200,6 @@ public class ShowTaskTutorView extends HttpServlet {
 			int groupSumOfSubmissions = 0;
 			int groupSumOfAllSubmissions = 0;
 			int groupSumOfPoints = 0;
-			int lastSID = 0;
 			List<Test> tests = DAOFactory.TestDAOIf(session).getTutorTests(task);
 			boolean hasUnapprochedPoints = false;
 			boolean showAllColumns = (task.getDeadline().isBefore(ZonedDateTime.now()) || task.isAllowPrematureSubmissionClosing()) && !requestAdapter.isPrivacyMode();
@@ -301,68 +300,65 @@ public class ShowTaskTutorView extends HttpServlet {
 					out.println("</tr>");
 					out.println("</thead>");
 				}
-				if (lastSID != submission.getSubmissionid()) {
-					groupSumOfAllSubmissions++;
-					out.println("<tr>");
-					String groupAdding = "";
-					if (group != null) {
-						groupAdding = "&groupid=" + group.getGid();
+				groupSumOfAllSubmissions++;
+				out.println("<tr>");
+				String groupAdding = "";
+				if (group != null) {
+					groupAdding = "&groupid=" + group.getGid();
+				}
+				out.println("<td><a href=\"" + Util.generateHTMLLink(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid() + groupAdding, response) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
+				if (showAllColumns) {
+					if (task.isADynamicTask()) {
+						out.println("<td>" + Util.boolToHTML(task.getDynamicTaskStrategie(session).isCorrect(submission)) + "</td>");
 					}
-						out.println("<td><a href=\"" + Util.generateHTMLLink(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid() + groupAdding, response) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
-					lastSID = submission.getSubmissionid();
-					if (showAllColumns) {
-						if (task.isADynamicTask()) {
-							out.println("<td>" + Util.boolToHTML(task.getDynamicTaskStrategie(session).isCorrect(submission)) + "</td>");
-						}
-						// show columns only if the results are in the database after the deadline
-						if (task.getDeadline().isBefore(ZonedDateTime.now())) {
-							for (Test test : tests) {
-								Map<Integer, Boolean> testResultsSubmission = testResults.get(submission.getSubmissionid());
-								if (testResultsSubmission != null && testResultsSubmission.containsKey(test.getId())) {
-									out.println("<td>" + Util.boolToHTML(testResultsSubmission.get(test.getId()), "wird gerade getestet, bitte Seite neu laden") + "</td>");
-								} else {
-									out.println("<td>n/a</td>");
-								}
+					// show columns only if the results are in the database after the deadline
+					if (task.getDeadline().isBefore(ZonedDateTime.now())) {
+						for (Test test : tests) {
+							Map<Integer, Boolean> testResultsSubmission = testResults.get(submission.getSubmissionid());
+							if (testResultsSubmission != null && testResultsSubmission.containsKey(test.getId())) {
+								out.println("<td>" + Util.boolToHTML(testResultsSubmission.get(test.getId()), "wird gerade getestet, bitte Seite neu laden") + "</td>");
+							} else {
+								out.println("<td>n/a</td>");
 							}
-							Map<Integer, List<Similarity>> similaritiesSubmission = similarities.get(submission.getSubmissionid());
-							for (SimilarityTest similarityTest : task.getSimilarityTests()) {
-								String users = "";
-								int maxSimilarity = 0;
-								if (similaritiesSubmission != null) {
-									List<Similarity> list = similaritiesSubmission.get(similarityTest.getSimilarityTestId());
-									if (list != null) {
-										for (Similarity similarity : list) {
-											users += Util.escapeHTML(similarity.getSubmissionTwo().getSubmitterNames()) + "\n";
-											maxSimilarity = similarity.getPercentage();
-										}
+						}
+						Map<Integer, List<Similarity>> similaritiesSubmission = similarities.get(submission.getSubmissionid());
+						for (SimilarityTest similarityTest : task.getSimilarityTests()) {
+							String users = "";
+							int maxSimilarity = 0;
+							if (similaritiesSubmission != null) {
+								List<Similarity> list = similaritiesSubmission.get(similarityTest.getSimilarityTestId());
+								if (list != null) {
+									for (Similarity similarity : list) {
+										users += Util.escapeHTML(similarity.getSubmissionTwo().getSubmitterNames()) + "\n";
+										maxSimilarity = similarity.getPercentage();
 									}
 								}
-								out.println("<td class=similarity><span title=\"" + users + "\">" + maxSimilarity + "</span></td>");
 							}
-						}
-						if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
-							if (submission.getPoints().getPointsOk()) {
-								out.println("<td class=\"points" + Util.getPointsCSSClass(submission.getPoints()) + "\" sorttable_customkey=\"" + submission.getPoints().getPoints() + "\">" + Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + "</td>");
-								out.println("<td></td>");
-								sumOfPoints += submission.getPoints().getPointsByStatus(task.getMinPointStep());
-								groupSumOfPoints += submission.getPoints().getPointsByStatus(task.getMinPointStep());
-								sumOfSubmissions++;
-								groupSumOfSubmissions++;
-							} else {
-								out.println("<td sorttable_customkey=\"-" + submission.getPoints().getPoints() + "\" class=\"points" + Util.getPointsCSSClass(submission.getPoints()) + "\">(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ")</td>");
-								out.println("<td><input type=checkbox name=\"sid" + submission.getSubmissionid() + "\"></td>");
-								hasUnapprochedPoints = true;
-							}
-						} else {
-							out.println("<td>n/a</td>");
-							out.println("<td></td>");
-						}
-						if (showPrematureSubmissionColumn) {
-							out.println("<td>" + (submission.isClosed() ? "<span class=b>abgeschlossen</span>" : "<small>nicht abgeschlossen</small>") + "</td>");
+							out.println("<td class=similarity><span title=\"" + users + "\">" + maxSimilarity + "</span></td>");
 						}
 					}
-					out.println("</tr>");
+					if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
+						if (submission.getPoints().getPointsOk()) {
+							out.println("<td class=\"points" + Util.getPointsCSSClass(submission.getPoints()) + "\" sorttable_customkey=\"" + submission.getPoints().getPoints() + "\">" + Util.showPoints(submission.getPoints().getPointsByStatus(task.getMinPointStep())) + "</td>");
+							out.println("<td></td>");
+							sumOfPoints += submission.getPoints().getPointsByStatus(task.getMinPointStep());
+							groupSumOfPoints += submission.getPoints().getPointsByStatus(task.getMinPointStep());
+							sumOfSubmissions++;
+							groupSumOfSubmissions++;
+						} else {
+							out.println("<td sorttable_customkey=\"-" + submission.getPoints().getPoints() + "\" class=\"points" + Util.getPointsCSSClass(submission.getPoints()) + "\">(" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + ")</td>");
+							out.println("<td><input type=checkbox name=\"sid" + submission.getSubmissionid() + "\"></td>");
+							hasUnapprochedPoints = true;
+						}
+					} else {
+						out.println("<td>n/a</td>");
+						out.println("<td></td>");
+					}
+					if (showPrematureSubmissionColumn) {
+						out.println("<td>" + (submission.isClosed() ? "<span class=b>abgeschlossen</span>" : "<small>nicht abgeschlossen</small>") + "</td>");
+					}
 				}
+				out.println("</tr>");
 			}
 			if (first == false) {
 				out.println("<tfoot><tr>");

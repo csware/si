@@ -81,28 +81,24 @@ public class ShowTaskTutorPrintView extends HttpServlet {
 			out.println("</thead>");
 			Iterator<Submission> submissionIterator = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOfGroupOrdered(task, group).iterator();
 
-			int lastSID = 0;
 			while (submissionIterator.hasNext()) {
 				Submission submission = submissionIterator.next();
-				if (lastSID != submission.getSubmissionid()) {
-					out.println("<tr>");
-					out.println("<td>" + Util.escapeHTML(submission.getSubmitterNames()) + "</td>");
-					lastSID = submission.getSubmissionid();
-					if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
-						out.println("<td class=feedback>" + Util.escapeHTML(submission.getPoints().getPublicComment()) + "</td>");
-						out.println("<td class=similarity>" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + "</td>");
-						if (submission.getPoints().getPointsOk()) {
-							out.println("<td>ok</td>");
-						} else {
-							out.println("<td></td>");
-						}
+				out.println("<tr>");
+				out.println("<td>" + Util.escapeHTML(submission.getSubmitterNames()) + "</td>");
+				if (submission.getPoints() != null && submission.getPoints().getPointStatus() != PointStatus.NICHT_BEWERTET.ordinal()) {
+					out.println("<td class=feedback>" + Util.escapeHTML(submission.getPoints().getPublicComment()) + "</td>");
+					out.println("<td class=similarity>" + Util.showPoints(submission.getPoints().getPlagiarismPoints(task.getMinPointStep())) + "</td>");
+					if (submission.getPoints().getPointsOk()) {
+						out.println("<td>ok</td>");
 					} else {
 						out.println("<td></td>");
-						out.println("<td>n/a</td>");
-						out.println("<td></td>");
 					}
-					out.println("</tr>");
+				} else {
+					out.println("<td></td>");
+					out.println("<td>n/a</td>");
+					out.println("<td></td>");
 				}
+				out.println("</tr>");
 			}
 		}
 		out.println("</table><p>");
