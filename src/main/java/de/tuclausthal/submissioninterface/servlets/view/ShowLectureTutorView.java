@@ -187,7 +187,7 @@ public class ShowLectureTutorView extends HttpServlet {
 		out.println("<a href=\"" + Util.generateHTMLLink(MassMail.class.getSimpleName() + "?lectureid=" + lecture.getId(), response) + "\">Mail an alle</a>");
 		out.println("</p>");
 		for (Group group : lecture.getGroups()) {
-			out.println("<h3><a name=\"group" + group.getGid() + "\">Gruppe: " + Util.escapeHTML(group.getName()) + "</a> <a href=\"#\" onclick=\"toggleVisibility('contentgroup" + group.getGid() + "'); return false;\">(+/-)</a></h3>");
+			out.println("<h3 id=\"group" + group.getGid() + "\">Gruppe: " + Util.escapeHTML(group.getName()) + " <a href=\"#\" onclick=\"toggleVisibility('contentgroup" + group.getGid() + "'); return false;\">(+/-)</a></h3>");
 			String defaultState = "";
 			if (participation.getRoleType().compareTo(ParticipationRole.ADVISOR) != 0 && !group.getTutors().isEmpty() && !group.getTutors().contains(participation)) {
 				defaultState = "style=\"display: none;\"";
