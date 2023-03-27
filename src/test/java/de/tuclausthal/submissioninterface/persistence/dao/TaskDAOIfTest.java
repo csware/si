@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2022-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,18 +19,42 @@
 package de.tuclausthal.submissioninterface.persistence.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
+import org.hibernate.Transaction;
 import org.junit.jupiter.api.Test;
 
 import de.tuclausthal.submissioninterface.BasicTest;
 import de.tuclausthal.submissioninterface.GATEDBTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 
 @GATEDBTest
 class TaskDAOIfTest extends BasicTest {
+	@Test
+	void testCreateDeleteTask() {
+		Transaction tx = session.beginTransaction();
+		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(1);
+		List<Task> tasks = DAOFactory.TaskDAOIf(session).getTasks(lecture, false);
+		int maxId = tasks.stream().mapToInt(t -> t.getTaskid()).max().orElse(0);
+
+		Task task = DAOFactory.TaskDAOIf(session).newTask("New task", 2, ZonedDateTime.now(), ZonedDateTime.now().plusHours(2), "Aufgabenstellung", lecture.getTaskGroups().get(0), null, 1, false, "", null, false);
+		assertTrue(task.getTaskid() > maxId);
+		assertFalse(tasks.contains(task));
+		assertEquals(DAOFactory.TaskDAOIf(session).getTasks(lecture, false).size(), tasks.size() + 1);
+		assertTrue(DAOFactory.TaskDAOIf(session).getTasks(lecture, false).contains(task));
+
+		DAOFactory.TaskDAOIf(session).deleteTask(task);
+		assertEquals(DAOFactory.TaskDAOIf(session).getTasks(lecture, false).size(), tasks.size());
+		assertFalse(DAOFactory.TaskDAOIf(session).getTasks(lecture, false).contains(task));
+
+		tx.rollback();
+	}
 
 	@Test
 	void testGetTasks() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2022-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,14 +19,39 @@
 package de.tuclausthal.submissioninterface.persistence.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
+import org.hibernate.Transaction;
 import org.junit.jupiter.api.Test;
 
 import de.tuclausthal.submissioninterface.BasicTest;
 import de.tuclausthal.submissioninterface.GATEDBTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 
 @GATEDBTest
 class MCOptionDAOIfTest extends BasicTest {
+	@Test
+	void testCreateDeleteMCOption() {
+		Transaction tx = session.beginTransaction();
+		Task task = DAOFactory.TaskDAOIf(session).getTask(2);
+		List<MCOption> mcOptions = DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task);
+
+		MCOption newMCOption = DAOFactory.MCOptionDAOIf(session).createMCOption(task, "New option", false);
+		assertFalse(mcOptions.contains(newMCOption));
+		assertEquals(mcOptions.size() + 1, DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task).size());
+		assertTrue(DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task).contains(newMCOption));
+
+		DAOFactory.MCOptionDAOIf(session).deleteMCOption(newMCOption);
+		assertEquals(mcOptions.size(), DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task).size());
+		assertFalse(DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(task).contains(newMCOption));
+
+		tx.rollback();
+	}
+
 	@Test
 	void testMCOptionsEmpty() {
 		assertEquals(0, DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(DAOFactory.TaskDAOIf(session).getTask(1)).size());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,11 +19,13 @@
 package de.tuclausthal.submissioninterface.persistence.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Transaction;
 import org.junit.jupiter.api.Test;
 
 import de.tuclausthal.submissioninterface.BasicTest;
@@ -33,6 +35,25 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 
 @GATEDBTest
 public class GroupDAOIfTest extends BasicTest {
+	@Test
+	public void testCreateDeleteGroup() {
+		Transaction tx = session.beginTransaction();
+		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(1);
+		Group newGroup = DAOFactory.GroupDAOIf(session).createGroup(lecture, "New group", true, false, 5, false);
+
+		Group g1 = DAOFactory.GroupDAOIf(session).getGroup(newGroup.getGid());
+		assertEquals(newGroup, g1);
+
+		session.refresh(g1);
+		assertEquals(newGroup, g1);
+
+		DAOFactory.GroupDAOIf(session).deleteGroup(newGroup);
+
+		Group g2 = DAOFactory.GroupDAOIf(session).getGroup(newGroup.getGid());
+		assertNull(g2);
+		tx.rollback();
+	}
+
 	@Test
 	public void testGetJoinAbleGroups() {
 		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(1);

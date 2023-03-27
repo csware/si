@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,21 +18,49 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.List;
 
+import org.hibernate.Transaction;
 import org.junit.jupiter.api.Test;
 
 import de.tuclausthal.submissioninterface.BasicTest;
 import de.tuclausthal.submissioninterface.GATEDBTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.util.Util;
 
 @GATEDBTest
 class LectureDAOIfTest extends BasicTest {
+	@Test
+	public void testCreateLecture() {
+		Transaction tx = session.beginTransaction();
+		List<Lecture> lectures = DAOFactory.LectureDAOIf(session).getLectures();
+		int maxId = lectures.stream().mapToInt(l -> l.getId()).max().orElse(0);
+		Lecture lecture = DAOFactory.LectureDAOIf(session).newLecture("New lecture", false, false);
+		assertTrue(lecture.getId() > maxId);
+		assertFalse(lectures.contains(lecture));
+		assertEquals(DAOFactory.LectureDAOIf(session).getLectures().size(), lectures.size() + 1);
+		assertTrue(DAOFactory.LectureDAOIf(session).getLectures().contains(lecture));
+		tx.rollback();
+	}
+
+	@Test
+	public void testDeleteLecture() {
+		Transaction tx = session.beginTransaction();
+		List<Lecture> lectures = DAOFactory.LectureDAOIf(session).getLectures();
+		Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(1);
+		assertTrue(lectures.contains(lecture));
+		DAOFactory.LectureDAOIf(session).deleteLecture(lecture);
+		assertNull(DAOFactory.LectureDAOIf(session).getLecture(1));
+		assertEquals(DAOFactory.LectureDAOIf(session).getLectures().size() + 1, lectures.size());
+		assertFalse(DAOFactory.LectureDAOIf(session).getLectures().contains(lecture));
+		tx.rollback();
+	}
 
 	@Test
 	void testGetLectures() {

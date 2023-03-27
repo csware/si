@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020, 2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -36,7 +36,10 @@ public class BasicTest {
 
 	@AfterEach
 	public void closeSession() {
-		assertFalse(session.getTransaction().isActive());
-		session.close();
+		try {
+			assertFalse(session.getTransaction().isActive(), "Transaction still open");
+		} finally {
+			session.close();
+		}
 	}
 }

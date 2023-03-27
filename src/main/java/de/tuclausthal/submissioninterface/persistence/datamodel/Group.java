@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -43,8 +44,8 @@ public class Group implements Serializable {
 	private int gid;
 	private String name;
 	private Lecture lecture;
-	private Set<Participation> members;
-	private Set<Participation> tutors;
+	private Set<Participation> members = new HashSet<>();
+	private Set<Participation> tutors = new HashSet<>();
 	private boolean allowStudentsToSignup = false;
 	private boolean allowStudentsToQuit = false;
 	private int maxStudents = 20;
