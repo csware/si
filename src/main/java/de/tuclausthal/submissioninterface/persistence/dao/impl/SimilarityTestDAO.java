@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -97,12 +97,9 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 
 	@Override
 	public void finish(SimilarityTest similarityTest) {
-		Session session = getSession();
-		Transaction tx = session.beginTransaction();
 		SimilarityTest TheSimilarityTest = getSimilarityTestLocked(similarityTest.getSimilarityTestId());
 		if (TheSimilarityTest != null) {
 			TheSimilarityTest.setStatus(0);
 		}
-		tx.commit();
 	}
 }
