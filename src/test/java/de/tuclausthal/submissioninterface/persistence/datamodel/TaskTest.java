@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, 2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020, 2022-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,6 +21,8 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
@@ -52,10 +54,10 @@ class TaskTest extends BasicTest {
 		assertFalse(task.showTextArea());
 	}
 
-
 	@Test
 	void testGettersC() {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(1);
+		assertEquals(LocalDateTime.of(2020, 12, 21, 10, 26, 50, 0), task.getStart().toLocalDateTime()); // HACK: for portability we don't test the timezone here
 		assertEquals(1, task.getTaskGroup().getTaskGroupId());
 		assertEquals(2, task.getPointCategories().size());
 		assertEquals(1, task.getSimilarityTests().size());
