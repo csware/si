@@ -56,6 +56,8 @@ import de.tuclausthal.submissioninterface.servlets.controller.DownloadModelSolut
 import de.tuclausthal.submissioninterface.servlets.controller.DownloadTaskFile;
 import de.tuclausthal.submissioninterface.servlets.controller.PerformStudentTest;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowFile;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowLecture;
+import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
 import de.tuclausthal.submissioninterface.servlets.controller.SubmitSolution;
 import de.tuclausthal.submissioninterface.servlets.controller.WebStart;
 import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
@@ -375,6 +377,22 @@ public class ShowTaskStudentView extends HttpServlet {
 				out.println("<li><a href=\"" + Util.generateHTMLLink(DownloadModelSolutionFile.class.getSimpleName() + "/" + Util.encodeURLPathComponent(file) + "?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(file) + "</a></li>");
 			}
 			out.println("</ul>");
+		}
+
+		List<Task> taskGroupTask = task.getTaskGroup().getTasks();
+		if (taskGroupTask.size() > 1) {
+			out.println("<p><hr>");
+			out.println("<div class=mid>");
+			int index = taskGroupTask.indexOf(task);
+			if (index > 0) {
+				out.print("<a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + taskGroupTask.get(index - 1).getTaskid(), response) + "\">&lt; Vorherige Aufgabe</a>");
+				out.print(" | ");
+			}
+			out.print("<a href=\"" + Util.generateHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId(), response) + "\">Übersicht</a>");
+			if (index < taskGroupTask.size() - 1) {
+				out.print(" | <a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + taskGroupTask.get(index + 1).getTaskid(), response) + "\">Nächste Aufgabe &gt;</a>");
+			}
+			out.println("</div>");
 		}
 
 		template.printTemplateFooter();
