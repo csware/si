@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -63,6 +63,10 @@ public class ChecklistTestManagerOverView extends HttpServlet {
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");
 		out.println("<td><input type=text name=title maxlength=250 size=60 value=\"" + Util.escapeHTML(test.getTestTitle()) + "\" required></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th># ausführbar für Studierende:</th>");
+		out.println("<td><input type=text name=timesRunnableByStudents value=\"" + test.getTimesRunnableByStudents() + "\" required=required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");

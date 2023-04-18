@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -98,6 +98,9 @@ public class DockerTestManager extends HttpServlet {
 		if ("edittest".equals(request.getParameter("action"))) {
 			Transaction tx = session.beginTransaction();
 			test.setTestTitle(request.getParameter("title"));
+			test.setForTutors(request.getParameter("tutortest") != null);
+			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
+			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			test.setPreparationShellCode(request.getParameter("preparationcode").replaceAll("\r\n", "\n"));
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));

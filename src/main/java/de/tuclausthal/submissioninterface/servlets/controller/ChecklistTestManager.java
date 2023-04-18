@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -97,6 +97,7 @@ public class ChecklistTestManager extends HttpServlet {
 		if ("edittest".equals(request.getParameter("action"))) {
 			Transaction tx = session.beginTransaction();
 			test.setTestTitle(request.getParameter("title"));
+			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
