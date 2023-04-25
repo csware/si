@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021, 2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -97,7 +97,7 @@ public class Shibboleth implements LoginIf {
 	public void failNoData(String error, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.addHeader("Cache-Control", "no-cache, must-revalidate");
 		Template template = TemplateFactory.getTemplate(request, response);
-		template.printTemplateHeader("Login fehlgeschlagen", "Login fehlgeschlagen");
+		template.printTemplateHeader("Login fehlgeschlagen");
 		PrintWriter out = response.getWriter();
 		if (!error.isEmpty()) {
 			out.println("<p class=\"red mid\">" + error + "</p>");

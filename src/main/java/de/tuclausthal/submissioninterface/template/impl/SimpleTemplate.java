@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021, 2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -82,7 +82,9 @@ public class SimpleTemplate extends Template {
 		out.println("</div>");
 		out.println("<hr class=divider>");
 		out.println("<div id=breadcrumb>");
+		out.println("<ul>");
 		out.println(breadCrumb);
+		out.println("</ul>");
 		out.println("</div>");
 		out.println("</div>");
 		out.println("<div id=\"content\">");

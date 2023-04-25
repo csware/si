@@ -49,7 +49,7 @@ public class SubscribeToLectureView extends HttpServlet {
 		@SuppressWarnings("unchecked")
 		List<Lecture> lectures = (List<Lecture>) request.getAttribute("lectures");
 
-		template.printTemplateHeader("Veranstaltungen", "<a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), response) + "\">Meine Veranstaltungen</a> &gt; Veranstaltungen");
+		template.printTemplateHeader("Veranstaltungen", "<li><a href=\"" + Util.generateHTMLLink(Overview.class.getSimpleName(), response) + "\">Meine Veranstaltungen</a></li><li>Veranstaltungen</li>");
 		PrintWriter out = response.getWriter();
 
 		if (!lectures.isEmpty()) {

@@ -53,7 +53,7 @@ public class OverviewView extends HttpServlet {
 
 		User user = RequestAdapter.getUser(request);
 
-		template.printTemplateHeader("Meine Veranstaltungen", "Meine Veranstaltungen");
+		template.printTemplateHeader("Meine Veranstaltungen", "<li>Meine Veranstaltungen</li>");
 		PrintWriter out = response.getWriter();
 
 		if (Configuration.getInstance().isMatrikelNumberMustBeEnteredManuallyIfMissing() && !(user instanceof Student)) {
