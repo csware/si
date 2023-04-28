@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,9 +20,9 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import org.hibernate.LockMode;
 import org.hibernate.Session;
@@ -65,11 +65,11 @@ public class ResultDAO extends AbstractDAO implements ResultDAOIf {
 		criteria.where(builder.equal(root.get(Result_.submission), submission));
 		// not nice, but issuing a delete query with a where clause might cause deadlocks and items per submission is expected to be low
 		for (Result result : session.createQuery(criteria).list()) {
-			session.delete(result);
+			session.remove(result);
 		}
 
 		for (String stringResult : results) {
-			session.save(new Result(submission, stringResult));
+			session.persist(new Result(submission, stringResult));
 		}
 	}
 }

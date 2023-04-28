@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,10 +21,10 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import org.hibernate.Session;
 
@@ -53,14 +53,14 @@ public class TaskDAO extends AbstractDAO implements TaskDAOIf {
 	public Task newTask(String title, int maxPoints, ZonedDateTime start, ZonedDateTime deadline, String description, TaskGroup taskGroup, ZonedDateTime showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, boolean allowPrematureSubmissionClosing) {
 		Session session = getSession();
 		Task task = new Task(title, maxPoints, start, deadline, description, taskGroup, showPoints, maxSubmitters, allowSubmittersAcrossGroups, taskType, dynamicTask, allowPrematureSubmissionClosing);
-		session.save(task);
+		session.persist(task);
 		return task;
 	}
 
 	@Override
 	public void deleteTask(Task task) {
 		Session session = getSession();
-		session.delete(task);
+		session.remove(task);
 	}
 
 	@Override

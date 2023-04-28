@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -25,12 +25,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 
 import org.hibernate.LockMode;
 import org.hibernate.Session;
@@ -151,7 +151,7 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 
 	private void storeInHistory(Submission submission, String field, String removed, String added, Participation marker) {
 		PointHistory ph = new PointHistory(submission, field, removed, added, marker);
-		getSession().save(ph);
+		getSession().persist(ph);
 	}
 
 	@Override
@@ -218,7 +218,6 @@ public class PointsDAO extends AbstractDAO implements PointsDAOIf {
 		submission.setPoints(points);
 		points.setPublicComment(publicComment);
 		points.setInternalComment(internalComment);
-		session.save(submission);
 
 		// TODO: Attention: see @MarkApproved.java
 		if (oldPoints != null) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020, 2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,9 +20,9 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import org.hibernate.Session;
 
@@ -45,7 +45,7 @@ public class PointGivenDAO extends AbstractDAO implements PointGivenDAOIf {
 	public PointGiven givePoint(int issuedPoints, Submission submission, PointCategory category) {
 		Session session = getSession();
 		PointGiven pointGiven = new PointGiven(issuedPoints, submission, category);
-		session.save(pointGiven);
+		session.persist(pointGiven);
 		return pointGiven;
 	}
 
@@ -63,6 +63,6 @@ public class PointGivenDAO extends AbstractDAO implements PointGivenDAOIf {
 
 	@Override
 	public void revokePointGiven(PointGiven pointGiven) {
-		getSession().delete(pointGiven);
+		getSession().remove(pointGiven);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;

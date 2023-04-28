@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -91,7 +91,7 @@ public abstract class AbstractDynamicTaskStrategie implements DynamicTaskStrateg
 		if (taskNumbers.isEmpty()) {
 			taskNumbers = createTaskNumbers(participation);
 			for (TaskNumber taskNumber : taskNumbers) {
-				session.save(taskNumber);
+				session.persist(taskNumber);
 			}
 		}
 		tx.commit();

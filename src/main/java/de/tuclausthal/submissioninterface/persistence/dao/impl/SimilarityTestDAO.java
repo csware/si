@@ -20,11 +20,11 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.time.ZonedDateTime;
 
-import javax.persistence.LockModeType;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
@@ -48,14 +48,14 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 	public SimilarityTest addSimilarityTest(Task task, String type, String basis, boolean normalizeCapitalization, String tabsSpacesNewlinesNormalization, int minimumDifferenceInPercent, String excludeFiles) {
 		Session session = getSession();
 		SimilarityTest similarityTest = new SimilarityTest(task, type, basis, normalizeCapitalization, tabsSpacesNewlinesNormalization, minimumDifferenceInPercent, excludeFiles);
-		session.save(similarityTest);
+		session.persist(similarityTest);
 		return similarityTest;
 	}
 
 	@Override
 	public void deleteSimilarityTest(SimilarityTest similarityTest) {
 		Session session = getSession();
-		session.delete(similarityTest);
+		session.remove(similarityTest);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class SimilarityTestDAO extends AbstractDAO implements SimilarityTestDAOI
 		CriteriaDelete<Similarity> criteria = builder.createCriteriaDelete(Similarity.class);
 		Root<Similarity> root = criteria.from(Similarity.class);
 		criteria.where(builder.equal(root.get(Similarity_.similarityTest), similarityTest));
-		session.createQuery(criteria).executeUpdate();
+		session.createMutationQuery(criteria).executeUpdate();
 	}
 
 	@Override

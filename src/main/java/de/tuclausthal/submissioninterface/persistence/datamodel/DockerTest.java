@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,10 +21,10 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;

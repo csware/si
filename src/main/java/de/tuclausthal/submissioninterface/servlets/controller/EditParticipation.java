@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,11 +20,12 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
 
-import javax.persistence.LockModeType;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import jakarta.persistence.LockModeType;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;

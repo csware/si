@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,10 +18,10 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import javax.persistence.LockModeType;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import org.hibernate.Session;
 
@@ -60,7 +60,7 @@ public class TestCountDAO extends AbstractDAO implements TestCountDAOIf {
 				return false;
 			}
 			testCount.setTimesExecuted(testCount.getTimesExecuted() + 1);
-			session.saveOrUpdate(testCount);
+			session.persist(testCount);
 		}
 		return true;
 	}

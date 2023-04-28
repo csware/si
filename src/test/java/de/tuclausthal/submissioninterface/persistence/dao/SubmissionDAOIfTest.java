@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -64,10 +64,9 @@ class SubmissionDAOIfTest extends BasicTest {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(2);
 		Group group = DAOFactory.GroupDAOIf(session).getGroup(1);
 		List<Submission> submissions = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOfGroupOrdered(task, group);
-		assertEquals(3, submissions.size());
+		assertEquals(2, submissions.size());
 		assertEquals(9, submissions.get(0).getSubmissionid());
-		assertEquals(9, submissions.get(1).getSubmissionid()); // TODO: duplicates possible
-		assertEquals(13, submissions.get(2).getSubmissionid());
+		assertEquals(13, submissions.get(1).getSubmissionid());
 	}
 
 	@Test
@@ -135,26 +134,23 @@ class SubmissionDAOIfTest extends BasicTest {
 	void testGetSubmissionsForTaskOrderedA() {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(1);
 		List<Submission> submissions = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task);
-		assertEquals(6, submissions.size());
+		assertEquals(4, submissions.size());
 		assertEquals(1, submissions.get(0).getSubmissionid());
 		assertEquals(4, submissions.get(1).getSubmissionid());
 		assertEquals(8, submissions.get(2).getSubmissionid());
-		assertEquals(8, submissions.get(3).getSubmissionid()); // TODO: duplicate
-		assertEquals(15, submissions.get(4).getSubmissionid());
-		assertEquals(15, submissions.get(5).getSubmissionid()); // TODO: duplicate
+		assertEquals(15, submissions.get(3).getSubmissionid());
 	}
 
 	@Test
 	void testGetSubmissionsForTaskOrderedB() {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(2);
 		List<Submission> submissions = DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOrdered(task);
-		assertEquals(6, submissions.size());
+		assertEquals(5, submissions.size());
 		assertEquals(2, submissions.get(0).getSubmissionid());
 		assertEquals(5, submissions.get(1).getSubmissionid());
 		assertEquals(9, submissions.get(2).getSubmissionid());
-		assertEquals(9, submissions.get(3).getSubmissionid()); // TODO: duplicate
-		assertEquals(13, submissions.get(4).getSubmissionid());
-		assertEquals(14, submissions.get(5).getSubmissionid());
+		assertEquals(13, submissions.get(3).getSubmissionid());
+		assertEquals(14, submissions.get(4).getSubmissionid());
 	}
 
 	@Test

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,14 +20,14 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
-import javax.persistence.LockModeType;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
@@ -66,7 +66,7 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 			participation.setUser(user);
 			participation.setLecture(lecture);
 			participation.setRoleType(type);
-			session.save(participation);
+			session.persist(participation);
 			return true;
 		}
 		return false;
@@ -75,8 +75,7 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 	@Override
 	public void deleteParticipation(Participation participation) {
 		Session session = getSession();
-		session.update(participation);
-		session.delete(participation);
+		session.remove(participation);
 	}
 
 	private Participation getParticipation(User user, Lecture lecture, boolean locked) {
@@ -109,7 +108,7 @@ public class ParticipationDAO extends AbstractDAO implements ParticipationDAOIf 
 		Session session = getSession();
 		Participation participation = getParticipationLocked(user, lecture);
 		if (participation != null) {
-			session.delete(participation);
+			session.remove(participation);
 		}
 	}
 

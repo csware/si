@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,10 +20,10 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 
 import org.hibernate.Session;
 
@@ -67,7 +67,7 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 		} else {
 			lecture.setGradingMethod("taskWise");
 		}
-		session.save(lecture);
+		session.persist(lecture);
 		return lecture;
 	}
 
@@ -98,6 +98,6 @@ public class LectureDAO extends AbstractDAO implements LectureDAOIf {
 	@Override
 	public void deleteLecture(Lecture lecture) {
 		Session session = getSession();
-		session.delete(lecture);
+		session.remove(lecture);
 	}
 }

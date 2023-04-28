@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, 2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020, 2022-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,9 +20,9 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import org.hibernate.Session;
 
@@ -56,13 +56,13 @@ public class MCOptionDAO extends AbstractDAO implements MCOptionDAOIf {
 	public MCOption createMCOption(Task task, String option, boolean correct) {
 		Session session = getSession();
 		MCOption mcoption = new MCOption(task, option, correct);
-		session.save(mcoption);
+		session.persist(mcoption);
 		return mcoption;
 	}
 
 	@Override
 	public void deleteMCOption(MCOption mcoption) {
 		Session session = getSession();
-		session.delete(mcoption);
+		session.remove(mcoption);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,10 +21,10 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import javax.persistence.LockModeType;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
@@ -58,7 +58,7 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 		Session session = getSession();
 		JUnitTest test = new JUnitTest();
 		test.setTask(task);
-		session.save(test);
+		session.persist(test);
 		return test;
 	}
 
@@ -67,7 +67,7 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 		Session session = getSession();
 		UMLConstraintTest test = new UMLConstraintTest();
 		test.setTask(task);
-		session.save(test);
+		session.persist(test);
 		return test;
 	}
 
@@ -76,14 +76,14 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 		Session session = getSession();
 		RegExpTest test = new RegExpTest();
 		test.setTask(task);
-		session.save(test);
+		session.persist(test);
 		return test;
 	}
 
 	@Override
 	public void deleteTest(Test test) {
 		Session session = getSession();
-		session.delete(test);
+		session.remove(test);
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 		Session session = getSession();
 		CompileTest test = new CompileTest();
 		test.setTask(task);
-		session.save(test);
+		session.persist(test);
 		return test;
 	}
 
@@ -150,7 +150,7 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 		Session session = getSession();
 		CommentsMetricTest test = new CommentsMetricTest();
 		test.setTask(task);
-		session.save(test);
+		session.persist(test);
 		return test;
 	}
 
@@ -159,7 +159,7 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 		Session session = getSession();
 		JavaAdvancedIOTest test = new JavaAdvancedIOTest();
 		test.setTask(task);
-		session.save(test);
+		session.persist(test);
 		return test;
 	}
 
@@ -168,7 +168,7 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 		Session session = getSession();
 		DockerTest test = new DockerTest();
 		test.setTask(task);
-		session.save(test);
+		session.persist(test);
 		return test;
 	}
 
@@ -177,7 +177,7 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 		Session session = getSession();
 		ChecklistTest test = new ChecklistTest();
 		test.setTask(task);
-		session.save(test);
+		session.persist(test);
 		return test;
 	}
 }

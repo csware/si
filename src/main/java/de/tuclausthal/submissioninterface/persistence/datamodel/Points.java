@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,11 +21,11 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Transient;
 
 @Embeddable
 public class Points implements Serializable {

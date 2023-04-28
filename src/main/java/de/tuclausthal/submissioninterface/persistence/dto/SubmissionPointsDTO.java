@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.dto;
 
-import javax.persistence.Transient;
+import jakarta.persistence.Transient;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
 

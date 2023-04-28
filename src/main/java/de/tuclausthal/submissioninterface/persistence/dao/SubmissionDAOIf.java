@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -59,7 +59,6 @@ public interface SubmissionDAOIf {
 
 	/**
 	 * Returns the submission of a task orderd by name
-	 * WARNING: duplicates possible
 	 * @param task
 	 * @return the list of submissions
 	 */
@@ -67,7 +66,6 @@ public interface SubmissionDAOIf {
 
 	/**
 	 * Returns the submission of a group for a specific task orderd by name
-	 * WARNING: duplicates possible
 	 * @param task 
 	 * @param group
 	 * @return the list of submissions

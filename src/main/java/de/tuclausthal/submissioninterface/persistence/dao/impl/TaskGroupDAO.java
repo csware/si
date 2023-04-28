@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2022-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -36,7 +36,7 @@ public class TaskGroupDAO extends AbstractDAO implements TaskGroupDAOIf {
 	@Override
 	public void deleteTaskGroup(TaskGroup taskGroup) {
 		Session session = getSession();
-		session.delete(taskGroup);
+		session.remove(taskGroup);
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class TaskGroupDAO extends AbstractDAO implements TaskGroupDAOIf {
 	public TaskGroup newTaskGroup(String title, Lecture lecture) {
 		Session session = getSession();
 		TaskGroup taskGroup = new TaskGroup(title, lecture);
-		session.save(taskGroup);
+		session.persist(taskGroup);
 		return taskGroup;
 	}
 }

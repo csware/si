@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2023 Sven Strickroth <email@cs-ware.de>
  * Copyright 2011 Joachim Schramm
  *
  * This file is part of the GATE.
@@ -21,8 +21,8 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.lang.invoke.MethodHandles;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaUMLConstraintTest;

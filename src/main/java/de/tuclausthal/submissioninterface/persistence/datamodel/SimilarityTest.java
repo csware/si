@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -22,15 +22,15 @@ import java.io.File;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
 import de.tuclausthal.submissioninterface.dupecheck.compressiondistance.CompressionDistance;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -94,7 +94,7 @@ public class MarkApproved extends HttpServlet {
 					submission.getPoints().setIssuedBy(participation);
 					// TODO: Attention! Manual update
 					PointHistory ph = new PointHistory(submission, "status", PointStatus.NICHT_ABGENOMMEN.toString(), PointStatus.ABGENOMMEN.toString(), participation);
-					session.save(ph);
+					session.persist(ph);
 				}
 			}
 		}

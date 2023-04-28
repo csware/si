@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.persistence.PersistenceException;
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletException;
 import javax.servlet.SessionTrackingMode;
@@ -39,8 +38,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jakarta.persistence.PersistenceException;
+
 import org.hibernate.Session;
-import org.hibernate.query.NativeQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,7 +99,7 @@ public class SelfTest extends HttpServlet {
 			testresults.add(new TestResult("Selbsttest ausgeführt mit GATE-Version:", Util.escapeHTML(versionInfo), null));
 		} catch (IOException | NullPointerException ex) {
 		}
-		testresults.add(new TestResult("Selbsttest ausgeführt am:", Util.escapeHTML(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").format(ZonedDateTime.now())), null));
+		testresults.add(new TestResult("Selbsttest ausgeführt am (Zeitzone muss auf allen Systemen identisch sein):", Util.escapeHTML(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss z").format(ZonedDateTime.now())), null));
 		try {
 			testresults.add(new TestResult("Selbsttest ausgeführt auf:", Util.escapeHTML(InetAddress.getLocalHost().getHostName()), null));
 		} catch (UnknownHostException e) {
@@ -110,12 +110,18 @@ public class SelfTest extends HttpServlet {
 
 		try {
 			Session session = RequestAdapter.getSession(request);
-			@SuppressWarnings("rawtypes")
-			NativeQuery query = session.createNativeQuery("SELECT VERSION();");
-			testresults.add(new TestResult("Datenbank-Software:", Util.escapeHTML(query.uniqueResult().toString()), null));
+			testresults.add(new TestResult("Datenbank-Software:", Util.escapeHTML(session.createNativeQuery("SELECT VERSION();", String.class).uniqueResult()), null));
 		} catch (PersistenceException e) {
 			testresults.add(new TestResult("Datenbank-Software:", Util.escapeHTML(e.getMessage()), false));
 			LOG.error("Could not get version from MySQL compliant server.", e);
+		}
+
+		try {
+			Session session = RequestAdapter.getSession(request);
+			testresults.add(new TestResult("Datenbank-Zeitzone (sollte Servletcontainerzeitzone entsprechen, siehe oben):", Util.escapeHTML(session.createNativeQuery("SELECT IF(@@time_zone='SYSTEM',@@system_time_zone,@@time_zone);", String.class).uniqueResult()), null));
+		} catch (PersistenceException e) {
+			testresults.add(new TestResult("Datenbank-Zeitzone (sollte Servletcontainerzeitzone entsprechen, siehe oben):", Util.escapeHTML(e.getMessage()), false));
+			LOG.error("Could not get timezone from MySQL compliant server.", e);
 		}
 
 		FilterRegistration filter = getServletContext().getFilterRegistration("AuthenticationFilter");

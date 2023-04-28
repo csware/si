@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -22,21 +22,22 @@ import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -111,7 +112,7 @@ public class Submission implements Serializable {
 	 * @return the submitters
 	 */
 	@ManyToMany
-	@OrderBy(value = "user asc")
+	//@OrderBy(value = "user asc") // not supported with Hibernate >= 6.1, see workaround in getSubmitterNames()
 	@JoinTable(name = "submissions_participations", inverseJoinColumns = @JoinColumn(name = "submitters_id"), joinColumns = @JoinColumn(name = "submissions_submissionid"))
 	public Set<Participation> getSubmitters() {
 		return submitters;
@@ -174,11 +175,20 @@ public class Submission implements Serializable {
 
 	@Transient
 	public String getSubmitterNames() {
-		StringBuilder sb = new StringBuilder();
-		for (Participation submitter : getSubmitters()) {
-			sb.append("; " + submitter.getUser().getLastNameFirstName());
+		if (getSubmitters().size() == 1) {
+			return getSubmitters().iterator().next().getUser().getLastNameFirstName();
 		}
-		return sb.substring(2).toString();
+		StringBuilder sb = new StringBuilder();
+		// HACK until Hibernate 6 gets support for sorted sets again
+		Iterator<String> it = getSubmitters().stream().sorted((u1, u2) -> u1.getUser().getLastNameFirstName().compareTo(u2.getUser().getLastNameFirstName())).map(s -> s.getUser().getLastNameFirstName()).iterator();
+		if (it.hasNext()) {
+			sb.append(it.next());
+		}
+		while (it.hasNext()) {
+			sb.append("; ");
+			sb.append(it.next());
+		}
+		return sb.toString();
 	}
 
 	/**

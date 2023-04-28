@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,10 +20,10 @@ package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
 import java.util.List;
 
-import javax.persistence.LockModeType;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -90,7 +90,7 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 			user.setFirstName(firstName);
 			user.setLastName(lastName);
 			user.setEmail(email);
-			session.save(user);
+			session.persist(user);
 			session.refresh(user); // make sure all fields are populated from DB
 		}
 		return user;
@@ -107,7 +107,7 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 			student.setFirstName(firstName);
 			student.setLastName(lastName);
 			student.setMatrikelno(matrikelno);
-			session.save(student);
+			session.persist(student);
 			session.refresh(student); // make sure all fields are populated from DB
 			user = student;
 		}
@@ -116,7 +116,7 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 
 	@Override
 	public void makeUserStudent(int uid, int matrikelno) {
-		getSession().createNativeQuery("update users set " + Student_.MATRIKELNO + " = :matrikelno where " + Student_.UID + " = :uid").setParameter("matrikelno", matrikelno, StandardBasicTypes.INTEGER).setParameter("uid", uid, StandardBasicTypes.INTEGER).executeUpdate();
+		getSession().createNativeMutationQuery("update users set " + Student_.MATRIKELNO + " = :matrikelno where " + Student_.UID + " = :uid").setParameter("matrikelno", matrikelno, StandardBasicTypes.INTEGER).setParameter("uid", uid, StandardBasicTypes.INTEGER).executeUpdate();
 	}
 
 	@Override

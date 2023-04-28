@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2020, 2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020, 2022-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,9 +18,9 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import org.hibernate.Session;
 
@@ -41,14 +41,14 @@ public class PointCategoryDAO extends AbstractDAO implements PointCategoryDAOIf 
 	@Override
 	public void deletePointCategory(PointCategory pointCategory) {
 		Session session = getSession();
-		session.delete(pointCategory);
+		session.remove(pointCategory);
 	}
 
 	@Override
 	public PointCategory newPointCategory(Task task, int points, String description, boolean optional) {
 		Session session = getSession();
 		PointCategory pointCategory = new PointCategory(task, points, description, optional);
-		session.save(pointCategory);
+		session.persist(pointCategory);
 		return pointCategory;
 	}
 

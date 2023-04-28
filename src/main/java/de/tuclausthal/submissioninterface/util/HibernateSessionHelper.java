@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,7 +21,7 @@ package de.tuclausthal.submissioninterface.util;
 import java.lang.invoke.MethodHandles;
 import java.util.Set;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;

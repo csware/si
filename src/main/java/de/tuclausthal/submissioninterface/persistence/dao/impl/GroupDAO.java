@@ -24,12 +24,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
@@ -62,7 +62,7 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 		group.setAllowStudentsToQuit(allowStudentsToQuit);
 		group.setMaxStudents(maxStudents);
 		group.setMembersVisibleToStudents(membersVisibleToStudents);
-		session.save(group);
+		session.persist(group);
 		return group;
 	}
 
@@ -73,7 +73,7 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 		for (Participation participation : group.getMembers()) {
 			participation.setGroup(null);
 		}
-		session.delete(group);
+		session.remove(group);
 	}
 
 	@Override

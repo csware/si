@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -24,11 +24,12 @@ import java.time.ZonedDateTime;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import javax.persistence.LockModeType;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import jakarta.persistence.LockModeType;
 
 import org.hibernate.LockMode;
 import org.hibernate.Session;

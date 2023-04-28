@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -116,7 +116,7 @@ public class AuthenticationFilter implements Filter {
 
 			Transaction tx = session.beginTransaction();
 			verifyResult.verifiedUser.setLastLoggedIn(ZonedDateTime.now());
-			session.save(verifyResult.verifiedUser);
+			session.persist(verifyResult.verifiedUser);
 			tx.commit();
 			sa.setUser(verifyResult.verifiedUser, request.getRemoteAddr());
 			if (login.redirectAfterLogin() == true) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -23,16 +23,16 @@ import java.lang.invoke.MethodHandles;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 import org.hibernate.annotations.DiscriminatorFormula;
 import org.hibernate.annotations.OrderBy;

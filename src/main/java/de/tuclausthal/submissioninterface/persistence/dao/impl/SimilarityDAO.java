@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -23,11 +23,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 
 import org.hibernate.LockMode;
 import org.hibernate.Session;
@@ -57,13 +57,13 @@ public class SimilarityDAO extends AbstractDAO implements SimilarityDAOIf {
 			CriteriaDelete<Similarity> criteria = builder.createCriteriaDelete(Similarity.class);
 			Root<Similarity> root = criteria.from(Similarity.class);
 			criteria.where(builder.and(builder.equal(root.get(Similarity_.similarityTest), similarityTest), builder.or(builder.and(builder.equal(root.get(Similarity_.submissionOne), submissionOne), builder.equal(root.get(Similarity_.submissionTwo), submissionTwo)), builder.and(builder.equal(root.get(Similarity_.submissionOne), submissionTwo), builder.equal(root.get(Similarity_.submissionTwo), submissionOne)))));
-			session.createQuery(criteria).executeUpdate();
+			session.createMutationQuery(criteria).executeUpdate();
 
 			Similarity simularity;
 			simularity = new Similarity(similarityTest, submissionOne, submissionTwo, percentage);
-			session.save(simularity);
+			session.persist(simularity);
 			simularity = new Similarity(similarityTest, submissionTwo, submissionOne, percentage);
-			session.save(simularity);
+			session.persist(simularity);
 		}
 	}
 

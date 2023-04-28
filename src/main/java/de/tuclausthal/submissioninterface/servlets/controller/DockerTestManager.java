@@ -111,7 +111,7 @@ public class DockerTestManager extends HttpServlet {
 			String expect = request.getParameter("expect").replaceAll("\r\n", "\n");
 			DockerTestStep newStep = new DockerTestStep(test, title, testCode, expect);
 			Transaction tx = session.beginTransaction();
-			session.save(newStep);
+			session.persist(newStep);
 			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 			return;
@@ -144,7 +144,7 @@ public class DockerTestManager extends HttpServlet {
 			}
 			if (step != null) {
 				Transaction tx = session.beginTransaction();
-				session.delete(step);
+				session.remove(step);
 				tx.commit();
 			}
 			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -23,16 +23,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.LockModeType;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.SetJoin;
-import javax.persistence.criteria.Subquery;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Order;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.SetJoin;
+import jakarta.persistence.criteria.Subquery;
 
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
@@ -91,7 +91,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 		Submission submission = getSubmission(task, submitter.getUser());
 		if (submission == null) {
 			submission = new Submission(task, submitter);
-			session.save(submission);
+			session.persist(submission);
 		} else {
 			session.refresh(submission, LockModeType.PESSIMISTIC_WRITE);
 		}
@@ -120,7 +120,7 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 		boolean result = false;
 		Util.recursiveDeleteEmptySubDirectories(submissionPath);
 		if (submissionPath.listFiles().length == 0 && submissionPath.delete()) {
-			session.delete(submission);
+			session.remove(submission);
 			result = true;
 		}
 		return result;

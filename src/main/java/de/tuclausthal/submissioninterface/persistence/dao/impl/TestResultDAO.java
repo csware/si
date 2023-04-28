@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -22,10 +22,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.persistence.LockModeType;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import org.hibernate.LockMode;
 import org.hibernate.Session;
@@ -55,7 +55,7 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 		session.lock(test, LockMode.PESSIMISTIC_WRITE);
 		TestResult testResult = getResultLocked(test, submission);
 		if (testExecutorTestResult == null && testResult != null) {
-			session.delete(testResult);
+			session.remove(testResult);
 			return;
 		}
 		if (testResult == null) {
@@ -66,7 +66,7 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 		if (testExecutorTestResult != null) {
 			testResult.setPassedTest(testExecutorTestResult.isTestPassed());
 			testResult.setTestOutput(testExecutorTestResult.getTestOutput());
-			session.saveOrUpdate(testResult);
+			session.persist(testResult);
 		}
 	}
 
