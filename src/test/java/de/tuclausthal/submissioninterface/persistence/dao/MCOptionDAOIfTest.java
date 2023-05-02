@@ -62,5 +62,10 @@ class MCOptionDAOIfTest extends BasicTest {
 		var mcOptions = DAOFactory.MCOptionDAOIf(session).getMCOptionsForTask(DAOFactory.TaskDAOIf(session).getTask(2));
 		assertEquals(4, mcOptions.size());
 		assertEquals(1, mcOptions.stream().filter(option -> option.isCorrect()).count());
+		assertEquals("Wrong 1", mcOptions.get(0).getTitle());
+		assertEquals("Wrong 2", mcOptions.get(1).getTitle());
+		assertEquals("Correct", mcOptions.get(2).getTitle());
+		assertTrue(mcOptions.get(2).isCorrect());
+		assertEquals("Wrong 3", mcOptions.get(3).getTitle());
 	}
 }
