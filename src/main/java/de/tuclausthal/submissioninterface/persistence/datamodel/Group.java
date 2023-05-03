@@ -153,7 +153,7 @@ public class Group implements Serializable {
 	 * @param maxStudents the maxStudents to set
 	 */
 	public void setMaxStudents(int maxStudents) {
-		this.maxStudents = maxStudents;
+		this.maxStudents = Math.max(1, maxStudents);
 	}
 
 	/**

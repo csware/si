@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2014, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2014, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -489,6 +489,10 @@ public final class Util {
 
 	public static int convertToPoints(String parameter, int minPointStep) {
 		int points = convertToPoints(parameter);
+		return ensureMinPointStepMultiples(points, minPointStep);
+	}
+
+	public static int ensureMinPointStepMultiples(int points, int minPointStep) {
 		if (points % minPointStep == 0) {
 			return points;
 		}

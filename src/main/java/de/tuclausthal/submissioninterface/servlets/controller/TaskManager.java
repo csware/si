@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2014, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2014, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -440,7 +440,7 @@ public class TaskManager extends HttpServlet {
 					task.setMinPointStep(Util.convertToPoints(request.getParameter("minpointstep")));
 				}
 				if (task.getPointCategories().isEmpty()) {
-					task.setMaxPoints(Util.convertToPoints(request.getParameter("maxpoints"), task.getMinPointStep()));
+					task.setMaxPoints(Util.convertToPoints(request.getParameter("maxpoints")));
 				}
 				if (task.isClozeTask()) {
 					ClozeTaskType clozeHelper = new ClozeTaskType(request.getParameter("description"), null, false, false);
@@ -453,7 +453,7 @@ public class TaskManager extends HttpServlet {
 				task.setDescription(request.getParameter("description"));
 				task.setMaxSubmitters(Util.parseInteger(request.getParameter("maxSubmitters"), 1));
 				task.setAllowSubmittersAcrossGroups(request.getParameter("allowSubmittersAcrossGroups") != null);
-				task.setMaxsize(Math.max(1024, Math.min(Configuration.MAX_UPLOAD_SIZE, 1024 * Util.parseInteger(request.getParameter("maxfilesize"), 0))));
+				task.setMaxsize(1024 * Util.parseInteger(request.getParameter("maxfilesize"), 0));
 				if (!task.isSCMCTask() && !task.isADynamicTask() && !task.isClozeTask()) {
 					task.setFilenameRegexp(request.getParameter("filenameregexp"));
 					task.setArchiveFilenameRegexp(request.getParameter("archivefilenameregexp"));

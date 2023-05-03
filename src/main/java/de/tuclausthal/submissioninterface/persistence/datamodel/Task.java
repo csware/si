@@ -47,6 +47,7 @@ import org.hibernate.annotations.OrderBy;
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieFactory;
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.util.Configuration;
+import de.tuclausthal.submissioninterface.util.Util;
 
 @Entity
 @Table(name = "tasks")
@@ -152,7 +153,7 @@ public class Task implements Serializable {
 	 * @param maxPoints the maxPoints to set
 	 */
 	public void setMaxPoints(int maxPoints) {
-		this.maxPoints = maxPoints;
+		this.maxPoints = Math.max(0, Util.ensureMinPointStepMultiples(maxPoints, getMinPointStep()));
 	}
 
 	/**
@@ -344,7 +345,7 @@ public class Task implements Serializable {
 	 * @param maxSubmitters per "group" 
 	 */
 	public void setMaxSubmitters(int maxSubmitters) {
-		this.maxSubmitters = maxSubmitters;
+		this.maxSubmitters = Math.max(1, maxSubmitters);
 	}
 
 	/**
@@ -429,7 +430,7 @@ public class Task implements Serializable {
 	 * @param minPointStep the minPointStep to set
 	 */
 	public void setMinPointStep(int minPointStep) {
-		this.minPointStep = minPointStep;
+		this.minPointStep = Math.max(1, minPointStep);
 	}
 
 	/**
@@ -492,7 +493,7 @@ public class Task implements Serializable {
 	 * @param maxsize the maxsize to set
 	 */
 	public void setMaxsize(int maxsize) {
-		this.maxsize = maxsize;
+		this.maxsize = Math.max(1024, Math.min(Configuration.MAX_UPLOAD_SIZE, maxsize));
 	}
 
 	/**
