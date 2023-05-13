@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -72,19 +72,17 @@ public class DockerTest extends TempDirTest {
 			StringBuilder testCode = new StringBuilder();
 			testCode.append("#!/bin/bash\n");
 			testCode.append("set -e\n");
-			testCode.append("separator='");
-			testCode.append(separator);
-			testCode.append("'\n\n");
-
 			testCode.append(test.getPreparationShellCode());
 			testCode.append("\n");
 
 			for (DockerTestStep testStep : test.getTestSteps()) {
-				testCode.append("echo $separator\n");
-				testCode.append("echo $separator >&2\n");
+				testCode.append("echo '" + separator + "'\n");
+				testCode.append("echo '" + separator + "' >&2\n");
+				testCode.append("{\n");
 				testCode.append("set -e\n");
 				testCode.append(testStep.getTestcode());
 				testCode.append("\n");
+				testCode.append("}\n");
 			}
 
 			FileWriter fw = new FileWriter(new File(administrativeDir, "test.sh"));
