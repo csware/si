@@ -110,7 +110,7 @@ Alternatively you can also use GitLab CI/CD functionality and download the built
 - Restart Tomcat
 - For using Docker-based tests
     - Build the local `safe-docker` image, based on `safe-docker/Dockerfile` (e.g., `docker build --tag safe-docker .` in the `safe-docker` folder of this repository). So far, the image is only prepared for supporting Haskell, you might want to extend it according to your needs.
-    - Copy `safe-docker/safe-docker` to `/usr/local/bin/safe-docker` and make sure it is owned by `root:root` and has the permissions `700`, you might want to check the parameters passed to `docker`.
+    - Copy `safe-docker/safe-docker` to `/usr/local/bin/safe-docker` and make sure it is owned by `root:root` and has the permissions `700`, you might want to check the parameters passed to `docker`. Requires the packages `libipc-run-perl` and `libdata-guid-perl packages` on Debian-based systems.
     - On Debian-based systems you might need to lift some systemd restrictions by creating the file `/etc/systemd/system/tomcat9.service.d/gate-safe-docker.conf` containing:
       ```
       [Service]

@@ -5,6 +5,7 @@
 # based on https://github.com/nomeata/safe-docker/blob/master/safe-docker
 # version e1732d3074d8442aa8aff81cb292f0098ac62b82, with minor modifications
 # needs /etc/sudoers entry: "tomcat ALL= NOPASSWD: /usr/local/bin/safe-docker"
+# requires Debian packages: libipc-run-perl libdata-guid-perl
 
 use Getopt::Long;
 use IPC::Run qw/ start run timeout /;
