@@ -70,7 +70,7 @@ Please read the whole procedure in advance to executing it.
     - On *nix the system Tomcat runs as the user `tomcat`, so make sure that the user has appropriate permissions, also on Debian-based systems, Tomcat might be sandboxed by systemd. Create a file `/etc/systemd/system/tomcat9.service.d/gate.conf` containing:
       ```
       [Service]
-      ReadWritePaths=/srv/submissioninterface/
+      ReadWritePaths=/srv/gate/
       ```
       (afterwards, issue `systemctl daemon-reload` and `systemctl restart tomcat`)
   - For development:
