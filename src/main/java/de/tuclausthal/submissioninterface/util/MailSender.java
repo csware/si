@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -48,6 +48,8 @@ public class MailSender {
 		MimeMessage msg;
 		Properties props = new Properties();
 		props.put("mail.smtp.host", Configuration.getInstance().getMailServer());
+		props.put("mail.smtp.connectiontimeout", "2500");
+		props.put("mail.smtp.timeout", "2500");
 
 		Session session = Session.getDefaultInstance(props, null);
 
