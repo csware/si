@@ -118,7 +118,7 @@ Alternatively you can also use GitLab CI/CD functionality and download the built
       PrivateTmp=no
       ReadWritePaths=/tmp/
       ```
-    - Set up `sudo` by inserting `tomcat ALL= NOPASSWD: /usr/local/bin/safe-docker` in `/etc/sudoers`
+    - Set up `sudo` by inserting `tomcat ALL= NOPASSWD: /usr/local/bin/safe-docker` in `/etc/sudoers.d/gate-safe-docker`
 
 Now GATE can be access using e.g. <http://localhost:8080/GATE/> depending on your concrete local setup.
 It is recommended to run the self-test to check whether everything looks ok: <http://localhost:8080/GATE/servlets/SelfTest>
