@@ -34,7 +34,7 @@ CREATE TABLE `checklisttestcheckitem` (
 
 DROP TABLE IF EXISTS `dockerteststep`;
 CREATE TABLE `dockerteststep` (
-  `teststepid` int(11) NOT NULL,
+  `teststepid` int(11) NOT NULL AUTO_INCREMENT,
   `expect` longtext NOT NULL,
   `testcode` longtext NOT NULL,
   `title` varchar(255) NOT NULL,

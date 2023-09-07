@@ -149,3 +149,6 @@ update tasks set showTextArea='textsolution.txt' where showTextArea='1';
 
 -- checktestitem mit feedback
 ALTER TABLE checklisttestcheckitem add column (`correct` bit(1) NOT NULL DEFAULT 1,`feedback` longtext NOT NULL DEFAULT '');
+
+-- fix missing auto increment
+ALTER TABLE `dockerteststep` CHANGE `teststepid` `teststepid` INT(11) NOT NULL AUTO_INCREMENT;
