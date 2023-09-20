@@ -35,6 +35,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -42,7 +43,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.hibernate.Session;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.OrderBy;
 
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieFactory;
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
@@ -208,7 +208,7 @@ public class Task implements Serializable {
 	 */
 	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(clause = "submissionid asc")
+	@OrderBy("submissionid asc")
 	public Set<Submission> getSubmissions() {
 		return submissions;
 	}
@@ -241,7 +241,7 @@ public class Task implements Serializable {
 	 */
 	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(clause = "id asc")
+	@OrderBy("id asc")
 	public Set<Test> getTests() {
 		return tests;
 	}
@@ -273,7 +273,7 @@ public class Task implements Serializable {
 	 */
 	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(clause = "similarityTestId asc")
+	@OrderBy("similarityTestId asc")
 	public Set<SimilarityTest> getSimilarityTests() {
 		return similarityTests;
 	}
@@ -387,7 +387,7 @@ public class Task implements Serializable {
 	 */
 	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(clause = "pointcatid asc")
+	@OrderBy("pointcatid asc")
 	public Set<PointCategory> getPointCategories() {
 		return pointCategories;
 	}

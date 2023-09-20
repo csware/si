@@ -30,11 +30,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.OrderBy;
 
 @Entity
 @Table(name = "taskgroups")
@@ -96,7 +96,7 @@ public class TaskGroup implements Serializable {
 	 */
 	@OneToMany(mappedBy = "taskGroup")
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(clause = "taskid asc")
+	@OrderBy("taskid asc")
 	public List<Task> getTasks() {
 		return tasks;
 	}

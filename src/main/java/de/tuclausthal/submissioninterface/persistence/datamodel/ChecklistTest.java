@@ -23,11 +23,11 @@ import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Transient;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.OrderBy;
 
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.NullTest;
@@ -53,7 +53,7 @@ public class ChecklistTest extends Test {
 	 */
 	@OneToMany(mappedBy = "test")
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(clause = "checkitemid asc")
+	@OrderBy("checkitemid asc")
 	public List<ChecklistTestCheckItem> getCheckItems() {
 		return checkItems;
 	}

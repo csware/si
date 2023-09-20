@@ -13,7 +13,7 @@
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.compiler.release>11</maven.compiler.release>
 		<slf4j.version>2.0.9</slf4j.version>
-		<hibernate.version>6.2.7.Final</hibernate.version>
+		<hibernate.version>6.3.1.Final</hibernate.version>
 	</properties>
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
@@ -94,11 +94,26 @@
 			<version>${hibernate.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- Allow to run Hibernate's Metamodel Generator from maven -->
 		<!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
 		<dependency>
 			<groupId>jakarta.xml.bind</groupId>
 			<artifactId>jakarta.xml.bind-api</artifactId>
 			<version>4.0.0</version>
+		</dependency>
+		<!-- Allow to run Hibernate's Metamodel Generator from maven -->
+		<!-- https://mvnrepository.com/artifact/org.antlr/antlr4-runtime -->
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4-runtime</artifactId>
+			<version>4.10.1</version>
+		</dependency>
+		<!-- Auto-generated classes show errors without this in Eclipse, class jakarta.annotation.Generated missing -->
+		<!-- https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api -->
+		<dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+			<version>2.1.1</version>
 		</dependency>
 
 		<!-- Allow to export the schema -->

@@ -23,11 +23,11 @@ import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Transient;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.OrderBy;
 
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 
@@ -52,7 +52,7 @@ public class JavaAdvancedIOTest extends Test {
 	 */
 	@OneToMany(mappedBy = "test")
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(clause = "teststepid asc")
+	@OrderBy("teststepid asc")
 	public List<JavaAdvancedIOTestStep> getTestSteps() {
 		return testSteps;
 	}

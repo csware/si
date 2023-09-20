@@ -31,11 +31,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 import org.hibernate.annotations.DiscriminatorFormula;
-import org.hibernate.annotations.OrderBy;
 
 @Entity
 @Table(name = "users")
@@ -65,7 +65,7 @@ public class User implements Serializable {
 	 * @return the lectureParticipant
 	 */
 	@OneToMany(mappedBy = "user")
-	@OrderBy(clause = "id desc")
+	@OrderBy("id desc")
 	public Set<Participation> getLectureParticipant() {
 		return lectureParticipant;
 	}

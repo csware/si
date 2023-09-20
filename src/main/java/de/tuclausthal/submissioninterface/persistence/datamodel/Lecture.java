@@ -30,13 +30,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.OrderBy;
 
 @Entity
 @Table(name = "lectures")
@@ -133,7 +133,7 @@ public class Lecture implements Serializable {
 	 */
 	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(clause = "taskgroupid asc")
+	@OrderBy("taskgroupid asc")
 	public List<TaskGroup> getTaskGroups() {
 		return taskGroups;
 	}
@@ -150,7 +150,7 @@ public class Lecture implements Serializable {
 	 */
 	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(clause = "name asc")
+	@OrderBy("name asc")
 	public Set<Group> getGroups() {
 		return groups;
 	}
