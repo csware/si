@@ -23,6 +23,7 @@ import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,10 +71,10 @@ public class ClozeTaskType {
 						item = new MultipleChocieClozeItem(data);
 						break;
 					case "SHORTANSWER":
-						item = new ShortAnswerClozeItem(data);
+						item = new ShortAnswerClozeItem(data, false);
 						break;
 					case "SHORTANSWER_NC":
-						item = new ShortAnswerIgnoreCaseClozeItem(data);
+						item = new ShortAnswerClozeItem(data, true);
 						break;
 					case "NUMERICAL":
 						item = new NumericClozeItem(data);
@@ -177,6 +178,8 @@ public class ClozeTaskType {
 		final protected List<String> knownOptions = new ArrayList<>();
 		final protected List<String> knownPoints = new ArrayList<>();
 
+		protected BiFunction<String, String, Boolean> evalFct = String::equals;
+
 		public boolean isAutoGradeAble() {
 			return !knownOptions.isEmpty();
 		}
@@ -184,11 +187,11 @@ public class ClozeTaskType {
 		abstract public void appendToHTML(StringBuilder sb, int number, String data, boolean notEditable, boolean feedback);
 
 		public int calculatePoints(String input) {
+			if (!Normalizer.isNormalized(input, Form.NFC)) {
+				input = Normalizer.normalize(input, Form.NFC);
+			}
 			for (int i = 0; i < knownOptions.size(); ++i) {
-				if (!Normalizer.isNormalized(input, Form.NFC)) {
-					input = Normalizer.normalize(input, Form.NFC);
-				}
-				if (knownOptions.get(i).equals(input)) {
+				if (evalFct.apply(knownOptions.get(i), input)) {
 					return Util.convertToPoints(knownPoints.get(i));
 				}
 			}
@@ -281,7 +284,7 @@ public class ClozeTaskType {
 	public static class ShortAnswerClozeItem extends ClozeItem {
 		int longestEntry = 0;
 
-		public ShortAnswerClozeItem(String data) {
+		public ShortAnswerClozeItem(String data, boolean ignoreCase) {
 			if (data.isEmpty()) {
 				return;
 			}
@@ -296,6 +299,9 @@ public class ClozeTaskType {
 				if (longestEntry > MAX_INPUTLENGTH) {
 					throw new RuntimeException("Option is longer than allowed maxlength " + MAX_INPUTLENGTH + ": \"" + parsedOption.group(2) + "\"");
 				}
+			}
+			if (ignoreCase) {
+				evalFct = String::equalsIgnoreCase;
 			}
 		}
 
@@ -330,22 +336,6 @@ public class ClozeTaskType {
 				sb.append(Util.showPoints(calculatePoints(oldData)));
 				sb.append(" Punkt(e))</span>");
 			}
-		}
-	}
-
-	public static class ShortAnswerIgnoreCaseClozeItem extends ShortAnswerClozeItem {
-		public ShortAnswerIgnoreCaseClozeItem(String data) {
-			super(data);
-		}
-
-		@Override
-		public int calculatePoints(String input) {
-			for (int i = 0; i < knownOptions.size(); ++i) {
-				if (knownOptions.get(i).equalsIgnoreCase(input)) {
-					return Util.convertToPoints(knownPoints.get(i));
-				}
-			}
-			return 0;
 		}
 	}
 
