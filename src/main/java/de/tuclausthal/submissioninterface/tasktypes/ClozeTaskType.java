@@ -34,7 +34,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import de.tuclausthal.submissioninterface.util.Util;
 
 public class ClozeTaskType {
-	private final static Pattern itemsPattern = Pattern.compile("\\{((?:MULTICHOICE|SHORTANSWER|SHORTANSWER_NC|NUMERICAL).+?)\\}", Pattern.MULTILINE | Pattern.DOTALL);
+	private final static Pattern itemsPattern = Pattern.compile("\\{((?:MULTICHOICE|SHORTANSWER(?:_NC)?(?:_IS)?|NUMERICAL).+?)\\}", Pattern.MULTILINE | Pattern.DOTALL);
 	private final static Pattern itemPattern = Pattern.compile("^([^:]+):(.*$)", Pattern.MULTILINE | Pattern.DOTALL);
 
 	private final static String FORM_NAME = "cloze";
@@ -71,10 +71,16 @@ public class ClozeTaskType {
 						item = new MultipleChocieClozeItem(data);
 						break;
 					case "SHORTANSWER":
-						item = new ShortAnswerClozeItem(data, false);
+						item = new ShortAnswerClozeItem(data, false, false);
 						break;
 					case "SHORTANSWER_NC":
-						item = new ShortAnswerClozeItem(data, true);
+						item = new ShortAnswerClozeItem(data, true, false);
+						break;
+					case "SHORTANSWER_IS":
+						item = new ShortAnswerClozeItem(data, false, true);
+						break;
+					case "SHORTANSWER_NC_IS":
+						item = new ShortAnswerClozeItem(data, true, true);
 						break;
 					case "NUMERICAL":
 						item = new NumericClozeItem(data);
@@ -284,7 +290,7 @@ public class ClozeTaskType {
 	public static class ShortAnswerClozeItem extends ClozeItem {
 		int longestEntry = 0;
 
-		public ShortAnswerClozeItem(String data, boolean ignoreCase) {
+		public ShortAnswerClozeItem(String data, boolean ignoreCase, boolean ignoreWhitespace) {
 			if (data.isEmpty()) {
 				return;
 			}
@@ -302,6 +308,14 @@ public class ClozeTaskType {
 			}
 			if (ignoreCase) {
 				evalFct = String::equalsIgnoreCase;
+			}
+			if (ignoreWhitespace) {
+				final BiFunction<String, String, Boolean> oldEvalFct = evalFct;
+				evalFct = new BiFunction<>() {
+					public Boolean apply(String correct, String input) {
+						return oldEvalFct.apply(correct, input.replaceAll("\\s+", ""));
+					}
+				};
 			}
 		}
 

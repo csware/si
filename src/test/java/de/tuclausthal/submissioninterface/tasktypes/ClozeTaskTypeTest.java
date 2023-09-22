@@ -121,6 +121,39 @@ public class ClozeTaskTypeTest {
 	}
 
 	@Test
+	public void testRendgeringShortAnswerIgnoreWhitespace() {
+		List<String> results = Arrays.asList("a = b");
+		ClozeTaskType ch = new ClozeTaskType("a=1 und b=1, was gilt für a und b? {SHORTANSWER_IS:1=a=b}", results, false, false);
+		assertFalse(ch.hasError());
+		assertTrue(ch.isAutoGradeAble());
+		assertTrue(ch.isAutoGradeAble(0));
+		assertEquals("a&#61;1 und b&#61;1, was gilt für a und b? <input name=\"cloze0\" type=\"text\" class=\"cloze\" value=\"a &#61; b\" size=\"20\"" + ClozeTaskType.FIXED_LIMIT + " autocomplete=\"off\" />", ch.toHTML());
+		assertEquals(100, ch.calculatePoints(results));
+	}
+
+	@Test
+	public void testRendgeringShortAnswerIgnoreWhitespaceWrong() {
+		List<String> results = Arrays.asList("A = b");
+		ClozeTaskType ch = new ClozeTaskType("a=1 und b=1, was gilt für a und b? {SHORTANSWER_IS:1=a=b}", results, false, false);
+		assertFalse(ch.hasError());
+		assertTrue(ch.isAutoGradeAble());
+		assertTrue(ch.isAutoGradeAble(0));
+		assertEquals("a&#61;1 und b&#61;1, was gilt für a und b? <input name=\"cloze0\" type=\"text\" class=\"cloze\" value=\"A &#61; b\" size=\"20\"" + ClozeTaskType.FIXED_LIMIT + " autocomplete=\"off\" />", ch.toHTML());
+		assertEquals(0, ch.calculatePoints(results));
+	}
+
+	@Test
+	public void testRendgeringShortAnswerNoCaseIgnoreWhitespace() {
+		List<String> results = Arrays.asList("A = b");
+		ClozeTaskType ch = new ClozeTaskType("a=1 und b=1, was gilt für a und b? {SHORTANSWER_NC_IS:1=a=b}", results, false, false);
+		assertFalse(ch.hasError());
+		assertTrue(ch.isAutoGradeAble());
+		assertTrue(ch.isAutoGradeAble(0));
+		assertEquals("a&#61;1 und b&#61;1, was gilt für a und b? <input name=\"cloze0\" type=\"text\" class=\"cloze\" value=\"A &#61; b\" size=\"20\"" + ClozeTaskType.FIXED_LIMIT + " autocomplete=\"off\" />", ch.toHTML());
+		assertEquals(100, ch.calculatePoints(results));
+	}
+
+	@Test
 	public void testRendgeringNotAutoGradeAble() {
 		List<String> results = Arrays.asList("Perl");
 		ClozeTaskType ch = new ClozeTaskType("Nennen Sie eine Programmiersprache: {SHORTANSWER:}", results, false, false);
