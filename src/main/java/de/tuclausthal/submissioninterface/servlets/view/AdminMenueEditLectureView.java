@@ -81,7 +81,7 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<th>Gruppenweise Bewertung:</th>");
-			out.println("<td><input type=checkbox name=groupWise></td>");
+			out.println("<td><input type=checkbox name=groupWise" + ("groupWise".equals(lecture.getGradingMethod()) ? " checked" : "") + "></td>");
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<th>Lösungen müssen abgenommen werden:</th>");
