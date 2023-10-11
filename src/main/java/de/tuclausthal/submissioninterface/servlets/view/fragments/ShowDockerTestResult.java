@@ -46,7 +46,11 @@ public class ShowDockerTestResult { // similar code in ShowJavaAdvancedIOTestRes
 				if ((object.containsKey("exitedCleanly") && object.getBoolean("exitedCleanly") == false) || (object.containsKey("time-exceeded") && object.getBoolean("time-exceeded") == true) || (object.containsKey("missing-tests") && object.getBoolean("missing-tests") == true)) {
 					if (object.containsKey("stderr")) {
 						if (forStudent) { // TODO show stderr to students?
-							out.println("<b>Syntaxfehler:</b><br><pre>" + Util.escapeHTML(cleanup(object, object.getString("stderr"))) + "</pre>");
+							if (object.containsKey("exitCode") && object.getInt("exitCode") == 15) {
+								out.println("<b>Der zu testende Code ist syntaktisch nicht korrekt und kann daher nicht getestet werden.</b><br>");
+							} else {
+								out.println("<b>Syntaxfehler:</b><br><pre>" + Util.escapeHTML(cleanup(object, object.getString("stderr"))) + "</pre>");
+							}
 						} else {
 							out.println("<textarea id=\"testresultajtt1\" cols=80 rows=15>" + Util.escapeHTML(object.getString("stderr")) + "</textarea>");
 						}
