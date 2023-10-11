@@ -269,4 +269,16 @@ public class ClozeTaskTypeTest {
 		assertTrue(ch.hasError());
 		assertEquals("No options found in \"~\"", ch.getError());
 	}
+
+	@Test
+	public void testCalculatePointsTooManyOptions() {
+		List<String> results = Arrays.asList("Perl", "Haskell", "C");
+		ClozeTaskType ch = new ClozeTaskType("Nennen Sie eine Programmiersprache: {SHORTANSWER:1=Perl~1=PHP~0.5=HTML}\nNennen Sie eine weitere Programmiersprache: {SHORTANSWER:}", results, true, true);
+		assertFalse(ch.hasError());
+		assertFalse(ch.isAutoGradeAble());
+		assertTrue(ch.isAutoGradeAble(0));
+		assertFalse(ch.isAutoGradeAble(1));
+		assertEquals("Nennen Sie eine Programmiersprache: <input name=\"cloze0\" type=\"text\" class=\"cloze\" disabled=\"disabled\" value=\"Perl\" size=\"7\"" + ClozeTaskType.FIXED_LIMIT + " autocomplete=\"off\" /> <span class=\"cloze_points\">(➜ 1 Punkt(e))</span>\nNennen Sie eine weitere Programmiersprache: <input name=\"cloze1\" type=\"text\" class=\"cloze\" disabled=\"disabled\" value=\"Haskell\" size=\"10\"" + ClozeTaskType.FIXED_LIMIT + " autocomplete=\"off\" />", ch.toHTML());
+		assertEquals(100, ch.calculatePoints(results));
+	}
 }

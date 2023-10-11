@@ -193,7 +193,7 @@ public class ShowTaskTutorAllSubmissionsView extends HttpServlet {
 				int i = 0;
 				for (String result : results) {
 					out.print("<li><span class=\"cloze_studentsolution\">" + Util.escapeHTML(result) + "</span>");
-					if (clozeHelper.isAutoGradeAble(i)) {
+					if (i < clozeHelper.getClozeEntries() && clozeHelper.isAutoGradeAble(i)) {
 						out.print(" (" + Util.escapeHTML(clozeHelper.getCorrect(i)) + ") ➜ " + (clozeHelper.calculatePoints(i, result) > 0 ? "<span class=green>ok</span>" : "<span class=red>nicht ok</span>"));
 					}
 					out.println("</li>");

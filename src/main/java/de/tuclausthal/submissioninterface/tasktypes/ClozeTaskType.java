@@ -160,7 +160,8 @@ public class ClozeTaskType {
 
 	public int calculatePoints(List<String> results) {
 		int points = 0;
-		for (int i = 0; i < results.size(); ++i) {
+		final int size = Math.min(getClozeEntries(), results.size());
+		for (int i = 0; i < size; ++i) {
 			points += items.get(i).calculatePoints(results.get(i));
 		}
 		return points;
