@@ -152,3 +152,6 @@ ALTER TABLE checklisttestcheckitem add column (`correct` bit(1) NOT NULL DEFAULT
 
 -- fix missing auto increment
 ALTER TABLE `dockerteststep` CHANGE `teststepid` `teststepid` INT(11) NOT NULL AUTO_INCREMENT;
+
+-- testscounts attributes are not optional
+ALTER TABLE `testscounts` CHANGE `test_id` `test_id` INT(11) NOT NULL, CHANGE `user_uid` `user_uid` INT(11) NOT NULL; 

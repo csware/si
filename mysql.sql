@@ -445,8 +445,8 @@ DROP TABLE IF EXISTS `testscounts`;
 CREATE TABLE IF NOT EXISTS `testscounts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `timesExecuted` int(11) NOT NULL,
-  `test_id` int(11) DEFAULT NULL,
-  `user_uid` int(11) DEFAULT NULL,
+  `test_id` int(11) NOT NULL,
+  `user_uid` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FKF81042A58DBEBD80` (`test_id`),
   KEY `FKF81042A5D2AB5AAD` (`user_uid`)

@@ -64,7 +64,7 @@ public class TestCount implements Serializable {
 	/**
 	 * @return the test
 	 */
-	@ManyToOne
+	@ManyToOne(optional = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Test getTest() {
 		return test;
@@ -80,7 +80,7 @@ public class TestCount implements Serializable {
 	/**
 	 * @return the user
 	 */
-	@ManyToOne
+	@ManyToOne(optional = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	public User getUser() {
 		return user;
