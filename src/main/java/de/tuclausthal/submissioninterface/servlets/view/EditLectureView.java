@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -85,16 +85,15 @@ public class EditLectureView extends HttpServlet {
 		out.println("</table>");
 		out.println("</form>");
 
-		if (!lecture.isAllowSelfSubscribe()) {
-			out.println("<h2>Teilnehmende hinzufügen</h2>");
-			out.println("<form method=post action=\"" + Util.generateHTMLLink("?", response) + "\">");
-			out.println("<input type=hidden name=action value=addParticipants>");
-			out.println("<input type=hidden name=lecture value=" + lecture.getId() + ">");
-			out.println("<textarea name=mailadresses cols=60 placeholder=\"E-Mail-Adressen, eine pro Zeile\"></textarea><br>");
-			out.println("<input type=checkbox name=failonerror checked id=failonerror> <label for=failonerror>Bei Fehler abbrechen</label><br>");
-			out.println("<input type=submit value=\"Teilnehmende hinzufügen\">");
-			out.println("</form>");
-		}
+		out.println("<h2>Teilnehmende hinzufügen</h2>");
+		out.println("<form method=post action=\"" + Util.generateHTMLLink("?", response) + "\">");
+		out.println("<input type=hidden name=action value=addParticipants>");
+		out.println("<input type=hidden name=lecture value=" + lecture.getId() + ">");
+		out.println("<textarea name=mailadresses cols=60 placeholder=\"E-Mail-Adressen, eine pro Zeile\"></textarea><br>");
+		out.println("<input type=checkbox name=failonerror checked id=failonerror> <label for=failonerror>Bei Fehler abbrechen</label><br>");
+		out.println("<input type=submit value=\"Teilnehmende hinzufügen\">");
+		out.println("</form>");
+
 		template.printTemplateFooter();
 	}
 }

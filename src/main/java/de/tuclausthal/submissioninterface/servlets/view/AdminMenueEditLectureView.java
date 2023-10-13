@@ -168,16 +168,14 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			out.println("</tfoot>");
 			out.println("</table><p>");
 
-			if (!lecture.isAllowSelfSubscribe()) {
-				out.println("<h2>Teilnehmende hinzufügen</h2>");
-				out.println("<form method=post action=\"" + Util.generateHTMLLink("?", response) + "\">");
-				out.println("<input type=hidden name=action value=addParticipants>");
-				out.println("<input type=hidden name=lecture value=" + lecture.getId() + ">");
-				out.println("<textarea name=mailadresses cols=60 placeholder=\"E-Mail-Adressen, eine pro Zeile\"></textarea>");
-				out.println("<input type=checkbox name=failonerror checked id=failonerror> <label for=failonerror>Bei Fehler abbrechen</label>");
-				out.println("<input type=submit value=\"Teilnehmende hinzufügen\">");
-				out.println("</form>");
-			}
+			out.println("<h2>Teilnehmende hinzufügen</h2>");
+			out.println("<form method=post action=\"" + Util.generateHTMLLink("?", response) + "\">");
+			out.println("<input type=hidden name=action value=addParticipants>");
+			out.println("<input type=hidden name=lecture value=" + lecture.getId() + ">");
+			out.println("<textarea name=mailadresses cols=60 placeholder=\"E-Mail-Adressen, eine pro Zeile\"></textarea>");
+			out.println("<input type=checkbox name=failonerror checked id=failonerror> <label for=failonerror>Bei Fehler abbrechen</label>");
+			out.println("<input type=submit value=\"Teilnehmende hinzufügen\">");
+			out.println("</form>");
 			out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("?", response) + "\">zur Übersicht</a></div>");
 		}
 		template.printTemplateFooter();
