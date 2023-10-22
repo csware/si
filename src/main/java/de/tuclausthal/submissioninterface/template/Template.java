@@ -169,6 +169,7 @@ public abstract class Template {
 		/* @formatter:off */
 		addHead("<script>\ntinyMCE.init({" +
 							"selector: '" + StringEscapeUtils.escapeEcmaScript(selector) + "'," +
+							"promotion: false," +
 							"entity_encoding: 'raw',"+
 							"branding: false," +
 							"resize: 'both'," +
