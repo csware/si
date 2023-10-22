@@ -175,7 +175,7 @@ public abstract class Template {
 							"resize: 'both'," +
 							"browser_spellcheck: true," +
 							"block_formats: 'Paragraph=p;Header 1=h1;Header 2=h2;Header 3=h3'," + 
-							"plugins: \"table,code,codesample,link,lists,image,quickbars,media,searchreplace,charmap,nonbreaking\"," +
+							"plugins: \"table,code,codesample,link,lists,image,quickbars,media,searchreplace,charmap,nonbreaking,help\"," +
 							"content_css: " + Json.createArrayBuilder(getStyleSheetsForWYSIWYGEditor()).build().toString() + "," +
 							"formats: {" +
 							"    alignleft: { selector: 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes: 'left' }," +
@@ -192,7 +192,8 @@ public abstract class Template {
 							"    insert: { title: 'Insert', items: 'image link media codeexample | template charmap hr | nonbreaking' }," +
 							"    view: { title: 'View', items: 'code | visualaid' }," +
 							"    format: { title: 'Format', items: 'bold italic strikethrough superscript subscript | styles fontfamily fontsize align | forecolor backcolor | removeformat' }," +
-							"    table: { title: 'Table', items: 'inserttable | cell row column | tableprops deletetable' }" +
+							"    table: { title: 'Table', items: 'inserttable | cell row column | tableprops deletetable' }," +
+							"    help: { title: 'Help', items: 'help' }" +
 							"  },"+
 							"toolbar: [" +
 							"    { name: 'history', items: [ 'undo', 'redo' ] }," +
