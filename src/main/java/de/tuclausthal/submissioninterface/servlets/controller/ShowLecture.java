@@ -71,7 +71,7 @@ public class ShowLecture extends HttpServlet {
 		if (participation == null) {
 			if (lecture.getSemester() == Util.getCurrentSemester() && lecture.isAllowSelfSubscribe()) {
 				request.setAttribute("title", "Zugriff verweigert (403)");
-				request.setAttribute("message", "<p>Sie versuchen auf eine Veranstaltung zuzugreifen, für die Sie nicht angemeldet sind.</p><p>Sie können Sie <a href=\"" + Util.generateHTMLLink(SubscribeToLecture.class.getSimpleName(), response) + "\">hier</a> für die Veranstaltung anmelden.</p>");
+				request.setAttribute("message", "<p>Sie versuchen auf eine Veranstaltung zuzugreifen, für die Sie (noch) nicht angemeldet sind.</p><p><form method=post action=\"" + Util.generateHTMLLink(SubscribeToLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response) + "\"><input type=submit value=\"zur Veranstaltung anmelden\"></form></p>");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 				return;
 			}
