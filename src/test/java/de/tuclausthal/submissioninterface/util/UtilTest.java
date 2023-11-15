@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -212,6 +212,7 @@ public class UtilTest {
 		assertTrue(pattern.matcher("Hal lo+").matches()); // included in \\p{Sm}
 		assertTrue(pattern.matcher("Hal lo)").matches());
 		assertTrue(pattern.matcher("Hal lo=").matches()); // included in \\p{Sm}
+		assertTrue(pattern.matcher("Hallo, Du da)").matches());
 		assertTrue(pattern.matcher("Hallo").matches());
 		assertTrue(pattern.matcher("François").matches());
 		assertTrue(pattern.matcher("Halloü").matches());
