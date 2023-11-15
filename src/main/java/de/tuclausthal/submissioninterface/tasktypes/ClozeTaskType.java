@@ -49,7 +49,7 @@ public class ClozeTaskType {
 
 	public ClozeTaskType(String text, List<String> oldInput, boolean notEditable, boolean feedback) {
 		assert (notEditable || !feedback);
-		if (!Normalizer.isNormalized(text, Form.NFC)) {
+		if (!Normalizer.isNormalized(text, Form.NFC)) { // TODO: this might not be optimal, cf. <https://www.sbl-site.org/Fonts/SBLHebrewManualv1.5.pdf> page 9
 			text = Normalizer.normalize(text, Form.NFC);
 		}
 		Matcher m = itemsPattern.matcher(text);
