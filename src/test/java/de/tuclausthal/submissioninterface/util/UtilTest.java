@@ -193,6 +193,8 @@ public class UtilTest {
 		assertEquals("b%20la+some-_%23thing.test", Util.encodeURLPathComponent("b la+some-_#thing.test"));
 		assertEquals("b%20la+some/thing.test", Util.encodeURLPathComponent("b la+some/thing.test"));
 		assertEquals("%25UTF-8%C3%BC/Hello%20World.java", Util.encodeURLPathComponent("%UTF-8ü/Hello World.java"));
+		assertEquals("%F0%9D%84%A0.txt", Util.encodeURLPathComponent("\uD834\uDD20.txt")); // four byte UTF-8 character
+		assertEquals("U%CC%88bung%2002_Some%20Name.pdf", Util.encodeURLPathComponent("Übung 02_Some Name.pdf")); // NFD normalized unicode string
 	}
 
 	@Test

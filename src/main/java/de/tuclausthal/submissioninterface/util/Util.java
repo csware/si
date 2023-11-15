@@ -31,6 +31,10 @@ import java.io.StringWriter;
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.time.Clock;
@@ -120,9 +124,44 @@ public final class Util {
 		return generateHTMLLink(request.getServletContext().getContextPath() + "/" + uri, response);
 	}
 
+	private static final char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' }; // RFC3986 recommends uppercase letters
+
+	// based on java.net.URI::encode(String)
 	public static String encodeURLPathComponent(String path) {
+		int length = path.length();
+		if (length == 0)
+			return path;
+
 		try {
-			return new URI(null, null, path, null).toASCIIString();
+			String s = new URI(null, null, path, null).toString();
+
+			// Check whether we actually need to path encode the string
+			for (int i = 0;;) {
+				if (s.charAt(i) >= '\u0080')
+					break;
+				if (++i >= length)
+					return s;
+			}
+
+			ByteBuffer bb = null;
+			try {
+				bb = StandardCharsets.UTF_8.newEncoder().encode(CharBuffer.wrap(s));
+			} catch (CharacterCodingException x) {
+				assert false;
+			}
+
+			StringBuilder sb = new StringBuilder();
+			while (bb.hasRemaining()) {
+				int b = bb.get() & 0xff;
+				if (b >= 0x80) {
+					sb.append('%');
+					sb.append(hexDigits[(b >> 4) & 0x0f]);
+					sb.append(hexDigits[(b >> 0) & 0x0f]);
+				} else {
+					sb.append((char) b);
+				}
+			}
+			return sb.toString();
 		} catch (URISyntaxException e) {
 			LOG.error("Could not encode pathcomponent.", e);
 		}
