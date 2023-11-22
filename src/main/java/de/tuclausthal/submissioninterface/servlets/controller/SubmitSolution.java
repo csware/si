@@ -374,6 +374,7 @@ public class SubmitSolution extends HttpServlet {
 			logPath.mkdirs();
 			boolean skippedFiles = false;
 			Vector<String> uploadedFilenames = new Vector<>();
+			ArrayList<String> skippedFilenames = new ArrayList<>();
 			for (Part aFile : request.getParts()) {
 				if (!aFile.getName().equalsIgnoreCase("file")) {
 					continue;
@@ -386,6 +387,7 @@ public class SubmitSolution extends HttpServlet {
 					if (!m.matches()) {
 						LOG.debug("File does not match pattern (taskid={}): filename:\"{}\"; pattern:\"{}\"", task.getTaskid(), submittedFileName, pattern.pattern());
 						skippedFiles = true;
+						skippedFilenames.add(submittedFileName.toString());
 						fileName = null;
 						break;
 					}
@@ -434,12 +436,18 @@ public class SubmitSolution extends HttpServlet {
 			if (skippedFiles) {
 				template.printTemplateHeader("Nicht alle Dateien wurden verarbeitet.", task);
 				PrintWriter out = response.getWriter();
+				out.println("<p>");
 				if (uploadedFilenames.isEmpty()) {
 					out.println("Es konnte keine Datei verarbeitet werden, da der");
 				} else {
 					out.println("Nicht alle Dateien konnten verarbeitet werden, da mindestens ein");
 				}
-				out.println("Dateiname ungültig war bzw. nicht der Vorgabe entsprach (ist z.B. ein Klassenname vorgegeben, so muss die Datei genauso heißen, Tipp: Nur A-Z, a-z, 0-9, ., - und _ sind erlaubt. Evtl. muss der Dateiname mit einem Großbuchstaben beginnen und darf keine Leerzeichen enthalten).");
+				out.println("Dateiname ungültig war bzw. nicht der Vorgabe entsprach (ist z. B. ein Dateiname (oder Klassenname) vorgegeben, so muss die Datei exakt so heißen. Auf Groß- und Kleinschreibung muss geachtet werden. Evtl. enthält der Dateiname ein verbotenes Zeichen (prüfen Sie, dass der Dateiname keine Sonderzeichen enthält bzw. nur aus den folgenden Zeichen besteht: A-Z, a-z, 0-9, ., - und _).</p>");
+				out.println("<p>Nicht akzeptierte Dateinamen:<ul>");
+				for (String filename : skippedFilenames) {
+					out.println("<li>" + Util.escapeHTML(filename) + "</li>");
+				}
+				out.println("</ul>");
 				out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur Abgabeseite</a></div>");
 				out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">zurück zur Aufgabe</a></div>");
 				template.printTemplateFooter();
