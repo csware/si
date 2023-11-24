@@ -30,7 +30,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -373,7 +372,7 @@ public class SubmitSolution extends HttpServlet {
 			File logPath = new File(taskPath, "logs" + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
 			logPath.mkdirs();
 			boolean skippedFiles = false;
-			Vector<String> uploadedFilenames = new Vector<>();
+			ArrayList<String> uploadedFilenames = new ArrayList<>();
 			ArrayList<String> skippedFilenames = new ArrayList<>();
 			for (Part aFile : request.getParts()) {
 				if (!aFile.getName().equalsIgnoreCase("file")) {
@@ -557,8 +556,8 @@ public class SubmitSolution extends HttpServlet {
 		}
 	}
 
-	public static Vector<Pattern> getTaskFileNamePatterns(Task task, boolean ignoreTaskPattern) {
-		Vector<Pattern> patterns = new Vector<>(2);
+	public static ArrayList<Pattern> getTaskFileNamePatterns(Task task, boolean ignoreTaskPattern) {
+		ArrayList<Pattern> patterns = new ArrayList<>(2);
 		patterns.add(Pattern.compile(Configuration.GLOBAL_FILENAME_REGEXP));
 		if (!(task.getFilenameRegexp() == null || task.getFilenameRegexp().isEmpty() || ignoreTaskPattern)) {
 			patterns.add(Pattern.compile("^(" + task.getFilenameRegexp() + ")$"));
@@ -566,8 +565,8 @@ public class SubmitSolution extends HttpServlet {
 		return patterns;
 	}
 
-	private static Vector<Pattern> getArchiveFileNamePatterns(Task task) {
-		Vector<Pattern> patterns = new Vector<>(2);
+	private static ArrayList<Pattern> getArchiveFileNamePatterns(Task task) {
+		ArrayList<Pattern> patterns = new ArrayList<>(2);
 		patterns.add(Pattern.compile(Configuration.GLOBAL_ARCHIVEFILENAME_REGEXP));
 		if (task.getArchiveFilenameRegexp() != null && !task.getArchiveFilenameRegexp().isEmpty()) {
 			if (task.getArchiveFilenameRegexp().startsWith("^")) {
@@ -582,7 +581,7 @@ public class SubmitSolution extends HttpServlet {
 	public static boolean handleUploadedFile(Logger log, File submissionPath, Task task, String fileName, Part item, Charset zipFileCharset) throws IOException {
 		if (!"-".equals(task.getArchiveFilenameRegexp()) && (fileName.endsWith(".zip") || fileName.endsWith(".jar"))) {
 			boolean skippedFiles = false;
-			Vector<Pattern> patterns = getArchiveFileNamePatterns(task);
+			ArrayList<Pattern> patterns = getArchiveFileNamePatterns(task);
 			try (ZipInputStream zipFile = new ZipInputStream(item.getInputStream(), zipFileCharset)) {
 				ZipEntry entry = null;
 				while ((entry = zipFile.getNextEntry()) != null) {

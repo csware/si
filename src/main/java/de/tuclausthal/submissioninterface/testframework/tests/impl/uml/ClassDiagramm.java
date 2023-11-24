@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -59,17 +58,17 @@ public class ClassDiagramm extends UMLDiagramm {
 	private int numberOfAbstractions = 0;
 	private int numberOfInterfaces = 0;
 
-	private Vector<String> classes = new Vector<>();
-	private Vector<String> attributes = new Vector<>();
-	private Vector<String> methods = new Vector<>();
-	private Vector<String> associations = new Vector<>();
-	private Vector<String> interfaces = new Vector<>();
+	private ArrayList<String> classes = new ArrayList<>();
+	private ArrayList<String> attributes = new ArrayList<>();
+	private ArrayList<String> methods = new ArrayList<>();
+	private ArrayList<String> associations = new ArrayList<>();
+	private ArrayList<String> interfaces = new ArrayList<>();
 
-	private Vector<String> allocationOfAssociations = new Vector<>();
+	private ArrayList<String> allocationOfAssociations = new ArrayList<>();
 
-	private HashMap<String, Vector<String>> m2c = new HashMap<>();
-	private HashMap<String, Vector<String>> a2c = new HashMap<>();
-	private HashMap<String, Vector<String>> m2i = new HashMap<>();
+	private HashMap<String, ArrayList<String>> m2c = new HashMap<>();
+	private HashMap<String, ArrayList<String>> a2c = new HashMap<>();
+	private HashMap<String, ArrayList<String>> m2i = new HashMap<>();
 	private String as2c;
 
 	private HashMap<String, String> IDs = new HashMap<>();
@@ -121,39 +120,39 @@ public class ClassDiagramm extends UMLDiagramm {
 		return numberOfAbstractions;
 	}
 
-	public Vector<String> getClassNames() {
+	public ArrayList<String> getClassNames() {
 		return classes;
 	}
 
-	public Vector<String> getInterfaceNames() {
+	public ArrayList<String> getInterfaceNames() {
 		return interfaces;
 	}
 
-	public Vector<String> getAttributeNames() {
+	public ArrayList<String> getAttributeNames() {
 		return attributes;
 	}
 
-	public Vector<String> getMethodsNames() {
+	public ArrayList<String> getMethodsNames() {
 		return methods;
 	}
 
-	public Vector<String> getAssociationNames() {
+	public ArrayList<String> getAssociationNames() {
 		return associations;
 	}
 
-	public Vector<String> getAllocationOfAssociation() {
+	public ArrayList<String> getAllocationOfAssociation() {
 		return allocationOfAssociations;
 	}
 
-	public HashMap<String, Vector<String>> getM2C() {
+	public HashMap<String, ArrayList<String>> getM2C() {
 		return m2c;
 	}
 
-	public HashMap<String, Vector<String>> getA2C() {
+	public HashMap<String, ArrayList<String>> getA2C() {
 		return a2c;
 	}
 
-	public HashMap<String, Vector<String>> getM2I() {
+	public HashMap<String, ArrayList<String>> getM2I() {
 		return m2i;
 	}
 
@@ -252,8 +251,8 @@ public class ClassDiagramm extends UMLDiagramm {
 			}
 			AttributesMethods attributesMethods = extractAttributesMethods(node);
 			if (!name.getNodeValue().isEmpty()) {
-				a2c.put(name.getNodeValue(), new Vector<>(attributesMethods.attributes));
-				m2c.put(name.getNodeValue(), new Vector<>(attributesMethods.methods));
+				a2c.put(name.getNodeValue(), new ArrayList<>(attributesMethods.attributes));
+				m2c.put(name.getNodeValue(), new ArrayList<>(attributesMethods.methods));
 			}
 		}
 	}
@@ -269,7 +268,7 @@ public class ClassDiagramm extends UMLDiagramm {
 			}
 			AttributesMethods attributesMethods = extractAttributesMethods(node);
 			if (!name.getNodeValue().isEmpty()) {
-				m2i.put(name.getNodeValue(), new Vector<>(attributesMethods.methods));
+				m2i.put(name.getNodeValue(), new ArrayList<>(attributesMethods.methods));
 			}
 		}
 	}

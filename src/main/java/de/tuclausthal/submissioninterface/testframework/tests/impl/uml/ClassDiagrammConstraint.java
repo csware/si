@@ -20,7 +20,7 @@
 package de.tuclausthal.submissioninterface.testframework.tests.impl.uml;
 
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Diese Klasse vergleicht die XMI Datei mit Klassendiagramminhalt
@@ -140,19 +140,19 @@ public class ClassDiagrammConstraint {
 	}
 
 	public String checkNamesOfClassesAndAttributes() {
-		Vector<String> result1 = new Vector<>();
-		Vector<String> result2 = new Vector<>();
+		ArrayList<String> result1 = new ArrayList<>();
+		ArrayList<String> result2 = new ArrayList<>();
 		for (int i = 0; i < cd1.getClassNames().size(); i++) {
-			result1.add(cd1.getClassNames().elementAt(i));
+			result1.add(cd1.getClassNames().get(i));
 		}
 		for (int i = 0; i < cd1.getAttributeNames().size(); i++) {
-			result1.add(cd1.getAttributeNames().elementAt(i));
+			result1.add(cd1.getAttributeNames().get(i));
 		}
 		for (int i = 0; i < cd2.getClassNames().size(); i++) {
-			result2.add(cd2.getClassNames().elementAt(i));
+			result2.add(cd2.getClassNames().get(i));
 		}
 		for (int i = 0; i < cd2.getAttributeNames().size(); i++) {
-			result2.add(cd2.getAttributeNames().elementAt(i));
+			result2.add(cd2.getAttributeNames().get(i));
 		}
 		if (result2.containsAll(result1)) {
 			return "Klassennamen und Attributsnamen okay";
@@ -206,8 +206,8 @@ public class ClassDiagrammConstraint {
 
 	public String checkPairsOfAssociations() {
 		if (cd1.getNumberOfAbstractions() == cd2.getNumberOfAbstractions() && checkNumberOfAssociations().equals("Anzahl der Assoziationen okay.")) {
-			Vector<String> v1 = cd1.getAllocationOfAssociation();
-			Vector<String> v2 = cd2.getAllocationOfAssociation();
+			ArrayList<String> v1 = cd1.getAllocationOfAssociation();
+			ArrayList<String> v2 = cd2.getAllocationOfAssociation();
 
 			HashMap<Integer, String> h1 = new HashMap<>();
 			HashMap<Integer, String> h2a = new HashMap<>();
