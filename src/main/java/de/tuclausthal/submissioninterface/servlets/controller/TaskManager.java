@@ -151,7 +151,7 @@ public class TaskManager extends HttpServlet {
 			request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
 
 			getServletContext().getNamedDispatcher(TaskManagerView.class.getSimpleName()).forward(request, response);
-		} else if ((("editTaskGroup".equals(request.getParameter("action")) && request.getParameter("taskgroupid") != null) || (request.getParameter("action").equals("newTaskGroup") && request.getParameter("lecture") != null))) {
+		} else if ((("editTaskGroup".equals(request.getParameter("action")) && request.getParameter("taskgroupid") != null) || ("newTaskGroup".equals(request.getParameter("action")) && request.getParameter("lecture") != null))) {
 			boolean editTaskGroup = request.getParameter("action").equals("editTaskGroup");
 			TaskGroup taskGroup;
 			if (editTaskGroup == true) {
