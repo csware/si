@@ -19,6 +19,7 @@ Please read the whole procedure in advance to executing it.
 - Install MariaDB
   - For a development machine on Windows [XAMPP](https://www.apachefriends.org/) is recommended which comes with [phpMyAdmin](https://www.phpmyadmin.net/) a nice administration interface for MariaDB
 - For development [Eclipse](https://www.eclipse.org/downloads/packages/) (IDE for Enterprise Java Developers) >= 2022-09 is recommended
+  - It may be necessary to build GATE once using the Maven compile goal to ensure that all required dependencies are available locally (in particular, hibernate-jpamodelgen).
 - For production use, it is recommended to run Apache Tomcat behind Apache httpd, connecting Tomcat using [mod_proxy_ajp](https://httpd.apache.org/docs/2.4/mod/mod_proxy_ajp.html), terminate SSL/TLS in httpd and probably use Shibboleth for Single-Sign on.
   - Configure the VHost with mod_proxy_ajp:
     ```
