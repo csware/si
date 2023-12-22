@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021, 2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.tuclausthal.submissioninterface.dupecheck.jplag.JPlagAdapter;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.controller.TaskManager;
@@ -52,7 +53,7 @@ public class DupeCheckFormView extends HttpServlet {
 		template.printEditTaskTemplateHeader("Ähnlichkeitsprüfung", task);
 		PrintWriter out = response.getWriter();
 
-		if (new File(Configuration.getInstance().getDataPath(), "jplag.jar").exists()) {
+		if (new File(Configuration.getInstance().getDataPath(), JPlagAdapter.JPLAG_JAR).exists()) {
 			out.println("<h2>JPlag Test</h2>");
 			out.println("<form action=\"" + Util.generateHTMLLink("?action=savesimilaritytest", response) + "\" method=post>");
 			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");

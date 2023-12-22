@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2020-2022 Sven Strickroth <email@cs-ware.de> 
+ *  Copyright (C) 2020-2023 Sven Strickroth <email@cs-ware.de> 
  *
  * This file is part of the GATE.
  *
@@ -148,7 +148,7 @@ public class JPlagAdapter extends DupeCheck {
 					tx.commit();
 				}
 			} else {
-				LOG.error("Executing \"" + new File(path, "jplag.jar").toString() + "\" failed: Exit code: " + exitValue);
+				LOG.error("Executing \"" + new File(path, JPLAG_JAR).toString() + "\" failed: Exit code: " + exitValue);
 				LOG.error(outputGrapper.getStdErrBuffer().toString());
 			}
 		} catch (Exception e) {
