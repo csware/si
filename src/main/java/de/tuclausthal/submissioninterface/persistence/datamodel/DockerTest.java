@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -41,7 +42,7 @@ public class DockerTest extends Test {
 	private static final long serialVersionUID = 1L;
 
 	private String preparationShellCode;
-	private List<DockerTestStep> testSteps;
+	private List<DockerTestStep> testSteps = new ArrayList<>();
 
 	@Override
 	@Transient

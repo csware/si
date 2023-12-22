@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -39,7 +40,7 @@ import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 public class JavaAdvancedIOTest extends Test {
 	private static final long serialVersionUID = 1L;
 
-	private List<JavaAdvancedIOTestStep> testSteps;
+	private List<JavaAdvancedIOTestStep> testSteps = new ArrayList<>();
 
 	@Override
 	@Transient

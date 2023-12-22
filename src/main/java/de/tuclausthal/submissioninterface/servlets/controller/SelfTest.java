@@ -47,6 +47,8 @@ import org.slf4j.LoggerFactory;
 import de.tuclausthal.submissioninterface.dupecheck.jplag.JPlagAdapter;
 import de.tuclausthal.submissioninterface.dupecheck.plaggie.PlaggieAdapter;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep;
+import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTestStep;
 import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
@@ -309,6 +311,33 @@ public class SelfTest extends HttpServlet {
 		} catch (Exception e) {
 			testresults.add(new TestResult("Java-Funktionstest erfolgreich.", Util.escapeHTML(e.getMessage()), false));
 			LOG.error("Java function test failed.", e);
+			Util.recursiveDelete(tempDir);
+			return;
+		}
+
+		try {
+			fw = new FileWriter(new File(tempDir, "Triangle.java"));
+			fw.write("public class Triangle {\r\n" + "	static void drawTriangle(int sizeOfTriangle) {\r\n" + "		for (int i = 0; i < sizeOfTriangle; i++) {\r\n" + "			for (int j = 0; j <= i; j++) {\r\n" + "				System.out.print(\"*\");\r\n" + "			}\r\n" + "			System.out.println();\r\n" + "		}\r\n" + "	}\r\n" + "}");
+			fw.close();
+
+			JavaAdvancedIOTest javaAdvancedIOTest = new JavaAdvancedIOTest();
+			javaAdvancedIOTest.getTestSteps().add(new JavaAdvancedIOTestStep(javaAdvancedIOTest, "Empty", "Triangle.drawTriangle(0);", ""));
+			javaAdvancedIOTest.getTestSteps().add(new JavaAdvancedIOTestStep(javaAdvancedIOTest, "One star", "Triangle.drawTriangle(1);", "*"));
+			javaAdvancedIOTest.getTestSteps().add(new JavaAdvancedIOTestStep(javaAdvancedIOTest, "Two stars", "Triangle.drawTriangle(2);", "*\n**"));
+			javaAdvancedIOTest.getTestSteps().add(new JavaAdvancedIOTestStep(javaAdvancedIOTest, "Four stars", "Triangle.drawTriangle(4);", "*\n**\n***\n****"));
+
+			de.tuclausthal.submissioninterface.testframework.tests.impl.JavaAdvancedIOTest javaFunctionTest = new de.tuclausthal.submissioninterface.testframework.tests.impl.JavaAdvancedIOTest(javaAdvancedIOTest);
+			TestExecutorTestResult result = new TestExecutorTestResult();
+			javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
+			testresults.add(new TestResult("JavaAdvancedIOTest erfolgreich.", Util.escapeHTML(result.getTestOutput()), result.isTestPassed()));
+
+			javaAdvancedIOTest.getTestSteps().add(new JavaAdvancedIOTestStep(javaAdvancedIOTest, "Four stars", "Triangle.drawTriangle(4);", "something else"));
+			result = new TestExecutorTestResult();
+			javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
+			testresults.add(new TestResult("JavaAdvancedIOTest erkennt erfolgreich Fehler.", Util.escapeHTML(result.getTestOutput()), !result.isTestPassed()));
+		} catch (Exception e) {
+			testresults.add(new TestResult("JavaAdvancedIOTest erfolgreich.", Util.escapeHTML(e.getMessage()), false));
+			LOG.error("JavaAdvancedIO test failed.", e);
 			Util.recursiveDelete(tempDir);
 			return;
 		}

@@ -20,14 +20,26 @@ package de.tuclausthal.submissioninterface.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.Part;
+
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class UtilTest {
 	@Test
@@ -279,5 +291,329 @@ public class UtilTest {
 		assertFalse(pattern.matcher("a/b").matches());
 		assertFalse(pattern.matcher("Hal lo/").matches());
 		assertFalse(pattern.matcher("Hal lo\\").matches());
+		assertFalse(pattern.matcher("").matches());
+	}
+
+	@Test
+	public void testLoadFileNotFound() {
+		assertThrows(IOException.class, () -> Util.loadFile(new File("does-not-exist")));
+	}
+
+	@Test
+	public void testLoadFileUTF8() throws IOException {
+		assertEquals("import java.util.Scanner; /* notwendig, damit der Scanner funktioniert */\n\npublic class TriangleOutput {\n	public static void main(String[] args) {\n		Scanner scanner = new Scanner(System.in); /* öffnet die Konsole */\n		System.out.println(\"Bitte geben Sie die Höhe des Dreiecks ein: \");\n		int triangleSize = scanner.nextInt(); /* liest einen Integer von der Konsole */\n		drawTriangle(triangleSize);\n		scanner.close(); /* schließt die Konsole */\n	}\n\n	static void drawTriangle(int sizeOfTriangle) {\n		for (int i = 0; i < sizeOfTriangle; i++) {\n			for (int j = 0; j <= i; j++) {\n				System.out.print(\"*\");\n			}\n			System.out.println();\n		}\n	}\n}\n", Util.loadFile(new File("src/test/resources/TriangleOutput.java")).toString());
+	}
+
+	@Test
+	public void testLoadFileISO88591() throws IOException {
+		assertEquals("import java.util.Scanner; /* notwendig, damit der Scanner funktioniert */\n\npublic class TriangleOutput {\n	public static void main(String[] args) {\n		Scanner scanner = new Scanner(System.in); /* �ffnet die Konsole */\n		System.out.println(\"Bitte geben Sie die H�he des Dreiecks ein: \");\n		int triangleSize = scanner.nextInt(); /* liest einen Integer von der Konsole */\n		drawTriangle(triangleSize);\n		scanner.close(); /* schlie�t die Konsole */\n	}\n\n	static void drawTriangle(int sizeOfTriangle) {\n		for (int i = 0; i < sizeOfTriangle; i++) {\n			for (int j = 0; j <= i; j++) {\n				System.out.print(\"*\");\n			}\n			System.out.println();\n		}\n	}\n}\n", Util.loadFile(new File("src/test/resources/TriangleOutputCP850.java")).toString());
+	}
+
+	@Test
+	public void testListFilesAsRelativeStringListNonExisting() {
+		assertTrue(Util.listFilesAsRelativeStringList(new File("does-not-exist")).isEmpty());
+	}
+
+	@Test
+	public void testListFilesAsRelativeStringListEmptyDir(@TempDir File tempDir) {
+		assertTrue(Util.listFilesAsRelativeStringList(tempDir).isEmpty());
+	}
+
+	@Test
+	public void testListFilesAsRelativeStringList(@TempDir File tempDir) throws IOException {
+		new File(tempDir, "emptyDirectory").mkdir();
+		File subSubDirectory = new File(tempDir, "subDirectory/SubSubDirectory");
+		subSubDirectory.mkdirs();
+		FileUtils.copyFile(new File("src/test/resources/TriangleOutput.java"), new File(tempDir, "a.txt"));
+		FileUtils.copyFile(new File("src/test/resources/TriangleOutput.java"), new File(subSubDirectory, "ü.txt"));
+
+		List<String> submittedFiles = Util.listFilesAsRelativeStringList(tempDir);
+		assertEquals(2, submittedFiles.size());
+		Collections.sort(submittedFiles);
+		assertEquals("a.txt", submittedFiles.get(0));
+		assertEquals("subDirectory/SubSubDirectory/ü.txt", submittedFiles.get(1).replace('\\', '/'));
+	}
+
+	@Test
+	public void testListFilesAsRelativeStringListWithNoExclude(@TempDir File tempDir) throws IOException {
+		File subDirectory = new File(tempDir, "subDirectory");
+		subDirectory.mkdir();
+		FileUtils.copyFile(new File("src/test/resources/TriangleOutput.java"), new File(tempDir, "HelloWorld.java"));
+		FileUtils.copyFile(new File("src/test/resources/TriangleOutput.java"), new File(subDirectory, "Something.java"));
+		List<String> submittedFiles = Util.listFilesAsRelativeStringList(tempDir, Collections.emptyList());
+		assertEquals(2, submittedFiles.size());
+		Collections.sort(submittedFiles);
+		assertEquals("HelloWorld.java", submittedFiles.get(0).replace('\\', '/'));
+		assertEquals("subDirectory/Something.java", submittedFiles.get(1).replace('\\', '/'));
+	}
+
+	@Test
+	public void testListFilesAsRelativeStringListWithExcludeAllExcluded(@TempDir File tempDir) throws IOException {
+		File subDirectory = new File(tempDir, "subDirectory");
+		subDirectory.mkdir();
+		FileUtils.copyFile(new File("src/test/resources/TriangleOutput.java"), new File(tempDir, "HelloWorld.java"));
+		FileUtils.copyFile(new File("src/test/resources/TriangleOutput.java"), new File(subDirectory, "HelloWorld.java"));
+		assertTrue(Util.listFilesAsRelativeStringList(tempDir, List.of("HelloWorld.java")).isEmpty());
+	}
+
+	@Test
+	public void testListFilesAsRelativeStringListWithExcludeNonExisting() {
+		assertTrue(Util.listFilesAsRelativeStringList(new File("does-not-exist"), List.of("HelloWorld.java")).isEmpty());
+	}
+
+	@Test
+	public void testListFilesAsRelativeStringListWithExcludeEmptyDir(@TempDir File tempDir) {
+		new File(tempDir, "emptyDirectory").mkdir();
+		assertTrue(Util.listFilesAsRelativeStringList(tempDir, List.of("HelloWorld.java")).isEmpty());
+	}
+
+	@Test
+	public void testListFilesAsRelativeStringListWithExclude(@TempDir File tempDir) throws IOException {
+		new File(tempDir, "emptyDirectory").mkdir();
+		File subSubDirectory = new File(tempDir, "subDirectory/SubSubDirectory");
+		subSubDirectory.mkdirs();
+		FileUtils.copyFile(new File("src/test/resources/TriangleOutput.java"), new File(tempDir, "a.txt"));
+		FileUtils.copyFile(new File("src/test/resources/TriangleOutput.java"), new File(subSubDirectory, "ü.txt"));
+
+		List<String> submittedFiles1 = Util.listFilesAsRelativeStringList(tempDir, List.of("a.txt"));
+		assertEquals(1, submittedFiles1.size());
+		assertEquals("subDirectory/SubSubDirectory/ü.txt", submittedFiles1.get(0).replace('\\', '/'));
+
+		List<String> submittedFiles2 = Util.listFilesAsRelativeStringList(tempDir, List.of("ü.txt"));
+		assertEquals(1, submittedFiles2.size());
+		assertEquals("a.txt", submittedFiles2.get(0));
+
+		List<String> submittedFiles3 = Util.listFilesAsRelativeStringList(tempDir, List.of("SubSubDirectory/ü.txt"));
+		assertEquals(2, submittedFiles3.size());
+		Collections.sort(submittedFiles3);
+		assertEquals("a.txt", submittedFiles3.get(0));
+		assertEquals("subDirectory/SubSubDirectory/ü.txt", submittedFiles3.get(1).replace('\\', '/'));
+	}
+
+	@Test
+	public void testRecursiveDeleteEmptySubDirectoriesEmpty(@TempDir File tempDir) {
+		Util.recursiveDeleteEmptySubDirectories(tempDir);
+		assertTrue(tempDir.isDirectory());
+	}
+
+	@Test
+	public void testRecursiveDeleteEmptySubDirectoriesSingleEmptySubDirectory(@TempDir File tempDir) {
+		File emptySubDir = new File(tempDir, "emptyDirectory");
+		assertTrue(emptySubDir.mkdir());
+		Util.recursiveDeleteEmptySubDirectories(tempDir);
+		assertFalse(emptySubDir.exists());
+		assertTrue(tempDir.isDirectory());
+	}
+
+	@Test
+	public void testRecursiveDeleteEmptySubDirectoriesFileInSubDirectoryWithEmptySubDirectory(@TempDir File tempDir) throws IOException {
+		File subDirectory = new File(tempDir, "subDirectory");
+		File subSubDirectory = new File(subDirectory, "SubSubDirectory");
+		assertTrue(subSubDirectory.mkdirs());
+		File subDirFile = new File(subDirectory, "a.txt");
+		FileUtils.copyFile(new File("src/test/resources/TriangleOutput.java"), subDirFile);
+		Util.recursiveDeleteEmptySubDirectories(tempDir);
+		assertFalse(subSubDirectory.exists());
+		assertTrue(subDirFile.isFile());
+		assertTrue(subDirectory.isDirectory());
+		assertTrue(tempDir.isDirectory());
+	}
+
+	@Test
+	public void testRecursiveDeleteEmptySubDirectoriesEmptySubSubDirectory(@TempDir File tempDir) {
+		File subDirectory = new File(tempDir, "subDirectory");
+		File subSubDirectory = new File(subDirectory, "SubSubDirectory");
+		assertTrue(subSubDirectory.mkdirs());
+		Util.recursiveDeleteEmptySubDirectories(tempDir);
+		assertFalse(subSubDirectory.exists());
+		assertFalse(subDirectory.exists());
+		assertTrue(tempDir.isDirectory());
+	}
+
+	@Test
+	public void testRecursiveDeleteEmptyDirectoriesEmpty(@TempDir File tempDir) {
+		File emptySubDir = new File(tempDir, "emptyDirectory");
+		assertTrue(emptySubDir.mkdir());
+		Util.recursiveDeleteEmptyDirectories(emptySubDir);
+		assertFalse(emptySubDir.exists());
+		assertTrue(tempDir.isDirectory());
+	}
+
+	@Test
+	public void testRecursiveDeleteEmptyDirectoriesNotEmpty(@TempDir File tempDir) throws IOException {
+		File file = new File(tempDir, "a.txt");
+		FileUtils.copyFile(new File("src/test/resources/TriangleOutput.java"), file);
+		Util.recursiveDeleteEmptyDirectories(tempDir);
+		assertTrue(file.isFile());
+		assertTrue(tempDir.isDirectory());
+	}
+
+	@Test
+	public void testRecursiveDeleteEmptyDirectoriesEmptySubDirectory(@TempDir File tempDir) {
+		File workDir = new File(tempDir, "workDir");
+		File emptySubDir = new File(workDir, "emptyDirectory");
+		assertTrue(emptySubDir.mkdirs());
+		Util.recursiveDeleteEmptyDirectories(workDir);
+		assertFalse(emptySubDir.exists());
+		assertFalse(workDir.exists());
+		assertTrue(tempDir.isDirectory());
+	}
+
+	@Test
+	public void testRecursiveDeleteEmptyDirectoriesFileInSubDirectory(@TempDir File tempDir) throws IOException {
+		File subDirectory = new File(tempDir, "subDirectory");
+		File subSubDirectory = new File(subDirectory, "SubSubDirectory");
+		assertTrue(subSubDirectory.mkdirs());
+		File subDirFile = new File(subDirectory, "a.txt");
+		FileUtils.copyFile(new File("src/test/resources/TriangleOutput.java"), subDirFile);
+		Util.recursiveDeleteEmptyDirectories(tempDir);
+		assertFalse(subSubDirectory.exists());
+		assertTrue(subDirectory.isDirectory());
+		assertTrue(subDirFile.isFile());
+		assertTrue(tempDir.isDirectory());
+	}
+
+	@Test
+	public void testRecursiveDeleteEmpty(@TempDir File tempDir) {
+		File emptySubDir = new File(tempDir, "emptyDirectory");
+		assertTrue(emptySubDir.mkdir());
+		Util.recursiveDelete(emptySubDir);
+		assertFalse(emptySubDir.exists());
+		assertTrue(tempDir.isDirectory());
+	}
+
+	@Test
+	public void testRecursiveDeleteDirectoryStructure(@TempDir File tempDir) throws IOException {
+		File workDir = new File(tempDir, "workDir");
+		File subDirectory = new File(workDir, "subDirectory");
+		File subSubDirectory = new File(subDirectory, "SubSubDirectory");
+		assertTrue(subSubDirectory.mkdirs());
+		File subDirFile = new File(subDirectory, "a.txt");
+		FileUtils.copyFile(new File("src/test/resources/TriangleOutput.java"), subDirFile);
+		Util.recursiveDelete(workDir);
+		assertFalse(workDir.exists());
+		assertTrue(tempDir.isDirectory());
+	}
+
+	@Test
+	public void testRecursiveDeleteFile(@TempDir File tempDir) throws IOException {
+		File subDirectory = new File(tempDir, "subDirectory");
+		assertTrue(subDirectory.mkdirs());
+		File file = new File(tempDir, "a.txt");
+		FileUtils.copyFile(new File("src/test/resources/TriangleOutput.java"), file);
+		Util.recursiveDelete(file);
+		assertFalse(file.exists());
+		assertTrue(subDirectory.isDirectory());
+		assertTrue(tempDir.isDirectory());
+	}
+
+	@Test
+	public void testRecursiveCopyEmptyDirectory(@TempDir File tempDir) throws IOException {
+		File source = new File(tempDir, "source");
+		File destination = new File(tempDir, "destination");
+		assertTrue(source.mkdir());
+		Util.recursiveCopy(source, destination);
+		assertTrue(destination.isDirectory());
+		assertEquals(0, destination.listFiles().length);
+	}
+
+	@Test
+	public void testRecursiveCopyFile(@TempDir File tempDir) throws IOException {
+		File source = new File("src/test/resources/TriangleOutput.java");
+		File destination = new File(tempDir, "destination");
+		Util.recursiveCopy(source, destination);
+		assertTrue(destination.isFile());
+		assertEquals(source.length(), destination.length());
+		String knownGoodContent = FileUtils.readFileToString(source, Charset.defaultCharset());
+		String destinationContent = FileUtils.readFileToString(destination, Charset.defaultCharset());
+		assertEquals(knownGoodContent, destinationContent);
+	}
+
+	@Test
+	public void testRecursiveCopy(@TempDir File tempDir) throws IOException {
+		File source = new File("src/test");
+		File destination = new File(tempDir, "destination");
+		Util.recursiveCopy(source, destination);
+		assertTrue(destination.isDirectory());
+
+		List<String> sourceFiles = Util.listFilesAsRelativeStringList(source);
+		List<String> destinationFiles = Util.listFilesAsRelativeStringList(destination);
+		assertEquals(sourceFiles, destinationFiles);
+	}
+
+	@Test
+	public void testRecursiveCopyDestinationEsists(@TempDir File tempDir) throws IOException {
+		File source = new File("src/test");
+		File destination = new File(tempDir, "destination");
+		destination.mkdir();
+		Util.recursiveCopy(source, destination);
+		assertTrue(destination.isDirectory());
+
+		List<String> sourceFiles = Util.listFilesAsRelativeStringList(source);
+		List<String> destinationFiles = Util.listFilesAsRelativeStringList(destination);
+		assertEquals(sourceFiles, destinationFiles);
+	}
+
+	@Test
+	public void testGetUploadFileName() {
+		class PartForFilenameTest implements Part {
+			private String filename;
+
+			public PartForFilenameTest(String filename) {
+				this.filename = filename;
+			}
+
+			@Override
+			public InputStream getInputStream() throws IOException {
+				return null;
+			}
+
+			@Override
+			public String getContentType() {
+				return null;
+			}
+
+			@Override
+			public String getName() {
+				return null;
+			}
+
+			@Override
+			public String getSubmittedFileName() {
+				return filename;
+			}
+
+			@Override
+			public long getSize() {
+				return 0;
+			}
+
+			@Override
+			public void write(String fileName) throws IOException {}
+
+			@Override
+			public void delete() throws IOException {}
+
+			@Override
+			public String getHeader(String name) {
+				return null;
+			}
+
+			@Override
+			public Collection<String> getHeaders(String name) {
+				return null;
+			}
+
+			@Override
+			public Collection<String> getHeaderNames() {
+				return null;
+			}
+		}
+
+		assertEquals(null, Util.getUploadFileName(new PartForFilenameTest(null)));
+		assertEquals("", Util.getUploadFileName(new PartForFilenameTest("")));
+		assertEquals("something.extension", Util.getUploadFileName(new PartForFilenameTest("something.extension")));
+		assertEquals("something.extension", Util.getUploadFileName(new PartForFilenameTest("somedir/something.extension")));
+		assertEquals("", Util.getUploadFileName(new PartForFilenameTest("somedir/")));
 	}
 }

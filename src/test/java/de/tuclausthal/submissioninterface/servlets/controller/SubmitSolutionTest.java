@@ -244,4 +244,24 @@ public class SubmitSolutionTest {
 		assertEquals(3104, createdFile.length());
 		assertDoesNotThrow(() -> assertTrue(FileUtils.contentEquals(file, createdFile)));
 	}
+
+	@Test
+	void testHandleUploadedFileZIPWithRelativePathUp(@TempDir File tempDir) {
+		final File destDir = new File(tempDir, "destination");
+		assertTrue(destDir.mkdir());
+
+		Task task = new Task();
+		task.setArchiveFilenameRegexp(".+");
+
+		final File file = new File("src/test/resources/zip-rel-one-up.zip");
+		assertDoesNotThrow(() -> assertFalse(SubmitSolution.handleUploadedFile(new NOPLoggerFactory().getLogger(""), destDir, task, "some-zip.zip", new MyPartImpl(file), Charset.forName("cp850"))));
+		assertEquals(2, destDir.listFiles().length);
+		File createdFile1 = new File(destDir, "simple1.txt");
+		assertTrue(createdFile1.isFile());
+		File createdFile2 = new File(destDir, "child/simple2.txt");
+		assertTrue(createdFile2.isFile());
+		assertEquals(1, tempDir.listFiles().length);
+		File createdFile3 = new File(tempDir, "simple3.txt");
+		assertFalse(createdFile3.exists());
+	}
 }
