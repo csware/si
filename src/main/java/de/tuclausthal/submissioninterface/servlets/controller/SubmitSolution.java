@@ -363,9 +363,7 @@ public class SubmitSolution extends HttpServlet {
 
 		File taskPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
 		File path = new File(taskPath, String.valueOf(submission.getSubmissionid()));
-		if (path.exists() == false) {
-			path.mkdirs();
-		}
+		Util.ensurePathExists(path);
 
 		if (file != null) {
 			LogEntry logEntry = new LogDAO(session).createLogUploadEntry(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null);
@@ -616,9 +614,7 @@ public class SubmitSolution extends HttpServlet {
 						Util.lowerCaseExtension(archivedFileName);
 						// TODO: relocate java-files from jar/zip archives?
 						File fileToCreate = new File(submissionPath, archivedFileName.toString());
-						if (!fileToCreate.getParentFile().exists()) {
-							fileToCreate.getParentFile().mkdirs();
-						}
+						Util.ensurePathExists(fileToCreate.getParentFile());
 						Util.copyInputStreamAndClose(zipFile, fileToCreate);
 					}
 				}

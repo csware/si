@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021, 2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -31,6 +31,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Logic for tests
@@ -101,12 +102,9 @@ public class TestTask {
 	 * @param testResult 
 	 */
 	public void performTaskInFolder(Test test, File basePath, File path, TestExecutorTestResult testResult) {
-		if (path.exists() == false) {
-			path.mkdirs();
-		}
-
 		AbstractTest testImpl = test.getTestImpl();
 		try {
+			Util.ensurePathExists(path);
 			testImpl.performTest(basePath, path, testResult);
 		} catch (Exception e) {
 			LoggerFactory.getLogger(MethodHandles.lookup().lookupClass()).error("Performing test failed.", e);

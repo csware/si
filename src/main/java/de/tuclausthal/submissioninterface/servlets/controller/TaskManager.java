@@ -217,9 +217,7 @@ public class TaskManager extends HttpServlet {
 		}
 
 		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + foldername + System.getProperty("file.separator"));
-		if (path.exists() == false) {
-			path.mkdirs();
-		}
+		Util.ensurePathExists(path);
 
 		long fileParts = request.getParts().stream().filter(part -> "file".equals(part.getName())).count();
 		if (fileParts == 0) {

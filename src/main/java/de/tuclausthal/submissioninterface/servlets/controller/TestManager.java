@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2015, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2015, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * Copyright 2011 Joachim Schramm
  *
@@ -177,9 +177,7 @@ public class TestManager extends HttpServlet {
 			UMLConstraintTest test = testDAO.createUMLConstraintTest(task);
 
 			File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
-			if (path.exists() == false) {
-				path.mkdirs();
-			}
+			Util.ensurePathExists(path);
 			int timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
 			int timeout = Util.parseInteger(request.getParameter("timeout"), 15);
 			boolean tutortest = request.getParameter("tutortest") != null;
@@ -212,9 +210,7 @@ public class TestManager extends HttpServlet {
 			JUnitTest test = testDAO.createJUnitTest(task);
 
 			File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
-			if (path.exists() == false) {
-				path.mkdirs();
-			}
+			Util.ensurePathExists(path);
 			int timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
 			boolean giveDetailsToStudents = request.getParameter("giveDetailsToStudents") != null;
 			int timeout = Util.parseInteger(request.getParameter("timeout"), 15);

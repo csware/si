@@ -597,4 +597,10 @@ public final class Util {
 			filename.replace(lastDot, filename.length(), filename.subSequence(lastDot, filename.length()).toString().toLowerCase());
 		}
 	}
+
+	public static void ensurePathExists(File path) throws IOException {
+		if (!path.exists() && !path.mkdirs()) {
+			throw new IOException("Could not create directory");
+		}
+	}
 }

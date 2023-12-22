@@ -173,10 +173,10 @@ public class Configuration {
 		if (path.isFile()) {
 			throw new RuntimeException("datapath must not be a file");
 		}
-		if (path.exists() == false) {
-			if (!path.mkdirs()) {
-				throw new RuntimeException("could not create datapath");
-			}
+		try {
+			Util.ensurePathExists(path);
+		} catch (IOException e) {
+			throw new RuntimeException("could not create datapath", e);
 		}
 	}
 
