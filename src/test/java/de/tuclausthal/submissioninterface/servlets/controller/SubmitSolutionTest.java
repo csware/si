@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021, 2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -34,10 +34,10 @@ import javax.servlet.http.Part;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.slf4j.helpers.NOPLoggerFactory;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.util.Util;
 
 public class SubmitSolutionTest {
 	private static class MyPartImpl implements Part {
@@ -99,10 +99,7 @@ public class SubmitSolutionTest {
 	}
 
 	@Test
-	void testHandleUploadedFileZIPWithUmlaut() {
-		File destDir = Util.createTemporaryDirectory("gate-test");
-		destDir.deleteOnExit();
-
+	void testHandleUploadedFileZIPWithUmlaut(@TempDir File destDir) {
 		Task task = new Task();
 		task.setArchiveFilenameRegexp(".+\\.txt");
 
@@ -111,14 +108,10 @@ public class SubmitSolutionTest {
 		File createdFile = new File(destDir, "ümlaut" + File.separator + "Ümlaut.txt");
 		assertTrue(createdFile.exists());
 		assertEquals(25, createdFile.length());
-		Util.recursiveDelete(destDir);
 	}
 
 	@Test
-	void testHandleUploadedFileZIPWithUmlautUTF8() {
-		File destDir = Util.createTemporaryDirectory("gate-test");
-		destDir.deleteOnExit();
-
+	void testHandleUploadedFileZIPWithUmlautUTF8(@TempDir File destDir) {
 		Task task = new Task();
 		task.setArchiveFilenameRegexp(".+\\.txt");
 
@@ -127,14 +120,10 @@ public class SubmitSolutionTest {
 		File createdFile = new File(destDir, "├╝mlaut" + File.separator + "├£mlaut.txt");
 		assertTrue(createdFile.exists());
 		assertEquals(25, createdFile.length());
-		Util.recursiveDelete(destDir);
 	}
 
 	@Test
-	void testHandleUploadedFileJava() {
-		File destDir = Util.createTemporaryDirectory("gate-test");
-		destDir.deleteOnExit();
-
+	void testHandleUploadedFileJava(@TempDir File destDir) {
 		Task task = new Task();
 
 		final File file = new File("src/test/resources/TriangleOutput.java");
@@ -143,14 +132,10 @@ public class SubmitSolutionTest {
 		assertTrue(createdFile.exists());
 		assertEquals(663, createdFile.length());
 		assertDoesNotThrow(() -> assertTrue(FileUtils.contentEquals(file, createdFile)));
-		Util.recursiveDelete(destDir);
 	}
 
 	@Test
-	void testHandleUploadedFileJavaCP850() {
-		File destDir = Util.createTemporaryDirectory("gate-test");
-		destDir.deleteOnExit();
-
+	void testHandleUploadedFileJavaCP850(@TempDir File destDir) {
 		Task task = new Task();
 
 		final File file = new File("src/test/resources/TriangleOutputCP850.java");
@@ -159,14 +144,10 @@ public class SubmitSolutionTest {
 		assertTrue(createdFile.exists());
 		assertEquals(660, createdFile.length());
 		assertDoesNotThrow(() -> assertTrue(FileUtils.contentEquals(file, createdFile)));
-		Util.recursiveDelete(destDir);
 	}
 
 	@Test
-	void testHandleUploadedFileJavaWithPackage() {
-		File destDir = Util.createTemporaryDirectory("gate-test");
-		destDir.deleteOnExit();
-
+	void testHandleUploadedFileJavaWithPackage(@TempDir File destDir) {
 		Task task = new Task();
 
 		final File file = new File("src/test/resources/TriangleOutputPackage.java");
@@ -175,14 +156,10 @@ public class SubmitSolutionTest {
 		assertTrue(createdFile.exists());
 		assertEquals(685, createdFile.length());
 		assertDoesNotThrow(() -> assertTrue(FileUtils.contentEquals(file, createdFile)));
-		Util.recursiveDelete(destDir);
 	}
 
 	@Test
-	void testHandleUploadedFileJavaWithBrokenPackage() {
-		File destDir = Util.createTemporaryDirectory("gate-test");
-		destDir.deleteOnExit();
-
+	void testHandleUploadedFileJavaWithBrokenPackage(@TempDir File destDir) {
 		Task task = new Task();
 
 		final File file = new File("src/test/resources/TriangleOutputPackageCommented.java");
@@ -191,14 +168,10 @@ public class SubmitSolutionTest {
 		assertTrue(createdFile.exists());
 		assertEquals(687, createdFile.length());
 		assertDoesNotThrow(() -> assertTrue(FileUtils.contentEquals(file, createdFile)));
-		Util.recursiveDelete(destDir);
 	}
 
 	@Test
-	void testHandleUploadedFileZIP() {
-		File destDir = Util.createTemporaryDirectory("gate-test");
-		destDir.deleteOnExit();
-
+	void testHandleUploadedFileZIP(@TempDir File destDir) {
 		Task task = new Task();
 		task.setArchiveFilenameRegexp(".+");
 
@@ -218,14 +191,10 @@ public class SubmitSolutionTest {
 		File createdFile3 = new File(destDir, "someother-file.txt");
 		assertTrue(createdFile3.exists());
 		assertEquals(14, createdFile3.length());
-		Util.recursiveDelete(destDir);
 	}
 
 	@Test
-	void testHandleUploadedFileZIPFilenameFilter() {
-		File destDir = Util.createTemporaryDirectory("gate-test");
-		destDir.deleteOnExit();
-
+	void testHandleUploadedFileZIPFilenameFilter(@TempDir File destDir) {
 		Task task = new Task();
 		task.setArchiveFilenameRegexp("TriangleOutput\\.java");
 
@@ -242,14 +211,10 @@ public class SubmitSolutionTest {
 		assertEquals(685, createdFile2.length());
 		File createdFile3 = new File(destDir, "someother-file.txt");
 		assertFalse(createdFile3.exists());
-		Util.recursiveDelete(destDir);
 	}
 
 	@Test
-	void testHandleUploadedFileZIPFileFilter() {
-		File destDir = Util.createTemporaryDirectory("gate-test");
-		destDir.deleteOnExit();
-
+	void testHandleUploadedFileZIPFileFilter(@TempDir File destDir) {
 		Task task = new Task();
 		task.setArchiveFilenameRegexp("^TriangleOutput\\.java");
 
@@ -264,14 +229,10 @@ public class SubmitSolutionTest {
 		assertFalse(packageDir.exists());
 		File createdFile3 = new File(destDir, "someother-file.txt");
 		assertFalse(createdFile3.exists());
-		Util.recursiveDelete(destDir);
 	}
 
 	@Test
-	void testHandleUploadedFileZIPNoUnpack() {
-		File destDir = Util.createTemporaryDirectory("gate-test");
-		destDir.deleteOnExit();
-
+	void testHandleUploadedFileZIPNoUnpack(@TempDir File destDir) {
 		Task task = new Task();
 		task.setArchiveFilenameRegexp("-");
 
@@ -282,6 +243,5 @@ public class SubmitSolutionTest {
 		assertTrue(createdFile.exists());
 		assertEquals(3104, createdFile.length());
 		assertDoesNotThrow(() -> assertTrue(FileUtils.contentEquals(file, createdFile)));
-		Util.recursiveDelete(destDir);
 	}
 }
