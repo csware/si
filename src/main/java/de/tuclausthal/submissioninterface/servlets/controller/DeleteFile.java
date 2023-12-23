@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FilenameUtils;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -93,15 +92,12 @@ public class DeleteFile extends HttpServlet {
 		}
 
 		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-		String relativeFile = FilenameUtils.normalize(request.getPathInfo().substring(1));
-		if (relativeFile != null && !relativeFile.isEmpty()) {
-			File file = new File(path, relativeFile);
-			if (file.exists() && file.isFile()) {
-				request.setAttribute("submission", submission);
-				request.setAttribute("filename", relativeFile);
-				getServletContext().getNamedDispatcher(DeleteFileView.class.getSimpleName()).forward(request, response);
-				return;
-			}
+		File file = Util.buildPath(path, request.getPathInfo().substring(1));
+		if (file != null && file.isFile()) {
+			request.setAttribute("submission", submission);
+			request.setAttribute("filename", request.getPathInfo().substring(1));
+			getServletContext().getNamedDispatcher(DeleteFileView.class.getSimpleName()).forward(request, response);
+			return;
 		}
 
 		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -145,16 +141,15 @@ public class DeleteFile extends HttpServlet {
 		}
 
 		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-		String relativeFile = FilenameUtils.normalize(request.getPathInfo().substring(1));
-		if (relativeFile != null && !relativeFile.isEmpty()) {
-			File file = new File(path, relativeFile);
+		File file = Util.buildPath(path, request.getPathInfo().substring(1));
+		if (file != null) {
 			Transaction tx = session.beginTransaction();
 			session.lock(submission, LockMode.PESSIMISTIC_WRITE);
 			if (file.exists() && file.isFile() && file.delete()) {
 				if (!submissionDAO.deleteIfNoFiles(submission, path)) {
 					submission.setLastModified(ZonedDateTime.now());
 				}
-				new LogDAO(session).createLogDeleteEntry(participation.getUser(), submission.getTask(), relativeFile);
+				new LogDAO(session).createLogDeleteEntry(participation.getUser(), submission.getTask(), request.getPathInfo().substring(1));
 				tx.commit();
 
 				response.sendRedirect(Util.generateAbsoluteServletsRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), request, response));

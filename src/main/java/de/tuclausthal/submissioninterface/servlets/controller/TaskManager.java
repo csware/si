@@ -249,7 +249,7 @@ public class TaskManager extends HttpServlet {
 			}
 			String fileName = m.group(1);
 
-			File uploadedFile = new File(path, fileName);
+			File uploadedFile = Util.buildPath(path, fileName);
 			Util.copyInputStreamAndClose(file.getInputStream(), uploadedFile);
 		}
 

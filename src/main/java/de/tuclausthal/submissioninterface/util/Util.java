@@ -603,4 +603,15 @@ public final class Util {
 			throw new IOException("Could not create directory");
 		}
 	}
+
+	public static File buildPath(final File basePath, String relativePath) {
+		if (relativePath.isBlank() || relativePath.charAt(0) == '/' || relativePath.charAt(0) == '\\') {
+			return null;
+		}
+		String result = FilenameUtils.normalize(relativePath);
+		if (result == null || result.isBlank()) {
+			return null;
+		}
+		return new File(basePath, result);
+	}
 }

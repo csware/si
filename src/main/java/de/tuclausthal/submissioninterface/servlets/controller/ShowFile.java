@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import jakarta.mail.internet.MimeUtility;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -90,26 +89,23 @@ public class ShowFile extends HttpServlet {
 		}
 
 		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid());
-		String relativeFile = FilenameUtils.normalize(request.getPathInfo().substring(1));
-		if (relativeFile != null && !relativeFile.isEmpty()) {
-			File file = new File(path, relativeFile);
-			if (file.exists() && file.isFile()) {
-				if (isPlainTextFile(file.getName().toLowerCase()) && !"true".equals(request.getParameter("download"))) {
-					// code for loading/displaying text-files
-					StringBuffer code = Util.loadFile(file);
+		File file = Util.buildPath(path, request.getPathInfo().substring(1));
+		if (file != null && file.isFile()) {
+			if (isPlainTextFile(file.getName().toLowerCase()) && !"true".equals(request.getParameter("download"))) {
+				// code for loading/displaying text-files
+				StringBuffer code = Util.loadFile(file);
 
-					request.setAttribute("submission", submission);
-					request.setAttribute("code", code);
-					request.setAttribute("fileName", Util.escapeHTML(file.getName()));
-					getServletContext().getNamedDispatcher(ShowFileView.class.getSimpleName()).forward(request, response);
-					return;
-				}
-				setContentTypeBasedonFilenameExtension(response, file.getName(), "true".equals(request.getParameter("download")));
-				try (OutputStream out = response.getOutputStream()) {
-					FileUtils.copyFile(file, out);
-				}
+				request.setAttribute("submission", submission);
+				request.setAttribute("code", code);
+				request.setAttribute("fileName", Util.escapeHTML(file.getName()));
+				getServletContext().getNamedDispatcher(ShowFileView.class.getSimpleName()).forward(request, response);
 				return;
 			}
+			setContentTypeBasedonFilenameExtension(response, file.getName(), "true".equals(request.getParameter("download")));
+			try (OutputStream out = response.getOutputStream()) {
+				FileUtils.copyFile(file, out);
+			}
+			return;
 		}
 
 		response.setStatus(HttpServletResponse.SC_NOT_FOUND);

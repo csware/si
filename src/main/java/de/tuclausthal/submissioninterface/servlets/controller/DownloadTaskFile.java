@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -80,16 +79,13 @@ public class DownloadTaskFile extends HttpServlet {
 		}
 
 		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles");
-		String relativeFile = FilenameUtils.normalize(request.getPathInfo().substring(1));
-		if (relativeFile != null && !relativeFile.isEmpty()) {
-			File file = new File(path, relativeFile);
-			if (file.exists() && file.isFile()) {
-				ShowFile.setContentTypeBasedonFilenameExtension(response, file.getName(), true);
-				try (OutputStream out = response.getOutputStream()) {
-					FileUtils.copyFile(file, out);
-				}
-				return;
+		File file = Util.buildPath(path, request.getPathInfo().substring(1));
+		if (file != null && file.isFile()) {
+			ShowFile.setContentTypeBasedonFilenameExtension(response, file.getName(), true);
+			try (OutputStream out = response.getOutputStream()) {
+				FileUtils.copyFile(file, out);
 			}
+			return;
 		}
 
 		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -125,18 +121,15 @@ public class DownloadTaskFile extends HttpServlet {
 		}
 
 		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles");
-		String relativeFile = FilenameUtils.normalize(request.getPathInfo().substring(1));
-		if (relativeFile != null && !relativeFile.isEmpty()) {
-			File file = new File(path, relativeFile);
-			if (file.exists() && file.isFile()) {
-				if (!"delete".equals(request.getParameter("action"))) {
-					response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
-					return;
-				}
-				file.delete();
-				response.sendRedirect(Util.generateAbsoluteServletsRedirectURL(TaskManager.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid() + "#advisorfiles", request, response));
+		File file = Util.buildPath(path, request.getPathInfo().substring(1));
+		if (file != null && file.isFile()) {
+			if (!"delete".equals(request.getParameter("action"))) {
+				response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
 				return;
 			}
+			file.delete();
+			response.sendRedirect(Util.generateAbsoluteServletsRedirectURL(TaskManager.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid() + "#advisorfiles", request, response));
+			return;
 		}
 
 		response.setStatus(HttpServletResponse.SC_NOT_FOUND);

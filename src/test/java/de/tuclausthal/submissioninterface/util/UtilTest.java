@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -40,6 +41,8 @@ import javax.servlet.http.Part;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class UtilTest {
 	@Test
@@ -615,5 +618,47 @@ public class UtilTest {
 		assertEquals("something.extension", Util.getUploadFileName(new PartForFilenameTest("something.extension")));
 		assertEquals("something.extension", Util.getUploadFileName(new PartForFilenameTest("somedir/something.extension")));
 		assertEquals("", Util.getUploadFileName(new PartForFilenameTest("somedir/")));
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "/", "\\" })
+	public void testBuildPath(final String separator, @TempDir File basePath) {
+		assertNull(Util.buildPath(basePath, ""));
+		assertNull(Util.buildPath(basePath, ".."));
+		assertNull(Util.buildPath(basePath, ".." + separator));
+		assertNull(Util.buildPath(basePath, ".." + separator + "something"));
+		assertNull(Util.buildPath(basePath, "something" + separator + ".."));
+		assertNull(Util.buildPath(basePath, "something" + separator + ".." + separator));
+		assertNull(Util.buildPath(basePath, "something" + separator + separator + ".." + separator));
+		assertNull(Util.buildPath(basePath, "something" + separator + ".." + separator + ".."));
+		assertNull(Util.buildPath(basePath, "something" + separator + ".." + separator + ".." + separator + "something"));
+		assertNull(Util.buildPath(basePath, "."));
+		assertNull(Util.buildPath(basePath, "." + separator));
+		assertNull(Util.buildPath(basePath, "." + separator + ".."));
+
+		// should never occur
+		assertNull(Util.buildPath(basePath, separator));
+		assertNull(Util.buildPath(basePath, separator + "something"));
+		assertNull(Util.buildPath(basePath, separator + separator + "something"));
+		assertNull(Util.buildPath(basePath, separator + separator + "something" + separator + "else"));
+		// ":" should be disallowed in Configuration.GLOBAL_FILENAME_REGEXP
+		{
+			File test = Util.buildPath(basePath, "C:" + separator);
+			assertTrue(test == null || new File(basePath, "C:" + separator).equals(test) || new File(basePath, "C:").equals(test));
+		}
+		{
+			File test = Util.buildPath(basePath, "C:" + separator + "something");
+			assertTrue(test == null || new File(basePath, "C:/something").equals(test) || new File(basePath, "C:\\something").equals(test));
+		}
+
+		assertEquals(new File(basePath, "something"), Util.buildPath(basePath, "something"));
+		assertEquals(new File(basePath, "something/more"), Util.buildPath(basePath, "something" + separator + "more"));
+		assertEquals(new File(basePath, "something/more"), Util.buildPath(basePath, "something" + separator + separator + "more"));
+		assertEquals(new File(basePath, "something/more"), Util.buildPath(basePath, "something" + separator + "even" + separator + ".." + separator + "more"));
+		assertEquals(new File(basePath, "something"), Util.buildPath(basePath, "." + separator + "something"));
+		assertEquals(new File(basePath, "else"), Util.buildPath(basePath, "something" + separator + ".." + separator + "else"));
+		// not really important, but this is a special case in apache.org.commons.io:FileUtils
+		//assertEquals(new File(basePath, "~/something"), Util.buildPath(basePath, "~" + separator + "something"));
+		//assertEquals(new File(basePath, "something"), Util.buildPath(basePath, "~" + separator + ".." + separator + "something"));
 	}
 }

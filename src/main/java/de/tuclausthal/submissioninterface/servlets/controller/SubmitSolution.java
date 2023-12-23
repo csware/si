@@ -156,8 +156,11 @@ public class SubmitSolution extends HttpServlet {
 				if (task.showTextArea()) {
 					String textsolution = "";
 					if (submission != null) {
-						File textSolutionFile = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator") + task.getShowTextArea());
-						if (textSolutionFile.exists()) {
+						File textSolutionFile = Util.buildPath(new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid()), task.getShowTextArea());
+						if (textSolutionFile == null) {
+							// should never happen!
+							LOG.error("textSolutionFile tried to escape submissiondir: \"{}\"", task.getShowTextArea());
+						} else if (textSolutionFile.isFile()) {
 							textsolution = Util.loadFile(textSolutionFile).toString();
 						}
 						if (task.isADynamicTask()) {
@@ -527,14 +530,19 @@ public class SubmitSolution extends HttpServlet {
 				jsonBuilder.add("taskNumbers", taskNumbersArrayBuilder);
 			}
 
-			File uploadedFile = new File(path, task.getShowTextArea());
+			File uploadedFile = Util.buildPath(path, task.getShowTextArea());
+			if (uploadedFile == null) {
+				// should never happen!
+				LOG.error("textSolutionFile tried to escape submissiondir: \"{}\"", task.getShowTextArea());
+				throw new NullPointerException();
+			}
 			try (FileWriter fileWriter = new FileWriter(uploadedFile)) {
 				if (request.getParameter("textsolution") != null && request.getParameter("textsolution").length() <= task.getMaxsize()) {
 					fileWriter.write(request.getParameter("textsolution"));
 				}
 			}
 
-			Util.recursiveCopy(uploadedFile, new File(logPath, task.getShowTextArea()));
+			Util.recursiveCopy(uploadedFile, Util.buildPath(logPath, task.getShowTextArea()));
 			logEntry.setAdditionalData(jsonBuilder.add("filename", uploadedFile.getName()).build().toString());
 
 			submission.setLastModified(ZonedDateTime.now());
@@ -600,23 +608,21 @@ public class SubmitSolution extends HttpServlet {
 						skippedFiles = true;
 						continue;
 					}
-					try {
-						if (!new File(submissionPath, archivedFileName.toString()).getCanonicalPath().startsWith(submissionPath.getCanonicalPath())) {
-							log.warn("Ignored entry for taskid={}: archivedFileName:\"{}\"; tries to escape submissiondir", task.getTaskid(), archivedFileName);
-							skippedFiles = true;
-							continue;
-						}
-					} catch (IOException e) {
-						// i.e. filename not valid on system
+					Util.lowerCaseExtension(archivedFileName);
+
+					File fileToCreate = Util.buildPath(submissionPath, archivedFileName.toString());
+					if (fileToCreate == null) {
+						log.warn("Ignored entry for taskid={}: archivedFileName:\"{}\"; tries to escape submissiondir", task.getTaskid(), archivedFileName);
+						skippedFiles = true;
 						continue;
 					}
-					if (!entry.getName().toLowerCase().endsWith(".class") && !entry.getName().startsWith("__MACOSX/")) {
-						Util.lowerCaseExtension(archivedFileName);
-						// TODO: relocate java-files from jar/zip archives?
-						File fileToCreate = new File(submissionPath, archivedFileName.toString());
-						Util.ensurePathExists(fileToCreate.getParentFile());
-						Util.copyInputStreamAndClose(zipFile, fileToCreate);
+					if (fileToCreate.getName().endsWith(".class") || entry.getName().startsWith("__MACOSX/")) {
+						continue;
 					}
+
+					// TODO: relocate java-files from jar/zip archives?
+					Util.ensurePathExists(fileToCreate.getParentFile());
+					Util.copyInputStreamAndClose(zipFile, fileToCreate);
 				}
 			}
 			return !skippedFiles;
