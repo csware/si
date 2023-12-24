@@ -80,6 +80,7 @@ public class ErrorHandlerView extends HttpServlet {
 				} else {
 					message = "Das Skript, auf das Sie versuchen zuzugreifen, hat einen schweren Fehler verursacht.<br>";
 				}
+				LOG.error("Internal server error, a servlet threw an exception, user={}, req.remoteAddr={}, req.method={}, req.requestURI={}", request.getSession(false) != null ? request.getSession(false).getAttribute("userID") : "", request.getRemoteAddr(), request.getMethod(), request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI), throwable);
 				break;
 			default:
 				title = "Unbekannter Fehler (" + request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE) + ")";
