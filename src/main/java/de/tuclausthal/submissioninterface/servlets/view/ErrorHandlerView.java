@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020-2021, 2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,7 +21,9 @@ package de.tuclausthal.submissioninterface.servlets.view;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.invoke.MethodHandles;
+import java.util.Objects;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -53,7 +55,11 @@ public class ErrorHandlerView extends HttpServlet {
 		}
 		String title = null;
 		String message = null;
-		switch ((Integer) request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)) {
+		if (request.getDispatcherType() != DispatcherType.ERROR) {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
+		switch ((Integer) Objects.requireNonNullElse(request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE), 0)) {
 			case 403:
 				title = "Zugriff verweigert (403)";
 				message = "Sie haben keine ausreichende Berechtigung (" + Util.escapeHTML((String) request.getAttribute(RequestDispatcher.ERROR_MESSAGE)) + ") für die angefragte Ressource \"" + Util.escapeHTML((String) request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI)) + "\".<br>";
