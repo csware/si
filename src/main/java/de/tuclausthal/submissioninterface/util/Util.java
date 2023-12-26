@@ -567,7 +567,9 @@ public final class Util {
 		if (fileName.toLowerCase().endsWith(".java")) {
 			uploadedFile = File.createTempFile("upload", null, path);
 		}
-		copyInputStreamAndClose(item.getInputStream(), uploadedFile);
+		try (InputStream is = item.getInputStream()) {
+			copyInputStreamAndClose(is, uploadedFile);
+		}
 		// extract defined package in java-files
 		if (fileName.toLowerCase().endsWith(".java")) {
 			NormalizerIf stripComments = new StripCommentsNormalizer();

@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -126,7 +127,7 @@ public class MassMarkTask extends HttpServlet {
 		SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 		List<String[]> lines;
 		final CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
-		try (CSVReader reader = new CSVReaderBuilder(new InputStreamReader(request.getPart("file").getInputStream(), StandardCharsets.UTF_8)).withCSVParser(parser).build()) {
+		try (InputStream is = request.getPart("file").getInputStream(); CSVReader reader = new CSVReaderBuilder(new InputStreamReader(is, StandardCharsets.UTF_8)).withCSVParser(parser).build()) {
 			try {
 				lines = reader.readAll();
 			} catch (CsvException e) {

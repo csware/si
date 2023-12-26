@@ -22,6 +22,7 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -192,7 +193,9 @@ public class TestManager extends HttpServlet {
 				return;
 			}
 			File uploadedFile = new File(path, "musterloesung" + test.getId() + ".xmi");
-			Util.copyInputStreamAndClose(file.getInputStream(), uploadedFile);
+			try (InputStream is = file.getInputStream()) {
+				Util.copyInputStreamAndClose(is, uploadedFile);
+			}
 
 			test.setTimesRunnableByStudents(timesRunnableByStudents);
 			test.setForTutors(tutortest);
@@ -227,7 +230,9 @@ public class TestManager extends HttpServlet {
 				return;
 			}
 			File uploadedFile = new File(path, "junittest" + test.getId() + ".jar");
-			Util.copyInputStreamAndClose(file.getInputStream(), uploadedFile);
+			try (InputStream is = file.getInputStream()) {
+				Util.copyInputStreamAndClose(is, uploadedFile);
+			}
 
 			test.setTimesRunnableByStudents(timesRunnableByStudents);
 			test.setMainClass(mainclass);

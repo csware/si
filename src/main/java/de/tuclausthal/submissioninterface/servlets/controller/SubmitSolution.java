@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.lang.invoke.MethodHandles;
 import java.nio.charset.Charset;
@@ -400,7 +401,9 @@ public class SubmitSolution extends HttpServlet {
 					if (!handleUploadedFile(LOG, path, task, fileName, aFile, Configuration.getInstance().getDefaultZipFileCharset())) {
 						skippedFiles = true;
 					}
-					Util.copyInputStreamAndClose(aFile.getInputStream(), new File(logPath, fileName));
+					try (InputStream is = aFile.getInputStream()) {
+						Util.copyInputStreamAndClose(is, new File(logPath, fileName));
+					}
 					uploadedFilenames.add(fileName);
 				} catch (IOException | IllegalArgumentException e) {
 					if (!submissionDAO.deleteIfNoFiles(submission, path)) {
@@ -588,7 +591,7 @@ public class SubmitSolution extends HttpServlet {
 		if (!"-".equals(task.getArchiveFilenameRegexp()) && (fileName.endsWith(".zip") || fileName.endsWith(".jar"))) {
 			boolean skippedFiles = false;
 			ArrayList<Pattern> patterns = getArchiveFileNamePatterns(task);
-			try (ZipInputStream zipFile = new ZipInputStream(item.getInputStream(), zipFileCharset)) {
+			try (InputStream is = item.getInputStream(); ZipInputStream zipFile = new ZipInputStream(is, zipFileCharset)) {
 				ZipEntry entry = null;
 				while ((entry = zipFile.getNextEntry()) != null) {
 					if (entry.isDirectory()) {
