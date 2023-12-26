@@ -95,9 +95,12 @@ public class AdminMenue extends HttpServlet {
 			File path = Configuration.getInstance().getDataPath();
 			// list lectures
 			for (File lectures : path.listFiles()) {
-				if (lectures.isDirectory() && DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(lectures.getName(), 0)) == null) {
+				if (!lectures.isDirectory() || !Util.isInteger(lectures.getName())) {
+					continue;
+				}
+				if (DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(lectures.getName(), 0)) == null) {
 					Util.recursiveDelete(lectures);
-				} else if (lectures.isDirectory()) {
+				} else {
 					// list all tasks
 					for (File tasks : lectures.listFiles()) {
 						if (!tasks.isDirectory() || DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(tasks.getName(), 0)) == null) {
@@ -106,7 +109,7 @@ public class AdminMenue extends HttpServlet {
 							// list all submissions
 							for (File submissions : tasks.listFiles()) {
 								// check for junittests
-								if (submissions.getName().startsWith("junittest")) {
+								if (submissions.isFile() && submissions.getName().startsWith("junittest")) {
 									if (DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(submissions.getName(), 0)) == null) {
 										boolean kill = true;
 										for (Test test : DAOFactory.TaskDAOIf(session).getTask(Util.parseInteger(tasks.getName(), 0)).getTests()) {
@@ -116,9 +119,11 @@ public class AdminMenue extends HttpServlet {
 											}
 										}
 										if (kill) {
-											tasks.delete();
+											submissions.delete();
 										}
 									}
+								} else if (submissions.isDirectory() && !Util.isInteger(submissions.getName())) { // TODO: implement concrete whitelist here
+									Util.recursiveDeleteEmptyDirectories(submissions);
 								} else if (DAOFactory.SubmissionDAOIf(session).getSubmissionLocked(Util.parseInteger(submissions.getName(), 0)) == null) {
 									Util.recursiveDelete(submissions);
 								} else {
