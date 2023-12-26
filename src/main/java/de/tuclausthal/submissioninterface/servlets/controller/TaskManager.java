@@ -148,8 +148,8 @@ public class TaskManager extends HttpServlet {
 
 			request.setAttribute("task", task);
 			File taskPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
-			request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "advisorfiles" + System.getProperty("file.separator"))));
-			request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
+			request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, "advisorfiles" + System.getProperty("file.separator"))));
+			request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
 
 			getServletContext().getNamedDispatcher(TaskManagerView.class.getSimpleName()).forward(request, response);
 		} else if ((("editTaskGroup".equals(request.getParameter("action")) && request.getParameter("taskgroupid") != null) || ("newTaskGroup".equals(request.getParameter("action")) && request.getParameter("lecture") != null))) {

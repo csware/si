@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -95,7 +95,7 @@ public class ShowTask extends HttpServlet {
 		request.setAttribute("participation", participation);
 
 		final File taskPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
-		request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "advisorfiles" + System.getProperty("file.separator"))));
+		request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, "advisorfiles" + System.getProperty("file.separator"))));
 		request.setAttribute("task", task);
 		if (request.getParameter("onlydescription") != null) {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
@@ -116,7 +116,7 @@ public class ShowTask extends HttpServlet {
 				}
 				getServletContext().getNamedDispatcher(ShowTaskTutorPrintView.class.getSimpleName()).forward(request, response);
 			} else {
-				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
+				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
 				getServletContext().getNamedDispatcher(ShowTaskTutorView.class.getSimpleName()).forward(request, response);
 			}
 		} else {
@@ -124,7 +124,7 @@ public class ShowTask extends HttpServlet {
 			Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
 			if (submission != null) {
 				File path = new File(taskPath, submission.getSubmissionid() + System.getProperty("file.separator"));
-				request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringList(path));
+				request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringListSorted(path));
 				if (task.isADynamicTask()) {
 					task.setDescription(task.getDynamicTaskStrategie(session).getTranslatedDescription(submission));
 				}
@@ -134,7 +134,7 @@ public class ShowTask extends HttpServlet {
 				}
 			}
 			if (ModelSolutionProvisionType.canStudentAccessModelSolution(task, submission, null, null)) {
-				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringList(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
+				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
 			}
 
 			request.setAttribute("submission", submission);

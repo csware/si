@@ -315,11 +315,13 @@ public class UtilTest {
 	@Test
 	public void testListFilesAsRelativeStringListNonExisting() {
 		assertTrue(Util.listFilesAsRelativeStringList(new File("does-not-exist")).isEmpty());
+		assertTrue(Util.listFilesAsRelativeStringListSorted(new File("does-not-exist")).isEmpty());
 	}
 
 	@Test
 	public void testListFilesAsRelativeStringListEmptyDir(@TempDir File tempDir) {
 		assertTrue(Util.listFilesAsRelativeStringList(tempDir).isEmpty());
+		assertTrue(Util.listFilesAsRelativeStringListSorted(tempDir).isEmpty());
 	}
 
 	@Test
@@ -331,10 +333,12 @@ public class UtilTest {
 		FileUtils.copyFile(new File("src/test/resources/TriangleOutput.java"), new File(subSubDirectory, "ü.txt"));
 
 		List<String> submittedFiles = Util.listFilesAsRelativeStringList(tempDir);
+		List<String> submittedFilesSorted = Util.listFilesAsRelativeStringListSorted(tempDir);
 		assertEquals(2, submittedFiles.size());
 		Collections.sort(submittedFiles);
 		assertEquals("a.txt", submittedFiles.get(0));
 		assertEquals("subDirectory/SubSubDirectory/ü.txt", submittedFiles.get(1).replace('\\', '/'));
+		assertEquals(submittedFiles, submittedFilesSorted);
 	}
 
 	@Test
@@ -539,8 +543,8 @@ public class UtilTest {
 		Util.recursiveCopy(source, destination);
 		assertTrue(destination.isDirectory());
 
-		List<String> sourceFiles = Util.listFilesAsRelativeStringList(source);
-		List<String> destinationFiles = Util.listFilesAsRelativeStringList(destination);
+		List<String> sourceFiles = Util.listFilesAsRelativeStringListSorted(source);
+		List<String> destinationFiles = Util.listFilesAsRelativeStringListSorted(destination);
 		assertEquals(sourceFiles, destinationFiles);
 	}
 
@@ -552,8 +556,8 @@ public class UtilTest {
 		Util.recursiveCopy(source, destination);
 		assertTrue(destination.isDirectory());
 
-		List<String> sourceFiles = Util.listFilesAsRelativeStringList(source);
-		List<String> destinationFiles = Util.listFilesAsRelativeStringList(destination);
+		List<String> sourceFiles = Util.listFilesAsRelativeStringListSorted(source);
+		List<String> destinationFiles = Util.listFilesAsRelativeStringListSorted(destination);
 		assertEquals(sourceFiles, destinationFiles);
 	}
 

@@ -238,7 +238,7 @@ public class ShowTaskTutorAllSubmissionsView extends HttpServlet {
 				out.println("</ul>");
 			}
 
-			List<String> submittedFiles = Util.listFilesAsRelativeStringList(new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator")));
+			List<String> submittedFiles = Util.listFilesAsRelativeStringListSorted(new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator")));
 			if (!submittedFiles.isEmpty()) {
 				if (task.getDeadline().isAfter(ZonedDateTime.now()) && task.getTests().stream().anyMatch(atest -> atest.TutorsCanRun())) {
 					out.println("<FORM class=mid method=POST action=\"" + Util.generateHTMLLink(PerformTest.class.getSimpleName(), response) + "\">");

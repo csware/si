@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -81,7 +81,7 @@ public class ShowSubmission extends HttpServlet {
 		}
 
 		request.setAttribute("submission", submission);
-		request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringList(new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"))));
+		request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringListSorted(new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"))));
 		getServletContext().getNamedDispatcher(ShowSubmissionView.class.getSimpleName()).forward(request, response);
 	}
 

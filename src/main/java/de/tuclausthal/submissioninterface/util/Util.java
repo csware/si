@@ -40,6 +40,7 @@ import java.text.NumberFormat;
 import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -315,6 +316,12 @@ public final class Util {
 		if (path.exists() && path.listFiles() != null) {
 			listFilesAsRelativeStringList(submittedFiles, path, "");
 		}
+		return submittedFiles;
+	}
+
+	public static List<String> listFilesAsRelativeStringListSorted(File path) {
+		List<String> submittedFiles = listFilesAsRelativeStringList(path);
+		Collections.sort(submittedFiles);
 		return submittedFiles;
 	}
 
