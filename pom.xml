@@ -83,7 +83,7 @@
 		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
-			<version>3.3.1</version>
+			<version>3.3.2</version>
 		</dependency>
 
 		<!-- Auto-generated classes show errors without this in Eclipse, class jakarta.annotation.Generated missing -->
