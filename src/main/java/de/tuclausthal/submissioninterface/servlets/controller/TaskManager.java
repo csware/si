@@ -426,6 +426,7 @@ public class TaskManager extends HttpServlet {
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Aufgabengruppe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
+				return;
 			}
 			Task task;
 			if (request.getParameter("action").equals("saveTask")) {
@@ -538,11 +539,11 @@ public class TaskManager extends HttpServlet {
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Aufgabe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
-			} else {
-				Transaction tx = session.beginTransaction();
-				taskDAO.deleteTask(task);
-				tx.commit();
+				return;
 			}
+			Transaction tx = session.beginTransaction();
+			taskDAO.deleteTask(task);
+			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response));
 			return;
 		} else if ("uploadTaskFile".equals(request.getParameter("action"))) {
@@ -579,11 +580,11 @@ public class TaskManager extends HttpServlet {
 				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 				request.setAttribute("title", "Aufgabengruppe nicht gefunden");
 				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
-			} else {
-				Transaction tx = session.beginTransaction();
-				taskGroupDAO.deleteTaskGroup(taskGroup);
-				tx.commit();
+				return;
 			}
+			Transaction tx = session.beginTransaction();
+			taskGroupDAO.deleteTaskGroup(taskGroup);
+			tx.commit();
 			response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response));
 			return;
 		} else if ("deletePointCategory".equals(request.getParameter("action"))) {
