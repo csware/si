@@ -245,6 +245,112 @@ public class JavaAdvancedIOTestTest {
 	}
 
 	@Test
+	void testJavaAdvancedIOTestSetIOInTestCode() throws Exception {
+		try (Writer fw = new FileWriter(new File(sourceDir, "HelloWorld.java"))) {
+			fw.write("public class HelloWorld {\n	static void main(String[] args) {\n		System.out.print(\"Hello World!\");\n" + "	}\n}");
+		}
+
+		javaAdvancedIOTest.getTestSteps().add(new JavaAdvancedIOTestStep(javaAdvancedIOTest, "Hello World! (ignore case)", "var old = System.out;\nvar buffer = new java.io.ByteArrayOutputStream();\nSystem.setOut(new java.io.PrintStream(buffer));\n\nHelloWorld.main(null);\n\nSystem.setOut(old);\nString content = buffer.toString();\nSystem.out.println(content.toLowerCase());", "hello world!"));
+
+		TestExecutorTestResult result = new TestExecutorTestResult();
+		javaFunctionTest.performTest(dataDir, sourceDir, result);
+		assertTrue(result.isTestPassed(), result.getTestOutput());
+
+		// {"v":1,"stdout":"hello world!\n","separator":"#<GATE@-5095029310556099959#@>#\n","exitedCleanly":true,"steps":[{"id":0,"got":"hello world!\n","expected":"hello world!","ok":true}]}
+		JsonObject object = null;
+		try (JsonReader jsonReader = Json.createReader(new StringReader(result.getTestOutput()))) {
+			object = jsonReader.readObject();
+		} catch (JsonParsingException ex) {
+		}
+		assertNotNull(object);
+		assertTrue(object.containsKey("separator"));
+		assertFalse(object.containsKey("stderr"));
+		assertTrue(object.containsKey("stdout"));
+		assertTrue(object.containsKey("exitedCleanly") && object.getBoolean("exitedCleanly"));
+		assertFalse(object.containsKey("missing-tests"));
+		assertFalse(object.containsKey("time-exceeded"));
+		assertFalse(object.containsKey("syntaxerror"));
+		assertTrue(object.containsKey("steps") && object.get("steps").getValueType().equals(JsonValue.ValueType.ARRAY));
+
+		JsonArray array = object.get("steps").asJsonArray();
+		assertEquals(1, array.size());
+		for (int i = 0; i < array.size(); ++i) {
+			JsonObject stepObject = array.get(i).asJsonObject();
+			assertTrue(stepObject.containsKey("ok") && stepObject.getBoolean("ok"));
+		}
+	}
+
+	@Test
+	void testJavaAdvancedIOTestSystemExitInStudentCode() throws Exception {
+		try (Writer fw = new FileWriter(new File(sourceDir, "Evil.java"))) {
+			fw.write("public class Evil {\n	static void main(String[] args) {\n		System.exit(0);\n" + "	}\n}");
+		}
+
+		javaAdvancedIOTest.getTestSteps().add(new JavaAdvancedIOTestStep(javaAdvancedIOTest, "Hello World! (ignore case)", "Evil.main(null);", ""));
+
+		TestExecutorTestResult result = new TestExecutorTestResult();
+		javaFunctionTest.performTest(dataDir, sourceDir, result);
+		assertFalse(result.isTestPassed(), result.getTestOutput());
+
+		// {"v":1,"stdout":"","stderr":"Exception in thread \"main\" java.security.AccessControlException: access denied (\"java.lang.RuntimePermission\" \"exitTheVM.0\")\n\tat java.base/java.security.AccessControlContext.checkPermission(AccessControlContext.java:485)\n\tat java.base/java.security.AccessController.checkPermission(AccessController.java:1068)\n\tat java.base/java.lang.SecurityManager.checkPermission(SecurityManager.java:416)\n\tat secmgr.NoExitSecurityManager.checkExit(NoExitSecurityManager.java:33)\n\tat java.base/java.lang.Runtime.exit(Runtime.java:113)\n\tat java.base/java.lang.System.exit(System.java:1860)\n\tat Evil.main(Evil.java:3)\n\tat Tester.main(Tester.java:4)\n","separator":"#<GATE@-7844624952352875734#@>#\n","exitedCleanly":false,"steps":[{"id":0,"got":"","expected":"","ok":true}]}
+		JsonObject object = null;
+		try (JsonReader jsonReader = Json.createReader(new StringReader(result.getTestOutput()))) {
+			object = jsonReader.readObject();
+		} catch (JsonParsingException ex) {
+		}
+		assertNotNull(object);
+		assertTrue(object.containsKey("separator"));
+		assertTrue(object.containsKey("stderr"));
+		assertTrue(object.containsKey("stdout"));
+		assertTrue(object.containsKey("exitedCleanly") && object.getBoolean("exitedCleanly") == false);
+		assertFalse(object.containsKey("missing-tests"));
+		assertFalse(object.containsKey("time-exceeded"));
+		assertFalse(object.containsKey("syntaxerror"));
+		assertTrue(object.containsKey("steps") && object.get("steps").getValueType().equals(JsonValue.ValueType.ARRAY));
+
+		JsonArray array = object.get("steps").asJsonArray();
+		assertEquals(1, array.size());
+		JsonObject stepObject = array.get(array.size() - 1).asJsonObject();
+		assertTrue(stepObject.containsKey("ok") && stepObject.getBoolean("ok") == true);
+		assertTrue(object.getString("stderr").contains(" java.security.AccessControlException: access denied (\"java.lang.RuntimePermission\" \"exitTheVM."), "Found java.security.AccessControlException: access denied (\"java.lang.RuntimePermission\" \"exitTheVM. in stderr");
+	}
+
+	@Test
+	void testJavaAdvancedIOTestSetIOInStudentCode() throws Exception {
+		try (Writer fw = new FileWriter(new File(sourceDir, "Evil.java"))) {
+			fw.write("public class Evil {\n	static void main(String[] args) {\n		System.setOut(new java.io.PrintStream(new java.io.ByteArrayOutputStream()));\n" + "	}\n}");
+		}
+
+		javaAdvancedIOTest.getTestSteps().add(new JavaAdvancedIOTestStep(javaAdvancedIOTest, "Hello World! (ignore case)", "Evil.main(null);", "something"));
+
+		TestExecutorTestResult result = new TestExecutorTestResult();
+		javaFunctionTest.performTest(dataDir, sourceDir, result);
+		assertFalse(result.isTestPassed(), result.getTestOutput());
+
+		// {"v":1,"stdout":"","stderr":"Exception in thread \"main\" java.security.AccessControlException: access denied (\"java.lang.RuntimePermission\" \"setIO\")\n\tat java.base/java.security.AccessControlContext.checkPermission(AccessControlContext.java:485)\n\tat java.base/java.security.AccessController.checkPermission(AccessController.java:1068)\n\tat java.base/java.lang.SecurityManager.checkPermission(SecurityManager.java:416)\n\tat java.base/java.lang.System.checkIO(System.java:323)\n\tat java.base/java.lang.System.setOut(System.java:240)\n\tat Evil.main(Evil.java:3)\n\tat Tester.main(Tester.java:4)\n","separator":"#<GATE@571104252856889185#@>#\n","exitedCleanly":false,"steps":[{"id":0,"got":"","expected":"","ok":true}]}
+		JsonObject object = null;
+		try (JsonReader jsonReader = Json.createReader(new StringReader(result.getTestOutput()))) {
+			object = jsonReader.readObject();
+		} catch (JsonParsingException ex) {
+		}
+		assertNotNull(object);
+		assertTrue(object.containsKey("separator"));
+		assertTrue(object.containsKey("stderr"));
+		assertTrue(object.containsKey("stdout"));
+		assertTrue(object.containsKey("exitedCleanly") && object.getBoolean("exitedCleanly") == false);
+		assertFalse(object.containsKey("missing-tests"));
+		assertFalse(object.containsKey("time-exceeded"));
+		assertFalse(object.containsKey("syntaxerror"));
+		assertTrue(object.containsKey("steps") && object.get("steps").getValueType().equals(JsonValue.ValueType.ARRAY));
+
+		JsonArray array = object.get("steps").asJsonArray();
+		assertEquals(1, array.size());
+		JsonObject stepObject = array.get(array.size() - 1).asJsonObject();
+		assertTrue(stepObject.containsKey("ok") && stepObject.getBoolean("ok") == false);
+		assertTrue(object.getString("stderr").contains(" java.security.AccessControlException: access denied (\"java.lang.RuntimePermission\" \"setIO\")"), "Found java.security.AccessControlException: access denied (\"java.lang.RuntimePermission\" \"setIO\") in stderr");
+	}
+
+	@Test
 	void testJavaAdvancedIOTestTimeout() throws Exception {
 		try (Writer fw = new FileWriter(new File(sourceDir, "Triangle.java"))) {
 			fw.write("public class Triangle {\n" + "	static void drawTriangle(int sizeOfTriangle) {\n" + "		if (sizeOfTriangle == 2) { try { Thread.sleep(10000); } catch (InterruptedException e) {} }\n		for (int i = 0; i < sizeOfTriangle; i++) {\n" + "			for (int j = 0; j <= i; j++) {\n" + "				System.out.print(\"*\");\n" + "			}\n" + "			System.out.println();\n" + "		}\n" + "	}\n" + "}");
