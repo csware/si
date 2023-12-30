@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,6 +29,9 @@ import java.util.Random;
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObjectBuilder;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
@@ -38,7 +42,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class DockerTest extends TempDirTest {
-	//final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	final static public String SAFE_DOCKER_SCRIPT = "/usr/local/bin/safe-docker";
 
 	private static final Random random = new Random();
@@ -102,6 +106,7 @@ public class DockerTest extends TempDirTest {
 			pb.directory(studentDir);
 			/* only forward explicitly specified environment variables to test processes */
 			pb.environment().keySet().removeIf(key -> !("PATH".equalsIgnoreCase(key) || "USER".equalsIgnoreCase(key) || "LANG".equalsIgnoreCase(key)));
+			LOG.debug("Executing external process: {} in {}", params, studentDir);
 			Process process = pb.start();
 			ProcessOutputGrabber outputGrapper = new ProcessOutputGrabber(process);
 			// no need to check for timeout, we fully rely on the safe-docker script here

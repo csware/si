@@ -120,6 +120,7 @@ public class JPlagAdapter extends DupeCheck {
 
 			ProcessBuilder pb = new ProcessBuilder(params);
 			pb.directory(tempDir);
+			LOG.debug("Executing external process: {} in {}", params, tempDir);
 			Process process = pb.start();
 			ProcessOutputGrabber outputGrapper = new ProcessOutputGrabber(process);
 			int exitValue = -1;

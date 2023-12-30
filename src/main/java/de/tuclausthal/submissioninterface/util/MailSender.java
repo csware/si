@@ -45,6 +45,8 @@ public class MailSender {
 	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public static boolean sendMail(String to, String subject, String messageText, List<File> attachments, MailOptions mailOptions) {
+		LOG.debug("Sending mail to: {}, Subject: {}, body: {}", to, subject, messageText);
+
 		MimeMessage msg;
 		Properties props = new Properties();
 		props.put("mail.smtp.host", Configuration.getInstance().getMailServer());

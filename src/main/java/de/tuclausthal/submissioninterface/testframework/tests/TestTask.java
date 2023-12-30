@@ -56,6 +56,14 @@ public class TestTask {
 		this.testId = test.getId();
 	}
 
+	final public int getTestId() {
+		return testId;
+	}
+
+	final public int getSubmissionId() {
+		return submissionid;
+	}
+
 	/**
 	 * Exetutes/performs the current task actions
 	 * @param basePath the path to the submissions

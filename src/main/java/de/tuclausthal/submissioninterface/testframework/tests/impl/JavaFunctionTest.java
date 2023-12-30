@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -22,9 +22,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
@@ -34,6 +38,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public abstract class JavaFunctionTest extends JavaSyntaxTest {
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	final static public String SECURITYMANAGER_JAR = "NoExitSecurityManager.jar";
 
 	public JavaFunctionTest(Test test) {
@@ -98,6 +103,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			pb.directory(cwd);
 			/* only forward explicitly specified environment variables to test processes */
 			pb.environment().keySet().removeIf(key -> !("PATH".equalsIgnoreCase(key) || "USER".equalsIgnoreCase(key) || "JAVA_HOME".equalsIgnoreCase(key) || "LANG".equalsIgnoreCase(key)));
+			LOG.debug("Executing external process: {} in {}", params, cwd);
 			Process process = pb.start();
 			ProcessOutputGrabber outputGrapper = new ProcessOutputGrabber(process);
 			TimeoutThread checkTread = new TimeoutThread(process, test.getTimeout());

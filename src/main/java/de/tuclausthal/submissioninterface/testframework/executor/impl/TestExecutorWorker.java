@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,7 +19,11 @@
 package de.tuclausthal.submissioninterface.testframework.executor.impl;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.concurrent.Callable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
@@ -28,6 +32,8 @@ import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
  * @author Sven Strickroth
  */
 public class TestExecutorWorker implements Callable<TestExecutorTestResult> {
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	private File dataPath;
 	private TestTask executionTask;
 
@@ -38,8 +44,10 @@ public class TestExecutorWorker implements Callable<TestExecutorTestResult> {
 
 	@Override
 	public TestExecutorTestResult call() throws Exception {
+		LOG.debug("Performing test {} on submissionid {}", executionTask.getTestId(), executionTask.getSubmissionId());
 		TestExecutorTestResult testResult = new TestExecutorTestResult();
 		executionTask.performTask(dataPath, testResult);
+		LOG.debug("Finished performing test {} on submissionid {}, passed: {}", executionTask.getTestId(), executionTask.getSubmissionId(), testResult.isTestPassed());
 		return testResult;
 	}
 }
