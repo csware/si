@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2021, 2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -49,11 +49,14 @@ public abstract class AbstractTest {
 	 * @param absolutePath the original path
 	 * @return an escaped path
 	 */
-	final protected String mkPath(String absolutePath) {
+	final static protected String mkPath(String absolutePath) {
 		if (System.getProperty("file.separator").equals("\\")) {
 			return absolutePath.replace("\\", "\\\\");
 		}
 		return absolutePath;
 	}
 
+	final static protected String mkPath(File absolutePath) {
+		return mkPath(absolutePath.getAbsolutePath());
+	}
 }

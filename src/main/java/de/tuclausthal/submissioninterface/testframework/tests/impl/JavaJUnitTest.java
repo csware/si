@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2021-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -63,7 +63,7 @@ public class JavaJUnitTest extends JavaFunctionTest {
 		policyFileWriter.write("	permission java.security.AllPermission;\n");
 		policyFileWriter.write("};\n");
 		policyFileWriter.write("\n");
-		policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar") + "\" {\n");
+		policyFileWriter.write("grant codeBase \"file:" + mkPath(new File(Util.constructPath(basePath, test.getTask()), "junittest" + test.getId() + ".jar")) + "\" {\n");
 		policyFileWriter.write("	permission java.lang.RuntimePermission \"setIO\";\n");
 		policyFileWriter.write("	permission java.lang.RuntimePermission \"exitTheVM.*\";\n");
 		policyFileWriter.write("	permission java.lang.reflect.ReflectPermission \"suppressAccessChecks\";\n");
@@ -73,6 +73,6 @@ public class JavaJUnitTest extends JavaFunctionTest {
 	@Override
 	void populateClassPathForRunningtests(File basePath, List<File> classPath) {
 		classPath.add(new File(basePath, JavaJUnitTest.JUNIT_JAR));
-		classPath.add(new File(basePath, test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "junittest" + test.getId() + ".jar"));
+		classPath.add(new File(Util.constructPath(basePath, test.getTask()), "junittest" + test.getId() + ".jar"));
 	}
 }

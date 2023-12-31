@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2014, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2014, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -35,7 +35,6 @@ import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.view.MessageView;
@@ -64,8 +63,6 @@ public class DownloadAsZip extends HttpServlet {
 			return;
 		}
 
-		Task task = submission.getTask();
-
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), submission.getTask().getTaskGroup().getLecture());
@@ -74,7 +71,7 @@ public class DownloadAsZip extends HttpServlet {
 			return;
 		}
 
-		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
+		final File path = Util.constructPath(Configuration.getInstance().getDataPath(), submission);
 
 		if (path.exists()) {
 			ShowFile.setContentTypeBasedonFilenameExtension(response, "submission-id" + submission.getSubmissionid() + ".zip", true);

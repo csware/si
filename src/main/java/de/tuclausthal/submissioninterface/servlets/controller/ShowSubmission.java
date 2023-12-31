@@ -18,7 +18,6 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.ZonedDateTime;
@@ -70,8 +69,6 @@ public class ShowSubmission extends HttpServlet {
 			return;
 		}
 
-		Task task = submission.getTask();
-
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), submission.getTask().getTaskGroup().getLecture());
@@ -81,7 +78,7 @@ public class ShowSubmission extends HttpServlet {
 		}
 
 		request.setAttribute("submission", submission);
-		request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringListSorted(new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"))));
+		request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringListSorted(Util.constructPath(Configuration.getInstance().getDataPath(), submission)));
 		getServletContext().getNamedDispatcher(ShowSubmissionView.class.getSimpleName()).forward(request, response);
 	}
 

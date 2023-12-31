@@ -157,7 +157,7 @@ public class SubmitSolution extends HttpServlet {
 				if (task.showTextArea()) {
 					String textsolution = "";
 					if (submission != null) {
-						File textSolutionFile = Util.buildPath(new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid()), task.getShowTextArea());
+						File textSolutionFile = Util.buildPath(Util.constructPath(Configuration.getInstance().getDataPath(), submission), task.getShowTextArea());
 						if (textSolutionFile == null) {
 							// should never happen!
 							LOG.error("textSolutionFile tried to escape submissiondir: \"{}\"", task.getShowTextArea());
@@ -365,7 +365,7 @@ public class SubmitSolution extends HttpServlet {
 			}
 		}
 
-		File taskPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+		final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
 		File path = new File(taskPath, String.valueOf(submission.getSubmissionid()));
 		Util.ensurePathExists(path);
 

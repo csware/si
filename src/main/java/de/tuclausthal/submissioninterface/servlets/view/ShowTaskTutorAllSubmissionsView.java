@@ -18,7 +18,6 @@
 
 package de.tuclausthal.submissioninterface.servlets.view;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.ZonedDateTime;
@@ -238,7 +237,7 @@ public class ShowTaskTutorAllSubmissionsView extends HttpServlet {
 				out.println("</ul>");
 			}
 
-			List<String> submittedFiles = Util.listFilesAsRelativeStringListSorted(new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator")));
+			List<String> submittedFiles = Util.listFilesAsRelativeStringListSorted(Util.constructPath(Configuration.getInstance().getDataPath(), submission));
 			if (!submittedFiles.isEmpty()) {
 				if (task.getDeadline().isAfter(ZonedDateTime.now()) && task.getTests().stream().anyMatch(atest -> atest.TutorsCanRun())) {
 					out.println("<FORM class=mid method=POST action=\"" + Util.generateHTMLLink(PerformTest.class.getSimpleName(), response) + "\">");

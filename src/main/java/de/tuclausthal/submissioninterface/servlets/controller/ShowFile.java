@@ -88,8 +88,7 @@ public class ShowFile extends HttpServlet {
 			return;
 		}
 
-		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid());
-		File file = Util.buildPath(path, request.getPathInfo().substring(1));
+		final File file = Util.buildPath(Util.constructPath(Configuration.getInstance().getDataPath(), submission), request.getPathInfo().substring(1));
 		if (file != null && file.isFile()) {
 			if (isPlainTextFile(file.getName().toLowerCase()) && !"true".equals(request.getParameter("download"))) {
 				// code for loading/displaying text-files

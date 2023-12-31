@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -73,7 +73,7 @@ public abstract class DupeCheck {
 		DAOFactory.SimilarityTestDAOIf(session).resetSimilarityTest(similarityTest);
 		tx.commit();
 		Task task = similarityTest.getTask();
-		File taskPath = new File(path.getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+		final File taskPath = Util.constructPath(path, task);
 		NormalizerCache normalizerCache = null;
 		try {
 			normalizerCache = new NormalizerCache(taskPath, similarityTest.getNormalizer());

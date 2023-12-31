@@ -177,7 +177,7 @@ public class TestManager extends HttpServlet {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			UMLConstraintTest test = testDAO.createUMLConstraintTest(task);
 
-			File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
+			final File path = Util.constructPath(Configuration.getInstance().getDataPath(), task);
 			Util.ensurePathExists(path);
 			int timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
 			int timeout = Util.parseInteger(request.getParameter("timeout"), 15);
@@ -212,7 +212,7 @@ public class TestManager extends HttpServlet {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			JUnitTest test = testDAO.createJUnitTest(task);
 
-			File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
+			final File path = Util.constructPath(Configuration.getInstance().getDataPath(), task);
 			Util.ensurePathExists(path);
 			int timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
 			boolean giveDetailsToStudents = request.getParameter("giveDetailsToStudents") != null;

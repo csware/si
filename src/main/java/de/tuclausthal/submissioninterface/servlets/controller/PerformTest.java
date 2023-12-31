@@ -134,7 +134,7 @@ public class PerformTest extends HttpServlet {
 				throw new IOException("Failed to create tempdir!");
 			}
 
-			final File taskPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+			final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
 			if (request.getParameter("sid") != null) {
 				SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 				Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));

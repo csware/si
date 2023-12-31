@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -139,7 +139,7 @@ public class SearchSubmissions extends HttpServlet {
 
 		}
 		if (arrayContains(request.getParameterValues("search"), "files")) {
-			File taskPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+			final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
 			for (Submission submission : task.getSubmissions()) {
 				File submissionPath = new File(taskPath, String.valueOf(submission.getSubmissionid()));
 				List<String> files = Util.listFilesAsRelativeStringList(submissionPath);

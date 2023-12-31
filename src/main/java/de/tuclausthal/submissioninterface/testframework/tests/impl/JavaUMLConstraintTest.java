@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2021, 2023 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -24,6 +24,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTes
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.uml.UMLDiagramm;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Provides feedback for UML diagrams
@@ -38,7 +39,7 @@ public class JavaUMLConstraintTest extends AbstractTest {
 	public void performTest(File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
 		String output = "";
 
-		File musterLoesung = new File(basePath.getAbsolutePath() + System.getProperty("file.separator") + test.getTask().getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + test.getTask().getTaskid() + System.getProperty("file.separator") + "musterloesung" + test.getId() + ".xmi");
+		final File musterLoesung = new File(Util.constructPath(basePath, test.getTask()), "musterloesung" + test.getId() + ".xmi");
 		File studentenLoesung = new File(submissionPath, "loesung.xmi");
 
 		UMLDiagramm diagramm = UMLDiagramm.getDiagramm(studentenLoesung);

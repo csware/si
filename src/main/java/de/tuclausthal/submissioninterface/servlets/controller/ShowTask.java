@@ -94,7 +94,7 @@ public class ShowTask extends HttpServlet {
 
 		request.setAttribute("participation", participation);
 
-		final File taskPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+		final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
 		request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, "advisorfiles" + System.getProperty("file.separator"))));
 		request.setAttribute("task", task);
 		if (request.getParameter("onlydescription") != null) {

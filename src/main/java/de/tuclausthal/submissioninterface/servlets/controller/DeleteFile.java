@@ -91,8 +91,7 @@ public class DeleteFile extends HttpServlet {
 			return;
 		}
 
-		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-		File file = Util.buildPath(path, request.getPathInfo().substring(1));
+		final File file = Util.buildPath(Util.constructPath(Configuration.getInstance().getDataPath(), submission), request.getPathInfo().substring(1));
 		if (file != null && file.isFile()) {
 			request.setAttribute("submission", submission);
 			request.setAttribute("filename", request.getPathInfo().substring(1));
@@ -140,8 +139,8 @@ public class DeleteFile extends HttpServlet {
 			return;
 		}
 
-		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
-		File file = Util.buildPath(path, request.getPathInfo().substring(1));
+		final File path = Util.constructPath(Configuration.getInstance().getDataPath(), submission);
+		final File file = Util.buildPath(path, request.getPathInfo().substring(1));
 		if (file != null) {
 			Transaction tx = session.beginTransaction();
 			session.lock(submission, LockMode.PESSIMISTIC_WRITE);

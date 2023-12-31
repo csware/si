@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.util.HibernateSessionHelper;
@@ -76,11 +75,10 @@ public class TestTask {
 		if (test != null && submission != null) {
 			Transaction tx = session.beginTransaction();
 			//session.buildLockRequest(LockOptions.UPGRADE).lock(submission);
-			Task task = submission.getTask();
 
 			testResult.setTestID(testId);
 
-			File path = new File(basePath.getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid() + System.getProperty("file.separator"));
+			final File path = Util.constructPath(basePath, submission);
 
 			performTaskInFolder(test, basePath, path, testResult);
 

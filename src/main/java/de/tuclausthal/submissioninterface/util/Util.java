@@ -64,6 +64,8 @@ import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerIf;
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 
 /**
  * Utility-class with various helpers
@@ -622,5 +624,14 @@ public final class Util {
 			return null;
 		}
 		return new File(basePath, result);
+	}
+
+	public static File constructPath(final File basePath, final Task task) {
+		return new File(basePath.getAbsoluteFile(), task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+	}
+
+	public static File constructPath(final File basePath, final Submission submission) {
+		final Task task = submission.getTask();
+		return new File(basePath.getAbsoluteFile(), task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid());
 	}
 }

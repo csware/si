@@ -78,7 +78,7 @@ public class DownloadTaskFile extends HttpServlet {
 			return;
 		}
 
-		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles");
+		final File path = new File(Util.constructPath(Configuration.getInstance().getDataPath(), task), "advisorfiles");
 		File file = Util.buildPath(path, request.getPathInfo().substring(1));
 		if (file != null && file.isFile()) {
 			ShowFile.setContentTypeBasedonFilenameExtension(response, file.getName(), true);
@@ -120,7 +120,7 @@ public class DownloadTaskFile extends HttpServlet {
 			return;
 		}
 
-		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "advisorfiles");
+		final File path = new File(Util.constructPath(Configuration.getInstance().getDataPath(), task), "advisorfiles");
 		File file = Util.buildPath(path, request.getPathInfo().substring(1));
 		if (file != null && file.isFile()) {
 			if (!"delete".equals(request.getParameter("action"))) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2023 Sven Strickroth <email@cs-ware.de>
  * Copyright 2019 Dustin Reineke <dustin.reineke@tu-clausthal.de>
  *
  * This file is part of the GATE.
@@ -98,7 +98,7 @@ public class DownloadSubmissionsByGroup extends HttpServlet {
 
 		try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
 			// add submitted files to zip archive
-			final File taskPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+			final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
 			for (final int submissionId : submissionIds) {
 				File submissionDir = new File(taskPath, submissionId + System.getProperty("file.separator"));
 				if (!submissionDir.exists()) {

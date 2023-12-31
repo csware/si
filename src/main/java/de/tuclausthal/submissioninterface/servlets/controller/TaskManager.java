@@ -147,7 +147,7 @@ public class TaskManager extends HttpServlet {
 			}
 
 			request.setAttribute("task", task);
-			File taskPath = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+			final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
 			request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, "advisorfiles" + System.getProperty("file.separator"))));
 			request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
 
@@ -217,7 +217,7 @@ public class TaskManager extends HttpServlet {
 			return;
 		}
 
-		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + foldername + System.getProperty("file.separator"));
+		final File path = new File(Util.constructPath(Configuration.getInstance().getDataPath(), task), foldername);
 		Util.ensurePathExists(path);
 
 		long fileParts = request.getParts().stream().filter(part -> "file".equals(part.getName())).count();

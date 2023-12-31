@@ -80,7 +80,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 			return;
 		}
 
-		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "modelsolutionfiles");
+		final File path = new File(Util.constructPath(Configuration.getInstance().getDataPath(), task), "modelsolutionfiles");
 		File file = Util.buildPath(path, request.getPathInfo().substring(1));
 		if (file != null && file.isFile()) {
 			ShowFile.setContentTypeBasedonFilenameExtension(response, file.getName(), true);
@@ -123,8 +123,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 			return;
 		}
 
-		File path = new File(Configuration.getInstance().getDataPath().getAbsolutePath() + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + "modelsolutionfiles");
-		File file = Util.buildPath(path, request.getPathInfo().substring(1));
+		final File file = Util.buildPath(new File(Util.constructPath(Configuration.getInstance().getDataPath(), task), "modelsolutionfiles"), request.getPathInfo().substring(1));
 		if (file != null && file.isFile()) {
 			if (!"delete".equals(request.getParameter("action"))) {
 				response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");

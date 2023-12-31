@@ -76,7 +76,7 @@ public class JPlagAdapter extends DupeCheck {
 			File resultsDir = new File(tempDir, "results");
 			resultsDir.mkdir();
 
-			File taskPath = new File(path + System.getProperty("file.separator") + task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator"));
+			final File taskPath = Util.constructPath(path, task);
 
 			File submissionsDir = new File(tempDir, "submissions");
 			submissionsDir.mkdir();
