@@ -342,7 +342,7 @@ public class AdminMenue extends HttpServlet {
 					if (task.getDeadline().isAfter(now)) { // do not clean up submissions for tasks that are still open for submission
 						continue;
 					}
-					if (submissions.isDirectory() && !Util.isInteger(submissions.getName())) { // TODO: implement concrete whitelist here
+					if (!submissions.isDirectory() || !Util.isInteger(submissions.getName())) { // TODO: implement concrete whitelist here: logs, modelsolutionfiles, advisorfiles, musterloesung-ID.xmi
 						if (dryRun) {
 							continue;
 						}
