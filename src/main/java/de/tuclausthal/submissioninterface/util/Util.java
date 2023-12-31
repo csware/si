@@ -74,6 +74,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 public final class Util {
 	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	public static Clock CLOCK = Clock.systemDefaultZone();
+	final private static String FILE_SEPARATOR = System.getProperty("file.separator");
 
 	/**
 	 * Escapes HTML sequences
@@ -330,7 +331,7 @@ public final class Util {
 	private static void listFilesAsRelativeStringList(List<String> submittedFiles, File path, String relativePath) {
 		for (File file : path.listFiles()) {
 			if (file.isDirectory()) {
-				listFilesAsRelativeStringList(submittedFiles, file, relativePath + file.getName() + System.getProperty("file.separator"));
+				listFilesAsRelativeStringList(submittedFiles, file, relativePath + file.getName() + FILE_SEPARATOR);
 			} else {
 				submittedFiles.add(relativePath + file.getName());
 			}
@@ -350,7 +351,7 @@ public final class Util {
 			// check that the file is not excluded
 			if (!excludedFileNames.contains(file.getName())) {
 				if (file.isDirectory()) {
-					listFilesAsRelativeStringList(submittedFiles, file, relativePath + file.getName() + System.getProperty("file.separator"), excludedFileNames);
+					listFilesAsRelativeStringList(submittedFiles, file, relativePath + file.getName() + FILE_SEPARATOR, excludedFileNames);
 				} else {
 					submittedFiles.add(relativePath + file.getName());
 				}
@@ -406,7 +407,7 @@ public final class Util {
 		if (fromFile.isDirectory()) {
 			toFile.mkdir();
 			for (File subFile : fromFile.listFiles()) {
-				recursiveCopy(subFile, new File(toFile.getAbsolutePath() + System.getProperty("file.separator") + subFile.getName()));
+				recursiveCopy(subFile, new File(toFile.getAbsolutePath() + FILE_SEPARATOR + subFile.getName()));
 			}
 			return;
 		}
@@ -427,7 +428,7 @@ public final class Util {
 					out.putNextEntry(new ZipEntry(relativePath + file.getName()));
 					copyInputStreamAndClose(file, out);
 				} else {
-					recursivelyZip(out, file, relativePath + file.getName() + System.getProperty("file.separator"));
+					recursivelyZip(out, file, relativePath + file.getName() + FILE_SEPARATOR);
 				}
 			} catch (Exception e) {
 				// ignore ;)
@@ -587,7 +588,7 @@ public final class Util {
 			Matcher packageMatcher = packagePattern.matcher(javaFileContents);
 			File destFile = new File(path, fileName);
 			if (packageMatcher.matches()) {
-				String packageName = packageMatcher.group(1).replace(".", System.getProperty("file.separator"));
+				String packageName = packageMatcher.group(1).replace(".", FILE_SEPARATOR);
 				File packageDirectory = new File(path, packageName);
 				packageDirectory.mkdirs();
 				destFile = new File(packageDirectory, fileName);
@@ -627,11 +628,11 @@ public final class Util {
 	}
 
 	public static File constructPath(final File basePath, final Task task) {
-		return new File(basePath.getAbsoluteFile(), task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid());
+		return new File(basePath.getAbsoluteFile(), task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid());
 	}
 
 	public static File constructPath(final File basePath, final Submission submission) {
 		final Task task = submission.getTask();
-		return new File(basePath.getAbsoluteFile(), task.getTaskGroup().getLecture().getId() + System.getProperty("file.separator") + task.getTaskid() + System.getProperty("file.separator") + submission.getSubmissionid());
+		return new File(basePath.getAbsoluteFile(), task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid() + FILE_SEPARATOR + submission.getSubmissionid());
 	}
 }
