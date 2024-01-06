@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -47,6 +47,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
@@ -320,11 +321,10 @@ public class AdminMenue extends HttpServlet {
 				// list all submissions
 				Set<Integer> submissionsInDB = submissionDAO.getSubmissionsForTaskOrdered(task, false).stream().map(s -> s.getSubmissionid()).collect(Collectors.toSet());
 				for (File submissions : tasks.listFiles()) {
-					// check for junittests
-					if (submissions.isFile() && submissions.getName().startsWith("junittest")) {
+					if (submissions.isFile()) {
 						boolean kill = true;
 						for (Test test : task.getTests()) {
-							if (submissions.getName().equals("junittest" + test.getId() + ".jar") && test instanceof JUnitTest) {
+							if (submissions.getName().equals("junittest" + test.getId() + ".jar") && test instanceof JUnitTest || submissions.getName().equals("musterloesung" + test.getId() + ".xmi") && test instanceof UMLConstraintTest) {
 								kill = false;
 								break;
 							}
@@ -342,7 +342,7 @@ public class AdminMenue extends HttpServlet {
 					if (task.getDeadline().isAfter(now)) { // do not clean up submissions for tasks that are still open for submission
 						continue;
 					}
-					if (!submissions.isDirectory() || !Util.isInteger(submissions.getName())) { // TODO: implement concrete whitelist here: logs, modelsolutionfiles, advisorfiles, musterloesung-ID.xmi
+					if (!Util.isInteger(submissions.getName())) { // TODO: implement concrete whitelist here: logs, modelsolutionfiles, advisorfiles
 						if (dryRun) {
 							continue;
 						}
