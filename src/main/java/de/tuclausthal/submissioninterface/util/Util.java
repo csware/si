@@ -628,11 +628,11 @@ public final class Util {
 	}
 
 	public static File constructPath(final File basePath, final Task task) {
-		return new File(basePath.getAbsoluteFile(), task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid());
+		return new File(basePath, task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid());
 	}
 
 	public static File constructPath(final File basePath, final Submission submission) {
 		final Task task = submission.getTask();
-		return new File(basePath.getAbsoluteFile(), task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid() + FILE_SEPARATOR + submission.getSubmissionid());
+		return new File(basePath, task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid() + FILE_SEPARATOR + submission.getSubmissionid());
 	}
 }

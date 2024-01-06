@@ -53,7 +53,7 @@ public class Configuration {
 
 	static private Configuration instance = null;
 	private Constructor<Template> templateConstructor;
-	private String dataPath;
+	private File dataPath;
 	private String serverName;
 	private String fullServerURI;
 	private String adminMail;
@@ -161,20 +161,20 @@ public class Configuration {
 	 * @return the path
 	 */
 	public File getDataPath() {
-		return new File(dataPath);
+		return dataPath;
 	}
 
 	private void fillDatapath(ServletContext context) {
-		dataPath = context.getInitParameter("datapath");
-		if (dataPath == null) {
+		String dataPathValue = context.getInitParameter("datapath");
+		if (dataPathValue == null) {
 			throw new RuntimeException("datapath not specified");
 		}
-		File path = new File(dataPath);
-		if (path.isFile()) {
+		dataPath = new File(dataPathValue).getAbsoluteFile();
+		if (dataPath.isFile()) {
 			throw new RuntimeException("datapath must not be a file");
 		}
 		try {
-			Util.ensurePathExists(path);
+			Util.ensurePathExists(dataPath);
 		} catch (IOException e) {
 			throw new RuntimeException("could not create datapath", e);
 		}

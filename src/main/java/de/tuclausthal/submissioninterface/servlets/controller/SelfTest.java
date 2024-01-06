@@ -155,7 +155,7 @@ public class SelfTest extends HttpServlet {
 			testresults.add(new TestResult("Testframework-Listener läuft.", false));
 			LOG.error("Could not access LocalExecutor.", e);
 		}
-		testresults.add(new TestResult("Daten-Verzeichnis existiert, ist lesbar und beschreibbar.", Util.escapeHTML(Configuration.getInstance().getDataPath().getAbsolutePath()), checkDataDir()));
+		testresults.add(new TestResult("Daten-Verzeichnis existiert, ist lesbar und beschreibbar.", Util.escapeHTML(Configuration.getInstance().getDataPath().toString()), checkDataDir()));
 		testresults.add(new TestResult("Parent vom Daten-Verzeichnis ist nicht beschreibbar (erhöht die Sicherheit).", !Configuration.getInstance().getDataPath().getParentFile().canWrite()));
 		checkRequiredFilesInDataDir(testresults);
 		if (new File(Configuration.getInstance().getDataPath(), JPlagAdapter.JPLAG_JAR).exists()) {
