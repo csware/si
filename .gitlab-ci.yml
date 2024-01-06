@@ -2,6 +2,8 @@
 # Building maven: https://docs.gitlab.com/ee/user/project/packages/maven_repository.html
 
 variables:
+  MAVEN_IMAGE11: $CI_REGISTRY_IMAGE/maven:3.9-eclipse-temurin-11jdk
+  MAVEN_IMAGE17: $CI_REGISTRY_IMAGE/maven:3.9-eclipse-temurin-17jdk
   # Configure mysql environment variables (https://hub.docker.com/_/mariadb/)
   MYSQL_DATABASE: "root"
   MYSQL_ROOT_PASSWORD: ""
@@ -14,6 +16,12 @@ variables:
   # when running from the command line.
   # `installAtEnd` and `deployAtEnd` are only effective with recent version of the corresponding plugins.
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  # to use dind-rootless, define 'environment = ["DIND_ROOTLESS=-rootless"]' in runner-config/config.toml additionally to allowed_privileged_services etc., cf. https://docs.gitlab.com/runner/executors/docker.html#use-rootless-docker-in-docker-with-restricted-privileged-mode and https://forum.gitlab.com/t/94101
+  DOCKER_TLS_CERTDIR: ""
+
+stages:
+ - prepare
+ - build
 
 # Cache downloaded dependencies and plugins between builds.
 # To keep cache across branches add 'key: "$CI_JOB_NAME"'
@@ -21,16 +29,40 @@ cache:
   paths:
     - .m2/repository
 
+prepare-docker-image:
+  stage: prepare
+  needs: []
+  cache: {}
+  image: docker:24.0
+  services:
+    - name: docker:24.0-dind$DIND_ROOTLESS
+      command: ["--tls=false"]
+  script:
+    - cd .gitlab-ci
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
+    - docker build --pull -t $MAVEN_IMAGE11 .
+    - docker push $MAVEN_IMAGE11
+    - sed -i 's/-11-/-17-/' Dockerfile
+    - docker build --pull -t $MAVEN_IMAGE17 .
+    - docker push $MAVEN_IMAGE17
+  rules:
+    - if: $UPDATE_CONTAINER
+      when: always
+    - changes:
+      - .gitlab-ci.yml
+      - .gitlab-ci/Dockerfile
+      when: always
+    - when: never
+
 compile-jdk11:
-  image: maven:3.9-eclipse-temurin-11-focal
+  image: $MAVEN_IMAGE11
   services:
     - mariadb:10.6
   stage: build
+  needs:
+    - job: prepare-docker-image
+      optional: true
   before_script:
-    - echo -e "section_start:`date +%s`:install_packages[collapsed=true]\r\e[0K\e[1;96mInstalling packages\e[0m"
-    - apt-get update -qq
-    - apt-get install -qq -y mariadb-client xmlstarlet
-    - echo -e "section_end:`date +%s`:install_packages\r\e[0K"
     - perl -pi -e 's|localhost/[a-zA-Z0-9]+|mariadb/abgabesystem|g' src/main/resources/hibernate.cfg.xml
     - perl -pi -e 's|hibernate.show_sql">true|hibernate.show_sql">false|g' src/main/resources/hibernate.cfg.xml
   script:
@@ -51,4 +83,4 @@ compile-jdk11:
 
 compile-jdk17:
   extends: compile-jdk11
-  image: maven:3.9-eclipse-temurin-17-focal
+  image: $MAVEN_IMAGE17

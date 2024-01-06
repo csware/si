@@ -14,3 +14,4 @@ deps/unmanaged/*/**.xml text eol=lf
 .gitignore text
 .tgitconfig text
 safe-docker/** text
+Dockerfile text
