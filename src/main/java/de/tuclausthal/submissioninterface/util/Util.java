@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2014, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2014, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -634,5 +634,9 @@ public final class Util {
 	public static File constructPath(final File basePath, final Submission submission) {
 		final Task task = submission.getTask();
 		return new File(basePath, task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid() + FILE_SEPARATOR + submission.getSubmissionid());
+	}
+
+	public static File constructPath(final File basePath, final Task task, final TaskPath pathComponent) {
+		return new File(basePath, task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid() + FILE_SEPARATOR + pathComponent.getPathComponent());
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2014, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2014, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -41,6 +41,7 @@ import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Configuration;
+import de.tuclausthal.submissioninterface.util.TaskPath;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -80,7 +81,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 			return;
 		}
 
-		final File path = new File(Util.constructPath(Configuration.getInstance().getDataPath(), task), "modelsolutionfiles");
+		final File path = Util.constructPath(Configuration.getInstance().getDataPath(), task, TaskPath.MODELSOLUTIONFILES);
 		File file = Util.buildPath(path, request.getPathInfo().substring(1));
 		if (file != null && file.isFile()) {
 			ShowFile.setContentTypeBasedonFilenameExtension(response, file.getName(), true);
@@ -123,7 +124,7 @@ public class DownloadModelSolutionFile extends HttpServlet {
 			return;
 		}
 
-		final File file = Util.buildPath(new File(Util.constructPath(Configuration.getInstance().getDataPath(), task), "modelsolutionfiles"), request.getPathInfo().substring(1));
+		final File file = Util.buildPath(Util.constructPath(Configuration.getInstance().getDataPath(), task, TaskPath.MODELSOLUTIONFILES), request.getPathInfo().substring(1));
 		if (file != null && file.isFile()) {
 			if (!"delete".equals(request.getParameter("action"))) {
 				response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");

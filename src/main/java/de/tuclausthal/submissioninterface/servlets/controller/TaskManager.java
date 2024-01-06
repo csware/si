@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2014, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2014, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -73,6 +73,7 @@ import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Configuration;
+import de.tuclausthal.submissioninterface.util.TaskPath;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -148,8 +149,8 @@ public class TaskManager extends HttpServlet {
 
 			request.setAttribute("task", task);
 			final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
-			request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, "advisorfiles" + System.getProperty("file.separator"))));
-			request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
+			request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, TaskPath.ADVISORFILES.getPathComponent())));
+			request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, TaskPath.MODELSOLUTIONFILES.getPathComponent())));
 
 			getServletContext().getNamedDispatcher(TaskManagerView.class.getSimpleName()).forward(request, response);
 		} else if ((("editTaskGroup".equals(request.getParameter("action")) && request.getParameter("taskgroupid") != null) || ("newTaskGroup".equals(request.getParameter("action")) && request.getParameter("lecture") != null))) {
@@ -204,7 +205,7 @@ public class TaskManager extends HttpServlet {
 		}
 	}
 
-	private void handleUploadedFiles(Lecture lecture, String foldername, HttpServletRequest request, HttpServletResponse response, Session session) throws IOException, ServletException {
+	private void handleUploadedFiles(Lecture lecture, TaskPath foldername, HttpServletRequest request, HttpServletResponse response, Session session) throws IOException, ServletException {
 		Template template = TemplateFactory.getTemplate(request, response);
 		PrintWriter out = response.getWriter();
 
@@ -217,7 +218,7 @@ public class TaskManager extends HttpServlet {
 			return;
 		}
 
-		final File path = new File(Util.constructPath(Configuration.getInstance().getDataPath(), task), foldername);
+		final File path = Util.constructPath(Configuration.getInstance().getDataPath(), task, foldername);
 		Util.ensurePathExists(path);
 
 		long fileParts = request.getParts().stream().filter(part -> "file".equals(part.getName())).count();
@@ -547,10 +548,10 @@ public class TaskManager extends HttpServlet {
 			response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response));
 			return;
 		} else if ("uploadTaskFile".equals(request.getParameter("action"))) {
-			handleUploadedFiles(participation.getLecture(), "advisorfiles", request, response, session);
+			handleUploadedFiles(participation.getLecture(), TaskPath.ADVISORFILES, request, response, session);
 			return;
 		} else if ("uploadModelSolutionFile".equals(request.getParameter("action"))) {
-			handleUploadedFiles(participation.getLecture(), "modelsolutionfiles", request, response, session);
+			handleUploadedFiles(participation.getLecture(), TaskPath.MODELSOLUTIONFILES, request, response, session);
 			return;
 		} else if (("saveNewTaskGroup".equals(request.getParameter("action")) || "saveTaskGroup".equals(request.getParameter("action")))) {
 			TaskGroupDAOIf taskGroupDAO = DAOFactory.TaskGroupDAOIf(session);

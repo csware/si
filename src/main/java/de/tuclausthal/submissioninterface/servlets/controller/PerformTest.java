@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2015, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2015, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -56,6 +56,7 @@ import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
 import de.tuclausthal.submissioninterface.util.Configuration;
+import de.tuclausthal.submissioninterface.util.TaskPath;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -149,7 +150,7 @@ public class PerformTest extends HttpServlet {
 				// prepare tempdir
 				Util.recursiveCopy(submissionPath, path);
 			} else {
-				final File modelSolutionPath = new File(taskPath, "modelsolutionfiles");
+				final File modelSolutionPath = new File(taskPath, TaskPath.MODELSOLUTIONFILES.getPathComponent());
 				// prepare tempdir
 				if (modelSolutionPath.isDirectory()) {
 					Util.recursiveCopy(modelSolutionPath, path);

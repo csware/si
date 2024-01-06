@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -48,6 +48,7 @@ import de.tuclausthal.submissioninterface.servlets.view.ShowTaskTutorCSVView;
 import de.tuclausthal.submissioninterface.servlets.view.ShowTaskTutorPrintView;
 import de.tuclausthal.submissioninterface.servlets.view.ShowTaskTutorView;
 import de.tuclausthal.submissioninterface.util.Configuration;
+import de.tuclausthal.submissioninterface.util.TaskPath;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -95,7 +96,7 @@ public class ShowTask extends HttpServlet {
 		request.setAttribute("participation", participation);
 
 		final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
-		request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, "advisorfiles" + System.getProperty("file.separator"))));
+		request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, TaskPath.ADVISORFILES.getPathComponent())));
 		request.setAttribute("task", task);
 		if (request.getParameter("onlydescription") != null) {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
@@ -116,7 +117,7 @@ public class ShowTask extends HttpServlet {
 				}
 				getServletContext().getNamedDispatcher(ShowTaskTutorPrintView.class.getSimpleName()).forward(request, response);
 			} else {
-				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
+				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, TaskPath.MODELSOLUTIONFILES.getPathComponent())));
 				getServletContext().getNamedDispatcher(ShowTaskTutorView.class.getSimpleName()).forward(request, response);
 			}
 		} else {
@@ -134,7 +135,7 @@ public class ShowTask extends HttpServlet {
 				}
 			}
 			if (ModelSolutionProvisionType.canStudentAccessModelSolution(task, submission, null, null)) {
-				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, "modelsolutionfiles" + System.getProperty("file.separator"))));
+				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, TaskPath.MODELSOLUTIONFILES.getPathComponent())));
 			}
 
 			request.setAttribute("submission", submission);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2014, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2014, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -81,6 +81,7 @@ import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Configuration;
+import de.tuclausthal.submissioninterface.util.TaskPath;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -371,7 +372,7 @@ public class SubmitSolution extends HttpServlet {
 
 		if (file != null) {
 			LogEntry logEntry = new LogDAO(session).createLogUploadEntry(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null);
-			File logPath = new File(taskPath, "logs" + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
+			File logPath = new File(taskPath, TaskPath.LOGS.getPathComponent() + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
 			logPath.mkdirs();
 			boolean skippedFiles = false;
 			ArrayList<String> uploadedFilenames = new ArrayList<>();
@@ -506,7 +507,7 @@ public class SubmitSolution extends HttpServlet {
 			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 		} else if (request.getParameter("textsolution") != null) {
 			LogEntry logEntry = new LogDAO(session).createLogUploadEntry(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null);
-			File logPath = new File(taskPath, "logs" + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
+			File logPath = new File(taskPath, TaskPath.LOGS.getPathComponent() + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
 			logPath.mkdirs();
 
 			JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();

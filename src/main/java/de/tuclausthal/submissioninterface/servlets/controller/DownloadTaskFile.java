@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -40,6 +40,7 @@ import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Configuration;
+import de.tuclausthal.submissioninterface.util.TaskPath;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -78,7 +79,7 @@ public class DownloadTaskFile extends HttpServlet {
 			return;
 		}
 
-		final File path = new File(Util.constructPath(Configuration.getInstance().getDataPath(), task), "advisorfiles");
+		final File path = Util.constructPath(Configuration.getInstance().getDataPath(), task, TaskPath.ADVISORFILES);
 		File file = Util.buildPath(path, request.getPathInfo().substring(1));
 		if (file != null && file.isFile()) {
 			ShowFile.setContentTypeBasedonFilenameExtension(response, file.getName(), true);
@@ -120,7 +121,7 @@ public class DownloadTaskFile extends HttpServlet {
 			return;
 		}
 
-		final File path = new File(Util.constructPath(Configuration.getInstance().getDataPath(), task), "advisorfiles");
+		final File path = Util.constructPath(Configuration.getInstance().getDataPath(), task, TaskPath.ADVISORFILES);
 		File file = Util.buildPath(path, request.getPathInfo().substring(1));
 		if (file != null && file.isFile()) {
 			if (!"delete".equals(request.getParameter("action"))) {
