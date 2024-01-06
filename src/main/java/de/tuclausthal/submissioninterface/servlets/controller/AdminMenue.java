@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -59,6 +60,7 @@ import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Configuration;
+import de.tuclausthal.submissioninterface.util.TaskPath;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
@@ -118,6 +120,8 @@ public class AdminMenue extends HttpServlet {
 			template.printAdminMenueTemplateHeader("Verzeichnis Cleanup");
 			PrintWriter out = response.getWriter();
 			cleanupDataDirectory(session, Configuration.getInstance().getDataPath(), false, out);
+			out.println("<hr>");
+			out.println("Done.");
 			template.printTemplateFooter();
 		} else if ("saveLecture".equals(request.getParameter("action")) && request.getParameter("name") != null && !request.getParameter("name").trim().isEmpty()) {
 			Transaction tx = session.beginTransaction();
@@ -292,6 +296,7 @@ public class AdminMenue extends HttpServlet {
 		final TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		final SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 
+		final List<String> taskPaths = Stream.of(TaskPath.values()).map(tp -> tp.getPathComponent()).collect(Collectors.toList());
 		for (File lectures : path.listFiles()) {
 			if (!lectures.isDirectory() || !Util.isInteger(lectures.getName())) {
 				continue;
@@ -342,7 +347,7 @@ public class AdminMenue extends HttpServlet {
 					if (task.getDeadline().isAfter(now)) { // do not clean up submissions for tasks that are still open for submission
 						continue;
 					}
-					if (!Util.isInteger(submissions.getName())) { // TODO: implement concrete whitelist here: logs, modelsolutionfiles, advisorfiles
+					if (taskPaths.contains(submissions.getName())) {
 						if (dryRun) {
 							continue;
 						}
