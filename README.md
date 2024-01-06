@@ -13,7 +13,7 @@ Please read the whole procedure in advance to executing it.
 - Install Java
   - On *nix (such as Debian) use the `openjdk-11-jre-headless` package
   - On Windows you can use [Liberica OpenJDK 11](https://bell-sw.com/pages/downloads/)
-- Install [Apache Tomcat](https://tomcat.apache.org) (e.g., on Debian-based systems use the `tomcat9` package)
+- Install [Apache Tomcat 9](https://tomcat.apache.org) (e.g., on Debian-based systems use the `tomcat9` package)
   - After installation Tomcat usually listens on locahost:8080
   - For development it is recommended to download the binary archive and integrate Tomcat into the used IDE, e.g. into Eclipse.
 - Install MariaDB
