@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -51,7 +51,7 @@ public class DeleteFileView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		out.println("<FORM class=mid method=POST action=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">");
-		out.println("<p>Sie Sie sicher, dass Sie die Datei \"" + Util.escapeHTML(filename) + "\" löschen möchten?</p>");
+		out.println("<p>Sind Sie sicher, dass Sie die Datei \"" + Util.escapeHTML(filename) + "\" löschen möchten?</p>");
 		out.println("<p>Dateien gleichen Namens werden auch durch erneutes Hochladen überschrieben.</p>");
 		out.println("<INPUT TYPE=submit VALUE=\"Datei löschen\"> <a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid(), request, response) + "\">Abbrechen</a>");
 		out.println("</FORM>");
