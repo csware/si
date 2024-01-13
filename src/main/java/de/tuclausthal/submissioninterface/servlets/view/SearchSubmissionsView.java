@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020-2021, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -55,7 +55,7 @@ public class SearchSubmissionsView extends HttpServlet {
 		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Suchen nach:</th>");
-		out.println("<td><input type=input name=q></td>");
+		out.println("<td><input type=text name=q></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Suchen in:</th>");
