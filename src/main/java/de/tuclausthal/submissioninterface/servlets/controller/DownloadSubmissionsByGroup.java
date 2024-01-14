@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2024 Sven Strickroth <email@cs-ware.de>
  * Copyright 2019 Dustin Reineke <dustin.reineke@tu-clausthal.de>
  *
  * This file is part of the GATE.
@@ -21,7 +21,6 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletException;
@@ -83,12 +82,6 @@ public class DownloadSubmissionsByGroup extends HttpServlet {
 			}
 		}
 
-		// get unique submission ids
-		HashSet<Integer> submissionIds = new HashSet<>();
-		for (Submission submission : DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOfGroupOrdered(task, group)) {
-			submissionIds.add(submission.getSubmissionid());
-		}
-
 		// set header
 		if (group == null) {
 			ShowFile.setContentTypeBasedonFilenameExtension(response, "Abgaben Aufgabe " + task.getTaskid() + " ohne Gruppe.zip", true);
@@ -99,13 +92,13 @@ public class DownloadSubmissionsByGroup extends HttpServlet {
 		try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
 			// add submitted files to zip archive
 			final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
-			for (final int submissionId : submissionIds) {
-				File submissionDir = new File(taskPath, submissionId + System.getProperty("file.separator"));
+			for (final Submission submission : DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOfGroupOrdered(task, group)) {
+				final File submissionDir = new File(taskPath, String.valueOf(submission.getSubmissionid()));
 				if (!submissionDir.exists()) {
 					continue;
 				}
 
-				String submitters = submissionId + " " + DAOFactory.SubmissionDAOIf(session).getSubmission(submissionId).getSubmitterNames();
+				String submitters = submission.getSubmissionid() + " " + submission.getSubmitterNames();
 				Util.recursivelyZip(zipOutputStream, submissionDir, submitters + System.getProperty("file.separator"));
 			}
 		}
