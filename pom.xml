@@ -135,6 +135,11 @@
 			<version>[5.7.0,6)</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.htmlunit</groupId>
+			<artifactId>htmlunit</artifactId>
+			<version>3.9.0</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>

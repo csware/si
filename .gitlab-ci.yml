@@ -45,12 +45,21 @@ prepare-docker-image:
     - sed -i 's/-11-/-17-/' Dockerfile
     - docker build --pull -t $MAVEN_IMAGE17 .
     - docker push $MAVEN_IMAGE17
+    - cd tomcat
+    - cp ../../submissiondir/junit.jar .
+    - cp ../../SecurityManager/NoExitSecurityManager.jar .
+    - cp ../../submissiondir/plaggie.properties .
+    - mkdir lectures
+    - cp -r ../../src/test/resources/lecture1 lectures/1
+    - docker build -t $CI_REGISTRY_IMAGE/tomcat:latest .
+    - docker push $CI_REGISTRY_IMAGE/tomcat:latest
   rules:
     - if: $UPDATE_CONTAINER
       when: always
     - changes:
       - .gitlab-ci.yml
       - .gitlab-ci/Dockerfile
+      - .gitlab-ci/tomcat/**
       when: always
     - when: never
 
@@ -58,21 +67,31 @@ compile-jdk11:
   image: $MAVEN_IMAGE11
   services:
     - mariadb:10.6
+    - name: $CI_REGISTRY_IMAGE/tomcat:latest
+      alias: tomcat
   stage: build
   needs:
     - job: prepare-docker-image
       optional: true
   before_script:
-    - perl -pi -e 's|localhost/[a-zA-Z0-9]+|mariadb/abgabesystem|g' src/main/resources/hibernate.cfg.xml
+    - export SERVER=$(grep mariadb /etc/hosts | cut -f1)
+    - perl -pi -e "s|localhost/[a-zA-Z0-9]+|$SERVER/abgabesystem|g" src/main/resources/hibernate.cfg.xml
     - perl -pi -e 's|hibernate.show_sql">true|hibernate.show_sql">false|g' src/main/resources/hibernate.cfg.xml
   script:
     - '[ -z "$SKIP_ONLINE_TESTS" ] && xmlstarlet val -w -e -s http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd src/main/webapp/WEB-INF/web.xml || echo "Skipped"'
     - '[ -z "$SKIP_ONLINE_TESTS" ] && xmlstarlet val -w -e -d http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd src/main/resources/hibernate.cfg.xml || echo "Skipped"'
+    - >
+      xmlstarlet edit --inplace -N x="http://xmlns.jcp.org/xml/ns/javaee" 
+      --update "/x:web-app/x:context-param[x:param-name[text()='datapath']]/x:param-value" --value "/srv/submissioninterface" 
+      --update "/x:web-app/x:filter[x:filter-name[text()='AuthenticationFilter']]/x:init-param[x:param-name[text()='login']]/x:param-value" --value "de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Form" 
+      --update "/x:web-app/x:filter[x:filter-name[text()='AuthenticationFilter']]/x:init-param[x:param-name[text()='verify']]/x:param-value" --value "de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.FakeVerify" 
+      src/main/webapp/WEB-INF/web.xml
     - 'mvn $MAVEN_CLI_OPTS verify'
     - mysql -u root -h mariadb -e 'create database abgabesystem CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin;'
     - mysql -u root -h mariadb abgabesystem < mysql.sql
     - mysql -u root -h mariadb abgabesystem < test-data.sql
-    - GATE_DB_TESTS=1 mvn $MAVEN_CLI_OPTS test
+    - curl --no-keepalive -u 'admin:s3cret' -T target/GATE-1.0-SNAPSHOT.war --no-keepalive -s -S -f "http://tomcat:8080/manager/text/deploy?path=/SubmissionInterface&update=true" | tee .deploy-error.tmp ; cat .deploy-error.tmp | grep -q "OK - Deployed application at context path"
+    - GATE_DB_TESTS=1 GATE_WEB_TESTS="http://tomcat:8080" mvn $MAVEN_CLI_OPTS test
     - mvn exec:java -Dexec.mainClass="de.tuclausthal.submissioninterface.util.HibernateSQLExporter"
   # keep built artifacts
   artifacts:
