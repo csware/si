@@ -72,8 +72,6 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
-import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestCount;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestCount_;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -236,13 +234,6 @@ class WebClientTest {
 						CriteriaDelete<TestCount> criteria = builder.createCriteriaDelete(TestCount.class);
 						Root<TestCount> root = criteria.from(TestCount.class);
 						criteria.where(builder.equal(root.get(TestCount_.user), participation.getUser()));
-						session.createMutationQuery(criteria).executeUpdate();
-					}
-					{
-						CriteriaBuilder builder = session.getCriteriaBuilder();
-						CriteriaDelete<TaskNumber> criteria = builder.createCriteriaDelete(TaskNumber.class);
-						Root<TaskNumber> root = criteria.from(TaskNumber.class);
-						criteria.where(builder.equal(root.get(TaskNumber_.participation), participation));
 						session.createMutationQuery(criteria).executeUpdate();
 					}
 					session.getTransaction().commit();

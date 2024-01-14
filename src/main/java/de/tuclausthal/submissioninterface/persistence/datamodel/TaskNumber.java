@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Giselle Rodriguez
- * Copyright 2011, 2020, 2022-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020, 2022-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -99,6 +99,7 @@ public class TaskNumber implements Serializable {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "participationid", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Participation getParticipation() {
 		return participation;
 	}

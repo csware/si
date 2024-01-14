@@ -591,7 +591,7 @@ ALTER TABLE `submissions_results`
 -- Constraints der Tabelle `submissions_tasknumbers`
 --
 ALTER TABLE `submissions_tasknumbers`
-  ADD CONSTRAINT `FK44B4D38D1986B517` FOREIGN KEY (`participationid`) REFERENCES `participations` (`id`),
+  ADD CONSTRAINT `FK44B4D38D1986B517` FOREIGN KEY (`participationid`) REFERENCES `participations` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK44B4D38D39FBF139` FOREIGN KEY (`submissionid`) REFERENCES `submissions` (`submissionid`),
   ADD CONSTRAINT `FK44B4D38DAE0697EB` FOREIGN KEY (`taskid`) REFERENCES `tasks` (`taskid`) ON DELETE CASCADE;
 

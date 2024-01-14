@@ -155,3 +155,5 @@ ALTER TABLE `dockerteststep` CHANGE `teststepid` `teststepid` INT(11) NOT NULL A
 
 -- testscounts attributes are not optional
 ALTER TABLE `testscounts` CHANGE `test_id` `test_id` INT(11) NOT NULL, CHANGE `user_uid` `user_uid` INT(11) NOT NULL; 
+
+ALTER TABLE `submissions_tasknumbers` DROP FOREIGN KEY `FK44B4D38D1986B517`; ALTER TABLE `submissions_tasknumbers` ADD CONSTRAINT `FK44B4D38D1986B517` FOREIGN KEY (`participationid`) REFERENCES `participations`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
