@@ -85,7 +85,6 @@ class WebClientTest {
 	public void createWebClient() {
 		webClient = new WebClient();
 		webClient.setCssErrorHandler(new SilentCssErrorHandler());
-		webClient.getOptions().setPrintContentOnFailingStatusCode(false);
 	}
 
 	@AfterEach
@@ -569,6 +568,7 @@ class WebClientTest {
 
 		@Test
 		void NoAdmin() throws Exception {
+			webClient.getOptions().setPrintContentOnFailingStatusCode(false);
 			final HtmlPage overviewPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/Overview");
 			assertThrows(ElementNotFoundException.class, () -> overviewPage.getAnchorByText("Admin-Menü"));
 
@@ -622,12 +622,14 @@ class WebClientTest {
 
 		@Test
 		void cannotAccessFileOfOtherSubmission() throws Exception {
+			webClient.getOptions().setPrintContentOnFailingStatusCode(false);
 			Exception exception = assertThrows(FailingHttpStatusCodeException.class, () -> webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowFile/HelloWorld.java?sid=7"));
 			assertTrue(exception.getMessage().startsWith("403 "), "403 ");
 		}
 
 		@Test
 		void cannotShowSubmission() throws Exception {
+			webClient.getOptions().setPrintContentOnFailingStatusCode(false);
 			Exception exception = assertThrows(FailingHttpStatusCodeException.class, () -> webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowSubmission?sid=10"));
 			assertTrue(exception.getMessage().startsWith("403 "), "403 ");
 		}
@@ -772,6 +774,7 @@ class WebClientTest {
 
 		@Test
 		void cannotAccessUserId2() throws Exception {
+			webClient.getOptions().setPrintContentOnFailingStatusCode(false);
 			Exception exception = assertThrows(FailingHttpStatusCodeException.class, () -> webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowUser?uid=2"));
 			assertTrue(exception.getMessage().startsWith("403 "), "403 ");
 		}
