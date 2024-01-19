@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,6 +18,7 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -43,6 +44,9 @@ public class ResultDAO extends AbstractDAO implements ResultDAOIf {
 
 	@Override
 	public List<String> getResultsForSubmission(Submission submission) {
+		if (submission == null) {
+			return Collections.emptyList();
+		}
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<String> criteria = builder.createQuery(String.class);
