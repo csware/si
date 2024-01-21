@@ -96,7 +96,7 @@ public class AdminMenue extends HttpServlet {
 			Template template = TemplateFactory.getTemplate(request, response);
 			template.printAdminMenueTemplateHeader("Verzeichnis Cleanup");
 			PrintWriter out = response.getWriter();
-			cleanupDataDirectory(session, Configuration.getInstance().getDataPath(), true, out);
+			cleanupDataDirectory(session, Configuration.getInstance().getLecturesPath(), true, out);
 			out.println("<hr>");
 			out.println("<p>Während des Aufräumens sollten keine Änderungen an Veranstaltungen und Tasks vorgenommen werden.</p>");
 			out.println("<form action=\"" + Util.generateHTMLLink("?action=cleanup", response) + "\" method=post>");
@@ -121,7 +121,7 @@ public class AdminMenue extends HttpServlet {
 			Template template = TemplateFactory.getTemplate(request, response);
 			template.printAdminMenueTemplateHeader("Verzeichnis Cleanup");
 			PrintWriter out = response.getWriter();
-			cleanupDataDirectory(session, Configuration.getInstance().getDataPath(), false, out);
+			cleanupDataDirectory(session, Configuration.getInstance().getLecturesPath(), false, out);
 			out.println("<hr>");
 			out.println("Done.");
 			template.printTemplateFooter();
@@ -292,18 +292,15 @@ public class AdminMenue extends HttpServlet {
 		}
 	}
 
-	private static void cleanupDataDirectory(final Session session, final Path path, boolean dryRun, final PrintWriter out) throws IOException {
+	private static void cleanupDataDirectory(final Session session, final Path lecturesPath, boolean dryRun, final PrintWriter out) throws IOException {
 		final ZonedDateTime now = ZonedDateTime.now();
 		final LectureDAOIf lectureDAO = DAOFactory.LectureDAOIf(session);
 		final TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		final SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 
 		final List<String> taskPaths = Stream.of(TaskPath.values()).map(tp -> tp.getPathComponent()).collect(Collectors.toList());
-		try (DirectoryStream<Path> dataPathDirectoryStream = Files.newDirectoryStream(path)) {
-			for (final Path lecturePath : dataPathDirectoryStream) {
-				if (!Files.isDirectory(lecturePath) || !Util.isInteger(lecturePath.getFileName().toString())) {
-					continue;
-				}
+		try (DirectoryStream<Path> lecturesPathDirectoryStream = Files.newDirectoryStream(lecturesPath)) {
+			for (final Path lecturePath : lecturesPathDirectoryStream) {
 				if (lectureDAO.getLecture(Util.parseInteger(lecturePath.getFileName().toString(), 0)) == null) {
 					if (dryRun) {
 						out.println("Would delete: " + Util.escapeHTML(lecturePath.toString()) + "<br>");

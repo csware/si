@@ -157,8 +157,10 @@ public class SelfTest extends HttpServlet {
 			testresults.add(new TestResult("Testframework-Listener läuft.", false));
 			LOG.error("Could not access LocalExecutor.", e);
 		}
-		testresults.add(new TestResult("Daten-Verzeichnis existiert, ist lesbar und beschreibbar.", Util.escapeHTML(Configuration.getInstance().getDataPath().toString()), checkDataDir()));
+		testresults.add(new TestResult("Daten-Verzeichnis existiert und ist lesbar.", Util.escapeHTML(Configuration.getInstance().getDataPath().toString()), checkDataDir()));
+		testresults.add(new TestResult("Daten-Verzeichnis ist nicht beschreibbar (erhöht die Sicherheit).", !Files.isWritable(Configuration.getInstance().getDataPath())));
 		testresults.add(new TestResult("Parent vom Daten-Verzeichnis ist nicht beschreibbar (erhöht die Sicherheit).", !Files.isWritable(Configuration.getInstance().getDataPath().getParent())));
+		testresults.add(new TestResult("Lectures-Verzeichnis existiert, ist les- und beschreibbar.", Util.escapeHTML(Configuration.getInstance().getLecturesPath().toString()), checkLecturesDir()));
 		checkRequiredFilesInDataDir(testresults);
 		if (Files.isRegularFile(Configuration.getInstance().getDataPath().resolve(JPlagAdapter.JPLAG_JAR))) {
 			testresults.add(new TestResult("\"" + JPlagAdapter.JPLAG_JAR + "\" ist im Daten-Verzeichnis installiert: JPlag prinzipiell verfügbar.", null));
@@ -199,7 +201,7 @@ public class SelfTest extends HttpServlet {
 
 	private boolean checkDataDir() {
 		final Path dataDir = Configuration.getInstance().getDataPath();
-		if (!Files.isDirectory(dataDir) || !Files.isReadable(dataDir) || !Files.isWritable(dataDir)) {
+		if (!Files.isDirectory(dataDir) || !Files.isReadable(dataDir)) {
 			return false;
 		}
 		try (Stream<Path> fileStream = Files.list(dataDir)) {
@@ -208,11 +210,25 @@ public class SelfTest extends HttpServlet {
 			LOG.error("Cannot read data-path,", e);
 			return false;
 		}
+		return true;
+	}
+
+	private boolean checkLecturesDir() {
+		final Path lecturesDir = Configuration.getInstance().getLecturesPath();
+		if (!Files.isDirectory(lecturesDir) || !Files.isReadable(lecturesDir) || !Files.isWritable(lecturesDir)) {
+			return false;
+		}
+		try (Stream<Path> fileStream = Files.list(lecturesDir)) {
+			fileStream.count();
+		} catch (SecurityException | IOException e) {
+			LOG.error("Cannot read lecture-path", e);
+			return false;
+		}
 		try {
-			final Path testFile = Files.createFile(dataDir.resolve("sometest"));
+			final Path testFile = Files.createFile(lecturesDir.resolve("sometest"));
 			Files.delete(testFile);
 		} catch (IOException e) {
-			LOG.error("Cannot write data-path,", e);
+			LOG.error("Cannot write lecture-path", e);
 			return false;
 		}
 		return true;

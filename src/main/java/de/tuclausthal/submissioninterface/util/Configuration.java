@@ -55,6 +55,7 @@ public class Configuration {
 	static private Configuration instance = null;
 	private Constructor<Template> templateConstructor;
 	private Path dataPath;
+	private Path lecturesPath;
 	private String serverName;
 	private String fullServerURI;
 	private String adminMail;
@@ -158,13 +159,21 @@ public class Configuration {
 	}
 
 	/**
-	 * Returns the path to the submissions
+	 * Returns the path to the root data directory
 	 * @return the path
 	 */
 	public Path getDataPath() {
 		return dataPath;
 	}
 
+	/**
+	 * Returns the path to the root of the lectures
+	 * @return the path
+	 */
+	public Path getLecturesPath() {
+		return lecturesPath;
+	}
+	
 	private void fillDatapath(ServletContext context) {
 		String dataPathValue = context.getInitParameter("datapath");
 		if (dataPathValue == null) {
@@ -178,6 +187,15 @@ public class Configuration {
 			Util.ensurePathExists(dataPath);
 		} catch (IOException e) {
 			throw new RuntimeException("could not create datapath", e);
+		}
+		lecturesPath = dataPath.resolve("lectures");
+		if (Files.isRegularFile(lecturesPath)) {
+			throw new RuntimeException("lecturespath must not be a file");
+		}
+		try {
+			Util.ensurePathExists(dataPath);
+		} catch (IOException e) {
+			throw new RuntimeException("could not create lecturespath", e);
 		}
 	}
 

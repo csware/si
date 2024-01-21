@@ -67,11 +67,11 @@ Please read the whole procedure in advance to executing it.
 - `src/main/resources/hibernate.cfg.xml` for the database configuration
   - Set the database name, username and password here
 - `src/main/webapp/WEB-INF/web.xml` for Tomcat and GATE specific configurations
-  - Adjust the `datapath` here, please make sure that this is accessible by Tomcat, use e.g. `/srv/gate/` or `c:\gate` here
+  - Adjust the `datapath` here, please make sure that this is accessible by Tomcat (should be read-only), use e.g. `/srv/gate/` or `c:\gate` here. Create subdirectories named `lectures` and `logs` that are writable for the tomcat user where the user data and logs are stored.
     - On *nix the system Tomcat runs as the user `tomcat`, so make sure that the user has appropriate permissions, also on Debian-based systems, Tomcat might be sandboxed by systemd. Create a file `/etc/systemd/system/tomcat9.service.d/gate.conf` containing:
       ```
       [Service]
-      ReadWritePaths=/srv/gate/
+      ReadWritePaths=/srv/gate/lectures/
       ```
       (afterwards, issue `systemctl daemon-reload` and `systemctl restart tomcat`)
   - For development:
@@ -98,6 +98,7 @@ Alternatively you can also use GitLab CI/CD functionality and download the built
 - Prepare the `datapath` in which the submissions will be stored (see the "Configuration files" section above)
   - Copy `submissiondir/*` and `SecurityManager/NoExitSecurityManager.jar` to that folder
   - If you want to use the [JPlag plagiarism system](https://github.com/jplag/jplag), compile JPlag 2.12 into a single .jar (using the maven goal `assembly:assembly` inside the `jplag` directory and copy the final `.jar` (from the target folder) as `jplag.jar` into the root of the `datapath`
+  - No files directly inside the data directory should be writable by the tomcat user.
 - On Windows: Make sure the `JAVA_HOME` environment variable is set and points to the JDK directory (e.g. `C:\Program Files\BellSoft\LibericaJDK-11\`)
 - Prepare Tomcat
   - If you want to have the user names on the Tomcat access log, you can use `%{username}r` (as a replacement for `%u`) for configuring the `AccessLogValve` `pattern`, cf. https://tomcat.apache.org/tomcat-9.0-doc/config/valve.html#Access_Log_Valve

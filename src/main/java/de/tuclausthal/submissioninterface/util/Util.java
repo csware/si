@@ -668,15 +668,15 @@ public final class Util {
 	}
 
 	public static Path constructPath(final Path basePath, final Task task) {
-		return basePath.resolve(task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid());
+		return basePath.resolve("lectures" + FILE_SEPARATOR + task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid());
 	}
 
 	public static Path constructPath(final Path basePath, final Submission submission) {
 		final Task task = submission.getTask();
-		return basePath.resolve(task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid() + FILE_SEPARATOR + submission.getSubmissionid());
+		return basePath.resolve("lectures" + FILE_SEPARATOR + task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid() + FILE_SEPARATOR + submission.getSubmissionid());
 	}
 
 	public static Path constructPath(final Path basePath, final Task task, final TaskPath pathComponent) {
-		return basePath.resolve(task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid() + FILE_SEPARATOR + pathComponent.getPathComponent());
+		return basePath.resolve("lectures" + FILE_SEPARATOR + task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid() + FILE_SEPARATOR + pathComponent.getPathComponent());
 	}
 }

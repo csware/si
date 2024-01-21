@@ -946,6 +946,9 @@ class WebClientTest {
 					if (content.startsWith("Test-Mail wurde an Admin-E-Mail-Adresse")) {
 						continue;
 					}
+					if (content.startsWith("Daten-Verzeichnis ist nicht beschreibbar")) {
+						continue;
+					}
 					if (content.startsWith("Parent vom Daten-Verzeichnis ist nicht beschreibbar")) {
 						continue;
 					}
