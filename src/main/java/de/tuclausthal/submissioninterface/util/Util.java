@@ -19,12 +19,9 @@
 package de.tuclausthal.submissioninterface.util;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -35,7 +32,9 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.time.Clock;
 import java.time.ZonedDateTime;
@@ -54,6 +53,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.file.PathUtils;
 import org.owasp.html.Handler;
 import org.owasp.html.HtmlSanitizer;
 import org.owasp.html.HtmlStreamRenderer;
@@ -248,20 +248,20 @@ public final class Util {
 		return (result.toString());
 	}
 
-	public static final void copyInputStreamAndClose(File inputFile, File outputFile) throws IOException {
-		try (FileInputStream in = new FileInputStream(inputFile)) {
+	public static final void copyInputStreamAndClose(final Path inputFile, final Path outputFile) throws IOException {
+		try (InputStream in = Files.newInputStream(inputFile)) {
 			copyInputStreamAndClose(in, outputFile);
 		}
 	}
 
-	public static final void copyInputStreamAndClose(InputStream in, File outputfile) throws IOException {
-		try (FileOutputStream os = new FileOutputStream(outputfile)) {
+	public static final void copyInputStreamAndClose(final InputStream in, final Path outputfile) throws IOException {
+		try (OutputStream os = Files.newOutputStream(outputfile)) {
 			copyInputStreamAndClose(in, os);
 		}
 	}
 
-	public static final void copyInputStreamAndClose(File inputFile, OutputStream out) throws IOException {
-		try (FileInputStream in = new FileInputStream(inputFile)) {
+	public static final void copyInputStreamAndClose(final Path inputFile, final OutputStream out) throws IOException {
+		try (InputStream in = Files.newInputStream(inputFile)) {
 			copyInputStreamAndClose(in, out);
 		}
 	}
@@ -314,46 +314,60 @@ public final class Util {
 		}
 	}
 
-	public static List<String> listFilesAsRelativeStringList(File path) {
+	public static List<String> listFilesAsRelativeStringList(final Path path) {
 		List<String> submittedFiles = new ArrayList<>();
-		if (path.exists() && path.listFiles() != null) {
-			listFilesAsRelativeStringList(submittedFiles, path, "");
+		try {
+			if (Files.exists(path) && !PathUtils.isEmptyDirectory(path)) {
+				listFilesAsRelativeStringList(submittedFiles, path, "");
+			}
+		} catch (IOException e) {
+			// ignore ;)
+			LOG.error("Error listing all files of a path", e);
 		}
 		return submittedFiles;
 	}
 
-	public static List<String> listFilesAsRelativeStringListSorted(File path) {
+	public static List<String> listFilesAsRelativeStringListSorted(final Path path) {
 		List<String> submittedFiles = listFilesAsRelativeStringList(path);
 		Collections.sort(submittedFiles);
 		return submittedFiles;
 	}
 
-	private static void listFilesAsRelativeStringList(List<String> submittedFiles, File path, String relativePath) {
-		for (File file : path.listFiles()) {
-			if (file.isDirectory()) {
-				listFilesAsRelativeStringList(submittedFiles, file, relativePath + file.getName() + FILE_SEPARATOR);
-			} else {
-				submittedFiles.add(relativePath + file.getName());
+	private static void listFilesAsRelativeStringList(final List<String> submittedFiles, final Path path, final String relativePath) throws IOException {
+		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path)) {
+			for (final Path file : directoryStream) {
+				if (Files.isDirectory(file)) {
+					listFilesAsRelativeStringList(submittedFiles, file, relativePath + file.getFileName() + FILE_SEPARATOR);
+				} else {
+					submittedFiles.add(relativePath + file.getFileName());
+				}
 			}
 		}
 	}
 
-	public static List<String> listFilesAsRelativeStringList(File path, List<String> excludedFileNames) {
+	public static List<String> listFilesAsRelativeStringList(final Path path, final List<String> excludedFileNames) {
 		List<String> submittedFiles = new ArrayList<>();
-		if (path.exists() && path.listFiles() != null) {
-			listFilesAsRelativeStringList(submittedFiles, path, "", excludedFileNames);
+		try {
+			if (Files.exists(path) && !PathUtils.isEmptyDirectory(path)) {
+				listFilesAsRelativeStringList(submittedFiles, path, "", excludedFileNames);
+			}
+		} catch (IOException e) {
+			// ignore ;)
+			LOG.error("Error listing all files of a path", e);
 		}
 		return submittedFiles;
 	}
 
-	private static void listFilesAsRelativeStringList(List<String> submittedFiles, File path, String relativePath, List<String> excludedFileNames) {
-		for (File file : path.listFiles()) {
-			// check that the file is not excluded
-			if (!excludedFileNames.contains(file.getName())) {
-				if (file.isDirectory()) {
-					listFilesAsRelativeStringList(submittedFiles, file, relativePath + file.getName() + FILE_SEPARATOR, excludedFileNames);
-				} else {
-					submittedFiles.add(relativePath + file.getName());
+	private static void listFilesAsRelativeStringList(final List<String> submittedFiles, final Path path, final String relativePath, final List<String> excludedFileNames) throws IOException {
+		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path)) {
+			for (final Path file : directoryStream) {
+				// check that the file is not excluded
+				if (!excludedFileNames.contains(file.getFileName().toString())) {
+					if (Files.isDirectory(file)) {
+						listFilesAsRelativeStringList(submittedFiles, file, relativePath + file.getFileName() + FILE_SEPARATOR, excludedFileNames);
+					} else {
+						submittedFiles.add(relativePath + file.getFileName());
+					}
 				}
 			}
 		}
@@ -362,11 +376,14 @@ public final class Util {
 	/**
 	 * Recursively delete all contained empty folders
 	 * @param toDelete the path to cleanup of empty directories
+	 * @throws IOException 
 	 */
-	public static void recursiveDeleteEmptySubDirectories(File toDelete) {
-		if (toDelete.isDirectory()) {
-			for (File subFile : toDelete.listFiles()) {
-				recursiveDeleteEmptyDirectories(subFile);
+	public static void recursiveDeleteEmptySubDirectories(final Path toDelete) throws IOException {
+		if (Files.isDirectory(toDelete)) {
+			try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(toDelete)) {
+				for (final Path subFile : directoryStream) {
+					recursiveDeleteEmptyDirectories(subFile);
+				}
 			}
 		}
 	}
@@ -374,13 +391,18 @@ public final class Util {
 	/**
 	 * Recursively delete empty folders (including the specified one)
 	 * @param toDelete the path to cleanup of empty directories
+	 * @throws IOException 
 	 */
-	public static void recursiveDeleteEmptyDirectories(File toDelete) {
-		if (toDelete.isDirectory()) {
-			for (File subFile : toDelete.listFiles()) {
-				recursiveDeleteEmptyDirectories(subFile);
+	public static void recursiveDeleteEmptyDirectories(final Path toDelete) throws IOException {
+		if (Files.isDirectory(toDelete)) {
+			try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(toDelete)) {
+				for (final Path subFile : directoryStream) {
+					recursiveDeleteEmptyDirectories(subFile);
+				}
 			}
-			toDelete.delete();
+			if (PathUtils.isEmptyDirectory(toDelete)) {
+				Files.delete(toDelete);
+			}
 		}
 	}
 
@@ -388,13 +410,23 @@ public final class Util {
 	 * Recursive delete files/folders
 	 * @param toDelete the path to delete
 	 */
-	public static void recursiveDelete(File toDelete) {
-		if (toDelete.isDirectory()) {
-			for (File subFile : toDelete.listFiles()) {
-				recursiveDelete(subFile);
+	public static void recursiveDelete(final Path toDelete) {
+		if (Files.isDirectory(toDelete)) {
+			try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(toDelete)) {
+				for (final Path subFile : directoryStream) {
+					recursiveDelete(subFile);
+				}
+			} catch (IOException e) {
+				// ignore ;)
+				LOG.error("Error deleting a path", e);
 			}
 		}
-		toDelete.delete();
+		try {
+			Files.deleteIfExists(toDelete);
+		} catch (IOException e) {
+			// ignore ;)
+			LOG.error("Error deleting a path", e);
+		}
 	}
 
 	/**
@@ -403,11 +435,15 @@ public final class Util {
 	 * @param toFile the destination
 	 * @throws IOException
 	 */
-	public static void recursiveCopy(File fromFile, File toFile) throws IOException {
-		if (fromFile.isDirectory()) {
-			toFile.mkdir();
-			for (File subFile : fromFile.listFiles()) {
-				recursiveCopy(subFile, new File(toFile.getAbsolutePath() + FILE_SEPARATOR + subFile.getName()));
+	public static void recursiveCopy(final Path fromFile, final Path toFile) throws IOException {
+		if (Files.isDirectory(fromFile)) {
+			if (!Files.isDirectory(toFile)) {
+				Files.createDirectory(toFile);
+			}
+			try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(fromFile)) {
+				for (final Path path : directoryStream) {
+					recursiveCopy(path, toFile.resolve(path.getFileName()));
+				}
 			}
 			return;
 		}
@@ -421,19 +457,19 @@ public final class Util {
 	 * @param path Path of the current directory
 	 * @param relativePath relative path of the 'next' directory
 	 */
-	public static void recursivelyZip(ZipOutputStream out, File path, String relativePath) {
-		for (File file : path.listFiles()) {
-			try {
-				if (file.isFile()) {
-					out.putNextEntry(new ZipEntry(relativePath + file.getName()));
+	public static void recursivelyZip(final ZipOutputStream out, final Path path, final String relativePath) {
+		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path)) {
+			for (final Path file : directoryStream) {
+				if (Files.isRegularFile(file)) {
+					out.putNextEntry(new ZipEntry(relativePath + file.getFileName()));
 					copyInputStreamAndClose(file, out);
 				} else {
-					recursivelyZip(out, file, relativePath + file.getName() + FILE_SEPARATOR);
+					recursivelyZip(out, file, relativePath + file.getFileName() + FILE_SEPARATOR);
 				}
-			} catch (Exception e) {
-				// ignore ;)
-				LOG.error("Error creating zip file", e);
 			}
+		} catch (Exception e) {
+			// ignore ;)
+			LOG.error("Error creating zip file", e);
 		}
 	}
 
@@ -472,9 +508,13 @@ public final class Util {
 	 * @return the file contents with \n EOL only
 	 * @throws IOException
 	 */
-	public static StringBuffer loadFile(File file) throws IOException {
-		StringWriter sw = new StringWriter((int) file.length());
-		try (Reader br = new CrLfFilterReader(new BufferedReader(new FileReader(file)))) {
+	public static StringBuffer loadFile(final Path file) throws IOException {
+		if (Files.size(file) >= Integer.MAX_VALUE) {
+			throw new IOException("File too large");
+		}
+		final StringWriter sw = new StringWriter((int) Files.size(file));
+		// Files.newBufferedReader(file) does not work as it checks for valid UTF-8 input
+		try (Reader br = new CrLfFilterReader(new BufferedReader(new InputStreamReader(Files.newInputStream(file))))) {
 			char[] buffer = new char[8192];
 			int len;
 			while ((len = br.read(buffer)) >= 0) {
@@ -512,9 +552,9 @@ public final class Util {
 	 * @param prefix
 	 * @return the temporary directory or null on error
 	 */
-	public static File createTemporaryDirectory(String prefix) {
+	public static Path createTemporaryDirectory(final String prefix) {
 		try {
-			return Files.createTempDirectory(prefix).toFile();
+			return Files.createTempDirectory(prefix);
 		} catch (IOException e) {
 		}
 		return null;
@@ -571,11 +611,11 @@ public final class Util {
 	 * @param fileName name of the file to handle
 	 * @throws IOException 
 	 */
-	public static void saveAndRelocateJavaFile(Part item, File path, String fileName) throws IOException {
-		File uploadedFile = new File(path, fileName);
+	public static void saveAndRelocateJavaFile(final Part item, final Path path, final String fileName) throws IOException {
+		Path uploadedFile = path.resolve(fileName);
 		// handle .java-files differently in order to extract package and move it to the correct folder
 		if (fileName.toLowerCase().endsWith(".java")) {
-			uploadedFile = File.createTempFile("upload", null, path);
+			uploadedFile = Files.createTempFile(path, "upload", ".java");
 		}
 		try (InputStream is = item.getInputStream()) {
 			copyInputStreamAndClose(is, uploadedFile);
@@ -586,20 +626,17 @@ public final class Util {
 			StringBuffer javaFileContents = stripComments.normalize(Util.loadFile(uploadedFile));
 			Pattern packagePattern = Pattern.compile(".*\\bpackage\\s+([a-zA-Z$]([a-zA-Z0-9_$]|\\.[a-zA-Z0-9_$])*)\\s*;.*", Pattern.DOTALL);
 			Matcher packageMatcher = packagePattern.matcher(javaFileContents);
-			File destFile = new File(path, fileName);
+			Path destFile = path.resolve(fileName);
 			if (packageMatcher.matches()) {
 				String packageName = packageMatcher.group(1).replace(".", FILE_SEPARATOR);
-				File packageDirectory = new File(path, packageName);
-				packageDirectory.mkdirs();
-				destFile = new File(packageDirectory, fileName);
+				Path packageDirectory = path.resolve(packageName);
+				Files.createDirectories(packageDirectory);
+				destFile = packageDirectory.resolve(fileName);
 			}
-			if (destFile.exists() && destFile.isFile()) {
-				destFile.delete();
+			if (Files.isRegularFile(destFile)) {
+				Files.deleteIfExists(destFile);
 			}
-			if (!uploadedFile.renameTo(destFile)) { // renameTo does not work across different filesystems
-				Util.recursiveCopy(uploadedFile, destFile);
-				uploadedFile.delete();
-			}
+			Files.move(uploadedFile, destFile);
 		}
 	}
 
@@ -610,13 +647,13 @@ public final class Util {
 		}
 	}
 
-	public static void ensurePathExists(File path) throws IOException {
-		if (!path.exists() && !path.mkdirs()) {
-			throw new IOException("Could not create directory");
+	public static void ensurePathExists(final Path path) throws IOException {
+		if (!Files.exists(path)) {
+			Files.createDirectories(path);
 		}
 	}
 
-	public static File buildPath(final File basePath, String relativePath) {
+	public static Path buildPath(final Path basePath, final String relativePath) {
 		if (relativePath.isBlank() || relativePath.charAt(0) == '/' || relativePath.charAt(0) == '\\') {
 			return null;
 		}
@@ -624,19 +661,19 @@ public final class Util {
 		if (result == null || result.isBlank()) {
 			return null;
 		}
-		return new File(basePath, result);
+		return Path.of(basePath.toString(), result);
 	}
 
-	public static File constructPath(final File basePath, final Task task) {
-		return new File(basePath, task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid());
+	public static Path constructPath(final Path basePath, final Task task) {
+		return basePath.resolve(task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid());
 	}
 
-	public static File constructPath(final File basePath, final Submission submission) {
+	public static Path constructPath(final Path basePath, final Submission submission) {
 		final Task task = submission.getTask();
-		return new File(basePath, task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid() + FILE_SEPARATOR + submission.getSubmissionid());
+		return basePath.resolve(task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid() + FILE_SEPARATOR + submission.getSubmissionid());
 	}
 
-	public static File constructPath(final File basePath, final Task task, final TaskPath pathComponent) {
-		return new File(basePath, task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid() + FILE_SEPARATOR + pathComponent.getPathComponent());
+	public static Path constructPath(final Path basePath, final Task task, final TaskPath pathComponent) {
+		return basePath.resolve(task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid() + FILE_SEPARATOR + pathComponent.getPathComponent());
 	}
 }

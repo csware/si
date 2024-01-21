@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,7 +18,9 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +36,7 @@ import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.SetJoin;
 import jakarta.persistence.criteria.Subquery;
 
+import org.apache.commons.io.file.PathUtils;
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
@@ -118,12 +121,12 @@ public class SubmissionDAO extends AbstractDAO implements SubmissionDAOIf {
 	}
 
 	@Override
-	public boolean deleteIfNoFiles(Submission submission, File submissionPath) {
+	public boolean deleteIfNoFiles(final Submission submission, final Path submissionPath) throws IOException {
 		Session session = getSession();
 		session.lock(submission, LockMode.PESSIMISTIC_WRITE);
 		boolean result = false;
 		Util.recursiveDeleteEmptySubDirectories(submissionPath);
-		if (submissionPath.listFiles().length == 0 && submissionPath.delete()) {
+		if (PathUtils.isEmptyDirectory(submissionPath) && Files.deleteIfExists(submissionPath)) {
 			session.remove(submission);
 			result = true;
 		}

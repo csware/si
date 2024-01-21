@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,9 +18,9 @@
 
 package de.tuclausthal.submissioninterface.dupecheck;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +49,7 @@ import de.tuclausthal.submissioninterface.util.Util;
 public abstract class DupeCheck {
 	public static int CORES = 1;
 
-	protected File path;
+	final protected Path path;
 
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -57,7 +57,7 @@ public abstract class DupeCheck {
 	 * Creates a new DupeCheck instance
 	 * @param path the path where the submissions are located
 	 */
-	public DupeCheck(File path) {
+	public DupeCheck(final Path path) {
 		this.path = path;
 	}
 
@@ -73,7 +73,7 @@ public abstract class DupeCheck {
 		DAOFactory.SimilarityTestDAOIf(session).resetSimilarityTest(similarityTest);
 		tx.commit();
 		Task task = similarityTest.getTask();
-		final File taskPath = Util.constructPath(path, task);
+		final Path taskPath = Util.constructPath(path, task);
 		NormalizerCache normalizerCache = null;
 		try {
 			normalizerCache = new NormalizerCache(taskPath, similarityTest.getNormalizer());
@@ -96,7 +96,7 @@ public abstract class DupeCheck {
 					Session session = HibernateSessionHelper.getSessionFactory().openSession();
 					SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf(session);
 					List<StringBuffer> javaFiles = new ArrayList<>();
-					for (String javaFile : Util.listFilesAsRelativeStringList(new File(taskPath, String.valueOf(submissions.get(i).getSubmissionid())), excludedFileNames)) {
+					for (final String javaFile : Util.listFilesAsRelativeStringList(taskPath.resolve(String.valueOf(submissions.get(i).getSubmissionid())), excludedFileNames)) {
 						// cache the files we use more than once
 						try {
 							javaFiles.add(cache.normalize(submissions.get(i).getSubmissionid() + System.getProperty("file.separator") + javaFile));
@@ -110,7 +110,7 @@ public abstract class DupeCheck {
 					for (int j = i + 1; j < submissions.size(); ++j) {
 						int maxSimilarity = 0;
 						// go through all submitted files of submission j
-						for (String javaFile : Util.listFilesAsRelativeStringList(new File(taskPath, String.valueOf(submissions.get(j).getSubmissionid())), excludedFileNames)) {
+						for (final String javaFile : Util.listFilesAsRelativeStringList(taskPath.resolve(String.valueOf(submissions.get(j).getSubmissionid())), excludedFileNames)) {
 							// compare all files, file by file
 							for (StringBuffer fileOne : javaFiles) {
 								StringBuffer fileTwo = null;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,8 +18,9 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.ZonedDateTime;
 
 import javax.servlet.ServletException;
@@ -91,10 +92,11 @@ public class DeleteFile extends HttpServlet {
 			return;
 		}
 
-		final File file = Util.buildPath(Util.constructPath(Configuration.getInstance().getDataPath(), submission), request.getPathInfo().substring(1));
-		if (file != null && file.isFile()) {
+		final Path submissionPath = Util.constructPath(Configuration.getInstance().getDataPath(), submission);
+		final Path file = Util.buildPath(submissionPath, request.getPathInfo().substring(1));
+		if (file != null && Files.isRegularFile(file)) {
 			request.setAttribute("submission", submission);
-			request.setAttribute("filename", request.getPathInfo().substring(1));
+			request.setAttribute("filename", submissionPath.relativize(file).toString());
 			getServletContext().getNamedDispatcher(DeleteFileView.class.getSimpleName()).forward(request, response);
 			return;
 		}
@@ -139,16 +141,16 @@ public class DeleteFile extends HttpServlet {
 			return;
 		}
 
-		final File path = Util.constructPath(Configuration.getInstance().getDataPath(), submission);
-		final File file = Util.buildPath(path, request.getPathInfo().substring(1));
+		final Path submissionPath = Util.constructPath(Configuration.getInstance().getDataPath(), submission);
+		final Path file = Util.buildPath(submissionPath, request.getPathInfo().substring(1));
 		if (file != null) {
 			Transaction tx = session.beginTransaction();
 			session.lock(submission, LockMode.PESSIMISTIC_WRITE);
-			if (file.exists() && file.isFile() && file.delete()) {
-				if (!submissionDAO.deleteIfNoFiles(submission, path)) {
+			if (Files.isRegularFile(file) && Files.deleteIfExists(file)) {
+				if (!submissionDAO.deleteIfNoFiles(submission, submissionPath)) {
 					submission.setLastModified(ZonedDateTime.now());
 				}
-				new LogDAO(session).createLogDeleteEntry(participation.getUser(), submission.getTask(), request.getPathInfo().substring(1));
+				new LogDAO(session).createLogDeleteEntry(participation.getUser(), submission.getTask(), submissionPath.relativize(file).toString());
 				tx.commit();
 
 				response.sendRedirect(Util.generateAbsoluteServletsRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), request, response));

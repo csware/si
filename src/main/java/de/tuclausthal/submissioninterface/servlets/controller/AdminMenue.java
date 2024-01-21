@@ -18,9 +18,11 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -290,85 +292,91 @@ public class AdminMenue extends HttpServlet {
 		}
 	}
 
-	private static void cleanupDataDirectory(final Session session, final File path, boolean dryRun, final PrintWriter out) {
+	private static void cleanupDataDirectory(final Session session, final Path path, boolean dryRun, final PrintWriter out) throws IOException {
 		final ZonedDateTime now = ZonedDateTime.now();
 		final LectureDAOIf lectureDAO = DAOFactory.LectureDAOIf(session);
 		final TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		final SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 
 		final List<String> taskPaths = Stream.of(TaskPath.values()).map(tp -> tp.getPathComponent()).collect(Collectors.toList());
-		for (File lectures : path.listFiles()) {
-			if (!lectures.isDirectory() || !Util.isInteger(lectures.getName())) {
-				continue;
-			}
-			if (lectureDAO.getLecture(Util.parseInteger(lectures.getName(), 0)) == null) {
-				if (dryRun) {
-					out.println("Would delete: " + Util.escapeHTML(lectures.toString()) + "<br>");
+		try (DirectoryStream<Path> dataPathDirectoryStream = Files.newDirectoryStream(path)) {
+			for (final Path lecturePath : dataPathDirectoryStream) {
+				if (!Files.isDirectory(lecturePath) || !Util.isInteger(lecturePath.getFileName().toString())) {
 					continue;
 				}
-				out.println("Deleting: " + Util.escapeHTML(lectures.toString()) + "<br>");
-				Util.recursiveDelete(lectures);
-				continue;
-			}
-
-			for (File tasks : lectures.listFiles()) {
-				Task task = null;
-				if (!tasks.isDirectory() || (task = taskDAO.getTask(Util.parseInteger(tasks.getName(), 0))) == null) {
+				if (lectureDAO.getLecture(Util.parseInteger(lecturePath.getFileName().toString(), 0)) == null) {
 					if (dryRun) {
-						out.println("Would delete: " + Util.escapeHTML(tasks.toString()) + "<br>");
+						out.println("Would delete: " + Util.escapeHTML(lecturePath.toString()) + "<br>");
 						continue;
 					}
-					out.println("Deleting: " + Util.escapeHTML(tasks.toString()) + "<br>");
-					Util.recursiveDelete(tasks);
+					out.println("Deleting: " + Util.escapeHTML(lecturePath.toString()) + "<br>");
+					Util.recursiveDelete(lecturePath);
 					continue;
 				}
 
-				// list all submissions
-				Set<Integer> submissionsInDB = submissionDAO.getSubmissionsForTaskOrdered(task, false).stream().map(s -> s.getSubmissionid()).collect(Collectors.toSet());
-				for (File submissions : tasks.listFiles()) {
-					if (submissions.isFile()) {
-						boolean kill = true;
-						for (Test test : task.getTests()) {
-							if (submissions.getName().equals("junittest" + test.getId() + ".jar") && test instanceof JUnitTest || submissions.getName().equals("musterloesung" + test.getId() + ".xmi") && test instanceof UMLConstraintTest) {
-								kill = false;
-								break;
-							}
-						}
-						if (kill) {
+				try (DirectoryStream<Path> lectureDirectoryStream = Files.newDirectoryStream(lecturePath)) {
+					for (final Path taskPath : lectureDirectoryStream) {
+						Task task = null;
+						if (!Files.isDirectory(taskPath) || (task = taskDAO.getTask(Util.parseInteger(taskPath.getFileName().toString(), 0))) == null) {
 							if (dryRun) {
-								out.println("Would delete: " + Util.escapeHTML(submissions.toString()) + "<br>");
+								out.println("Would delete: " + Util.escapeHTML(taskPath.toString()) + "<br>");
 								continue;
 							}
-							out.println("Deleting: " + Util.escapeHTML(submissions.toString()) + "<br>");
-							submissions.delete();
-						}
-						continue;
-					}
-					if (task.getDeadline().isAfter(now)) { // do not clean up submissions for tasks that are still open for submission
-						continue;
-					}
-					if (taskPaths.contains(submissions.getName())) {
-						if (dryRun) {
+							out.println("Deleting: " + Util.escapeHTML(taskPath.toString()) + "<br>");
+							Util.recursiveDelete(taskPath);
 							continue;
 						}
-						Util.recursiveDeleteEmptyDirectories(submissions);
-						continue;
-					}
-					if (!submissionsInDB.contains(Util.parseInteger(submissions.getName(), -1))) {
-						if (dryRun) {
-							out.println("Would delete: " + Util.escapeHTML(submissions.toString()) + "<br>");
-							continue;
+
+						// list all submissions
+						final Set<Integer> submissionsInDB = submissionDAO.getSubmissionsForTaskOrdered(task, false).stream().map(s -> s.getSubmissionid()).collect(Collectors.toSet());
+						try (DirectoryStream<Path> taskDirectoryStream = Files.newDirectoryStream(taskPath)) {
+							for (final Path submissionPath : taskDirectoryStream) {
+								if (Files.isRegularFile(submissionPath)) {
+									boolean kill = true;
+									for (Test test : task.getTests()) {
+										if (submissionPath.getFileName().toString().equals("junittest" + test.getId() + ".jar") && test instanceof JUnitTest || submissionPath.getFileName().toString().equals("musterloesung" + test.getId() + ".xmi") && test instanceof UMLConstraintTest) {
+											kill = false;
+											break;
+										}
+									}
+									if (kill) {
+										if (dryRun) {
+											out.println("Would delete: " + Util.escapeHTML(submissionPath.toString()) + "<br>");
+											continue;
+										}
+										out.println("Deleting: " + Util.escapeHTML(submissionPath.toString()) + "<br>");
+										Files.delete(submissionPath);
+									}
+									continue;
+								}
+								if (task.getDeadline().isAfter(now)) { // do not clean up submissions for tasks that are still open for submission
+									continue;
+								}
+								if (taskPaths.contains(submissionPath.getFileName().toString())) {
+									if (dryRun) {
+										continue;
+									}
+									Util.recursiveDeleteEmptyDirectories(submissionPath);
+									continue;
+								}
+								if (!submissionsInDB.contains(Util.parseInteger(submissionPath.getFileName().toString(), -1))) {
+									if (dryRun) {
+										out.println("Would delete: " + Util.escapeHTML(submissionPath.toString()) + "<br>");
+										continue;
+									}
+									out.println("Deleting: " + Util.escapeHTML(submissionPath.toString()) + "<br>");
+									Util.recursiveDelete(submissionPath);
+									continue;
+								}
+								if (dryRun) {
+									continue;
+								}
+								Util.recursiveDeleteEmptySubDirectories(submissionPath);
+							}
 						}
-						out.println("Deleting: " + Util.escapeHTML(submissions.toString()) + "<br>");
-						Util.recursiveDelete(submissions);
-						continue;
+						out.flush();
 					}
-					if (dryRun) {
-						continue;
-					}
-					Util.recursiveDeleteEmptySubDirectories(submissions);
 				}
-				out.flush();
 			}
 		}
 	}

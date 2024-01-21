@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,9 +20,10 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
@@ -46,14 +47,14 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 	}
 
 	@Override
-	final protected void performTestInTempDir(File basePath, File javaSourceDir, TestExecutorTestResult testResult) throws Exception {
-		File tempClassesDir = Util.createTemporaryDirectory("test");
+	final protected void performTestInTempDir(final Path basePath, final Path javaSourceDir, final TestExecutorTestResult testResult) throws Exception {
+		Path tempClassesDir = Util.createTemporaryDirectory("test");
 		if (tempClassesDir == null) {
 			throw new IOException("Failed to create tempdir!");
 		}
 		try {
 			compileJava(javaSourceDir, null, tempClassesDir, null);
-			List<File> classPath = new ArrayList<>();
+			final List<Path> classPath = new ArrayList<>();
 			populateClassPathForRunningtests(basePath, classPath);
 			classPath.add(tempClassesDir);
 			runJava(basePath, javaSourceDir, classPath, testResult);
@@ -62,12 +63,12 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 		}
 	}
 
-	protected void runJava(File basePath, File cwd, List<File> classPath, TestExecutorTestResult testResult) throws Exception {
-		File policyFile = null;
+	protected void runJava(final Path basePath, final Path cwd, final List<Path> classPath, final TestExecutorTestResult testResult) throws Exception {
+		Path policyFile = null;
 		try {
 			// prepare policy file
-			policyFile = File.createTempFile("special", ".policy");
-			BufferedWriter policyFileWriter = new BufferedWriter(new FileWriter(policyFile));
+			policyFile = Files.createTempFile("special", ".policy");
+			BufferedWriter policyFileWriter = Files.newBufferedWriter(policyFile);
 			populateJavaPolicyFile(basePath, cwd, policyFileWriter);
 			policyFileWriter.write("\n");
 			policyFileWriter.write("grant {\n");
@@ -88,19 +89,19 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			// limit memory usage
 			params.add("-Xmx128m");
 			// for security reasons, so that students cannot access the server
-			params.add("-Xbootclasspath/a:" + basePath.getAbsolutePath() + System.getProperty("file.separator") + SECURITYMANAGER_JAR);
+			params.add("-Xbootclasspath/a:" + basePath.toAbsolutePath().resolve(SECURITYMANAGER_JAR));
 			params.add("-Djava.security.manager=secmgr.NoExitSecurityManager");
-			params.add("-Djava.security.policy=" + policyFile.getAbsolutePath());
+			params.add("-Djava.security.policy=" + policyFile.toAbsolutePath().toString());
 			if (!classPath.isEmpty()) {
 				params.add("-cp");
 				StringJoiner joiner = new StringJoiner(File.pathSeparator);
-				classPath.stream().forEach(path -> joiner.add(path.getAbsolutePath()));
+				classPath.stream().forEach(path -> joiner.add(path.toAbsolutePath().toString()));
 				params.add(joiner.toString());
 			}
 			params.addAll(additionalParams);
 
 			ProcessBuilder pb = new ProcessBuilder(params);
-			pb.directory(cwd);
+			pb.directory(cwd.toFile());
 			/* only forward explicitly specified environment variables to test processes */
 			pb.environment().keySet().removeIf(key -> !("PATH".equalsIgnoreCase(key) || "USER".equalsIgnoreCase(key) || "JAVA_HOME".equalsIgnoreCase(key) || "LANG".equalsIgnoreCase(key)));
 			LOG.debug("Executing external process: {} in {}", params, cwd);
@@ -124,7 +125,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 			testResult.setTestOutput(outputGrapper.getStdOutBuffer().toString());
 		} finally {
 			if (policyFile != null) {
-				policyFile.delete();
+				Files.delete(policyFile);
 			}
 		}
 	}
@@ -164,7 +165,7 @@ public abstract class JavaFunctionTest extends JavaSyntaxTest {
 
 	abstract void populateParameters(List<String> params);
 
-	abstract void populateJavaPolicyFile(File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException;
+	abstract void populateJavaPolicyFile(final Path basePath, final Path tempDir, final BufferedWriter policyFileWriter) throws IOException;
 
-	void populateClassPathForRunningtests(File basePath, List<File> classPath) {}
+	void populateClassPathForRunningtests(final Path basePath, final List<Path> classPath) {}
 }

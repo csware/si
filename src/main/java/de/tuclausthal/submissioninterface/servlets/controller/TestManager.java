@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2015, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2015, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * Copyright 2011 Joachim Schramm
  *
@@ -20,9 +20,9 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -177,7 +177,7 @@ public class TestManager extends HttpServlet {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			UMLConstraintTest test = testDAO.createUMLConstraintTest(task);
 
-			final File path = Util.constructPath(Configuration.getInstance().getDataPath(), task);
+			final Path path = Util.constructPath(Configuration.getInstance().getDataPath(), task);
 			Util.ensurePathExists(path);
 			int timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
 			int timeout = Util.parseInteger(request.getParameter("timeout"), 15);
@@ -192,7 +192,7 @@ public class TestManager extends HttpServlet {
 				session.getTransaction().rollback();
 				return;
 			}
-			File uploadedFile = new File(path, "musterloesung" + test.getId() + ".xmi");
+			final Path uploadedFile = path.resolve("musterloesung" + test.getId() + ".xmi");
 			try (InputStream is = file.getInputStream()) {
 				Util.copyInputStreamAndClose(is, uploadedFile);
 			}
@@ -212,7 +212,7 @@ public class TestManager extends HttpServlet {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			JUnitTest test = testDAO.createJUnitTest(task);
 
-			final File path = Util.constructPath(Configuration.getInstance().getDataPath(), task);
+			final Path path = Util.constructPath(Configuration.getInstance().getDataPath(), task);
 			Util.ensurePathExists(path);
 			int timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
 			boolean giveDetailsToStudents = request.getParameter("giveDetailsToStudents") != null;
@@ -229,7 +229,7 @@ public class TestManager extends HttpServlet {
 				session.getTransaction().rollback();
 				return;
 			}
-			File uploadedFile = new File(path, "junittest" + test.getId() + ".jar");
+			final Path uploadedFile = path.resolve("junittest" + test.getId() + ".jar");
 			try (InputStream is = file.getInputStream()) {
 				Util.copyInputStreamAndClose(is, uploadedFile);
 			}

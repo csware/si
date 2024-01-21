@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,10 +18,11 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -48,7 +49,7 @@ public class DockerTest extends TempDirTest {
 	private static final Random random = new Random();
 	private final String separator;
 	private final de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest test;
-	private File tempDir;
+	private Path tempDir;
 
 	public DockerTest(de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest test) {
 		super(test);
@@ -57,7 +58,7 @@ public class DockerTest extends TempDirTest {
 	}
 
 	@Override
-	public void performTest(File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
+	public void performTest(final Path basePath, final Path submissionPath, final TestExecutorTestResult testResult) throws Exception {
 		try {
 			tempDir = Util.createTemporaryDirectory("test");
 			//Configuration.getInstance().getDataPath()
@@ -65,11 +66,11 @@ public class DockerTest extends TempDirTest {
 				throw new IOException("Failed to create tempdir!");
 			}
 
-			File administrativeDir = new File(tempDir, "administrative");
-			administrativeDir.mkdirs();
+			final Path administrativeDir = tempDir.resolve("administrative");
+			Files.createDirectories(administrativeDir);
 
-			File studentDir = new File(tempDir, "student");
-			studentDir.mkdirs();
+			final Path studentDir = tempDir.resolve("student");
+			Files.createDirectories(studentDir);
 
 			Util.recursiveCopy(submissionPath, studentDir);
 
@@ -89,21 +90,22 @@ public class DockerTest extends TempDirTest {
 				testCode.append("}\n");
 			}
 
-			FileWriter fw = new FileWriter(new File(administrativeDir, "test.sh"));
-			fw.write(testCode.toString());
-			fw.close();
+			final Path testDriver = administrativeDir.resolve("test.sh");
+			try (Writer fw = Files.newBufferedWriter(testDriver)) {
+				fw.write(testCode.toString());
+			}
 
 			List<String> params = new ArrayList<>();
 			params.add("sudo");
 			params.add(SAFE_DOCKER_SCRIPT);
 			params.add("--timeout=" + test.getTimeout());
-			params.add("--dir=" + Util.escapeCommandlineArguments(administrativeDir.getAbsolutePath()));
+			params.add("--dir=" + Util.escapeCommandlineArguments(administrativeDir.toAbsolutePath().toString()));
 			params.add("--");
 			params.add("bash");
-			params.add(Util.escapeCommandlineArguments(administrativeDir.getAbsolutePath()) + "/test.sh");
+			params.add(Util.escapeCommandlineArguments(testDriver.toAbsolutePath().toString()));
 
 			ProcessBuilder pb = new ProcessBuilder(params);
-			pb.directory(studentDir);
+			pb.directory(studentDir.toFile());
 			/* only forward explicitly specified environment variables to test processes */
 			pb.environment().keySet().removeIf(key -> !("PATH".equalsIgnoreCase(key) || "USER".equalsIgnoreCase(key) || "LANG".equalsIgnoreCase(key)));
 			LOG.debug("Executing external process: {} in {}", params, studentDir);
@@ -133,7 +135,7 @@ public class DockerTest extends TempDirTest {
 	}
 
 	// similar code in JavaAdvancedIOTest
-	protected boolean calculateTestResult(Test test, boolean exitedCleanly, StringBuffer processOutput, StringBuffer stdErr, int exitCode, boolean aborted) {
+	protected boolean calculateTestResult(final Test test, boolean exitedCleanly, final StringBuffer processOutput, final StringBuffer stdErr, final int exitCode, final boolean aborted) {
 		de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest dt = (de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest) test;
 
 		JsonObjectBuilder builder = Json.createObjectBuilder();
@@ -143,7 +145,7 @@ public class DockerTest extends TempDirTest {
 		}
 		builder.add("separator", separator + "\n");
 		if (tempDir != null) {
-			builder.add("tmpdir", tempDir.getAbsolutePath());
+			builder.add("tmpdir", tempDir.toAbsolutePath().toString());
 		}
 		builder.add("exitCode", exitCode);
 		builder.add("exitedCleanly", exitedCleanly);
@@ -187,5 +189,5 @@ public class DockerTest extends TempDirTest {
 	}
 
 	@Override
-	protected void performTestInTempDir(File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception {}
+	protected void performTestInTempDir(Path basePath, Path tempDir, TestExecutorTestResult testResult) throws Exception {}
 }

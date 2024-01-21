@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,9 +18,9 @@
 
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
-import java.io.File;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Path;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -213,7 +213,7 @@ public class SimilarityTest implements Serializable {
 	 * @return the dupecheck instance or null
 	 */
 	@Transient
-	public DupeCheck getDupeCheck(File path) {
+	public DupeCheck getDupeCheck(final Path path) {
 		if ("plaggie".equals(getType())) {
 			return new PlaggieAdapter(path);
 		} else if ("jplag".equals(getType())) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,10 +18,6 @@
 
 package de.tuclausthal.submissioninterface.util;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -43,11 +39,7 @@ import org.reflections.Reflections;
 public class HibernateSQLExporter {
 	public static final String FILENAME = "db-schema.sql";
 
-	public static void main(String[] fdf) throws FileNotFoundException, IOException {
-		try (FileOutputStream fos = new FileOutputStream(new File(FILENAME), false)) {
-			// clear file
-		}
-
+	public static void main(String[] args) {
 		StandardServiceRegistry standardRegistry = new StandardServiceRegistryBuilder().configure().build();
 		MetadataSources metadataSources = new MetadataSources(standardRegistry);
 		Set<Class<?>> entities = new Reflections("de.tuclausthal.submissioninterface.persistence.datamodel").getTypesAnnotatedWith(Entity.class);
@@ -58,7 +50,7 @@ public class HibernateSQLExporter {
 
 		EnumSet<TargetType> enumSet = EnumSet.of(TargetType.SCRIPT);
 		SchemaExport schemaExport = new SchemaExport();
-		schemaExport.setOutputFile(FILENAME);
+		schemaExport.setOutputFile(FILENAME).setOverrideOutputFileContent();
 		schemaExport.execute(enumSet, Action.CREATE, metadata);
 
 		standardRegistry.close();

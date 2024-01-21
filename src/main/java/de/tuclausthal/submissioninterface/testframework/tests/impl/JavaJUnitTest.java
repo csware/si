@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2021-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2021-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,8 +19,8 @@
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
@@ -58,12 +58,12 @@ public class JavaJUnitTest extends JavaFunctionTest {
 	}
 
 	@Override
-	void populateJavaPolicyFile(File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException {
-		policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.getAbsolutePath() + System.getProperty("file.separator") + JavaJUnitTest.JUNIT_JAR) + "\" {\n");
+	void populateJavaPolicyFile(final Path basePath, final Path tempDir, final BufferedWriter policyFileWriter) throws IOException {
+		policyFileWriter.write("grant codeBase \"file:" + mkPath(basePath.resolve(JavaJUnitTest.JUNIT_JAR)) + "\" {\n");
 		policyFileWriter.write("	permission java.security.AllPermission;\n");
 		policyFileWriter.write("};\n");
 		policyFileWriter.write("\n");
-		policyFileWriter.write("grant codeBase \"file:" + mkPath(new File(Util.constructPath(basePath, test.getTask()), "junittest" + test.getId() + ".jar")) + "\" {\n");
+		policyFileWriter.write("grant codeBase \"file:" + mkPath(Util.constructPath(basePath, test.getTask()).resolve("junittest" + test.getId() + ".jar")) + "\" {\n");
 		policyFileWriter.write("	permission java.lang.RuntimePermission \"setIO\";\n");
 		policyFileWriter.write("	permission java.lang.RuntimePermission \"exitTheVM.*\";\n");
 		policyFileWriter.write("	permission java.lang.reflect.ReflectPermission \"suppressAccessChecks\";\n");
@@ -71,8 +71,8 @@ public class JavaJUnitTest extends JavaFunctionTest {
 	}
 
 	@Override
-	void populateClassPathForRunningtests(File basePath, List<File> classPath) {
-		classPath.add(new File(basePath, JavaJUnitTest.JUNIT_JAR));
-		classPath.add(new File(Util.constructPath(basePath, test.getTask()), "junittest" + test.getId() + ".jar"));
+	void populateClassPathForRunningtests(final Path basePath, final List<Path> classPath) {
+		classPath.add(basePath.resolve(JavaJUnitTest.JUNIT_JAR));
+		classPath.add(Util.constructPath(basePath, test.getTask()).resolve("junittest" + test.getId() + ".jar"));
 	}
 }

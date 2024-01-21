@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2023-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -23,11 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
@@ -36,7 +36,6 @@ import jakarta.json.JsonReader;
 import jakarta.json.JsonValue;
 import jakarta.json.stream.JsonParsingException;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -48,19 +47,19 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
 public class JavaAdvancedIOTestTest {
 
 	@TempDir
-	private File tempDir;
-	private File sourceDir;
-	private File dataDir;
+	private Path tempDir;
+	private Path sourceDir;
+	private Path dataDir;
 	private JavaAdvancedIOTest javaAdvancedIOTest;
 	private de.tuclausthal.submissioninterface.testframework.tests.impl.JavaAdvancedIOTest javaFunctionTest;
 
 	@BeforeEach
 	void setUpTest() throws IOException {
-		sourceDir = new File(tempDir, "source");
-		sourceDir.mkdir();
-		dataDir = new File(tempDir, "data");
-		dataDir.mkdir();
-		FileUtils.copyFileToDirectory(new File("SecurityManager/NoExitSecurityManager.jar"), dataDir);
+		sourceDir = tempDir.resolve("source");
+		Files.createDirectory(sourceDir);
+		dataDir = tempDir.resolve("data");
+		Files.createDirectory(dataDir);
+		Files.copy(Path.of("SecurityManager/NoExitSecurityManager.jar"), dataDir.resolve("NoExitSecurityManager.jar"));
 
 		javaAdvancedIOTest = new JavaAdvancedIOTest();
 		javaFunctionTest = new de.tuclausthal.submissioninterface.testframework.tests.impl.JavaAdvancedIOTest(javaAdvancedIOTest);
@@ -68,7 +67,7 @@ public class JavaAdvancedIOTestTest {
 
 	@Test
 	void testJavaAdvancedIOTestOK() throws Exception {
-		try (Writer fw = new FileWriter(new File(sourceDir, "Triangle.java"))) {
+		try (Writer fw = Files.newBufferedWriter(sourceDir.resolve("Triangle.java"))) {
 			fw.write("public class Triangle {\n" + "	static void drawTriangle(int sizeOfTriangle) {\n" + "		for (int i = 0; i < sizeOfTriangle; i++) {\n" + "			for (int j = 0; j <= i; j++) {\n" + "				System.out.print(\"*\");\n" + "			}\n" + "			System.out.println();\n" + "		}\n" + "	}\n" + "}");
 		}
 
@@ -107,7 +106,7 @@ public class JavaAdvancedIOTestTest {
 
 	@Test
 	void testJavaAdvancedIOTestFailedStep() throws Exception {
-		try (Writer fw = new FileWriter(new File(sourceDir, "Triangle.java"))) {
+		try (Writer fw = Files.newBufferedWriter(sourceDir.resolve("Triangle.java"))) {
 			fw.write("public class Triangle {\n" + "	static void drawTriangle(int sizeOfTriangle) {\n" + "		for (int i = 0; i < sizeOfTriangle; i++) {\n" + "			for (int j = 0; j <= i; j++) {\n" + "				System.out.print(\"*\");\n" + "			}\n" + "			System.out.println();\n" + "		}\n" + "	}\n" + "}");
 		}
 
@@ -148,7 +147,7 @@ public class JavaAdvancedIOTestTest {
 
 	@Test
 	void testJavaAdvancedIOTestException() throws Exception {
-		try (Writer fw = new FileWriter(new File(sourceDir, "Triangle.java"))) {
+		try (Writer fw = Files.newBufferedWriter(sourceDir.resolve("Triangle.java"))) {
 			fw.write("public class Triangle {\n" + "	static void drawTriangle(int sizeOfTriangle) {\n" + "		if (sizeOfTriangle == 2) { throw new RuntimeException(\"Some failure!\"); }\n		for (int i = 0; i < sizeOfTriangle; i++) {\n" + "			for (int j = 0; j <= i; j++) {\n" + "				System.out.print(\"*\");\n" + "			}\n" + "			System.out.println();\n" + "		}\n" + "	}\n" + "}");
 		}
 
@@ -192,7 +191,7 @@ public class JavaAdvancedIOTestTest {
 
 	@Test
 	void testJavaAdvancedIOTestSyntaxErrorInStudentCode() throws Exception {
-		try (Writer fw = new FileWriter(new File(sourceDir, "Triangle.java"))) {
+		try (Writer fw = Files.newBufferedWriter(sourceDir.resolve("Triangle.java"))) {
 			fw.write("public class Triangle {\n" + "	static void drawTriangle(it sizeOfTriangle) {\n" + "		for (int i = 0; i < sizeOfTriangle; i++) {\n" + "			for (int j = 0; j <= i; j++) {\n" + "				System.out.print(\"*\");\n" + "			}\n" + "			System.out.println();\n" + "		}\n" + "	}\n" + "}");
 		}
 
@@ -219,7 +218,7 @@ public class JavaAdvancedIOTestTest {
 
 	@Test
 	void testJavaAdvancedIOTestMissingMethodInStudentCode() throws Exception {
-		try (Writer fw = new FileWriter(new File(sourceDir, "Triangle.java"))) {
+		try (Writer fw = Files.newBufferedWriter(sourceDir.resolve("Triangle.java"))) {
 			fw.write("public class Triangle {\n" + "	static void drawTheTriangle(int sizeOfTriangle) {\n" + "		for (int i = 0; i < sizeOfTriangle; i++) {\n" + "			for (int j = 0; j <= i; j++) {\n" + "				System.out.print(\"*\");\n" + "			}\n" + "			System.out.println();\n" + "		}\n" + "	}\n" + "}");
 		}
 
@@ -246,7 +245,7 @@ public class JavaAdvancedIOTestTest {
 
 	@Test
 	void testJavaAdvancedIOTestSetIOInTestCode() throws Exception {
-		try (Writer fw = new FileWriter(new File(sourceDir, "HelloWorld.java"))) {
+		try (Writer fw = Files.newBufferedWriter(sourceDir.resolve("HelloWorld.java"))) {
 			fw.write("public class HelloWorld {\n	static void main(String[] args) {\n		System.out.print(\"Hello World!\");\n" + "	}\n}");
 		}
 
@@ -282,7 +281,7 @@ public class JavaAdvancedIOTestTest {
 
 	@Test
 	void testJavaAdvancedIOTestSystemExitInStudentCode() throws Exception {
-		try (Writer fw = new FileWriter(new File(sourceDir, "Evil.java"))) {
+		try (Writer fw = Files.newBufferedWriter(sourceDir.resolve("Evil.java"))) {
 			fw.write("public class Evil {\n	static void main(String[] args) {\n		System.exit(0);\n" + "	}\n}");
 		}
 
@@ -317,7 +316,7 @@ public class JavaAdvancedIOTestTest {
 
 	@Test
 	void testJavaAdvancedIOTestSetIOInStudentCode() throws Exception {
-		try (Writer fw = new FileWriter(new File(sourceDir, "Evil.java"))) {
+		try (Writer fw = Files.newBufferedWriter(sourceDir.resolve("Evil.java"))) {
 			fw.write("public class Evil {\n	static void main(String[] args) {\n		System.setOut(new java.io.PrintStream(new java.io.ByteArrayOutputStream()));\n" + "	}\n}");
 		}
 
@@ -352,7 +351,7 @@ public class JavaAdvancedIOTestTest {
 
 	@Test
 	void testJavaAdvancedIOTestTimeout() throws Exception {
-		try (Writer fw = new FileWriter(new File(sourceDir, "Triangle.java"))) {
+		try (Writer fw = Files.newBufferedWriter(sourceDir.resolve("Triangle.java"))) {
 			fw.write("public class Triangle {\n" + "	static void drawTriangle(int sizeOfTriangle) {\n" + "		if (sizeOfTriangle == 2) { try { Thread.sleep(10000); } catch (InterruptedException e) {} }\n		for (int i = 0; i < sizeOfTriangle; i++) {\n" + "			for (int j = 0; j <= i; j++) {\n" + "				System.out.print(\"*\");\n" + "			}\n" + "			System.out.println();\n" + "		}\n" + "	}\n" + "}");
 		}
 

@@ -19,8 +19,9 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletException;
@@ -91,10 +92,10 @@ public class DownloadSubmissionsByGroup extends HttpServlet {
 
 		try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
 			// add submitted files to zip archive
-			final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
+			final Path taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
 			for (final Submission submission : DAOFactory.SubmissionDAOIf(session).getSubmissionsForTaskOfGroupOrdered(task, group)) {
-				final File submissionDir = new File(taskPath, String.valueOf(submission.getSubmissionid()));
-				if (!submissionDir.exists()) {
+				final Path submissionDir = taskPath.resolve(String.valueOf(submission.getSubmissionid()));
+				if (!Files.isDirectory(submissionDir)) {
 					continue;
 				}
 

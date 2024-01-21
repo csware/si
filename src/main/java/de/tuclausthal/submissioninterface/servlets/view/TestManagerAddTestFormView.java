@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,9 +18,10 @@
 
 package de.tuclausthal.submissioninterface.servlets.view;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -120,7 +121,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</form>");
 
 		// similar code in DockerTestManagerView
-		if (new File(DockerTest.SAFE_DOCKER_SCRIPT).exists()) {
+		if (Files.isRegularFile(Path.of(DockerTest.SAFE_DOCKER_SCRIPT))) {
 			out.println("<h2>Docker Test</h2>");
 			out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");

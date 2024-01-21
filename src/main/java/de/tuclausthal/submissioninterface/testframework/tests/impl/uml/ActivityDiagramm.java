@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,7 +19,7 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests.impl.uml;
 
-import java.io.File;
+import java.nio.file.Path;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -54,7 +54,7 @@ public class ActivityDiagramm extends UMLDiagramm {
 	private int numberOfJunctions = 0;
 	private int numberOfRepeats = 0;
 
-	public ActivityDiagramm(File file, Node xmiContentNode) {
+	public ActivityDiagramm(final Path file, final Node xmiContentNode) {
 		super(file, xmiContentNode);
 		parse();
 	}

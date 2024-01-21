@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,9 +18,9 @@
 
 package de.tuclausthal.submissioninterface.util;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 public class MailSender {
 	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public static boolean sendMail(String to, String subject, String messageText, List<File> attachments, MailOptions mailOptions) {
+	public static boolean sendMail(final String to, String subject, final String messageText, final List<Path> attachments, final MailOptions mailOptions) {
 		LOG.debug("Sending mail to: {}, Subject: {}, body: {}", to, subject, messageText);
 
 		MimeMessage msg;
@@ -88,11 +88,11 @@ public class MailSender {
 				MimeMultipart multipart = new MimeMultipart();
 				multipart.addBodyPart(messageBodyPart);
 
-				for (File file : attachments) {
+				for (final Path file : attachments) {
 					MimeBodyPart messagePart = new MimeBodyPart();
-					DataSource source = new FileDataSource(file);
+					DataSource source = new FileDataSource(file.toFile());
 					messagePart.setDataHandler(new DataHandler(source));
-					messagePart.setFileName(file.getName());
+					messagePart.setFileName(file.getFileName().toString());
 					multipart.addBodyPart(messagePart);
 				}
 

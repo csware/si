@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,7 +18,8 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao;
 
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
@@ -78,8 +79,9 @@ public interface SubmissionDAOIf {
 	 * @param submission
 	 * @param submissionPath
 	 * @return success of the removal
+	 * @throws IOException 
 	 */
-	public boolean deleteIfNoFiles(Submission submission, File submissionPath);
+	public boolean deleteIfNoFiles(Submission submission, Path submissionPath) throws IOException;
 
 	public Submission getUngradedSubmission(Task task, int lastSubmissionID, boolean reverse);
 

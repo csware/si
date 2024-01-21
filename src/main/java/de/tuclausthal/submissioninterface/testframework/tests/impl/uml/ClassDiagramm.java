@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
- * Copyright 2011-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,7 +19,7 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests.impl.uml;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,7 +43,7 @@ import org.w3c.dom.NodeList;
 public class ClassDiagramm extends UMLDiagramm {
 	public static String TYPE = "UML:Class";
 
-	public ClassDiagramm(File file, Node xmiContentNode) {
+	public ClassDiagramm(final Path file, final Node xmiContentNode) {
 		super(file, xmiContentNode);
 		parse();
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021, 2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021, 2023-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,8 +18,8 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests;
 
-import java.io.File;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Path;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -68,7 +68,7 @@ public class TestTask {
 	 * @param basePath the path to the submissions
 	 * @param testResult 
 	 */
-	public void performTask(File basePath, TestExecutorTestResult testResult) {
+	public void performTask(final Path basePath, final TestExecutorTestResult testResult) {
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
 		Test test = DAOFactory.TestDAOIf(session).getTest(testId);
 		Submission submission = DAOFactory.SubmissionDAOIf(session).getSubmission(submissionid);
@@ -78,7 +78,7 @@ public class TestTask {
 
 			testResult.setTestID(testId);
 
-			final File path = Util.constructPath(basePath, submission);
+			final Path path = Util.constructPath(basePath, submission);
 
 			performTaskInFolder(test, basePath, path, testResult);
 
@@ -107,7 +107,7 @@ public class TestTask {
 	 * @param path the path of the folder where the testing data lies
 	 * @param testResult 
 	 */
-	public void performTaskInFolder(Test test, File basePath, File path, TestExecutorTestResult testResult) {
+	public void performTaskInFolder(final Test test, final Path basePath, final Path path, final TestExecutorTestResult testResult) {
 		AbstractTest testImpl = test.getTestImpl();
 		try {
 			Util.ensurePathExists(path);

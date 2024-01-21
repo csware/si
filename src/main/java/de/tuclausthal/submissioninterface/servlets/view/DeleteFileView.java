@@ -51,7 +51,7 @@ public class DeleteFileView extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		out.println("<FORM class=mid method=POST action=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">");
-		out.println("<p>Sind Sie sicher, dass Sie die Datei \"" + Util.escapeHTML(filename) + "\" löschen möchten?</p>");
+		out.println("<p>Sind Sie sicher, dass Sie die Datei \"" + Util.escapeHTML(filename.replace('\\', '/')) + "\" löschen möchten?</p>");
 		out.println("<p>Dateien gleichen Namens werden auch durch erneutes Hochladen überschrieben.</p>");
 		out.println("<INPUT TYPE=submit VALUE=\"Datei löschen\"> <a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid(), request, response) + "\">Abbrechen</a>");
 		out.println("</FORM>");

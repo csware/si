@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,8 +18,9 @@
 
 package de.tuclausthal.submissioninterface.util;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.hibernate.Session;
 
@@ -43,12 +44,13 @@ public class TestRunner {
 	 */
 	public static void main(String[] args) throws IOException {
 		HibernateSessionHelper.getSessionFactory();
-		if (args.length != 1 || !new File(args[0]).isDirectory()) {
+		final Path dataPath;
+		if (args.length != 1 || (dataPath = Path.of(args[0])) == null || !Files.isDirectory(dataPath)) {
 			System.out.println("first parameter must point to the submission directory");
 			System.exit(1);
+			return; // not needed, but to make Eclipse happy
 		}
 		DupeCheck.CORES = 2;
-		File dataPath = new File(args[0]);
 		Session session = HibernateSessionHelper.getSessionFactory().openSession();
 		SimilarityTest similarityTest;
 		while ((similarityTest = DAOFactory.SimilarityTestDAOIf(session).takeSimilarityTestTransacted()) != null) {

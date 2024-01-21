@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2013, 2015, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2013, 2015, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,11 +19,12 @@
 package de.tuclausthal.submissioninterface.util;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -53,7 +54,7 @@ public class Configuration {
 
 	static private Configuration instance = null;
 	private Constructor<Template> templateConstructor;
-	private File dataPath;
+	private Path dataPath;
 	private String serverName;
 	private String fullServerURI;
 	private String adminMail;
@@ -160,7 +161,7 @@ public class Configuration {
 	 * Returns the path to the submissions
 	 * @return the path
 	 */
-	public File getDataPath() {
+	public Path getDataPath() {
 		return dataPath;
 	}
 
@@ -169,8 +170,8 @@ public class Configuration {
 		if (dataPathValue == null) {
 			throw new RuntimeException("datapath not specified");
 		}
-		dataPath = new File(dataPathValue).getAbsoluteFile();
-		if (dataPath.isFile()) {
+		dataPath = Path.of(dataPathValue).toAbsolutePath();
+		if (Files.isRegularFile(dataPath)) {
 			throw new RuntimeException("datapath must not be a file");
 		}
 		try {

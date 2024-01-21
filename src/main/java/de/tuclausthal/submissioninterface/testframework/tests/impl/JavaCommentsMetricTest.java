@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2021, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class JavaCommentsMetricTest extends AbstractTest {
 	}
 
 	@Override
-	public void performTest(File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
+	public void performTest(final Path basePath, final Path submissionPath, final TestExecutorTestResult testResult) throws Exception {
 		List<String> excludedFileNames = Arrays.asList(test.getExcludedFiles().split(","));
 
 		long charsOfCode = 0;
@@ -53,7 +53,7 @@ public class JavaCommentsMetricTest extends AbstractTest {
 		StripCodeNormalizer scoden = new StripCodeNormalizer();
 		for (String file : Util.listFilesAsRelativeStringList(submissionPath, excludedFileNames)) {
 			if (file.endsWith(".java")) {
-				StringBuffer fileContents = Util.loadFile(new File(submissionPath, file));
+				StringBuffer fileContents = Util.loadFile(submissionPath.resolve(file));
 
 				StringBuffer code = new StringBuffer(fileContents);
 				code = fulln.normalize(scn.normalize(code));

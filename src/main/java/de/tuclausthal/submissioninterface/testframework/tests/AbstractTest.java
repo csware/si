@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017, 2021, 2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2021, 2023-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests;
 
-import java.io.File;
+import java.nio.file.Path;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
@@ -42,7 +42,7 @@ public abstract class AbstractTest {
 	 * @param testResult
 	 * @throws Exception
 	 */
-	public abstract void performTest(File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception;
+	public abstract void performTest(final Path basePath, final Path submissionPath, final TestExecutorTestResult testResult) throws Exception;
 
 	/**
 	 * Prepares a windows path (windows needs double backslash)
@@ -56,7 +56,7 @@ public abstract class AbstractTest {
 		return absolutePath;
 	}
 
-	final static protected String mkPath(File absolutePath) {
-		return mkPath(absolutePath.getAbsolutePath());
+	final static protected String mkPath(final Path path) {
+		return mkPath(path.toAbsolutePath().toString());
 	}
 }

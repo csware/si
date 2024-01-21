@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,9 +19,10 @@
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,21 +58,21 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 	}
 
 	@Override
-	public void performTest(File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
-		File tempDir = null;
+	public void performTest(final Path basePath, final Path submissionPath, final TestExecutorTestResult testResult) throws Exception {
+		Path tempDir = null;
 		try {
 			tempDir = Util.createTemporaryDirectory("test");
 			if (tempDir == null) {
 				throw new IOException("Failed to create tempdir!");
 			}
-			File codeDir = new File(tempDir, STUDENT_CODE_DIRNAME);
-			codeDir.mkdir();
-			File testerDir = new File(tempDir, TEST_CODE_DIRNAME);
-			testerDir.mkdir();
-			File studentClassesDir = new File(tempDir, STUDENT_CLASSES_DIRNAME);
-			studentClassesDir.mkdir();
-			File testClassesDir = new File(tempDir, TEST_CLASSES_DIRNAME);
-			testClassesDir.mkdir();
+			final Path codeDir = tempDir.resolve(STUDENT_CODE_DIRNAME);
+			Files.createDirectory(codeDir);
+			final Path testerDir = tempDir.resolve(TEST_CODE_DIRNAME);
+			Files.createDirectory(testerDir);
+			final Path studentClassesDir = tempDir.resolve(STUDENT_CLASSES_DIRNAME);
+			Files.createDirectory(studentClassesDir);
+			final Path testClassesDir = tempDir.resolve(TEST_CLASSES_DIRNAME);
+			Files.createDirectory(testClassesDir);
 
 			Util.recursiveCopy(submissionPath, codeDir);
 			TestExecutorTestResult compileTestResult = new TestExecutorTestResult();
@@ -102,9 +103,9 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 			if (insertionPoint >= 0) {
 				teacherTemplate.replace(insertionPoint, insertionPoint + "{{TESTCODE}}".length(), testCode.toString());
 			}
-			FileWriter fw = new FileWriter(new File(testerDir, "Tester.java"));
-			fw.write(teacherTemplate.toString());
-			fw.close();
+			try (Writer fw = Files.newBufferedWriter(testerDir.resolve("Tester.java"))) {
+				fw.write(teacherTemplate.toString());
+			}
 
 			TestExecutorTestResult compileTestResultFull = new TestExecutorTestResult();
 			if (!compileJava(testerDir, Arrays.asList(studentClassesDir), testClassesDir, compileTestResultFull)) {
@@ -188,8 +189,8 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 	}
 
 	@Override
-	void populateJavaPolicyFile(File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException {
-		policyFileWriter.write("grant codeBase \"file:" + mkPath(new File(tempDir.getParentFile(), TEST_CLASSES_DIRNAME).getAbsolutePath()) + "\" {\n");
+	void populateJavaPolicyFile(final Path basePath, final Path tempDir, final BufferedWriter policyFileWriter) throws IOException {
+		policyFileWriter.write("grant codeBase \"file:" + mkPath(tempDir.getParent().resolve(TEST_CLASSES_DIRNAME)) + "\" {\n");
 		policyFileWriter.write("	permission java.lang.RuntimePermission \"setIO\";\n");
 		policyFileWriter.write("	permission java.lang.reflect.ReflectPermission \"suppressAccessChecks\";\n");
 		policyFileWriter.write("};\n");

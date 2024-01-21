@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2017, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,8 +18,8 @@
 
 package de.tuclausthal.submissioninterface.dupecheck.levenshteindistance;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
 
@@ -28,7 +28,7 @@ import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
  * @author Sven Strickroth
  */
 public class LevenshteinDistance extends DupeCheck {
-	public LevenshteinDistance(File path) {
+	public LevenshteinDistance(final Path path) {
 		super(path);
 	}
 

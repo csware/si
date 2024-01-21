@@ -18,16 +18,16 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -81,12 +81,12 @@ public class DownloadModelSolutionFile extends HttpServlet {
 			return;
 		}
 
-		final File path = Util.constructPath(Configuration.getInstance().getDataPath(), task, TaskPath.MODELSOLUTIONFILES);
-		File file = Util.buildPath(path, request.getPathInfo().substring(1));
-		if (file != null && file.isFile()) {
-			ShowFile.setContentTypeBasedonFilenameExtension(response, file.getName(), true);
+		final Path path = Util.constructPath(Configuration.getInstance().getDataPath(), task, TaskPath.MODELSOLUTIONFILES);
+		final Path file = Util.buildPath(path, request.getPathInfo().substring(1));
+		if (file != null && Files.isRegularFile(file)) {
+			ShowFile.setContentTypeBasedonFilenameExtension(response, file.getFileName().toString(), true);
 			try (OutputStream out = response.getOutputStream()) {
-				FileUtils.copyFile(file, out);
+				Files.copy(file, out);
 			}
 			return;
 		}
@@ -124,13 +124,13 @@ public class DownloadModelSolutionFile extends HttpServlet {
 			return;
 		}
 
-		final File file = Util.buildPath(Util.constructPath(Configuration.getInstance().getDataPath(), task, TaskPath.MODELSOLUTIONFILES), request.getPathInfo().substring(1));
-		if (file != null && file.isFile()) {
+		final Path file = Util.buildPath(Util.constructPath(Configuration.getInstance().getDataPath(), task, TaskPath.MODELSOLUTIONFILES), request.getPathInfo().substring(1));
+		if (file != null && Files.isRegularFile(file)) {
 			if (!"delete".equals(request.getParameter("action"))) {
 				response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
 				return;
 			}
-			file.delete();
+			Files.delete(file);
 			response.sendRedirect(Util.generateAbsoluteServletsRedirectURL(TaskManager.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid() + "#modelsolutionfiles", request, response));
 			return;
 		}

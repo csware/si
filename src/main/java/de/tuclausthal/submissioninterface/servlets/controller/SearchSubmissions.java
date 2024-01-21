@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,8 +18,8 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -139,12 +139,12 @@ public class SearchSubmissions extends HttpServlet {
 
 		}
 		if (arrayContains(request.getParameterValues("search"), "files")) {
-			final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
+			final Path taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
 			for (Submission submission : task.getSubmissions()) {
-				File submissionPath = new File(taskPath, String.valueOf(submission.getSubmissionid()));
+				final Path submissionPath = taskPath.resolve(String.valueOf(submission.getSubmissionid()));
 				List<String> files = Util.listFilesAsRelativeStringList(submissionPath);
 				for (String file : files) {
-					StringBuffer fileContent = Util.loadFile(new File(submissionPath, file));
+					final StringBuffer fileContent = Util.loadFile(submissionPath.resolve(file));
 					if (fileContent.toString().contains(request.getParameter("q"))) {
 						foundSubmissions.add(submission);
 						break;

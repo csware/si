@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,12 +21,11 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -37,19 +36,19 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
 public class JavaRegExpTest {
 
 	@TempDir
-	private File tempDir;
-	private File sourceDir;
-	private File dataDir;
+	private Path tempDir;
+	private Path sourceDir;
+	private Path dataDir;
 	private RegExpTest regexpTest;
 	private JavaIORegexpTest javaFunctionTest;
 
 	@BeforeEach
 	void setUpTest() throws IOException {
-		sourceDir = new File(tempDir, "source");
-		sourceDir.mkdir();
-		dataDir = new File(tempDir, "data");
-		dataDir.mkdir();
-		FileUtils.copyFileToDirectory(new File("SecurityManager/NoExitSecurityManager.jar"), dataDir);
+		sourceDir = tempDir.resolve("source");
+		Files.createDirectory(sourceDir);
+		dataDir = tempDir.resolve("data");
+		Files.createDirectory(dataDir);
+		Files.copy(Path.of("SecurityManager/NoExitSecurityManager.jar"), dataDir.resolve("NoExitSecurityManager.jar"));
 
 		regexpTest = new RegExpTest();
 		regexpTest.setMainClass("HelloWorld");
@@ -60,7 +59,7 @@ public class JavaRegExpTest {
 
 	@Test
 	void testJavaRegExpTestOk() throws Exception {
-		try (Writer fw = new FileWriter(new File(sourceDir, "HelloWorld.java"))) {
+		try (Writer fw = Files.newBufferedWriter(sourceDir.resolve("HelloWorld.java"))) {
 			fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		System.out.println(\"Hello World!\");\n	}\n}\n");
 		}
 
@@ -71,7 +70,7 @@ public class JavaRegExpTest {
 
 	@Test
 	void testJavaRegExpTestFail() throws Exception {
-		try (Writer fw = new FileWriter(new File(sourceDir, "HelloWorld.java"))) {
+		try (Writer fw = Files.newBufferedWriter(sourceDir.resolve("HelloWorld.java"))) {
 			fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		System.out.println(\"Hello World!\");\n	}\n}\n");
 		}
 
@@ -85,7 +84,7 @@ public class JavaRegExpTest {
 	void testJavaRegExpTestTimeout() throws Exception {
 		TestExecutorTestResult result = new TestExecutorTestResult();
 		regexpTest.setTimeout(2);
-		try (Writer fw = new FileWriter(new File(sourceDir, "HelloWorld.java"))) {
+		try (Writer fw = Files.newBufferedWriter(sourceDir.resolve("HelloWorld.java"))) {
 			fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		while (true) {\n			try {\n				Thread.sleep(1000);\n			} catch (InterruptedException e) {\n				System.out.println(\"Ignore InterruptedException\");\n			}\n		}\n	}\n}\n");
 		}
 		javaFunctionTest.performTest(dataDir, sourceDir, result);

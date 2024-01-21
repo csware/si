@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,18 +18,20 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletException;
@@ -156,18 +158,18 @@ public class SelfTest extends HttpServlet {
 			LOG.error("Could not access LocalExecutor.", e);
 		}
 		testresults.add(new TestResult("Daten-Verzeichnis existiert, ist lesbar und beschreibbar.", Util.escapeHTML(Configuration.getInstance().getDataPath().toString()), checkDataDir()));
-		testresults.add(new TestResult("Parent vom Daten-Verzeichnis ist nicht beschreibbar (erhöht die Sicherheit).", !Configuration.getInstance().getDataPath().getParentFile().canWrite()));
+		testresults.add(new TestResult("Parent vom Daten-Verzeichnis ist nicht beschreibbar (erhöht die Sicherheit).", !Files.isWritable(Configuration.getInstance().getDataPath().getParent())));
 		checkRequiredFilesInDataDir(testresults);
-		if (new File(Configuration.getInstance().getDataPath(), JPlagAdapter.JPLAG_JAR).exists()) {
+		if (Files.isRegularFile(Configuration.getInstance().getDataPath().resolve(JPlagAdapter.JPLAG_JAR))) {
 			testresults.add(new TestResult("\"" + JPlagAdapter.JPLAG_JAR + "\" ist im Daten-Verzeichnis installiert: JPlag prinzipiell verfügbar.", null));
 		} else {
 			testresults.add(new TestResult("\"" + JPlagAdapter.JPLAG_JAR + "\" ist nicht im Daten-Verzeichnis installiert: JPlag nicht verfügbar.", null));
 		}
 
 		testJavaTests(testresults);
-		if (new File(DockerTest.SAFE_DOCKER_SCRIPT).exists()) {
+		if (Files.isRegularFile(Path.of(DockerTest.SAFE_DOCKER_SCRIPT))) {
 			testresults.add(new TestResult("\"" + DockerTest.SAFE_DOCKER_SCRIPT + "\" Skript ist installiert: DockerIOTests prinzipiell verfügbar.", null));
-			File tempDir = Util.createTemporaryDirectory("emptydir");
+			final Path tempDir = Util.createTemporaryDirectory("emptydir");
 			try {
 				de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest dockerTestSpec = new de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest();
 				dockerTestSpec.setPreparationShellCode("");
@@ -196,19 +198,19 @@ public class SelfTest extends HttpServlet {
 	}
 
 	private boolean checkDataDir() {
-		File dataDir = Configuration.getInstance().getDataPath();
-		if (!dataDir.exists() || !dataDir.isDirectory() || !dataDir.canRead() || !dataDir.canWrite()) {
+		final Path dataDir = Configuration.getInstance().getDataPath();
+		if (!Files.isDirectory(dataDir) || !Files.isReadable(dataDir) || !Files.isWritable(dataDir)) {
 			return false;
 		}
-		try {
-			dataDir.list();
-		} catch (SecurityException e) {
+		try (Stream<Path> fileStream = Files.list(dataDir)) {
+			fileStream.count();
+		} catch (SecurityException | IOException e) {
 			LOG.error("Cannot read data-path,", e);
 			return false;
 		}
 		try {
-			File testFile = File.createTempFile("sometest", null, dataDir);
-			testFile.delete();
+			final Path testFile = Files.createFile(dataDir.resolve("sometest"));
+			Files.delete(testFile);
 		} catch (IOException e) {
 			LOG.error("Cannot write data-path,", e);
 			return false;
@@ -219,26 +221,23 @@ public class SelfTest extends HttpServlet {
 	private void checkRequiredFilesInDataDir(List<TestResult> testresults) {
 		String[] filesToCheck = { JavaFunctionTest.SECURITYMANAGER_JAR, JavaJUnitTest.JUNIT_JAR, PlaggieAdapter.CONFIG_FILE_NAME };
 		for (String filename : filesToCheck) {
-			File file = new File(Configuration.getInstance().getDataPath(), filename);
-			testresults.add(new TestResult("\"" + filename + "\" ist im Daten-Verzeichnis vorhanden und lesbar.", file.exists() || file.canRead()));
+			final Path file = Configuration.getInstance().getDataPath().resolve(filename);
+			testresults.add(new TestResult("\"" + filename + "\" ist im Daten-Verzeichnis vorhanden und lesbar.", Files.isRegularFile(file) && Files.isReadable(file)));
 		}
 	}
 
 	protected void testJavaTests(List<TestResult> testresults) {
-		File tempDir = Util.createTemporaryDirectory("javatests");
+		final Path tempDir = Util.createTemporaryDirectory("javatests");
 		if (tempDir == null) {
 			testresults.add(new TestResult("Java-Tests erfolgreich.", "Konnte kein temporäres Verzeichnis erstellen.", false));
 			LOG.error("Failed to create tempdir!");
 			return;
 		}
 
-		FileWriter fw;
-		try {
-			fw = new FileWriter(new File(tempDir, "HelloWorld.java"));
+		try (Writer fw = Files.newBufferedWriter(tempDir.resolve("HelloWorld.java"))) {
 			fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		System.out.println(\"Hello World!\");\n	}\n}\n");
-			fw.close();
 		} catch (IOException e) {
-			testresults.add(new TestResult("Java-Tests erfolgreich.", "Konnte keine Datei im temporären Verzeichnis (" + Util.escapeHTML(tempDir.getAbsolutePath()) + ") erstellen.", false));
+			testresults.add(new TestResult("Java-Tests erfolgreich.", "Konnte keine Datei im temporären Verzeichnis (" + Util.escapeHTML(tempDir.toString()) + ") erstellen.", false));
 			LOG.error("Could not write to tempDir.", e);
 			Util.recursiveDelete(tempDir);
 			return;
@@ -256,9 +255,9 @@ public class SelfTest extends HttpServlet {
 		}
 
 		try {
-			fw = new FileWriter(new File(tempDir, "HelloWorld.java"));
-			fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		System.out.println(\"Hello World!);\n	 }\n}\n");
-			fw.close();
+			try (Writer fw = Files.newBufferedWriter(tempDir.resolve("HelloWorld.java"))) {
+				fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		System.out.println(\"Hello World!);\n	 }\n}\n");
+			}
 
 			TestExecutorTestResult result = new TestExecutorTestResult();
 			boolean compileResult = JavaSyntaxTest.compileJava(tempDir, null, tempDir, result);
@@ -271,9 +270,9 @@ public class SelfTest extends HttpServlet {
 		}
 
 		try {
-			fw = new FileWriter(new File(tempDir, "HelloWorld.java"));
-			fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		System.out.println(\"Hello World!\");\n	}\n}\n");
-			fw.close();
+			try (Writer fw = Files.newBufferedWriter(tempDir.resolve("HelloWorld.java"))) {
+				fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		System.out.println(\"Hello World!\");\n	}\n}\n");
+			}
 
 			RegExpTest regexpTest = new RegExpTest();
 			regexpTest.setMainClass("HelloWorld");
@@ -290,16 +289,16 @@ public class SelfTest extends HttpServlet {
 			testresults.add(new TestResult("Java-Funktionstest erkennt erfolgreich Fehler.", Util.escapeHTML(result.getTestOutput()), !result.isTestPassed()));
 
 			regexpTest.setTimeout(2);
-			fw = new FileWriter(new File(tempDir, "HelloWorld.java"));
-			fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		while (true) {\n			try {\n				Thread.sleep(1000);\n			} catch (InterruptedException e) {\n				System.out.println(\"Ignore InterruptedException\");\n			}\n		}\n	}\n}\n");
-			fw.close();
+			try (Writer fw = Files.newBufferedWriter(tempDir.resolve("HelloWorld.java"))) {
+				fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		while (true) {\n			try {\n				Thread.sleep(1000);\n			} catch (InterruptedException e) {\n				System.out.println(\"Ignore InterruptedException\");\n			}\n		}\n	}\n}\n");
+			}
 			javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
 			testresults.add(new TestResult("Java-Funktionstest erkennt erfolgreich Timeout.", Util.escapeHTML(result.getTestOutput()), !result.isTestPassed() && result.getTestOutput().contains("aborted due to too long execution time")));
 
 			if (functionTestGenerallyOK) {
-				fw = new FileWriter(new File(tempDir, "HelloWorld.java"));
-				fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		System.out.println(\"----start here----\\n\" + System.getProperty(\"java.runtime.name\", \"-\") + \" \" + System.getProperty(\"java.runtime.version\", \"-\") + \" (\" + System.getProperty(\"java.version\", \"-\") + \"; \" + System.getProperty(\"java.vm.name\", \"-\") + \" \" + System.getProperty(\"java.vm.version\", \"-\")+ \"; \" + System.getProperty(\"java.vendor\", \"-\") + \")\\n----to here----\");\n	}\n}\n");
-				fw.close();
+				try (Writer fw = Files.newBufferedWriter(tempDir.resolve("HelloWorld.java"))) {
+					fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		System.out.println(\"----start here----\\n\" + System.getProperty(\"java.runtime.name\", \"-\") + \" \" + System.getProperty(\"java.runtime.version\", \"-\") + \" (\" + System.getProperty(\"java.version\", \"-\") + \"; \" + System.getProperty(\"java.vm.name\", \"-\") + \" \" + System.getProperty(\"java.vm.version\", \"-\")+ \"; \" + System.getProperty(\"java.vendor\", \"-\") + \")\\n----to here----\");\n	}\n}\n");
+				}
 				javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
 				String output = result.getTestOutput();
 				if (output.contains("----start here----") && output.contains("----to here----")) {
@@ -316,9 +315,9 @@ public class SelfTest extends HttpServlet {
 		}
 
 		try {
-			fw = new FileWriter(new File(tempDir, "Triangle.java"));
-			fw.write("public class Triangle {\r\n" + "	static void drawTriangle(int sizeOfTriangle) {\r\n" + "		for (int i = 0; i < sizeOfTriangle; i++) {\r\n" + "			for (int j = 0; j <= i; j++) {\r\n" + "				System.out.print(\"*\");\r\n" + "			}\r\n" + "			System.out.println();\r\n" + "		}\r\n" + "	}\r\n" + "}");
-			fw.close();
+			try (Writer fw = Files.newBufferedWriter(tempDir.resolve("Triangle.java"))) {
+				fw.write("public class Triangle {\r\n" + "	static void drawTriangle(int sizeOfTriangle) {\r\n" + "		for (int i = 0; i < sizeOfTriangle; i++) {\r\n" + "			for (int j = 0; j <= i; j++) {\r\n" + "				System.out.print(\"*\");\r\n" + "			}\r\n" + "			System.out.println();\r\n" + "		}\r\n" + "	}\r\n" + "}");
+			}
 
 			JavaAdvancedIOTest javaAdvancedIOTest = new JavaAdvancedIOTest();
 			javaAdvancedIOTest.getTestSteps().add(new JavaAdvancedIOTestStep(javaAdvancedIOTest, "Empty", "Triangle.drawTriangle(0);", ""));

@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Joachim Schramm
- * Copyright 2011, 2017, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2021, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,9 +19,12 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests.impl.uml;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Iterator;
 
 import javax.xml.XMLConstants;
@@ -55,8 +58,8 @@ public abstract class UMLDiagramm {
 		this.name = name;
 	}
 
-	public UMLDiagramm(File file, Node xmiContentNode) {
-		this.name = file.getAbsolutePath();
+	public UMLDiagramm(final Path file, final Node xmiContentNode) {
+		this.name = file.toAbsolutePath().toString();
 		this.xmiContentNode = xmiContentNode;
 	}
 
@@ -88,7 +91,7 @@ public abstract class UMLDiagramm {
 	abstract public String getType();
 
 	//lesen der XMI Datei und einordnen der Diagrammart
-	public static UMLDiagramm getDiagramm(File file) {
+	public static UMLDiagramm getDiagramm(final Path file) {
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
@@ -96,7 +99,7 @@ public abstract class UMLDiagramm {
 		try {
 			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			try (FileReader freader = new FileReader(file)) {
+			try (Reader freader = new BufferedReader(new InputStreamReader(Files.newInputStream(file)))) {
 				document = builder.parse(new InputSource(freader));
 			}
 		} catch (ParserConfigurationException e) {

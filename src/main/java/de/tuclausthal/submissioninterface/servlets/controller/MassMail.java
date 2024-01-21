@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2017, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2020-2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,9 +18,9 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -170,9 +170,9 @@ public class MassMail extends HttpServlet {
 		}
 
 		final String[] fixedHeader = { "Name", "E-Mail" };
-		File tmpDir = Util.createTemporaryDirectory("csv");
-		File tmpFile = new File(tmpDir, "alle-empfaenger.csv");
-		try (CSVWriter writer = new CSVWriter(new FileWriter(tmpFile), ';', CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
+		final Path tmpDir = Util.createTemporaryDirectory("csv");
+		final Path tmpFile = tmpDir.resolve("alle-empfaenger.csv");
+		try (CSVWriter writer = new CSVWriter(Files.newBufferedWriter(tmpFile), ';', CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
 			writer.writeNext(fixedHeader, false);
 			for (User receipient : receipients) {
 				String[] line = new String[fixedHeader.length];

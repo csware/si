@@ -1,5 +1,5 @@
 /*
- * Copyright 2011, 2017, 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2021-2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,8 +19,8 @@
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -71,5 +71,5 @@ public class JavaIORegexpTest extends JavaFunctionTest {
 	}
 
 	@Override
-	void populateJavaPolicyFile(File basePath, File tempDir, BufferedWriter policyFileWriter) throws IOException {}
+	void populateJavaPolicyFile(final Path basePath, final Path tempDir, final BufferedWriter policyFileWriter) throws IOException {}
 }

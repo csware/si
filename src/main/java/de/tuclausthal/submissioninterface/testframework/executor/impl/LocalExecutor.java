@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2021, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,8 +18,8 @@
 
 package de.tuclausthal.submissioninterface.testframework.executor.impl;
 
-import java.io.File;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -38,9 +38,9 @@ import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
  */
 public class LocalExecutor implements TestExecutorIf {
 	private volatile static LocalExecutor instance = null;
-	private ExecutorService executorService = Executors.newFixedThreadPool(CORES);
+	final private ExecutorService executorService = Executors.newFixedThreadPool(CORES);
 	public static int CORES = 1;
-	public static File dataPath;
+	public static Path dataPath;
 
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
-import java.io.File;
+import java.nio.file.Path;
 
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
@@ -32,5 +32,5 @@ public class NullTest extends AbstractTest {
 	}
 
 	@Override
-	public void performTest(File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {}
+	public void performTest(final Path basePath, final Path submissionPath, final TestExecutorTestResult testResult) throws Exception {}
 }

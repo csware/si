@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2023-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.testframework.executor.impl;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.lang.invoke.MethodHandles;
 import java.util.concurrent.Callable;
 
@@ -34,10 +34,10 @@ import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
 public class TestExecutorWorker implements Callable<TestExecutorTestResult> {
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private File dataPath;
+	final private Path dataPath;
 	private TestTask executionTask;
 
-	public TestExecutorWorker(File dataPath, TestTask executionTask) {
+	public TestExecutorWorker(final Path dataPath, final TestTask executionTask) {
 		this.dataPath = dataPath;
 		this.executionTask = executionTask;
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2021, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,8 +18,8 @@
 
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
@@ -35,21 +35,21 @@ public abstract class TempDirTest extends AbstractTest {
 	}
 
 	@Override
-	public void performTest(File basePath, File submissionPath, TestExecutorTestResult testResult) throws Exception {
+	public void performTest(final Path basePath, final Path submissionPath, final TestExecutorTestResult testResult) throws Exception {
 		// check if we are already in an tempdir, i.e., we're executing a student test as Tutor
-		File checkPath = submissionPath;
+		Path checkPath = submissionPath;
 		boolean isAlreadyTempDir = true;
 		while (checkPath != null) {
 			if (basePath.equals(checkPath)) {
 				isAlreadyTempDir = false;
 				break;
 			}
-			checkPath = checkPath.getParentFile();
+			checkPath = checkPath.getParent();
 		}
 		if (isAlreadyTempDir) {
 			performTestInTempDir(basePath, submissionPath, testResult);
 		} else {
-			File tempDir = null;
+			Path tempDir = null;
 			try {
 				tempDir = Util.createTemporaryDirectory("test");
 				if (tempDir == null) {
@@ -68,5 +68,5 @@ public abstract class TempDirTest extends AbstractTest {
 		}
 	}
 
-	abstract protected void performTestInTempDir(File basePath, File tempDir, TestExecutorTestResult testResult) throws Exception;
+	abstract protected void performTestInTempDir(final Path basePath, final Path tempDir, final TestExecutorTestResult testResult) throws Exception;
 }

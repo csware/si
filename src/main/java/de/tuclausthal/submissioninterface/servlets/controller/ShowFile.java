@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,10 +18,11 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import jakarta.mail.internet.MimeUtility;
 
-import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
@@ -88,21 +88,21 @@ public class ShowFile extends HttpServlet {
 			return;
 		}
 
-		final File file = Util.buildPath(Util.constructPath(Configuration.getInstance().getDataPath(), submission), request.getPathInfo().substring(1));
-		if (file != null && file.isFile()) {
-			if (isPlainTextFile(file.getName().toLowerCase()) && !"true".equals(request.getParameter("download"))) {
+		final Path file = Util.buildPath(Util.constructPath(Configuration.getInstance().getDataPath(), submission), request.getPathInfo().substring(1));
+		if (file != null && Files.isRegularFile(file)) {
+			if (isPlainTextFile(file.getFileName().toString().toLowerCase()) && !"true".equals(request.getParameter("download"))) {
 				// code for loading/displaying text-files
 				StringBuffer code = Util.loadFile(file);
 
 				request.setAttribute("submission", submission);
 				request.setAttribute("code", code);
-				request.setAttribute("fileName", Util.escapeHTML(file.getName()));
+				request.setAttribute("fileName", Util.escapeHTML(file.getFileName().toString()));
 				getServletContext().getNamedDispatcher(ShowFileView.class.getSimpleName()).forward(request, response);
 				return;
 			}
-			setContentTypeBasedonFilenameExtension(response, file.getName(), "true".equals(request.getParameter("download")));
+			setContentTypeBasedonFilenameExtension(response, file.getFileName().toString(), "true".equals(request.getParameter("download")));
 			try (OutputStream out = response.getOutputStream()) {
-				FileUtils.copyFile(file, out);
+				Files.copy(file, out);
 			}
 			return;
 		}

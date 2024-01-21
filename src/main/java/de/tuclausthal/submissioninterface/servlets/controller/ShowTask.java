@@ -18,8 +18,8 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.time.ZonedDateTime;
 
 import javax.servlet.ServletException;
@@ -95,8 +95,8 @@ public class ShowTask extends HttpServlet {
 
 		request.setAttribute("participation", participation);
 
-		final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
-		request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, TaskPath.ADVISORFILES.getPathComponent())));
+		final Path taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
+		request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringListSorted(taskPath.resolve(TaskPath.ADVISORFILES.getPathComponent())));
 		request.setAttribute("task", task);
 		if (request.getParameter("onlydescription") != null) {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
@@ -117,14 +117,14 @@ public class ShowTask extends HttpServlet {
 				}
 				getServletContext().getNamedDispatcher(ShowTaskTutorPrintView.class.getSimpleName()).forward(request, response);
 			} else {
-				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, TaskPath.MODELSOLUTIONFILES.getPathComponent())));
+				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(taskPath.resolve(TaskPath.MODELSOLUTIONFILES.getPathComponent())));
 				getServletContext().getNamedDispatcher(ShowTaskTutorView.class.getSimpleName()).forward(request, response);
 			}
 		} else {
 			SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 			Submission submission = submissionDAO.getSubmission(task, RequestAdapter.getUser(request));
 			if (submission != null) {
-				File path = new File(taskPath, submission.getSubmissionid() + System.getProperty("file.separator"));
+				final Path path = taskPath.resolve(String.valueOf(submission.getSubmissionid()));
 				request.setAttribute("submittedFiles", Util.listFilesAsRelativeStringListSorted(path));
 				if (task.isADynamicTask()) {
 					task.setDescription(task.getDynamicTaskStrategie(session).getTranslatedDescription(submission));
@@ -135,7 +135,7 @@ public class ShowTask extends HttpServlet {
 				}
 			}
 			if (ModelSolutionProvisionType.canStudentAccessModelSolution(task, submission, null, null)) {
-				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, TaskPath.MODELSOLUTIONFILES.getPathComponent())));
+				request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(taskPath.resolve(String.valueOf(TaskPath.MODELSOLUTIONFILES.getPathComponent()))));
 			}
 
 			request.setAttribute("submission", submission);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,9 +21,9 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -32,8 +32,8 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
 
 public class JavaCompileTest {
 	@Test
-	void testJavaCompileTestOK(@TempDir File tempDir) throws Exception {
-		try (Writer fw = new FileWriter(new File(tempDir, "HelloWorld.java"))) {
+	void testJavaCompileTestOK(@TempDir final Path tempDir) throws Exception {
+		try (Writer fw = Files.newBufferedWriter(tempDir.resolve("HelloWorld.java"))) {
 			fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		System.out.println(\"Hello World!\");\n	}\n}\n");
 		}
 
@@ -43,8 +43,8 @@ public class JavaCompileTest {
 	}
 
 	@Test
-	void testJavaCompileTestFail(@TempDir File tempDir) throws Exception {
-		try (Writer fw = new FileWriter(new File(tempDir, "HelloWorld.java"))) {
+	void testJavaCompileTestFail(@TempDir final Path tempDir) throws Exception {
+		try (Writer fw = Files.newBufferedWriter(tempDir.resolve("HelloWorld.java"))) {
 			fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		System.out.println(\"Hello World!);\n	 }\n}\n");
 		}
 

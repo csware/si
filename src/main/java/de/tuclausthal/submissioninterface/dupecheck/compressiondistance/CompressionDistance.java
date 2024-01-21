@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,8 +20,8 @@ package de.tuclausthal.submissioninterface.dupecheck.compressiondistance;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import SevenZip.Compression.LZMA.Encoder;
 import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
@@ -33,7 +33,7 @@ import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
 public class CompressionDistance extends DupeCheck {
 	private static ThreadLocal<Encoder> encoder = new ThreadLocal<>();
 
-	public CompressionDistance(File path) {
+	public CompressionDistance(final Path path) {
 		super(path);
 	}
 

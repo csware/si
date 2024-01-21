@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2014, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2014, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,8 +18,9 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletException;
@@ -71,13 +72,12 @@ public class DownloadAsZip extends HttpServlet {
 			return;
 		}
 
-		final File path = Util.constructPath(Configuration.getInstance().getDataPath(), submission);
-
-		if (path.exists()) {
+		final Path submissionPath = Util.constructPath(Configuration.getInstance().getDataPath(), submission);
+		if (Files.isDirectory(submissionPath)) {
 			ShowFile.setContentTypeBasedonFilenameExtension(response, "submission-id" + submission.getSubmissionid() + ".zip", true);
 			try (ZipOutputStream out = new ZipOutputStream(response.getOutputStream())) {
 				//out.setMethod(ZipOutputStream.STORED);
-				Util.recursivelyZip(out, path, "");
+				Util.recursivelyZip(out, submissionPath, "");
 			}
 			return;
 		}

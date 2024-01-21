@@ -18,10 +18,11 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -130,12 +131,12 @@ public class PerformTest extends HttpServlet {
 			request.setAttribute("task", test.getTask());
 			request.setAttribute("test", test);
 
-			File path = Util.createTemporaryDirectory("tutortest");
+			final Path path = Util.createTemporaryDirectory("tutortest");
 			if (path == null) {
 				throw new IOException("Failed to create tempdir!");
 			}
 
-			final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
+			final Path taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
 			if (request.getParameter("sid") != null) {
 				SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 				Submission submission = submissionDAO.getSubmission(Util.parseInteger(request.getParameter("sid"), 0));
@@ -146,13 +147,13 @@ public class PerformTest extends HttpServlet {
 					return;
 				}
 
-				File submissionPath = new File(taskPath, String.valueOf(submission.getSubmissionid()));
+				final Path submissionPath = taskPath.resolve(String.valueOf(submission.getSubmissionid()));
 				// prepare tempdir
 				Util.recursiveCopy(submissionPath, path);
 			} else {
-				final File modelSolutionPath = new File(taskPath, TaskPath.MODELSOLUTIONFILES.getPathComponent());
+				final Path modelSolutionPath = taskPath.resolve(TaskPath.MODELSOLUTIONFILES.getPathComponent());
 				// prepare tempdir
-				if (modelSolutionPath.isDirectory()) {
+				if (Files.isDirectory(modelSolutionPath)) {
 					Util.recursiveCopy(modelSolutionPath, path);
 				}
 			}
@@ -187,7 +188,7 @@ public class PerformTest extends HttpServlet {
 			return;
 		}
 
-		File path = Util.createTemporaryDirectory("tutortest");
+		final Path path = Util.createTemporaryDirectory("tutortest");
 		if (path == null) {
 			throw new IOException("Failed to create tempdir!");
 		}

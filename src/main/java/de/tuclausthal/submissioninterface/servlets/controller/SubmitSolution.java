@@ -18,13 +18,14 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.lang.invoke.MethodHandles;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -158,11 +159,11 @@ public class SubmitSolution extends HttpServlet {
 				if (task.showTextArea()) {
 					String textsolution = "";
 					if (submission != null) {
-						File textSolutionFile = Util.buildPath(Util.constructPath(Configuration.getInstance().getDataPath(), submission), task.getShowTextArea());
+						final Path textSolutionFile = Util.buildPath(Util.constructPath(Configuration.getInstance().getDataPath(), submission), task.getShowTextArea());
 						if (textSolutionFile == null) {
 							// should never happen!
 							LOG.error("textSolutionFile tried to escape submissiondir: \"{}\"", task.getShowTextArea());
-						} else if (textSolutionFile.isFile()) {
+						} else if (Files.isRegularFile(textSolutionFile)) {
 							textsolution = Util.loadFile(textSolutionFile).toString();
 						}
 						if (task.isADynamicTask()) {
@@ -366,14 +367,14 @@ public class SubmitSolution extends HttpServlet {
 			}
 		}
 
-		final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
-		File path = new File(taskPath, String.valueOf(submission.getSubmissionid()));
+		final Path taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
+		final Path path = taskPath.resolve(String.valueOf(submission.getSubmissionid()));
 		Util.ensurePathExists(path);
 
 		if (file != null) {
 			LogEntry logEntry = new LogDAO(session).createLogUploadEntry(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null);
-			File logPath = new File(taskPath, TaskPath.LOGS.getPathComponent() + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
-			logPath.mkdirs();
+			final Path logPath = taskPath.resolve(TaskPath.LOGS.getPathComponent() + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
+			Files.createDirectories(logPath);
 			boolean skippedFiles = false;
 			ArrayList<String> uploadedFilenames = new ArrayList<>();
 			ArrayList<String> skippedFilenames = new ArrayList<>();
@@ -403,7 +404,7 @@ public class SubmitSolution extends HttpServlet {
 						skippedFiles = true;
 					}
 					try (InputStream is = aFile.getInputStream()) {
-						Util.copyInputStreamAndClose(is, new File(logPath, fileName));
+						Util.copyInputStreamAndClose(is, logPath.resolve(fileName));
 					}
 					uploadedFilenames.add(fileName);
 				} catch (IOException | IllegalArgumentException e) {
@@ -412,7 +413,7 @@ public class SubmitSolution extends HttpServlet {
 					}
 					LOG.warn("Problem on processing uploaded file", e);
 					Util.recursiveDeleteEmptyDirectories(logPath);
-					if (!logPath.exists()) {
+					if (!Files.exists(logPath)) {
 						session.remove(logEntry);
 					} else {
 						logEntry.setAdditionalData(Json.createObjectBuilder().add("filenames", Json.createArrayBuilder(uploadedFilenames)).build().toString());
@@ -507,8 +508,8 @@ public class SubmitSolution extends HttpServlet {
 			response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 		} else if (request.getParameter("textsolution") != null) {
 			LogEntry logEntry = new LogDAO(session).createLogUploadEntry(studentParticipation.getUser(), task, uploadFor > 0 ? LogAction.UPLOAD_ADMIN : LogAction.UPLOAD, null);
-			File logPath = new File(taskPath, TaskPath.LOGS.getPathComponent() + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
-			logPath.mkdirs();
+			final Path logPath = taskPath.resolve(TaskPath.LOGS.getPathComponent() + System.getProperty("file.separator") + String.valueOf(logEntry.getId()));
+			Files.createDirectories(logPath);
 
 			JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
 			if (task.isADynamicTask()) {
@@ -534,20 +535,20 @@ public class SubmitSolution extends HttpServlet {
 				jsonBuilder.add("taskNumbers", taskNumbersArrayBuilder);
 			}
 
-			File uploadedFile = Util.buildPath(path, task.getShowTextArea());
+			final Path uploadedFile = Util.buildPath(path, task.getShowTextArea());
 			if (uploadedFile == null) {
 				// should never happen!
 				LOG.error("textSolutionFile tried to escape submissiondir: \"{}\"", task.getShowTextArea());
 				throw new NullPointerException();
 			}
-			try (FileWriter fileWriter = new FileWriter(uploadedFile)) {
+			try (Writer fileWriter = Files.newBufferedWriter(uploadedFile)) {
 				if (request.getParameter("textsolution") != null && request.getParameter("textsolution").length() <= task.getMaxsize()) {
 					fileWriter.write(request.getParameter("textsolution"));
 				}
 			}
 
 			Util.recursiveCopy(uploadedFile, Util.buildPath(logPath, task.getShowTextArea()));
-			logEntry.setAdditionalData(jsonBuilder.add("filename", uploadedFile.getName()).build().toString());
+			logEntry.setAdditionalData(jsonBuilder.add("filename", uploadedFile.getFileName().toString()).build().toString());
 
 			submission.setLastModified(ZonedDateTime.now());
 			tx.commit();
@@ -588,7 +589,7 @@ public class SubmitSolution extends HttpServlet {
 		return patterns;
 	}
 
-	public static boolean handleUploadedFile(Logger log, File submissionPath, Task task, String fileName, Part item, Charset zipFileCharset) throws IOException {
+	public static boolean handleUploadedFile(final Logger log, final Path submissionPath, final Task task, final String fileName, final Part item, final Charset zipFileCharset) throws IOException {
 		if (!"-".equals(task.getArchiveFilenameRegexp()) && (fileName.endsWith(".zip") || fileName.endsWith(".jar"))) {
 			boolean skippedFiles = false;
 			ArrayList<Pattern> patterns = getArchiveFileNamePatterns(task);
@@ -614,18 +615,18 @@ public class SubmitSolution extends HttpServlet {
 					}
 					Util.lowerCaseExtension(archivedFileName);
 
-					File fileToCreate = Util.buildPath(submissionPath, archivedFileName.toString());
+					final Path fileToCreate = Util.buildPath(submissionPath, archivedFileName.toString());
 					if (fileToCreate == null) {
 						log.warn("Ignored entry for taskid={}: archivedFileName:\"{}\"; tries to escape submissiondir", task.getTaskid(), archivedFileName);
 						skippedFiles = true;
 						continue;
 					}
-					if (fileToCreate.getName().endsWith(".class") || entry.getName().startsWith("__MACOSX/")) {
+					if (fileToCreate.getFileName().toString().endsWith(".class") || entry.getName().startsWith("__MACOSX/")) {
 						continue;
 					}
 
 					// TODO: relocate java-files from jar/zip archives?
-					Util.ensurePathExists(fileToCreate.getParentFile());
+					Util.ensurePathExists(fileToCreate.getParent());
 					Util.copyInputStreamAndClose(zipFile, fileToCreate);
 				}
 			}

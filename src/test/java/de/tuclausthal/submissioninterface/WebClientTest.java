@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -173,7 +174,7 @@ class WebClientTest {
 
 			@ParameterizedTest
 			@CsvSource({ "TriangleOutput.java, TriangleOutput.java", "TriangleOutputPackage.java, mypackage/TriangleOutput.java" })
-			void uploadFile(final String filename, final String remoteFilename, @TempDir final File tmp) throws Exception {
+			void uploadFile(final String filename, final String remoteFilename, @TempDir final Path tmp) throws Exception {
 				final HtmlPage taskPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowTask?taskid=4");
 				assertEquals("GATE: Aufgabe \"Something\"", taskPage.getTitleText());
 				assertTrue(taskPage.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
@@ -182,7 +183,7 @@ class WebClientTest {
 				final HtmlForm submitForm = submitPage.getForms().get(0);
 				final HtmlFileInput fileInput = submitForm.getInputByName("file");
 				fileInput.setValue("TriangleOutput.java");
-				final String fileContents = Util.loadFile(new File("src/test/resources", filename)).toString();
+				final String fileContents = Util.loadFile(Path.of("src/test/resources", filename)).toString();
 				fileInput.setData(fileContents.getBytes());
 				final HtmlPage submittedPage = submitForm.getOneHtmlElementByAttribute("input", "type", "submit").click();
 				final String pageContent = submittedPage.asNormalizedText();
@@ -197,7 +198,7 @@ class WebClientTest {
 
 				// download file
 				final UnexpectedPage downloadFilePage = webClient.getPage(uploadedFile.getUrl().toString() + "&download=true");
-				final File tmpFile = new File(tmp, "tmpfile");
+				final Path tmpFile = tmp.resolve("tmpfile");
 				try (InputStream is = downloadFilePage.getInputStream()) {
 					Util.copyInputStreamAndClose(is, tmpFile);
 				}
@@ -239,7 +240,7 @@ class WebClientTest {
 				}
 
 				@Test
-				void testDynamicNumbersTask(@TempDir final File tmp) throws Exception {
+				void testDynamicNumbersTask(@TempDir final Path tmp) throws Exception {
 					HtmlPage taskPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowTask?taskid=" + task.getTaskid());
 					assertEquals("GATE: Aufgabe \"Dynamic Task binary numbers\"", taskPage.getTitleText());
 					assertTrue(taskPage.asNormalizedText().contains("Keine Abgabe mehr möglich."), "Keine Abgabe mehr möglich.");
@@ -280,7 +281,7 @@ class WebClientTest {
 
 					// download file
 					final TextPage downloadFilePage = webClient.getPage(uploadedFile.getUrl().toString() + "&download=true");
-					final File tmpFile = new File(tmp, "tmpfile");
+					final Path tmpFile = tmp.resolve("tmpfile");
 					Util.copyInputStreamAndClose(new ByteArrayInputStream(downloadFilePage.getContent().getBytes()), tmpFile);
 					assertEquals(textSolution, Util.loadFile(tmpFile).toString());
 
@@ -721,7 +722,7 @@ class WebClientTest {
 		}
 
 		@Test
-		void downloadSubmissionAsZip(@TempDir final File tmp) throws Exception {
+		void downloadSubmissionAsZip(@TempDir final Path tmp) throws Exception {
 			final Task task = new Task();
 			task.setArchiveFilenameRegexp(".+");
 			final UnexpectedPage downloadFilePage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/DownloadAsZip?sid=12");
@@ -736,14 +737,14 @@ class WebClientTest {
 		}
 
 		@Test
-		void accessFileSid10(@TempDir final File tmp) throws Exception {
+		void accessFileSid10(@TempDir final Path tmp) throws Exception {
 			final HtmlPage uploadedFile = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowFile/HelloWorld.java?sid=10");
-			final String fileContents = Util.loadFile(new File("src/test/resources/lecture1/3/10/HelloWorld.java")).toString();
+			final String fileContents = Util.loadFile(Path.of("src/test/resources/lecture1/3/10/HelloWorld.java")).toString();
 			assertEquals(fileContents.trim(), uploadedFile.getElementById("fileContents").getTextContent().trim());
 
 			// download file
 			final UnexpectedPage downloadFilePage = webClient.getPage(uploadedFile.getUrl().toString() + "&download=true");
-			final File tmpFile = new File(tmp, "tmpfile");
+			final Path tmpFile = tmp.resolve("tmpfile");
 			try (InputStream is = downloadFilePage.getInputStream()) {
 				Util.copyInputStreamAndClose(is, tmpFile);
 			}
@@ -751,14 +752,14 @@ class WebClientTest {
 		}
 
 		@Test
-		void accessFileSid8(@TempDir final File tmp) throws Exception {
+		void accessFileSid8(@TempDir final Path tmp) throws Exception {
 			final HtmlPage uploadedFile = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowFile/textloesung.txt?sid=8");
-			final String fileContents = Util.loadFile(new File("src/test/resources/lecture1/1/8/textloesung.txt")).toString();
+			final String fileContents = Util.loadFile(Path.of("src/test/resources/lecture1/1/8/textloesung.txt")).toString();
 			assertEquals(fileContents.trim(), uploadedFile.getElementById("fileContents").getTextContent().trim());
 
 			// download file
 			final TextPage downloadFilePage = webClient.getPage(uploadedFile.getUrl().toString() + "&download=true");
-			final File tmpFile = new File(tmp, "tmpfile");
+			final Path tmpFile = tmp.resolve("tmpfile");
 			Util.copyInputStreamAndClose(new ByteArrayInputStream(downloadFilePage.getContent().getBytes()), tmpFile);
 			assertEquals(fileContents, Util.loadFile(tmpFile).toString());
 		}

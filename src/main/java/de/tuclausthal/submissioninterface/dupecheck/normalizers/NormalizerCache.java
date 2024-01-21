@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2021, 2023-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,9 +19,10 @@
 package de.tuclausthal.submissioninterface.dupecheck.normalizers;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -30,9 +31,9 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class NormalizerCache {
-	private NormalizerIf normalizer;
-	private File cacheDirectoty;
-	private File pathToTask;
+	final private NormalizerIf normalizer;
+	final private Path cacheDirectoty;
+	final private Path pathToTask;
 
 	/**
 	 * Creates a new normalizer cache
@@ -40,7 +41,7 @@ public class NormalizerCache {
 	 * @param normalizer the normalizer to cache
 	 * @throws IOException
 	 */
-	public NormalizerCache(File pathToTask, NormalizerIf normalizer) throws IOException {
+	public NormalizerCache(final Path pathToTask, final NormalizerIf normalizer) throws IOException {
 		this.pathToTask = pathToTask;
 		this.normalizer = normalizer;
 		cacheDirectoty = Util.createTemporaryDirectory("normalizer.cache");
@@ -56,13 +57,13 @@ public class NormalizerCache {
 	 * @throws IOException
 	 */
 	synchronized public StringBuffer normalize(String file) throws IOException {
-		File tempFile = new File(cacheDirectoty, file);
-		if (tempFile.exists()) {
+		final Path tempFile = cacheDirectoty.resolve(file);
+		if (Files.isRegularFile(tempFile)) {
 			return Util.loadFile(tempFile);
 		}
-		StringBuffer stringBuffer = normalizer.normalize(Util.loadFile(new File(pathToTask, file)));
-		tempFile.getParentFile().mkdirs();
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
+		final StringBuffer stringBuffer = normalizer.normalize(Util.loadFile(pathToTask.resolve(file)));
+		Files.createDirectories(tempFile.getParent());
+		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(tempFile)))) {
 			bw.write(stringBuffer.toString());
 		}
 		return stringBuffer;

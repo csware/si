@@ -18,11 +18,11 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -148,9 +148,9 @@ public class TaskManager extends HttpServlet {
 			}
 
 			request.setAttribute("task", task);
-			final File taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
-			request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, TaskPath.ADVISORFILES.getPathComponent())));
-			request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(new File(taskPath, TaskPath.MODELSOLUTIONFILES.getPathComponent())));
+			final Path taskPath = Util.constructPath(Configuration.getInstance().getDataPath(), task);
+			request.setAttribute("advisorFiles", Util.listFilesAsRelativeStringListSorted(taskPath.resolve(TaskPath.ADVISORFILES.getPathComponent())));
+			request.setAttribute("modelSolutionFiles", Util.listFilesAsRelativeStringListSorted(taskPath.resolve(TaskPath.MODELSOLUTIONFILES.getPathComponent())));
 
 			getServletContext().getNamedDispatcher(TaskManagerView.class.getSimpleName()).forward(request, response);
 		} else if ((("editTaskGroup".equals(request.getParameter("action")) && request.getParameter("taskgroupid") != null) || ("newTaskGroup".equals(request.getParameter("action")) && request.getParameter("lecture") != null))) {
@@ -218,7 +218,7 @@ public class TaskManager extends HttpServlet {
 			return;
 		}
 
-		final File path = Util.constructPath(Configuration.getInstance().getDataPath(), task, foldername);
+		final Path path = Util.constructPath(Configuration.getInstance().getDataPath(), task, foldername);
 		Util.ensurePathExists(path);
 
 		long fileParts = request.getParts().stream().filter(part -> "file".equals(part.getName())).count();
@@ -251,7 +251,7 @@ public class TaskManager extends HttpServlet {
 			}
 			String fileName = m.group(1);
 
-			File uploadedFile = Util.buildPath(path, fileName);
+			final Path uploadedFile = Util.buildPath(path, fileName);
 			try (InputStream is = file.getInputStream()) {
 				Util.copyInputStreamAndClose(is, uploadedFile);
 			}

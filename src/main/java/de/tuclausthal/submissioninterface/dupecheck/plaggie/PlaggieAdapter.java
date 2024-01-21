@@ -1,6 +1,6 @@
 /*
  *  Copyright (C) 2006 Aleksi Ahtiainen, Mikko Rahikainen.
- *  Copyright (C) 2009-2010, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de> 
+ *  Copyright (C) 2009-2010, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de> 
  *
  *  This file is part of the homework submission interface.
  *
@@ -29,6 +29,9 @@ import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -75,7 +78,7 @@ public class PlaggieAdapter extends DupeCheck {
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	final static public String CONFIG_FILE_NAME = "plaggie.properties";
 
-	public PlaggieAdapter(File path) {
+	public PlaggieAdapter(final Path path) {
 		super(path);
 	}
 
@@ -92,7 +95,7 @@ public class PlaggieAdapter extends DupeCheck {
 		tx.commit();
 		try {
 			// -- Read the configuration file
-			config = new Configuration(new File(path, CONFIG_FILE_NAME));
+			config = new Configuration(path.resolve(CONFIG_FILE_NAME).toFile());
 
 			config.htmlReport = false;
 			config.minimumSubmissionSimilarityValue = similarityTest.getMinimumDifferenceInPercent() / 100.0;
@@ -100,7 +103,7 @@ public class PlaggieAdapter extends DupeCheck {
 
 			Debug.setEnabled(config.debugMessages);
 
-			final File file1 = Util.constructPath(path, task);
+			final Path file1 = Util.constructPath(path, task);
 
 			// -- Create the code tokenizer object for parsing the source code files
 			codeTokenizer = (CodeTokenizer) Class.forName(config.codeTokenizer).getDeclaredConstructor().newInstance();
@@ -232,22 +235,18 @@ public class PlaggieAdapter extends DupeCheck {
 	 * hierarchy depends on the configuration, especially parameter
 	 * severalSubmissionDirectories.
 	 */
-	private ArrayList<DirectorySubmission> getDirectorySubmissions(File directory) throws Exception {
-		File[] files = directory.listFiles();
+	private ArrayList<DirectorySubmission> getDirectorySubmissions(final Path directory) throws Exception {
 		ArrayList<DirectorySubmission> submissions = new ArrayList<>();
 
 		FilenameFilter filter = generateFilenameFilter();
 
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].isDirectory()) {
-				try {
-					Integer.parseInt(files[i].getName());
-					Debug.println("Adding directory submission: " + files[i].getPath());
-					DirectorySubmission dirS = new DirectorySubmission(files[i], filter, config.useRecursive);
-					submissions.add(dirS);
-				} catch (NumberFormatException e) {
-					// ignore, we just want to handle submission-directories
+		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(directory)) {
+			for (final Path file : directoryStream) {
+				if (!Files.isDirectory(file) || !Util.isInteger(file.getFileName().toString())) {
+					continue;
 				}
+				Debug.println("Adding directory submission: " + file.toString());
+				submissions.add(new DirectorySubmission(file.toFile(), filter, config.useRecursive));
 			}
 		}
 		return submissions;
