@@ -679,7 +679,7 @@ public class UtilTest {
 		assertEquals(basePath.resolve("something"), Util.buildPath(basePath, "." + separator + "something"));
 		assertEquals(basePath.resolve("else"), Util.buildPath(basePath, "something" + separator + ".." + separator + "else"));
 		// not really important, but this is a special case in apache.org.commons.io:FileUtils
-		//assertEquals(basePath.resolve("~/something"), Util.buildPath(basePath, "~" + separator + "something"));
-		//assertEquals(basePath.resolve("something"), Util.buildPath(basePath, "~" + separator + ".." + separator + "something"));
+		assertEquals(basePath.resolve("~/something"), Util.buildPath(basePath, "~" + separator + "something"));
+		assertEquals(basePath.resolve("something"), Util.buildPath(basePath, "~" + separator + ".." + separator + "something"));
 	}
 }

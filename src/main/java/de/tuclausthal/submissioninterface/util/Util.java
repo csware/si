@@ -657,11 +657,14 @@ public final class Util {
 		if (relativePath.isBlank() || relativePath.charAt(0) == '/' || relativePath.charAt(0) == '\\') {
 			return null;
 		}
-		String result = FilenameUtils.normalize(relativePath);
-		if (result == null || result.isBlank()) {
+		if (!basePath.isAbsolute()) {
+			throw new RuntimeException("Path not absolute!");
+		}
+		final Path combinedPath = Path.of(basePath.toString(), relativePath.replace('\\', '/')).normalize();
+		if (!combinedPath.startsWith(basePath) || basePath.equals(combinedPath)) {
 			return null;
 		}
-		return Path.of(basePath.toString(), result);
+		return combinedPath;
 	}
 
 	public static Path constructPath(final Path basePath, final Task task) {
