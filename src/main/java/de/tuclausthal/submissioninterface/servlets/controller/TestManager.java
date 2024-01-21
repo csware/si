@@ -55,6 +55,8 @@ import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.servlets.view.TestManagerAddTestFormView;
+import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaJUnitTest;
+import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaUMLConstraintTest;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -192,7 +194,7 @@ public class TestManager extends HttpServlet {
 				session.getTransaction().rollback();
 				return;
 			}
-			final Path uploadedFile = path.resolve("musterloesung" + test.getId() + ".xmi");
+			final Path uploadedFile = path.resolve(String.format(JavaUMLConstraintTest.FILENAME_PATTERN, test.getId()));
 			try (InputStream is = file.getInputStream()) {
 				Util.copyInputStreamAndClose(is, uploadedFile);
 			}
@@ -229,7 +231,7 @@ public class TestManager extends HttpServlet {
 				session.getTransaction().rollback();
 				return;
 			}
-			final Path uploadedFile = path.resolve("junittest" + test.getId() + ".jar");
+			final Path uploadedFile = path.resolve(String.format(JavaJUnitTest.FILENAME_PATTERN, test.getId()));
 			try (InputStream is = file.getInputStream()) {
 				Util.copyInputStreamAndClose(is, uploadedFile);
 			}

@@ -61,6 +61,8 @@ import de.tuclausthal.submissioninterface.servlets.view.AdminMenueShowAdminUsers
 import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
+import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaJUnitTest;
+import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaUMLConstraintTest;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.TaskPath;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -331,7 +333,7 @@ public class AdminMenue extends HttpServlet {
 								if (Files.isRegularFile(submissionPath)) {
 									boolean kill = true;
 									for (Test test : task.getTests()) {
-										if (submissionPath.getFileName().toString().equals("junittest" + test.getId() + ".jar") && test instanceof JUnitTest || submissionPath.getFileName().toString().equals("musterloesung" + test.getId() + ".xmi") && test instanceof UMLConstraintTest) {
+										if (test instanceof JUnitTest && submissionPath.getFileName().toString().equals(String.format(JavaJUnitTest.FILENAME_PATTERN, test.getId())) || test instanceof UMLConstraintTest && submissionPath.getFileName().toString().equals(String.format(JavaUMLConstraintTest.FILENAME_PATTERN, test.getId()))) {
 											kill = false;
 											break;
 										}

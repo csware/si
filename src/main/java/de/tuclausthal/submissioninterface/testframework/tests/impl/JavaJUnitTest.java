@@ -32,6 +32,7 @@ import de.tuclausthal.submissioninterface.util.Util;
  */
 public class JavaJUnitTest extends JavaFunctionTest {
 	final static public String JUNIT_JAR = "junit.jar";
+	final static public String FILENAME_PATTERN = "junittest%d.jar";
 
 	public JavaJUnitTest(Test test) {
 		super(test);
@@ -63,7 +64,7 @@ public class JavaJUnitTest extends JavaFunctionTest {
 		policyFileWriter.write("	permission java.security.AllPermission;\n");
 		policyFileWriter.write("};\n");
 		policyFileWriter.write("\n");
-		policyFileWriter.write("grant codeBase \"file:" + mkPath(Util.constructPath(basePath, test.getTask()).resolve("junittest" + test.getId() + ".jar")) + "\" {\n");
+		policyFileWriter.write("grant codeBase \"file:" + mkPath(Util.constructPath(basePath, test.getTask()).resolve(String.format(FILENAME_PATTERN, test.getId()))) + "\" {\n");
 		policyFileWriter.write("	permission java.lang.RuntimePermission \"setIO\";\n");
 		policyFileWriter.write("	permission java.lang.RuntimePermission \"exitTheVM.*\";\n");
 		policyFileWriter.write("	permission java.lang.reflect.ReflectPermission \"suppressAccessChecks\";\n");
@@ -73,6 +74,6 @@ public class JavaJUnitTest extends JavaFunctionTest {
 	@Override
 	void populateClassPathForRunningtests(final Path basePath, final List<Path> classPath) {
 		classPath.add(basePath.resolve(JavaJUnitTest.JUNIT_JAR));
-		classPath.add(Util.constructPath(basePath, test.getTask()).resolve("junittest" + test.getId() + ".jar"));
+		classPath.add(Util.constructPath(basePath, test.getTask()).resolve(String.format(FILENAME_PATTERN, test.getId())));
 	}
 }

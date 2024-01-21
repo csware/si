@@ -31,6 +31,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class JavaUMLConstraintTest extends AbstractTest {
+	final static public String FILENAME_PATTERN = "musterloesung%d.xmi";
+
 	public JavaUMLConstraintTest(UMLConstraintTest umlConstraintTest) {
 		super(umlConstraintTest);
 	}
@@ -39,7 +41,7 @@ public class JavaUMLConstraintTest extends AbstractTest {
 	public void performTest(final Path basePath, final Path submissionPath, final TestExecutorTestResult testResult) throws Exception {
 		String output = "";
 
-		final Path musterLoesung = Util.constructPath(basePath, test.getTask()).resolve("musterloesung" + test.getId() + ".xmi");
+		final Path musterLoesung = Util.constructPath(basePath, test.getTask()).resolve(String.format(FILENAME_PATTERN, test.getId()));
 		final Path studentenLoesung = submissionPath.resolve("loesung.xmi");
 
 		UMLDiagramm diagramm = UMLDiagramm.getDiagramm(studentenLoesung);
