@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021, 2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021, 2023-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -169,9 +169,11 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 				"</tr>" + 
 				"</table></p>");
 		/* @formatter:on */
-		out.println("<p>Schlägt die Kompilierung des studentischen Codes oder der definierten Tests fehl oder wird ein Laufzeitfehler geworfen, erhalten die Studierenden die Ausgabe \"Nicht alle Tests wurden durchlaufen. Das Program wurde nicht ordentlich beendet.\", wobei die Tabelle alle bisherigen inkl. des zuletzt ausgeführten Tests zeigt (die Spalte \"Erhalten\" ist dann ggf. leer). Für genauere Ausgaben bei Syntaxfehlern bitte einen Syntaxtest nutzen. Syntaxfehler im Testcode treten z. B. dann auf, wenn eine Methode aufgerufen werden soll, die im studentischen Code nicht existiert. Bei einem Laufzeitfehler wird der STDERR (Stacktrace) separat für Studierende und TutorInnen angezeigt.</p>");
+		out.println("<p>Schlägt die Kompilierung des studentischen Codes oder der definierten Tests fehl oder wird ein Laufzeitfehler geworfen, erhalten die Studierenden die Ausgabe \"Nicht alle Tests wurden durchlaufen. Das Program wurde nicht ordentlich beendet.\", wobei die Tabelle alle bisherigen inkl. des zuletzt ausgeführten Tests zeigt (die Spalte \"Erhalten\" ist dann ggf. leer). Für genauere Ausgaben bei Syntaxfehlern bitte einen Syntaxtest nutzen. Syntaxfehler im Testcode treten z. B. dann auf, wenn eine Methode aufgerufen werden soll, die im studentischen Code nicht existiert - als Lösung kann auf Reflection zurückgegriffen werden. Bei einem Laufzeitfehler wird der STDERR (Stacktrace) separat für Studierende und TutorInnen angezeigt.</p>");
 		out.println("<p>Die erwartete Ausgabe und tatsächliche Ausgabe wird getrimmt und hinsichtlich der Zeilenenden auf \"\\n\" normalisiert und mittels exaktem Stringvergleich verglichen. Im Testcode kann beliebiger Java-Code verwendet werden, der auch in einer normalen Block-Umgebung erlaubt ist (da keine imports möglich sind, sind ggf. absolute Klassennamen notwendig).</p>");
-		out.println("<p>Diese Art von Test ist für einfache Ausgabetests ausgerichtet, es können aber auch approximative Tests oder nahezu beliebige Überprüfungen durchgefühert werden, z.B. erwartet \"ca. 0.13\" und Testcode \"float f = StudentCode.getFloat(); if (Math.abs(f - 0.13) < 0.01) { System.out.println(\"ca. 0.13\"); } else { System.out.println(f); }\".</p>");
+		out.println("<p>Diese Art von Test ist für einfache Ausgabetests ausgerichtet, es können aber auch approximative Tests oder nahezu beliebige Überprüfungen durchgefühert werden, z. B. erwartet <code class=dt_studentsolution>ca. 0.13</code> und Testcode <code class=dt_studentsolution>float f = StudentCode.getFloat(); if (Math.abs(f - 0.13) < 0.01) { System.out.println(\"ca. 0.13\"); } else { System.out.println(f); }</code>.</p>");
+		out.println("<p>Eingaben können über STDIN vorgegeben werden, z. B. <code class=dt_studentsolution>System.setIn(new java.io.StringBufferInputStream(\"4\\n5\\n\"))</code>. Dabei muss jedoch beachtet werden, dass diese nur einmal zur Verfügung stehen, falls System.in mehrfach \"geöffnet\" wird.</p>");
+		out.println("<p>Ausgaben (z. B. über System.out) können in einem Buffer zwischengespeichert und transformiert bzw. ersetzt werden, z. B.: <pre class=dt_studentsolution>var old = System.out;\nvar buffer = new java.io.ByteArrayOutputStream();\nSystem.setOut(new java.io.PrintStream(buffer)); // alle Ausgaben auf System.out werden jetzt umgeleitet\n// Aufruf des studentischen Codes\nSystem.setOut(old); // das Zurücksetzen darf nicht fehlen!\nString content = buffer.toString();\nSystem.out.println(content.toLowerCase());</pre><br>Ausgaben können auch direkt ignoriert werden (z. B. <code class=dt_studentsolution>System.setOut(new java.io.PrintStream(java.io.PrintStream.nullOutputStream()))</code>).</p>");
 		out.println("</div>");
 
 		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
