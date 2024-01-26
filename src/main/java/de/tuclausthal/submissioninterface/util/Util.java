@@ -54,9 +54,6 @@ import javax.servlet.http.Part;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.file.PathUtils;
-import org.owasp.html.Handler;
-import org.owasp.html.HtmlSanitizer;
-import org.owasp.html.HtmlStreamRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -174,30 +171,11 @@ public final class Util {
 
 	/**
 	 * Only allow certain HTML tags
-	 * based on the Zikula Framework
 	 * @param message
 	 * @return partly escaped string
 	 */
 	public static String makeCleanHTML(String message) {
-		if (message == null) {
-			return "";
-		}
-		StringBuilder sb = new StringBuilder();
-		HtmlStreamRenderer renderer = HtmlStreamRenderer.create(sb,
-				new Handler<IOException>() {
-					public void handle(IOException ex) {
-						// System.out suppresses IOExceptions
-						throw new AssertionError(null, ex);
-					}
-				},
-				new Handler<String>() {
-					public void handle(String x) {
-						throw new AssertionError(x);
-					}
-				});
-		// Use the policy defined above to sanitize the HTML.
-		HtmlSanitizer.sanitize(message, HTMLSanitizerPolicy.POLICY_DEFINITION.apply(renderer));
-		return sb.toString();
+		return HTMLSanitizerPolicy.POLICY_DEFINITION.sanitize(message);
 	}
 
 	public static String textToHTML(String message) {
