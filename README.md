@@ -10,9 +10,9 @@ Please read the whole procedure in advance to executing it.
 
 ### Installation steps of required software
 
-- Install Java (17 is recommended)
-  - On *nix (such as Debian) use the `openjdk-11-jre-headless` or `openjdk-17-jre-headless` package
-  - On Windows you can use [Liberica OpenJDK 11 or OpenJDK 17](https://bell-sw.com/pages/downloads/)
+- Install Java (17 is recommended, 11 and 21 also work)
+  - On *nix (such as Debian) use the `openjdk-17-jre-headless` package
+  - On Windows you can use [Liberica OpenJDK 17](https://bell-sw.com/pages/downloads/)
 - Install [Apache Tomcat 9](https://tomcat.apache.org) (e.g., on Debian-based systems use the `tomcat9` package)
   - After installation Tomcat usually listens on locahost:8080
   - For development it is recommended to download the binary archive and integrate Tomcat into the used IDE, e.g. into Eclipse.
