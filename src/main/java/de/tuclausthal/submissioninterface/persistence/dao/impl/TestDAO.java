@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -37,7 +37,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task_;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
@@ -66,15 +65,6 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 	public UMLConstraintTest createUMLConstraintTest(Task task) {
 		Session session = getSession();
 		UMLConstraintTest test = new UMLConstraintTest();
-		test.setTask(task);
-		session.persist(test);
-		return test;
-	}
-
-	@Override
-	public RegExpTest createRegExpTest(Task task) {
-		Session session = getSession();
-		RegExpTest test = new RegExpTest();
 		test.setTask(task);
 		session.persist(test);
 		return test;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,16 +19,21 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Path;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
-import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaIORegexpTest;
 
 @Entity
 public class RegExpTest extends Test {
 	private static final long serialVersionUID = 1L;
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private String commandLineParameter;
 	private String mainClass;
@@ -80,7 +85,14 @@ public class RegExpTest extends Test {
 	@Override
 	@Transient
 	public AbstractTest getTestImpl() {
-		return new JavaIORegexpTest(this);
+		return new AbstractTest(this) {
+			@Override
+			public void performTest(Path basePath, Path submissionPath, TestExecutorTestResult testResult) throws Exception {
+				LOG.warn("Deprecated Java RegExp Test requested: taskid={}, testid={}", getTask().getTaskid(), getId());
+				testResult.setTestPassed(false);
+				testResult.setTestOutput("Deprecated Java RegExp Test. Not executed. Use JavaAdvancedIOTest which is more powerful.");
+			}
+		};
 	}
 
 	@Override

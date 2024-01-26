@@ -23,8 +23,6 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -47,7 +45,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
-import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
@@ -243,30 +240,6 @@ public class TestManager extends HttpServlet {
 			test.setTestDescription(description);
 			test.setGiveDetailsToStudents(giveDetailsToStudents);
 			test.setTimeout(timeout);
-			session.getTransaction().commit();
-			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
-		} else if ("saveNewTest".equals(request.getParameter("action")) && "regexp".equals(request.getParameter("type"))) {
-			//check regexp
-			try {
-				Pattern.compile(request.getParameter("regexp"));
-			} catch (PatternSyntaxException e) {
-				request.setAttribute("title", "Ungültiger regulärer Ausdruck");
-				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
-				return;
-			}
-			// store it
-			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
-			session.beginTransaction();
-			RegExpTest test = testDAO.createRegExpTest(task);
-			test.setMainClass(request.getParameter("mainclass"));
-			test.setCommandLineParameter(request.getParameter("parameter"));
-			test.setTimeout(Util.parseInteger(request.getParameter("timeout"), 15));
-			test.setRegularExpression(request.getParameter("regexp"));
-			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
-			test.setForTutors(request.getParameter("tutortest") != null);
-			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
-			test.setTestTitle(request.getParameter("title"));
-			test.setTestDescription(request.getParameter("description"));
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "compile".equals(request.getParameter("type"))) {

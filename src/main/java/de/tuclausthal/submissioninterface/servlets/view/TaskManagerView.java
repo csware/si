@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -444,7 +444,7 @@ public class TaskManagerView extends HttpServlet {
 						out.println("<li>&quot;" + Util.escapeHTML(test.getTestTitle()) + "&quot;: ");
 						if (test instanceof RegExpTest) {
 							RegExpTest regexptest = (RegExpTest) test;
-							out.println("Java RegExp-Test:<br>Prüfpattern: " + Util.escapeHTML(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.escapeHTML(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.escapeHTML(regexptest.getMainClass()) + "<br>");
+							out.println("Java RegExp-Test (not supported any more, migrate to JavaAdvancedIOTest):<br>Prüfpattern: " + Util.escapeHTML(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.escapeHTML(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.escapeHTML(regexptest.getMainClass()) + "<br>");
 						} else if (test instanceof CompileTest) {
 							out.println("Java Syntax-Test<br>");
 						} else if (test instanceof JUnitTest) {

@@ -19,6 +19,7 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.Writer;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
@@ -40,6 +41,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+import jakarta.json.stream.JsonParsingException;
 import jakarta.persistence.PersistenceException;
 
 import org.hibernate.Session;
@@ -51,7 +56,6 @@ import de.tuclausthal.submissioninterface.dupecheck.plaggie.PlaggieAdapter;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTestStep;
-import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.view.MessageView;
@@ -60,7 +64,6 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
 import de.tuclausthal.submissioninterface.testframework.executor.impl.LocalExecutor;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.DockerTest;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaFunctionTest;
-import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaIORegexpTest;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaJUnitTest;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaSyntaxTest;
 import de.tuclausthal.submissioninterface.util.Configuration;
@@ -278,54 +281,10 @@ public class SelfTest extends HttpServlet {
 			TestExecutorTestResult result = new TestExecutorTestResult();
 			boolean compileResult = JavaSyntaxTest.compileJava(tempDir, null, tempDir, result);
 			testresults.add(new TestResult("Java-Syntaxtest erkennt syntaktisch falsche Lösung (\"HelloWorld.java:3: error: unclosed string literal\").", Util.escapeHTML(result.getTestOutput()), !compileResult && compileResult == result.isTestPassed() && result.getTestOutput().contains("HelloWorld.java:3: error: unclosed string literal")));
+			Files.delete(tempDir.resolve("HelloWorld.java"));
 		} catch (Exception e) {
 			testresults.add(new TestResult("Java-Syntaxtest erkennt syntaktisch falsche Lösung.", Util.escapeHTML(e.getMessage()), false));
 			LOG.error("Java syntax text failed for syntactically incorrect solution.", e);
-			Util.recursiveDelete(tempDir);
-			return;
-		}
-
-		try {
-			try (Writer fw = Files.newBufferedWriter(tempDir.resolve("HelloWorld.java"))) {
-				fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		System.out.println(\"Hello World!\");\n	}\n}\n");
-			}
-
-			RegExpTest regexpTest = new RegExpTest();
-			regexpTest.setMainClass("HelloWorld");
-			regexpTest.setCommandLineParameter("");
-			regexpTest.setRegularExpression("^Hello World!$");
-			JavaIORegexpTest javaFunctionTest = new JavaIORegexpTest(regexpTest);
-			TestExecutorTestResult result = new TestExecutorTestResult();
-			javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
-			testresults.add(new TestResult("Java-Funktionstest erfolgreich.", Util.escapeHTML(result.getTestOutput()), result.isTestPassed()));
-			boolean functionTestGenerallyOK = result.isTestPassed();
-
-			regexpTest.setRegularExpression("No Match");
-			javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
-			testresults.add(new TestResult("Java-Funktionstest erkennt erfolgreich Fehler.", Util.escapeHTML(result.getTestOutput()), !result.isTestPassed()));
-
-			regexpTest.setTimeout(2);
-			try (Writer fw = Files.newBufferedWriter(tempDir.resolve("HelloWorld.java"))) {
-				fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		while (true) {\n			try {\n				Thread.sleep(1000);\n			} catch (InterruptedException e) {\n				System.out.println(\"Ignore InterruptedException\");\n			}\n		}\n	}\n}\n");
-			}
-			javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
-			testresults.add(new TestResult("Java-Funktionstest erkennt erfolgreich Timeout.", Util.escapeHTML(result.getTestOutput()), !result.isTestPassed() && result.getTestOutput().contains("aborted due to too long execution time")));
-
-			if (functionTestGenerallyOK) {
-				try (Writer fw = Files.newBufferedWriter(tempDir.resolve("HelloWorld.java"))) {
-					fw.write("public class HelloWorld {\n	public static void main(String[] args) {\n		System.out.println(\"----start here----\\n\" + System.getProperty(\"java.runtime.name\", \"-\") + \" \" + System.getProperty(\"java.runtime.version\", \"-\") + \" (\" + System.getProperty(\"java.version\", \"-\") + \"; \" + System.getProperty(\"java.vm.name\", \"-\") + \" \" + System.getProperty(\"java.vm.version\", \"-\")+ \"; \" + System.getProperty(\"java.vendor\", \"-\") + \")\\n----to here----\");\n	}\n}\n");
-				}
-				javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
-				String output = result.getTestOutput();
-				if (output.contains("----start here----") && output.contains("----to here----")) {
-					int start = output.indexOf("----start here----\n") + "----start here----\n".length();
-					output = output.substring(start, output.length() - "\n----to here----\n".length());
-				}
-				testresults.add(new TestResult("Java-Version der Java-Funktionstests:", Util.escapeHTML(output), null));
-			}
-		} catch (Exception e) {
-			testresults.add(new TestResult("Java-Funktionstest erfolgreich.", Util.escapeHTML(e.getMessage()), false));
-			LOG.error("Java function test failed.", e);
 			Util.recursiveDelete(tempDir);
 			return;
 		}
@@ -345,11 +304,45 @@ public class SelfTest extends HttpServlet {
 			TestExecutorTestResult result = new TestExecutorTestResult();
 			javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
 			testresults.add(new TestResult("JavaAdvancedIOTest erfolgreich.", Util.escapeHTML(result.getTestOutput()), result.isTestPassed()));
+			final boolean functionTestGenerallyOK = result.isTestPassed();
 
 			javaAdvancedIOTest.getTestSteps().add(new JavaAdvancedIOTestStep(javaAdvancedIOTest, "Four stars", "Triangle.drawTriangle(4);", "something else"));
 			result = new TestExecutorTestResult();
 			javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
 			testresults.add(new TestResult("JavaAdvancedIOTest erkennt erfolgreich Fehler.", Util.escapeHTML(result.getTestOutput()), !result.isTestPassed()));
+
+			javaAdvancedIOTest.setTimeout(2);
+			try (Writer fw = Files.newBufferedWriter(tempDir.resolve("Triangle.java"))) {
+				fw.write("public class Triangle {\n	static void drawTriangle(int sizeOfTriangle) {\n		while (true) {\n			try {\n				Thread.sleep(1000);\n			} catch (InterruptedException e) {\n				System.out.println(\"Ignore InterruptedException\");\n			}\n		}\n	}\n}\n");
+			}
+			javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
+			JsonObject object = null;
+			try (JsonReader jsonReader = Json.createReader(new StringReader(result.getTestOutput()))) {
+				object = jsonReader.readObject();
+			} catch (JsonParsingException ex) {
+				testresults.add(new TestResult("JavaAdvancedIOTest-Ausgabe ist kein gültiges JSON.", Util.escapeHTML(result.getTestOutput()), false));
+			}
+			testresults.add(new TestResult("JavaAdvancedIOTest erkennt erfolgreich Timeout.", Util.escapeHTML(result.getTestOutput()), !result.isTestPassed() && object.containsKey("time-exceeded") && object.getBoolean("time-exceeded")));
+
+			if (functionTestGenerallyOK) {
+				javaAdvancedIOTest.getTestSteps().clear();
+				javaAdvancedIOTest.getTestSteps().add(new JavaAdvancedIOTestStep(javaAdvancedIOTest, "Empty", "Triangle.drawTriangle(0);", ""));
+				try (Writer fw = Files.newBufferedWriter(tempDir.resolve("Triangle.java"))) {
+					fw.write("public class Triangle {\n	static void drawTriangle(int sizeOfTriangle) {\n		System.out.println(\"----start here----\\n\" + System.getProperty(\"java.runtime.name\", \"-\") + \" \" + System.getProperty(\"java.runtime.version\", \"-\") + \" (\" + System.getProperty(\"java.version\", \"-\") + \"; \" + System.getProperty(\"java.vm.name\", \"-\") + \" \" + System.getProperty(\"java.vm.version\", \"-\")+ \"; \" + System.getProperty(\"java.vendor\", \"-\") + \")\\n----to here----\");\n	}\n}\n");
+				}
+				javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
+				try (JsonReader jsonReader = Json.createReader(new StringReader(result.getTestOutput()))) {
+					object = jsonReader.readObject();
+				} catch (JsonParsingException ex) {
+					testresults.add(new TestResult("JavaAdvancedIOTest-Ausgabe ist kein gültiges JSON.", Util.escapeHTML(result.getTestOutput()), false));
+				}
+				String output = object.getString("stdout", "STDOUT empty");
+				if (output.contains("----start here----") && output.contains("----to here----")) {
+					int start = output.indexOf("----start here----\n") + "----start here----\n".length();
+					output = output.substring(start, output.length() - "\n----to here----\n".length());
+				}
+				testresults.add(new TestResult("Java-Version des JavaAdvancedIOTests:", Util.escapeHTML(output), null));
+			}
 		} catch (Exception e) {
 			testresults.add(new TestResult("JavaAdvancedIOTest erfolgreich.", Util.escapeHTML(e.getMessage()), false));
 			LOG.error("JavaAdvancedIO test failed.", e);

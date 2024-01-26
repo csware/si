@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2021-2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -26,7 +26,6 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.RegExpTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.UMLConstraintTest;
@@ -49,13 +48,6 @@ public interface TestDAOIf {
 	 * @return the created test
 	 */
 	public UMLConstraintTest createUMLConstraintTest(Task task);
-
-	/**
-	 * Create and store a JUnitTest to a specific task
-	 * @param task the task to associtate the test to
-	 * @return the created test
-	 */
-	public RegExpTest createRegExpTest(Task task);
 
 	/**
 	 * Create and store a compile/syntax to a specific task
