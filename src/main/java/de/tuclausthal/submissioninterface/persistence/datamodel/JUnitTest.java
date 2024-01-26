@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -19,9 +19,13 @@
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
 import java.lang.invoke.MethodHandles;
+import java.util.regex.Pattern;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaJUnitTest;
@@ -33,6 +37,9 @@ import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaJUnitTest
 @Entity
 public class JUnitTest extends Test {
 	private static final long serialVersionUID = 1L;
+	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+	public static final Pattern CANONICAL_CLASS_NAME = Pattern.compile("[A-Za-z][A-Za-z0-9.\\-]*");
 
 	private String mainClass = "AllTests";
 
@@ -47,6 +54,10 @@ public class JUnitTest extends Test {
 	 * @param mainClass the mainClass to set
 	 */
 	public void setMainClass(String mainClass) {
+		if (!CANONICAL_CLASS_NAME.matcher(mainClass).matches()) {
+			LOG.warn("illegal main-class for JUnitTest found: testid: {}, mainclass: \"{}\"", getId(), mainClass);
+			throw new IllegalArgumentException("Illegal class-name for main-class.");
+		}
 		this.mainClass = mainClass;
 	}
 

@@ -245,7 +245,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Main-Klasse:</th>");
-		out.println("<td><input type=text name=mainclass value=\"AllTests\" required=required></td>");
+		out.println("<td><input type=text name=mainclass value=\"AllTests\" pattern=\"[A-Za-z][A-Za-z0-9.\\-]*\" required=required></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Tutorentest:</th>");
