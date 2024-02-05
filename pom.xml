@@ -15,6 +15,20 @@
 		<slf4j.version>2.0.9</slf4j.version>
 		<hibernate.version>6.4.3.Final</hibernate.version>
 	</properties>
+	<profiles>
+		<profile>
+			<!-- Auto-generating classes does not work without this in Eclipse -->
+			<id>eclipse-hibernate-dependency</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.hibernate.orm</groupId>
+					<artifactId>hibernate-jpamodelgen</artifactId>
+					<version>${hibernate.version}</version>
+					<scope>provided</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 		<dependency>
@@ -84,14 +98,6 @@
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
 			<version>3.3.2</version>
-		</dependency>
-
-		<!-- Auto-generated classes show errors without this in Eclipse, class jakarta.annotation.Generated missing -->
-		<!-- https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api -->
-		<dependency>
-			<groupId>jakarta.annotation</groupId>
-			<artifactId>jakarta.annotation-api</artifactId>
-			<version>2.1.1</version>
 		</dependency>
 
 		<!-- Allow to export the schema -->
