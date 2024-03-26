@@ -27,16 +27,15 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 // "EbayPolicyExample" of the OWASP HTML Satinizer project extended by:
-// Copyright (c) 2021-2023 Sven Strickroth <email@cs-ware.de>
+// Copyright (c) 2021-2024 Sven Strickroth <email@cs-ware.de>
 
 package de.tuclausthal.submissioninterface.util;
 
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import org.owasp.html.HtmlPolicyBuilder;
 import org.owasp.html.PolicyFactory;
-
-import com.google.common.base.Predicate;
 
 /**
  * Based on the
@@ -140,34 +139,16 @@ public class HTMLSanitizerPolicy {
 
 	private static Predicate<String> matchesEither(final Pattern a, final Pattern b) {
 		return new Predicate<>() {
-			public boolean apply(String s) {
-				return a.matcher(s).matches() || b.matcher(s).matches();
-			}
-
-			// Needed for Java8 compatibility with later Guava that extends
-			// java.util.function.Predicate.
-			// For some reason the default test method implementation that calls
-			// through to apply is not assumed here.
-			@SuppressWarnings("all")
 			public boolean test(String s) {
-				return apply(s);
+				return a.matcher(s).matches() || b.matcher(s).matches();
 			}
 		};
 	}
 
 	private static Predicate<String> matchesEither(final Pattern a, final Pattern b, final Pattern c) {
 		return new Predicate<>() {
-			public boolean apply(String s) {
-				return a.matcher(s).matches() || b.matcher(s).matches() || c.matcher(s).matches();
-			}
-
-			// Needed for Java8 compatibility with later Guava that extends
-			// java.util.function.Predicate.
-			// For some reason the default test method implementation that calls
-			// through to apply is not assumed here.
-			@SuppressWarnings("all")
 			public boolean test(String s) {
-				return apply(s);
+				return a.matcher(s).matches() || b.matcher(s).matches() || c.matcher(s).matches();
 			}
 		};
 	}
