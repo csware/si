@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2022-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -133,12 +133,13 @@ public class ShowTaskTutorAllSubmissionsSchematicView extends HttpServlet {
 			} else if (task.isClozeTask()) {
 				List<String> results = DAOFactory.ResultDAOIf(session).getResultsForSubmission(submission);
 				ClozeTaskType clozeHelper = new ClozeTaskType(task.getDescription(), results, true, true);
+				final int resultsLength = results.size();
 				for (int i = 0; i < clozeHelper.getClozeEntries(); ++i) {
 					out.print("<td><span class=\"cloze_studentsolution");
 					if (clozeHelper.isAutoGradeAble(i)) {
-						out.print((clozeHelper.calculatePoints(i, results.get(i)) > 0 ? " green" : " red"));
+						out.print((clozeHelper.calculatePoints(i, i >= resultsLength ? "" : results.get(i)) > 0 ? " green" : " red"));
 					}
-					out.println("\">" + Util.escapeHTML(results.get(i)) + "</span></td>");
+					out.println("\">" + Util.escapeHTML(i >= resultsLength ? "" : results.get(i)) + "</span></td>");
 				}
 				out.println("<td class=points>" + Util.showPoints(clozeHelper.calculatePoints(results)) + "</td>");
 				if (showGrading && submission.getPoints() != null) {
