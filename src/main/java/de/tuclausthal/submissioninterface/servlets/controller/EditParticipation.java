@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -40,7 +40,7 @@ import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
- * Controller-Servlet for changing participationroles by superusers and advisors
+ * Controller-Servlet for changing participationroles by advisors
  * @author Sven Strickroth
  *
  */
@@ -78,6 +78,6 @@ public class EditParticipation extends HttpServlet {
 			participation.setRoleType(ParticipationRole.NORMAL);
 		}
 		tx.commit();
-		response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?action=showLecture&lecture=" + callerParticipation.getLecture().getId(), response));
+		response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + callerParticipation.getLecture().getId(), response));
 	}
 }
