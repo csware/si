@@ -65,7 +65,7 @@ public class EditParticipation extends HttpServlet {
 			return;
 		}
 
-		if (request.getParameter("type") == null) {
+		if (request.getParameter("type") == null || callerParticipation == participation) {
 			response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "invalid request");
 			return;
 		}
