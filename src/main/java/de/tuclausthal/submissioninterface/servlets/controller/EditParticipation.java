@@ -74,7 +74,18 @@ public class EditParticipation extends HttpServlet {
 		session.refresh(participation, LockModeType.PESSIMISTIC_WRITE);
 		if ("tutor".equals(request.getParameter("type"))) {
 			participation.setRoleType(ParticipationRole.TUTOR);
+			if (participation.getGroup() != null) {
+				participation.getGroup().getTutors().add(participation);
+				participation.setGroup(null);
+			}
 		} else {
+			if (participation.getLecture().getGroups().stream().anyMatch(g -> g.getTutors().contains(participation))) {
+				tx.rollback();
+				request.setAttribute("title", "Ungültige Anfrage");
+				request.setAttribute("message", "Studierender ist in mindestens einer Gruppe als TutorIn zugeordnet.");
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
+				return;
+			}
 			participation.setRoleType(ParticipationRole.NORMAL);
 		}
 		tx.commit();
