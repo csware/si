@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -255,27 +255,27 @@ public class ShowLectureTutorView extends HttpServlet {
 						out.println("<td>n/a</td>");
 					}
 				}
-				out.println("<td><a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + thisParticipation.getUser().getUid(), response) + "\">" + Util.escapeHTML(thisParticipation.getUser().getLastNameFirstName()) + "</a></td>");
+				out.println("<td><a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + thisParticipation.getUser().getUid(), response) + "\" id=p" + thisParticipation.getId() + ">" + Util.escapeHTML(thisParticipation.getUser().getLastNameFirstName()) + "</a></td>");
 				if (thisParticipation.getRoleType().compareTo(ParticipationRole.NORMAL) == 0) {
 					out.println("<td>" + Util.escapeHTML(thisParticipation.getRoleType().toString()));
 					if (isAdvisor) {
-						out.println(" (<a onclick=\"return sendAsPost(this, 'Wirklich promoten?')\" href=\"" + Util.generateHTMLLink(EditParticipation.class.getSimpleName() + "?lectureid=" + thisParticipation.getLecture().getId() + "&participationid=" + thisParticipation.getId() + "&type=tutor", response) + "\">+</a>)");
+						out.println(" (<a onclick=\"return sendAsPost(this, 'Wirklich &quot;' + document.getElementById('p" + thisParticipation.getId() + "').innerHTML + '&quot; promoten?')\" href=\"" + Util.generateHTMLLink(EditParticipation.class.getSimpleName() + "?lectureid=" + thisParticipation.getLecture().getId() + "&participationid=" + thisParticipation.getId() + "&type=tutor", response) + "\">+</a>)");
 					}
 					if (thisParticipation.getGroup() != null) {
-						out.println(" <a onclick=\"return sendAsPost(this, 'Wirklich aus der Gruppe entfernen?')\" href=\"" + Util.generateHTMLLink(EditGroup.class.getSimpleName() + "?groupid=" + thisParticipation.getGroup().getGid() + "&participationid=" + thisParticipation.getId() + "&action=removeFromGroup", response) + "\"><img src=\"" + getServletContext().getContextPath() + "/assets/log-out.svg\" width=16 height=16 class=inlineicon border=0 alt=\"aus Gruppe entfernen\" title=\"aus Gruppe entfernen\"></a>");
+						out.println(" <a onclick=\"return sendAsPost(this, 'Wirklich &quot;' + document.getElementById('p" + thisParticipation.getId() + "').innerHTML + '&quot; aus der Gruppe entfernen?')\" href=\"" + Util.generateHTMLLink(EditGroup.class.getSimpleName() + "?groupid=" + thisParticipation.getGroup().getGid() + "&participationid=" + thisParticipation.getId() + "&action=removeFromGroup", response) + "\"><img src=\"" + getServletContext().getContextPath() + "/assets/log-out.svg\" width=16 height=16 class=inlineicon border=0 alt=\"aus Gruppe entfernen\" title=\"aus Gruppe entfernen\"></a>");
 					}
 				} else if (thisParticipation.getRoleType().compareTo(ParticipationRole.TUTOR) == 0) {
 					out.println("<td>" + Util.escapeHTML(thisParticipation.getRoleType().toString()));
 					if (isAdvisor) {
-						out.println(" (<a onclick=\"return sendAsPost(this, 'Wirklich degradieren?')\" href=\"" + Util.generateHTMLLink(EditParticipation.class.getSimpleName() + "?lectureid=" + thisParticipation.getLecture().getId() + "&participationid=" + thisParticipation.getId() + "&type=normal", response) + "\">-</a>)");
+						out.println(" (<a onclick=\"return sendAsPost(this, 'Wirklich &quot;' + document.getElementById('p" + thisParticipation.getId() + "').innerHTML + '&quot; degradieren?')\" href=\"" + Util.generateHTMLLink(EditParticipation.class.getSimpleName() + "?lectureid=" + thisParticipation.getLecture().getId() + "&participationid=" + thisParticipation.getId() + "&type=normal", response) + "\">-</a>)");
 					}
 					if (thisParticipation.getGroup() != null && thisParticipation.getUser() != requestAdapter.getUser()) {
-						out.println(" <a onclick=\"return sendAsPost(this, 'Wirklich aus der Gruppe entfernen?')\" href=\"" + Util.generateHTMLLink(EditGroup.class.getSimpleName() + "?groupid=" + thisParticipation.getGroup().getGid() + "&participationid=" + thisParticipation.getId() + "&action=removeFromGroup", response) + "\"><img src=\"" + getServletContext().getContextPath() + "/assets/log-out.svg\" width=16 height=16 class=inlineicon border=0 alt=\"aus Gruppe entfernen\" title=\"aus Gruppe entfernen\"></a>");
+						out.println(" <a onclick=\"return sendAsPost(this, 'Wirklich &quot;' + document.getElementById('p" + thisParticipation.getId() + "').innerHTML + '&quot; aus der Gruppe entfernen?')\" href=\"" + Util.generateHTMLLink(EditGroup.class.getSimpleName() + "?groupid=" + thisParticipation.getGroup().getGid() + "&participationid=" + thisParticipation.getId() + "&action=removeFromGroup", response) + "\"><img src=\"" + getServletContext().getContextPath() + "/assets/log-out.svg\" width=16 height=16 class=inlineicon border=0 alt=\"aus Gruppe entfernen\" title=\"aus Gruppe entfernen\"></a>");
 					}
 				} else {
 					out.println("<td>" + Util.escapeHTML(thisParticipation.getRoleType().toString()));
 					if (isAdvisor && thisParticipation.getGroup() != null) {
-						out.println(" <a onclick=\"return sendAsPost(this, 'Wirklich aus der Gruppe entfernen?')\" href=\"" + Util.generateHTMLLink(EditGroup.class.getSimpleName() + "?groupid=" + thisParticipation.getGroup().getGid() + "&participationid=" + thisParticipation.getId() + "&action=removeFromGroup", response) + "\"><img src=\"" + getServletContext().getContextPath() + "/assets/log-out.svg\" width=16 height=16 class=inlineicon border=0 alt=\"aus Gruppe entfernen\" title=\"aus Gruppe entfernen\"></a>");
+						out.println(" <a onclick=\"return sendAsPost(this, 'Wirklich &quot;' + document.getElementById('p" + thisParticipation.getId() + "').innerHTML + '&quot; aus der Gruppe entfernen?')\" href=\"" + Util.generateHTMLLink(EditGroup.class.getSimpleName() + "?groupid=" + thisParticipation.getGroup().getGid() + "&participationid=" + thisParticipation.getId() + "&action=removeFromGroup", response) + "\"><img src=\"" + getServletContext().getContextPath() + "/assets/log-out.svg\" width=16 height=16 class=inlineicon border=0 alt=\"aus Gruppe entfernen\" title=\"aus Gruppe entfernen\"></a>");
 					}
 				}
 				out.println("</td>");
