@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2013, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2013, 2020-2021, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,8 +20,10 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.stream.Stream;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -86,10 +88,15 @@ public class ShowFileView extends HttpServlet {
 			rendererType = "javascript";
 		}
 
-		if ("yes".equals(request.getParameter("wrap"))) {
-			options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid(), response) + "\">(no wrap)</a>");
+		final boolean wrap = (request.getParameter("wrap") == null && Stream.of(request.getCookies()).anyMatch(c -> "wrap".equals(c.getName()))) || "yes".equals(request.getParameter("wrap"));
+		if (wrap) {
+			options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid() + "&wrap=no", response) + "\">(no wrap)</a>");
+			response.addCookie(new Cookie("wrap", "1"));
 		} else {
 			options.append(" <a href=\"" + Util.generateHTMLLink("?sid=" + submission.getSubmissionid() + "&wrap=yes", response) + "\">(wrap)</a>");
+			final Cookie autoWrapCookie = new Cookie("wrap", "0");
+			autoWrapCookie.setMaxAge(0);
+			response.addCookie(autoWrapCookie);
 		}
 
 		out.println("<!DOCTYPE html>");
@@ -108,7 +115,7 @@ public class ShowFileView extends HttpServlet {
 		}
 
 		out.println("<h1>" + Util.escapeHTML(fileName) + "</h1>");
-		out.print("<pre class=\"line-numbers" + ("yes".equals(request.getParameter("wrap")) ? " wrap" : "") + "\"><code id=fileContents class=\"language-" + rendererType + "\">");
+		out.print("<pre class=\"line-numbers" + (wrap ? " wrap" : "") + "\"><code id=fileContents class=\"language-" + rendererType + "\">");
 		out.print(Util.escapeHTML(code.toString()));
 		out.println("\n</code></pre>");
 		out.println("<script src=\"" + request.getContextPath() + "/assets/prism/prism.js\" defer></script>");
