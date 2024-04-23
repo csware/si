@@ -33,9 +33,9 @@ prepare-docker-image:
   stage: prepare
   needs: []
   cache: {}
-  image: docker:24.0
+  image: docker:26.0
   services:
-    - name: docker:24.0-dind$DIND_ROOTLESS
+    - name: docker:26.0-dind$DIND_ROOTLESS
       command: ["--tls=false"]
   script:
     - cd .gitlab-ci
