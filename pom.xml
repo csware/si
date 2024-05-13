@@ -13,7 +13,7 @@
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.compiler.release>11</maven.compiler.release>
 		<slf4j.version>2.0.13</slf4j.version>
-		<hibernate.version>6.4.8.Final</hibernate.version>
+		<hibernate.version>6.5.2.Final</hibernate.version>
 		<jackson.version>2.17.2</jackson.version>
 	</properties>
 	<profiles>
@@ -191,6 +191,9 @@
 				<version>3.13.0</version>
 				<!-- Enable Hibernate's Metamodel Generator to generate metadata model classes (ending in _ suffix) for more type-safe Criteria queries -->
 				<configuration>
+					<compilerArgs>
+						<arg>-AsuppressJakartaDataMetamodel=true</arg>
+					</compilerArgs>
 					<annotationProcessorPaths>
 						<annotationProcessorPath>
 							<groupId>org.hibernate.orm</groupId>
