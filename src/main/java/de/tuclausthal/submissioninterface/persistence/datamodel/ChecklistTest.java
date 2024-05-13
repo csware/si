@@ -45,6 +45,9 @@ import de.tuclausthal.submissioninterface.testframework.tests.impl.NullTest;
 public class ChecklistTest extends Test {
 	private static final long serialVersionUID = 1L;
 
+	@OneToMany(mappedBy = "test", cascade = CascadeType.PERSIST)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OrderBy("checkitemid asc")
 	@JacksonXmlElementWrapper(localName = "checkItems")
 	@JacksonXmlProperty(localName = "checkItem")
 	@JsonManagedReference
@@ -59,9 +62,6 @@ public class ChecklistTest extends Test {
 	/**
 	 * @return the checkItems
 	 */
-	@OneToMany(mappedBy = "test", cascade = CascadeType.PERSIST)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy("checkitemid asc")
 	public List<ChecklistTestCheckItem> getCheckItems() {
 		return checkItems;
 	}

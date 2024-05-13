@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -22,7 +22,6 @@ import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.time.ZonedDateTime;
 
-import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,12 +38,21 @@ import org.hibernate.annotations.OnDeleteAction;
 public class PointHistory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	@ManyToOne(optional = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Submission submission;
+	@Column(nullable = false)
 	private String field;
+	@Column(nullable = false, length = 65536)
 	private String removed;
+	@Column(nullable = false, length = 65536)
 	private String added;
+	@ManyToOne(optional = false)
 	private Participation who;
+	@Column(nullable = false)
 	private ZonedDateTime date = ZonedDateTime.now();
 
 	public PointHistory() {}
@@ -60,8 +68,6 @@ public class PointHistory implements Serializable {
 	/**
 	 * @return the id
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return id;
 	}
@@ -76,8 +82,6 @@ public class PointHistory implements Serializable {
 	/**
 	 * @return the submission
 	 */
-	@ManyToOne(optional = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Submission getSubmission() {
 		return submission;
 	}
@@ -92,7 +96,6 @@ public class PointHistory implements Serializable {
 	/**
 	 * @return the field
 	 */
-	@Column(nullable = false)
 	public String getField() {
 		return field;
 	}
@@ -107,8 +110,6 @@ public class PointHistory implements Serializable {
 	/**
 	 * @return the ZonedDateTime
 	 */
-	@Basic
-	@Column(nullable = false)
 	public ZonedDateTime getDate() {
 		return date;
 	}
@@ -123,7 +124,6 @@ public class PointHistory implements Serializable {
 	/**
 	 * @return the removed
 	 */
-	@Column(nullable = false, length = 65536)
 	public String getRemoved() {
 		return removed;
 	}
@@ -138,7 +138,6 @@ public class PointHistory implements Serializable {
 	/**
 	 * @return the added
 	 */
-	@Column(nullable = false, length = 65536)
 	public String getAdded() {
 		return added;
 	}
@@ -153,7 +152,6 @@ public class PointHistory implements Serializable {
 	/**
 	 * @return the who
 	 */
-	@ManyToOne(optional = false)
 	public Participation getWho() {
 		return who;
 	}

@@ -39,11 +39,23 @@ import org.hibernate.annotations.OnDeleteAction;
 public class TaskNumber implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int tasknumberid;
+	@ManyToOne
+	@JoinColumn(name = "taskid", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Task task;
+	@ManyToOne
+	@JoinColumn(name = "participationid", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Participation participation;
+	@ManyToOne
+	@JoinColumn(name = "submissionid") // on delete: set NULL
 	private Submission submission = null;
+	@Column(nullable = false)
 	private String number;
+	@Column(nullable = false)
 	private String origNumber;
 
 	// for Hibernate
@@ -64,8 +76,6 @@ public class TaskNumber implements Serializable {
 	/**
 	 * @return the TasknumberID
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getTasknumberid() {
 		return tasknumberid;
 	}
@@ -80,9 +90,6 @@ public class TaskNumber implements Serializable {
 	/**
 	 * @return the task
 	 */
-	@ManyToOne
-	@JoinColumn(name = "taskid", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Task getTask() {
 		return task;
 	}
@@ -97,9 +104,6 @@ public class TaskNumber implements Serializable {
 	/**
 	 * @return the participation
 	 */
-	@ManyToOne
-	@JoinColumn(name = "participationid", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Participation getParticipation() {
 		return participation;
 	}
@@ -114,8 +118,6 @@ public class TaskNumber implements Serializable {
 	/**
 	 * @return the submission
 	 */
-	@ManyToOne
-	@JoinColumn(name = "submissionid") // on delete: set NULL
 	public Submission getSubmission() {
 		return submission;
 	}
@@ -130,7 +132,6 @@ public class TaskNumber implements Serializable {
 	/**
 	 * @return the number
 	 */
-	@Column(nullable = false)
 	public String getNumber() {
 		return number;
 	}
@@ -152,7 +153,6 @@ public class TaskNumber implements Serializable {
 	/**
 	 * @return the origNumber
 	 */
-	@Column(nullable = false)
 	public String getOrigNumber() {
 		return origNumber;
 	}

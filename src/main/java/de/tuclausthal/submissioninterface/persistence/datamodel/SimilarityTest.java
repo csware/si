@@ -54,16 +54,24 @@ import de.tuclausthal.submissioninterface.dupecheck.plaggie.PlaggieAdapter;
 public class SimilarityTest implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private int similarityTestId;
+	@ManyToOne
+	@JoinColumn(name = "taskid", nullable = false)
 	@JsonBackReference
 	private Task task;
 	private int minimumDifferenceInPercent = 50;
+	@Column(nullable = false, columnDefinition = "TINYINT")
 	@JsonIgnore
 	private int status = 1; // 1 = needs to run, 2 = running, 0 = done
+	@Column(nullable = false)
 	private String type;
+	@Column(nullable = false)
 	private String basis;
 	private boolean normalizeCapitalization;
+	@Column(nullable = false)
 	private String tabsSpacesNewlinesNormalization;
 	private String excludeFiles;
 
@@ -92,8 +100,6 @@ public class SimilarityTest implements Serializable {
 	/**
 	 * @return the similarityTestId
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getSimilarityTestId() {
 		return similarityTestId;
 	}
@@ -108,8 +114,6 @@ public class SimilarityTest implements Serializable {
 	/**
 	 * @return the task
 	 */
-	@ManyToOne
-	@JoinColumn(name = "taskid", nullable = false)
 	public Task getTask() {
 		return task;
 	}
@@ -124,7 +128,6 @@ public class SimilarityTest implements Serializable {
 	/**
 	 * @return the status
 	 */
-	@Column(nullable = false, columnDefinition = "TINYINT")
 	public int getStatus() {
 		return status;
 	}
@@ -139,7 +142,6 @@ public class SimilarityTest implements Serializable {
 	/**
 	 * @return the type
 	 */
-	@Column(nullable = false)
 	public String getType() {
 		return type;
 	}
@@ -154,7 +156,6 @@ public class SimilarityTest implements Serializable {
 	/**
 	 * @return the basis
 	 */
-	@Column(nullable = false)
 	public String getBasis() {
 		return basis;
 	}
@@ -183,7 +184,6 @@ public class SimilarityTest implements Serializable {
 	/**
 	 * @return the tabsSpacesNewlinesNormalization
 	 */
-	@Column(nullable = false)
 	public String getTabsSpacesNewlinesNormalization() {
 		return tabsSpacesNewlinesNormalization;
 	}

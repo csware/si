@@ -49,28 +49,41 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 public class Lecture implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private int id;
+	@Column(nullable = false)
 	private String name;
 	private int semester;
 	private boolean requiresAbhnahme;
+	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
 	private Set<Participation> participants;
+	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OrderBy("taskgroupid asc")
 	@JacksonXmlElementWrapper(localName = "taskGroups")
 	@JacksonXmlProperty(localName = "taskGroup")
 	@JsonManagedReference
 	private List<TaskGroup> taskGroups;
+	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OrderBy("name asc")
 	@JacksonXmlElementWrapper(localName = "groups")
 	@JacksonXmlProperty(localName = "group")
 	private List<Group> groups;
+	@Column(nullable = false)
 	private String gradingMethod = "";
+	@Column(nullable = false, columnDefinition = "TEXT")
 	private String description = "";
+	@ColumnDefault("1")
 	private boolean allowSelfSubscribe = true;
 
 	/**
 	 * @return the name
 	 */
-	@Column(nullable = false)
 	public String getName() {
 		return name;
 	}
@@ -112,8 +125,6 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the participants
 	 */
-	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Set<Participation> getParticipants() {
 		return participants;
 	}
@@ -128,8 +139,6 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the id
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return id;
 	}
@@ -144,9 +153,6 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the taskGroups
 	 */
-	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy("taskgroupid asc")
 	public List<TaskGroup> getTaskGroups() {
 		return taskGroups;
 	}
@@ -161,9 +167,6 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the groups
 	 */
-	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy("name asc")
 	public List<Group> getGroups() {
 		return groups;
 	}
@@ -192,7 +195,6 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the gradingMethod
 	 */
-	@Column(nullable = false)
 	public String getGradingMethod() {
 		return gradingMethod;
 	}
@@ -210,7 +212,6 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the description
 	 */
-	@Column(nullable = false, columnDefinition = "TEXT")
 	public String getDescription() {
 		return description;
 	}
@@ -225,7 +226,6 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the allowSelfSubscribe
 	 */
-	@ColumnDefault("1")
 	public boolean isAllowSelfSubscribe() {
 		return allowSelfSubscribe;
 	}

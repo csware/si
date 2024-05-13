@@ -44,13 +44,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Group implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private int gid;
+	@Column(nullable = false)
 	private String name;
+	@ManyToOne
+	@JoinColumn(name = "lectureid", nullable = false)
 	@JsonBackReference
 	private Lecture lecture;
+	@OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<Participation> members = new HashSet<>();
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "groups_tutors", joinColumns = @JoinColumn(name = "groups_gid"))
 	@JsonIgnore
 	private Set<Participation> tutors = new HashSet<>();
 	private boolean allowStudentsToSignup = false;
@@ -62,8 +70,6 @@ public class Group implements Serializable {
 	/**
 	 * @return the gid
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getGid() {
 		return gid;
 	}
@@ -78,7 +84,6 @@ public class Group implements Serializable {
 	/**
 	 * @return the name
 	 */
-	@Column(nullable = false)
 	public String getName() {
 		return name;
 	}
@@ -93,8 +98,6 @@ public class Group implements Serializable {
 	/**
 	 * @return the lecture
 	 */
-	@ManyToOne
-	@JoinColumn(name = "lectureid", nullable = false)
 	public Lecture getLecture() {
 		return lecture;
 	}
@@ -109,7 +112,6 @@ public class Group implements Serializable {
 	/**
 	 * @return the members
 	 */
-	@OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
 	public Set<Participation> getMembers() {
 		return members;
 	}
@@ -166,8 +168,6 @@ public class Group implements Serializable {
 	/**
 	 * @return the tutors
 	 */
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "groups_tutors", joinColumns = @JoinColumn(name = "groups_gid"))
 	public Set<Participation> getTutors() {
 		return tutors;
 	}
@@ -196,7 +196,6 @@ public class Group implements Serializable {
 	/**
 	 * @return the membersVisibleToStudents
 	 */
-	@Column(nullable = false)
 	public boolean isMembersVisibleToStudents() {
 		return membersVisibleToStudents;
 	}

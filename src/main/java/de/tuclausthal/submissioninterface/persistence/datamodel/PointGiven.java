@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2020, 2022-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020, 2022-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -37,8 +37,16 @@ import org.hibernate.annotations.OnDeleteAction;
 public class PointGiven implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int pointgivenid;
+	@ManyToOne
+	@JoinColumn(name = "categoryid", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private PointCategory category;
+	@ManyToOne
+	@JoinColumn(name = "submissionid", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Submission submission;
 	private int points;
 
@@ -54,8 +62,6 @@ public class PointGiven implements Serializable {
 	/**
 	 * @return the pointgivenid
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getPointgivenid() {
 		return pointgivenid;
 	}
@@ -70,9 +76,6 @@ public class PointGiven implements Serializable {
 	/**
 	 * @return the submission
 	 */
-	@ManyToOne
-	@JoinColumn(name = "submissionid", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Submission getSubmission() {
 		return submission;
 	}
@@ -101,9 +104,6 @@ public class PointGiven implements Serializable {
 	/**
 	 * @return the category
 	 */
-	@ManyToOne
-	@JoinColumn(name = "categoryid", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public PointCategory getCategory() {
 		return category;
 	}

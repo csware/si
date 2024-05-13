@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Giselle Rodriguez
- * Copyright 2011, 2020, 2022-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2020, 2022-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -39,8 +39,14 @@ import org.hibernate.annotations.OnDeleteAction;
 public class Result implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int resultid;
+	@ManyToOne
+	@JoinColumn(name = "submissionid", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Submission submission;
+	@Column(nullable = false)
 	private String result;
 
 	// for Hibernate
@@ -58,7 +64,6 @@ public class Result implements Serializable {
 	/**
 	 * @return the result
 	 */
-	@Column(nullable = false)
 	public String getResult() {
 		return result;
 	}
@@ -73,8 +78,6 @@ public class Result implements Serializable {
 	/**
 	 * @return the resultID
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getResultid() {
 		return resultid;
 	}
@@ -89,9 +92,6 @@ public class Result implements Serializable {
 	/**
 	 * @return the submission
 	 */
-	@ManyToOne
-	@JoinColumn(name = "submissionid", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Submission getSubmission() {
 		return submission;
 	}

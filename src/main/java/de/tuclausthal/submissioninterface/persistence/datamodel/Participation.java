@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020, 2022-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020, 2022-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -41,18 +41,27 @@ import jakarta.persistence.UniqueConstraint;
 public class Participation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	@ManyToOne
+	@JoinColumn(name = "uid", nullable = false)
 	private User user;
+	@ManyToOne
+	@JoinColumn(name = "groupid")
 	private Group group;
+	@ManyToOne
+	@JoinColumn(name = "lectureid", nullable = false)
 	private Lecture lecture;
+	@Column(nullable = false)
 	private String role = "NORMAL";
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "submissions_participations", joinColumns = @JoinColumn(name = "submitters_id"), inverseJoinColumns = @JoinColumn(name = "submissions_submissionid"))
 	private Set<Submission> submissions;
 
 	/**
 	 * @return the user
 	 */
-	@ManyToOne
-	@JoinColumn(name = "uid", nullable = false)
 	public User getUser() {
 		return user;
 	}
@@ -67,8 +76,6 @@ public class Participation implements Serializable {
 	/**
 	 * @return the group
 	 */
-	@ManyToOne
-	@JoinColumn(name = "groupid")
 	public Group getGroup() {
 		return group;
 	}
@@ -83,8 +90,6 @@ public class Participation implements Serializable {
 	/**
 	 * @return the lecture
 	 */
-	@ManyToOne
-	@JoinColumn(name = "lectureid", nullable = false)
 	public Lecture getLecture() {
 		return lecture;
 	}
@@ -99,8 +104,6 @@ public class Participation implements Serializable {
 	/**
 	 * @return the id
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return id;
 	}
@@ -115,7 +118,6 @@ public class Participation implements Serializable {
 	/**
 	 * @return the role
 	 */
-	@Column(nullable = false)
 	private String getRole() {
 		return role;
 	}
@@ -140,8 +142,6 @@ public class Participation implements Serializable {
 	/**
 	 * @return the submissions
 	 */
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "submissions_participations", joinColumns = @JoinColumn(name = "submitters_id"), inverseJoinColumns = @JoinColumn(name = "submissions_submissionid"))
 	public Set<Submission> getSubmissions() {
 		return submissions;
 	}

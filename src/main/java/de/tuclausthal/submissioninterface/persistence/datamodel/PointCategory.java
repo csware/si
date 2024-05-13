@@ -38,11 +38,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class PointCategory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private int pointcatid;
+	@ManyToOne
+	@JoinColumn(name = "taskid", nullable = false)
 	@JsonBackReference
 	private Task task;
 	private int points;
+	@Column(nullable = false)
 	private String description;
 	private boolean optional = false;
 
@@ -59,8 +64,6 @@ public class PointCategory implements Serializable {
 	/**
 	 * @return the pointcatid
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getPointcatid() {
 		return pointcatid;
 	}
@@ -75,8 +78,6 @@ public class PointCategory implements Serializable {
 	/**
 	 * @return the task
 	 */
-	@ManyToOne
-	@JoinColumn(name = "taskid", nullable = false)
 	public Task getTask() {
 		return task;
 	}
@@ -105,7 +106,6 @@ public class PointCategory implements Serializable {
 	/**
 	 * @return the description
 	 */
-	@Column(nullable = false)
 	public String getDescription() {
 		return description;
 	}

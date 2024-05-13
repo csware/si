@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -37,10 +37,18 @@ import org.hibernate.annotations.OnDeleteAction;
 public class Similarity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int similarityid;
+	@ManyToOne(optional = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Submission submissionOne;
+	@ManyToOne(optional = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Submission submissionTwo;
 	private int percentage;
+	@ManyToOne(optional = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private SimilarityTest similarityTest;
 
 	// for Hibernate
@@ -62,8 +70,6 @@ public class Similarity implements Serializable {
 	/**
 	 * @return the similarityid
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getSimilarityid() {
 		return similarityid;
 	}
@@ -92,8 +98,6 @@ public class Similarity implements Serializable {
 	/**
 	 * @return the submissionOne
 	 */
-	@ManyToOne(optional = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Submission getSubmissionOne() {
 		return submissionOne;
 	}
@@ -101,8 +105,6 @@ public class Similarity implements Serializable {
 	/**
 	 * @return the submissionTwo
 	 */
-	@ManyToOne(optional = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Submission getSubmissionTwo() {
 		return submissionTwo;
 	}
@@ -124,8 +126,6 @@ public class Similarity implements Serializable {
 	/**
 	 * @return the similarityTest
 	 */
-	@ManyToOne(optional = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public SimilarityTest getSimilarityTest() {
 		return similarityTest;
 	}

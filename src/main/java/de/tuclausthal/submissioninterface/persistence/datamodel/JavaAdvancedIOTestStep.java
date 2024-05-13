@@ -38,12 +38,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class JavaAdvancedIOTestStep implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private int teststepid;
+	@ManyToOne
+	@JoinColumn(name = "testid", nullable = false)
 	@JsonBackReference
 	private JavaAdvancedIOTest test;
+	@Column(nullable = false)
 	private String title;
+	@Column(nullable = false, length = 65536)
 	private String testcode;
+	@Column(nullable = false, length = 65536)
 	private String expect;
 
 	// for Hibernate
@@ -59,8 +66,6 @@ public class JavaAdvancedIOTestStep implements Serializable {
 	/**
 	 * @return the teststepid
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getTeststepid() {
 		return teststepid;
 	}
@@ -75,8 +80,6 @@ public class JavaAdvancedIOTestStep implements Serializable {
 	/**
 	 * @return the test
 	 */
-	@ManyToOne
-	@JoinColumn(name = "testid", nullable = false)
 	public JavaAdvancedIOTest getTest() {
 		return test;
 	}
@@ -91,7 +94,6 @@ public class JavaAdvancedIOTestStep implements Serializable {
 	/**
 	 * @return the testcode
 	 */
-	@Column(nullable = false, length = 65536)
 	public String getTestcode() {
 		return testcode;
 	}
@@ -106,7 +108,6 @@ public class JavaAdvancedIOTestStep implements Serializable {
 	/**
 	 * @return the expect
 	 */
-	@Column(nullable = false, length = 65536)
 	public String getExpect() {
 		return expect;
 	}
@@ -121,7 +122,6 @@ public class JavaAdvancedIOTestStep implements Serializable {
 	/**
 	 * @return the title
 	 */
-	@Column(nullable = false)
 	public String getTitle() {
 		return title;
 	}

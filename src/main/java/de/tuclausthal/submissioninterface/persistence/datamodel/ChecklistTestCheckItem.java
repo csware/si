@@ -42,19 +42,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class ChecklistTestCheckItem implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private int checkitemid;
+	@ManyToOne
+	@JoinColumn(name = "testid", nullable = false)
 	@JsonBackReference
 	private ChecklistTest test;
+	@Column(nullable = false, length = 65536)
 	private String title;
 	private boolean correct;
+	@Column(nullable = false, length = 65536)
 	private String feedback;
 
 	/**
 	 * @return the checkid
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getCheckitemid() {
 		return checkitemid;
 	}
@@ -69,8 +73,6 @@ public class ChecklistTestCheckItem implements Serializable {
 	/**
 	 * @return the test
 	 */
-	@ManyToOne
-	@JoinColumn(name = "testid", nullable = false)
 	public ChecklistTest getTest() {
 		return test;
 	}
@@ -85,7 +87,6 @@ public class ChecklistTestCheckItem implements Serializable {
 	/**
 	 * @return the title
 	 */
-	@Column(nullable = false, length = 65536)
 	public String getTitle() {
 		return title;
 	}
@@ -114,7 +115,6 @@ public class ChecklistTestCheckItem implements Serializable {
 	/**
 	 * @return the feedback
 	 */
-	@Column(nullable = false, length = 65536)
 	public String getFeedback() {
 		return feedback;
 	}

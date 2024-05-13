@@ -48,13 +48,21 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 public class TaskGroup implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private int taskGroupId;
+	@Column(nullable = false)
 	private String title = "";
+	@OneToMany(mappedBy = "taskGroup", cascade = CascadeType.PERSIST)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OrderBy("taskid asc")
 	@JacksonXmlElementWrapper(localName = "tasks")
 	@JacksonXmlProperty(localName = "task")
 	@JsonManagedReference
 	private List<Task> tasks;
+	@ManyToOne
+	@JoinColumn(name = "lectureid", nullable = false)
 	@JsonBackReference
 	private Lecture lecture;
 
@@ -75,8 +83,6 @@ public class TaskGroup implements Serializable {
 	/**
 	 * @return the taskGroupId
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getTaskGroupId() {
 		return taskGroupId;
 	}
@@ -91,7 +97,6 @@ public class TaskGroup implements Serializable {
 	/**
 	 * @return the title
 	 */
-	@Column(nullable = false)
 	public String getTitle() {
 		return title;
 	}
@@ -106,9 +111,6 @@ public class TaskGroup implements Serializable {
 	/**
 	 * @return the tasks
 	 */
-	@OneToMany(mappedBy = "taskGroup", cascade = CascadeType.PERSIST)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy("taskid asc")
 	public List<Task> getTasks() {
 		return tasks;
 	}
@@ -124,8 +126,6 @@ public class TaskGroup implements Serializable {
 	 * @return the lecture
 	 */
 
-	@ManyToOne
-	@JoinColumn(name = "lectureid", nullable = false)
 	public Lecture getLecture() {
 		return lecture;
 	}

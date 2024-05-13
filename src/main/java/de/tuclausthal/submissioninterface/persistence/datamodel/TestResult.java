@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020, 2022-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020, 2022-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -37,10 +37,16 @@ import org.hibernate.annotations.OnDeleteAction;
 public class TestResult implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	@ManyToOne(optional = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Test test;
+	@ManyToOne(optional = false)
 	private Submission submission;
 	private boolean passedTest;
+	@Column(nullable = false, length = 16777215)
 	private String testOutput = "no output available yet";
 
 	/**
@@ -60,7 +66,6 @@ public class TestResult implements Serializable {
 	/**
 	 * @return the testOutput
 	 */
-	@Column(nullable = false, length = 16777215)
 	public String getTestOutput() {
 		return testOutput;
 	}
@@ -75,8 +80,6 @@ public class TestResult implements Serializable {
 	/**
 	 * @return the test
 	 */
-	@ManyToOne(optional = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Test getTest() {
 		return test;
 	}
@@ -91,7 +94,6 @@ public class TestResult implements Serializable {
 	/**
 	 * @return the submission
 	 */
-	@ManyToOne(optional = false)
 	public Submission getSubmission() {
 		return submission;
 	}
@@ -106,8 +108,6 @@ public class TestResult implements Serializable {
 	/**
 	 * @return the id
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return id;
 	}

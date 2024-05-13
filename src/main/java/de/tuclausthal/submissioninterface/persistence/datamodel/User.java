@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -23,7 +23,6 @@ import java.lang.invoke.MethodHandles;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
-import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -44,19 +43,26 @@ import org.hibernate.annotations.DiscriminatorFormula;
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int uid;
+	@Column(nullable = false, unique = true)
 	private String username;
+	@Column(nullable = false)
 	private String email;
+	@Column(nullable = false)
 	private String lastName = "";
+	@Column(nullable = false)
 	private String firstName = "";
 	private boolean superUser = false;
+	@OneToMany(mappedBy = "user")
+	@OrderBy("id desc")
 	private Set<Participation> lectureParticipant;
 	private ZonedDateTime lastLoggedIn;
 
 	/**
 	 * @return the email
 	 */
-	@Column(nullable = false)
 	public String getEmail() {
 		return email;
 	}
@@ -64,8 +70,6 @@ public class User implements Serializable {
 	/**
 	 * @return the lectureParticipant
 	 */
-	@OneToMany(mappedBy = "user")
-	@OrderBy("id desc")
 	public Set<Participation> getLectureParticipant() {
 		return lectureParticipant;
 	}
@@ -73,8 +77,6 @@ public class User implements Serializable {
 	/**
 	 * @return the uid
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getUid() {
 		return uid;
 	}
@@ -117,7 +119,6 @@ public class User implements Serializable {
 	/**
 	 * @return the lastName
 	 */
-	@Column(nullable = false)
 	public String getLastName() {
 		return lastName;
 	}
@@ -125,7 +126,6 @@ public class User implements Serializable {
 	/**
 	 * @param lastName the lastName to set
 	 */
-	@Column(nullable = false)
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
@@ -133,7 +133,6 @@ public class User implements Serializable {
 	/**
 	 * @return the firstName
 	 */
-	@Column(nullable = false)
 	public String getFirstName() {
 		return firstName;
 	}
@@ -172,7 +171,6 @@ public class User implements Serializable {
 	/**
 	 * @return the username
 	 */
-	@Column(nullable = false, unique = true)
 	public String getUsername() {
 		return username;
 	}
@@ -187,7 +185,6 @@ public class User implements Serializable {
 	/**
 	 * @return the lastLoggedIn
 	 */
-	@Basic
 	public ZonedDateTime getLastLoggedIn() {
 		return lastLoggedIn;
 	}

@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -64,38 +63,62 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class Task implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private int taskid;
+	@Column(nullable = false)
 	private String title = "";
 	private int maxSubmitters = 1;
 	@JacksonXmlProperty(localName = "maxSize")
 	private int maxsize = 10485760;
 	private int maxPoints = 0;
 	private int minPointStep = 50;
+	@Column(nullable = false)
 	private ZonedDateTime start;
+	@Column(nullable = false)
 	private ZonedDateTime deadline;
 	private ZonedDateTime showPoints;
+	@Column(nullable = false, length = 16777215)
 	@JsonSerialize(using = TaskDescriptionSerializer.class)
 	private String description = "";
+	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OrderBy("submissionid asc")
 	@JsonIgnore
 	private Set<Submission> submissions;
+	@ManyToOne
+	@JoinColumn(name = "taskgroupid", nullable = false)
 	@JsonBackReference
 	private TaskGroup taskGroup;
+	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OrderBy("pointcatid asc")
 	@JacksonXmlElementWrapper(localName = "pointCategories")
 	@JacksonXmlProperty(localName = "pointCategory")
 	@JsonManagedReference
 	private List<PointCategory> pointCategories;
+	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OrderBy("id asc")
 	@JacksonXmlElementWrapper(localName = "tests")
 	@JacksonXmlProperty(localName = "test")
 	@JsonManagedReference
 	private List<Test> tests;
+	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OrderBy("similarityTestId asc")
 	@JacksonXmlElementWrapper(localName = "similarityTests")
 	@JacksonXmlProperty(localName = "similarityTest")
 	@JsonManagedReference
 	private List<SimilarityTest> similarityTests;
+	@Column(nullable = false)
 	private String filenameRegexp = "[A-Z][A-Za-z0-9_]+\\.java";
+	@Column(nullable = false)
 	private String archiveFilenameRegexp = "-";
+	@Column(nullable = false)
 	private String showTextArea = "-";
+	@Column(nullable = false, columnDefinition = "TEXT")
 	private String featuredFiles = "";
 	private boolean tutorsCanUploadFiles = false;
 	private boolean allowSubmittersAcrossGroups = false;
@@ -139,8 +162,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the taskid
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getTaskid() {
 		return taskid;
 	}
@@ -155,7 +176,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the title
 	 */
-	@Column(nullable = false)
 	public String getTitle() {
 		return title;
 	}
@@ -184,8 +204,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the start
 	 */
-	@Basic
-	@Column(nullable = false)
 	public ZonedDateTime getStart() {
 		return start;
 	}
@@ -200,8 +218,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the deadline
 	 */
-	@Basic
-	@Column(nullable = false)
 	public ZonedDateTime getDeadline() {
 		return deadline;
 	}
@@ -216,7 +232,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the description
 	 */
-	@Column(nullable = false, length = 16777215)
 	public String getDescription() {
 		return description;
 	}
@@ -231,9 +246,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the submissions
 	 */
-	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy("submissionid asc")
 	public Set<Submission> getSubmissions() {
 		return submissions;
 	}
@@ -248,8 +260,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the taskGroup
 	 */
-	@ManyToOne
-	@JoinColumn(name = "taskgroupid", nullable = false)
 	public TaskGroup getTaskGroup() {
 		return taskGroup;
 	}
@@ -264,9 +274,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the test
 	 */
-	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy("id asc")
 	public List<Test> getTests() {
 		return tests;
 	}
@@ -281,7 +288,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the showPoints
 	 */
-	@Basic
 	public ZonedDateTime getShowPoints() {
 		return showPoints;
 	}
@@ -296,9 +302,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the similarityTests
 	 */
-	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy("similarityTestId asc")
 	public List<SimilarityTest> getSimilarityTests() {
 		return similarityTests;
 	}
@@ -313,7 +316,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the filenameRegexp
 	 */
-	@Column(nullable = false)
 	public String getFilenameRegexp() {
 		return filenameRegexp;
 	}
@@ -333,7 +335,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the showTextArea
 	 */
-	@Column(nullable = false)
 	public String getShowTextArea() {
 		return showTextArea;
 	}
@@ -376,7 +377,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the featuredFiles
 	 */
-	@Column(nullable = false, columnDefinition = "TEXT")
 	public String getFeaturedFiles() {
 		return featuredFiles;
 	}
@@ -410,9 +410,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the pointCategories
 	 */
-	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy("pointcatid asc")
 	public List<PointCategory> getPointCategories() {
 		return pointCategories;
 	}
@@ -427,7 +424,6 @@ public class Task implements Serializable {
 	/**
 	 * @return the archiveFilenameRegexp
 	 */
-	@Column(nullable = false)
 	public String getArchiveFilenameRegexp() {
 		return archiveFilenameRegexp;
 	}

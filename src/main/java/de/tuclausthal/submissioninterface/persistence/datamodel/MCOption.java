@@ -44,10 +44,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class MCOption implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private int id;
+	@Column(nullable = false)
 	private String title = "";
 	private boolean correct = false;
+	@ManyToOne
+	@JoinColumn(name = "taskid", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnore
 	private Task task;
 
@@ -63,8 +69,6 @@ public class MCOption implements Serializable {
 	/**
 	 * @return the id
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return id;
 	}
@@ -79,7 +83,6 @@ public class MCOption implements Serializable {
 	/**
 	 * @return the option
 	 */
-	@Column(nullable = false)
 	public String getTitle() {
 		return title;
 	}
@@ -94,7 +97,6 @@ public class MCOption implements Serializable {
 	/**
 	 * @return the correct
 	 */
-	@Column(nullable = false)
 	public boolean isCorrect() {
 		return correct;
 	}
@@ -109,9 +111,6 @@ public class MCOption implements Serializable {
 	/**
 	 * @return the task
 	 */
-	@ManyToOne
-	@JoinColumn(name = "taskid", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Task getTask() {
 		return task;
 	}

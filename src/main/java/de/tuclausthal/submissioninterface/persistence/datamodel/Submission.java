@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -47,14 +47,28 @@ import org.hibernate.annotations.OnDeleteAction;
 public class Submission implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int submissionid;
+	@ManyToOne
+	@JoinColumn(name = "taskid", nullable = false)
 	private Task task;
+	@ManyToMany
+	//@OrderBy(value = "user asc") // not supported with Hibernate >= 6.1, see workaround in getSubmitterNames()
+	@JoinTable(name = "submissions_participations", inverseJoinColumns = @JoinColumn(name = "submitters_id"), joinColumns = @JoinColumn(name = "submissions_submissionid"))
 	private Set<Participation> submitters = new HashSet<>();
 	private Points points;
+	@OneToMany(mappedBy = "submission", fetch = FetchType.LAZY)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OrderBy(value = "id asc")
 	private Set<TestResult> testResults;
+	@OneToMany(mappedBy = "submissionOne", fetch = FetchType.LAZY)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Set<Similarity> similarSubmissions;
 	private ZonedDateTime lastModified = null;
 	private ZonedDateTime closedTime = null;
+	@ManyToOne
+	@JoinColumn(name = "closedBy")
 	private Participation closedBy = null;
 
 	// for Hibernate
@@ -72,9 +86,6 @@ public class Submission implements Serializable {
 	/**
 	 * @return the testResult
 	 */
-	@OneToMany(mappedBy = "submission", fetch = FetchType.LAZY)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@OrderBy(value = "id asc")
 	public Set<TestResult> getTestResults() {
 		return testResults;
 	}
@@ -111,9 +122,6 @@ public class Submission implements Serializable {
 	/**
 	 * @return the submitters
 	 */
-	@ManyToMany
-	//@OrderBy(value = "user asc") // not supported with Hibernate >= 6.1, see workaround in getSubmitterNames()
-	@JoinTable(name = "submissions_participations", inverseJoinColumns = @JoinColumn(name = "submitters_id"), joinColumns = @JoinColumn(name = "submissions_submissionid"))
 	public Set<Participation> getSubmitters() {
 		return submitters;
 	}
@@ -128,8 +136,6 @@ public class Submission implements Serializable {
 	/**
 	 * @return the task
 	 */
-	@ManyToOne
-	@JoinColumn(name = "taskid", nullable = false)
 	public Task getTask() {
 		return task;
 	}
@@ -144,8 +150,6 @@ public class Submission implements Serializable {
 	/**
 	 * @return the submissionid
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getSubmissionid() {
 		return submissionid;
 	}
@@ -160,8 +164,6 @@ public class Submission implements Serializable {
 	/**
 	 * @return the similarSubmissions
 	 */
-	@OneToMany(mappedBy = "submissionOne", fetch = FetchType.LAZY)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Set<Similarity> getSimilarSubmissions() {
 		return similarSubmissions;
 	}
@@ -228,8 +230,6 @@ public class Submission implements Serializable {
 	 *
 	 * @return user id of the student
 	 */
-	@ManyToOne
-	@JoinColumn(name = "closedBy")
 	public Participation getClosedBy() {
 		return closedBy;
 	}

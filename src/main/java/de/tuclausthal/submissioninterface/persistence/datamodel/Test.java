@@ -46,10 +46,14 @@ import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 public abstract class Test implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@JsonIgnore
 	private int id;
 	private int timesRunnableByStudents = 0;
 	private boolean forTutors = false;
+	@ManyToOne
+	@JoinColumn(name = "taskid", nullable = false)
 	@JsonBackReference
 	private Task task;
 	private int timeout = 5;
@@ -79,8 +83,6 @@ public abstract class Test implements Serializable {
 	/**
 	 * @return the id
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return id;
 	}
@@ -95,8 +97,6 @@ public abstract class Test implements Serializable {
 	/**
 	 * @return the task
 	 */
-	@ManyToOne
-	@JoinColumn(name = "taskid", nullable = false)
 	public Task getTask() {
 		return task;
 	}

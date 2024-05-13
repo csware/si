@@ -39,14 +39,27 @@ import org.hibernate.annotations.OnDeleteAction;
 public class LogEntry implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	@ManyToOne
+	@JoinColumn(name = "userId", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
+	@ManyToOne
+	@JoinColumn(name = "testId", nullable = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Test test;
+	@ManyToOne
+	@JoinColumn(name = "taskId", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Task task;
 	private ZonedDateTime timeStamp = ZonedDateTime.now();
 	private int action;
 	private Boolean result;
+	@Column(length = 16777215)
 	private String testOutput;
+	@Column(length = 16777215)
 	private String additionalData;
 
 	public LogEntry() {}
@@ -66,8 +79,6 @@ public class LogEntry implements Serializable {
 	/**
 	 * @return the uid
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return id;
 	}
@@ -114,7 +125,6 @@ public class LogEntry implements Serializable {
 	/**
 	 * @return the testOutput
 	 */
-	@Column(length = 16777215)
 	public String getTestOutput() {
 		return testOutput;
 	}
@@ -143,9 +153,6 @@ public class LogEntry implements Serializable {
 	/**
 	 * @return the userId
 	 */
-	@ManyToOne
-	@JoinColumn(name = "userId", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public User getUser() {
 		return user;
 	}
@@ -160,9 +167,6 @@ public class LogEntry implements Serializable {
 	/**
 	 * @return the test
 	 */
-	@ManyToOne
-	@JoinColumn(name = "testId", nullable = true)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Test getTest() {
 		return test;
 	}
@@ -177,9 +181,6 @@ public class LogEntry implements Serializable {
 	/**
 	 * @return the task
 	 */
-	@ManyToOne
-	@JoinColumn(name = "taskId", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
 	public Task getTask() {
 		return task;
 	}
@@ -194,7 +195,6 @@ public class LogEntry implements Serializable {
 	/**
 	 * @return the additionalData
 	 */
-	@Column(length = 16777215)
 	public String getAdditionalData() {
 		return additionalData;
 	}
