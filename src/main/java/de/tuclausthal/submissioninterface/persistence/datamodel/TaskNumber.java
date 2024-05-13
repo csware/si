@@ -145,7 +145,6 @@ public class TaskNumber implements Serializable {
 	/**
 	 * @param origNumber the origNumber to set
 	 */
-	@Column(nullable = false)
 	public void setOrigNumber(String origNumber) {
 		this.origNumber = origNumber;
 	}
@@ -153,6 +152,7 @@ public class TaskNumber implements Serializable {
 	/**
 	 * @return the origNumber
 	 */
+	@Column(nullable = false)
 	public String getOrigNumber() {
 		return origNumber;
 	}
