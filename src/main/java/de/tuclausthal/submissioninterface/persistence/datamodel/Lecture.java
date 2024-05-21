@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -23,6 +23,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,18 +39,30 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
 @Entity
 @Table(name = "lectures")
 public class Lecture implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	private int id;
 	private String name;
 	private int semester;
 	private boolean requiresAbhnahme;
+	@JsonIgnore
 	private Set<Participation> participants;
+	@JacksonXmlElementWrapper(localName = "taskGroups")
+	@JacksonXmlProperty(localName = "taskGroup")
+	@JsonManagedReference
 	private List<TaskGroup> taskGroups;
-	private Set<Group> groups;
+	@JacksonXmlElementWrapper(localName = "groups")
+	@JacksonXmlProperty(localName = "group")
+	private List<Group> groups;
 	private String gradingMethod = "";
 	private String description = "";
 	private boolean allowSelfSubscribe = true;
@@ -131,7 +144,7 @@ public class Lecture implements Serializable {
 	/**
 	 * @return the taskGroups
 	 */
-	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OrderBy("taskgroupid asc")
 	public List<TaskGroup> getTaskGroups() {
@@ -151,14 +164,14 @@ public class Lecture implements Serializable {
 	@OneToMany(mappedBy = "lecture", fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OrderBy("name asc")
-	public Set<Group> getGroups() {
+	public List<Group> getGroups() {
 		return groups;
 	}
 
 	/**
 	 * @param groups the groups to set
 	 */
-	public void setGroups(Set<Group> groups) {
+	public void setGroups(List<Group> groups) {
 		this.groups = groups;
 	}
 
@@ -188,6 +201,9 @@ public class Lecture implements Serializable {
 	 * @param gradingMethod the gradingMethod to set
 	 */
 	public void setGradingMethod(String gradingMethod) {
+		if (!List.of("groupWise", "taskWise").contains(gradingMethod)) {
+			throw new RuntimeException("Invalid gradingMethod");
+		}
 		this.gradingMethod = gradingMethod;
 	}
 

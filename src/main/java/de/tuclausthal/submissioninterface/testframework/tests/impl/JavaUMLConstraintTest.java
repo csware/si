@@ -31,7 +31,8 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class JavaUMLConstraintTest extends AbstractTest {
-	final static public String FILENAME_PATTERN = "musterloesung%d.xmi";
+	final static public String FILENAME_PREFIX = "musterloesung";
+	final static public String FILENAME_PATTERN = FILENAME_PREFIX + "%d.xmi";
 
 	public JavaUMLConstraintTest(UMLConstraintTest umlConstraintTest) {
 		super(umlConstraintTest);

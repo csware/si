@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -22,6 +22,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -30,6 +31,10 @@ import jakarta.persistence.Transient;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 
@@ -42,6 +47,9 @@ public class DockerTest extends Test {
 	private static final long serialVersionUID = 1L;
 
 	private String preparationShellCode;
+	@JacksonXmlElementWrapper(localName = "testSteps")
+	@JacksonXmlProperty(localName = "testStep")
+	@JsonManagedReference
 	private List<DockerTestStep> testSteps = new ArrayList<>();
 
 	@Override
@@ -68,7 +76,7 @@ public class DockerTest extends Test {
 	/**
 	 * @return the testSteps
 	 */
-	@OneToMany(mappedBy = "test")
+	@OneToMany(mappedBy = "test", cascade = CascadeType.PERSIST)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OrderBy("teststepid asc")
 	public List<DockerTestStep> getTestSteps() {

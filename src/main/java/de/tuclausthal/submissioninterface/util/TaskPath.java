@@ -19,17 +19,23 @@
 package de.tuclausthal.submissioninterface.util;
 
 public enum TaskPath {
-	LOGS("logs"),
-	ADVISORFILES("advisorfiles"),
-	MODELSOLUTIONFILES("modelsolutionfiles");
+	LOGS("logs", false),
+	ADVISORFILES("advisorfiles", true),
+	MODELSOLUTIONFILES("modelsolutionfiles", true);
 
 	private String path;
+	private boolean allowImportExport;
 
-	private TaskPath(String s) {
-		path = s;
+	private TaskPath(final String path, final boolean allowImportExport) {
+		this.path = path;
+		this.allowImportExport = allowImportExport;
 	}
 
 	public String getPathComponent() {
 		return path;
+	}
+
+	public boolean isAllowImportExport() {
+		return allowImportExport;
 	}
 }

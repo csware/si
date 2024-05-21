@@ -59,6 +59,7 @@ import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.NormalizerIf;
 import de.tuclausthal.submissioninterface.dupecheck.normalizers.impl.StripCommentsNormalizer;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
@@ -643,6 +644,10 @@ public final class Util {
 			return null;
 		}
 		return combinedPath;
+	}
+
+	public static Path constructPath(final Path basePath, final Lecture lecture) {
+		return basePath.resolve("lectures" + FILE_SEPARATOR + String.valueOf(lecture.getId()));
 	}
 
 	public static Path constructPath(final Path basePath, final Task task) {

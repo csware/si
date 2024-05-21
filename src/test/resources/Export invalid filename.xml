@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Lecture>
+  <name>Lecture 1</name>
+  <semester>20201</semester>
+  <requiresAbhnahme>true</requiresAbhnahme>
+  <gradingMethod>taskWise</gradingMethod>
+  <description></description>
+  <allowSelfSubscribe>true</allowSelfSubscribe>
+  <taskGroups>
+    <taskGroup>
+      <title>Taskgroup 1</title>
+      <tasks>
+        <task>
+          <taskConfiguration>
+            <title>Hello World</title>
+            <maxSubmitters>2</maxSubmitters>
+            <maxPoints>150</maxPoints>
+            <minPointStep>50</minPointStep>
+            <start>2020-12-21T10:32:01+01:00</start>
+            <deadline>2020-12-21T10:40:39+01:00</deadline>
+            <showPoints>2020-12-28T10:52:01+01:00</showPoints>
+            <description>&lt;p>Write "Hello World!" (class name &lt;em>HelloWorld&lt;/em>)&lt;/p></description>
+            <filenameRegexp>HelloWorld\.java</filenameRegexp>
+            <archiveFilenameRegexp>-</archiveFilenameRegexp>
+            <showTextArea>-</showTextArea>
+            <featuredFiles></featuredFiles>
+            <tutorsCanUploadFiles>false</tutorsCanUploadFiles>
+            <allowSubmittersAcrossGroups>false</allowSubmittersAcrossGroups>
+            <dynamicTask/>
+            <type></type>
+            <allowPrematureSubmissionClosing>false</allowPrematureSubmissionClosing>
+            <modelSolutionProvisionType>INTERNAL</modelSolutionProvisionType>
+            <maxSize>10485760</maxSize>
+          </taskConfiguration>
+          <files>
+            <file>
+              <filename></filename>
+              <encoding>base64</encoding>
+              <content>cHVibGljIGNsYXNzIEhlbGxvV29ybGQgew0KCXB1YmxpYyBzdGF0aWMgdm9pZCBtYWluKFN0cmluZ1tdIGFyZ3MpIHsNCg0KCX0NCn0NCg==</content>
+            </file>
+          </files>
+        </task>
+      </tasks>
+    </taskGroup>
+  </taskGroups>
+</Lecture>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2021, 2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2021, 2023-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -73,6 +73,13 @@ public class AdminMenueOverView extends HttpServlet {
 		out.println("<p class=mid><a href=\"" + Util.generateHTMLLink("?action=showAdminUsers", response) + "\">Super User anzeigen</a></p>");
 		out.println("<p class=mid><a href=\"" + Util.generateHTMLLink(SelfTest.class.getSimpleName(), response) + "\">Selbsttest</a></p>");
 		out.println("<p class=mid><a href=\"" + Util.generateHTMLLink("?action=cleanup", response) + "\">Verzeichnis Cleanup (erst Dry-Run, kann lange dauern)</a></p>");
+
+		out.println("<h2>Veranstaltung aus Export importieren</h2>");
+		out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?action=import", response) + "\">");
+		out.println("<INPUT TYPE=checkbox NAME=dryrun id=importdryrun checked> <label for=importdryrun>Dry-Run</label><br>");
+		out.println("<INPUT TYPE=file NAME=file required>");
+		out.println("<INPUT TYPE=submit VALUE=upload>");
+		out.println("</FORM>");
 
 		template.printTemplateFooter();
 	}

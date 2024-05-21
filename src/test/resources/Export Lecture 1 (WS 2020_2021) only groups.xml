@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Lecture>
+  <groups>
+    <group>
+      <name>Group 1 (fixed)</name>
+      <allowStudentsToSignup>false</allowStudentsToSignup>
+      <allowStudentsToQuit>false</allowStudentsToQuit>
+      <maxStudents>2</maxStudents>
+      <submissionGroup>false</submissionGroup>
+      <membersVisibleToStudents>false</membersVisibleToStudents>
+    </group>
+    <group>
+      <name>Group 2 (full)</name>
+      <allowStudentsToSignup>true</allowStudentsToSignup>
+      <allowStudentsToQuit>true</allowStudentsToQuit>
+      <maxStudents>2</maxStudents>
+      <submissionGroup>false</submissionGroup>
+      <membersVisibleToStudents>false</membersVisibleToStudents>
+    </group>
+    <group>
+      <name>Group 3</name>
+      <allowStudentsToSignup>true</allowStudentsToSignup>
+      <allowStudentsToQuit>true</allowStudentsToQuit>
+      <maxStudents>2</maxStudents>
+      <submissionGroup>false</submissionGroup>
+      <membersVisibleToStudents>false</membersVisibleToStudents>
+    </group>
+    <group>
+      <name>Group 4 (empty)</name>
+      <allowStudentsToSignup>true</allowStudentsToSignup>
+      <allowStudentsToQuit>true</allowStudentsToQuit>
+      <maxStudents>2</maxStudents>
+      <submissionGroup>false</submissionGroup>
+      <membersVisibleToStudents>false</membersVisibleToStudents>
+    </group>
+    <group>
+      <name>Group 5 (no join)</name>
+      <allowStudentsToSignup>false</allowStudentsToSignup>
+      <allowStudentsToQuit>false</allowStudentsToQuit>
+      <maxStudents>2</maxStudents>
+      <submissionGroup>false</submissionGroup>
+      <membersVisibleToStudents>false</membersVisibleToStudents>
+    </group>
+  </groups>
+</Lecture>

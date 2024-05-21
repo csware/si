@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -30,6 +30,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 
 /**
@@ -38,16 +42,20 @@ import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
  */
 @Entity
 @Table(name = "tests")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
 public abstract class Test implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	private int id;
 	private int timesRunnableByStudents = 0;
 	private boolean forTutors = false;
+	@JsonBackReference
 	private Task task;
 	private int timeout = 5;
 	private String testTitle = "";
 	private String testDescription = "";
+	@JsonIgnore
 	private boolean needsToRun = true;
 	private boolean giveDetailsToStudents = false;
 
@@ -62,6 +70,9 @@ public abstract class Test implements Serializable {
 	 * @param timesRunnableByStudents 
 	 */
 	public void setTimesRunnableByStudents(int timesRunnableByStudents) {
+		if (timesRunnableByStudents < 0) {
+			timesRunnableByStudents = 0;
+		}
 		this.timesRunnableByStudents = timesRunnableByStudents;
 	}
 
@@ -108,6 +119,9 @@ public abstract class Test implements Serializable {
 	 * @param timeout the timeout to set
 	 */
 	public void setTimeout(int timeout) {
+		if (timeout < 0) {
+			timeout = 1;
+		}
 		this.timeout = timeout;
 	}
 
@@ -168,6 +182,7 @@ public abstract class Test implements Serializable {
 	}
 
 	@Transient
+	@JsonIgnore
 	abstract public AbstractTest getTestImpl();
 
 	/**

@@ -286,7 +286,7 @@ INSERT INTO `taskgroups` (`taskGroupId`, `title`, `lectureid`) VALUES
 INSERT INTO `tasks` (`taskid`, `allowPrematureSubmissionClosing`, `allowSubmittersAcrossGroups`, `archiveFilenameRegexp`, `deadline`, `description`, `dynamicTask`, `featuredFiles`, `filenameRegexp`, `maxPoints`, `maxSubmitters`, `maxsize`, `minPointStep`, `showPoints`, `showTextArea`, `start`, `type`, `title`, `tutorsCanUploadFiles`, `taskgroupid`, `modelSolutionProvision`) VALUES
 (1, b'0', b'0', '-', '2020-12-21 10:40:39', '<p>Berechnen Sie die Dezimaldarstellung des Bin&auml;r-Wertes $Var0$.</p>', 'bin2dec', '', '-', 100, 2, 10485760, 50, '2020-12-28 10:26:50', 'textloesung.txt', '2020-12-21 10:26:50', 'dynamicTask', 'Dynamic Task binary numbers', b'0', 1, NULL),
 (2, b'0', b'0', '-', '2020-12-21 10:40:39', '<p>Choose wisely!</p>', NULL, '', '-', 200, 2, 10485760, 50, '2020-12-28 10:30:39', '-', '2020-12-21 10:30:39', 'mc', 'MC Task', b'0', 1, NULL),
-(3, b'0', b'0', '-', '2020-12-21 10:40:39', '<p>Write \"Hello World\" (class name <em>HelloWorld</em>)</p>', NULL, '', 'HelloWorld\\.java', 150, 2, 10485760, 50, '2020-12-28 10:52:01', '-', '2020-12-21 10:32:01', '', 'Hello World', b'0', 2, NULL),
+(3, b'0', b'0', '-', '2020-12-21 10:40:39', '<p>Write \"Hello World!\" (class name <em>HelloWorld</em>)</p>\r\n<p><a href=\"DownloadTaskFile/HelloWorld.java?taskid=3\">Vorlage hier downloaden</a></p>', NULL, '', 'HelloWorld\\.java', 150, 2, 10485760, 50, '2020-12-28 10:52:01', '-', '2020-12-21 10:32:01', '', 'Hello World', b'0', 2, NULL),
 (4, b'1', b'0', '-', '2100-12-28 10:53:05', '<p>Upload some Java</p>', NULL, '', '[A-Z][A-Za-z0-9_]+\\.java', 500, 1, 10485760, 50, '2120-12-28 10:53:05', '-', '2020-12-21 10:53:05', '', 'Something', b'0', 2, NULL);
 
 --

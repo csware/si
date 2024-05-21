@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Lecture>
+  <name>Lecture 2 Groupwise</name>
+  <semester>20201</semester>
+  <requiresAbhnahme>false</requiresAbhnahme>
+  <gradingMethod>groupWise</gradingMethod>
+  <description></description>
+  <yetUnknownFeature>something</yetUnknownFeature>
+  <taskGroups/>
+</Lecture>

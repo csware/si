@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -36,15 +36,22 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "groups")
 public class Group implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	private int gid;
 	private String name;
+	@JsonBackReference
 	private Lecture lecture;
+	@JsonIgnore
 	private Set<Participation> members = new HashSet<>();
+	@JsonIgnore
 	private Set<Participation> tutors = new HashSet<>();
 	private boolean allowStudentsToSignup = false;
 	private boolean allowStudentsToQuit = false;

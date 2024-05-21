@@ -152,6 +152,8 @@ public class ShowFile extends HttpServlet {
 			response.setContentType("text/plain");
 		} else if (filenameLowerCase.endsWith(".csv")) {
 			response.setContentType("text/csv");
+		} else if (filenameLowerCase.endsWith(".xml")) {
+			response.setContentType("text/xml");
 		} else {
 			response.setContentType("application/octet-stream");
 			forceDownload = true;

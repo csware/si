@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2020, 2022-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020, 2022-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -30,12 +30,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "pointcategories")
 public class PointCategory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	private int pointcatid;
+	@JsonBackReference
 	private Task task;
 	private int points;
 	private String description;

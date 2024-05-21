@@ -32,6 +32,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
 import de.tuclausthal.submissioninterface.dupecheck.compressiondistance.CompressionDistance;
 import de.tuclausthal.submissioninterface.dupecheck.jplag.JPlagAdapter;
@@ -51,9 +54,12 @@ import de.tuclausthal.submissioninterface.dupecheck.plaggie.PlaggieAdapter;
 public class SimilarityTest implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	private int similarityTestId;
+	@JsonBackReference
 	private Task task;
 	private int minimumDifferenceInPercent = 50;
+	@JsonIgnore
 	private int status = 1; // 1 = needs to run, 2 = running, 0 = done
 	private String type;
 	private String basis;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, 2022-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020, 2022-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -33,6 +33,8 @@ import jakarta.persistence.Table;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Options shown for Multiple Choice Questions
  * @author Sven Strickroth
@@ -42,9 +44,11 @@ import org.hibernate.annotations.OnDeleteAction;
 public class MCOption implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	private int id;
 	private String title = "";
 	private boolean correct = false;
+	@JsonIgnore
 	private Task task;
 
 	// for Hibernate

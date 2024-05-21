@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Lecture>
+  <name>Lecture 1</name>
+  <requiresAbhnahme>true</requiresAbhnahme>
+  <gradingMethod>taskWise</gradingMethod>
+  <description></description>
+  <allowSelfSubscribe>true</allowSelfSubscribe>
+</Lecture>

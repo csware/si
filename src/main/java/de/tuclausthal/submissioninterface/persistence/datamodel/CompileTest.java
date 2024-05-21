@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -23,6 +23,8 @@ import java.lang.invoke.MethodHandles;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaSyntaxTest;
 
@@ -36,6 +38,7 @@ public class CompileTest extends Test {
 
 	@Override
 	@Transient
+	@JsonIgnore
 	public AbstractTest getTestImpl() {
 		return new JavaSyntaxTest(this);
 	}

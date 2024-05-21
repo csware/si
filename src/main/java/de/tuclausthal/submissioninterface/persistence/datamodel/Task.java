@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,11 +21,13 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -44,8 +46,16 @@ import org.hibernate.Session;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieFactory;
 import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
+import de.tuclausthal.submissioninterface.persistence.TaskDescriptionSerializer;
 import de.tuclausthal.submissioninterface.util.Configuration;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -54,21 +64,35 @@ import de.tuclausthal.submissioninterface.util.Util;
 public class Task implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	private int taskid;
 	private String title = "";
 	private int maxSubmitters = 1;
+	@JacksonXmlProperty(localName = "maxSize")
 	private int maxsize = 10485760;
 	private int maxPoints = 0;
 	private int minPointStep = 50;
 	private ZonedDateTime start;
 	private ZonedDateTime deadline;
 	private ZonedDateTime showPoints;
+	@JsonSerialize(using = TaskDescriptionSerializer.class)
 	private String description = "";
+	@JsonIgnore
 	private Set<Submission> submissions;
+	@JsonBackReference
 	private TaskGroup taskGroup;
-	private Set<PointCategory> pointCategories;
-	private Set<Test> tests;
-	private Set<SimilarityTest> similarityTests;
+	@JacksonXmlElementWrapper(localName = "pointCategories")
+	@JacksonXmlProperty(localName = "pointCategory")
+	@JsonManagedReference
+	private List<PointCategory> pointCategories;
+	@JacksonXmlElementWrapper(localName = "tests")
+	@JacksonXmlProperty(localName = "test")
+	@JsonManagedReference
+	private List<Test> tests;
+	@JacksonXmlElementWrapper(localName = "similarityTests")
+	@JacksonXmlProperty(localName = "similarityTest")
+	@JsonManagedReference
+	private List<SimilarityTest> similarityTests;
 	private String filenameRegexp = "[A-Z][A-Za-z0-9_]+\\.java";
 	private String archiveFilenameRegexp = "-";
 	private String showTextArea = "-";
@@ -76,6 +100,7 @@ public class Task implements Serializable {
 	private boolean tutorsCanUploadFiles = false;
 	private boolean allowSubmittersAcrossGroups = false;
 	private String dynamicTask = null;
+	@JsonIgnore
 	private String modelSolutionProvision = null;
 	private String type = "";
 	private boolean allowPrematureSubmissionClosing = false;
@@ -239,17 +264,17 @@ public class Task implements Serializable {
 	/**
 	 * @return the test
 	 */
-	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OrderBy("id asc")
-	public Set<Test> getTests() {
+	public List<Test> getTests() {
 		return tests;
 	}
 
 	/**
 	 * @param tests 
 	 */
-	public void setTests(Set<Test> tests) {
+	public void setTests(List<Test> tests) {
 		this.tests = tests;
 	}
 
@@ -271,17 +296,17 @@ public class Task implements Serializable {
 	/**
 	 * @return the similarityTests
 	 */
-	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OrderBy("similarityTestId asc")
-	public Set<SimilarityTest> getSimilarityTests() {
+	public List<SimilarityTest> getSimilarityTests() {
 		return similarityTests;
 	}
 
 	/**
 	 * @param similarityTests the similarityTests to set
 	 */
-	public void setSimilarityTests(Set<SimilarityTest> similarityTests) {
+	public void setSimilarityTests(List<SimilarityTest> similarityTests) {
 		this.similarityTests = similarityTests;
 	}
 
@@ -385,17 +410,17 @@ public class Task implements Serializable {
 	/**
 	 * @return the pointCategories
 	 */
-	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OrderBy("pointcatid asc")
-	public Set<PointCategory> getPointCategories() {
+	public List<PointCategory> getPointCategories() {
 		return pointCategories;
 	}
 
 	/**
 	 * @param pointCategories the pointCategories to set
 	 */
-	public void setPointCategories(Set<PointCategory> pointCategories) {
+	public void setPointCategories(List<PointCategory> pointCategories) {
 		this.pointCategories = pointCategories;
 	}
 
@@ -534,6 +559,9 @@ public class Task implements Serializable {
 	 * @param taskType the type to set
 	 */
 	public void setType(String taskType) {
+		if (!List.of("", "sc", "mc", "cloze", "dynamicTask").contains(taskType)) {
+			throw new RuntimeException("Invalid taskType");
+		}
 		this.type = taskType;
 	}
 

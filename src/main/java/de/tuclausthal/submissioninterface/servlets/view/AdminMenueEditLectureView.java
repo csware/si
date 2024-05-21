@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -176,6 +176,15 @@ public class AdminMenueEditLectureView extends HttpServlet {
 			out.println("<input type=checkbox name=failonerror checked id=failonerror> <label for=failonerror>Bei Fehler abbrechen</label>");
 			out.println("<input type=submit value=\"Teilnehmende hinzufügen\">");
 			out.println("</form>");
+
+			out.println("<p class=mid><a href=\"" + Util.generateHTMLLink("?lecture=" + lecture.getId() + "&action=export", response) + "\">Export</a><p>");
+			out.println("<h2>Aufgaben aus Export importieren (werden angefügt)</h2>");
+			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + Util.generateHTMLLink("?action=import&onlyAppendTasks&lecture=" + lecture.getId(), response) + "\">");
+			out.println("<INPUT TYPE=checkbox NAME=dryrun id=importdryrun checked> <label for=importdryrun>Dry-Run</label><br>");
+			out.println("<INPUT TYPE=file NAME=file required>");
+			out.println("<INPUT TYPE=submit VALUE=upload>");
+			out.println("</FORM>");
+
 			out.println("<div class=mid><a href=\"" + Util.generateHTMLLink("?", response) + "\">zur Übersicht</a></div>");
 		}
 		template.printTemplateFooter();

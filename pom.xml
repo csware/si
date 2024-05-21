@@ -14,6 +14,7 @@
 		<maven.compiler.release>11</maven.compiler.release>
 		<slf4j.version>2.0.9</slf4j.version>
 		<hibernate.version>6.4.8.Final</hibernate.version>
+		<jackson.version>2.17.1</jackson.version>
 	</properties>
 	<profiles>
 		<profile>
@@ -120,6 +121,19 @@
 			<groupId>org.glassfish</groupId>
 			<artifactId>jakarta.json</artifactId>
 			<version>2.0.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>${jackson.version}</version>
 		</dependency>
 
 		<!-- https://devcenter.heroku.com/articles/local-maven-dependencies -->

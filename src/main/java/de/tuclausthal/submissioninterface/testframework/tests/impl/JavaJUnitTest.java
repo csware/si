@@ -38,7 +38,8 @@ public class JavaJUnitTest extends JavaFunctionTest {
 	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	final static public String JUNIT_JAR = "junit.jar";
-	final static public String FILENAME_PATTERN = "junittest%d.jar";
+	final static public String FILENAME_PREFIX = "junittest";
+	final static public String FILENAME_PATTERN = FILENAME_PREFIX + "%d.jar";
 
 	public JavaJUnitTest(Test test) {
 		super(test);

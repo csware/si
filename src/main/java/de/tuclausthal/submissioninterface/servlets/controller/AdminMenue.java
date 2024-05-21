@@ -19,24 +19,34 @@
 package de.tuclausthal.submissioninterface.servlets.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.LectureDAOIf;
@@ -64,6 +74,7 @@ import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaJUnitTest;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaUMLConstraintTest;
 import de.tuclausthal.submissioninterface.util.Configuration;
+import de.tuclausthal.submissioninterface.util.LectureImportExportHelper;
 import de.tuclausthal.submissioninterface.util.TaskPath;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -72,9 +83,11 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  *
  */
+@MultipartConfig(maxFileSize = Configuration.MAX_UPLOAD_SIZE)
 @GATEController
 public class AdminMenue extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -105,6 +118,19 @@ public class AdminMenue extends HttpServlet {
 			out.println("<input type=submit value=\"Cleanup jetzt wirklich durchführen\"> <a href=\"" + Util.generateHTMLLink("?", response) + "\">Abbrechen</a>");
 			out.println("</form>");
 			template.printTemplateFooter();
+		} else if ("export".equals(request.getParameter("action"))) {
+			final Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+			if (lecture == null) {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, "lecture not found");
+				return;
+			}
+			try {
+				ShowFile.setContentTypeBasedonFilenameExtension(response, "Export " + lecture.getName() + " (" + lecture.getReadableSemester() + ").xml", true);
+				LectureImportExportHelper.exportLecture(session, lecture, Util.constructPath(Configuration.getInstance().getDataPath(), lecture), response.getOutputStream());
+			} catch (final JsonProcessingException e) {
+				LOG.warn("Could not export lecture " + lecture.getId(), e);
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not export lecture, see details in server log.");
+			}
 		} else { // list all lectures
 			request.setAttribute("lectures", DAOFactory.LectureDAOIf(session).getLectures());
 			getServletContext().getNamedDispatcher(AdminMenueOverView.class.getSimpleName()).forward(request, response);
@@ -127,6 +153,59 @@ public class AdminMenue extends HttpServlet {
 			out.println("<hr>");
 			out.println("Done.");
 			template.printTemplateFooter();
+		} else if ("import".equals(request.getParameter("action"))) {
+			if (request.getParts().stream().filter(part -> "file".equals(part.getName())).count() != 1) {
+				request.setAttribute("title", "Upload-Error");
+				request.setAttribute("message", "<p class=mid>Es kann nur genau eine Datei importiert werden!</p><p class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></p>");
+				getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
+				return;
+			}
+			// Process a file upload
+			Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(Util.parseInteger(request.getParameter("lecture"), 0));
+			for (final Part file : request.getParts()) {
+				if (!file.getName().equalsIgnoreCase("file")) {
+					continue;
+				}
+				final Map<Task, Set<String>> skippedFiles = new HashMap<>();
+				final Transaction transaction = session.beginTransaction();
+				try (InputStream is = file.getInputStream()) {
+					lecture = LectureImportExportHelper.importLecture(session, lecture, RequestAdapter.getUser(request), request.getParameter("dryrun") != null ? null : Configuration.getInstance().getDataPath(), is, skippedFiles);
+					if (request.getParameter("dryrun") != null) {
+						transaction.rollback();
+						request.setAttribute("title", "Import-Dry-Run");
+						request.setAttribute("message", "Keine Probleme festgestellt.");
+						getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
+						return;
+					}
+					transaction.commit();
+					if (!skippedFiles.isEmpty()) {
+						request.setAttribute("title", "Import-Probleme");
+						final StringBuilder output = new StringBuilder();
+						output.append("<h2>Folgende Dateien konnten nicht importiert werden:</h2><ul>");
+						for (final Task task : skippedFiles.keySet()) {
+							output.append("<li>" + Util.escapeHTML(task.getTitle()) + " (" + task.getTaskid() + ")" + "</li><ul>");
+							for (final String filename : skippedFiles.get(task)) {
+								output.append("<li>" + Util.escapeHTML(filename) + "</li>");
+							}
+							output.append("</ul>");
+						}
+						output.append("</ul>");
+						output.append("<p><a href=\"" + Util.generateHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response) + "\">" + Util.escapeHTML(lecture.getName()) + "</a></p>");
+						request.setAttribute("message", output.toString());
+						getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
+						return;
+					}
+					break;
+				} catch (final JsonProcessingException e) {
+					transaction.rollback();
+					LOG.warn("could not import lecture", e);
+					request.setAttribute("title", "Import");
+					request.setAttribute("message", "Hochgeladene Datei konnte nicht geparsed werden. Weitere Informationen finden sich im Server-Log.");
+					getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
+					return;
+				}
+			}
+			response.sendRedirect(Util.generateRedirectURL(ShowLecture.class.getSimpleName() + "?lecture=" + lecture.getId(), response));
 		} else if ("saveLecture".equals(request.getParameter("action")) && request.getParameter("name") != null && !request.getParameter("name").trim().isEmpty()) {
 			Transaction tx = session.beginTransaction();
 			Lecture newLecture = DAOFactory.LectureDAOIf(session).newLecture(request.getParameter("name").trim(), request.getParameter("requiresAbhnahme") != null, request.getParameter("groupWise") != null);

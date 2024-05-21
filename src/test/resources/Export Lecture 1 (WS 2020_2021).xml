@@ -1,0 +1,299 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Lecture>
+  <name>Lecture 1</name>
+  <semester>20201</semester>
+  <requiresAbhnahme>true</requiresAbhnahme>
+  <gradingMethod>taskWise</gradingMethod>
+  <description></description>
+  <allowSelfSubscribe>true</allowSelfSubscribe>
+  <taskGroups>
+    <taskGroup>
+      <title>Taskgroup 1</title>
+      <tasks>
+        <task>
+          <taskConfiguration>
+            <title>Dynamic Task binary numbers</title>
+            <maxSubmitters>2</maxSubmitters>
+            <maxPoints>100</maxPoints>
+            <minPointStep>50</minPointStep>
+            <start>2020-12-21T10:26:50+01:00</start>
+            <deadline>2020-12-21T10:40:39+01:00</deadline>
+            <showPoints>2020-12-28T10:26:50+01:00</showPoints>
+            <description>&lt;p>Berechnen Sie die Dezimaldarstellung des Bin&amp;auml;r-Wertes $Var0$.&lt;/p></description>
+            <filenameRegexp>-</filenameRegexp>
+            <archiveFilenameRegexp>-</archiveFilenameRegexp>
+            <showTextArea>textloesung.txt</showTextArea>
+            <featuredFiles></featuredFiles>
+            <tutorsCanUploadFiles>false</tutorsCanUploadFiles>
+            <allowSubmittersAcrossGroups>false</allowSubmittersAcrossGroups>
+            <dynamicTask>bin2dec</dynamicTask>
+            <type>dynamicTask</type>
+            <allowPrematureSubmissionClosing>false</allowPrematureSubmissionClosing>
+            <modelSolutionProvisionType>INTERNAL</modelSolutionProvisionType>
+            <maxSize>10485760</maxSize>
+            <pointCategories>
+              <pointCategory>
+                <points>100</points>
+                <description>Correct solution</description>
+                <optional>false</optional>
+              </pointCategory>
+              <pointCategory>
+                <points>50</points>
+                <description>Very nice explanation</description>
+                <optional>true</optional>
+              </pointCategory>
+            </pointCategories>
+            <tests/>
+            <similarityTests>
+              <similarityTest>
+                <minimumDifferenceInPercent>80</minimumDifferenceInPercent>
+                <type>levenshtein</type>
+                <basis>code</basis>
+                <normalizeCapitalization>true</normalizeCapitalization>
+                <tabsSpacesNewlinesNormalization>all</tabsSpacesNewlinesNormalization>
+                <excludeFiles>.classpath,.project,META-INF,.settings</excludeFiles>
+              </similarityTest>
+            </similarityTests>
+          </taskConfiguration>
+        </task>
+        <task>
+          <taskConfiguration>
+            <title>MC Task</title>
+            <maxSubmitters>2</maxSubmitters>
+            <maxPoints>200</maxPoints>
+            <minPointStep>50</minPointStep>
+            <start>2020-12-21T10:30:39+01:00</start>
+            <deadline>2020-12-21T10:40:39+01:00</deadline>
+            <showPoints>2020-12-28T10:30:39+01:00</showPoints>
+            <description>&lt;p>Choose wisely!&lt;/p></description>
+            <filenameRegexp>-</filenameRegexp>
+            <archiveFilenameRegexp>-</archiveFilenameRegexp>
+            <showTextArea>-</showTextArea>
+            <featuredFiles></featuredFiles>
+            <tutorsCanUploadFiles>false</tutorsCanUploadFiles>
+            <allowSubmittersAcrossGroups>false</allowSubmittersAcrossGroups>
+            <dynamicTask/>
+            <type>mc</type>
+            <allowPrematureSubmissionClosing>false</allowPrematureSubmissionClosing>
+            <modelSolutionProvisionType>INTERNAL</modelSolutionProvisionType>
+            <maxSize>10485760</maxSize>
+            <pointCategories/>
+            <tests/>
+            <similarityTests/>
+          </taskConfiguration>
+          <scmcoptions>
+            <scmcoption>
+              <title>Wrong 1</title>
+              <correct>false</correct>
+            </scmcoption>
+            <scmcoption>
+              <title>Wrong 2</title>
+              <correct>false</correct>
+            </scmcoption>
+            <scmcoption>
+              <title>Correct</title>
+              <correct>true</correct>
+            </scmcoption>
+            <scmcoption>
+              <title>Wrong 3</title>
+              <correct>false</correct>
+            </scmcoption>
+          </scmcoptions>
+        </task>
+      </tasks>
+    </taskGroup>
+    <taskGroup>
+      <title>Java</title>
+      <tasks>
+        <task>
+          <taskConfiguration>
+            <title>Hello World</title>
+            <maxSubmitters>2</maxSubmitters>
+            <maxPoints>150</maxPoints>
+            <minPointStep>50</minPointStep>
+            <start>2020-12-21T10:32:01+01:00</start>
+            <deadline>2020-12-21T10:40:39+01:00</deadline>
+            <showPoints>2020-12-28T10:52:01+01:00</showPoints>
+            <description>&lt;p>Write "Hello World!" (class name &lt;em>HelloWorld&lt;/em>)&lt;/p>&#xd;
+&lt;p>&lt;a href="DownloadTaskFile/HelloWorld.java?taskid=--GATETASKID--">Vorlage hier downloaden&lt;/a>&lt;/p></description>
+            <filenameRegexp>HelloWorld\.java</filenameRegexp>
+            <archiveFilenameRegexp>-</archiveFilenameRegexp>
+            <showTextArea>-</showTextArea>
+            <featuredFiles></featuredFiles>
+            <tutorsCanUploadFiles>false</tutorsCanUploadFiles>
+            <allowSubmittersAcrossGroups>false</allowSubmittersAcrossGroups>
+            <dynamicTask/>
+            <type></type>
+            <allowPrematureSubmissionClosing>false</allowPrematureSubmissionClosing>
+            <modelSolutionProvisionType>INTERNAL</modelSolutionProvisionType>
+            <maxSize>10485760</maxSize>
+            <pointCategories>
+              <pointCategory>
+                <points>50</points>
+                <description>Compiles</description>
+                <optional>false</optional>
+              </pointCategory>
+              <pointCategory>
+                <points>100</points>
+                <description>Output correct</description>
+                <optional>false</optional>
+              </pointCategory>
+            </pointCategories>
+            <tests>
+              <test>
+                <CompileTest>
+                  <timesRunnableByStudents>2</timesRunnableByStudents>
+                  <forTutors>true</forTutors>
+                  <timeout>5</timeout>
+                  <testTitle>Syntax-Test</testTitle>
+                  <testDescription></testDescription>
+                  <giveDetailsToStudents>true</giveDetailsToStudents>
+                </CompileTest>
+              </test>
+              <test>
+                <JavaAdvancedIOTest>
+                  <timesRunnableByStudents>2</timesRunnableByStudents>
+                  <forTutors>true</forTutors>
+                  <timeout>15</timeout>
+                  <testTitle>Testen</testTitle>
+                  <testDescription/>
+                  <giveDetailsToStudents>true</giveDetailsToStudents>
+                  <testSteps>
+                    <testStep>
+                      <title>Hello World</title>
+                      <testcode>HelloWorld.main(null);</testcode>
+                      <expect>Hello World!</expect>
+                    </testStep>
+                  </testSteps>
+                </JavaAdvancedIOTest>
+              </test>
+              <test>
+                <RegExpTest>
+                  <timesRunnableByStudents>0</timesRunnableByStudents>
+                  <forTutors>true</forTutors>
+                  <timeout>15</timeout>
+                  <testTitle>Funktionstest (Tutoren only)</testTitle>
+                  <testDescription></testDescription>
+                  <giveDetailsToStudents>false</giveDetailsToStudents>
+                  <commandLineParameter></commandLineParameter>
+                  <mainClass>HelloWorld</mainClass>
+                  <regularExpression>Hello World!</regularExpression>
+                </RegExpTest>
+              </test>
+              <test>
+                <CommentsMetricTest>
+                  <timesRunnableByStudents>1</timesRunnableByStudents>
+                  <forTutors>false</forTutors>
+                  <timeout>5</timeout>
+                  <testTitle>Kommentar-Metrik (Students only)</testTitle>
+                  <testDescription></testDescription>
+                  <giveDetailsToStudents>true</giveDetailsToStudents>
+                  <minProzent>5</minProzent>
+                  <excludedFiles></excludedFiles>
+                </CommentsMetricTest>
+              </test>
+            </tests>
+            <similarityTests>
+              <similarityTest>
+                <minimumDifferenceInPercent>80</minimumDifferenceInPercent>
+                <type>plaggie</type>
+                <basis></basis>
+                <normalizeCapitalization>false</normalizeCapitalization>
+                <tabsSpacesNewlinesNormalization></tabsSpacesNewlinesNormalization>
+                <excludeFiles></excludeFiles>
+              </similarityTest>
+              <similarityTest>
+                <minimumDifferenceInPercent>80</minimumDifferenceInPercent>
+                <type>levenshtein</type>
+                <basis>code</basis>
+                <normalizeCapitalization>true</normalizeCapitalization>
+                <tabsSpacesNewlinesNormalization>all</tabsSpacesNewlinesNormalization>
+                <excludeFiles>.classpath,.project,META-INF,.settings</excludeFiles>
+              </similarityTest>
+            </similarityTests>
+          </taskConfiguration>
+          <files>
+            <file>
+              <filename>advisorfiles/HelloWorld.java</filename>
+              <encoding>base64</encoding>
+              <content>cHVibGljIGNsYXNzIEhlbGxvV29ybGQgew0KCXB1YmxpYyBzdGF0aWMgdm9pZCBtYWluKFN0cmluZ1tdIGFyZ3MpIHsNCg0KCX0NCn0NCg==</content>
+            </file>
+            <file>
+              <filename>modelsolutionfiles/HelloWorld.java</filename>
+              <encoding>base64</encoding>
+              <content>LyoqDQogKiBDbGFzcyB0aGF0IHByaW50cyBvdXQgYSBncmVldGluZyB0byB0aGUgY29uc29sZQ0KICogQGF1dGhvciBTdmVuIFN0cmlja3JvdGgNCiAqIEB2ZXJzaW9uIDIuMA0KICovDQpwdWJsaWMgY2xhc3MgSGVsbG9Xb3JsZCB7DQoJLyoqDQoJICogUHJpbnRzIHRoZSBncmVldGluZyBtZXNzYWdlDQoJICogQHBhcmFtIGFyZ3MgQ29tbWFuZCBsaW5lIHBhcmFtZXRlcnMsIG5vdCB1c2VkDQoJICovDQoJcHVibGljIHN0YXRpYyB2b2lkIG1haW4oU3RyaW5nW10gYXJncykgew0KCQlTeXN0ZW0ub3V0LnByaW50bG4oZ3JlZXRpbmcoKSk7DQoJfQ0KDQoJLyoqDQoJICogUmV0dXJucyB0aGUgZ3JlZXRpbmcgdG8gcHJpbnQgb3V0Lg0KCSAqIEByZXR1cm4gdGhlIGdyZWV0aW5nDQoJICovDQoJcHJpdmF0ZSBzdGF0aWMgU3RyaW5nIGdyZWV0aW5nKCkgew0KCQlyZXR1cm4gIkhlbGxvIFdvcmxkISI7DQoJfQ0KfQ0K</content>
+            </file>
+          </files>
+        </task>
+        <task>
+          <taskConfiguration>
+            <title>Something</title>
+            <maxSubmitters>1</maxSubmitters>
+            <maxPoints>500</maxPoints>
+            <minPointStep>50</minPointStep>
+            <start>2020-12-21T10:53:05+01:00</start>
+            <deadline>2100-12-28T10:53:05+01:00</deadline>
+            <showPoints>2120-12-28T10:53:05+01:00</showPoints>
+            <description>&lt;p>Upload some Java&lt;/p></description>
+            <filenameRegexp>[A-Z][A-Za-z0-9_]+\.java</filenameRegexp>
+            <archiveFilenameRegexp>-</archiveFilenameRegexp>
+            <showTextArea>-</showTextArea>
+            <featuredFiles></featuredFiles>
+            <tutorsCanUploadFiles>false</tutorsCanUploadFiles>
+            <allowSubmittersAcrossGroups>false</allowSubmittersAcrossGroups>
+            <dynamicTask/>
+            <type></type>
+            <allowPrematureSubmissionClosing>true</allowPrematureSubmissionClosing>
+            <modelSolutionProvisionType>INTERNAL</modelSolutionProvisionType>
+            <maxSize>10485760</maxSize>
+            <pointCategories/>
+            <tests/>
+            <similarityTests/>
+          </taskConfiguration>
+        </task>
+      </tasks>
+    </taskGroup>
+  </taskGroups>
+  <groups>
+    <group>
+      <name>Group 1 (fixed)</name>
+      <allowStudentsToSignup>false</allowStudentsToSignup>
+      <allowStudentsToQuit>false</allowStudentsToQuit>
+      <maxStudents>2</maxStudents>
+      <submissionGroup>false</submissionGroup>
+      <membersVisibleToStudents>false</membersVisibleToStudents>
+    </group>
+    <group>
+      <name>Group 2 (full)</name>
+      <allowStudentsToSignup>true</allowStudentsToSignup>
+      <allowStudentsToQuit>true</allowStudentsToQuit>
+      <maxStudents>2</maxStudents>
+      <submissionGroup>false</submissionGroup>
+      <membersVisibleToStudents>false</membersVisibleToStudents>
+    </group>
+    <group>
+      <name>Group 3</name>
+      <allowStudentsToSignup>true</allowStudentsToSignup>
+      <allowStudentsToQuit>true</allowStudentsToQuit>
+      <maxStudents>2</maxStudents>
+      <submissionGroup>false</submissionGroup>
+      <membersVisibleToStudents>false</membersVisibleToStudents>
+    </group>
+    <group>
+      <name>Group 4 (empty)</name>
+      <allowStudentsToSignup>true</allowStudentsToSignup>
+      <allowStudentsToQuit>true</allowStudentsToQuit>
+      <maxStudents>2</maxStudents>
+      <submissionGroup>false</submissionGroup>
+      <membersVisibleToStudents>false</membersVisibleToStudents>
+    </group>
+    <group>
+      <name>Group 5 (no join)</name>
+      <allowStudentsToSignup>false</allowStudentsToSignup>
+      <allowStudentsToQuit>false</allowStudentsToQuit>
+      <maxStudents>2</maxStudents>
+      <submissionGroup>false</submissionGroup>
+      <membersVisibleToStudents>false</membersVisibleToStudents>
+    </group>
+  </groups>
+</Lecture>

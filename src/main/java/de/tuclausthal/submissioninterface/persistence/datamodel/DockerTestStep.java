@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -30,12 +30,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "dockerteststep")
 public class DockerTestStep implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	private int teststepid;
+	@JsonBackReference
 	private DockerTest test;
 	private String title;
 	private String testcode;

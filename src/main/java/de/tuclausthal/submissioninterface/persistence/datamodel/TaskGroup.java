@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2020, 2022-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2020, 2022-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,14 +37,25 @@ import jakarta.persistence.Table;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
 @Entity
 @Table(name = "taskgroups")
 public class TaskGroup implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	private int taskGroupId;
 	private String title = "";
+	@JacksonXmlElementWrapper(localName = "tasks")
+	@JacksonXmlProperty(localName = "task")
+	@JsonManagedReference
 	private List<Task> tasks;
+	@JsonBackReference
 	private Lecture lecture;
 
 	public TaskGroup() {}
@@ -94,7 +106,7 @@ public class TaskGroup implements Serializable {
 	/**
 	 * @return the tasks
 	 */
-	@OneToMany(mappedBy = "taskGroup")
+	@OneToMany(mappedBy = "taskGroup", cascade = CascadeType.PERSIST)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OrderBy("taskid asc")
 	public List<Task> getTasks() {

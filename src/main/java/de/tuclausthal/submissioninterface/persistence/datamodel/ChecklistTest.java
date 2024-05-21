@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
@@ -28,6 +29,10 @@ import jakarta.persistence.Transient;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 import de.tuclausthal.submissioninterface.testframework.tests.impl.NullTest;
@@ -40,6 +45,9 @@ import de.tuclausthal.submissioninterface.testframework.tests.impl.NullTest;
 public class ChecklistTest extends Test {
 	private static final long serialVersionUID = 1L;
 
+	@JacksonXmlElementWrapper(localName = "checkItems")
+	@JacksonXmlProperty(localName = "checkItem")
+	@JsonManagedReference
 	private List<ChecklistTestCheckItem> checkItems;
 
 	@Override
@@ -51,7 +59,7 @@ public class ChecklistTest extends Test {
 	/**
 	 * @return the checkItems
 	 */
-	@OneToMany(mappedBy = "test")
+	@OneToMany(mappedBy = "test", cascade = CascadeType.PERSIST)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@OrderBy("checkitemid asc")
 	public List<ChecklistTestCheckItem> getCheckItems() {

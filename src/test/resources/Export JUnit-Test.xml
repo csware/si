@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Lecture>
+  <name>Lecture 1</name>
+  <semester>20201</semester>
+  <requiresAbhnahme>true</requiresAbhnahme>
+  <gradingMethod>taskWise</gradingMethod>
+  <taskGroups>
+    <taskGroup>
+      <title>Taskgroup 1</title>
+      <tasks>
+        <task>
+          <taskConfiguration>
+            <title>JUnitTest</title>
+            <maxSubmitters>1</maxSubmitters>
+            <maxPoints>0</maxPoints>
+            <minPointStep>50</minPointStep>
+            <start>2023-04-04T11:32:01+02:00</start>
+            <deadline>2024-04-04T11:40:39+02:00</deadline>
+            <showPoints/>
+            <description></description>
+            <filenameRegexp>[A-Z][A-Za-z0-9_]+\.java</filenameRegexp>
+            <archiveFilenameRegexp>-</archiveFilenameRegexp>
+            <showTextArea>-</showTextArea>
+            <featuredFiles></featuredFiles>
+            <tutorsCanUploadFiles>false</tutorsCanUploadFiles>
+            <allowSubmittersAcrossGroups>false</allowSubmittersAcrossGroups>
+            <dynamicTask/>
+            <type></type>
+            <allowPrematureSubmissionClosing>false</allowPrematureSubmissionClosing>
+            <modelSolutionProvisionType>INTERNAL</modelSolutionProvisionType>
+            <maxSize>10485760</maxSize>
+            <pointCategories/>
+            <tests>
+              <test>
+                <JUnitTest>
+                  <timesRunnableByStudents>1</timesRunnableByStudents>
+                  <forTutors>true</forTutors>
+                  <timeout>15</timeout>
+                  <testTitle>Funktionstest</testTitle>
+                  <testDescription></testDescription>
+                  <giveDetailsToStudents>true</giveDetailsToStudents>
+                  <mainClass>AllTests</mainClass>
+                </JUnitTest>
+              </test>
+            </tests>
+            <similarityTests/>
+          </taskConfiguration>
+          <files>
+            <file>
+              <filename>junittest0.jar</filename>
+              <encoding>base64</encoding>
+              <content>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</content>
+            </file>
+          </files>
+        </task>
+      </tasks>
+    </taskGroup>
+  </taskGroups>
+</Lecture>
