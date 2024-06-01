@@ -69,7 +69,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Tutorentest:</th>");
-		out.println("<td><input type=checkbox name=tutortest checked> (Ergebnis wird den TutorInnen zur Korrektur angezeigt)</td>");
+		out.println("<td><input type=checkbox name=tutortest id=tutortestjs checked> <label for=tutortestjs>(Ergebnis wird den TutorInnen zur Korrektur angezeigt)</label></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th># ausführbar für Studierende:</th>");
@@ -99,7 +99,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Tutorentest:</th>");
-		out.println("<td><input type=checkbox name=tutortest checked> (Ergebnis wird den TutorInnen zur Korrektur angezeigt)</td>");
+		out.println("<td><input type=checkbox name=tutortest id=tutortestjaio checked> <label for=tutortestjaio>(Ergebnis wird den TutorInnen zur Korrektur angezeigt)</label></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th># ausführbar für Studierende:</th>");
@@ -134,7 +134,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<th>Tutorentest:</th>");
-			out.println("<td><input type=checkbox name=tutortest checked> (Ergebnis wird den TutorInnen zur Korrektur angezeigt)</td>");
+			out.println("<td><input type=checkbox name=tutortest id=tutortestd checked> <label for=tutortestd>(Ergebnis wird den TutorInnen zur Korrektur angezeigt)</label></td>");
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<th># ausführbar für Studierende:</th>");
@@ -210,7 +210,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Tutorentest:</th>");
-		out.println("<td><input type=checkbox name=tutortest checked> (Ergebnis wird den TutorInnen zur Korrektur angezeigt)</td>");
+		out.println("<td><input type=checkbox name=tutortest id=tutortestumlct checked> <label for=tutortestumlct>(Ergebnis wird den TutorInnen zur Korrektur angezeigt)</label></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th># ausführbar für Studierende:</th>");
@@ -249,7 +249,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Tutorentest:</th>");
-		out.println("<td><input type=checkbox name=tutortest checked> (Ergebnis wird den TutorInnen zur Korrektur angezeigt)</td>");
+		out.println("<td><input type=checkbox name=tutortest id=tutortestjunit checked> <label for=tutortestjunit>(Ergebnis wird den TutorInnen zur Korrektur angezeigt)</label></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th># ausführbar für Studierende:</th>");
@@ -291,7 +291,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th>Tutorentest:</th>");
-		out.println("<td><input type=checkbox name=tutortest checked> (Ergebnis wird den TutorInnen zur Korrektur angezeigt)</td>");
+		out.println("<td><input type=checkbox name=tutortest id=tutortestcm checked> <label for=tutortestcm>(Ergebnis wird den TutorInnen zur Korrektur angezeigt)</label></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<th># ausführbar für Studierende:</th>");

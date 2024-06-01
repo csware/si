@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020-2021, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -67,7 +67,7 @@ public class PublishGradesView extends HttpServlet {
 		if (nichtAbgenommen > 0) {
 			out.println("<p class=red>" + nichtAbgenommen + " nicht abgenommene Abgaben.</p>");
 		}
-		out.println("<p><input type=checkbox name=mail> Hinweismail an Studierende senden</p>");
+		out.println("<p><input type=checkbox id=mail name=mail> <label for=mail>Hinweismail an Studierende senden</label></p>");
 		out.println("<input type=submit value= \"Punkte freischalten\"></p></form>");
 
 		template.printTemplateFooter();
