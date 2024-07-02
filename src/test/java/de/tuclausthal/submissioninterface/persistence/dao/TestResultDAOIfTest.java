@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -77,5 +77,15 @@ class TestResultDAOIfTest extends BasicTest {
 		assertEquals(2, task3TestResults.get(12).size());
 		assertTrue(task3TestResults.get(12).get(1));
 		assertTrue(task3TestResults.get(12).get(2));
+	}
+
+	@Test
+	void testGetCorrectSubmissionsForTests() {
+		assertTrue(DAOFactory.TestResultDAOIf(session).getCorrectSubmissionsForTests(DAOFactory.TaskDAOIf(session).getTask(1)).isEmpty());
+
+		Map<Integer, Integer> correctSubmissions = DAOFactory.TestResultDAOIf(session).getCorrectSubmissionsForTests(DAOFactory.TaskDAOIf(session).getTask(3));
+		assertEquals(2, correctSubmissions.size());
+		assertEquals(3, correctSubmissions.get(1));
+		assertEquals(3, correctSubmissions.get(2));
 	}
 }

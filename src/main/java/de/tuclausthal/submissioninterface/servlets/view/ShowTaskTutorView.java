@@ -179,6 +179,14 @@ public class ShowTaskTutorView extends HttpServlet {
 		}
 
 		if (task.getSubmissions() != null && !task.getSubmissions().isEmpty()) {
+			if (!task.getTests().isEmpty() && task.getTests().stream().anyMatch(t -> t.isForTutors())) {
+				if (task.getTests().stream().anyMatch(t -> t.isForTutors() && !t.isNeedsToRun())) {
+					out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&show=testoverview", response) + "\">Übersicht der Testergebnisse</a></div>");
+				}
+				if (participation.getRoleType() == ParticipationRole.ADVISOR && task.getTaskGroup().getLecture().getName().contains("Live-Coding")) {
+					out.println("<p><div class=mid><a onclick=\"return confirm('Are you sure?')\" href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&action=dotests", response) + "\">Alle Tests JETZT ausführen...</a></div>");
+				}
+			}
 			Map<Integer, Map<Integer, Boolean>> testResults = DAOFactory.TestResultDAOIf(session).getResults(task);
 			Map<Integer, Map<Integer, List<Similarity>>> similarities = DAOFactory.SimilarityDAOIf(session).getMaxSimilarities(task);
 			out.println("<p><h2>Abgaben</h2><p>");
@@ -263,6 +271,9 @@ public class ShowTaskTutorView extends HttpServlet {
 						}
 						out.println("<div " + defaultState + " id=\"contentgroup" + group.getGid() + "\">");
 						out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&action=grouplist&groupid=" + group.getGid(), response) + "\" target=\"_blank\">Druckbare Liste</a></div>");
+						if (task.getTests().stream().anyMatch(t -> t.isForTutors() && !t.isNeedsToRun())) {
+							out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&show=testoverview&groupid=" + group.getGid(), response) + "\">Übersicht der Testergebnisse für die Gruppe</a></div>");
+						}
 						if (!task.isADynamicTask() && !task.isSCMCTask() && !task.isClozeTask()) {
 							out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(DownloadSubmissionsByGroup.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&groupid=" + group.getGid(), response) + "\">Alle Abgaben der Gruppe herunterladen (ZIP-Archiv)</a></div>");
 						}
@@ -306,7 +317,11 @@ public class ShowTaskTutorView extends HttpServlet {
 				if (group != null) {
 					groupAdding = "&groupid=" + group.getGid();
 				}
-				out.println("<td><a href=\"" + Util.generateHTMLLink(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid() + groupAdding, response) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
+				if (requestAdapter.isPrivacyMode()) {
+					out.println("<td><a href=\"" + Util.generateHTMLLink(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid() + groupAdding, response) + "\">" + submission.getSubmissionid() + "</a></td>");
+				} else {
+					out.println("<td><a href=\"" + Util.generateHTMLLink(ShowSubmission.class.getSimpleName() + "?sid=" + submission.getSubmissionid() + groupAdding, response) + "\">" + Util.escapeHTML(submission.getSubmitterNames()) + "</a></td>");
+				}
 				if (showAllColumns) {
 					if (task.isADynamicTask()) {
 						out.println("<td>" + Util.boolToHTML(task.getDynamicTaskStrategie(session).isCorrect(submission)) + "</td>");

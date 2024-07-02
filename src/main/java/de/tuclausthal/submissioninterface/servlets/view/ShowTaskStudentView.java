@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -40,6 +41,10 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.MCOptionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.impl.TestResultCommonErrorDAO;
+import de.tuclausthal.submissioninterface.persistence.datamodel.CommonError;
+import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
@@ -48,6 +53,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStat
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.controller.CloseSubmissionByStudent;
@@ -60,6 +66,8 @@ import de.tuclausthal.submissioninterface.servlets.controller.ShowLecture;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
 import de.tuclausthal.submissioninterface.servlets.controller.SubmitSolution;
 import de.tuclausthal.submissioninterface.servlets.controller.WebStart;
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowDockerTestResult;
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowJavaAdvancedIOTestResult;
 import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -355,6 +363,39 @@ public class ShowTaskStudentView extends HttpServlet {
 				}
 				out.println("</table>");
 			}
+
+			if (ZonedDateTime.now().isAfter(ZonedDateTime.of(2013, 11, 2, 12, 30, 0, 0, ZoneId.systemDefault())) && task.getTaskGroup().getLecture().getName().contains("Live-Coding") && !submission.getTestResults().isEmpty()) {
+				/*Transaction tx = session.beginTransaction();
+				new LogDAO(session).createLogUploadEntry(participation.getUser(), task, LogAction.SUBMISSION_SEEN_TESTRESULTS, null);
+				tx.commit();*/
+				out.println("<p><h2>Finale Testergebnisse:</h2>");
+				out.println("<ul>");
+				for (TestResult testResult : submission.getTestResults()) {
+					out.println("<li>" + Util.escapeHTML(testResult.getTest().getTestTitle()) + "<br>");
+					out.println("<b>Erfolgreich:</b> " + Util.boolToHTML(testResult.getPassedTest()) + "<br>");
+					if (!testResult.getPassedTest()) {
+						TestResultCommonErrorDAO trce = new TestResultCommonErrorDAO(session);
+						List<CommonError> ces = trce.getCommonError(testResult);
+						String commonErrorString = "| ";
+						for (CommonError ce : ces) {
+							commonErrorString = commonErrorString + Util.escapeHTML(ce.getTitle()) + " | ";
+						}
+						out.println("<br><b>Fehlermeldung: </b>" + commonErrorString + "<br>");
+					}
+					if (!testResult.getTestOutput().isEmpty() && testResult.getTest().isGiveDetailsToStudents()) {
+						if (testResult.getTest() instanceof JavaAdvancedIOTest) {
+							ShowJavaAdvancedIOTestResult.printTestResults(out, (JavaAdvancedIOTest) testResult.getTest(), testResult.getTestOutput(), true, null);
+						} else if (testResult.getTest() instanceof DockerTest) {
+							ShowDockerTestResult.printTestResults(out, (DockerTest) testResult.getTest(), testResult.getTestOutput(), true, null);
+						} else {
+							out.println("<br><b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
+						}
+					}
+					out.println("</li>");
+				}
+				out.println("</ul>");
+			}
+
 		} else {
 			out.println("<p>");
 			if ("loesung\\.(xmi|zargo|png)".equals(task.getFilenameRegexp())) {
@@ -367,6 +408,11 @@ public class ShowTaskStudentView extends HttpServlet {
 			} else {
 				out.println("<div class=mid><a href=\"" + Util.generateHTMLLink(SubmitSolution.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">Abgabe starten</a></div>");
 			}
+		}
+
+		if (ZonedDateTime.now().isAfter(ZonedDateTime.of(2023, 12, 7, 12, 30, 0, 0, ZoneId.systemDefault())) && task.getTaskGroup().getLecture().getName().contains("Live-Coding")) {
+			// add link to students common errors
+			out.print("<div class=mid><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid() + "&show=commonerroroverview", response) + "\">Häufige Fehler von anderen Studierenden anschauen</a></div>");
 		}
 
 		if (modelSolutionFiles != null && !modelSolutionFiles.isEmpty()) {

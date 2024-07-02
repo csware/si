@@ -157,3 +157,11 @@ ALTER TABLE `dockerteststep` CHANGE `teststepid` `teststepid` INT(11) NOT NULL A
 ALTER TABLE `testscounts` CHANGE `test_id` `test_id` INT(11) NOT NULL, CHANGE `user_uid` `user_uid` INT(11) NOT NULL; 
 
 ALTER TABLE `submissions_tasknumbers` DROP FOREIGN KEY `FK44B4D38D1986B517`; ALTER TABLE `submissions_tasknumbers` ADD CONSTRAINT `FK44B4D38D1986B517` FOREIGN KEY (`participationid`) REFERENCES `participations`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+-- common errors
+create table commonerrors (errorid integer not null auto_increment, commonerrorname varchar(255) not null, title varchar(255) not null, type tinyint(4), testid integer not null, primary key (errorid)) engine=InnoDB;
+create table testresults_commonerror (errorid integer not null, testresultid integer not null, primary key (errorid, testresultid)) engine=InnoDB;
+alter table commonerrors add constraint FK84b477b3adpufhy6yca79d79r foreign key (testid) references tests (id) on delete cascade;
+alter table testresults_commonerror add constraint FK787leerpp7s7yak6btbhtbh48 foreign key (testresultid) references testresults (id);
+alter table testresults_commonerror add constraint FKcfm4aoanp948updtgcn1pn07j foreign key (errorid) references commonerrors (errorid);
+ALTER TABLE `testresults_commonerror` DROP FOREIGN KEY `FK787leerpp7s7yak6btbhtbh48`; ALTER TABLE `testresults_commonerror` ADD CONSTRAINT `FK787leerpp7s7yak6btbhtbh48` FOREIGN KEY (`testresultid`) REFERENCES `testresults`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT; ALTER TABLE `testresults_commonerror` DROP FOREIGN KEY `FKcfm4aoanp948updtgcn1pn07j`; ALTER TABLE `testresults_commonerror` ADD CONSTRAINT `FKcfm4aoanp948updtgcn1pn07j` FOREIGN KEY (`errorid`) REFERENCES `commonerrors`(`errorid`) ON DELETE CASCADE ON UPDATE RESTRICT;

@@ -18,11 +18,13 @@
 
 package de.tuclausthal.submissioninterface.persistence.dao.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jakarta.persistence.LockModeType;
+import jakarta.persistence.Tuple;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -95,6 +97,17 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 	}
 
 	@Override
+	public List<TestResult> getResults(Test test) {
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<TestResult> criteria = builder.createQuery(TestResult.class);
+		Root<TestResult> root = criteria.from(TestResult.class);
+		criteria.select(root);
+		criteria.where(builder.equal(root.get(TestResult_.test), test));
+		return session.createQuery(criteria).list();
+	}
+
+	@Override
 	public Map<Integer, Map<Integer, Boolean>> getResults(Task task) {
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -107,6 +120,38 @@ public class TestResultDAO extends AbstractDAO implements TestResultDAOIf {
 
 		try (Stream<TestResult> stream = query.stream()) {
 			return stream.collect(Collectors.groupingBy(tr -> tr.getSubmission().getSubmissionid(), Collectors.toMap(tr -> tr.getTest().getId(), tr -> tr.getPassedTest())));
+		}
+	}
+
+	@Override
+	public Map<Integer, Integer> getCorrectSubmissionsForTests(Task task) {
+		Session session = getSession();
+
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Tuple> criteria = builder.createTupleQuery();
+		Root<TestResult> root = criteria.from(TestResult.class);
+		criteria.select(builder.tuple(root.get(TestResult_.test), builder.count(root.get(TestResult_.passedTest))));
+		criteria.where(builder.and(builder.equal(root.get(TestResult_.test).get(Test_.task), task), builder.equal(root.get(TestResult_.passedTest), true)));
+		criteria.groupBy(root.get(TestResult_.test));
+		Query<Tuple> query = session.createQuery(criteria);
+		try (Stream<Tuple> stream = query.stream()) {
+			return stream.collect(Collectors.toMap(tupel -> tupel.get(0, Test.class).getId(), tupel -> tupel.get(1, Long.class).intValue()));
+		}
+	}
+
+	@Override
+	public Map<Integer, Integer> getCorrectSubmissionsForTestsInGroup(Task task, List<Submission> submissions) {
+		Session session = getSession();
+
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Tuple> criteria = builder.createTupleQuery();
+		Root<TestResult> root = criteria.from(TestResult.class);
+		criteria.select(builder.tuple(root.get(TestResult_.test), builder.count(root.get(TestResult_.passedTest))));
+		criteria.where(builder.and(builder.equal(root.get(TestResult_.test).get(Test_.task), task), builder.equal(root.get(TestResult_.passedTest), true)), root.get(TestResult_.submission).in(submissions));
+		criteria.groupBy(root.get(TestResult_.test));
+		Query<Tuple> query = session.createQuery(criteria);
+		try (Stream<Tuple> stream = query.stream()) {
+			return stream.collect(Collectors.toMap(tupel -> tupel.get(0, Test.class).getId(), tupel -> tupel.get(1, Long.class).intValue()));
 		}
 	}
 }
