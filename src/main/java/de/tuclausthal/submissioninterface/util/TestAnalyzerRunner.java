@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020, 2022-2024 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,16 +21,14 @@ package de.tuclausthal.submissioninterface.util;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.ZonedDateTime;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import de.tuclausthal.submissioninterface.dupecheck.DupeCheck;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.datamodel.SimilarityTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.testanalyzer.CommonErrorAnalyzer;
@@ -42,7 +40,7 @@ import de.tuclausthal.submissioninterface.testframework.tests.TestTask;
  * Test runner
  * @author Sven Strickroth
  */
-public class TestRunner {
+public class TestAnalyzerRunner {
 	/**
 	 * @param args the first argument must be to path to the submissions
 	 * @throws IOException 
@@ -50,42 +48,43 @@ public class TestRunner {
 	public static void main(String[] args) throws IOException {
 		HibernateSessionHelper.getSessionFactory();
 		final Path dataPath;
-		if (args.length != 1 || (dataPath = Path.of(args[0])) == null || !Files.isDirectory(dataPath)) {
+		if (args.length != 2 || (dataPath = Path.of(args[0])) == null || !Files.isDirectory(dataPath)) {
 			System.out.println("first parameter must point to the submission directory");
+			System.out.println("second parameter must be a task number");
 			System.exit(1);
 			return; // not needed, but to make Eclipse happy
 		}
-		DupeCheck.CORES = 2;
-		Session session = HibernateSessionHelper.getSessionFactory().openSession();
-		SimilarityTest similarityTest;
-		while ((similarityTest = DAOFactory.SimilarityTestDAOIf(session).takeSimilarityTestTransacted()) != null) {
-			DupeCheck dupeCheck = similarityTest.getDupeCheck(dataPath);
-			dupeCheck.performDupeCheck(similarityTest, session);
+		final Session session = HibernateSessionHelper.getSessionFactory().openSession();
+		final Task task = DAOFactory.TaskDAOIf(session).getTask(Integer.parseInt(args[1]));
+		if (task == null) {
+			System.err.println("Task not found.");
+			System.exit(1);
+			return;
 		}
-		session.close();
-		LocalExecutor.CORES = 2;
+
+		LocalExecutor.CORES = (Runtime.getRuntime().availableProcessors() > 4) ? Runtime.getRuntime().availableProcessors() - 2 : 2;
 		LocalExecutor.dataPath = dataPath;
 		LocalExecutor.getInstance();
-		session = HibernateSessionHelper.getSessionFactory().openSession();
-		Test test;
-		final Set<Test> executedTests = new HashSet<>();
-		while ((test = DAOFactory.TestDAOIf(session).takeTestTransacted()) != null) {
-			executedTests.add(test);
-			for (Submission submission : test.getTask().getSubmissions()) {
+		Transaction tx = session.beginTransaction();
+		task.setDeadline(ZonedDateTime.now());
+		tx.commit();
+		for (final Test test : task.getTests()) {
+			for (final Submission submission : test.getTask().getSubmissions()) {
 				TestExecutor.executeTask(new TestTask(test, submission, true));
 			}
 		}
 		TestExecutor.shutdown();
 
-		final Transaction tx = session.beginTransaction();
+		tx = session.beginTransaction();
+		DAOFactory.CommonErrorDAOIf(session).reset(task);
 		final CommonErrorAnalyzer analyzer = new CommonErrorAnalyzer(session);
-		for (final Test executedTest : executedTests) {
-			DAOFactory.CommonErrorDAOIf(session).reset(executedTest);
-			for (final TestResult testResult : DAOFactory.TestResultDAOIf(session).getResults(executedTest)) {
+		for (final Submission sub : task.getSubmissions()) {
+			for (final TestResult testResult : sub.getTestResults()) {
 				analyzer.runAnalysis(testResult);
 			}
 		}
 		tx.commit();
+
 		session.close();
 	}
 }

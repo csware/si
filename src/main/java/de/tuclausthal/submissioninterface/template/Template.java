@@ -29,6 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.text.StringEscapeUtils;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.CommonError;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
@@ -124,6 +125,10 @@ public abstract class Template {
 		printTemplateHeader("Gruppe \"" + Util.escapeHTML(group.getName()) + "\"", "<li><a href=\"" + Util.generateAbsoluteServletsHTMLLink(Overview.class.getSimpleName(), servletRequest, servletResponse) + "\">Meine Veranstaltungen</a></li><li><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + group.getLecture().getId(), servletRequest, servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(group.getLecture().getName()) + "\"</a></li><li>Gruppe \"" + Util.escapeHTML(group.getName()) + "\"</li>");
 	}
 
+	public void printTemplateHeader(CommonError commonError, Submission submission, String title) throws IOException {
+		printTemplateHeader("Fehler \"" + Util.escapeHTML(commonError.getTitle()) + "\"", "<li><a href=\"" + Util.generateAbsoluteServletsHTMLLink(Overview.class.getSimpleName(), servletRequest, servletResponse) + "\">Meine Veranstaltungen</a></li><li><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + submission.getTask().getTaskGroup().getLecture().getId(), servletRequest, servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(submission.getTask().getTaskGroup().getLecture().getName()) + "\"</a></li><li><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid(), servletRequest, servletResponse) + "\">Aufgabe \"" + Util.escapeHTML(submission.getTask().getTitle()) + "\"</a></li><li><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid() + "&show=commonerroroverview", servletRequest, servletResponse) + "\">Testübersicht</a></li><li>Fehler \"" + Util.escapeHTML(commonError.getTitle()) + "\"</li>");
+	}
+
 	final public void addHead(String header) {
 		headers.add(header);
 	}
@@ -136,6 +141,10 @@ public abstract class Template {
 
 	final public void addDiffJs() {
 		addHead("<script src=\"" + prefix + "/assets/diff.min.js\"></script>");
+	}
+
+	final public void addChartJs() {
+		addHead("<script src=\"" + prefix + "/assets/chart.umd.js\"></script>");
 	}
 
 	final public void addKeepAlive() {

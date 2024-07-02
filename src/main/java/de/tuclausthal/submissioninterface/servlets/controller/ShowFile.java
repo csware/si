@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.ZonedDateTime;
 
 import jakarta.mail.internet.MimeUtility;
 import jakarta.servlet.ServletException;
@@ -75,9 +76,14 @@ public class ShowFile extends HttpServlet {
 		// check Lecture Participation
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), submission.getTask().getTaskGroup().getLecture());
-		if (participation == null || (participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0 && !submission.getSubmitters().contains(participation))) {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
-			return;
+		if (participation != null && participation.getLecture().getName().contains("Live-Coding") && ZonedDateTime.now().isAfter(task.getDeadline())) {
+			// allow students to see submissions of others
+		} else {
+			// check Lecture Participation
+			if (participation == null || (participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0 && !submission.getSubmitters().contains(participation))) {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+				return;
+			}
 		}
 
 		if (request.getPathInfo() == null) {

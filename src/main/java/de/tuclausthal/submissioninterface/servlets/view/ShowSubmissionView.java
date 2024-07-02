@@ -95,7 +95,11 @@ public class ShowSubmissionView extends HttpServlet {
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
 		Task task = submission.getTask();
 
-		template.printTemplateHeader(submission);
+		if (requestAdapter.isPrivacyMode()) {
+			template.printTemplateHeader("Abgabe " + String.valueOf(submission.getSubmissionid()), task);
+		} else {
+			template.printTemplateHeader(submission);
+		}
 		PrintWriter out = response.getWriter();
 		StringBuilder javaScript = new StringBuilder();
 
@@ -107,12 +111,14 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("<p>Abgabe endgültig eingereicht: " + Util.escapeHTML(dateFormatter.format(submission.getClosedTime())) + " von " + Util.escapeHTML(submission.getClosedBy().getUser().getLastNameFirstName()) + "</p>");
 		}
 
-		for (Participation participation : submission.getSubmitters()) {
-			out.println("<a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + participation.getUser().getUid(), response) + "\">" + Util.escapeHTML(participation.getUser().getLastNameFirstName()) + "</a><br>");
-		}
+		if (!requestAdapter.isPrivacyMode()) {
+			for (Participation participation : submission.getSubmitters()) {
+				out.println("<a href=\"" + Util.generateHTMLLink(ShowUser.class.getSimpleName() + "?uid=" + participation.getUser().getUid(), response) + "\">" + Util.escapeHTML(participation.getUser().getLastNameFirstName()) + "</a><br>");
+			}
 
-		if (!task.isAllowSubmittersAcrossGroups() && submission.getSubmitters().iterator().next().getGroup() != null) {
-			out.println("<h2>Gruppe: " + Util.escapeHTML(submission.getSubmitters().iterator().next().getGroup().getName()) + "</h2>");
+			if (!task.isAllowSubmittersAcrossGroups() && submission.getSubmitters().iterator().next().getGroup() != null) {
+				out.println("<h2>Gruppe: " + Util.escapeHTML(submission.getSubmitters().iterator().next().getGroup().getName()) + "</h2>");
+			}
 		}
 
 		if (task.getMaxSubmitters() > 1 && submission.getSubmitters().size() < task.getMaxSubmitters() && (task.isAllowSubmittersAcrossGroups() || submission.getSubmitters().iterator().next().getGroup() != null)) {

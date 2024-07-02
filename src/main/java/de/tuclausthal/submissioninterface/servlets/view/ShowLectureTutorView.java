@@ -135,6 +135,9 @@ public class ShowLectureTutorView extends HttpServlet {
 					while (taskIterator.hasNext()) {
 						Task task = taskIterator.next();
 						boolean visibleToStudents = task.getStart().isBefore(ZonedDateTime.now());
+						if (requestAdapter.isPrivacyMode() && !visibleToStudents) {
+							continue;
+						}
 						if (visibleToStudents || participation.getRoleType().compareTo(ParticipationRole.TUTOR) >= 0) {
 							out.println("<tr class=\"" + (!visibleToStudents ? "tasknotvisible" : "") + "\">");
 							out.println("<td><a href=\"" + Util.generateHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response) + "\">" + Util.escapeHTML(task.getTitle()) + "</a>" + (visibleToStudents ? "" : " <img src=\"" + getServletContext().getContextPath() + "/assets/eyeslash.svg\" width=16 height=16 class=inlineicon border=0 alt=\"für Studierende nicht sichtbar\" title=\"für Studierende nicht sichtbar\">") + "</td>");

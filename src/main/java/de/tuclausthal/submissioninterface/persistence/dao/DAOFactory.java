@@ -20,6 +20,7 @@ package de.tuclausthal.submissioninterface.persistence.dao;
 
 import org.hibernate.Session;
 
+import de.tuclausthal.submissioninterface.persistence.dao.impl.CommonErrorDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.GroupDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.LectureDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.MCOptionDAO;
@@ -36,6 +37,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.impl.TaskGroupDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TaskNumberDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TestCountDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TestDAO;
+import de.tuclausthal.submissioninterface.persistence.dao.impl.TestResultCommonErrorDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TestResultDAO;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.UserDAO;
 
@@ -169,5 +171,13 @@ public class DAOFactory {
 
 	public static MCOptionDAOIf MCOptionDAOIf(Session session) {
 		return new MCOptionDAO(session);
+	}
+
+	public static CommonErrorDAOIf CommonErrorDAOIf(Session session) {
+		return new CommonErrorDAO(session);
+	}
+
+	public static TestResultCommonErrorDAOIf TestResultCommonErrorIf(Session session) {
+		return new TestResultCommonErrorDAO(session);
 	}
 }

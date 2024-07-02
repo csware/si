@@ -29,6 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.controller.AdminMenue;
 import de.tuclausthal.submissioninterface.servlets.controller.Logout;
+import de.tuclausthal.submissioninterface.servlets.controller.Privacy;
 import de.tuclausthal.submissioninterface.servlets.controller.SwitchLogin;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.util.Configuration;
@@ -69,10 +70,9 @@ public class SimpleTemplate extends Template {
 			out.println("Angemeldet als: " + Util.escapeHTML(user.getEmail()));
 			if (user.isSuperUser()) {
 				out.println(" - <a href=\"" + Util.generateAbsoluteServletsHTMLLink(AdminMenue.class.getSimpleName(), servletRequest, servletResponse) + "\">Admin-Menü</a>");
+				out.println(" - <a href=\"" + Util.generateAbsoluteServletsHTMLLink(Privacy.class.getSimpleName(), servletRequest, servletResponse) + "\">Privacy-Mode (" + (requestAdapter.isPrivacyMode() ? "an" : "aus") + ")</a>");
 			}
-			if (requestAdapter.isPrivacyMode()) {
-				out.println(" - Privacy-Mode");
-			} else if (requestAdapter.isIntranet()) {
+			if (requestAdapter.isIntranet()) {
 				out.println(" - <a href=\"" + Util.generateAbsoluteServletsHTMLLink(SwitchLogin.class.getSimpleName() + "?uid=" + user.getUid(), servletRequest, servletResponse) + "\">Tutor Login</a>");
 			}
 			out.println(" - <a href=\"" + Util.generateAbsoluteServletsHTMLLink(Logout.class.getSimpleName(), servletRequest, servletResponse) + "\">LogOut</a>");

@@ -1,5 +1,6 @@
 /*
- * Copyright 2009-2010, 2021-2022, 2024 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2024 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021 Florian Holzinger <f.holzinger@campus.lmu.de>
  *
  * This file is part of the GATE.
  *
@@ -21,34 +22,29 @@ package de.tuclausthal.submissioninterface.persistence.dao;
 import java.util.List;
 import java.util.Map;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.CommonError;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
-import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 
 /**
- * Data Access Object Interface for the TestResult-class
- * @author Sven Strickroth
+ * Data Access Object Interface for the CommonError-class
+ * @author Florian Holzinger
  */
-public interface TestResultDAOIf {
-	/**
-	 * Creates and stores a TestResult for a submission in the DB
-	 * @param test the test
-	 * @param submission the submission
-	 * @param testExecutorTestResult 
-	 */
-	void storeTestResult(Test test, Submission submission, TestExecutorTestResult testExecutorTestResult);
+public interface CommonErrorDAOIf {
 
-	TestResult getResult(Test test, Submission submission);
+	public void reset(Test test);
 
-	TestResult getResultLocked(Test test, Submission submission);
+	public void reset(Task task);
 
-	Map<Integer, Map<Integer, Boolean>> getResults(Task task);
+	public CommonError newCommonError(String title, String commonErrorName, TestResult testResult, CommonError.Type errorType);
 
-	public Map<Integer, Integer> getCorrectSubmissionsForTests(Task task);
+	public CommonError getCommonError(int id);
 
-	public Map<Integer, Integer> getCorrectSubmissionsForTestsInGroup(Task task, List<Submission> submissions);
+	public CommonError getCommonError(String title, Test test);
 
-	public List<TestResult> getResults(Test test);
+	public List<CommonError> getCommonErrors(Test test);
+
+	Map<Submission, List<CommonError>> getErrorsForSubmissions(Test test, List<Submission> submissions);
 }

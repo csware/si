@@ -473,6 +473,13 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
+create table commonerrors (errorid integer not null auto_increment, commonerrorname varchar(255) not null, title varchar(255) not null, type tinyint(4), testid integer not null, primary key (errorid)) engine=InnoDB;
+create table testresults_commonerror (errorid integer not null, testresultid integer not null, primary key (errorid, testresultid)) engine=InnoDB;
+alter table commonerrors add constraint FK84b477b3adpufhy6yca79d79r foreign key (testid) references tests (id) on delete cascade;
+alter table testresults_commonerror add constraint FK787leerpp7s7yak6btbhtbh48 foreign key (testresultid) references testresults (id);
+alter table testresults_commonerror add constraint FKcfm4aoanp948updtgcn1pn07j foreign key (errorid) references commonerrors (errorid);
+ALTER TABLE `testresults_commonerror` DROP FOREIGN KEY `FK787leerpp7s7yak6btbhtbh48`; ALTER TABLE `testresults_commonerror` ADD CONSTRAINT `FK787leerpp7s7yak6btbhtbh48` FOREIGN KEY (`testresultid`) REFERENCES `testresults`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT; ALTER TABLE `testresults_commonerror` DROP FOREIGN KEY `FKcfm4aoanp948updtgcn1pn07j`; ALTER TABLE `testresults_commonerror` ADD CONSTRAINT `FKcfm4aoanp948updtgcn1pn07j` FOREIGN KEY (`errorid`) REFERENCES `commonerrors`(`errorid`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
 --
 -- Constraints der exportierten Tabellen
 --
