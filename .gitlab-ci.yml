@@ -4,6 +4,7 @@
 variables:
   MAVEN_IMAGE11: $CI_REGISTRY_IMAGE/maven:3.9-eclipse-temurin-11jdk
   MAVEN_IMAGE17: $CI_REGISTRY_IMAGE/maven:3.9-eclipse-temurin-17jdk
+  FF_NETWORK_PER_BUILD: 1
   # Configure mysql environment variables (https://hub.docker.com/_/mariadb/)
   MYSQL_DATABASE: "root"
   MYSQL_ROOT_PASSWORD: ""
@@ -74,8 +75,7 @@ compile-jdk11:
     - job: prepare-docker-image
       optional: true
   before_script:
-    - export SERVER=$(grep mariadb /etc/hosts | cut -f1)
-    - perl -pi -e "s|localhost/[a-zA-Z0-9]+|$SERVER/abgabesystem|g" src/main/resources/hibernate.cfg.xml
+    - perl -pi -e "s|localhost/[a-zA-Z0-9]+|mariadb/abgabesystem|g" src/main/resources/hibernate.cfg.xml
     - perl -pi -e 's|hibernate.show_sql">true|hibernate.show_sql">false|g' src/main/resources/hibernate.cfg.xml
   script:
     - '[ -z "$SKIP_ONLINE_TESTS" ] && xmlstarlet val -w -e -s http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd src/main/webapp/WEB-INF/web.xml || echo "Skipped"'
