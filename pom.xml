@@ -12,9 +12,9 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.compiler.release>11</maven.compiler.release>
-		<slf4j.version>2.0.9</slf4j.version>
+		<slf4j.version>2.0.13</slf4j.version>
 		<hibernate.version>6.4.8.Final</hibernate.version>
-		<jackson.version>2.17.1</jackson.version>
+		<jackson.version>2.17.2</jackson.version>
 	</properties>
 	<profiles>
 		<profile>
@@ -98,7 +98,7 @@
 		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
-			<version>3.4.0</version>
+			<version>3.4.1</version>
 		</dependency>
 
 		<!-- Allow to export the schema -->
@@ -203,7 +203,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>3.3.1</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -221,7 +221,7 @@
 			<plugin>
 				<groupId>io.github.git-commit-id</groupId>
 				<artifactId>git-commit-id-maven-plugin</artifactId>
-				<version>9.0.0</version>
+				<version>9.0.1</version>
 				<executions>
 					<execution>
 						<id>get-the-git-infos</id>
