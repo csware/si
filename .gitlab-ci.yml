@@ -67,7 +67,7 @@ prepare-docker-image:
 compile-jdk11:
   image: $MAVEN_IMAGE11
   services:
-    - mariadb:10.6
+    - mariadb:10.11
     - name: $CI_REGISTRY_IMAGE/tomcat:latest
       alias: tomcat
   stage: build
