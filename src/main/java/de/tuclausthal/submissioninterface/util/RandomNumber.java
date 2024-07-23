@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Giselle Rodriguez
- * Copyright 2011, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2017, 2020-2021, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -196,10 +196,10 @@ public class RandomNumber {
 
 	private static String get2Skalierung(BigInteger number) {
 		BigInteger result = number;
-		BigInteger div = new BigInteger("2");
+		BigInteger div = BigInteger.TWO;
 		int scale = -1;
-		BigInteger rest = new BigInteger("0");
-		BigInteger cero = new BigInteger("0");
+		BigInteger rest = BigInteger.ZERO;
+		BigInteger cero = BigInteger.ZERO;
 		while (!result.equals(cero)) {
 			result = result.divide(div);
 			scale += 1;
