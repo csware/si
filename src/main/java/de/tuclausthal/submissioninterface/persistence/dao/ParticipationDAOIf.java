@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -39,7 +39,7 @@ public interface ParticipationDAOIf {
 	 * @param type the role-type
 	 * @return true if a new participation was created
 	 */
-	public boolean createParticipation(User user, Lecture lecture, ParticipationRole type);
+	boolean createParticipation(User user, Lecture lecture, ParticipationRole type);
 
 	/**
 	 * Fetch a participation for a user in a specific lecture
@@ -47,49 +47,49 @@ public interface ParticipationDAOIf {
 	 * @param lecture the lecture
 	 * @return the participation or null
 	 */
-	public Participation getParticipation(User user, Lecture lecture);
+	Participation getParticipation(User user, Lecture lecture);
 
-	public Participation getParticipationLocked(User user, Lecture lecture);
+	Participation getParticipationLocked(User user, Lecture lecture);
 
 	/**
 	 * Fetch a participation by the participation id
 	 * @param participationid the id
 	 * @return the participation or null
 	 */
-	public Participation getParticipation(int participationid);
+	Participation getParticipation(int participationid);
 
-	public Participation getParticipationLocked(int participationid);
+	Participation getParticipationLocked(int participationid);
 
 	/**
 	 * Returns the participation for a lecture which are not associated with a group for a given lecture
 	 * @param lecture the lecture
 	 * @return participation list
 	 */
-	public List<Participation> getParticipationsWithoutGroup(Lecture lecture);
+	List<Participation> getParticipationsWithoutGroup(Lecture lecture);
 
-	public List<Participation> getMarkersAvailableParticipations(Group group);
+	List<Participation> getMarkersAvailableParticipations(Group group);
 
-	public List<Participation> getParticipationsWithNoSubmissionToTaskOrdered(Task task);
+	List<Participation> getParticipationsWithNoSubmissionToTaskOrdered(Task task);
 
-	public List<Participation> getLectureParticipationsOrderedByName(Lecture lecture);
+	List<Participation> getLectureParticipationsOrderedByName(Lecture lecture);
 
 	/**
 	 * Returns the participation for a specific group
 	 * @param group the group
 	 * @return participation list
 	 */
-	public List<Participation> getParticipationsOfGroup(Group group);
+	List<Participation> getParticipationsOfGroup(Group group);
 
 	/**
 	 * Removes a specific participation
 	 * @param participation the participation to delete
 	 */
-	public void deleteParticipation(Participation participation);
+	void deleteParticipation(Participation participation);
 
 	/**
 	 * Remove a participation based on the user-lecture association
 	 * @param user the user of the participation
 	 * @param lecture the lecture
 	 */
-	public void deleteParticipation(User user, Lecture lecture);
+	void deleteParticipation(User user, Lecture lecture);
 }

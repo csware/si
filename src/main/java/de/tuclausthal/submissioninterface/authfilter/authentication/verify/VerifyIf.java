@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -36,5 +36,5 @@ public interface VerifyIf {
 	 * @param request
 	 * @return the user or null if authentication failed
 	 */
-	public VerifyResult checkCredentials(Session session, LoginData logindata, HttpServletRequest request);
+	VerifyResult checkCredentials(Session session, LoginData logindata, HttpServletRequest request);
 }

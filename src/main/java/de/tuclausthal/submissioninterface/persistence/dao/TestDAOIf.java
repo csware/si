@@ -40,48 +40,48 @@ public interface TestDAOIf {
 	 * @param task the task to associtate the test to
 	 * @return the created test
 	 */
-	public JUnitTest createJUnitTest(Task task);
+	JUnitTest createJUnitTest(Task task);
 
 	/**
 	 * Create and store a UMLConstraintTest to a specific task
 	 * @param task the task to associtate the test to
 	 * @return the created test
 	 */
-	public UMLConstraintTest createUMLConstraintTest(Task task);
+	UMLConstraintTest createUMLConstraintTest(Task task);
 
 	/**
 	 * Create and store a compile/syntax to a specific task
 	 * @param task the task to associtate the test to
 	 * @return the created test
 	 */
-	public CompileTest createCompileTest(Task task);
+	CompileTest createCompileTest(Task task);
 
-	public JavaAdvancedIOTest createJavaAdvancedIOTest(Task task);
+	JavaAdvancedIOTest createJavaAdvancedIOTest(Task task);
 
-	public CommentsMetricTest createCommentsMetricTest(Task task);
+	CommentsMetricTest createCommentsMetricTest(Task task);
 
-	public DockerTest createDockerTest(Task task);
+	DockerTest createDockerTest(Task task);
 
-	public ChecklistTest createChecklistTest(Task task);
+	ChecklistTest createChecklistTest(Task task);
 
 	/**
 	 * Remove a specific test from the DB
 	 * @param test the test to remvoe
 	 */
-	public void deleteTest(Test test);
+	void deleteTest(Test test);
 
-	public Test getTest(int testId);
+	Test getTest(int testId);
 
-	public Test getTestLocked(int testId);
+	Test getTestLocked(int testId);
 
 	/**
 	 * Checks if a test is ready to run
 	 * ALERT: this method starts it's own transaction!
 	 * @return Test or null if none is "queued".
 	 */
-	public Test takeTestTransacted();
+	Test takeTestTransacted();
 
-	public List<Test> getStudentTests(Task task);
+	List<Test> getStudentTests(Task task);
 
-	public List<Test> getTutorTests(Task task);
+	List<Test> getTutorTests(Task task);
 }

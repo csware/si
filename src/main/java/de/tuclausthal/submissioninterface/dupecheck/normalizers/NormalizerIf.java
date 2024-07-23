@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -28,5 +28,5 @@ public interface NormalizerIf {
 	 * @param stringBuffer the string to normalize
 	 * @return the normalized string
 	 */
-	public StringBuffer normalize(StringBuffer stringBuffer);
+	StringBuffer normalize(StringBuffer stringBuffer);
 }

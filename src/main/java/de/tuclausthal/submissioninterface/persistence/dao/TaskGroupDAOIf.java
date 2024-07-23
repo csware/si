@@ -1,5 +1,5 @@
 /*
- * Copyright 2010, 2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -32,18 +32,18 @@ public interface TaskGroupDAOIf {
 	 * @param lecture the lecture to which the taskGroup should be associated
 	 * @return a new TaskGroup
 	 */
-	public TaskGroup newTaskGroup(String title, Lecture lecture);
+	TaskGroup newTaskGroup(String title, Lecture lecture);
 
 	/**
 	 * Fetch a taskGroup based on it's id
 	 * @param taskGroupId the taskgroup id
 	 * @return the TaskGroup or null
 	 */
-	public TaskGroup getTaskGroup(int taskGroupId);
+	TaskGroup getTaskGroup(int taskGroupId);
 
 	/**
 	 * Deletes a specific taskGroup from the DB
 	 * @param taskGroup the taskGroup to remove
 	 */
-	public void deleteTaskGroup(TaskGroup taskGroup);
+	void deleteTaskGroup(TaskGroup taskGroup);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -32,7 +32,7 @@ public interface LectureDAOIf {
 	 * Returns all groups
 	 * @return group-list
 	 */
-	public List<Lecture> getLectures();
+	List<Lecture> getLectures();
 
 	/**
 	 * Creates a new lecture and stores it in the DB
@@ -41,25 +41,25 @@ public interface LectureDAOIf {
 	 * @param groupWiseGrading grading is done groupwise
 	 * @return the new lecture
 	 */
-	public Lecture newLecture(String name, boolean requiresAbhnahme, boolean groupWiseGrading);
+	Lecture newLecture(String name, boolean requiresAbhnahme, boolean groupWiseGrading);
 
 	/**
 	 * Fetch a lecture by id
 	 * @param lectureId
 	 * @return the lecture or null
 	 */
-	public Lecture getLecture(int lectureId);
+	Lecture getLecture(int lectureId);
 
 	/**
 	 * Returns all lectures which User user doesn't attents
 	 * @param user
 	 * @return list of lectures
 	 */
-	public List<Lecture> getCurrentLecturesWithoutUser(User user);
+	List<Lecture> getCurrentLecturesWithoutUser(User user);
 
 	/**
 	 * Removes a lecture
 	 * @param lecture the lecture to delete
 	 */
-	public void deleteLecture(Lecture lecture);
+	void deleteLecture(Lecture lecture);
 }

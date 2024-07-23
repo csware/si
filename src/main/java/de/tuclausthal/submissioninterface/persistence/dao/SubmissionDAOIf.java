@@ -38,9 +38,9 @@ public interface SubmissionDAOIf {
 	 * @param submissionid the submissionid to fetch
 	 * @return the submission or null
 	 */
-	public Submission getSubmission(int submissionid);
+	Submission getSubmission(int submissionid);
 
-	public Submission getSubmissionLocked(int submissionid);
+	Submission getSubmissionLocked(int submissionid);
 
 	/**
 	 * Fetch a submission based on the task-user-association
@@ -48,7 +48,7 @@ public interface SubmissionDAOIf {
 	 * @param user the user who submitted the submission
 	 * @return the submission or null
 	 */
-	public Submission getSubmission(Task task, User user);
+	Submission getSubmission(Task task, User user);
 
 	/**
 	 * Create and store a new submission in the DB
@@ -56,7 +56,7 @@ public interface SubmissionDAOIf {
 	 * @param submitter the participation of the submitter
 	 * @return the (new or existing) submission
 	 */
-	public Submission createSubmission(Task task, Participation submitter);
+	Submission createSubmission(Task task, Participation submitter);
 
 	/**
 	 * Returns the submission of a task orderd by name
@@ -64,7 +64,7 @@ public interface SubmissionDAOIf {
 	 * @param honourGroups
 	 * @return the list of submissions
 	 */
-	public List<Submission> getSubmissionsForTaskOrdered(Task task, boolean honourGroups);
+	List<Submission> getSubmissionsForTaskOrdered(Task task, boolean honourGroups);
 
 	/**
 	 * Returns the submission of a group for a specific task orderd by name
@@ -72,7 +72,7 @@ public interface SubmissionDAOIf {
 	 * @param group
 	 * @return the list of submissions
 	 */
-	public List<Submission> getSubmissionsForTaskOfGroupOrdered(Task task, Group group);
+	List<Submission> getSubmissionsForTaskOfGroupOrdered(Task task, Group group);
 
 	/**
 	 * Deletes a submission if it contains no files
@@ -81,13 +81,13 @@ public interface SubmissionDAOIf {
 	 * @return success of the removal
 	 * @throws IOException 
 	 */
-	public boolean deleteIfNoFiles(Submission submission, Path submissionPath) throws IOException;
+	boolean deleteIfNoFiles(Submission submission, Path submissionPath) throws IOException;
 
-	public Submission getUngradedSubmission(Task task, int lastSubmissionID, boolean reverse);
+	Submission getUngradedSubmission(Task task, int lastSubmissionID, boolean reverse);
 
-	public Submission getUngradedSubmission(Task task, int lastSubmissionID, Group group, boolean reverse);
+	Submission getUngradedSubmission(Task task, int lastSubmissionID, Group group, boolean reverse);
 
-	public List<Submission> getSubmissionsForSearch(Task task, String searchString, boolean publicComment, boolean privateComment, boolean testResults);
+	List<Submission> getSubmissionsForSearch(Task task, String searchString, boolean publicComment, boolean privateComment, boolean testResults);
 
-	public List<Submission> getAllSubmissions(Participation submitter);
+	List<Submission> getAllSubmissions(Participation submitter);
 }

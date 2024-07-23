@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -44,17 +44,17 @@ public interface PointsDAOIf {
 	 * @param duplicate see definition in Points class
 	 * @return the (new or updated) points instance
 	 */
-	public Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate);
+	Points createPoints(int issuedPoints, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate);
 
-	public Points createPoints(List<Integer> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate);
+	Points createPoints(List<Integer> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate);
 
-	public Points createPointsFromRequestParameters(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate);
+	Points createPointsFromRequestParameters(Map<String, String[]> pointGiven, Submission submission, Participation participation, String publicComment, String internalComment, PointStatus pointStatus, Integer duplicate);
 
 	Points createMCPoints(int issuedPoints, Submission submission, String publicComment, PointStatus pointStatus);
 
 	List<PointHistory> getPointHistoryForSubmission(Submission submission);
 
-	public Map<Integer, Integer> getAllPointsForLecture(Lecture lecture);
+	Map<Integer, Integer> getAllPointsForLecture(Lecture lecture);
 
-	public Map<Integer, int[]> getSubmissionStatisticsPerTasks(Lecture lecture);
+	Map<Integer, int[]> getSubmissionStatisticsPerTasks(Lecture lecture);
 }

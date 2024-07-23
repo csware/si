@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2021-2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -37,11 +37,11 @@ public interface TestResultDAOIf {
 	 * @param submission the submission
 	 * @param testExecutorTestResult 
 	 */
-	public void storeTestResult(Test test, Submission submission, TestExecutorTestResult testExecutorTestResult);
+	void storeTestResult(Test test, Submission submission, TestExecutorTestResult testExecutorTestResult);
 
-	public TestResult getResult(Test test, Submission submission);
+	TestResult getResult(Test test, Submission submission);
 
-	public TestResult getResultLocked(Test test, Submission submission);
+	TestResult getResultLocked(Test test, Submission submission);
 
-	public Map<Integer, Map<Integer, Boolean>> getResults(Task task);
+	Map<Integer, Map<Integer, Boolean>> getResults(Task task);
 }

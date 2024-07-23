@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -33,5 +33,5 @@ public interface TestExecutorIf {
 	 * @param executionTask the executiontask to execute
 	 * @return a future-reference
 	 */
-	public Future<TestExecutorTestResult> executeTask(TestTask executionTask);
+	Future<TestExecutorTestResult> executeTask(TestTask executionTask);
 }

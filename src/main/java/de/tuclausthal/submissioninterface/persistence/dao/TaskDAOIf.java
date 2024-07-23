@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -46,20 +46,20 @@ public interface TaskDAOIf {
 	 * @param allowPrematureSubmissionClosing set the flag to enable the feature that students can close the submission before the deadline ends to allow tutors grading the task
 	 * @return a new Task
 	 */
-	public Task newTask(String title, int maxPoints, ZonedDateTime start, ZonedDateTime deadline, String description, TaskGroup taskGroup, ZonedDateTime showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, boolean allowPrematureSubmissionClosing);
+	Task newTask(String title, int maxPoints, ZonedDateTime start, ZonedDateTime deadline, String description, TaskGroup taskGroup, ZonedDateTime showPoints, int maxSubmitters, boolean allowSubmittersAcrossGroups, String taskType, String dynamicTask, boolean allowPrematureSubmissionClosing);
 
 	/**
 	 * Fetch a task based on it's id
 	 * @param taskid the task id
 	 * @return the task or null
 	 */
-	public Task getTask(int taskid);
+	Task getTask(int taskid);
 
 	/**
 	 * Deletes a specific task from the DB
 	 * @param task the task to remove
 	 */
-	public void deleteTask(Task task);
+	void deleteTask(Task task);
 
-	public List<Task> getTasks(Lecture lecture, boolean onlyVisible);
+	List<Task> getTasks(Lecture lecture, boolean onlyVisible);
 }

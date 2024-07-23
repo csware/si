@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Giselle Rodriguez
- * Copyright 2011, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2021, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -37,7 +37,7 @@ public interface TaskNumberDAOIf {
 	 * @param submission 
 	 * @return the list of numbers of a Task
 	 */
-	public List<TaskNumber> getTaskNumbersForSubmission(Submission submission);
+	List<TaskNumber> getTaskNumbersForSubmission(Submission submission);
 
 	/**
 	 * Return the TaskNumbers of a submission
@@ -45,7 +45,7 @@ public interface TaskNumberDAOIf {
 	 * @param participation 
 	 * @return the list of numbers of a Task
 	 */
-	public List<TaskNumber> getTaskNumbersForTaskLocked(Task task, Participation participation);
+	List<TaskNumber> getTaskNumbersForTaskLocked(Task task, Participation participation);
 
-	public List<TaskNumber> assignTaskNumbersToSubmission(Submission submission, Participation participation);
+	List<TaskNumber> assignTaskNumbersToSubmission(Submission submission, Participation participation);
 }

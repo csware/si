@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -37,41 +37,41 @@ public interface SimilarityTestDAOIf {
 	 * @param excludeFiles Comma separated list of filesnames to exclude
 	 * @return the similarity test
 	 */
-	public SimilarityTest addSimilarityTest(Task task, String type, String basis, boolean normalizeCapitalization, String tabsSpacesNewlinesNormalization, int minimumDifferenceInPercent, String excludeFiles);
+	SimilarityTest addSimilarityTest(Task task, String type, String basis, boolean normalizeCapitalization, String tabsSpacesNewlinesNormalization, int minimumDifferenceInPercent, String excludeFiles);
 
 	/**
 	 * Retireves a similarity test from the db by a given id.
 	 * @param similarityTestId
 	 * @return the similarity test or null
 	 */
-	public SimilarityTest getSimilarityTest(int similarityTestId);
+	SimilarityTest getSimilarityTest(int similarityTestId);
 
-	public SimilarityTest getSimilarityTestLocked(int similarityTestId);
+	SimilarityTest getSimilarityTestLocked(int similarityTestId);
 
 	/**
 	 * Removes the given similarity test from the db.
 	 * @param similarityTest
 	 */
-	public void deleteSimilarityTest(SimilarityTest similarityTest);
+	void deleteSimilarityTest(SimilarityTest similarityTest);
 
 	/**
 	 * Rests all results for the given similarity test
 	 * ATTENTION: this method starts it's own transaction!
 	 * @param similarityTest
 	 */
-	public void resetSimilarityTest(SimilarityTest similarityTest);
+	void resetSimilarityTest(SimilarityTest similarityTest);
 
 	/**
 	 * Checks if a similarity test is ready to run
 	 * ATTENTION: this method starts it's own transaction!
 	 * @return SimilarityTest or null if none is "queued".
 	 */
-	public SimilarityTest takeSimilarityTestTransacted();
+	SimilarityTest takeSimilarityTestTransacted();
 
 	/**
 	 * Marks a test as finished
 	 * ATTENTION: this method starts it's own transaction!
 	 * @param similarityTest 
 	 */
-	public void finish(SimilarityTest similarityTest);
+	void finish(SimilarityTest similarityTest);
 }

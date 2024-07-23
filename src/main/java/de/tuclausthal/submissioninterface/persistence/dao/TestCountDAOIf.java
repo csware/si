@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2021, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -26,7 +26,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
  * @author Sven Strickroth
  */
 public interface TestCountDAOIf {
-	public boolean canSeeResultAndIncrementCounterTransaction(Test test, Submission submission);
+	boolean canSeeResultAndIncrementCounterTransaction(Test test, Submission submission);
 
-	public int canStillRunXTimes(Test test, Submission submission);
+	int canStillRunXTimes(Test test, Submission submission);
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Giselle Rodriguez
- * Copyright 2011 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -34,12 +34,12 @@ public interface ResultDAOIf {
 	 * @param submission the submission
 	 * @param results the results of a submission
 	 */
-	public void createResults(Submission submission, List<String> results);
+	void createResults(Submission submission, List<String> results);
 
 	/**
 	 * Returns the results for a submission
 	 * @param submission the submission
 	 * @return the list of results
 	 */
-	public List<String> getResultsForSubmission(Submission submission);
+	List<String> getResultsForSubmission(Submission submission);
 }

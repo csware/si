@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -35,18 +35,18 @@ public interface MCOptionDAOIf {
 	 * @param correct whether this MC option is correct
 	 * @return the mcoption
 	 */
-	public MCOption createMCOption(Task task, String option, boolean correct);
+	MCOption createMCOption(Task task, String option, boolean correct);
 
 	/**
 	 * Returns the M Options for a task
 	 * @param task the task
 	 * @return the list of options
 	 */
-	public List<MCOption> getMCOptionsForTask(Task task);
+	List<MCOption> getMCOptionsForTask(Task task);
 
 	/**
 	 * Delete a MC option
 	 * @param mcoption the mcoption to delete
 	 */
-	public void deleteMCOption(MCOption mcoption);
+	void deleteMCOption(MCOption mcoption);
 }

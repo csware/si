@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2021-2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -39,24 +39,24 @@ public interface GroupDAOIf {
 	 * @param membersVisibleToStudents 
 	 * @return the new group
 	 */
-	public Group createGroup(Lecture lecture, String name, boolean allowStudentsToSignup, boolean allowStudentsToQuit, int maxStudents, boolean membersVisibleToStudents);
+	Group createGroup(Lecture lecture, String name, boolean allowStudentsToSignup, boolean allowStudentsToQuit, int maxStudents, boolean membersVisibleToStudents);
 
 	/**
 	 * Fetch a group by the id
 	 * @param groupid the id
 	 * @return the group or null
 	 */
-	public Group getGroup(int groupid);
+	Group getGroup(int groupid);
 
-	public Group getGroupLocked(int groupid);
+	Group getGroupLocked(int groupid);
 
 	/**
 	 * Deletes a group
 	 * @param group the group to delete
 	 */
-	public void deleteGroup(Group group);
+	void deleteGroup(Group group);
 
-	public List<Group> getJoinAbleGroups(Lecture lecture, Group participationGroup);
+	List<Group> getJoinAbleGroups(Lecture lecture, Group participationGroup);
 
-	public Map<Integer, Integer> getGroupSizes(List<Group> groupsToConsider, Group participationGroup);
+	Map<Integer, Integer> getGroupSizes(List<Group> groupsToConsider, Group participationGroup);
 }

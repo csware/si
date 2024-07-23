@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -29,9 +29,9 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
  * @author Sven Strickroth
  */
 public interface PointGivenDAOIf {
-	public void revokePointGiven(PointGiven pointGiven);
+	void revokePointGiven(PointGiven pointGiven);
 
-	public PointGiven givePoint(int issuedPoints, Submission submission, PointCategory category);
+	PointGiven givePoint(int issuedPoints, Submission submission, PointCategory category);
 
-	public List<PointGiven> getPointsGivenOfSubmission(Submission submission);
+	List<PointGiven> getPointsGivenOfSubmission(Submission submission);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2021, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -38,7 +38,7 @@ public interface SimilarityDAOIf {
 	 * @param submissionTwo
 	 * @param percentage the similarity in per cent
 	 */
-	public void addSimilarityResult(SimilarityTest similarityTest, Submission submissionOne, Submission submissionTwo, int percentage);
+	void addSimilarityResult(SimilarityTest similarityTest, Submission submissionOne, Submission submissionTwo, int percentage);
 
 	/**
 	 * Returns the similarities of a given submission to other submissions
@@ -46,7 +46,7 @@ public interface SimilarityDAOIf {
 	 * @param submission
 	 * @return list of similarity
 	 */
-	public List<Similarity> getUsersWithSimilarity(SimilarityTest similarityTest, Submission submission);
+	List<Similarity> getUsersWithSimilarity(SimilarityTest similarityTest, Submission submission);
 
 	/**
 	 * Returns the maximum similarities of a given submission to other submissions
@@ -54,7 +54,7 @@ public interface SimilarityDAOIf {
 	 * @param submission
 	 * @return the list of maximum similarities
 	 */
-	public List<Similarity> getUsersWithMaxSimilarity(SimilarityTest similarityTest, Submission submission);
+	List<Similarity> getUsersWithMaxSimilarity(SimilarityTest similarityTest, Submission submission);
 
-	public Map<Integer, Map<Integer, List<Similarity>>> getMaxSimilarities(Task task);
+	Map<Integer, Map<Integer, List<Similarity>>> getMaxSimilarities(Task task);
 }

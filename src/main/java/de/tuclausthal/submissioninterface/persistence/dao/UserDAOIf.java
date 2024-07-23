@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2021-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2021-2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -32,16 +32,16 @@ public interface UserDAOIf {
 	 * @param uid the user id
 	 * @return the user or null
 	 */
-	public User getUser(int uid);
+	User getUser(int uid);
 
 	/**
 	 * Fetch a user based on the username
 	 * @param username the username of the user
 	 * @return the user or null
 	 */
-	public User getUserByUsername(String username);
+	User getUserByUsername(String username);
 
-	public User getUserByEmail(String email);
+	User getUserByEmail(String email);
 
 	/**
 	 * Create and store a new user with the username/email-address email in the DB
@@ -51,7 +51,7 @@ public interface UserDAOIf {
 	 * @param lastName
 	 * @return the new user
 	 */
-	public User createUser(String username, String email, String firstName, String lastName);
+	User createUser(String username, String email, String firstName, String lastName);
 
 	/**
 	 * Create and store a new user with the username/email-address email in the DB
@@ -62,19 +62,19 @@ public interface UserDAOIf {
 	 * @param matrikelno the matrikelnumber of the new user
 	 * @return the new user
 	 */
-	public User createUser(String username, String email, String firstName, String lastName, int matrikelno);
+	User createUser(String username, String email, String firstName, String lastName, int matrikelno);
 
 	/**
 	 * Get all users from the DB
 	 * @return list of users
 	 */
-	public List<User> getUsers();
+	List<User> getUsers();
 
 	/**
 	 * Get all admin-users from the DB
 	 * @return list of admin-users
 	 */
-	public List<User> getSuperUsers();
+	List<User> getSuperUsers();
 
-	public void makeUserStudent(int uid, int matrikelno);
+	void makeUserStudent(int uid, int matrikelno);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -33,16 +33,16 @@ public interface LoginIf {
 	 * if not: the user from LoginData is loaded automatically
 	 * @return whether verification of the gathered credentials is needed
 	 */
-	public abstract boolean requiresVerification();
+	boolean requiresVerification();
 
-	public boolean isSubsequentAuthRequest(HttpServletRequest request);
+	boolean isSubsequentAuthRequest(HttpServletRequest request);
 
 	/**
 	 * Returns the user credentials
 	 * @param request
 	 * @return the LoginData or null
 	 */
-	public abstract LoginData getLoginData(HttpServletRequest request);
+	LoginData getLoginData(HttpServletRequest request);
 
 	/**
 	 * Requests credentials from the user
@@ -50,7 +50,7 @@ public interface LoginIf {
 	 * @param response
 	 * @throws IOException
 	 */
-	public abstract void failNoData(HttpServletRequest request, HttpServletResponse response) throws IOException;
+	void failNoData(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 	/**
 	 * Requests credentials from the user with error-message
@@ -59,11 +59,11 @@ public interface LoginIf {
 	 * @param response
 	 * @throws IOException
 	 */
-	public abstract void failNoData(String error, HttpServletRequest request, HttpServletResponse response) throws IOException;
+	void failNoData(String error, HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 	/**
 	 * Returns whether a http redirect is needed after login
 	 * @return returns true if a redirect is required
 	 */
-	public abstract boolean redirectAfterLogin();
+	boolean redirectAfterLogin();
 }

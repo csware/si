@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -26,30 +26,30 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 
 public interface DynamicTaskStrategieIf {
 
-	public abstract boolean isCorrect(Submission submission);
+	boolean isCorrect(Submission submission);
 
-	public abstract String[] getResultFields(boolean includePartialSolutions);
+	String[] getResultFields(boolean includePartialSolutions);
 
-	public abstract int getNumberOfResultFields();
+	int getNumberOfResultFields();
 
-	public abstract List<String> getCorrectResults(List<TaskNumber> taskNumbers, boolean includePartialSolutions);
+	List<String> getCorrectResults(List<TaskNumber> taskNumbers, boolean includePartialSolutions);
 
-	public abstract List<String> getCorrectResults(Submission submission, boolean includePartialSolutions);
+	List<String> getCorrectResults(Submission submission, boolean includePartialSolutions);
 
-	public abstract String[] getVariableNames();
+	String[] getVariableNames();
 
-	public abstract List<TaskNumber> getVariables(Participation participation);
+	List<TaskNumber> getVariables(Participation participation);
 
-	public abstract List<TaskNumber> getVariables(Submission submission);
+	List<TaskNumber> getVariables(Submission submission);
 
-	public abstract String getExampleTaskDescription();
+	String getExampleTaskDescription();
 
-	public abstract String getTranslatedDescription(Participation participation);
+	String getTranslatedDescription(Participation participation);
 
-	public abstract String getTranslatedDescription(List<TaskNumber> taskNumbers);
+	String getTranslatedDescription(List<TaskNumber> taskNumbers);
 
-	public abstract String getTranslatedDescription(Submission submission);
+	String getTranslatedDescription(Submission submission);
 
-	public abstract List<String> getUserResults(Submission submission);
+	List<String> getUserResults(Submission submission);
 
 }

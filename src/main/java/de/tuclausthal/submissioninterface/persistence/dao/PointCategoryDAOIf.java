@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -26,11 +26,11 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
  * @author Sven Strickroth
  */
 public interface PointCategoryDAOIf {
-	public PointCategory newPointCategory(Task task, int points, String description, boolean optional);
+	PointCategory newPointCategory(Task task, int points, String description, boolean optional);
 
-	public PointCategory getPointCategory(int id);
+	PointCategory getPointCategory(int id);
 
-	public void deletePointCategory(PointCategory pointCategory);
+	void deletePointCategory(PointCategory pointCategory);
 
-	public int countPoints(Task task);
+	int countPoints(Task task);
 }
