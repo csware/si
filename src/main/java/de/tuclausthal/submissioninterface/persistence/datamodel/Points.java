@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -182,7 +182,7 @@ public class Points implements Serializable {
 		return PointStatus.values()[pointStatus];
 	}
 
-	public static enum PointStatus {
+	public enum PointStatus {
 		NICHT_BEWERTET, NICHT_ABGENOMMEN, ABGENOMMEN_FAILED, ABGENOMMEN
 	}
 

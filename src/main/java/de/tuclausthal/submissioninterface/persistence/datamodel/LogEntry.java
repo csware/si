@@ -1,5 +1,5 @@
 /*
- * Copyright 2009, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -72,7 +72,7 @@ public class LogEntry implements Serializable {
 		return id;
 	}
 
-	public static enum LogAction {
+	public enum LogAction {
 		UPLOAD, PERFORMED_TEST, DELETE_FILE, UPLOAD_ADMIN
 	}
 
