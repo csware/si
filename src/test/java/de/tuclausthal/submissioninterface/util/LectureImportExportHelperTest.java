@@ -18,16 +18,17 @@
 
 package de.tuclausthal.submissioninterface.util;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -56,30 +57,32 @@ import de.tuclausthal.submissioninterface.testframework.tests.impl.JavaJUnitTest
 @GATEDBTest
 public class LectureImportExportHelperTest extends BasicTest {
 	@Test
-	public void testExportLecture1() throws IOException {
+	public void testExportLecture1(@TempDir final Path tempDir) throws IOException {
 		final Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(1);
-		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		LectureImportExportHelper.exportLecture(session, lecture, Path.of("src/test/resources/lecture1"), outputStream);
+		final Path temp = Files.createTempFile(tempDir, "export", ".xml");
+		LectureImportExportHelper.exportLecture(session, lecture, Path.of("src/test/resources/lecture1"), temp);
 
 		final Path file = Path.of("src/test/resources/Export Lecture 1 (WS 2020_2021).xml");
 		final String knownGood = Files.readString(file).replaceAll("&#xd;\r\n", "&#xd;\n");
-		assertEquals(knownGood, outputStream.toString());
+		assertArrayEquals(knownGood.getBytes(Charset.forName("UTF-8")), Files.readAllBytes(temp));
 	}
 
 	@Test
-	public void testExportLecture2() throws IOException {
+	public void testExportLecture2(@TempDir final Path tempDir) throws IOException {
 		final Lecture lecture = DAOFactory.LectureDAOIf(session).getLecture(2);
-		final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		LectureImportExportHelper.exportLecture(session, lecture, Path.of("src/test/resources/lecture2"), outputStream);
+		final Path temp = Files.createTempFile(tempDir, "export", ".xml");
+		LectureImportExportHelper.exportLecture(session, lecture, Path.of("src/test/resources/lecture2"), temp);
 
 		final Path file = Path.of("src/test/resources/Export Lecture 2 Groupwise (WS 2020_2021).xml");
 		final String knownGood = Files.readString(file).replaceAll("&#xd;\r\n", "&#xd;\n");
-		assertEquals(outputStream.toString(), knownGood);
+		assertArrayEquals(Files.readAllBytes(temp), knownGood.getBytes(Charset.forName("UTF-8")));
 	}
 
 	@Test
-	public void testImportLecture1(@TempDir final Path tempDir) throws IOException {
+	public void testImportLecture1(@TempDir final Path tempRootDir) throws IOException {
 		session.beginTransaction();
+		final Path tempDir = tempRootDir.resolve("lecture");
+		Files.createDirectories(tempDir);
 		final User admin = DAOFactory.UserDAOIf(session).getUser(1);
 		final Lecture newLecture;
 		try (InputStream inputStream = new FileInputStream("src/test/resources/Export Lecture 1 (WS 2020_2021).xml")) {
@@ -104,11 +107,11 @@ public class LectureImportExportHelperTest extends BasicTest {
 			assertEquals("Wrong 3", mcOptions.get(3).getTitle());
 
 			// recheck with original import file file
-			final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			LectureImportExportHelper.exportLecture(session, newLecture, tempDir.resolve("lectures").resolve(String.valueOf(newLecture.getId())), outputStream);
+			final Path temp = Files.createTempFile(tempRootDir, "export", ".xml");
+			LectureImportExportHelper.exportLecture(session, newLecture, tempDir.resolve("lectures").resolve(String.valueOf(newLecture.getId())), temp);
 			final Path file = Path.of("src/test/resources/Export Lecture 1 (WS 2020_2021).xml");
 			final String knownGood = Files.readString(file).replaceAll("&#xd;\r\n", "&#xd;\n");
-			assertEquals(knownGood, outputStream.toString());
+			assertArrayEquals(knownGood.getBytes(Charset.forName("UTF-8")), Files.readAllBytes(temp));
 		}
 		assertEquals(1, SubmitSolutionTest.numberOfFiles(tempDir));
 		assertEquals(1, SubmitSolutionTest.numberOfFiles(tempDir.resolve("lectures").resolve(String.valueOf(newLecture.getId()))));

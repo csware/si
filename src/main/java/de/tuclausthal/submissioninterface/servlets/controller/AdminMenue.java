@@ -124,12 +124,16 @@ public class AdminMenue extends HttpServlet {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "lecture not found");
 				return;
 			}
+			final Path temp = Files.createTempFile("export", ".xml");
 			try {
+				LectureImportExportHelper.exportLecture(session, lecture, Util.constructPath(Configuration.getInstance().getDataPath(), lecture), temp);
 				ShowFile.setContentTypeBasedonFilenameExtension(response, "Export " + lecture.getName() + " (" + lecture.getReadableSemester() + ").xml", true);
-				LectureImportExportHelper.exportLecture(session, lecture, Util.constructPath(Configuration.getInstance().getDataPath(), lecture), response.getOutputStream());
+				Files.copy(temp, response.getOutputStream());
 			} catch (final JsonProcessingException e) {
 				LOG.warn("Could not export lecture " + lecture.getId(), e);
-				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not export lecture, see details in server log.");
+				throw e;
+			} finally {
+				Files.delete(temp);
 			}
 		} else { // list all lectures
 			request.setAttribute("lectures", DAOFactory.LectureDAOIf(session).getLectures());

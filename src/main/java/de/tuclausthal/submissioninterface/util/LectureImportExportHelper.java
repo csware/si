@@ -20,7 +20,6 @@ package de.tuclausthal.submissioninterface.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -58,14 +57,14 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 
 public class LectureImportExportHelper {
-	public static void exportLecture(final Session session, final Lecture lecture, final Path lecturePath, final OutputStream outputStream) throws IOException {
+	public static void exportLecture(final Session session, final Lecture lecture, final Path lecturePath, final Path outputFile) throws IOException {
 		final XmlMapper xmlMapper = XmlMapper.builder().enable(MapperFeature.REQUIRE_SETTERS_FOR_GETTERS).build();
 		xmlMapper.enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION);
 		final SimpleModule module = new SimpleModule();
 		module.setSerializerModifier(new TaskSerializerModifier(session, lecturePath));
 		xmlMapper.registerModule(module);
 		xmlMapper.registerModule(new JavaTimeModule()).configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-		xmlMapper.writerWithDefaultPrettyPrinter().writeValue(outputStream, lecture);
+		xmlMapper.writerWithDefaultPrettyPrinter().writeValue(outputFile.toFile(), lecture);
 	}
 
 	public static Lecture importLecture(final Session session, final Lecture importToLecture, final User user, final Path dataPath, final InputStream inputStream, final Map<Task, Set<String>> skippedFiles) throws IOException {
