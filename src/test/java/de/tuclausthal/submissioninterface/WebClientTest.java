@@ -214,6 +214,46 @@ class WebClientTest {
 				assertTrue(afterDelete.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
 			}
 
+			@Test
+			void uploadFileExtensionNormalization(@TempDir final Path tmp) throws Exception {
+				final HtmlPage taskPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowTask?taskid=4");
+				assertEquals("GATE: Aufgabe \"Something\"", taskPage.getTitleText());
+				assertTrue(taskPage.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
+
+				final HtmlPage submitPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/SubmitSolution?taskid=4");
+				final HtmlForm submitForm = submitPage.getForms().get(0);
+				final HtmlFileInput fileInput = submitForm.getInputByName("file");
+				fileInput.setValue("TriangleOutput.JaVa");
+				final String fileContents = Util.loadFile(Path.of("src/test/resources/TriangleOutput.java")).toString();
+				fileInput.setData(fileContents.getBytes());
+				final HtmlPage submittedPage = submitForm.getOneHtmlElementByAttribute("input", "type", "submit").click();
+				final String pageContent = submittedPage.asNormalizedText();
+				assertTrue(pageContent.contains("TriangleOutput.java"), "TriangleOutput.java");
+				assertTrue(pageContent.contains("Abgabe bearbeiten/erweitern"), "Abgabe bearbeiten/erweitern");
+				assertEquals(1, DAOFactory.SubmissionDAOIf(session).getSubmission(DAOFactory.TaskDAOIf(session).getTask(4), participation.getUser()).getSubmitters().size());
+
+				// retrieve file
+				final HtmlAnchor viewFileLink = submittedPage.getFirstByXPath("//a[text()='TriangleOutput.java']");
+				final HtmlPage uploadedFile = viewFileLink.click();
+				assertEquals(fileContents.trim(), uploadedFile.getElementById("fileContents").getTextContent().trim());
+
+				// download file
+				final UnexpectedPage downloadFilePage = webClient.getPage(uploadedFile.getUrl().toString() + "&download=true");
+				final Path tmpFile = tmp.resolve("tmpfile");
+				try (InputStream is = downloadFilePage.getInputStream()) {
+					Util.copyInputStreamAndClose(is, tmpFile);
+				}
+				assertEquals(fileContents, Util.loadFile(tmpFile).toString());
+
+				// delete file
+				final HtmlAnchor deleteLink = submittedPage.getFirstByXPath("//a[text()='löschen']");
+				final HtmlPage deleteConfirm = deleteLink.click();
+				assertEquals("GATE: Datei löschen", deleteConfirm.getTitleText());
+				assertTrue(deleteConfirm.asNormalizedText().contains("Datei \"TriangleOutput.java\" löschen"), "Datei \"TriangleOutput.java\" löschen");
+				final HtmlPage afterDelete = deleteConfirm.getForms().get(0).getOneHtmlElementByAttribute("input", "type", "submit").click();
+				assertTrue(afterDelete.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
+			}
+
 			@ParameterizedTest
 			@ValueSource(strings = { "some.java", "Some .java", "Something.java.somethingelse", "Something.somethingelse.java", "Filename.pdf", "Invalid:Name", "Another<Invalid" })
 			void uploadFileInvalidName(final String filename) throws Exception {
