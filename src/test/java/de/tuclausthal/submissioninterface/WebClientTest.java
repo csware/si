@@ -20,7 +20,9 @@ package de.tuclausthal.submissioninterface;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -56,6 +58,7 @@ import org.htmlunit.html.HtmlForm;
 import org.htmlunit.html.HtmlLabel;
 import org.htmlunit.html.HtmlPage;
 import org.htmlunit.html.HtmlPasswordInput;
+import org.htmlunit.html.HtmlSelect;
 import org.htmlunit.html.HtmlSubmitInput;
 import org.htmlunit.html.HtmlTable;
 import org.htmlunit.html.HtmlTableRow;
@@ -71,8 +74,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestCount;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestCount_;
@@ -186,6 +191,9 @@ class WebClientTest {
 				fileInput.setValue("TriangleOutput.java");
 				final String fileContents = Util.loadFile(Path.of("src/test/resources", filename)).toString();
 				fileInput.setData(fileContents.getBytes());
+				assertThrows(ElementNotFoundException.class, () -> {
+					submitForm.getSelectByName("partnerid");
+				});
 				final HtmlPage submittedPage = submitForm.getOneHtmlElementByAttribute("input", "type", "submit").click();
 				final String pageContent = submittedPage.asNormalizedText();
 				assertTrue(pageContent.contains("TriangleOutput.java"), "TriangleOutput.java");
@@ -212,6 +220,7 @@ class WebClientTest {
 				assertTrue(deleteConfirm.asNormalizedText().contains("Datei \"" + remoteFilename + "\" löschen"), "Datei \"" + remoteFilename + "\" löschen");
 				final HtmlPage afterDelete = deleteConfirm.getForms().get(0).getOneHtmlElementByAttribute("input", "type", "submit").click();
 				assertTrue(afterDelete.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
+				assertNull(DAOFactory.SubmissionDAOIf(session).getSubmission(DAOFactory.TaskDAOIf(session).getTask(4), participation.getUser()));
 			}
 
 			@Test
@@ -574,7 +583,7 @@ class WebClientTest {
 			}
 
 			@Nested
-			class Task4FileUploadTimeChecks extends BasicTest {
+			class Task4FileUploadTimeChecks {
 				private Task task;
 				private ZonedDateTime oldDeadline;
 
@@ -609,6 +618,200 @@ class WebClientTest {
 					final HtmlPage submittedPage = submitForm.getOneHtmlElementByAttribute("input", "type", "submit").click();
 					final String pageContent = submittedPage.asNormalizedText();
 					assertTrue(pageContent.contains("Abgabe nicht mehr möglich."), "Abgabe nicht mehr möglich.");
+				}
+			}
+
+			@Nested
+			class Task4PartnerUploads {
+				private Task task;
+
+				@BeforeEach
+				void EnablePartnerSubmissions() {
+					task = DAOFactory.TaskDAOIf(session).getTask(4);
+					session.beginTransaction();
+					task.setMaxSubmitters(2);
+					participation.setGroup(DAOFactory.GroupDAOIf(session).getGroup(1));
+					session.getTransaction().commit();
+				}
+
+				@AfterEach
+				void ResetPartnerSubmissions() {
+					session.beginTransaction();
+					session.refresh(task);
+					task.setMaxSubmitters(1);
+					final Submission cleanup = DAOFactory.SubmissionDAOIf(session).getSubmission(task, DAOFactory.UserDAOIf(session).getUserByUsername("user2"));
+					if (cleanup != null) {
+						session.remove(cleanup);
+					}
+					session.getTransaction().commit();
+				}
+
+				@Test
+				void submitFileWithNoPartner() throws Exception {
+					final HtmlPage taskPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowTask?taskid=4");
+					assertEquals("GATE: Aufgabe \"Something\"", taskPage.getTitleText());
+					assertTrue(taskPage.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
+
+					final HtmlPage submitPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/SubmitSolution?taskid=4");
+					final HtmlForm submitForm = submitPage.getForms().get(0);
+					final HtmlFileInput fileInput = submitForm.getInputByName("file");
+					fileInput.setValue("TriangleOutput.java");
+					fileInput.setData("Something".getBytes());
+					final HtmlPage submittedPage = submitForm.getOneHtmlElementByAttribute("input", "type", "submit").click();
+					final String pageContent = submittedPage.asNormalizedText();
+					assertTrue(pageContent.contains("TriangleOutput.java"), "TriangleOutput.java");
+					assertTrue(pageContent.contains("Abgabe bearbeiten/erweitern"), "Abgabe bearbeiten/erweitern");
+					assertEquals(1, DAOFactory.SubmissionDAOIf(session).getSubmission(task, participation.getUser()).getSubmitters().size());
+
+					// delete file
+					final HtmlAnchor deleteLink = submittedPage.getFirstByXPath("//a[text()='löschen']");
+					final HtmlPage deleteConfirm = deleteLink.click();
+					assertEquals("GATE: Datei löschen", deleteConfirm.getTitleText());
+					assertTrue(deleteConfirm.asNormalizedText().contains("Datei \"TriangleOutput.java\" löschen"), "Datei \"TriangleOutput.java\" löschen");
+					final HtmlPage afterDelete = deleteConfirm.getForms().get(0).getOneHtmlElementByAttribute("input", "type", "submit").click();
+					assertTrue(afterDelete.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
+					assertNull(DAOFactory.SubmissionDAOIf(session).getSubmission(task, participation.getUser()));
+				}
+
+				@Test
+				void submitFileWithPartner() throws Exception {
+					final HtmlPage taskPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowTask?taskid=4");
+					assertEquals("GATE: Aufgabe \"Something\"", taskPage.getTitleText());
+					assertTrue(taskPage.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
+
+					assertNull(DAOFactory.SubmissionDAOIf(session).getSubmission(task, DAOFactory.UserDAOIf(session).getUserByUsername("user2")));
+
+					final HtmlPage submitPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/SubmitSolution?taskid=4");
+					final HtmlForm submitForm = submitPage.getForms().get(0);
+					final HtmlFileInput fileInput = submitForm.getInputByName("file");
+					fileInput.setValue("TriangleOutput.java");
+					fileInput.setData("Something".getBytes());
+					final HtmlSelect partner = submitForm.getSelectByName("partnerid");
+					assertIterableEquals(List.of("0", "19", "4", "6"), partner.getOptions().stream().map(o -> o.getValueAttribute()).sorted().collect(Collectors.toList()));
+					partner.setSelectedAttribute("6", true);
+					final HtmlPage submittedPage = submitForm.getOneHtmlElementByAttribute("input", "type", "submit").click();
+					final String pageContent = submittedPage.asNormalizedText();
+					assertTrue(pageContent.contains("TriangleOutput.java"), "TriangleOutput.java");
+					assertTrue(pageContent.contains("Abgabe bearbeiten/erweitern"), "Abgabe bearbeiten/erweitern");
+					assertEquals(2, DAOFactory.SubmissionDAOIf(session).getSubmission(task, participation.getUser()).getSubmitters().size());
+					assertSame(DAOFactory.SubmissionDAOIf(session).getSubmission(task, participation.getUser()), DAOFactory.SubmissionDAOIf(session).getSubmission(task, DAOFactory.UserDAOIf(session).getUserByUsername("user2")));
+
+					// delete file
+					final HtmlAnchor deleteLink = submittedPage.getFirstByXPath("//a[text()='löschen']");
+					final HtmlPage deleteConfirm = deleteLink.click();
+					assertEquals("GATE: Datei löschen", deleteConfirm.getTitleText());
+					assertTrue(deleteConfirm.asNormalizedText().contains("Datei \"TriangleOutput.java\" löschen"), "Datei \"TriangleOutput.java\" löschen");
+					final HtmlPage afterDelete = deleteConfirm.getForms().get(0).getOneHtmlElementByAttribute("input", "type", "submit").click();
+					assertTrue(afterDelete.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
+					assertNull(DAOFactory.SubmissionDAOIf(session).getSubmission(task, participation.getUser()));
+					assertNull(DAOFactory.SubmissionDAOIf(session).getSubmission(task, DAOFactory.UserDAOIf(session).getUserByUsername("user2")));
+				}
+
+				@ParameterizedTest
+				@ValueSource(strings = { "502" /* does not exist */, "17" /* no group */, "8" /* different lecture */, "6" /* we will create a contradicting submission */, "self" /* self */ })
+				void submitFileWithInvalidPartner(String partnerId) throws Exception {
+					final HtmlPage taskPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowTask?taskid=4");
+					assertEquals("GATE: Aufgabe \"Something\"", taskPage.getTitleText());
+					assertTrue(taskPage.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
+
+					assertNull(DAOFactory.SubmissionDAOIf(session).getSubmission(task, DAOFactory.UserDAOIf(session).getUserByUsername("user2")));
+
+					final HtmlPage submitPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/SubmitSolution?taskid=4");
+					final HtmlForm submitForm = submitPage.getForms().get(0);
+					final HtmlFileInput fileInput = submitForm.getInputByName("file");
+					fileInput.setValue("TriangleOutput.java");
+					fileInput.setData("Something".getBytes());
+					final HtmlSelect partner = submitForm.getSelectByName("partnerid");
+					if ("self".equals(partnerId)) {
+						partnerId = String.valueOf(participation.getId());
+					} else if ("6".equals(partnerId)) {
+						session.beginTransaction();
+						DAOFactory.SubmissionDAOIf(session).createSubmission(task, DAOFactory.ParticipationDAOIf(session).getParticipation(6));
+						session.getTransaction().commit();
+					}
+					partner.getOption(1).setValueAttribute(partnerId);
+					partner.setSelectedAttribute(partnerId, true);
+					final HtmlPage submittedPage = submitForm.getOneHtmlElementByAttribute("input", "type", "submit").click();
+					final String pageContent = submittedPage.asNormalizedText();
+					assertTrue(pageContent.contains("Ein ausgewählter Studierender hat bereits eine eigene Abgabe initiiert"), "Ein ausgewählter Studierender hat bereits eine eigene Abgabe initiiert");
+					assertNull(DAOFactory.SubmissionDAOIf(session).getSubmission(task, participation.getUser()));
+				}
+
+				@Nested
+				class PartnerGroup {
+					private Group group;
+
+					@BeforeEach
+					void EnablePartnerSubmissions() {
+						group = DAOFactory.GroupDAOIf(session).getGroup(1);
+						session.beginTransaction();
+						group.setSubmissionGroup(true);
+						session.getTransaction().commit();
+					}
+
+					@AfterEach
+					void ResetPartnerSubmissions() {
+						session.beginTransaction();
+						session.refresh(group);
+						group.setSubmissionGroup(false);
+						session.getTransaction().commit();
+					}
+
+					@Test
+					void submitFile() throws Exception {
+						final HtmlPage taskPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowTask?taskid=4");
+						assertEquals("GATE: Aufgabe \"Something\"", taskPage.getTitleText());
+						assertTrue(taskPage.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
+
+						final HtmlPage submitPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/SubmitSolution?taskid=4");
+						final HtmlForm submitForm = submitPage.getForms().get(0);
+						final HtmlFileInput fileInput = submitForm.getInputByName("file");
+						fileInput.setValue("TriangleOutput.java");
+						fileInput.setData("Something".getBytes());
+						assertThrows(ElementNotFoundException.class, () -> {
+							submitForm.getSelectByName("partnerid");
+						});
+						final HtmlPage submittedPage = submitForm.getOneHtmlElementByAttribute("input", "type", "submit").click();
+						final String pageContent = submittedPage.asNormalizedText();
+						assertTrue(pageContent.contains("TriangleOutput.java"), "TriangleOutput.java");
+						assertTrue(pageContent.contains("Abgabe bearbeiten/erweitern"), "Abgabe bearbeiten/erweitern");
+						assertEquals(group.getMembers().size(), DAOFactory.SubmissionDAOIf(session).getSubmission(task, participation.getUser()).getSubmitters().size());
+
+						// delete file
+						final HtmlAnchor deleteLink = submittedPage.getFirstByXPath("//a[text()='löschen']");
+						final HtmlPage deleteConfirm = deleteLink.click();
+						assertEquals("GATE: Datei löschen", deleteConfirm.getTitleText());
+						assertTrue(deleteConfirm.asNormalizedText().contains("Datei \"TriangleOutput.java\" löschen"), "Datei \"TriangleOutput.java\" löschen");
+						final HtmlPage afterDelete = deleteConfirm.getForms().get(0).getOneHtmlElementByAttribute("input", "type", "submit").click();
+						assertTrue(afterDelete.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
+						assertNull(DAOFactory.SubmissionDAOIf(session).getSubmission(task, participation.getUser()));
+					}
+
+					@Test
+					void groupSubmissionAlreadyExists() throws Exception {
+						assertNull(DAOFactory.SubmissionDAOIf(session).getSubmission(task, DAOFactory.UserDAOIf(session).getUserByUsername("user2")));
+						session.beginTransaction();
+						DAOFactory.SubmissionDAOIf(session).createSubmission(task, DAOFactory.ParticipationDAOIf(session).getParticipation(6));
+						session.getTransaction().commit();
+
+						final HtmlPage taskPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowTask?taskid=4");
+						assertEquals("GATE: Aufgabe \"Something\"", taskPage.getTitleText());
+						assertTrue(taskPage.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
+
+						final HtmlPage submitPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/SubmitSolution?taskid=4");
+						final HtmlForm submitForm = submitPage.getForms().get(0);
+						final HtmlFileInput fileInput = submitForm.getInputByName("file");
+						fileInput.setValue("TriangleOutput.java");
+						final String fileContents = Util.loadFile(Path.of("src/test/resources/TriangleOutput.java")).toString();
+						fileInput.setData(fileContents.getBytes());
+						assertThrows(ElementNotFoundException.class, () -> {
+							submitForm.getSelectByName("partnerid");
+						});
+						final HtmlPage submittedPage = submitForm.getOneHtmlElementByAttribute("input", "type", "submit").click();
+						final String pageContent = submittedPage.asNormalizedText();
+						assertTrue(pageContent.contains("Es wurde bereits eine Gruppen-Abgabe initiiert."), "Es wurde bereits eine Gruppen-Abgabe initiiert.");
+						assertNull(DAOFactory.SubmissionDAOIf(session).getSubmission(task, participation.getUser()));
+					}
 				}
 			}
 		}

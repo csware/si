@@ -349,20 +349,29 @@ public class SubmitSolution extends HttpServlet {
 					}
 				}
 			} else {
+				boolean error = false;
 				for (int partnerID : partnerIDs) {
 					Participation partnerParticipation = participationDAO.getParticipation(partnerID);
-					session.lock(partnerParticipation, LockMode.PESSIMISTIC_WRITE); // creating submissions is serialized by locking the participation, see above
-					if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation != null && partnerParticipation.getRoleType().equals(ParticipationRole.NORMAL) && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && ((task.isAllowSubmittersAcrossGroups() && (partnerParticipation.getGroup() == null || !partnerParticipation.getGroup().isSubmissionGroup())) || (!task.isAllowSubmittersAcrossGroups() && partnerParticipation.getGroup() != null && studentParticipation.getGroup() != null && partnerParticipation.getGroup().getGid() == studentParticipation.getGroup().getGid())) && submissionDAO.getSubmission(task, partnerParticipation.getUser()) == null) {
-						submission.getSubmitters().add(partnerParticipation);
-					} else {
-						tx.rollback();
-						template.printTemplateHeader("Ungültige Anfrage", task);
-						PrintWriter out = response.getWriter();
-						out.println("<div class=mid>Ein ausgewählter Studierender hat bereits eine eigene Abgabe initiiert, Sie haben bereits die maximale Anzahl von Studierenden überschritten oder einen nicht verfügbaren Studierenden ausgewählt.</div>");
-						out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
-						template.printTemplateFooter();
-						return;
+					if (partnerParticipation == null) {
+						error = true;
+						break;
 					}
+					session.lock(partnerParticipation, LockMode.PESSIMISTIC_WRITE); // creating submissions is serialized by locking the participation, see above
+					if (submission.getSubmitters().size() < task.getMaxSubmitters() && partnerParticipation.getRoleType().equals(ParticipationRole.NORMAL) && partnerParticipation.getLecture().getId() == task.getTaskGroup().getLecture().getId() && ((task.isAllowSubmittersAcrossGroups() && (partnerParticipation.getGroup() == null || !partnerParticipation.getGroup().isSubmissionGroup())) || (!task.isAllowSubmittersAcrossGroups() && partnerParticipation.getGroup() != null && studentParticipation.getGroup() != null && partnerParticipation.getGroup().getGid() == studentParticipation.getGroup().getGid())) && submissionDAO.getSubmission(task, partnerParticipation.getUser()) == null) {
+						submission.getSubmitters().add(partnerParticipation);
+						continue;
+					}
+					error = true;
+					break;
+				}
+				if (error) {
+					tx.rollback();
+					template.printTemplateHeader("Ungültige Anfrage", task);
+					PrintWriter out = response.getWriter();
+					out.println("<div class=mid>Ein ausgewählter Studierender hat bereits eine eigene Abgabe initiiert, Sie haben bereits die maximale Anzahl von Studierenden überschritten oder einen nicht verfügbaren Studierenden ausgewählt.</div>");
+					out.println("<p><div class=mid><a href=\"javascript:window.history.back();\">zurück zur vorherigen Seite</a></div>");
+					template.printTemplateFooter();
+					return;
 				}
 			}
 		}
