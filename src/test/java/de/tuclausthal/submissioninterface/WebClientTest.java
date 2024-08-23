@@ -68,6 +68,7 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
@@ -211,6 +212,29 @@ class WebClientTest {
 				assertTrue(deleteConfirm.asNormalizedText().contains("Datei \"" + remoteFilename + "\" löschen"), "Datei \"" + remoteFilename + "\" löschen");
 				final HtmlPage afterDelete = deleteConfirm.getForms().get(0).getOneHtmlElementByAttribute("input", "type", "submit").click();
 				assertTrue(afterDelete.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
+			}
+
+			@ParameterizedTest
+			@ValueSource(strings = { "some.java", "Some .java", "Something.java.somethingelse", "Something.somethingelse.java", "Filename.pdf", "Invalid:Name", "Another<Invalid" })
+			void uploadFileInvalidName(final String filename) throws Exception {
+				final HtmlPage taskPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowTask?taskid=4");
+				assertEquals("GATE: Aufgabe \"Something\"", taskPage.getTitleText());
+				assertTrue(taskPage.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
+
+				final HtmlPage submitPage = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/SubmitSolution?taskid=4");
+				final HtmlForm submitForm = submitPage.getForms().get(0);
+				final HtmlFileInput fileInput = submitForm.getInputByName("file");
+				fileInput.setValue(filename);
+				fileInput.setData("Something".getBytes());
+				final HtmlPage submittedPage = submitForm.getOneHtmlElementByAttribute("input", "type", "submit").click();
+				final String pageContent = submittedPage.asNormalizedText();
+				assertTrue(pageContent.contains("Nicht alle Dateien wurden verarbeitet."), "Nicht alle Dateien wurden verarbeitet.");
+				assertTrue(pageContent.contains(filename), filename);
+				assertNull(DAOFactory.SubmissionDAOIf(session).getSubmission(DAOFactory.TaskDAOIf(session).getTask(4), participation.getUser()));
+
+				final HtmlPage taskPage2 = webClient.getPage(WEBROOT + "/SubmissionInterface/servlets/ShowTask?taskid=4");
+				assertEquals("GATE: Aufgabe \"Something\"", taskPage2.getTitleText());
+				assertTrue(taskPage2.asNormalizedText().contains("Abgabe starten"), "Abgabe starten");
 			}
 
 			@Nested
