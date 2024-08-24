@@ -4,6 +4,7 @@
 variables:
   MAVEN_IMAGE11: $CI_REGISTRY_IMAGE/maven:3.9-eclipse-temurin-11jdk
   MAVEN_IMAGE17: $CI_REGISTRY_IMAGE/maven:3.9-eclipse-temurin-17jdk
+  MAVEN_IMAGE21: $CI_REGISTRY_IMAGE/maven:3.9-eclipse-temurin-21jdk
   FF_NETWORK_PER_BUILD: 1
   # Configure mysql environment variables (https://hub.docker.com/_/mariadb/)
   MYSQL_DATABASE: "root"
@@ -46,6 +47,9 @@ prepare-docker-image:
     - sed -i 's/-11-/-17-/' Dockerfile
     - docker build --pull -t $MAVEN_IMAGE17 .
     - docker push $MAVEN_IMAGE17
+    - sed -i 's/-17-focal/-21-jammy/' Dockerfile
+    - docker build --pull -t $MAVEN_IMAGE21 .
+    - docker push $MAVEN_IMAGE21
     - cd tomcat
     - cp ../../submissiondir/junit.jar .
     - cp ../../SecurityManager/NoExitSecurityManager.jar .
@@ -103,3 +107,7 @@ compile-jdk11:
 compile-jdk17:
   extends: compile-jdk11
   image: $MAVEN_IMAGE17
+
+compile-jdk21:
+  extends: compile-jdk11
+  image: $MAVEN_IMAGE21
