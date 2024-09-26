@@ -150,9 +150,11 @@ class WebClientTest {
 
 			@AfterEach
 			void resetSubscribe() {
+				session.clear();
 				session.beginTransaction();
-				session.refresh(lecture);
+				lecture = session.merge(lecture);
 				lecture.setSemester(oldSemester);
+				participation = session.merge(participation);
 				DAOFactory.SubmissionDAOIf(session).getAllSubmissions(participation).forEach(s -> session.remove(s));
 				DAOFactory.ParticipationDAOIf(session).deleteParticipation(participation);
 				session.getTransaction().commit();
@@ -299,8 +301,9 @@ class WebClientTest {
 
 				@AfterEach
 				void reset() {
+					session.clear();
 					session.beginTransaction();
-					session.refresh(task);
+					task = session.merge(task);
 					task.setDeadline(oldDeadline);
 					{
 						CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -382,8 +385,9 @@ class WebClientTest {
 
 				@AfterEach
 				void reset() {
+					session.clear();
 					session.beginTransaction();
-					session.refresh(task);
+					session.merge(task);
 					task.setDeadline(oldDeadline);
 					session.getTransaction().commit();
 				}
@@ -497,8 +501,9 @@ class WebClientTest {
 
 				@AfterEach
 				void reset() {
+					session.clear();
 					session.beginTransaction();
-					session.refresh(task);
+					task = session.merge(task);
 					task.setDeadline(oldDeadline);
 					{
 						CriteriaBuilder builder = session.getCriteriaBuilder();

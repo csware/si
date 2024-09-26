@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -76,6 +76,7 @@ class TestCountDAOIfTest extends BasicTest {
 		session.getTransaction().begin();
 		assertEquals(false, DAOFactory.TestCountDAOIf(session).canSeeResultAndIncrementCounterTransaction(test, submission));
 		session.getTransaction().commit();
+		session.clear();
 		session.getTransaction().begin();
 		DAOFactory.TestDAOIf(session).deleteTest(test);
 		session.getTransaction().commit();
