@@ -26,6 +26,7 @@ import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -160,6 +161,8 @@ public class SelfTest extends HttpServlet {
 			testresults.add(new TestResult("Testframework-Listener läuft.", false));
 			LOG.error("Could not access LocalExecutor.", e);
 		}
+		testresults.add(new TestResult("TMP-Verzeichnis ist beschreibbar.", Util.escapeHTML(Configuration.getInstance().getLecturesPath().toString()), checkTemp()));
+		testresults.add(new TestResult("Dateien mit Umlauten können erstellt werden.", Util.escapeHTML(Configuration.getInstance().getLecturesPath().toString()), checkSpecialFilename()));
 		testresults.add(new TestResult("Daten-Verzeichnis existiert und ist lesbar.", Util.escapeHTML(Configuration.getInstance().getDataPath().toString()), checkDataDir()));
 		testresults.add(new TestResult("Daten-Verzeichnis ist nicht beschreibbar (erhöht die Sicherheit).", !Files.isWritable(Configuration.getInstance().getDataPath())));
 		testresults.add(new TestResult("Parent vom Daten-Verzeichnis ist nicht beschreibbar (erhöht die Sicherheit).", !Files.isWritable(Configuration.getInstance().getDataPath().getParent())));
@@ -211,6 +214,38 @@ public class SelfTest extends HttpServlet {
 			fileStream.count();
 		} catch (SecurityException | IOException e) {
 			LOG.error("Cannot read data-path,", e);
+			return false;
+		}
+		return true;
+	}
+
+	private boolean checkTemp() {
+		try {
+			final Path testFile = Files.createTempFile("sometext", ".tmp");
+			Files.delete(testFile);
+		} catch (IOException e) {
+			LOG.error("Cannot create tempfile", e);
+			return false;
+		}
+		final Path tmpPath = Util.createTemporaryDirectory("test");
+		if (tmpPath == null) {
+			LOG.error("Could not create temporary directory");
+			return false;
+		}
+		if (Files.notExists(tmpPath)) {
+			LOG.error("Created directory does not exist");
+			return false;
+		}
+		Util.recursiveDelete(tmpPath);
+		return true;
+	}
+
+	private boolean checkSpecialFilename() {
+		try {
+			final Path testFile = Files.createTempFile("ÜÜmlaut", ".tmp");
+			Files.delete(testFile);
+		} catch (IOException | InvalidPathException e) {
+			LOG.error("Cannot create filenames containing umlauts, (InvalidPathException: LANG=*.UTF8 or LANG=C.UTF8 set?)", e);
 			return false;
 		}
 		return true;
