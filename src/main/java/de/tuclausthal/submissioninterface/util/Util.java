@@ -253,12 +253,12 @@ public final class Util {
 				out.write(buffer, 0, len);
 			}
 		} finally {
-			if (in instanceof ZipInputStream) {
-				((ZipInputStream) in).closeEntry();
+			if (in instanceof ZipInputStream zis) {
+				zis.closeEntry();
 			} else
 				in.close();
-			if (out instanceof ZipOutputStream) {
-				((ZipOutputStream) out).closeEntry();
+			if (out instanceof ZipOutputStream zos) {
+				zos.closeEntry();
 			} else {
 				out.close();
 			}

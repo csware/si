@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2022-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -99,7 +98,7 @@ public class ShowTaskTutorAllSubmissionsView extends HttpServlet {
 
 		int id = 0;
 		StringBuilder javaScript = new StringBuilder();
-		List<ChecklistTest> checklistTests = task.getTests().stream().filter(test -> test instanceof ChecklistTest).map(test -> (ChecklistTest) test).collect(Collectors.toList());
+		final List<ChecklistTest> checklistTests = task.getTests().stream().filter(test -> test instanceof ChecklistTest).map(test -> (ChecklistTest) test).toList();
 		for (Submission submission : task.getSubmissions()) {
 			if (skipFullScore && submission.getPoints() != null && submission.getPoints().getPoints() == task.getMaxPoints()) {
 				continue;
@@ -119,12 +118,12 @@ public class ShowTaskTutorAllSubmissionsView extends HttpServlet {
 					out.println("<li>" + Util.escapeHTML(testResult.getTest().getTestTitle()) + "<br>");
 					out.println("<b>Erfolgreich:</b> " + Util.boolToHTML(testResult.getPassedTest()));
 					if (!testResult.getTestOutput().isEmpty()) {
-						if (testResult.getTest() instanceof JavaAdvancedIOTest) {
+						if (testResult.getTest() instanceof JavaAdvancedIOTest jaiot) {
 							out.println("<br>");
-							ShowJavaAdvancedIOTestResult.printTestResults(out, (JavaAdvancedIOTest) testResult.getTest(), testResult.getTestOutput(), false, javaScript);
-						} else if (testResult.getTest() instanceof DockerTest) {
+							ShowJavaAdvancedIOTestResult.printTestResults(out, jaiot, testResult.getTestOutput(), false, javaScript);
+						} else if (testResult.getTest() instanceof DockerTest dt) {
 							out.println("<br>");
-							ShowDockerTestResult.printTestResults(out, (DockerTest) testResult.getTest(), testResult.getTestOutput(), false, javaScript);
+							ShowDockerTestResult.printTestResults(out, dt, testResult.getTestOutput(), false, javaScript);
 						} else {
 							out.println("<br><textarea cols=80 rows=15>" + Util.escapeHTML(testResult.getTestOutput()) + "</textarea>");
 						}

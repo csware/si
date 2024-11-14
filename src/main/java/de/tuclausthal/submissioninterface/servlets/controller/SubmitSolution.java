@@ -495,7 +495,7 @@ public class SubmitSolution extends HttpServlet {
 				++i;
 			}
 			Collections.sort(resultIDs);
-			List<String> results = resultIDs.stream().map(String::valueOf).collect(Collectors.toList());
+			final List<String> results = resultIDs.stream().map(String::valueOf).toList();
 			DAOFactory.ResultDAOIf(session).createResults(submission, results);
 
 			DAOFactory.PointsDAOIf(session).createMCPoints(allCorrect ? task.getMaxPoints() : 0, submission, "", task.getTaskGroup().getLecture().isRequiresAbhnahme() ? PointStatus.NICHT_ABGENOMMEN : PointStatus.ABGENOMMEN);

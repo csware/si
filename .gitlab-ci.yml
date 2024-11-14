@@ -2,7 +2,6 @@
 # Building maven: https://docs.gitlab.com/ee/user/project/packages/maven_repository.html
 
 variables:
-  MAVEN_IMAGE11: $CI_REGISTRY_IMAGE/maven:3.9-eclipse-temurin-11jdk
   MAVEN_IMAGE17: $CI_REGISTRY_IMAGE/maven:3.9-eclipse-temurin-17jdk
   MAVEN_IMAGE21: $CI_REGISTRY_IMAGE/maven:3.9-eclipse-temurin-21jdk
   FF_NETWORK_PER_BUILD: 1
@@ -42,9 +41,6 @@ prepare-docker-image:
   script:
     - cd .gitlab-ci
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
-    - docker build --pull -t $MAVEN_IMAGE11 .
-    - docker push $MAVEN_IMAGE11
-    - sed -i 's/-11-/-17-/' Dockerfile
     - docker build --pull -t $MAVEN_IMAGE17 .
     - docker push $MAVEN_IMAGE17
     - sed -i 's/-17-focal/-21-jammy/' Dockerfile
@@ -68,8 +64,8 @@ prepare-docker-image:
       when: always
     - when: never
 
-compile-jdk11:
-  image: $MAVEN_IMAGE11
+compile-jdk17:
+  image: $MAVEN_IMAGE17
   services:
     - mariadb:10.11
     - name: $CI_REGISTRY_IMAGE/tomcat:latest
@@ -104,10 +100,6 @@ compile-jdk11:
       - db-schema.sql
     expire_in: 1 week
 
-compile-jdk17:
-  extends: compile-jdk11
-  image: $MAVEN_IMAGE17
-
 compile-jdk21:
-  extends: compile-jdk11
+  extends: compile-jdk17
   image: $MAVEN_IMAGE21

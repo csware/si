@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -59,13 +59,12 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 		Session session = RequestAdapter.getSession(request);
 		TestDAOIf testDAOIf = DAOFactory.TestDAOIf(session);
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
-		if (tst == null || !(tst instanceof JavaAdvancedIOTest)) {
+		if (tst == null || !(tst instanceof JavaAdvancedIOTest test)) {
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Test nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
-		JavaAdvancedIOTest test = (JavaAdvancedIOTest) tst;
 
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), test.getTask().getTaskGroup().getLecture());
@@ -83,13 +82,12 @@ public class JavaAdvancedIOTestManager extends HttpServlet {
 		Session session = RequestAdapter.getSession(request);
 		TestDAOIf testDAOIf = DAOFactory.TestDAOIf(session);
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
-		if (tst == null || !(tst instanceof JavaAdvancedIOTest)) {
+		if (tst == null || !(tst instanceof JavaAdvancedIOTest test)) {
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Test nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
-		JavaAdvancedIOTest test = (JavaAdvancedIOTest) tst;
 
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), test.getTask().getTaskGroup().getLecture());

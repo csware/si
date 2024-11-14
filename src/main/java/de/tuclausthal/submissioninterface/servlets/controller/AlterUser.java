@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2013, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2013, 2020-2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -67,8 +67,7 @@ public class AlterUser extends HttpServlet {
 				tx.commit();
 			}
 		}
-		if (user instanceof Student) {
-			Student student = (Student) user;
+		if (user instanceof Student student) {
 			if (request.getParameter("studiengang") != null && !"".equals(request.getParameter("studiengang").trim())) {
 				Transaction tx = session.beginTransaction();
 				student.setStudiengang(request.getParameter("studiengang"));

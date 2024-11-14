@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -112,11 +112,11 @@ public class ShowLectureTutorFullView extends HttpServlet {
 				submission = submissionIterator.next();
 			}
 			out.println("<tr>");
-			if (lectureParticipation.getUser() instanceof Student) {
+			if (lectureParticipation.getUser() instanceof Student student) {
 				if (showMatNo) {
-					out.println("<td>" + ((Student) lectureParticipation.getUser()).getMatrikelno() + "</td>");
+					out.println("<td>" + student.getMatrikelno() + "</td>");
 				}
-				out.println("<td>" + Util.escapeHTML(((Student) lectureParticipation.getUser()).getStudiengang()) + "</td>");
+				out.println("<td>" + Util.escapeHTML(student.getStudiengang()) + "</td>");
 			} else {
 				if (showMatNo) {
 					out.println("<td>n/a</td>");

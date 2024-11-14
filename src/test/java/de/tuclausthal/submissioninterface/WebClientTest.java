@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -692,7 +691,7 @@ class WebClientTest {
 					fileInput.setValue("TriangleOutput.java");
 					fileInput.setData("Something".getBytes());
 					final HtmlSelect partner = submitForm.getSelectByName("partnerid");
-					assertIterableEquals(List.of("0", "19", "4", "6"), partner.getOptions().stream().map(o -> o.getValueAttribute()).sorted().collect(Collectors.toList()));
+					assertIterableEquals(List.of("0", "19", "4", "6"), partner.getOptions().stream().map(o -> o.getValueAttribute()).sorted().toList());
 					partner.setSelectedAttribute("6", true);
 					final HtmlPage submittedPage = submitForm.getOneHtmlElementByAttribute("input", "type", "submit").click();
 					final String pageContent = submittedPage.asNormalizedText();
@@ -1066,14 +1065,14 @@ class WebClientTest {
 				assertEquals(8, rows.size());
 
 				int i = 0;
-				assertEquals(List.of("Ägyptologie und Koptologie (Promotion)", "Lastname1", "Firstname1", "1", "(2)", "1,5", "k.A.", "2,5"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
-				assertEquals(List.of("n/a", "Lastname2", "Firstname2", "1", "(2)", "1,5", "k.A.", "2,5"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
-				assertEquals(List.of("n/a", "Lastname3", "Firstname3", "n.b.", "k.A.", "n.b.", "k.A.", "0"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
-				assertEquals(List.of("n/a", "Lastname4", "Firstname4", "n.b.", "k.A.", "n.b.", "k.A.", "0"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
-				assertEquals(List.of("", "Lastname5", "Firstname5", "k.A.", "1", "k.A.", "k.A.", "1"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
-				assertEquals(List.of("n/a", "Lastname6", "Firstname6", "1,5", "(2)", "(0)", "k.A.", "1,5"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
-				assertEquals(List.of("n/a", "Lastname7", "Firstname7", "n.b.", "(2)", "0", "k.A.", "0"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
-				assertEquals(List.of("n/a", "Lastname8", "Firstname8", "k.A.", "(2)", "k.A.", "k.A.", "0"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
+				assertEquals(List.of("Ägyptologie und Koptologie (Promotion)", "Lastname1", "Firstname1", "1", "(2)", "1,5", "k.A.", "2,5"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
+				assertEquals(List.of("n/a", "Lastname2", "Firstname2", "1", "(2)", "1,5", "k.A.", "2,5"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
+				assertEquals(List.of("n/a", "Lastname3", "Firstname3", "n.b.", "k.A.", "n.b.", "k.A.", "0"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
+				assertEquals(List.of("n/a", "Lastname4", "Firstname4", "n.b.", "k.A.", "n.b.", "k.A.", "0"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
+				assertEquals(List.of("", "Lastname5", "Firstname5", "k.A.", "1", "k.A.", "k.A.", "1"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
+				assertEquals(List.of("n/a", "Lastname6", "Firstname6", "1,5", "(2)", "(0)", "k.A.", "1,5"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
+				assertEquals(List.of("n/a", "Lastname7", "Firstname7", "n.b.", "(2)", "0", "k.A.", "0"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
+				assertEquals(List.of("n/a", "Lastname8", "Firstname8", "k.A.", "(2)", "k.A.", "k.A.", "0"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
 			}
 
 			@Test
@@ -1094,9 +1093,9 @@ class WebClientTest {
 				assertEquals(3, rows.size());
 
 				int i = 0;
-				assertEquals(List.of("Abgabe von", "Bemerkungen", "Punkte", "OK?"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
-				assertEquals(List.of("Lastname6, Firstname6", "ne, so nicht", "0", ""), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
-				assertEquals(List.of("Lastname7, Firstname7", "falsch und abnahme nicht bestanden", "0", "ok"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
+				assertEquals(List.of("Abgabe von", "Bemerkungen", "Punkte", "OK?"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
+				assertEquals(List.of("Lastname6, Firstname6", "ne, so nicht", "0", ""), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
+				assertEquals(List.of("Lastname7, Firstname7", "falsch und abnahme nicht bestanden", "0", "ok"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
 			}
 
 			@Test
@@ -1108,8 +1107,8 @@ class WebClientTest {
 				assertEquals(2, rows.size());
 
 				int i = 0;
-				assertEquals(List.of("Abgabe von", "Bemerkungen", "Punkte", "OK?"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
-				assertEquals(List.of("Lastname1, Firstname1; Lastname2, Firstname2", "jetzt final", "1,5", "ok"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
+				assertEquals(List.of("Abgabe von", "Bemerkungen", "Punkte", "OK?"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
+				assertEquals(List.of("Lastname1, Firstname1; Lastname2, Firstname2", "jetzt final", "1,5", "ok"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
 			}
 
 			@Test
@@ -1121,8 +1120,8 @@ class WebClientTest {
 				assertEquals(2, rows.size());
 
 				int i = 0;
-				assertEquals(List.of("Abgabe von", "Bemerkungen", "Punkte", "OK?"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
-				assertEquals(List.of("Lastname3, Firstname3; Lastname4, Firstname4", "", "n/a", ""), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).collect(Collectors.toList()));
+				assertEquals(List.of("Abgabe von", "Bemerkungen", "Punkte", "OK?"), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
+				assertEquals(List.of("Lastname3, Firstname3; Lastname4, Firstname4", "", "n/a", ""), rows.get(i++).getCells().stream().map(c -> c.asNormalizedText()).toList());
 			}
 		}
 

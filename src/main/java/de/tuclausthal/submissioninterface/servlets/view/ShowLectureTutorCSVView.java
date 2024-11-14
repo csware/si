@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2013, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2013, 2020-2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -102,11 +102,11 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 				}
 				String[] line = new String[header.size()];
 				int column = 0;
-				if (lectureParticipation.getUser() instanceof Student) {
+				if (lectureParticipation.getUser() instanceof Student student) {
 					if (showMatNo) {
-						line[column++] = String.valueOf(((Student) lectureParticipation.getUser()).getMatrikelno());
+						line[column++] = String.valueOf(student.getMatrikelno());
 					}
-					line[column++] = ((Student) lectureParticipation.getUser()).getStudiengang();
+					line[column++] = student.getStudiengang();
 				} else {
 					if (showMatNo) {
 						line[column++] = "n/a;";

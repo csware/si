@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -23,7 +23,6 @@ import java.io.PrintWriter;
 import java.time.ZonedDateTime;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -72,11 +71,11 @@ public class ShowUserView extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		out.println("<p><a href=\"mailto:" + Util.escapeHTML(user.getEmail()) + "\">" + Util.escapeHTML(user.getEmail()) + "</a></p>");
 
-		if (user instanceof Student) {
+		if (user instanceof Student student) {
 			if (isAtLeastAdvisorOnce) {
-				out.println("<p>Matrikelnummer: " + ((Student) user).getMatrikelno() + "</p>");
+				out.println("<p>Matrikelnummer: " + student.getMatrikelno() + "</p>");
 			}
-			out.println("<p>Studiengang: " + Util.escapeHTML(((Student) user).getStudiengang()) + "</p>");
+			out.println("<p>Studiengang: " + Util.escapeHTML(student.getStudiengang()) + "</p>");
 		}
 
 		boolean titleShown = false;
@@ -94,7 +93,7 @@ public class ShowUserView extends HttpServlet {
 				continue;
 			}
 
-			List<Task> tasks = DAOFactory.TaskDAOIf(session).getTasks(participation.getLecture(), false).stream().filter(t -> t.getStart().isBefore(ZonedDateTime.now())).collect(Collectors.toList());
+			final List<Task> tasks = DAOFactory.TaskDAOIf(session).getTasks(participation.getLecture(), false).stream().filter(t -> t.getStart().isBefore(ZonedDateTime.now())).toList();
 			List<Submission> submissions = DAOFactory.SubmissionDAOIf(session).getAllSubmissions(participation);
 			if (tasks.isEmpty()) {
 				out.println("<div class=mid>keine Aufgaben gefunden.</div>");

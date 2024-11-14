@@ -249,8 +249,8 @@ public class ShowLectureTutorView extends HttpServlet {
 				Participation thisParticipation = participationIterator.next();
 				out.println("<tr>");
 				if (showMatNo) {
-					if (thisParticipation.getUser() instanceof Student) {
-						out.println("<td>" + ((Student) thisParticipation.getUser()).getMatrikelno() + "</td>");
+					if (thisParticipation.getUser() instanceof Student student) {
+						out.println("<td>" + student.getMatrikelno() + "</td>");
 					} else {
 						out.println("<td>n/a</td>");
 					}

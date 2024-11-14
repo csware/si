@@ -10,7 +10,7 @@ Please read the whole procedure in advance to executing it.
 
 ### Installation steps of required software
 
-- Install Java (17 is recommended, 11 and 21 also work)
+- Install Java (17 is recommended, 21 also works)
   - On *nix (such as Debian) use the `openjdk-17-jre-headless` package
   - On Windows you can use [Liberica OpenJDK 17](https://bell-sw.com/pages/downloads/)
 - Install [Apache Tomcat 9](https://tomcat.apache.org) (e.g., on Debian-based systems use the `tomcat9` package)
@@ -99,7 +99,7 @@ Alternatively you can also use GitLab CI/CD functionality and download the built
   - Copy `submissiondir/*` and `SecurityManager/NoExitSecurityManager.jar` to that folder
   - If you want to use the [JPlag plagiarism system](https://github.com/jplag/jplag), compile JPlag 2.12 into a single .jar (using the maven goal `assembly:assembly` inside the `jplag` directory and copy the final `.jar` (from the target folder) as `jplag.jar` into the root of the `datapath`
   - No files directly inside the data directory should be writable by the tomcat user.
-- On Windows: Make sure the `JAVA_HOME` environment variable is set and points to the JDK directory (e.g. `C:\Program Files\BellSoft\LibericaJDK-11\`)
+- On Windows: Make sure the `JAVA_HOME` environment variable is set and points to the JDK directory (e.g. `C:\Program Files\BellSoft\LibericaJDK-17\`)
 - Prepare Tomcat
   - If you want to have the user names on the Tomcat access log, you can use `%{username}r` (as a replacement for `%u`) for configuring the `AccessLogValve` `pattern`, cf. https://tomcat.apache.org/tomcat-9.0-doc/config/valve.html#Access_Log_Valve
   - Rename the built `.war` file to e.g. `gate`, because the name is then used to build the URL under which GATE will be accessible using Tomcat

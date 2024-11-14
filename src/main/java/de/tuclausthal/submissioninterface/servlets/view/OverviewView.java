@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2013, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -61,8 +61,7 @@ public class OverviewView extends HttpServlet {
 			out.println("Bitte nennen Sie Ihre Matrikelnummer: <input type=number required=\"required\" name=matrikelno id=matrikelno pattern=\"[0-9]+\" autocomplete=\"off\" size=15\"> <input type=submit value=\"speichern...\">");
 			out.println("</form></p><br>");
 		}
-		if (user instanceof Student) {
-			Student student = (Student) user;
+		if (user instanceof Student student) {
 			if (student.getStudiengang() == null) {
 				out.println("<p><form class=\"highlightborder mid\" action=\"" + Util.generateHTMLLink(AlterUser.class.getSimpleName(), response) + "\" method=post>");
 				out.println("Bitte nennen Sie Ihren Studiengang: <select required name=studiengang>");

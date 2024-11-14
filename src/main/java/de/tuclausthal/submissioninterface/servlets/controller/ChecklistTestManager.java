@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -55,13 +55,12 @@ public class ChecklistTestManager extends HttpServlet {
 		Session session = RequestAdapter.getSession(request);
 		TestDAOIf testDAOIf = DAOFactory.TestDAOIf(session);
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
-		if (tst == null || !(tst instanceof ChecklistTest)) {
+		if (tst == null || !(tst instanceof ChecklistTest test)) {
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Test nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
-		ChecklistTest test = (ChecklistTest) tst;
 
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), test.getTask().getTaskGroup().getLecture());
@@ -79,13 +78,12 @@ public class ChecklistTestManager extends HttpServlet {
 		Session session = RequestAdapter.getSession(request);
 		TestDAOIf testDAOIf = DAOFactory.TestDAOIf(session);
 		Test tst = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
-		if (tst == null || !(tst instanceof ChecklistTest)) {
+		if (tst == null || !(tst instanceof ChecklistTest test)) {
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			request.setAttribute("title", "Test nicht gefunden");
 			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 			return;
 		}
-		ChecklistTest test = (ChecklistTest) tst;
 
 		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
 		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), test.getTask().getTaskGroup().getLecture());

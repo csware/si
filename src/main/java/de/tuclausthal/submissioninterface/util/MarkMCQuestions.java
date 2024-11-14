@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -20,7 +20,6 @@ package de.tuclausthal.submissioninterface.util;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -73,7 +72,7 @@ public class MarkMCQuestions {
 		ResultDAOIf resultDAO = DAOFactory.ResultDAOIf(session);
 		MCOptionDAOIf mcOptionDAO = DAOFactory.MCOptionDAOIf(session);
 		List<MCOption> options = mcOptionDAO.getMCOptionsForTask(task);
-		List<Integer> correctOptions = options.stream().filter(option -> option.isCorrect()).map(option -> option.getId()).collect(Collectors.toList());
+		final List<Integer> correctOptions = options.stream().filter(option -> option.isCorrect()).map(option -> option.getId()).toList();
 
 		for (Submission submission : session.createQuery(criteria).setLockMode(LockModeType.PESSIMISTIC_WRITE).list()) {
 			// don't update or check submissions that already were marked manually
@@ -82,7 +81,7 @@ public class MarkMCQuestions {
 			}
 
 			List<String> results = resultDAO.getResultsForSubmission(submission);
-			boolean allCorrect = (results.size() == correctOptions.size()) && correctOptions.containsAll(results.stream().map(result -> Integer.parseInt(result)).collect(Collectors.toList()));
+			final boolean allCorrect = (results.size() == correctOptions.size()) && correctOptions.containsAll(results.stream().map(result -> Integer.parseInt(result)).toList());
 
 			int points = allCorrect ? task.getMaxPoints() : 0;
 			int oldPoints = 0;

@@ -383,7 +383,7 @@ public class AdminMenue extends HttpServlet {
 		final TaskDAOIf taskDAO = DAOFactory.TaskDAOIf(session);
 		final SubmissionDAOIf submissionDAO = DAOFactory.SubmissionDAOIf(session);
 
-		final List<String> taskPaths = Stream.of(TaskPath.values()).map(tp -> tp.getPathComponent()).collect(Collectors.toList());
+		final List<String> taskPaths = Stream.of(TaskPath.values()).map(tp -> tp.getPathComponent()).toList();
 		try (DirectoryStream<Path> lecturesPathDirectoryStream = Files.newDirectoryStream(lecturesPath)) {
 			for (final Path lecturePath : lecturesPathDirectoryStream) {
 				if (lectureDAO.getLecture(Util.parseInteger(lecturePath.getFileName().toString(), 0)) == null) {

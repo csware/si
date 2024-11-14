@@ -442,8 +442,7 @@ public class TaskManagerView extends HttpServlet {
 					out.println("<ul>");
 					for (Test test : task.getTests()) {
 						out.println("<li>&quot;" + Util.escapeHTML(test.getTestTitle()) + "&quot;: ");
-						if (test instanceof RegExpTest) {
-							RegExpTest regexptest = (RegExpTest) test;
+						if (test instanceof RegExpTest regexptest) {
 							out.println("Java RegExp-Test (not supported any more, migrate to JavaAdvancedIOTest):<br>Prüfpattern: " + Util.escapeHTML(regexptest.getRegularExpression()) + "<br>Parameter: " + Util.escapeHTML(regexptest.getCommandLineParameter()) + "<br>Main-Klasse: " + Util.escapeHTML(regexptest.getMainClass()) + "<br>");
 						} else if (test instanceof CompileTest) {
 							out.println("Java Syntax-Test<br>");
@@ -470,14 +469,14 @@ public class TaskManagerView extends HttpServlet {
 								out.println("in Ausführung bzw. bereits ausgeführt - <a onclick=\"return sendAsPost(this, 'Wirklich erneut ausführen?')\" href=\"" + Util.generateHTMLLink(TestManager.class.getSimpleName() + "?action=rerunTest&testid=" + test.getId() + "&taskid=" + task.getTaskid(), response) + "\">erneut ausführen</a><br>");
 							}
 						}
-						if (test instanceof JavaAdvancedIOTest) {
-							out.println("Bestehend aus " + ((JavaAdvancedIOTest) test).getTestSteps().size() + " Schritten<br>");
+						if (test instanceof JavaAdvancedIOTest adiot) {
+							out.println("Bestehend aus " + adiot.getTestSteps().size() + " Schritten<br>");
 							out.println("<a href=\"" + Util.generateHTMLLink(JavaAdvancedIOTestManager.class.getSimpleName() + "?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
-						} else if (test instanceof DockerTest) {
-							out.println("Bestehend aus " + ((DockerTest) test).getTestSteps().size() + " Schritten<br>");
+						} else if (test instanceof DockerTest dt) {
+							out.println("Bestehend aus " + dt.getTestSteps().size() + " Schritten<br>");
 							out.println("<a href=\"" + Util.generateHTMLLink(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
-						} else if (test instanceof ChecklistTest) {
-							out.println("Bestehend aus " + ((ChecklistTest) test).getCheckItems().size() + " Checklist-Einträgen<br>");
+						} else if (test instanceof ChecklistTest clt) {
+							out.println("Bestehend aus " + clt.getCheckItems().size() + " Checklist-Einträgen<br>");
 							out.println("<a href=\"" + Util.generateHTMLLink(ChecklistTestManager.class.getSimpleName() + "?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
 						}
 						if (test.TutorsCanRun() && !modelSolutionFiles.isEmpty()) {

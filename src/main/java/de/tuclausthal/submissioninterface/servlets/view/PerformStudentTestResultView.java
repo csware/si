@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -60,12 +60,11 @@ public class PerformStudentTestResultView extends HttpServlet {
 		Template template = TemplateFactory.getTemplate(request, response);
 		template.addDiffJs();
 
-		if (test instanceof ChecklistTest) {
+		if (test instanceof ChecklistTest checklistTest) {
 			template.printTemplateHeader("Überprüfung", task);
 
 			PrintWriter out = response.getWriter();
 
-			ChecklistTest checklistTest = (ChecklistTest) test;
 			LogEntry logEntry = (LogEntry) request.getAttribute("logentry");
 
 			out.println("<p><strong>Bitte überprüfen Sie Ihre Lösung hinsichtlich der folgenden Punkte und haken alle Tests an, die Ihre Lösung erfüllt:</strong></p>");
@@ -105,10 +104,10 @@ public class PerformStudentTestResultView extends HttpServlet {
 		}
 		out.println("<b>Bestanden:</b> " + Util.boolToHTML(testResult.isTestPassed()) + "<br>");
 		if (test.isGiveDetailsToStudents() && !testResult.getTestOutput().isEmpty()) {
-			if (test instanceof JavaAdvancedIOTest) {
-				ShowJavaAdvancedIOTestResult.printTestResults(out, (JavaAdvancedIOTest) test, testResult.getTestOutput(), true, null);
-			} else if (test instanceof DockerTest) {
-				ShowDockerTestResult.printTestResults(out, (DockerTest) test, testResult.getTestOutput(), true, null);
+			if (test instanceof JavaAdvancedIOTest jaiot) {
+				ShowJavaAdvancedIOTestResult.printTestResults(out, jaiot, testResult.getTestOutput(), true, null);
+			} else if (test instanceof DockerTest dt) {
+				ShowDockerTestResult.printTestResults(out, dt, testResult.getTestOutput(), true, null);
 			} else {
 				out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
 			}

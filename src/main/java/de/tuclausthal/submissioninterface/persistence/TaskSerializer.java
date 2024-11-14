@@ -31,7 +31,6 @@ import java.util.OptionalInt;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -93,7 +92,7 @@ public class TaskSerializer extends StdSerializer<Task> implements ContextualSer
 		final Map<String, byte[]> files = getStoredFiles(value);
 		if (files != null) {
 			gen.writeObjectFieldStart("files");
-			for (final String file : files.keySet().stream().sorted().collect(Collectors.toList())) {
+			for (final String file : files.keySet().stream().sorted().toList()) {
 				gen.writeObjectFieldStart("file");
 				gen.writeStringField("filename", file);
 				gen.writeStringField("encoding", "base64");
@@ -114,7 +113,7 @@ public class TaskSerializer extends StdSerializer<Task> implements ContextualSer
 		if (!Files.isDirectory(taskPath)) {
 			return null;
 		}
-		final List<String> taskPaths = Stream.of(TaskPath.values()).map(tp -> tp.getPathComponent()).collect(Collectors.toList());
+		final List<String> taskPaths = Stream.of(TaskPath.values()).map(tp -> tp.getPathComponent()).toList();
 		final Map<String, byte[]> result = new LinkedHashMap<>();
 		try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(taskPath)) {
 			for (final Path file : directoryStream) {
@@ -187,7 +186,7 @@ public class TaskSerializer extends StdSerializer<Task> implements ContextualSer
 			return;
 		}
 		final Path taskPath = lecturePath.resolve(String.valueOf(task.getTaskid()));
-		final List<Path> taskPaths = Stream.of(TaskPath.values()).filter(tp -> tp.isAllowImportExport()).map(tp -> taskPath.resolve(tp.getPathComponent())).collect(Collectors.toList());
+		final List<Path> taskPaths = Stream.of(TaskPath.values()).filter(tp -> tp.isAllowImportExport()).map(tp -> taskPath.resolve(tp.getPathComponent())).toList();
 		try {
 			Util.ensurePathExists(taskPath);
 		} catch (final IOException e) {
