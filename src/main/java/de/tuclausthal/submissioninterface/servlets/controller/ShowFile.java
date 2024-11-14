@@ -113,7 +113,7 @@ public class ShowFile extends HttpServlet {
 		getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
 	}
 
-	private boolean isPlainTextFile(String lowercaseFilename) {
+	private static boolean isPlainTextFile(String lowercaseFilename) {
 		for (String extension : plainTextFiles) {
 			if (lowercaseFilename.endsWith("." + extension)) {
 				return true;
@@ -123,10 +123,8 @@ public class ShowFile extends HttpServlet {
 	}
 
 	public static boolean isInlineAble(String lowercaseFilename) {
-		for (String extension : plainTextFiles) {
-			if (lowercaseFilename.endsWith("." + extension)) {
-				return true;
-			}
+		if (isPlainTextFile(lowercaseFilename)) {
+			return true;
 		}
 		for (String extension : inlineFiles) {
 			if (lowercaseFilename.endsWith("." + extension)) {
