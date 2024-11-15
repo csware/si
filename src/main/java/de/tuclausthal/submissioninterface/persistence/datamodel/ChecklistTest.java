@@ -55,7 +55,7 @@ public class ChecklistTest extends Test {
 
 	@Override
 	@Transient
-	public AbstractTest getTestImpl() {
+	public AbstractTest<Test> getTestImpl() {
 		return new NullTest();
 	}
 

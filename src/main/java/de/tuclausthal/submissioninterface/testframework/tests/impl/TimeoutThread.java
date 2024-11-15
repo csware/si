@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010,2012 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2012, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -23,15 +23,15 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
  * @author Sven Strickroth
  */
 public class TimeoutThread extends Thread {
-	private Process process;
-	private int timeout;
+	final private Process process;
+	final private int timeout;
 	private boolean aborted = false;
 
 	/**
 	 * @param process
 	 * @param timeout
 	 */
-	public TimeoutThread(Process process, int timeout) {
+	public TimeoutThread(final Process process, final int timeout) {
 		this.process = process;
 		this.timeout = timeout;
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -130,16 +130,16 @@ public class ClozeTaskType {
 
 	public String getCorrect(int index) {
 		ClozeItem item = items.get(index);
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sbCorrect = new StringBuilder();
 		for (int i = 0; i < item.knownOptions.size(); ++i) {
 			if (i > 0) {
-				sb.append(", ");
+				sbCorrect.append(", ");
 			}
-			sb.append(item.knownOptions.get(i));
-			sb.append(": ");
-			sb.append(item.knownPoints.get(i));
+			sbCorrect.append(item.knownOptions.get(i));
+			sbCorrect.append(": ");
+			sbCorrect.append(item.knownPoints.get(i));
 		}
-		return sb.toString();
+		return sbCorrect.toString();
 	}
 
 	public int maxPoints() {

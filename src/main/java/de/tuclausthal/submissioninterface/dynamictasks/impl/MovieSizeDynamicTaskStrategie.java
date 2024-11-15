@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -24,7 +24,6 @@ import java.util.List;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTaskStrategie;
-import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
@@ -32,7 +31,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 /**
  * @author Sven Strickroth
  */
-public class MovieSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie implements DynamicTaskStrategieIf {
+public class MovieSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie {
 	private static final String[] RESULT_FIELDS = { "Größe der Videodatei in Bytes", "Größe der Videodatei in Mebibyte" };
 	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Pixel (width x height", "-Video: Byte pro Frame", "-Video Byte pro Sekunde", "-Video Byte pro Minute", "-Sound Byte pro Sekunde", "-Byte pro Sekunde", "-Byte pro Minute", "Größe der Videodatei in Bytes", "Größe der Videodatei in Mebibyte" };
 	private static final String[] VARIABLES = { "FP/s", "Auflösung", "Dauer", "Ton durchschnittlich pro Sekunde (KBit/s)" };

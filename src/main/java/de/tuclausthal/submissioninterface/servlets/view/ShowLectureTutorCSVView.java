@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 import com.opencsv.CSVWriter;
+import com.opencsv.ICSVWriter;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.SubmissionDAOIf;
@@ -72,7 +73,7 @@ public class ShowLectureTutorCSVView extends HttpServlet {
 		List<TaskGroup> taskGroupList = lecture.getTaskGroups();
 
 		final String[] empty = new String[0];
-		try (CSVWriter writer = new CSVWriter(new PrintWriter(response.getWriter()), ';', CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
+		try (CSVWriter writer = new CSVWriter(new PrintWriter(response.getWriter()), ';', ICSVWriter.DEFAULT_QUOTE_CHARACTER, ICSVWriter.DEFAULT_ESCAPE_CHARACTER, ICSVWriter.DEFAULT_LINE_END)) {
 			List<String> header = new ArrayList<>();
 			if (showMatNo) {
 				header.add("MatrikelNo");

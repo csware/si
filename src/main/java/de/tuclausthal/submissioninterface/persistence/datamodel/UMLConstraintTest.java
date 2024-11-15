@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2024 Sven Strickroth <email@cs-ware.de>
  * Copyright 2011 Joachim Schramm
  *
  * This file is part of the GATE.
@@ -33,7 +33,7 @@ public class UMLConstraintTest extends Test {
 
 	@Override
 	@Transient
-	public AbstractTest getTestImpl() {
+	public AbstractTest<? extends Test> getTestImpl() {
 		return new JavaUMLConstraintTest(this);
 	}
 

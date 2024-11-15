@@ -23,8 +23,8 @@ import java.math.BigInteger;
 import java.text.DecimalFormat;
 
 public class RandomNumber {
-	private static final char[] types = { 'B', 'O', 'D', 'F', 'H', 'L' };
-	private static final int[][] randomParam = { { 2, 3, 0 }, { 8, 100, 0 }, { 10, 100, 0 }, { 10, 100, 2 }, { 16, 1000, 0 }, { 10, 100000000, 0 } };
+	private static final char[] TYPES = { 'B', 'O', 'D', 'F', 'H', 'L' };
+	private static final int[][] RANDOMNUMBER_PARAMS = { { 2, 3, 0 }, { 8, 100, 0 }, { 10, 100, 0 }, { 10, 100, 2 }, { 16, 1000, 0 }, { 10, 100000000, 0 } };
 
 	public static String getRandomNumber(int[] randomParam) {
 		StringBuilder before = new StringBuilder("1");
@@ -56,13 +56,13 @@ public class RandomNumber {
 
 	public static int[] getRandomParam(char type) {
 		int pos = 0;
-		for (int i = 0; i < types.length; i++) {
-			if (type == types[i]) {
+		for (int i = 0; i < TYPES.length; i++) {
+			if (type == TYPES[i]) {
 				pos = i;
 				break;
 			}
 		}
-		return randomParam[pos];
+		return RANDOMNUMBER_PARAMS[pos];
 	}
 
 	public static String binStringToHex(String bin) {
@@ -110,14 +110,25 @@ public class RandomNumber {
 		return hex.toString();
 	}
 
-	public static String trimLeadingZeros(String str) {
+	public static String trimLeadingZeros(final String str) {
 		if (str == null) {
 			return null;
 		}
-		while (str.length() > 0 && str.charAt(0) == '0') {
-			str = str.substring(1);
+		final int left = indexOfNonZero(str);
+		return (left != 0) ? str.substring(left) : str;
+	}
+
+	private static int indexOfNonZero(final String value) {
+		final int length = value.length();
+		int left = 0;
+		while (left < length) {
+			final char ch = value.charAt(left);
+			if (ch != '0') {
+				break;
+			}
+			++left;
 		}
-		return str;
+		return left;
 	}
 
 	public static String getFloatBits(float randomNumber) {
@@ -137,9 +148,7 @@ public class RandomNumber {
 		}
 		bits = bits.substring(0, 8 + 5 + shift);
 
-		while (bits.length() < 32) {
-			bits += "0";
-		}
+		bits += "0".repeat(Math.max(0, bits.length() - 32));
 
 		String origNumber = "";
 		if (bits.charAt(0) == '1') {
@@ -189,6 +198,8 @@ public class RandomNumber {
 				case 16:
 					number = String.valueOf(Double.toHexString(zahl));
 					break;
+				default:
+					assert false;
 			}
 		}
 		return number;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2017, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -104,7 +104,7 @@ public class GroupDAO extends AbstractDAO implements GroupDAOIf {
 		subQuery.select(builder.count(groupMembersCount.get(Participation_.id)));
 		subQuery.where(builder.equal(groupMembersCount.get(Participation_.group), root));
 
-		Predicate where = builder.and(builder.equal(root.get(Group_.lecture), lecture), builder.equal(root.get(Group_.allowStudentsToSignup), true), builder.lt(subQuery, root.get(Group_.maxStudents)));
+		Predicate where = builder.and(builder.equal(root.get(Group_.lecture), lecture), builder.equal(root.get(Group_.allowStudentsToSignup), Boolean.TRUE), builder.lt(subQuery, root.get(Group_.maxStudents)));
 		if (participationGroup != null) {
 			where = builder.and(where, builder.notEqual(root, participationGroup));
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -24,7 +24,6 @@ import java.util.List;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTaskStrategie;
-import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
@@ -33,7 +32,7 @@ import de.tuclausthal.submissioninterface.util.RandomNumber;
 /**
  * @author Sven Strickroth
  */
-public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamicTaskStrategie implements DynamicTaskStrategieIf {
+public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamicTaskStrategie {
 	private static final String[] RESULT_FIELDS = { "Lösung der Berechnung (binär)", "Lösung der Berechnung (hex)", "Fehler der Lösung" };
 	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Lösung der Berechnung (decimal)", "Lösung der Berechnung (binär)", "Lösung der Berechnung (hex)", "-Float-Ergebnis", "Fehler der Lösung" };
 	private static final String[] VARIABLES = { "Wert 1", "Wert 2" };
@@ -80,7 +79,7 @@ public class HexFloatMultiplikationDynamkicTaskStrategie extends AbstractDynamic
 		if (includePartialSolutions) {
 			results.add(String.valueOf((float) result));
 		}
-		double diff = result - Double.valueOf(Float.toString((float) result));
+		final double diff = result - Double.parseDouble(Float.toString((float) result));
 		results.add(String.valueOf((float) diff));
 		return results;
 	}

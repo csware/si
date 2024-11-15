@@ -51,9 +51,9 @@ public class CompressionDistance extends DupeCheck {
 	 * @return length of the compressed string
 	 * @throws IOException
 	 */
-	private int compress(StringBuffer sb) throws IOException {
-		ByteArrayInputStream errorInputStream = new ByteArrayInputStream(sb.toString().getBytes());
-		ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
+	private static int compress(final StringBuffer sb) throws IOException {
+		final ByteArrayInputStream errorInputStream = new ByteArrayInputStream(sb.toString().getBytes());
+		final ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
 		encoder.get().Code(errorInputStream, errorOutputStream, -1, -1, null);
 		return errorOutputStream.size();
 	}
@@ -65,13 +65,13 @@ public class CompressionDistance extends DupeCheck {
 	 * @return the similarity in per cent
 	 * @throws IOException
 	 */
-	private int compressionDistance(StringBuffer fileOne, StringBuffer fileTwo) throws IOException {
+	private static int compressionDistance(final StringBuffer fileOne, final StringBuffer fileTwo) throws IOException {
 		// TODO: caching possible here
-		int one = compress(fileOne);
-		int two = compress(fileTwo);
-		StringBuffer fileBoth = new StringBuffer(fileOne);
+		final int one = compress(fileOne);
+		final int two = compress(fileTwo);
+		final StringBuffer fileBoth = new StringBuffer(fileOne);
 		fileBoth.append(fileTwo);
-		int both = compress(fileBoth);
+		final int both = compress(fileBoth);
 		return (int) ((1 - (double) (both - Math.min(one, two)) / Math.max(one, two)) * 100.0);
 	}
 }

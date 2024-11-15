@@ -115,11 +115,11 @@ public class Lecture implements Serializable {
 	 */
 	@Transient
 	public String getReadableSemester() {
-		String semester = ((Integer) getSemester()).toString();
+		final String readableSemester = ((Integer) getSemester()).toString();
 		if (getSemester() % 2 != 0) {
-			return "WS " + semester.substring(0, 4) + "/" + ((getSemester() - 1) / 10 + 1);
+			return "WS " + readableSemester.substring(0, 4) + "/" + ((getSemester() - 1) / 10 + 1);
 		}
-		return "SS " + semester.substring(0, 4);
+		return "SS " + readableSemester.substring(0, 4);
 	}
 
 	/**

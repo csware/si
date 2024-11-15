@@ -28,9 +28,10 @@ import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * @author Sven Strickroth
+ * @param <T> 
  */
-public abstract class TempDirTest extends AbstractTest {
-	public TempDirTest(Test test) {
+public abstract class TempDirTest<T extends Test> extends AbstractTest<T> {
+	public TempDirTest(final T test) {
 		super(test);
 	}
 

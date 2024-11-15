@@ -225,11 +225,11 @@ public class ActivityDiagramm extends UMLDiagramm {
 		}
 	}
 
-	private int countNodes(Node node, String nodeName) {
-		XPathFactory xPathfactory = XPathFactory.newInstance();
-		XPath xpath = xPathfactory.newXPath();
+	private static int countNodes(Node node, String nodeName) {
+		final XPathFactory xPathfactory = XPathFactory.newInstance();
+		final XPath xpath = xPathfactory.newXPath();
 		xpath.setNamespaceContext(new UMLNameSpaceContext());
-		XPathExpression expr;
+		final XPathExpression expr;
 
 		try {
 			expr = xpath.compile("count(//" + nodeName + "[xmi.id])");

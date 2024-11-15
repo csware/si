@@ -282,19 +282,19 @@ public class ClassDiagramm extends UMLDiagramm {
 		xpath.setNamespaceContext(new UMLNameSpaceContext());
 
 		XPathExpression expr;
-		NodeList attributes = null;
-		NodeList methods = null;
+		NodeList attributesList = null;
+		NodeList methodsList = null;
 		try {
 			expr = xpath.compile("*/UML:Attribute");
-			attributes = (NodeList) expr.evaluate(rootNode, XPathConstants.NODESET);
+			attributesList = (NodeList) expr.evaluate(rootNode, XPathConstants.NODESET);
 			expr = xpath.compile("*/UML:Operation");
-			methods = (NodeList) expr.evaluate(rootNode, XPathConstants.NODESET);
+			methodsList = (NodeList) expr.evaluate(rootNode, XPathConstants.NODESET);
 		} catch (XPathExpressionException e) {
 		}
 
-		if (attributes != null) {
-			for (int i = 0; i < attributes.getLength(); i++) {
-				Node node = attributes.item(i);
+		if (attributesList != null) {
+			for (int i = 0; i < attributesList.getLength(); i++) {
+				Node node = attributesList.item(i);
 				numberOfAttributes++;
 				Node name = node.getAttributes().getNamedItem("name");
 				if (!name.getNodeValue().isEmpty()) {
@@ -303,9 +303,9 @@ public class ClassDiagramm extends UMLDiagramm {
 			}
 			Collections.sort(result.attributes);
 		}
-		if (methods != null) {
-			for (int i = 0; i < methods.getLength(); i++) {
-				Node node = methods.item(i);
+		if (methodsList != null) {
+			for (int i = 0; i < methodsList.getLength(); i++) {
+				Node node = methodsList.item(i);
 				numberOfMethods++;
 				Node name = node.getAttributes().getNamedItem("name");
 				if (!name.getNodeValue().isEmpty()) {

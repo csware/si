@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -136,14 +136,14 @@ public class AuthenticationFilter implements Filter {
 		request.setAttribute("username", sa.getUser().getUsername());
 		try {
 			if ("POST".equalsIgnoreCase(request.getMethod())) {
-				StringBuilder correctOrigin = new StringBuilder(request.getScheme());
+				final StringBuilder correctOrigin = new StringBuilder(request.getScheme());
 				correctOrigin.append("://");
 				correctOrigin.append(request.getServerName());
 				if (("https".equals(request.getScheme()) && request.getLocalPort() != 443) || ("http".equals(request.getScheme()) && request.getLocalPort() != 80)) {
 					correctOrigin.append(":");
 					correctOrigin.append(request.getLocalPort());
 				}
-				String origin = request.getHeader("Origin");
+				final String origin = request.getHeader("Origin");
 				if (origin == null) {
 					if (request.getHeader("Referer") == null || !request.getHeader("Referer").startsWith(correctOrigin.toString() + "/")) {
 						// just for compatibility of old browsers that do not send the Origin header
@@ -168,7 +168,7 @@ public class AuthenticationFilter implements Filter {
 		}
 	}
 
-	private void performRedirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private static void performRedirect(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
 		String queryString = "";
 		if (request.getQueryString() != null) {
 			queryString = "?" + request.getQueryString();

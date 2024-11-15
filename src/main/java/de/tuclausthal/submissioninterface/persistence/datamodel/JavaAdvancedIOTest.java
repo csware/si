@@ -55,7 +55,7 @@ public class JavaAdvancedIOTest extends Test {
 
 	@Override
 	@Transient
-	public AbstractTest getTestImpl() {
+	public AbstractTest<JavaAdvancedIOTest> getTestImpl() {
 		return new de.tuclausthal.submissioninterface.testframework.tests.impl.JavaAdvancedIOTest(this);
 	}
 

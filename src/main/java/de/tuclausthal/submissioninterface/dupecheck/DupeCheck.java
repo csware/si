@@ -85,7 +85,7 @@ public abstract class DupeCheck {
 		List<Submission> submissions = new ArrayList<>(task.getSubmissions());
 		List<String> excludedFileNames = Arrays.asList(similarityTest.getExcludeFiles().split(","));
 
-		ExecutorService executorService = Executors.newFixedThreadPool(CORES);
+		final ExecutorService executorService = Executors.newFixedThreadPool(CORES);
 		// go through all submissions
 		for (int outerI = 0; outerI < submissions.size(); ++outerI) {
 			final NormalizerCache cache = normalizerCache;
@@ -93,8 +93,8 @@ public abstract class DupeCheck {
 			executorService.execute(new Runnable() {
 				@Override
 				public void run() {
-					Session session = HibernateSessionHelper.getSessionFactory().openSession();
-					SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf(session);
+					final Session innerSession = HibernateSessionHelper.getSessionFactory().openSession();
+					final SimilarityDAOIf similarityDAO = DAOFactory.SimilarityDAOIf(innerSession);
 					List<StringBuffer> javaFiles = new ArrayList<>();
 					for (final String javaFile : Util.listFilesAsRelativeStringList(taskPath.resolve(String.valueOf(submissions.get(i).getSubmissionid())), excludedFileNames)) {
 						// cache the files we use more than once
@@ -130,12 +130,12 @@ public abstract class DupeCheck {
 							}
 						}
 						if (similarityTest.getMinimumDifferenceInPercent() <= maxSimilarity) {
-							Transaction tx = session.beginTransaction();
+							final Transaction tx2 = innerSession.beginTransaction();
 							similarityDAO.addSimilarityResult(similarityTest, submissions.get(i), submissions.get(j), maxSimilarity);
-							tx.commit();
+							tx2.commit();
 						}
 					}
-					session.close();
+					innerSession.close();
 				}
 			});
 		}

@@ -108,7 +108,7 @@ public class TestTask {
 	 * @param testResult 
 	 */
 	public void performTaskInFolder(final Test test, final Path basePath, final Path path, final TestExecutorTestResult testResult) {
-		AbstractTest testImpl = test.getTestImpl();
+		AbstractTest<? extends Test> testImpl = test.getTestImpl();
 		try {
 			Util.ensurePathExists(path);
 			testImpl.performTest(basePath, path, testResult);

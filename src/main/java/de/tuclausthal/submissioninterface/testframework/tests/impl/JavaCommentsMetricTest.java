@@ -33,12 +33,10 @@ import de.tuclausthal.submissioninterface.util.Util;
 /**
  * @author Sven Strickroth
  */
-public class JavaCommentsMetricTest extends AbstractTest {
-	final private CommentsMetricTest test;
+public class JavaCommentsMetricTest extends AbstractTest<CommentsMetricTest> {
 
-	public JavaCommentsMetricTest(CommentsMetricTest test) {
+	public JavaCommentsMetricTest(final CommentsMetricTest test) {
 		super(test);
-		this.test = test;
 	}
 
 	@Override

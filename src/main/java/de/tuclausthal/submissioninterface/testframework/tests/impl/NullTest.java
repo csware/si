@@ -20,13 +20,14 @@ package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
 import java.nio.file.Path;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 
 /**
  * @author Sven Strickroth
  */
-public class NullTest extends AbstractTest {
+public class NullTest extends AbstractTest<Test> {
 	public NullTest() {
 		super(null);
 	}

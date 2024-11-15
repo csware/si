@@ -30,11 +30,11 @@ import de.tuclausthal.submissioninterface.util.Util;
  * Provides feedback for UML diagrams
  * @author Sven Strickroth
  */
-public class JavaUMLConstraintTest extends AbstractTest {
+public class JavaUMLConstraintTest extends AbstractTest<UMLConstraintTest> {
 	final static public String FILENAME_PREFIX = "musterloesung";
 	final static public String FILENAME_PATTERN = FILENAME_PREFIX + "%d.xmi";
 
-	public JavaUMLConstraintTest(UMLConstraintTest umlConstraintTest) {
+	public JavaUMLConstraintTest(final UMLConstraintTest umlConstraintTest) {
 		super(umlConstraintTest);
 	}
 

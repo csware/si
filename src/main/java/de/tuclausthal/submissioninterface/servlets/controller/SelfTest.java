@@ -205,7 +205,7 @@ public class SelfTest extends HttpServlet {
 		getServletContext().getNamedDispatcher(SelfTestView.class.getSimpleName()).forward(request, response);
 	}
 
-	private boolean checkDataDir() {
+	private static boolean checkDataDir() {
 		final Path dataDir = Configuration.getInstance().getDataPath();
 		if (!Files.isDirectory(dataDir) || !Files.isReadable(dataDir)) {
 			return false;
@@ -219,7 +219,7 @@ public class SelfTest extends HttpServlet {
 		return true;
 	}
 
-	private boolean checkTemp() {
+	private static boolean checkTemp() {
 		try {
 			final Path testFile = Files.createTempFile("sometext", ".tmp");
 			Files.delete(testFile);
@@ -240,7 +240,7 @@ public class SelfTest extends HttpServlet {
 		return true;
 	}
 
-	private boolean checkSpecialFilename() {
+	private static boolean checkSpecialFilename() {
 		try {
 			final Path testFile = Files.createTempFile("ÜÜmlaut", ".tmp");
 			Files.delete(testFile);
@@ -251,7 +251,7 @@ public class SelfTest extends HttpServlet {
 		return true;
 	}
 
-	private boolean checkLecturesDir() {
+	private static boolean checkLecturesDir() {
 		final Path lecturesDir = Configuration.getInstance().getLecturesPath();
 		if (!Files.isDirectory(lecturesDir) || !Files.isReadable(lecturesDir) || !Files.isWritable(lecturesDir)) {
 			return false;
@@ -272,7 +272,7 @@ public class SelfTest extends HttpServlet {
 		return true;
 	}
 
-	private void checkRequiredFilesInDataDir(List<TestResult> testresults) {
+	private static void checkRequiredFilesInDataDir(List<TestResult> testresults) {
 		String[] filesToCheck = { JavaFunctionTest.SECURITYMANAGER_JAR, JavaJUnitTest.JUNIT_JAR, PlaggieAdapter.CONFIG_FILE_NAME };
 		for (String filename : filesToCheck) {
 			final Path file = Configuration.getInstance().getDataPath().resolve(filename);
@@ -280,7 +280,7 @@ public class SelfTest extends HttpServlet {
 		}
 	}
 
-	protected void testJavaTests(List<TestResult> testresults) {
+	private static void testJavaTests(List<TestResult> testresults) {
 		final Path tempDir = Util.createTemporaryDirectory("javatests");
 		if (tempDir == null) {
 			testresults.add(new TestResult("Java-Tests erfolgreich.", "Konnte kein temporäres Verzeichnis erstellen.", false));
@@ -354,10 +354,10 @@ public class SelfTest extends HttpServlet {
 			JsonObject object = null;
 			try (JsonReader jsonReader = Json.createReader(new StringReader(result.getTestOutput()))) {
 				object = jsonReader.readObject();
+				testresults.add(new TestResult("JavaAdvancedIOTest erkennt erfolgreich Timeout.", Util.escapeHTML(result.getTestOutput()), !result.isTestPassed() && object.containsKey("time-exceeded") && object.getBoolean("time-exceeded")));
 			} catch (JsonParsingException ex) {
 				testresults.add(new TestResult("JavaAdvancedIOTest-Ausgabe ist kein gültiges JSON.", Util.escapeHTML(result.getTestOutput()), false));
 			}
-			testresults.add(new TestResult("JavaAdvancedIOTest erkennt erfolgreich Timeout.", Util.escapeHTML(result.getTestOutput()), !result.isTestPassed() && object.containsKey("time-exceeded") && object.getBoolean("time-exceeded")));
 
 			if (functionTestGenerallyOK) {
 				javaAdvancedIOTest.getTestSteps().clear();
@@ -368,15 +368,16 @@ public class SelfTest extends HttpServlet {
 				javaFunctionTest.performTest(Configuration.getInstance().getDataPath(), tempDir, result);
 				try (JsonReader jsonReader = Json.createReader(new StringReader(result.getTestOutput()))) {
 					object = jsonReader.readObject();
+
+					String output = object.getString("stdout", "STDOUT empty");
+					if (output.contains("----start here----") && output.contains("----to here----")) {
+						int start = output.indexOf("----start here----\n") + "----start here----\n".length();
+						output = output.substring(start, output.length() - "\n----to here----\n".length());
+					}
+					testresults.add(new TestResult("Java-Version des JavaAdvancedIOTests:", Util.escapeHTML(output), null));
 				} catch (JsonParsingException ex) {
 					testresults.add(new TestResult("JavaAdvancedIOTest-Ausgabe ist kein gültiges JSON.", Util.escapeHTML(result.getTestOutput()), false));
 				}
-				String output = object.getString("stdout", "STDOUT empty");
-				if (output.contains("----start here----") && output.contains("----to here----")) {
-					int start = output.indexOf("----start here----\n") + "----start here----\n".length();
-					output = output.substring(start, output.length() - "\n----to here----\n".length());
-				}
-				testresults.add(new TestResult("Java-Version des JavaAdvancedIOTests:", Util.escapeHTML(output), null));
 			}
 		} catch (Exception e) {
 			testresults.add(new TestResult("JavaAdvancedIOTest erfolgreich.", Util.escapeHTML(e.getMessage()), false));
@@ -389,21 +390,23 @@ public class SelfTest extends HttpServlet {
 	}
 
 	public static class TestResult {
-		public String test;
-		public String details;
-		public Boolean result;
+		final public String test;
+		final public String details;
+		final public Boolean result;
 
-		public TestResult(String test) {
+		private TestResult(String test) {
 			this.test = test;
 			this.result = true;
+			this.details = "";
 		}
 
-		public TestResult(String test, Boolean result) {
+		private TestResult(String test, Boolean result) {
 			this.test = test;
 			this.result = result;
+			this.details = "";
 		}
 
-		public TestResult(String test, String details, Boolean result) {
+		private TestResult(String test, String details, Boolean result) {
 			this.test = test;
 			this.details = details;
 			this.result = result;

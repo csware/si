@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021, 2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021, 2023-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -85,7 +85,7 @@ public class Shibboleth implements LoginIf {
 			}
 			redirString = "?" + REDIR_PARAMETER + "=" + URLEncoder.encode((request.getRequestURI() + queryString), StandardCharsets.UTF_8.toString());
 		} else {
-			request.getSession().setAttribute(LOOP_DETECTION_KEY, true);
+			request.getSession().setAttribute(LOOP_DETECTION_KEY, Boolean.TRUE);
 			if (request.getParameter(REDIR_PARAMETER) != null) {
 				redirString = "?" + REDIR_PARAMETER + "=" + URLEncoder.encode(request.getParameter(REDIR_PARAMETER), StandardCharsets.UTF_8.toString());
 			}
@@ -115,7 +115,7 @@ public class Shibboleth implements LoginIf {
 		if (username == null) {
 			return null;
 		}
-		request.getSession().setAttribute(SHIBBOLETH_LOGIN_KEY, true);
+		request.getSession().setAttribute(SHIBBOLETH_LOGIN_KEY, Boolean.TRUE);
 		return new LoginData(username, null);
 	}
 

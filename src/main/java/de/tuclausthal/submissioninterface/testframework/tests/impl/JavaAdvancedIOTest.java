@@ -36,14 +36,13 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTe
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.util.Util;
 
-public class JavaAdvancedIOTest extends JavaFunctionTest {
+public class JavaAdvancedIOTest extends JavaFunctionTest<de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest> {
 	private static final Random random = new Random();
 	private static final String STUDENT_CODE_DIRNAME = "studentcode";
 	private static final String TEST_CODE_DIRNAME = "testcode";
 	private static final String STUDENT_CLASSES_DIRNAME = STUDENT_CODE_DIRNAME + "_classes";
 	private static final String TEST_CLASSES_DIRNAME = TEST_CODE_DIRNAME + "_classes";
 	private final String separator;
-	private final de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest test;
 
 	public enum FAILSTATE {
 		SYNTAX_ERROR_STUDENT_SOLUTION,
@@ -51,10 +50,9 @@ public class JavaAdvancedIOTest extends JavaFunctionTest {
 	}
 	private FAILSTATE errorState = null;
 
-	public JavaAdvancedIOTest(de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest test) {
+	public JavaAdvancedIOTest(final de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest test) {
 		super(test);
 		separator = "#<GATE@" + random.nextLong() + "#@>#";
-		this.test = test;
 	}
 
 	@Override

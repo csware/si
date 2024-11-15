@@ -37,12 +37,13 @@ import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * @author Sven Strickroth
+ * @param <T> 
  */
-public abstract class JavaFunctionTest extends JavaSyntaxTest {
+public abstract class JavaFunctionTest<T extends Test> extends JavaSyntaxTest<T> {
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	final static public String SECURITYMANAGER_JAR = "NoExitSecurityManager.jar";
 
-	public JavaFunctionTest(Test test) {
+	public JavaFunctionTest(final T test) {
 		super(test);
 	}
 

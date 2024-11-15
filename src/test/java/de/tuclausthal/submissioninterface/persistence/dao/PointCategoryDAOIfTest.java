@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -32,7 +32,7 @@ class PointCategoryDAOIfTest extends BasicTest {
 	@Test
 	void testCountPointsNone() {
 		Task task = DAOFactory.TaskDAOIf(session).getTask(2);
-		assertEquals(0, DAOFactory.PointCategoryDAOIf(session).countPoints(task));;
+		assertEquals(0, DAOFactory.PointCategoryDAOIf(session).countPoints(task));
 		assertEquals(0, task.getPointCategories().size());
 		assertEquals(200, task.getMaxPoints());
 	}

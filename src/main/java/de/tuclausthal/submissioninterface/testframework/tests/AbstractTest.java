@@ -25,14 +25,15 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
 
 /**
  * @author Sven Strickroth
+ * @param <T> Test type
  */
-public abstract class AbstractTest {
-	final protected Test test;
+public abstract class AbstractTest<T extends Test> {
+	final protected T test;
 
 	/**
 	 * @param test
 	 */
-	public AbstractTest(Test test) {
+	public AbstractTest(final T test) {
 		this.test = test;
 	}
 

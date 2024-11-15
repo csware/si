@@ -63,8 +63,8 @@ public class JUnitTest extends Test {
 
 	@Override
 	@Transient
-	public AbstractTest getTestImpl() {
-		return new JavaJUnitTest(this);
+	public AbstractTest<JUnitTest> getTestImpl() {
+		return new JavaJUnitTest<>(this);
 	}
 
 	@Override

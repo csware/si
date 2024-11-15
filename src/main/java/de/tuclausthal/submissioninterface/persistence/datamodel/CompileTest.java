@@ -39,8 +39,8 @@ public class CompileTest extends Test {
 	@Override
 	@Transient
 	@JsonIgnore
-	public AbstractTest getTestImpl() {
-		return new JavaSyntaxTest(this);
+	public AbstractTest<CompileTest> getTestImpl() {
+		return new JavaSyntaxTest<>(this);
 	}
 
 	@Override

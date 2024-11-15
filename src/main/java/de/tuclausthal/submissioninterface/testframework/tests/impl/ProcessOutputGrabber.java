@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -31,7 +31,7 @@ public final class ProcessOutputGrabber {
 	 * Grabber for stdout and stderr of a process into a StringBuffer
 	 * @param process the process to grab the stdout and stderr from
 	 */
-	public ProcessOutputGrabber(Process process) {
+	public ProcessOutputGrabber(final Process process) {
 		readStdOutThread = new ReadOutputThread(process.getInputStream());
 		readStdErrThread = new ReadOutputThread(process.getErrorStream());
 		readStdOutThread.start();

@@ -73,8 +73,8 @@ public class Configuration {
 
 	static {
 		Properties versionProperties = new Properties();
-		try {
-			versionProperties.load(Configuration.class.getClassLoader().getResourceAsStream("git.properties"));
+		try (var propertiesFile = Configuration.class.getClassLoader().getResourceAsStream("git.properties")) {
+			versionProperties.load(propertiesFile);
 			VERSION_INFO = versionProperties.getProperty("git.commit.id.abbrev") + " (" + versionProperties.getProperty("git.build.time") + ")";
 		} catch (IOException | NullPointerException ex) {
 			VERSION_INFO = "unknown";

@@ -183,7 +183,7 @@ public abstract class Test implements Serializable {
 
 	@Transient
 	@JsonIgnore
-	abstract public AbstractTest getTestImpl();
+	abstract public AbstractTest<? extends Test> getTestImpl();
 
 	/**
 	 * @return the giveDetailsToStudents

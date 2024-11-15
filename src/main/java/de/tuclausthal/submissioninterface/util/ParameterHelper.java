@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2022-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -40,11 +40,11 @@ public class ParameterHelper {
 		return request.getParameter(parameter.key) != null;
 	}
 
-	public void constructLinks(HttpServletResponse response, PrintWriter out) {
+	public void constructLinks(final HttpServletResponse response, final PrintWriter out) {
 		out.println("<ul>");
-		for (Parameter parameter : parameters) {
+		for (final Parameter parameter : parameters) {
 			out.print("<li><a href=\"");
-			out.print(Util.generateHTMLLink(constructParameters(baseURI, parameter), response));
+			out.print(Util.generateHTMLLink(constructParameters(parameter), response));
 			out.print("\">");
 			out.print(parameter.getTitle());
 			out.print(" ");
@@ -58,10 +58,10 @@ public class ParameterHelper {
 		out.println("</ul>");
 	}
 
-	private String constructParameters(String baseURI, Parameter current) {
-		StringBuilder sb = new StringBuilder();
+	private String constructParameters(final Parameter current) {
+		final StringBuilder sb = new StringBuilder();
 		sb.append(baseURI);
-		for (Parameter parameter : parameters) {
+		for (final Parameter parameter : parameters) {
 			if (parameter == current || request.getParameter(parameter.getKey()) == null) {
 				continue;
 			}
@@ -76,8 +76,8 @@ public class ParameterHelper {
 	}
 
 	public static class Parameter {
-		private String key;
-		private String title;
+		final private String key;
+		final private String title;
 		private boolean inverted = false;
 		private String show = "anzeigen";
 		private String hide = "ausblenden";

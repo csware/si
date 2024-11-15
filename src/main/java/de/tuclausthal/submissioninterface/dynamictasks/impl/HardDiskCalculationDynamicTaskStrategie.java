@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -24,7 +24,6 @@ import java.util.List;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTaskStrategie;
-import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
@@ -32,7 +31,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 /**
  * @author Sven Strickroth
  */
-public class HardDiskCalculationDynamicTaskStrategie extends AbstractDynamicTaskStrategie implements DynamicTaskStrategieIf {
+public class HardDiskCalculationDynamicTaskStrategie extends AbstractDynamicTaskStrategie {
 	private static final String[] RESULT_FIELDS = { "Lösung in Terrabyte", "Lösung in Tebibyte" };
 	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Summe der Blue-Rays (bytes)", "-Summe der Audio-Files (bytes)", "-Lösung in Bytes", "Lösung in Terrabyte", "Lösung in Tebibyte" };
 	private static final String[] VARIABLES = { "Anzahl Blue-Rays", "Größe der Blue-Rays", "Anzahl Musikstücke", "Durchschnittliche Größe der Musikstücke" };

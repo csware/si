@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -30,10 +30,10 @@ public class CrLfFilterReader extends FilterReader {
 
 	@Override
 	public int read() throws IOException {
-		int thisChar = super.read();
+		final int thisChar = super.read();
 		if (thisChar == '\r') {
 			super.mark(1);
-			int nextChar = super.read();
+			final int nextChar = super.read();
 			if (nextChar == -1) {
 				return thisChar;
 			} else if (nextChar != '\n') {
@@ -52,7 +52,7 @@ public class CrLfFilterReader extends FilterReader {
 
 	// based on FixCrLfFilter.java from the Apache Ant project
 	@Override
-	public int read(char[] buf, int start, int length) throws IOException {
+	public int read(final char[] buf, int start, int length) throws IOException {
 		int count = 0;
 		int c = 0;
 		while (length-- > 0 && (c = this.read()) != -1) {

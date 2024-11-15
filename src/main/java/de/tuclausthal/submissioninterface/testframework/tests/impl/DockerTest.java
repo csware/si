@@ -19,8 +19,8 @@
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
 import java.io.Writer;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -35,26 +35,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * @author Sven Strickroth
  */
-public class DockerTest extends TempDirTest {
+public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest> {
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	final static public String SAFE_DOCKER_SCRIPT = "/usr/local/bin/safe-docker";
 
 	private static final Random random = new Random();
 	private final String separator;
-	private final de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest test;
 	private Path tempDir;
 
-	public DockerTest(de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest test) {
+	public DockerTest(final de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest test) {
 		super(test);
 		separator = "#<GATE@" + random.nextLong() + "#@>#";
-		this.test = test;
 	}
 
 	@Override
@@ -125,7 +122,7 @@ public class DockerTest extends TempDirTest {
 			}
 
 			boolean exitedCleanly = (exitValue == 0);
-			testResult.setTestPassed(calculateTestResult(test, exitedCleanly, outputGrapper.getStdOutBuffer(), outputGrapper.getStdErrBuffer(), exitValue, aborted));
+			testResult.setTestPassed(calculateTestResult(exitedCleanly, outputGrapper.getStdOutBuffer(), outputGrapper.getStdErrBuffer(), exitValue, aborted));
 			testResult.setTestOutput(outputGrapper.getStdOutBuffer().toString());
 		} finally {
 			if (tempDir != null) {
@@ -135,9 +132,7 @@ public class DockerTest extends TempDirTest {
 	}
 
 	// similar code in JavaAdvancedIOTest
-	protected boolean calculateTestResult(final Test test, boolean exitedCleanly, final StringBuffer processOutput, final StringBuffer stdErr, final int exitCode, final boolean aborted) {
-		de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest dt = (de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest) test;
-
+	protected boolean calculateTestResult(boolean exitedCleanly, final StringBuffer processOutput, final StringBuffer stdErr, final int exitCode, final boolean aborted) {
 		JsonObjectBuilder builder = Json.createObjectBuilder();
 		builder.add("stdout", processOutput.toString());
 		if (stdErr.length() > 0) {
@@ -164,12 +159,12 @@ public class DockerTest extends TempDirTest {
 
 		int i;
 		JsonArrayBuilder arrb = Json.createArrayBuilder();
-		for (i = 0; i < dt.getTestSteps().size() && i + 1 < outputs.size(); ++i) {
+		for (i = 0; i < test.getTestSteps().size() && i + 1 < outputs.size(); ++i) {
 			JsonObjectBuilder job = Json.createObjectBuilder();
-			job.add("id", dt.getTestSteps().get(i).getTeststepid());
+			job.add("id", test.getTestSteps().get(i).getTeststepid());
 			job.add("got", outputs.get(i + 1));
-			job.add("expected", dt.getTestSteps().get(i).getExpect());
-			if (!outputs.get(i + 1).trim().equals(dt.getTestSteps().get(i).getExpect().trim())) {
+			job.add("expected", test.getTestSteps().get(i).getExpect());
+			if (!outputs.get(i + 1).trim().equals(test.getTestSteps().get(i).getExpect().trim())) {
 				exitedCleanly = false;
 				job.add("ok", false);
 			} else {
@@ -178,7 +173,7 @@ public class DockerTest extends TempDirTest {
 			arrb.add(job);
 		}
 		builder.add("steps", arrb);
-		if (i < dt.getTestSteps().size()) {
+		if (i < test.getTestSteps().size()) {
 			builder.add("missing-tests", true);
 			exitedCleanly = false;
 		}
@@ -189,5 +184,5 @@ public class DockerTest extends TempDirTest {
 	}
 
 	@Override
-	protected void performTestInTempDir(Path basePath, Path tempDir, TestExecutorTestResult testResult) throws Exception {}
+	protected void performTestInTempDir(Path basePath, Path pTempDir, TestExecutorTestResult testResult) throws Exception {}
 }

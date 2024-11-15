@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Session;
 
 import com.opencsv.CSVWriter;
+import com.opencsv.ICSVWriter;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.GroupDAOIf;
@@ -172,7 +173,7 @@ public class MassMail extends HttpServlet {
 		final String[] fixedHeader = { "Name", "E-Mail" };
 		final Path tmpDir = Util.createTemporaryDirectory("csv");
 		final Path tmpFile = tmpDir.resolve("alle-empfaenger.csv");
-		try (CSVWriter writer = new CSVWriter(Files.newBufferedWriter(tmpFile), ';', CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
+		try (CSVWriter writer = new CSVWriter(Files.newBufferedWriter(tmpFile), ';', ICSVWriter.DEFAULT_QUOTE_CHARACTER, ICSVWriter.DEFAULT_ESCAPE_CHARACTER, ICSVWriter.DEFAULT_LINE_END)) {
 			writer.writeNext(fixedHeader, false);
 			for (User receipient : receipients) {
 				String[] line = new String[fixedHeader.length];

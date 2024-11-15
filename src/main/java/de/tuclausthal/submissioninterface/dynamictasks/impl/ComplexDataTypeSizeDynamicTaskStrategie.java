@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2020 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -24,7 +24,6 @@ import java.util.List;
 import org.hibernate.Session;
 
 import de.tuclausthal.submissioninterface.dynamictasks.AbstractDynamicTaskStrategie;
-import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
@@ -32,7 +31,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskNumber;
 /**
  * @author Sven Strickroth
  */
-public class ComplexDataTypeSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie implements DynamicTaskStrategieIf {
+public class ComplexDataTypeSizeDynamicTaskStrategie extends AbstractDynamicTaskStrategie {
 	private static final String[] RESULT_FIELDS = { "Größe des Datentyps in Bits" };
 	private static final String[] RESULT_FIELDS_WITH_PARTIAL = { "-Bits für Lfnd. Nr.", "-Bits für Verwendungszweck", "-Bits für Betrag", "Größe des Datentyps in Bits" };
 	private static final String[] VARIABLES = { "Max. Lfnd. Nr.", "Länge Verwendungszweck", "Min. Betrag", "Max. Betrag" };

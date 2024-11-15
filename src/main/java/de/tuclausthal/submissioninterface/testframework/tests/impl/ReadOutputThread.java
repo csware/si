@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2022, 2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -37,7 +37,7 @@ public class ReadOutputThread extends Thread {
 	final private static int BUFFER_LENGTH = 8 * 1024;
 	final private static int MAX_LENGTH = 64 * 1024;
 
-	public ReadOutputThread(InputStream is) {
+	public ReadOutputThread(final InputStream is) {
 		streamReader = new CrLfFilterReader(new BufferedReader(new InputStreamReader(is)));
 	}
 
@@ -49,7 +49,7 @@ public class ReadOutputThread extends Thread {
 	public void run() {
 		boolean truncated = false;
 		try {
-			char buffer[] = new char[BUFFER_LENGTH];
+			final char buffer[] = new char[BUFFER_LENGTH];
 			int read;
 			while ((read = streamReader.read(buffer)) != -1) {
 				if (stringBuffer.length() >= MAX_LENGTH) {

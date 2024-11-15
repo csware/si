@@ -84,8 +84,8 @@ public class RegExpTest extends Test {
 
 	@Override
 	@Transient
-	public AbstractTest getTestImpl() {
-		return new AbstractTest(this) {
+	public AbstractTest<Test> getTestImpl() {
+		return new AbstractTest<>(this) {
 			@Override
 			public void performTest(Path basePath, Path submissionPath, TestExecutorTestResult testResult) throws Exception {
 				LOG.warn("Deprecated Java RegExp Test requested: taskid={}, testid={}", getTask().getTaskid(), getId());

@@ -147,16 +147,14 @@ public class PlaggieAdapter extends DupeCheck {
 		ArrayList<SubmissionDetectionResult> detResults = null;
 
 		// Generate the black list
-		HashMap<String, Integer> blacklist = new HashMap<>();
+		final HashMap<String, Integer> blacklist = new HashMap<>();
 		if (!(config.blacklistFile == null || config.blacklistFile.equals(""))) {
-			try {
-				BufferedReader bin = new BufferedReader(new FileReader(config.blacklistFile));
+			try (BufferedReader bin = new BufferedReader(new FileReader(config.blacklistFile))) {
 				String s;
-				Integer dummy = 0;
+				final Integer dummy = 0;
 				while ((s = bin.readLine()) != null) {
 					blacklist.put(s.toUpperCase(), dummy);
 				}
-				bin.close();
 			} catch (FileNotFoundException e) {
 				// do nothing
 			}
@@ -164,13 +162,13 @@ public class PlaggieAdapter extends DupeCheck {
 		}
 
 		// Create the code excluder
-		ArrayList<CodeExcluder> codeExcluders = new ArrayList<>();
+		final ArrayList<CodeExcluder> codeExcluders = new ArrayList<>();
 
 		if (config.excludeInterfaces) {
 			codeExcluders.add(new InterfaceCodeExcluder());
 		}
 
-		StringTokenizer tokenizer = new StringTokenizer(config.templates, ",");
+		final StringTokenizer tokenizer = new StringTokenizer(config.templates, ",");
 
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken().trim();
@@ -272,10 +270,8 @@ public class PlaggieAdapter extends DupeCheck {
 	/**
 	 * Returns the token list of the given file.
 	 */
-	private TokenList createTokenList(String filename, CodeTokenizer tokenizer) throws Exception {
-
+	private static TokenList createTokenList(String filename, CodeTokenizer tokenizer) throws Exception {
 		TokenList tokens = tokenizer.tokenize(new File(filename));
-
 		return tokens;
 	}
 

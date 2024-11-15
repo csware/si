@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2024 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -64,6 +64,7 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 		return query.uniqueResult();
 	}
 
+	@Override
 	public User getUserByEmail(String email) {
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
@@ -116,7 +117,7 @@ public class UserDAO extends AbstractDAO implements UserDAOIf {
 
 	@Override
 	public void makeUserStudent(int uid, int matrikelno) {
-		getSession().createNativeMutationQuery("update users set " + Student_.MATRIKELNO + " = :matrikelno where " + Student_.UID + " = :uid").setParameter("matrikelno", matrikelno, StandardBasicTypes.INTEGER).setParameter("uid", uid, StandardBasicTypes.INTEGER).executeUpdate();
+		getSession().createNativeMutationQuery("update users set " + Student_.MATRIKELNO + " = :matrikelno where " + User_.UID + " = :uid").setParameter("matrikelno", matrikelno, StandardBasicTypes.INTEGER).setParameter("uid", uid, StandardBasicTypes.INTEGER).executeUpdate();
 	}
 
 	@Override

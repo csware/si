@@ -40,9 +40,10 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
 
 /**
  * @author Sven Strickroth
+ * @param <T> 
  */
-public class JavaSyntaxTest extends TempDirTest {
-	public JavaSyntaxTest(Test test) {
+public class JavaSyntaxTest<T extends Test> extends TempDirTest<T> {
+	public JavaSyntaxTest(final T test) {
 		super(test);
 	}
 

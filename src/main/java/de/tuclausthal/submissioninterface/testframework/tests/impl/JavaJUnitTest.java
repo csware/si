@@ -28,20 +28,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * @author Sven Strickroth
+ * @param <T> 
  */
-public class JavaJUnitTest extends JavaFunctionTest {
+public class JavaJUnitTest<T extends JUnitTest> extends JavaFunctionTest<T> {
 	final private static Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	final static public String JUNIT_JAR = "junit.jar";
 	final static public String FILENAME_PREFIX = "junittest";
 	final static public String FILENAME_PATTERN = FILENAME_PREFIX + "%d.jar";
 
-	public JavaJUnitTest(Test test) {
+	public JavaJUnitTest(final T test) {
 		super(test);
 	}
 
@@ -62,7 +62,7 @@ public class JavaJUnitTest extends JavaFunctionTest {
 	@Override
 	void populateParameters(List<String> params) {
 		params.add("junit.textui.TestRunner");
-		String mainClass = ((JUnitTest) test).getMainClass();
+		String mainClass = test.getMainClass();
 		if (!JUnitTest.CANONICAL_CLASS_NAME.matcher(mainClass).matches()) {
 			LOG.warn("illegal main-class for JUnitTest found: testid: {}, mainclass: \"{}\"", test.getId(), mainClass);
 			mainClass = "AllTests";
