@@ -1,5 +1,5 @@
 /*
- * Copyright 2013, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2013, 2020-2022, 2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,11 +21,11 @@ package de.tuclausthal.submissioninterface.util;
 import java.lang.invoke.MethodHandles;
 import java.util.Set;
 
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRegistration;
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletRegistration;
+import jakarta.servlet.http.HttpServlet;
 
 import org.reflections.Reflections;
 import org.slf4j.Logger;

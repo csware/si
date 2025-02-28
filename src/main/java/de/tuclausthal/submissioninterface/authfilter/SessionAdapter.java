@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2020-2021, 2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -22,8 +22,8 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.concurrent.Future;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;

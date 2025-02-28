@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2017, 2020-2021, 2025 Sven Strickroth <email@cs-ware.de>
  * Copyright 2011 Joachim Schramm
  *
  * This file is part of the GATE.
@@ -22,10 +22,10 @@ package de.tuclausthal.submissioninterface.servlets.view;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
 import de.tuclausthal.submissioninterface.servlets.GATEView;

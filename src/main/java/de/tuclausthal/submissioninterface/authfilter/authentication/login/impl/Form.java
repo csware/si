@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2012, 2017, 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2012, 2017, 2021, 2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -21,9 +21,9 @@ package de.tuclausthal.submissioninterface.authfilter.authentication.login.impl;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginData;
 import de.tuclausthal.submissioninterface.authfilter.authentication.login.LoginIf;

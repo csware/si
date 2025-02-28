@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2017, 2020-2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -24,12 +24,11 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import jakarta.mail.internet.MimeUtility;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2012, 2020-2021, 2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2011-2012, 2020-2021, 2023, 2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -23,12 +23,12 @@ import java.io.PrintWriter;
 import java.lang.invoke.MethodHandles;
 import java.util.Objects;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

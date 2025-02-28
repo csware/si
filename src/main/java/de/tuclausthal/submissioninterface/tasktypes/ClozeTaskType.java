@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -27,7 +27,7 @@ import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.text.StringEscapeUtils;
 

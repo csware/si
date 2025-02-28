@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,8 +18,8 @@
 
 package de.tuclausthal.submissioninterface.servlets;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;

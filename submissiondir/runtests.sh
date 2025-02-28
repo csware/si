@@ -1,7 +1,7 @@
 #!/bin/bash
 
 contextname="submissionsystem"
-webappdir="/var/lib/tomcat9/webapps/"
+webappdir="/var/lib/tomcat10/webapps/"
 contextpath="$webappdir$contextname"
 datadir="/srv/submissioninterface"
 

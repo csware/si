@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2024 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -37,7 +37,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.Part;
+import jakarta.servlet.http.Part;
 
 import org.apache.commons.io.file.PathUtils;
 import org.junit.jupiter.api.Test;

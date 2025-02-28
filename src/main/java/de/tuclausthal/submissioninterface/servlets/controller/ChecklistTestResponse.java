@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2024 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021-2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -22,17 +22,16 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import jakarta.json.Json;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;

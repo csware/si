@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2012, 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2012, 2020-2023, 2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -23,10 +23,10 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;

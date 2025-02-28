@@ -13,7 +13,7 @@ Please read the whole procedure in advance to executing it.
 - Install Java (17 is recommended, 21 also works)
   - On *nix (such as Debian) use the `openjdk-17-jre-headless` package
   - On Windows you can use [Liberica OpenJDK 17](https://bell-sw.com/pages/downloads/)
-- Install [Apache Tomcat 9](https://tomcat.apache.org) (e.g., on Debian-based systems use the `tomcat9` package)
+- Install [Apache Tomcat 10.1](https://tomcat.apache.org) (e.g., on Debian-based systems use the `tomcat10` package)
   - After installation Tomcat usually listens on locahost:8080
   - For development it is recommended to download the binary archive and integrate Tomcat into the used IDE, e.g. into Eclipse.
 - Install MariaDB
@@ -68,7 +68,7 @@ Please read the whole procedure in advance to executing it.
   - Set the database name, username and password here
 - `src/main/webapp/WEB-INF/web.xml` for Tomcat and GATE specific configurations
   - Adjust the `datapath` here, please make sure that this is accessible by Tomcat (should be read-only), use e.g. `/srv/gate/` or `c:\gate` here. Create subdirectories named `lectures` and `logs` that are writable for the tomcat user where the user data and logs are stored.
-    - On *nix the system Tomcat runs as the user `tomcat`, so make sure that the user has appropriate permissions, also on Debian-based systems, Tomcat might be sandboxed by systemd. Create a file `/etc/systemd/system/tomcat9.service.d/gate.conf` containing:
+    - On *nix the system Tomcat runs as the user `tomcat`, so make sure that the user has appropriate permissions, also on Debian-based systems, Tomcat might be sandboxed by systemd. Create a file `/etc/systemd/system/tomcat10.service.d/gate.conf` containing:
       ```
       [Service]
       ReadWritePaths=/srv/gate/lectures/
@@ -101,9 +101,9 @@ Alternatively you can also use GitLab CI/CD functionality and download the built
   - No files directly inside the data directory should be writable by the tomcat user.
 - On Windows: Make sure the `JAVA_HOME` environment variable is set and points to the JDK directory (e.g. `C:\Program Files\BellSoft\LibericaJDK-17\`)
 - Prepare Tomcat
-  - If you want to have the user names on the Tomcat access log, you can use `%{username}r` (as a replacement for `%u`) for configuring the `AccessLogValve` `pattern`, cf. https://tomcat.apache.org/tomcat-9.0-doc/config/valve.html#Access_Log_Valve
+  - If you want to have the user names on the Tomcat access log, you can use `%{username}r` (as a replacement for `%u`) for configuring the `AccessLogValve` `pattern`, cf. https://tomcat.apache.org/tomcat-10.1-doc/config/valve.html#Access_Log_Valve
   - Rename the built `.war` file to e.g. `gate`, because the name is then used to build the URL under which GATE will be accessible using Tomcat
-  - Copy the `.war` file to the `webapps` folder of Tomcat (usually in `C:\Program Files\Apache Tomcat 9\webapps` or `/var/lib/tomcat9/webapps/`)
+  - Copy the `.war` file to the `webapps` folder of Tomcat (usually in `C:\Program Files\Apache Tomcat 10.1\webapps` or `/var/lib/tomcat10/webapps/`)
   - New versions of GATE can be easily deployed by just overriding the `.war` file in the `webapps` folder
 - Create first user with superuser permissions: Execute `util.CreateFirstUser` with parameters: `loginname emailaddress firtsname lastname`. Alternatively, you can also manually insert a new row into the `users` table.
 - Set up the cron task that performs regular tasks such as automatically start the plagiarism check in background
@@ -113,7 +113,7 @@ Alternatively you can also use GitLab CI/CD functionality and download the built
 - For using Docker-based tests
     - Build the local `safe-docker` image, based on `safe-docker/Dockerfile` (e.g., `docker build --tag safe-docker .` in the `safe-docker` folder of this repository). So far, the image is only prepared for supporting Haskell, you might want to extend it according to your needs.
     - Copy `safe-docker/safe-docker` to `/usr/local/bin/safe-docker` and make sure it is owned by `root:root` and has the permissions `700`, you might want to check the parameters passed to `docker`. Requires the packages `libipc-run-perl` and `libdata-guid-perl packages` on Debian-based systems.
-    - On Debian-based systems you might need to lift some systemd restrictions by creating the file `/etc/systemd/system/tomcat9.service.d/gate-safe-docker.conf` containing:
+    - On Debian-based systems you might need to lift some systemd restrictions by creating the file `/etc/systemd/system/tomcat10.service.d/gate-safe-docker.conf` containing:
       ```
       [Service]
       NoNewPrivileges=false

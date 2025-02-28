@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012, 2020-2024 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2012, 2020-2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -22,14 +22,14 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.time.ZonedDateTime;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;

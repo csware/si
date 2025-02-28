@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021, 2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
 
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServlet;
 
 import org.junit.jupiter.api.Test;
 import org.reflections.Reflections;

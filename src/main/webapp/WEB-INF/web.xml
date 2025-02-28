@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
   <description>
-      Submission Interface
+      GATE is an e-assessment system developed to support (large) programming courses with automatic feedback.
     </description>
-  <display-name>Submission Interface</display-name>
+  <display-name>GATE</display-name>
   <session-config>
     <session-timeout>30</session-timeout>
     <tracking-mode>COOKIE</tracking-mode>

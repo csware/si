@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2010, 2015 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2015, 2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,8 +18,8 @@
 
 package de.tuclausthal.submissioninterface.testframework.executor.impl;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 import de.tuclausthal.submissioninterface.util.Configuration;
 

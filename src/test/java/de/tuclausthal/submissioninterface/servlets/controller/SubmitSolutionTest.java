@@ -1,5 +1,5 @@
 /*
- * Copyright 2021, 2023-2024 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2021, 2023-2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -33,7 +33,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-import javax.servlet.http.Part;
+import jakarta.servlet.http.Part;
 
 import org.apache.commons.io.file.PathUtils;
 import org.junit.jupiter.api.Test;

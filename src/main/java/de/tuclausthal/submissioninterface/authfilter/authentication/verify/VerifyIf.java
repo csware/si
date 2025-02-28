@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020, 2024 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020, 2024-2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -18,7 +18,7 @@
 
 package de.tuclausthal.submissioninterface.authfilter.authentication.verify;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.hibernate.Session;
 

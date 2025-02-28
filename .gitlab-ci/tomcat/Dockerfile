@@ -1,4 +1,4 @@
-FROM tomcat:9.0-jdk17-temurin-jammy
+FROM tomcat:10.1-jdk21-temurin-noble
 
 ENV TZ=Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone

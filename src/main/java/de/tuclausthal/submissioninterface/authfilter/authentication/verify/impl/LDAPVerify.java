@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2011, 2017, 2020-2021 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2011, 2017, 2020-2021, 2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -27,8 +27,9 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
-import javax.servlet.FilterConfig;
-import javax.servlet.http.HttpServletRequest;
+
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.hibernate.Session;
 import org.slf4j.Logger;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2014, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2014, 2017, 2020-2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -48,9 +48,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.file.PathUtils;

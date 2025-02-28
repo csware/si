@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021, 2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021, 2023, 2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -23,8 +23,8 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.User;
 import de.tuclausthal.submissioninterface.servlets.controller.AdminMenue;

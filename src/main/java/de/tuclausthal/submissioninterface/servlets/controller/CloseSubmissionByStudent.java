@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2023, 2025 Sven Strickroth <email@cs-ware.de>
  * Copyright 2019 Dustin Reineke <dustin.reineke@tu-clausthal.de>
  *
  * This file is part of the GATE.
@@ -22,12 +22,11 @@ package de.tuclausthal.submissioninterface.servlets.controller;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import jakarta.persistence.LockModeType;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;

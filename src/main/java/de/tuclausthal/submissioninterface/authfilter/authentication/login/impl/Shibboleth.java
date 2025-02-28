@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021, 2023-2024 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020-2021, 2023-2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -24,10 +24,10 @@ import java.lang.invoke.MethodHandles;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010, 2020-2022 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009-2010, 2020-2022, 2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -24,8 +24,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;

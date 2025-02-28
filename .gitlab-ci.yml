@@ -52,8 +52,8 @@ prepare-docker-image:
     - cp ../../submissiondir/plaggie.properties .
     - mkdir lectures
     - cp -r ../../src/test/resources/lecture1 lectures/1
-    - docker build -t $CI_REGISTRY_IMAGE/tomcat:latest .
-    - docker push $CI_REGISTRY_IMAGE/tomcat:latest
+    - docker build -t $CI_REGISTRY_IMAGE/tomcat:10.1 .
+    - docker push $CI_REGISTRY_IMAGE/tomcat:10.1
   rules:
     - if: $UPDATE_CONTAINER
       when: always
@@ -68,7 +68,7 @@ compile-jdk17:
   image: $MAVEN_IMAGE17
   services:
     - mariadb:10.11
-    - name: $CI_REGISTRY_IMAGE/tomcat:latest
+    - name: $CI_REGISTRY_IMAGE/tomcat:10.1
       alias: tomcat
   stage: build
   needs:
