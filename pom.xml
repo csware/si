@@ -14,7 +14,7 @@
 		<maven.compiler.release>${maven.compiler.source}</maven.compiler.release>
 		<slf4j.version>2.0.17</slf4j.version>
 		<hibernate.version>6.6.9.Final</hibernate.version>
-		<jackson.version>2.18.2</jackson.version>
+		<jackson.version>2.18.3</jackson.version>
 	</properties>
 	<profiles>
 		<profile>
