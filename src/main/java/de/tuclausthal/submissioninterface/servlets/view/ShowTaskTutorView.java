@@ -151,6 +151,7 @@ public class ShowTaskTutorView extends HttpServlet {
 		}
 		out.println("</table>");
 
+
 		if (participation.getRoleType() == ParticipationRole.ADVISOR) {
 			out.println("<p><div class=mid><a href=\"" + Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid() + "&action=editTask", response) + "\">Aufgabe bearbeiten</a></div>");
 		}
