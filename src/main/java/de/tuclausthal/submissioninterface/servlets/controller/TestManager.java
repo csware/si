@@ -272,9 +272,9 @@ public class TestManager extends HttpServlet {
 			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
-		} else if ("saveNewTest".equals(request.getParameter("action")) && "haskellDynamicClustering".equals(request.getParameter("type"))) {
+		} else if ("saveNewTest".equals(request.getParameter("action")) && "haskellruntime".equals(request.getParameter("type"))) {
 			// TODO@CHW: implement similar as docker test
-			response.sendRedirect(Util.generateRedirectURL(HaskellDynamicClusteringTestManager.class.getSimpleName(), response));
+			response.sendRedirect(Util.generateRedirectURL(HaskellRuntimeTestManager.class.getSimpleName(), response));
 		} else if ("deleteTest".equals(request.getParameter("action"))) {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			session.beginTransaction();

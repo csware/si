@@ -310,7 +310,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</form>");
 
         if (Files.isRegularFile(Path.of(DockerTest.SAFE_DOCKER_SCRIPT))) {
-			printHaskellDynamicClusteringTestForm(out, response, task);
+			printHaskellRuntimeTestForm(out, response, task);
         } else {
             out.println("<p>(Das dynamische Error Clustering für Haskell Abgaben ist nicht verfügbar, da /usr/local/bin/safe-docker nicht gefunden wurde.)</p>");
         }
@@ -318,13 +318,13 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		template.printTemplateFooter();
 	}
 
-	public static void printHaskellDynamicClusteringTestForm(PrintWriter out, HttpServletResponse response, Task task) {
+	public static void printHaskellRuntimeTestForm(PrintWriter out, HttpServletResponse response, Task task) {
 		out.println("<h2>Haskell dynamisches Error Clustering</h2>");
 
 		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
 		out.println("<input type=hidden name=action value=saveNewTest>");
-		out.println("<input type=hidden name=type value=haskellDynamicClustering>");
+		out.println("<input type=hidden name=type value=haskellruntime>");
 		out.println("<table>");
 		out.println("<tr>");
 		out.println("<th>Titel:</th>");

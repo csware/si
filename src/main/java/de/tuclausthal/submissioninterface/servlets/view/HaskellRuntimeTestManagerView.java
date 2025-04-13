@@ -17,38 +17,46 @@
  * along with GATE. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tuclausthal.submissioninterface.servlets.controller;
+package de.tuclausthal.submissioninterface.servlets.view;
 
-import de.tuclausthal.submissioninterface.servlets.GATEController;
-import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
-import de.tuclausthal.submissioninterface.servlets.view.HaskellDynamicClusteringTestManagerView;
+
+import de.tuclausthal.submissioninterface.servlets.GATEView;
+import de.tuclausthal.submissioninterface.template.Template;
+import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.hibernate.Session;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serial;
 
+import static de.tuclausthal.submissioninterface.servlets.view.TestManagerAddTestFormView.printHaskellRuntimeTestForm;
+
 /**
- * Controller-Servlet for clustering haskell submissions based on common errors (dynamic/runtime analysis)
+ * View-Servlet for clustering haskell submissions based on common errors (dynamic/runtime analysis)
  *
  * @author Christian Wagner
  */
-@GATEController
-public class HaskellDynamicClusteringTestManager extends HttpServlet {
+@GATEView
+public class HaskellRuntimeTestManagerView extends HttpServlet {
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Session session = RequestAdapter.getSession(request);
+        Template template = TemplateFactory.getTemplate(request, response);
 
-        // TODO@CHW missing implementation
+        template.addKeepAlive();
+        template.printTemplateHeader("Haskell dynamisches Error Clustering bearbeiten");
 
-        request.setAttribute("testattribute", "somevalue");
-        getServletContext().getNamedDispatcher(HaskellDynamicClusteringTestManagerView.class.getSimpleName()).forward(request, response);
+        PrintWriter out = response.getWriter();
+        out.println("...");
+        // printHaskellDynamicClusteringTestForm(); // TODO@CHW needs task as parameter, look at Docker test implementation
 
+        // TODO@CHW implement HTML to setup the haskell dynamic clustering in detail
+
+        template.printTemplateFooter();
     }
 }
