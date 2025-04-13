@@ -24,6 +24,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -61,6 +62,8 @@ public interface TestDAOIf {
 	CommentsMetricTest createCommentsMetricTest(Task task);
 
 	DockerTest createDockerTest(Task task);
+
+	HaskellRuntimeTest createHaskellRuntimeTest(Task task);
 
 	ChecklistTest createChecklistTest(Task task);
 

@@ -331,6 +331,10 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=text name=title value=\"Haskell dynamisches Error Clustering\" required></td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Beschreibung:</th>");
+		out.println("<td><textarea cols=60 rows=10 name=description></textarea></td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<th>Tutorentest:</th>");
 		out.println("<td><input type=checkbox name=tutortest id=tutortestd checked> <label for=tutortestd>(Ergebnis wird den TutorInnen zur Korrektur angezeigt)</label></td>");
 		out.println("</tr>");
@@ -339,15 +343,25 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\" required pattern=\"[0-9]+\"></td>");
 		out.println("</tr>");
 		out.println("<tr>");
+		out.println("<th>Timeout (s):</th>");
+		out.println("<td><input type=text name=timeout value=\"15\" required pattern=\"[0-9]+\"></td>");
+		out.println("</tr>");
+		out.println("<tr>");
 		out.println("<th>Studierenden Test-Details anzeigen:</th>");
 		out.println("<td><input type=checkbox name=giveDetailsToStudents checked></td>");
+		out.println("</tr>");
+		out.println("<tr>");
+		out.println("<th>Preparation Code:</th>");
+		out.println("<td><textarea cols=60 rows=10 name=preparationcode></textarea></td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.println("<td colspan=2 class=mid>Weitere Einstellungen auf zweiter Seite...</td>");
 		out.println("</tr>");
 		out.println("<tr>");
 		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+		out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() +
+				"?action=editTask&taskid=" + task.getTaskid() +
+				"&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 		out.println("\">Abbrechen</a></td>");
 		out.println("</tr>");
 		out.println("</table>");

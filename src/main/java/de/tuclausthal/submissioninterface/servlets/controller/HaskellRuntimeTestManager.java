@@ -45,7 +45,7 @@ public class HaskellRuntimeTestManager extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Session session = RequestAdapter.getSession(request);
 
-        // TODO@CHW missing implementation
+        // TODO@CHW missing implementation, request redirected by TestManager
 
         request.setAttribute("testattribute", "somevalue");
         getServletContext().getNamedDispatcher(HaskellRuntimeTestManagerView.class.getSimpleName()).forward(request, response);

@@ -35,6 +35,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -157,6 +158,15 @@ public class TestDAO extends AbstractDAO implements TestDAOIf {
 	public DockerTest createDockerTest(Task task) {
 		Session session = getSession();
 		DockerTest test = new DockerTest();
+		test.setTask(task);
+		session.persist(test);
+		return test;
+	}
+
+	@Override
+	public HaskellRuntimeTest createHaskellRuntimeTest(Task task) {
+		Session session = getSession();
+		HaskellRuntimeTest test = new HaskellRuntimeTest();
 		test.setTask(task);
 		session.persist(test);
 		return test;
