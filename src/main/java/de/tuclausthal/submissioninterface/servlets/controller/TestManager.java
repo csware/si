@@ -41,6 +41,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
@@ -154,6 +155,28 @@ public class TestManager extends HttpServlet {
 			test.setPreparationShellCode(preparationcode.replaceAll("\r\n", "\n"));
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
+		} else if ("saveNewTest".equals(request.getParameter("action")) && "haskellsyntax".equals(request.getParameter("type"))) {
+			session.beginTransaction();
+			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
+			HaskellSyntaxTest test = testDAO.createHaskellSyntaxTest(task);
+
+			int timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
+			boolean tutortest = request.getParameter("tutortest") != null;
+			String title = request.getParameter("title");
+			String description = request.getParameter("description");
+
+			test.setTimesRunnableByStudents(timesRunnableByStudents);
+			test.setForTutors(tutortest);
+			test.setTestTitle(title);
+			test.setTestDescription(description);
+			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
+			test.setTimeout(15); // falls du es trotzdem festlegen willst
+			session.getTransaction().commit();
+
+			// Zurück zur Aufgabenübersicht (wie bei CompileTest)
+			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName()
+					+ "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId()
+					+ "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "checklist".equals(request.getParameter("type"))) {
 			session.beginTransaction();
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);

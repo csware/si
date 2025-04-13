@@ -27,6 +27,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
@@ -68,6 +69,8 @@ public class PerformTestResultView extends HttpServlet {
 				ShowJavaAdvancedIOTestResult.printTestResults(out, jaiot, testResult.getTestOutput(), (participation == null || !participation.getRoleType().equals(ParticipationRole.ADVISOR)), null);
 			} else if (test instanceof DockerTest dt) {
 				ShowDockerTestResult.printTestResults(out, dt, testResult.getTestOutput(), (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0), null);
+			} else if (test instanceof HaskellSyntaxTest hst){
+				//TODO: Ein gescheiter Output muss sich hier evtl. überlegt werden
 			} else {
 				out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
 			}

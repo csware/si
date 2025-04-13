@@ -29,6 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTestCheckItem;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -108,6 +109,8 @@ public class PerformStudentTestResultView extends HttpServlet {
 				ShowJavaAdvancedIOTestResult.printTestResults(out, jaiot, testResult.getTestOutput(), true, null);
 			} else if (test instanceof DockerTest dt) {
 				ShowDockerTestResult.printTestResults(out, dt, testResult.getTestOutput(), true, null);
+			} else if (test instanceof HaskellSyntaxTest hst){
+				//TODO: Add error Output
 			} else {
 				out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
 			}

@@ -170,6 +170,10 @@ public class TestManagerAddTestFormView extends HttpServlet {
 			out.println("<td><input type=text name=title value=\"Haskell-Syntax-Test\" required></td>");
 			out.println("</tr>");
 			out.println("<tr>");
+			out.println("<th>Beschreibung:</th>");
+			out.println("<td><textarea cols=60 rows=10 name=description></textarea></td>");
+			out.println("</tr>");
+			out.println("<tr>");
 			out.println("<th>Tutorentest:</th>");
 			out.println("<td><input type=checkbox name=tutortest id=tutortesths checked> <label for=tutortesths>(Ergebnis wird den TutorInnen zur Korrektur angezeigt)</label></td>");
 			out.println("</tr>");
@@ -180,13 +184,6 @@ public class TestManagerAddTestFormView extends HttpServlet {
 			out.println("<tr>");
 			out.println("<th>Studierenden Test-Details anzeigen:</th>");
 			out.println("<td><input type=checkbox name=giveDetailsToStudents checked></td>");
-			out.println("</tr>");
-			out.println("<tr>");
-			out.println("<th>Preparation Code:</th>");
-			out.println("<td><textarea cols=60 rows=10 name=preparationcode></textarea></td>");
-			out.println("</tr>");
-			out.println("<tr>");
-			out.println("<td colspan=2 class=mid>Weitere Einstellungen auf zweiter Seite...</td>");
 			out.println("</tr>");
 			out.println("<tr>");
 			out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
