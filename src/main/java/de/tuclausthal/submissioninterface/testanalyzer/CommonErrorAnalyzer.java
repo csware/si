@@ -34,6 +34,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.CommonError;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 
@@ -58,6 +59,8 @@ public class CommonErrorAnalyzer {
 			groupCompilerTestResults((CompileTest) test, testResult);
 		} else if (test instanceof JavaAdvancedIOTest) {
 			groupJavaIOTestResults((JavaAdvancedIOTest) test, testResult);
+		} else if (test instanceof HaskellRuntimeTest haskellRuntimeTest) {
+			groupHaskellRuntimeTestResults(haskellRuntimeTest, testResult);
 		} else if (test instanceof JUnitTest) {
 			groupJUnitTestResults((JUnitTest) test, testResult);
 		}
@@ -149,6 +152,22 @@ public class CommonErrorAnalyzer {
 			keyStr += "time-exceeded ";
 
 		return new String[] { stepsStr, keyStr };
+	}
+
+	private void groupHaskellRuntimeTestResults(final HaskellRuntimeTest test, final TestResult testResult) {
+		if (testResult.getPassedTest()) {
+			return;
+		}
+
+		// TODO@CHW implement correctly
+
+		final JsonObject testOutputJson = Json.createReader(new StringReader(testResult.getTestOutput())).readObject();
+
+		if (testOutputJson.containsKey("exitCode") && testOutputJson.getInt("exitCode") != 0) {
+			// TODO: maybe modify and use groupTestResultToCommonErrors()
+			// TODO: exitCode != 0 on compile error and on runtime error
+			bindCommonError(testResult, "Failed", "Failed", null);
+		}
 	}
 
 	private void groupJUnitTestResults(JUnitTest test, final TestResult testResult) {
