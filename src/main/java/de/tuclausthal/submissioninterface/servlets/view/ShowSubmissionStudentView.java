@@ -23,16 +23,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.*;
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowHaskellSyntaxTestResult;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.CommonError;
-import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
-import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowFile;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowDockerTestResult;
@@ -82,6 +79,9 @@ public class ShowSubmissionStudentView extends HttpServlet {
 					} else if (testResult.getTest() instanceof DockerTest) {
 						out.println("<br>");
 						ShowDockerTestResult.printTestResults(out, (DockerTest) testResult.getTest(), testResult.getTestOutput(), true, javaScript);
+					} else if (testResult.getTest() instanceof HaskellSyntaxTest hst) {
+						out.println("<br>");
+						ShowHaskellSyntaxTestResult.printTestResults(out, hst, testResult.getTestOutput(), false, javaScript);
 					} else {
 						out.println("<br><textarea id=\"testresult" + testResult.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(testResult.getTestOutput()) + "</textarea>");
 					}

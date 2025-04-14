@@ -22,6 +22,7 @@ package de.tuclausthal.submissioninterface.testanalyzer;
 import java.io.StringReader;
 import java.util.List;
 
+import de.tuclausthal.submissioninterface.testanalyzer.haskell.RegexBasedHaskellClustering;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
@@ -38,6 +39,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTe
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 
 public class CommonErrorAnalyzer {
 	//from Literatur
@@ -67,6 +69,9 @@ public class CommonErrorAnalyzer {
 		}
 		else if (test instanceof DockerTest) {
 			groupDockerTestResults((DockerTest) test, testResult);
+		}
+		else if (test instanceof HaskellSyntaxTest){
+			groupHaskellSyntaxTestResults((HaskellSyntaxTest) test, testResult);
 		}
 	}
 
@@ -321,5 +326,18 @@ public class CommonErrorAnalyzer {
 
 		groupTestResultToCommonErrors(testResult, stderr, keyStr);
 	}
+
+	private void groupHaskellSyntaxTestResults(final HaskellSyntaxTest test, final TestResult testResult) {
+		if (testResult.getPassedTest()) {
+			return;
+		}
+
+		JsonObject testOutputJson = Json.createReader(new StringReader(testResult.getTestOutput())).readObject();
+		String stderr = testOutputJson.containsKey("stderr") ? testOutputJson.getString("stderr") : "";
+
+		String keyStr = "HaskellSyntax: ";
+		new RegexBasedHaskellClustering(session).classify(testResult, stderr, keyStr);
+	}
+
 
 }
