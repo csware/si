@@ -167,7 +167,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Titel:</th>");
-			out.println("<td><input type=text name=title value=\"Haskell-Syntax-Test\" required></td>");
+			out.println("<td><input type=text name=title value=\"Haskell Syntax Test\" required></td>");
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<th>Beschreibung:</th>");
@@ -202,7 +202,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 			out.println("<table>");
 			out.println("<tr>");
 			out.println("<th>Titel:</th>");
-			out.println("<td><input type=text name=title value=\"Haskell dynamisches Error Clustering\" required></td>");
+			out.println("<td><input type=text name=title value=\"Haskell Runtime Test\" required></td>");
 			out.println("</tr>");
 			out.println("<tr>");
 			out.println("<th>Beschreibung:</th>");
