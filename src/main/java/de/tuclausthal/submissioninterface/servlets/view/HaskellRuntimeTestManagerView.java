@@ -37,8 +37,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serial;
 
-import static de.tuclausthal.submissioninterface.servlets.view.TestManagerAddTestFormView.printHaskellRuntimeTestForm;
-
 /**
  * View-Servlet for clustering haskell submissions based on common errors (dynamic/runtime analysis)
  *
@@ -61,8 +59,6 @@ public class HaskellRuntimeTestManagerView extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         // similar code in TestManagerAddTestFormView
-        // TODO@CHW: can this code duplicate be avoided using printHaskellRuntimeTestForm()?
-        // TODO@CHW: compare with printHaskellRuntimeTestForm() and add remaining fields
         out.println("<h2>" + Util.escapeHTML(test.getTestTitle()) + "</h2>");
         out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
         out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");

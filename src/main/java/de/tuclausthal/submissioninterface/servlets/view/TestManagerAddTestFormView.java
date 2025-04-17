@@ -120,8 +120,8 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</table>");
 		out.println("</form>");
 
-		// similar code in DockerTestManagerView
 		if (Files.isRegularFile(Path.of(DockerTest.SAFE_DOCKER_SCRIPT))) {
+			// similar code in DockerTestManagerView
 			out.println("<h2>Docker Test</h2>");
 			out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
@@ -192,10 +192,57 @@ public class TestManagerAddTestFormView extends HttpServlet {
 			out.println("</tr>");
 			out.println("</table>");
 			out.println("</form>");
-		} else {
-			out.println("<p>(Docker-Tests sind nicht verfügbar, da /usr/local/bin/safe-docker nicht gefunden wurde.)</p>");
-		}
 
+			// similar code in HaskellRuntimeTestManagerView
+			out.println("<h2>Haskell Runtime Test</h2>");
+			out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
+			out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
+			out.println("<input type=hidden name=action value=saveNewTest>");
+			out.println("<input type=hidden name=type value=haskellruntime>");
+			out.println("<table>");
+			out.println("<tr>");
+			out.println("<th>Titel:</th>");
+			out.println("<td><input type=text name=title value=\"Haskell dynamisches Error Clustering\" required></td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<th>Beschreibung:</th>");
+			out.println("<td><textarea cols=60 rows=10 name=description></textarea></td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<th>Tutorentest:</th>");
+			out.println("<td><input type=checkbox name=tutortest id=tutortestd checked> <label for=tutortestd>(Ergebnis wird den TutorInnen zur Korrektur angezeigt)</label></td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<th># ausführbar für Studierende:</th>");
+			out.println("<td><input type=text name=timesRunnableByStudents value=\"0\" required pattern=\"[0-9]+\"></td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<th>Timeout (s):</th>");
+			out.println("<td><input type=text name=timeout value=\"15\" required pattern=\"[0-9]+\"></td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<th>Studierenden Test-Details anzeigen:</th>");
+			out.println("<td><input type=checkbox name=giveDetailsToStudents checked></td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<th>Preparation Code:</th>");
+			out.println("<td><textarea cols=60 rows=10 name=preparationcode></textarea></td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.println("<td colspan=2 class=mid>Weitere Einstellungen auf zweiter Seite...</td>");
+			out.println("</tr>");
+			out.println("<tr>");
+			out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+			out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() +
+					"?action=editTask&taskid=" + task.getTaskid() +
+					"&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+			out.println("\">Abbrechen</a></td>");
+			out.println("</tr>");
+			out.println("</table>");
+			out.println("</form>");
+		} else {
+			out.println("<p>(Docker-Tests, Haskell Syntax Tests und Haskell Runtime Tests sind nicht verfügbar, da /usr/local/bin/safe-docker nicht gefunden wurde.)</p>");
+		}
 
 		// similar code in ChecklistTestManagerView
 		out.println("<h2>Checklist Test</h2>");
@@ -344,65 +391,6 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</table>");
 		out.println("</form>");
 
-        if (Files.isRegularFile(Path.of(DockerTest.SAFE_DOCKER_SCRIPT))) {
-			printHaskellRuntimeTestForm(out, response, task);
-        } else {
-            out.println("<p>(Das dynamische Error Clustering für Haskell Abgaben ist nicht verfügbar, da /usr/local/bin/safe-docker nicht gefunden wurde.)</p>");
-        }
-
 		template.printTemplateFooter();
-
-
-
-	}
-
-	public static void printHaskellRuntimeTestForm(PrintWriter out, HttpServletResponse response, Task task) {
-		out.println("<h2>Haskell dynamisches Error Clustering</h2>");
-
-		out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
-		out.println("<input type=hidden name=taskid value=\"" + task.getTaskid() + "\">");
-		out.println("<input type=hidden name=action value=saveNewTest>");
-		out.println("<input type=hidden name=type value=haskellruntime>");
-		out.println("<table>");
-		out.println("<tr>");
-		out.println("<th>Titel:</th>");
-		out.println("<td><input type=text name=title value=\"Haskell dynamisches Error Clustering\" required></td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Beschreibung:</th>");
-		out.println("<td><textarea cols=60 rows=10 name=description></textarea></td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Tutorentest:</th>");
-		out.println("<td><input type=checkbox name=tutortest id=tutortestd checked> <label for=tutortestd>(Ergebnis wird den TutorInnen zur Korrektur angezeigt)</label></td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th># ausführbar für Studierende:</th>");
-		out.println("<td><input type=text name=timesRunnableByStudents value=\"0\" required pattern=\"[0-9]+\"></td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Timeout (s):</th>");
-		out.println("<td><input type=text name=timeout value=\"15\" required pattern=\"[0-9]+\"></td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Studierenden Test-Details anzeigen:</th>");
-		out.println("<td><input type=checkbox name=giveDetailsToStudents checked></td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<th>Preparation Code:</th>");
-		out.println("<td><textarea cols=60 rows=10 name=preparationcode></textarea></td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.println("<td colspan=2 class=mid>Weitere Einstellungen auf zweiter Seite...</td>");
-		out.println("</tr>");
-		out.println("<tr>");
-		out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-		out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() +
-				"?action=editTask&taskid=" + task.getTaskid() +
-				"&lecture=" + task.getTaskGroup().getLecture().getId(), response));
-		out.println("\">Abbrechen</a></td>");
-		out.println("</tr>");
-		out.println("</table>");
-		out.println("</form>");
 	}
 }
