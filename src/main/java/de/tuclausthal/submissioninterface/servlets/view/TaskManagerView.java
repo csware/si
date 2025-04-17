@@ -33,6 +33,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
@@ -452,6 +454,10 @@ public class TaskManagerView extends HttpServlet {
 							out.println("Kommentar-Metrik-Test<br>");
 						} else if (test instanceof JavaAdvancedIOTest) {
 							out.println("Erweiterer Java-IO-Test<br>");
+						} else if (test instanceof HaskellSyntaxTest) {
+							out.println("Haskell Syntax Test<br>");
+						} else if (test instanceof HaskellRuntimeTest) {
+							out.println("Haskell Runtime Test<br>");
 						} else if (test instanceof DockerTest) {
 							out.println("Docker<br>");
 						} else if (test instanceof ChecklistTest) {
