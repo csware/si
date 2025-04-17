@@ -1,3 +1,21 @@
+/*
+ * Copyright 2025 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2025 Esat Avci <e.avci@campus.lmu.de>
+ *
+ * This file is part of the GATE.
+ *
+ * GATE is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * GATE is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with GATE. If not, see <http://www.gnu.org/licenses/>.
+ */
 package de.tuclausthal.submissioninterface.servlets.view.fragments;
 
 import java.io.PrintWriter;
@@ -9,23 +27,14 @@ import jakarta.json.JsonObject;
 import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 
 public class ShowHaskellSyntaxTestResult {
-    /**
-     * @param out         PrintWriter zum Ausgeben
-     * @param test        der HaskellSyntaxTest
-     * @param testOutput  JSON-String aus testResult.getTestOutput()
-     * @param isStudent   true, wenn Studentensicht, false wenn Tutorsicht
-     * @param javaScript  Hier kannst Du Code-Preview/JS-Schnipsel anfügen, wenn Du willst
-     */
     public static void printTestResults(PrintWriter out, HaskellSyntaxTest test, String testOutput, boolean isStudent, StringBuilder javaScript) {
-        // JSON auslesen:
+
         JsonObject json = Json.createReader(new StringReader(testOutput)).readObject();
 
         String stderr = json.getString("stderr", "");
 
-        // ErrorMessage
         if (!stderr.isEmpty()) {
             out.println("<p><strong>Fehlerausgabe (stderr):</strong></p>");
-            // Du kannst Zeilen hier farblich kennzeichnen oder ab Zeilenumbrüchen splitten
             out.println("<pre class=\"haskellstderr\">" + escapeHTML(stderr) + "</pre>");
         }
 
