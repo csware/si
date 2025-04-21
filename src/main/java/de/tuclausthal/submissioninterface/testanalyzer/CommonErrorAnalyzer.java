@@ -22,7 +22,7 @@ package de.tuclausthal.submissioninterface.testanalyzer;
 import java.io.StringReader;
 import java.util.List;
 
-import de.tuclausthal.submissioninterface.testanalyzer.haskell.RegexBasedHaskellClustering;
+import de.tuclausthal.submissioninterface.testanalyzer.haskell.syntax.RegexBasedHaskellClustering;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;

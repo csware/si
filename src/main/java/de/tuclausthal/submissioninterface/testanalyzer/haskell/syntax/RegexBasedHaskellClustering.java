@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with GATE. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.tuclausthal.submissioninterface.testanalyzer.haskell;
+package de.tuclausthal.submissioninterface.testanalyzer.haskell.syntax;
 
 import java.util.*;
 import java.util.regex.Pattern;
