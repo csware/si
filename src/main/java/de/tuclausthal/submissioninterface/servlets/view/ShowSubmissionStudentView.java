@@ -23,7 +23,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.*;
+import de.tuclausthal.submissioninterface.persistence.datamodel.CommonError;
+import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
+import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowHaskellSyntaxTestResult;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;

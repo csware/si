@@ -62,16 +62,14 @@ public class CommonErrorAnalyzer {
 			groupCompilerTestResults((CompileTest) test, testResult);
 		} else if (test instanceof JavaAdvancedIOTest) {
 			groupJavaIOTestResults((JavaAdvancedIOTest) test, testResult);
-		} else if (test instanceof HaskellRuntimeTest haskellRuntimeTest) {
-			groupHaskellRuntimeTestResults(haskellRuntimeTest, testResult);
 		} else if (test instanceof JUnitTest) {
 			groupJUnitTestResults((JUnitTest) test, testResult);
-		}
-		else if (test instanceof DockerTest) {
-			groupDockerTestResults((DockerTest) test, testResult);
-		}
-		else if (test instanceof HaskellSyntaxTest){
+		} else if (test instanceof HaskellSyntaxTest) {
 			groupHaskellSyntaxTestResults((HaskellSyntaxTest) test, testResult);
+		} else if (test instanceof HaskellRuntimeTest haskellRuntimeTest) {
+			groupHaskellRuntimeTestResults(haskellRuntimeTest, testResult);
+		} else if (test instanceof DockerTest) {
+			groupDockerTestResults((DockerTest) test, testResult);
 		}
 	}
 
