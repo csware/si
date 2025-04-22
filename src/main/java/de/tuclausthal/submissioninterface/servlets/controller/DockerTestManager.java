@@ -33,6 +33,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
@@ -40,6 +41,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.servlets.GATEController;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.view.DockerTestManagerOverView;
+import de.tuclausthal.submissioninterface.servlets.view.HaskellRuntimeTestManagerView;
 import de.tuclausthal.submissioninterface.servlets.view.MessageView;
 import de.tuclausthal.submissioninterface.util.Util;
 
@@ -71,7 +73,11 @@ public class DockerTestManager extends HttpServlet {
 		}
 
 		request.setAttribute("test", test);
-		getServletContext().getNamedDispatcher(DockerTestManagerOverView.class.getSimpleName()).forward(request, response);
+
+		String testManagerViewClassSimpleName = test instanceof HaskellRuntimeTest ?
+				HaskellRuntimeTestManagerView.class.getSimpleName() : DockerTestManagerOverView.class.getSimpleName();
+
+		getServletContext().getNamedDispatcher(testManagerViewClassSimpleName).forward(request, response);
 	}
 
 	@Override
@@ -93,6 +99,9 @@ public class DockerTestManager extends HttpServlet {
 			return;
 		}
 
+		String testManagerClassSimpleName = test instanceof HaskellRuntimeTest ?
+				HaskellRuntimeTestManager.class.getSimpleName() : DockerTestManager.class.getSimpleName();
+
 		if ("edittest".equals(request.getParameter("action"))) {
 			Transaction tx = session.beginTransaction();
 			test.setTestTitle(request.getParameter("title"));
@@ -101,7 +110,7 @@ public class DockerTestManager extends HttpServlet {
 			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			test.setPreparationShellCode(request.getParameter("preparationcode").replaceAll("\r\n", "\n"));
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(testManagerClassSimpleName + "?testid=" + test.getId(), response));
 			return;
 		} else if ("addNewStep".equals(request.getParameter("action"))) {
 			String title = request.getParameter("title");
@@ -111,7 +120,7 @@ public class DockerTestManager extends HttpServlet {
 			Transaction tx = session.beginTransaction();
 			session.persist(newStep);
 			tx.commit();
-			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(testManagerClassSimpleName + "?testid=" + test.getId(), response));
 			return;
 		} else if ("updateStep".equals(request.getParameter("action"))) {
 			DockerTestStep step = null;
@@ -130,7 +139,7 @@ public class DockerTestManager extends HttpServlet {
 				step.setExpect(Objects.toString(request.getParameter("expect"), "").replaceAll("\r\n", "\n"));
 				tx.commit();
 			}
-			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(testManagerClassSimpleName + "?testid=" + test.getId(), response));
 			return;
 		} else if ("deleteStep".equals(request.getParameter("action"))) {
 			DockerTestStep step = null;
@@ -145,7 +154,7 @@ public class DockerTestManager extends HttpServlet {
 				session.remove(step);
 				tx.commit();
 			}
-			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
+			response.sendRedirect(Util.generateRedirectURL(testManagerClassSimpleName + "?testid=" + test.getId(), response));
 			return;
 		}
 
