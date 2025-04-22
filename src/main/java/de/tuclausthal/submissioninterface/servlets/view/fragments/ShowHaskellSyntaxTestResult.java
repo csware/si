@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.view.fragments;
 import java.io.PrintWriter;
 import java.io.StringReader;
 
+import de.tuclausthal.submissioninterface.util.Util;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 
@@ -35,19 +36,9 @@ public class ShowHaskellSyntaxTestResult {
 
         if (!stderr.isEmpty()) {
             out.println("<p><strong>Fehlerausgabe (stderr):</strong></p>");
-            out.println("<pre class=\"haskellstderr\">" + escapeHTML(stderr) + "</pre>");
+            out.println("<pre class=\"haskellstderr\">" + Util.escapeHTML(stderr) + "</pre>");
         }
 
         out.println("</div>");
-    }
-
-    private static String escapeHTML(String str) {
-        if (str == null) {
-            return "";
-        }
-        return str
-                .replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;");
     }
 }
