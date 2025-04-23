@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowHaskellSyntaxTestResult;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -67,11 +68,11 @@ public class PerformTestResultView extends HttpServlet {
 		if (!testResult.getTestOutput().isEmpty()) {
 			if (test instanceof JavaAdvancedIOTest jaiot) {
 				ShowJavaAdvancedIOTestResult.printTestResults(out, jaiot, testResult.getTestOutput(), (participation == null || !participation.getRoleType().equals(ParticipationRole.ADVISOR)), null);
+			} else if (test instanceof HaskellSyntaxTest hst){
+				ShowHaskellSyntaxTestResult.printTestResults(out, hst, testResult.getTestOutput(), (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0), null);
 			} else if (test instanceof DockerTest dt) {
 				ShowDockerTestResult.printTestResults(out, dt, testResult.getTestOutput(), (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0), null);
-			} else if (test instanceof HaskellSyntaxTest hst){
-				//TODO: Ein gescheiter Output muss sich hier evtl. überlegt werden
-			} else {
+			}  else {
 				out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
 			}
 		}

@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import de.tuclausthal.submissioninterface.persistence.datamodel.*;
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowHaskellSyntaxTestResult;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,18 +44,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.MCOptionDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.PointGivenDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TestResultCommonErrorDAO;
-import de.tuclausthal.submissioninterface.persistence.datamodel.CommonError;
-import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
-import de.tuclausthal.submissioninterface.persistence.datamodel.PointCategory;
-import de.tuclausthal.submissioninterface.persistence.datamodel.PointGiven;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
-import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
-import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.controller.CloseSubmissionByStudent;
@@ -385,6 +376,8 @@ public class ShowTaskStudentView extends HttpServlet {
 					if (!testResult.getTestOutput().isEmpty() && testResult.getTest().isGiveDetailsToStudents()) {
 						if (testResult.getTest() instanceof JavaAdvancedIOTest) {
 							ShowJavaAdvancedIOTestResult.printTestResults(out, (JavaAdvancedIOTest) testResult.getTest(), testResult.getTestOutput(), true, null);
+						} else if (testResult.getTest() instanceof HaskellSyntaxTest) {
+							ShowHaskellSyntaxTestResult.printTestResults(out, (HaskellSyntaxTest) testResult.getTest(), testResult.getTestOutput(), true, null);
 						} else if (testResult.getTest() instanceof DockerTest) {
 							ShowDockerTestResult.printTestResults(out, (DockerTest) testResult.getTest(), testResult.getTestOutput(), true, null);
 						} else {

@@ -319,13 +319,12 @@ public class ShowSubmissionView extends HttpServlet {
 					if (testResult.getTest() instanceof JavaAdvancedIOTest jaiot) {
 						out.println("<br>");
 						ShowJavaAdvancedIOTestResult.printTestResults(out, jaiot, testResult.getTestOutput(), false, javaScript);
-					} else if (testResult.getTest() instanceof DockerTest dt) {
-						out.println("<br>");
-						ShowDockerTestResult.printTestResults(out, dt, testResult.getTestOutput(), false, javaScript);
 					} else if (testResult.getTest() instanceof HaskellSyntaxTest hst) {
 						out.println("<br>");
 						ShowHaskellSyntaxTestResult.printTestResults(out, hst, testResult.getTestOutput(), false, javaScript);
-					}
+					} else if (testResult.getTest() instanceof DockerTest dt) {
+						out.println("<br>");
+						ShowDockerTestResult.printTestResults(out, dt, testResult.getTestOutput(), false, javaScript);}
 					else {
 						out.println("<br><textarea id=\"testresult" + testResult.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(testResult.getTestOutput()) + "</textarea>");
 					}

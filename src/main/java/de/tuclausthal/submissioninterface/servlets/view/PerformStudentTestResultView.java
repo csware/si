@@ -21,6 +21,7 @@ package de.tuclausthal.submissioninterface.servlets.view;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowHaskellSyntaxTestResult;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -107,10 +108,10 @@ public class PerformStudentTestResultView extends HttpServlet {
 		if (test.isGiveDetailsToStudents() && !testResult.getTestOutput().isEmpty()) {
 			if (test instanceof JavaAdvancedIOTest jaiot) {
 				ShowJavaAdvancedIOTestResult.printTestResults(out, jaiot, testResult.getTestOutput(), true, null);
-			} else if (test instanceof DockerTest dt) {
-				ShowDockerTestResult.printTestResults(out, dt, testResult.getTestOutput(), true, null);
 			} else if (test instanceof HaskellSyntaxTest hst){
-				//TODO: Add error Output
+				ShowHaskellSyntaxTestResult.printTestResults(out, hst, testResult.getTestOutput(), true, null);
+			}  else if (test instanceof DockerTest dt) {
+				ShowDockerTestResult.printTestResults(out, dt, testResult.getTestOutput(), true, null);
 			} else {
 				out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
 			}
