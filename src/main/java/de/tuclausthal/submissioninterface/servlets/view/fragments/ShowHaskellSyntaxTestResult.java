@@ -35,7 +35,7 @@ public class ShowHaskellSyntaxTestResult {
         String stderr = json.getString("stderr", "");
 
         if (!stderr.isEmpty()) {
-            out.println("<p><strong>Fehlerausgabe (stderr):</strong></p>");
+            out.println("<p><strong>Fehlerausgabe:</strong></p>");
             out.println("<pre class=\"haskellstderr\">" + Util.escapeHTML(stderr) + "</pre>");
         }
 

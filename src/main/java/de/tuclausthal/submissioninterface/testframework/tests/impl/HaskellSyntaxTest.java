@@ -18,39 +18,56 @@
  */
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.lang.invoke.MethodHandles;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Random;
+
 import jakarta.json.Json;
 import jakarta.json.JsonObjectBuilder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
+import de.tuclausthal.submissioninterface.util.Util;
 
 public class HaskellSyntaxTest extends DockerTest {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final String SAFE_DOCKER_SCRIPT = "/usr/local/bin/safe-docker";
+    private static final Random RANDOM = new Random();
+    private final String separator;
+    private Path tempDir;
 
     public HaskellSyntaxTest(de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest test) {
         super(test);
-    }
-    @Override
-    protected String generateTestShellScript() {
-        return """
-            #!/bin/bash
-            set -e
-            echo '%s'
-            for file in *.hs; do
-              ghci -ignore-dot-ghci -v0 -ferror-spans -fdiagnostics-color=never -Wall -e ":load $file" -e ":quit"
-            done
-            """.formatted(separator);
+        this.separator = "#<GATE@" + RANDOM.nextLong() + "#@>#";
     }
 
     @Override
-    protected boolean isSuccessful(int exitCode, StringBuffer stderr) {
+    protected boolean isProcessSuccessful(int exitCode, StringBuffer stderr) {
         return exitCode == 0 && !stderr.toString().toLowerCase().contains("error:");
     }
 
     @Override
-    protected String generateJsonResult(StringBuffer stdout, StringBuffer stderr, int exitCode, boolean success, boolean aborted) {
+    protected void analyzeAndSetResult(boolean exitedCleanly, StringBuffer stdout, StringBuffer stderr, int exitCode, boolean aborted, TestExecutorTestResult result) {
+        result.setTestPassed(exitedCleanly);
+        result.setTestOutput(generateJsonResult(stdout, stderr, exitCode, exitedCleanly, aborted));
+    }
+
+
+
+
+    private String generateJsonResult(StringBuffer stdout, StringBuffer stderr, int exitCode, boolean success, boolean aborted) {
         JsonObjectBuilder builder = Json.createObjectBuilder()
                 .add("stdout", stdout.toString())
                 .add("separator", separator + "\n")
                 .add("exitCode", exitCode)
                 .add("exitedCleanly", success);
+
         if (stderr.length() > 0) {
             builder.add("stderr", stderr.toString());
         }
@@ -61,5 +78,27 @@ public class HaskellSyntaxTest extends DockerTest {
             builder.add("tmpdir", tempDir.toAbsolutePath().toString());
         }
         return builder.build().toString();
+    }
+
+    @Override
+    protected void performTestInTempDir(Path basePath, Path tempDir, TestExecutorTestResult testResult) throws Exception {
+        //currently unused
+    }
+
+    @Override
+    protected String generateTestShellScript(){
+        return """
+                #!/bin/bash
+                set -e
+                echo '%s'
+                for file in *.hs; do
+                  ghci -ignore-dot-ghci -v0 -ferror-spans -fdiagnostics-color=never -Wall -e ":load $file" -e ":quit"
+                done
+                """.formatted(separator);
+    }
+
+    @Override
+    protected void debugLog(List<String> params, Path studentDir){
+        LOG.debug("Executing HaskellSyntaxTest docker process: {} in {}", params, studentDir);
     }
 }
