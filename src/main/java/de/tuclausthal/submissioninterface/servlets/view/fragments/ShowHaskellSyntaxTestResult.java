@@ -39,6 +39,5 @@ public class ShowHaskellSyntaxTestResult {
             out.println("<pre class=\"haskellstderr\">" + Util.escapeHTML(stderr) + "</pre>");
         }
 
-        out.println("</div>");
     }
 }

@@ -36,15 +36,9 @@ import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTes
 import de.tuclausthal.submissioninterface.util.Util;
 
 public class HaskellSyntaxTest extends DockerTest {
-    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final String SAFE_DOCKER_SCRIPT = "/usr/local/bin/safe-docker";
-    private static final Random RANDOM = new Random();
-    private final String separator;
-    private Path tempDir;
 
     public HaskellSyntaxTest(de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest test) {
         super(test);
-        this.separator = "#<GATE@" + RANDOM.nextLong() + "#@>#";
     }
 
     @Override

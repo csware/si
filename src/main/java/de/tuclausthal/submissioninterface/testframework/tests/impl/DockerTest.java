@@ -42,12 +42,12 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest> {
-	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	final static protected Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	final static public String SAFE_DOCKER_SCRIPT = "/usr/local/bin/safe-docker";
 
-	private static final Random random = new Random();
-	private final String separator;
-	private Path tempDir;
+	protected static final Random random = new Random();
+	protected final String separator;
+	protected Path tempDir;
 
 	public DockerTest(final de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest test) {
 		super(test);
