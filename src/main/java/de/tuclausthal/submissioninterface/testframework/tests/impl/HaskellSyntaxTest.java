@@ -51,7 +51,7 @@ public class HaskellSyntaxTest extends DockerTest {
     protected void analyzeAndSetResult(boolean exitedCleanly, StringBuffer stdout, StringBuffer stderr, int exitCode, boolean aborted, TestExecutorTestResult result) {
         boolean success = exitedCleanly && !stderr.toString().toLowerCase().contains("error:");
         result.setTestPassed(success);
-        result.setTestOutput(createJsonBuilder(exitedCleanly, stdout, stderr, exitCode, aborted).toString());
+        result.setTestOutput(createJsonBuilder(success, stdout, stderr, exitCode, aborted).build().toString());
     }
 
 
