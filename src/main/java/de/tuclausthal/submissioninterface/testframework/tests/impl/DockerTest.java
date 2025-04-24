@@ -109,7 +109,7 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 				aborted = true;
 			}
 
-			boolean exitedCleanly = isProcessSuccessful(exitValue, outputGrapper.getStdErrBuffer());
+			boolean exitedCleanly = (exitValue == 0);
 
 			// for modularization and flexibility in child classes
 			analyzeAndSetResult(exitedCleanly, outputGrapper.getStdOutBuffer(), outputGrapper.getStdErrBuffer(), exitValue, aborted, testResult);
@@ -118,10 +118,6 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 				Util.recursiveDelete(tempDir);
 			}
 		}
-	}
-
-	protected boolean isProcessSuccessful(int exitCode, StringBuffer stderr) {
-		return exitCode == 0;
 	}
 
 	protected void analyzeAndSetResult(boolean exitedCleanly, StringBuffer stdout, StringBuffer stderr, int exitCode, boolean aborted, TestExecutorTestResult result) {

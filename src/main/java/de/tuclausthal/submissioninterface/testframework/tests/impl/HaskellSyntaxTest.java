@@ -48,37 +48,12 @@ public class HaskellSyntaxTest extends DockerTest {
     }
 
     @Override
-    protected boolean isProcessSuccessful(int exitCode, StringBuffer stderr) {
-        return exitCode == 0 && !stderr.toString().toLowerCase().contains("error:");
-    }
-
-    @Override
     protected void analyzeAndSetResult(boolean exitedCleanly, StringBuffer stdout, StringBuffer stderr, int exitCode, boolean aborted, TestExecutorTestResult result) {
-        result.setTestPassed(exitedCleanly);
-        result.setTestOutput(generateJsonResult(stdout, stderr, exitCode, exitedCleanly, aborted));
+        boolean success = exitedCleanly && !stderr.toString().toLowerCase().contains("error:");
+        result.setTestPassed(success);
+        result.setTestOutput(createJsonBuilder(exitedCleanly, stdout, stderr, exitCode, aborted).toString());
     }
 
-
-
-
-    private String generateJsonResult(StringBuffer stdout, StringBuffer stderr, int exitCode, boolean success, boolean aborted) {
-        JsonObjectBuilder builder = Json.createObjectBuilder()
-                .add("stdout", stdout.toString())
-                .add("separator", separator + "\n")
-                .add("exitCode", exitCode)
-                .add("exitedCleanly", success);
-
-        if (stderr.length() > 0) {
-            builder.add("stderr", stderr.toString());
-        }
-        if (aborted) {
-            builder.add("time-exceeded", true);
-        }
-        if (tempDir != null) {
-            builder.add("tmpdir", tempDir.toAbsolutePath().toString());
-        }
-        return builder.build().toString();
-    }
 
     @Override
     protected void performTestInTempDir(Path basePath, Path tempDir, TestExecutorTestResult testResult) throws Exception {
