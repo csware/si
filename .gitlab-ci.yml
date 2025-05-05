@@ -78,10 +78,10 @@ compile-jdk17:
     - perl -pi -e "s|localhost/[a-zA-Z0-9]+|mariadb/abgabesystem|g" src/main/resources/hibernate.cfg.xml
     - perl -pi -e 's|hibernate.show_sql">true|hibernate.show_sql">false|g' src/main/resources/hibernate.cfg.xml
   script:
-    - '[ -z "$SKIP_ONLINE_TESTS" ] && xmlstarlet val -w -e -s http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd src/main/webapp/WEB-INF/web.xml || echo "Skipped"'
+    - '[ -z "$SKIP_ONLINE_TESTS" ] && xmlstarlet val -w -e -s https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd src/main/webapp/WEB-INF/web.xml || echo "Skipped"'
     - '[ -z "$SKIP_ONLINE_TESTS" ] && xmlstarlet val -w -e -d http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd src/main/resources/hibernate.cfg.xml || echo "Skipped"'
     - >
-      xmlstarlet edit --inplace -N x="http://xmlns.jcp.org/xml/ns/javaee" 
+      xmlstarlet edit --inplace -N x="https://jakarta.ee/xml/ns/jakartaee" 
       --update "/x:web-app/x:context-param[x:param-name[text()='datapath']]/x:param-value" --value "/srv/submissioninterface" 
       --update "/x:web-app/x:filter[x:filter-name[text()='AuthenticationFilter']]/x:init-param[x:param-name[text()='login']]/x:param-value" --value "de.tuclausthal.submissioninterface.authfilter.authentication.login.impl.Form" 
       --update "/x:web-app/x:filter[x:filter-name[text()='AuthenticationFilter']]/x:init-param[x:param-name[text()='verify']]/x:param-value" --value "de.tuclausthal.submissioninterface.authfilter.authentication.verify.impl.FakeVerify" 
