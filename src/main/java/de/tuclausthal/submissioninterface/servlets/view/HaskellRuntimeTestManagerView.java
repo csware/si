@@ -20,8 +20,8 @@
 package de.tuclausthal.submissioninterface.servlets.view;
 
 
-import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.controller.HaskellRuntimeTestManager;
 import de.tuclausthal.submissioninterface.servlets.controller.TaskManager;
@@ -94,7 +94,55 @@ public class HaskellRuntimeTestManagerView extends HttpServlet {
 
         out.println("<hr>");
 
-        out.println("<h2>Automated testcase generation is not yet implemented.</h2>");
+        out.println("<h2>Neue Testschritte automatisch generieren</h2>");
+        out.println("<p style=\"color: red\">Testschritt Generator ist noch nicht vollständig implementiert.</p>"); // TODO@CHW
+        out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
+        out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");
+        out.println("<input type=hidden name=action value=generateNewTestSteps>");
+        out.println("<table>");
+        out.println("<tr>");
+        out.println("<th>Number of test steps</th>");
+        out.println("<td><input type=text name=numberOfTestSteps value=\"10\" required=required pattern=\"[0-9]+\"></td>");
+        out.println("</tr>");
+        out.println("<tr>");
+        out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
+        out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + test.getTask().getTaskid() + "&lecture=" + test.getTask().getTaskGroup().getLecture().getId(), response));
+        out.println("\">Abbrechen</a></td>");
+        out.println("</tr>");
+        out.println("</table>");
+        out.println("</form>");
+
+        out.println("<h2>Testschritte bearbeiten</h2>");
+        out.println("<table>");
+        out.println(/* @formatter:off */
+            "<thead>" +
+                "<tr>" +
+                    "<th>Titel</th>" +
+                    "<th>Testcode</th>" +
+                    "<th>Expected</th>" +
+                "</tr>" +
+            "</thead>"
+        /* @formatter:on */);
+
+        for (DockerTestStep step : test.getTestSteps()) {
+            String deleteTestStepLink = Util.generateHTMLLink(HaskellRuntimeTestManager.class.getSimpleName() +
+                    "?testid=" + test.getId() +
+                    "&action=deleteStep&teststepid=" + step.getTeststepid(), response
+            );
+            out.println(/* @formatter:off */
+                "<tr>" +
+                    "<td>" +
+                        Util.escapeHTML(step.getTitle()) + " " +
+                        "<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + deleteTestStepLink + "\">" +
+                            "(Löschen)" +
+                        "</a>" +
+                    "</td>" +
+                    "<td>" + Util.escapeHTML(step.getTestcode()) + "</td>" +
+                    "<td>" + Util.escapeHTML(step.getExpect()) + "</td>" +
+                "</tr>"
+            /* @formatter:on */);
+        }
+        out.println("</table>");
 
         template.printTemplateFooter();
     }
