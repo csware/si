@@ -170,10 +170,9 @@ public class TestManager extends HttpServlet {
 			test.setTestTitle(title);
 			test.setTestDescription(description);
 			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
-			test.setTimeout(15); // falls du es trotzdem festlegen willst
+			test.setTimeout(15);
 			session.getTransaction().commit();
 
-			// Zurück zur Aufgabenübersicht (wie bei CompileTest)
 			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName()
 					+ "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId()
 					+ "&taskid=" + task.getTaskid(), response));

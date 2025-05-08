@@ -390,7 +390,6 @@ public class TestManagerAddTestFormView extends HttpServlet {
 		out.println("</tr>");
 		out.println("</table>");
 		out.println("</form>");
-
 		template.printTemplateFooter();
 	}
 }

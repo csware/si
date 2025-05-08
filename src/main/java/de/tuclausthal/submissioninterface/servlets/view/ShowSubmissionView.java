@@ -324,8 +324,8 @@ public class ShowSubmissionView extends HttpServlet {
 						ShowHaskellSyntaxTestResult.printTestResults(out, hst, testResult.getTestOutput(), false, javaScript);
 					} else if (testResult.getTest() instanceof DockerTest dt) {
 						out.println("<br>");
-						ShowDockerTestResult.printTestResults(out, dt, testResult.getTestOutput(), false, javaScript);}
-					else {
+						ShowDockerTestResult.printTestResults(out, dt, testResult.getTestOutput(), false, javaScript);
+					} else {
 						out.println("<br><textarea id=\"testresult" + testResult.getId() + "\" cols=80 rows=15>" + Util.escapeHTML(testResult.getTestOutput()) + "</textarea>");
 					}
 				}

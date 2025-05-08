@@ -68,11 +68,11 @@ public class PerformTestResultView extends HttpServlet {
 		if (!testResult.getTestOutput().isEmpty()) {
 			if (test instanceof JavaAdvancedIOTest jaiot) {
 				ShowJavaAdvancedIOTestResult.printTestResults(out, jaiot, testResult.getTestOutput(), (participation == null || !participation.getRoleType().equals(ParticipationRole.ADVISOR)), null);
-			} else if (test instanceof HaskellSyntaxTest hst){
+			} else if (test instanceof HaskellSyntaxTest hst) {
 				ShowHaskellSyntaxTestResult.printTestResults(out, hst, testResult.getTestOutput(), (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0), null);
 			} else if (test instanceof DockerTest dt) {
 				ShowDockerTestResult.printTestResults(out, dt, testResult.getTestOutput(), (participation == null || participation.getRoleType().compareTo(ParticipationRole.TUTOR) < 0), null);
-			}  else {
+			} else {
 				out.println("<b>Ausgabe:</b><br><pre>" + Util.escapeHTML(testResult.getTestOutput()) + "</pre>");
 			}
 		}

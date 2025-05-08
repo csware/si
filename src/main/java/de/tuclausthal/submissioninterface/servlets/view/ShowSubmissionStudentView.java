@@ -81,9 +81,9 @@ public class ShowSubmissionStudentView extends HttpServlet {
 					if (testResult.getTest() instanceof JavaAdvancedIOTest) {
 						out.println("<br>");
 						ShowJavaAdvancedIOTestResult.printTestResults(out, (JavaAdvancedIOTest) testResult.getTest(), testResult.getTestOutput(), true, javaScript);
-					}else if (testResult.getTest() instanceof HaskellSyntaxTest hst) {
-							out.println("<br>");
-							ShowHaskellSyntaxTestResult.printTestResults(out, hst, testResult.getTestOutput(), false, javaScript);
+					} else if (testResult.getTest() instanceof HaskellSyntaxTest hst) {
+						out.println("<br>");
+						ShowHaskellSyntaxTestResult.printTestResults(out, hst, testResult.getTestOutput(), false, javaScript);
 					} else if (testResult.getTest() instanceof DockerTest) {
 						out.println("<br>");
 						ShowDockerTestResult.printTestResults(out, (DockerTest) testResult.getTest(), testResult.getTestOutput(), true, javaScript);
