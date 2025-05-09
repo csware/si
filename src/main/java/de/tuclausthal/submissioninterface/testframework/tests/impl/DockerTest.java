@@ -92,7 +92,7 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 			/* only forward explicitly specified environment variables to test processes */
 			pb.environment().keySet().removeIf(key -> !("PATH".equalsIgnoreCase(key) || "USER".equalsIgnoreCase(key) || "LANG".equalsIgnoreCase(key)));
 
-			debugLog(params, studentDir);
+			LOG.debug("Executing external process: {} in {}", params, studentDir);
 
 			Process process = pb.start();
 			ProcessOutputGrabber outputGrapper = new ProcessOutputGrabber(process);
@@ -204,10 +204,6 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 		}
 
 		return testCode.toString();
-	}
-
-	protected final void debugLog(List<String> params, Path studentDir){
-		LOG.debug("Executing external process: {} in {}", params, studentDir);
 	}
 
 
