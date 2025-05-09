@@ -311,7 +311,6 @@ public class CommonErrorAnalyzer {
 
 		String keyStr = "";
 
-		// Optional: zusätzliche Hinweise sammeln
 		if (testOutputJson.containsKey("exitCode")) {
 			keyStr += "ExitCode: " + testOutputJson.getInt("exitCode") + " ";
 		}
@@ -333,8 +332,18 @@ public class CommonErrorAnalyzer {
 		JsonObject testOutputJson = Json.createReader(new StringReader(testResult.getTestOutput())).readObject();
 		String stderr = testOutputJson.containsKey("stderr") ? testOutputJson.getString("stderr") : "";
 
-		String keyStr = "HaskellSyntax: ";
-		new RegexBasedHaskellClustering(session).classify(testResult, stderr, keyStr);
+		 String clusterResult = RegexBasedHaskellClustering.classify(stderr);
+
+		String keyStr = "Syntax: " + clusterResult;
+
+		CommonErrorDAOIf commonErrorDAO = DAOFactory.CommonErrorDAOIf(session);
+		CommonError commonError = commonErrorDAO.getCommonError(keyStr, testResult.getTest());
+		if (commonError != null) {
+			commonError.getTestResults().add(testResult);
+		} else {
+			commonErrorDAO.newCommonError(keyStr, clusterResult, testResult, CommonError.Type.CompileTimeError);
+		}
+
 	}
 
 
