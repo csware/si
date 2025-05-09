@@ -37,25 +37,23 @@ import de.tuclausthal.submissioninterface.util.Util;
 
 public class HaskellSyntaxTest extends DockerTest {
 
+    private static final Random random = new Random();
+    private final String separator;
+
     public HaskellSyntaxTest(de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest test) {
         super(test);
+        separator = "#<GATE@" + random.nextLong() + "#@>#";
     }
 
     @Override
-    protected void analyzeAndSetResult(boolean exitedCleanly, StringBuffer stdout, StringBuffer stderr, int exitCode, boolean aborted, TestExecutorTestResult result) {
+    protected final void analyzeAndSetResult(final boolean exitedCleanly, final StringBuffer stdout, final StringBuffer stderr, final int exitCode, final boolean aborted, final TestExecutorTestResult result) {
         boolean success = exitedCleanly && !stderr.toString().toLowerCase().contains("error:");
         result.setTestPassed(success);
         result.setTestOutput(createJsonBuilder(success, stdout, stderr, exitCode, aborted).build().toString());
     }
 
-
     @Override
-    protected void performTestInTempDir(Path basePath, Path tempDir, TestExecutorTestResult testResult) throws Exception {
-        //currently unused
-    }
-
-    @Override
-    protected String generateTestShellScript(){
+    protected final String generateTestShellScript(){
         return """
                 #!/bin/bash
                 set -e
@@ -64,10 +62,5 @@ public class HaskellSyntaxTest extends DockerTest {
                   ghci -ignore-dot-ghci -v0 -ferror-spans -fdiagnostics-color=never -Wall -e ":load $file" -e ":quit"
                 done
                 """.formatted(separator);
-    }
-
-    @Override
-    protected void debugLog(List<String> params, Path studentDir){
-        LOG.debug("Executing HaskellSyntaxTest docker process: {} in {}", params, studentDir);
     }
 }

@@ -42,12 +42,12 @@ import de.tuclausthal.submissioninterface.util.Util;
  * @author Sven Strickroth
  */
 public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest> {
-	final static protected Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	final static public String SAFE_DOCKER_SCRIPT = "/usr/local/bin/safe-docker";
 
-	protected static final Random random = new Random();
-	protected final String separator;
-	protected Path tempDir;
+	final private static Random random = new Random();
+	final private String separator;
+	private  Path tempDir;
 
 	public DockerTest(final de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest test) {
 		super(test);
@@ -55,7 +55,7 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 	}
 
 	@Override
-	public void performTest(final Path basePath, final Path submissionPath, final TestExecutorTestResult testResult) throws Exception {
+	public final void performTest(final Path basePath, final Path submissionPath, final TestExecutorTestResult testResult) throws Exception {
 		try {
 			tempDir = Util.createTemporaryDirectory("test");
 			//Configuration.getInstance().getDataPath()
@@ -206,7 +206,7 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 		return testCode.toString();
 	}
 
-	protected void debugLog(List<String> params, Path studentDir){
+	protected final void debugLog(List<String> params, Path studentDir){
 		LOG.debug("Executing external process: {} in {}", params, studentDir);
 	}
 
