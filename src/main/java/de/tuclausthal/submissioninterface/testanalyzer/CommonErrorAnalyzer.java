@@ -332,7 +332,7 @@ public class CommonErrorAnalyzer {
 		JsonObject testOutputJson = Json.createReader(new StringReader(testResult.getTestOutput())).readObject();
 		String stderr = testOutputJson.containsKey("stderr") ? testOutputJson.getString("stderr") : "";
 
-		 String clusterResult = RegexBasedHaskellClustering.classify(stderr);
+		String clusterResult = RegexBasedHaskellClustering.classify(stderr);
 
 		String keyStr = "Syntax: " + clusterResult;
 
