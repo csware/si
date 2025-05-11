@@ -47,7 +47,7 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 
 	final private static Random random = new Random();
 	final private String separator;
-	private  Path tempDir;
+	private Path tempDir;
 
 	public DockerTest(final de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest test) {
 		super(test);
