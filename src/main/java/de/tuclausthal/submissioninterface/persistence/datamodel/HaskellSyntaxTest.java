@@ -21,14 +21,13 @@ package de.tuclausthal.submissioninterface.persistence.datamodel;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
 
-
 import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 
 @Entity
 public class HaskellSyntaxTest extends DockerTest {
-    @Override
-    @Transient
-    public AbstractTest<DockerTest> getTestImpl() {
-        return new de.tuclausthal.submissioninterface.testframework.tests.impl.HaskellSyntaxTest(this);
-    }
+	@Override
+	@Transient
+	public AbstractTest<DockerTest> getTestImpl() {
+		return new de.tuclausthal.submissioninterface.testframework.tests.impl.HaskellSyntaxTest(this);
+	}
 }

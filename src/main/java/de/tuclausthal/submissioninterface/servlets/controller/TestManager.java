@@ -41,8 +41,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -309,10 +309,9 @@ public class TestManager extends HttpServlet {
 			test.setTimeout(Util.parseInteger(request.getParameter("timeout"), 15));
 			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			String preparationCode = request.getParameter("preparationcode");
-			if (preparationCode == null) preparationCode = "";
-			test.setPreparationShellCode(
-					preparationCode.replaceAll("\r\n", "\n")
-			);
+			if (preparationCode == null)
+				preparationCode = "";
+			test.setPreparationShellCode(preparationCode.replaceAll("\r\n", "\n"));
 
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(HaskellRuntimeTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));

@@ -19,10 +19,10 @@
 
 package de.tuclausthal.submissioninterface.persistence.datamodel;
 
-import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
 
+import de.tuclausthal.submissioninterface.testframework.tests.AbstractTest;
 
 /**
  * Haskell runtime test, extends the DockerTest by automatically generating haskell testcases and by clustering

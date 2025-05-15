@@ -21,23 +21,23 @@ package de.tuclausthal.submissioninterface.servlets.view.fragments;
 import java.io.PrintWriter;
 import java.io.StringReader;
 
-import de.tuclausthal.submissioninterface.util.Util;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
+import de.tuclausthal.submissioninterface.util.Util;
 
 public class ShowHaskellSyntaxTestResult {
-    public static void printTestResults(PrintWriter out, HaskellSyntaxTest test, String testOutput, boolean isStudent, StringBuilder javaScript) {
+	public static void printTestResults(PrintWriter out, HaskellSyntaxTest test, String testOutput, boolean isStudent, StringBuilder javaScript) {
 
-        JsonObject json = Json.createReader(new StringReader(testOutput)).readObject();
+		JsonObject json = Json.createReader(new StringReader(testOutput)).readObject();
 
-        String stderr = json.getString("stderr", "");
+		String stderr = json.getString("stderr", "");
 
-        if (!stderr.isEmpty()) {
-            out.println("<p><strong>Fehlerausgabe:</strong></p>");
-            out.println("<pre class=\"haskellstderr\">" + Util.escapeHTML(stderr) + "</pre>");
-        }
+		if (!stderr.isEmpty()) {
+			out.println("<p><strong>Fehlerausgabe:</strong></p>");
+			out.println("<pre class=\"haskellstderr\">" + Util.escapeHTML(stderr) + "</pre>");
+		}
 
-    }
+	}
 }

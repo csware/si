@@ -233,9 +233,7 @@ public class TestManagerAddTestFormView extends HttpServlet {
 			out.println("</tr>");
 			out.println("<tr>");
 			out.print("<td colspan=2 class=mid><input type=submit value=speichern> <a href=\"");
-			out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() +
-					"?action=editTask&taskid=" + task.getTaskid() +
-					"&lecture=" + task.getTaskGroup().getLecture().getId(), response));
+			out.print(Util.generateHTMLLink(TaskManager.class.getSimpleName() + "?action=editTask&taskid=" + task.getTaskid() + "&lecture=" + task.getTaskGroup().getLecture().getId(), response));
 			out.println("\">Abbrechen</a></td>");
 			out.println("</tr>");
 			out.println("</table>");

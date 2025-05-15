@@ -19,23 +19,29 @@
 
 package de.tuclausthal.submissioninterface.servlets.controller;
 
-import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
-import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
-import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
-import de.tuclausthal.submissioninterface.persistence.datamodel.*;
-import de.tuclausthal.submissioninterface.servlets.GATEController;
-import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
-import de.tuclausthal.submissioninterface.servlets.view.MessageView;
-import de.tuclausthal.submissioninterface.util.Util;
+import java.io.IOException;
+import java.io.Serial;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.io.IOException;
-import java.io.Serial;
+import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
+import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
+import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
+import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
+import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
+import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
+import de.tuclausthal.submissioninterface.servlets.GATEController;
+import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
+import de.tuclausthal.submissioninterface.servlets.view.MessageView;
+import de.tuclausthal.submissioninterface.util.Util;
 
 /**
  * Controller-Servlet for clustering haskell submissions based on common errors (dynamic/runtime analysis).
@@ -45,58 +51,58 @@ import java.io.Serial;
  */
 @GATEController
 public class HaskellRuntimeTestManager extends HttpServlet {
-    @Serial
-    private static final long serialVersionUID = 1L;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        getServletContext().getNamedDispatcher(DockerTestManager.class.getSimpleName()).forward(request, response);
-    }
+	@Override
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		getServletContext().getNamedDispatcher(DockerTestManager.class.getSimpleName()).forward(request, response);
+	}
 
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Session session = RequestAdapter.getSession(request);
-        TestDAOIf testDAOIf = DAOFactory.TestDAOIf(session);
-        Test test = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
-        if (!(test instanceof HaskellRuntimeTest haskellRuntimeTest)) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            request.setAttribute("title", "Test nicht gefunden");
-            getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
-            return;
-        }
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Session session = RequestAdapter.getSession(request);
+		TestDAOIf testDAOIf = DAOFactory.TestDAOIf(session);
+		Test test = testDAOIf.getTest(Util.parseInteger(request.getParameter("testid"), 0));
+		if (!(test instanceof HaskellRuntimeTest haskellRuntimeTest)) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			request.setAttribute("title", "Test nicht gefunden");
+			getServletContext().getNamedDispatcher(MessageView.class.getSimpleName()).forward(request, response);
+			return;
+		}
 
-        ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
-        Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), haskellRuntimeTest.getTask().getTaskGroup().getLecture());
-        if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
-            return;
-        }
+		ParticipationDAOIf participationDAO = DAOFactory.ParticipationDAOIf(session);
+		Participation participation = participationDAO.getParticipation(RequestAdapter.getUser(request), haskellRuntimeTest.getTask().getTaskGroup().getLecture());
+		if (participation == null || participation.getRoleType() != ParticipationRole.ADVISOR) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "insufficient rights");
+			return;
+		}
 
-        if ("generateNewTestSteps".equals(request.getParameter("action"))) {
-            int numberOfTestSteps = Util.parseInteger(request.getParameter("numberOfTestSteps"), 0);
-            String[][] testcases = new String[numberOfTestSteps][3];
+		if ("generateNewTestSteps".equals(request.getParameter("action"))) {
+			int numberOfTestSteps = Util.parseInteger(request.getParameter("numberOfTestSteps"), 0);
+			String[][] testcases = new String[numberOfTestSteps][3];
 
-            // TODO@CHW: this is just a placeholder for the actual testcase generator
-            for (int testStepId = 0; testStepId < numberOfTestSteps; testStepId++) {
-                testcases[testStepId][0] = "Testcase " + testStepId;
-                testcases[testStepId][1] = "ghci -e " + testStepId + "+" + testStepId;
-                testcases[testStepId][2] = "" + (testStepId + testStepId);
-            }
+			// TODO@CHW: this is just a placeholder for the actual testcase generator
+			for (int testStepId = 0; testStepId < numberOfTestSteps; testStepId++) {
+				testcases[testStepId][0] = "Testcase " + testStepId;
+				testcases[testStepId][1] = "ghci -e " + testStepId + "+" + testStepId;
+				testcases[testStepId][2] = "" + (testStepId + testStepId);
+			}
 
-            Transaction tx = session.beginTransaction();
-            for (int testStepId = 0; testStepId < numberOfTestSteps; testStepId++) {
-                String title = testcases[testStepId][0];
-                String testCode = testcases[testStepId][1].replaceAll("\r\n", "\n");
-                String expect = testcases[testStepId][2].replaceAll("\r\n", "\n");
+			Transaction tx = session.beginTransaction();
+			for (int testStepId = 0; testStepId < numberOfTestSteps; testStepId++) {
+				String title = testcases[testStepId][0];
+				String testCode = testcases[testStepId][1].replaceAll("\r\n", "\n");
+				String expect = testcases[testStepId][2].replaceAll("\r\n", "\n");
 
-                DockerTestStep newStep = new DockerTestStep(haskellRuntimeTest, title, testCode, expect);
-                session.persist(newStep);
-            }
-            tx.commit();
+				DockerTestStep newStep = new DockerTestStep(haskellRuntimeTest, title, testCode, expect);
+				session.persist(newStep);
+			}
+			tx.commit();
 
-            response.sendRedirect(Util.generateRedirectURL(HaskellRuntimeTestManager.class.getSimpleName() + "?testid=" + haskellRuntimeTest.getId(), response));
-        } else {
-            getServletContext().getNamedDispatcher(DockerTestManager.class.getSimpleName()).forward(request, response);
-        }
-    }
+			response.sendRedirect(Util.generateRedirectURL(HaskellRuntimeTestManager.class.getSimpleName() + "?testid=" + haskellRuntimeTest.getId(), response));
+		} else {
+			getServletContext().getNamedDispatcher(DockerTestManager.class.getSimpleName()).forward(request, response);
+		}
+	}
 }

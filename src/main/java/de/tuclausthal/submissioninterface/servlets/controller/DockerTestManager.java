@@ -33,8 +33,8 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.dao.ParticipationDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.TestDAOIf;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTestStep;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ParticipationRole;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
@@ -74,8 +74,7 @@ public class DockerTestManager extends HttpServlet {
 
 		request.setAttribute("test", test);
 
-		String testManagerViewClassSimpleName = test instanceof HaskellRuntimeTest ?
-				HaskellRuntimeTestManagerView.class.getSimpleName() : DockerTestManagerOverView.class.getSimpleName();
+		String testManagerViewClassSimpleName = test instanceof HaskellRuntimeTest ? HaskellRuntimeTestManagerView.class.getSimpleName() : DockerTestManagerOverView.class.getSimpleName();
 
 		getServletContext().getNamedDispatcher(testManagerViewClassSimpleName).forward(request, response);
 	}
@@ -99,8 +98,7 @@ public class DockerTestManager extends HttpServlet {
 			return;
 		}
 
-		String testManagerClassSimpleName = test instanceof HaskellRuntimeTest ?
-				HaskellRuntimeTestManager.class.getSimpleName() : DockerTestManager.class.getSimpleName();
+		String testManagerClassSimpleName = test instanceof HaskellRuntimeTest ? HaskellRuntimeTestManager.class.getSimpleName() : DockerTestManager.class.getSimpleName();
 
 		if ("edittest".equals(request.getParameter("action"))) {
 			Transaction tx = session.beginTransaction();

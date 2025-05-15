@@ -126,7 +126,6 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 		result.setTestOutput(stdout.toString());
 	}
 
-
 	// similar code in JavaAdvancedIOTest
 	protected boolean calculateTestResult(boolean exitedCleanly, final StringBuffer processOutput, final StringBuffer stdErr, final int exitCode, final boolean aborted) {
 		JsonObjectBuilder builder = createJsonBuilder(exitedCleanly, processOutput, stdErr, exitCode, aborted);
@@ -186,7 +185,7 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 
 	}
 
-	protected String generateTestShellScript(){
+	protected String generateTestShellScript() {
 		StringBuilder testCode = new StringBuilder();
 		testCode.append("#!/bin/bash\n");
 		testCode.append("set -e\n");
@@ -205,7 +204,6 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 
 		return testCode.toString();
 	}
-
 
 	@Override
 	protected void performTestInTempDir(Path basePath, Path pTempDir, TestExecutorTestResult testResult) throws Exception {}

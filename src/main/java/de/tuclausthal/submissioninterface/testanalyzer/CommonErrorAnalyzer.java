@@ -22,7 +22,6 @@ package de.tuclausthal.submissioninterface.testanalyzer;
 import java.io.StringReader;
 import java.util.List;
 
-import de.tuclausthal.submissioninterface.testanalyzer.haskell.syntax.RegexBasedHaskellClustering;
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
@@ -33,13 +32,14 @@ import de.tuclausthal.submissioninterface.persistence.dao.CommonErrorDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommonError;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
-import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
-import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
+import de.tuclausthal.submissioninterface.testanalyzer.haskell.syntax.RegexBasedHaskellClustering;
 
 public class CommonErrorAnalyzer {
 	//from Literatur
@@ -345,6 +345,4 @@ public class CommonErrorAnalyzer {
 		}
 
 	}
-
-
 }

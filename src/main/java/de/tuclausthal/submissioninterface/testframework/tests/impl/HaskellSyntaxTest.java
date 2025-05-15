@@ -18,49 +18,36 @@
  */
 package de.tuclausthal.submissioninterface.testframework.tests.impl;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.lang.invoke.MethodHandles;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 import java.util.Random;
 
-import jakarta.json.Json;
-import jakarta.json.JsonObjectBuilder;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.tuclausthal.submissioninterface.testframework.executor.TestExecutorTestResult;
-import de.tuclausthal.submissioninterface.util.Util;
 
 public class HaskellSyntaxTest extends DockerTest {
 
-    private static final Random random = new Random();
-    private final String separator;
+	private static final Random random = new Random();
+	private final String separator;
 
-    public HaskellSyntaxTest(de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest test) {
-        super(test);
-        separator = "#<GATE@" + random.nextLong() + "#@>#";
-    }
+	public HaskellSyntaxTest(de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest test) {
+		super(test);
+		separator = "#<GATE@" + random.nextLong() + "#@>#";
+	}
 
-    @Override
-    protected final void analyzeAndSetResult(final boolean exitedCleanly, final StringBuffer stdout, final StringBuffer stderr, final int exitCode, final boolean aborted, final TestExecutorTestResult result) {
-        boolean success = exitedCleanly && !stderr.toString().toLowerCase().contains("error:");
-        result.setTestPassed(success);
-        result.setTestOutput(createJsonBuilder(success, stdout, stderr, exitCode, aborted).build().toString());
-    }
+	@Override
+	protected final void analyzeAndSetResult(final boolean exitedCleanly, final StringBuffer stdout, final StringBuffer stderr, final int exitCode, final boolean aborted, final TestExecutorTestResult result) {
+		boolean success = exitedCleanly && !stderr.toString().toLowerCase().contains("error:");
+		result.setTestPassed(success);
+		result.setTestOutput(createJsonBuilder(success, stdout, stderr, exitCode, aborted).build().toString());
+	}
 
-    @Override
-    protected final String generateTestShellScript(){
-        return """
-                #!/bin/bash
-                set -e
-                echo '%s'
-                for file in *.hs; do
-                  ghci -ignore-dot-ghci -v0 -ferror-spans -fdiagnostics-color=never -Wall -e ":load $file" -e ":quit"
-                done
-                """.formatted(separator);
-    }
+	@Override
+	protected final String generateTestShellScript() {
+		return """
+				#!/bin/bash
+				set -e
+				echo '%s'
+				for file in *.hs; do
+				  ghci -ignore-dot-ghci -v0 -ferror-spans -fdiagnostics-color=never -Wall -e ":load $file" -e ":quit"
+				done
+				""".formatted(separator);
+	}
 }
