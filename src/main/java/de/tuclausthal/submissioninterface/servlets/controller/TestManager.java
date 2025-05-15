@@ -173,9 +173,7 @@ public class TestManager extends HttpServlet {
 			test.setTimeout(15);
 			session.getTransaction().commit();
 
-			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName()
-					+ "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId()
-					+ "&taskid=" + task.getTaskid(), response));
+			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "checklist".equals(request.getParameter("type"))) {
 			session.beginTransaction();
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
