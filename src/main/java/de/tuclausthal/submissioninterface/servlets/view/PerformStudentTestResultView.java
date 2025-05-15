@@ -29,6 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTestCheckItem;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.LogEntry;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -37,6 +38,7 @@ import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.controller.ChecklistTestResponse;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowDockerTestResult;
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowHaskellSyntaxTestResult;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowJavaAdvancedIOTestResult;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
@@ -106,6 +108,8 @@ public class PerformStudentTestResultView extends HttpServlet {
 		if (test.isGiveDetailsToStudents() && !testResult.getTestOutput().isEmpty()) {
 			if (test instanceof JavaAdvancedIOTest jaiot) {
 				ShowJavaAdvancedIOTestResult.printTestResults(out, jaiot, testResult.getTestOutput(), true, null);
+			} else if (test instanceof HaskellSyntaxTest hst) {
+				ShowHaskellSyntaxTestResult.printTestResults(out, hst, testResult.getTestOutput(), true, null);
 			} else if (test instanceof DockerTest dt) {
 				ShowDockerTestResult.printTestResults(out, dt, testResult.getTestOutput(), true, null);
 			} else {

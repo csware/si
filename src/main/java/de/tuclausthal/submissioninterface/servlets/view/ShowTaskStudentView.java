@@ -44,6 +44,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TestResultCommonErrorDAO;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommonError;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -67,6 +68,7 @@ import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
 import de.tuclausthal.submissioninterface.servlets.controller.SubmitSolution;
 import de.tuclausthal.submissioninterface.servlets.controller.WebStart;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowDockerTestResult;
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowHaskellSyntaxTestResult;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowJavaAdvancedIOTestResult;
 import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.template.Template;
@@ -385,6 +387,8 @@ public class ShowTaskStudentView extends HttpServlet {
 					if (!testResult.getTestOutput().isEmpty() && testResult.getTest().isGiveDetailsToStudents()) {
 						if (testResult.getTest() instanceof JavaAdvancedIOTest) {
 							ShowJavaAdvancedIOTestResult.printTestResults(out, (JavaAdvancedIOTest) testResult.getTest(), testResult.getTestOutput(), true, null);
+						} else if (testResult.getTest() instanceof HaskellSyntaxTest) {
+							ShowHaskellSyntaxTestResult.printTestResults(out, (HaskellSyntaxTest) testResult.getTest(), testResult.getTestOutput(), true, null);
 						} else if (testResult.getTest() instanceof DockerTest) {
 							ShowDockerTestResult.printTestResults(out, (DockerTest) testResult.getTest(), testResult.getTestOutput(), true, null);
 						} else {

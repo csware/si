@@ -45,8 +45,8 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 	final static private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	final static public String SAFE_DOCKER_SCRIPT = "/usr/local/bin/safe-docker";
 
-	private static final Random random = new Random();
-	private final String separator;
+	final private static Random random = new Random();
+	final private String separator;
 	private Path tempDir;
 
 	public DockerTest(final de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest test) {
@@ -55,7 +55,7 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 	}
 
 	@Override
-	public void performTest(final Path basePath, final Path submissionPath, final TestExecutorTestResult testResult) throws Exception {
+	public final void performTest(final Path basePath, final Path submissionPath, final TestExecutorTestResult testResult) throws Exception {
 		try {
 			tempDir = Util.createTemporaryDirectory("test");
 			//Configuration.getInstance().getDataPath()
@@ -71,21 +71,7 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 
 			Util.recursiveCopy(submissionPath, studentDir);
 
-			StringBuilder testCode = new StringBuilder();
-			testCode.append("#!/bin/bash\n");
-			testCode.append("set -e\n");
-			testCode.append(test.getPreparationShellCode());
-			testCode.append("\n");
-
-			for (DockerTestStep testStep : test.getTestSteps()) {
-				testCode.append("echo '" + separator + "'\n");
-				testCode.append("echo '" + separator + "' >&2\n");
-				testCode.append("{\n");
-				testCode.append("set -e\n");
-				testCode.append(testStep.getTestcode());
-				testCode.append("\n");
-				testCode.append("}\n");
-			}
+			String testCode = generateTestShellScript();
 
 			final Path testDriver = administrativeDir.resolve("test.sh");
 			try (Writer fw = Files.newBufferedWriter(testDriver)) {
@@ -105,7 +91,9 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 			pb.directory(studentDir.toFile());
 			/* only forward explicitly specified environment variables to test processes */
 			pb.environment().keySet().removeIf(key -> !("PATH".equalsIgnoreCase(key) || "USER".equalsIgnoreCase(key) || "LANG".equalsIgnoreCase(key)));
+
 			LOG.debug("Executing external process: {} in {}", params, studentDir);
+
 			Process process = pb.start();
 			ProcessOutputGrabber outputGrapper = new ProcessOutputGrabber(process);
 			// no need to check for timeout, we fully rely on the safe-docker script here
@@ -122,8 +110,9 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 			}
 
 			boolean exitedCleanly = (exitValue == 0);
-			testResult.setTestPassed(calculateTestResult(exitedCleanly, outputGrapper.getStdOutBuffer(), outputGrapper.getStdErrBuffer(), exitValue, aborted));
-			testResult.setTestOutput(outputGrapper.getStdOutBuffer().toString());
+
+			// for modularization and flexibility in child classes
+			analyzeAndSetResult(exitedCleanly, outputGrapper.getStdOutBuffer(), outputGrapper.getStdErrBuffer(), exitValue, aborted, testResult);
 		} finally {
 			if (tempDir != null) {
 				Util.recursiveDelete(tempDir);
@@ -131,22 +120,15 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 		}
 	}
 
+	protected void analyzeAndSetResult(boolean exitedCleanly, StringBuffer stdout, StringBuffer stderr, int exitCode, boolean aborted, TestExecutorTestResult result) {
+		boolean passed = calculateTestResult(exitedCleanly, stdout, stderr, exitCode, aborted);
+		result.setTestPassed(passed);
+		result.setTestOutput(stdout.toString());
+	}
+
 	// similar code in JavaAdvancedIOTest
 	protected boolean calculateTestResult(boolean exitedCleanly, final StringBuffer processOutput, final StringBuffer stdErr, final int exitCode, final boolean aborted) {
-		JsonObjectBuilder builder = Json.createObjectBuilder();
-		builder.add("stdout", processOutput.toString());
-		if (stdErr.length() > 0) {
-			builder.add("stderr", stdErr.toString());
-		}
-		builder.add("separator", separator + "\n");
-		if (tempDir != null) {
-			builder.add("tmpdir", tempDir.toAbsolutePath().toString());
-		}
-		builder.add("exitCode", exitCode);
-		builder.add("exitedCleanly", exitedCleanly);
-		if (aborted) {
-			builder.add("time-exceeded", aborted);
-		}
+		JsonObjectBuilder builder = createJsonBuilder(exitedCleanly, processOutput, stdErr, exitCode, aborted);
 
 		int start = 0;
 		int splitterPos;
@@ -181,6 +163,46 @@ public class DockerTest extends TempDirTest<de.tuclausthal.submissioninterface.p
 		processOutput.setLength(0);
 		processOutput.append(builder.build().toString());
 		return exitedCleanly;
+	}
+
+	protected JsonObjectBuilder createJsonBuilder(boolean exitedCleanly, final StringBuffer processOutput, final StringBuffer stdErr, final int exitCode, final boolean aborted) {
+		JsonObjectBuilder builder = Json.createObjectBuilder();
+		builder.add("stdout", processOutput.toString());
+		if (stdErr.length() > 0) {
+			builder.add("stderr", stdErr.toString());
+		}
+		builder.add("separator", separator + "\n");
+		if (tempDir != null) {
+			builder.add("tmpdir", tempDir.toAbsolutePath().toString());
+		}
+		builder.add("exitCode", exitCode);
+		builder.add("exitedCleanly", exitedCleanly);
+		if (aborted) {
+			builder.add("time-exceeded", aborted);
+		}
+
+		return builder;
+
+	}
+
+	protected String generateTestShellScript() {
+		StringBuilder testCode = new StringBuilder();
+		testCode.append("#!/bin/bash\n");
+		testCode.append("set -e\n");
+		testCode.append(test.getPreparationShellCode());
+		testCode.append("\n");
+
+		for (DockerTestStep testStep : test.getTestSteps()) {
+			testCode.append("echo '" + separator + "'\n");
+			testCode.append("echo '" + separator + "' >&2\n");
+			testCode.append("{\n");
+			testCode.append("set -e\n");
+			testCode.append(testStep.getTestcode());
+			testCode.append("\n");
+			testCode.append("}\n");
+		}
+
+		return testCode.toString();
 	}
 
 	@Override

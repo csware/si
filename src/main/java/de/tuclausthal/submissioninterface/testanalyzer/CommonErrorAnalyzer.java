@@ -32,10 +32,14 @@ import de.tuclausthal.submissioninterface.persistence.dao.CommonErrorDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommonError;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
+import de.tuclausthal.submissioninterface.testanalyzer.haskell.syntax.RegexBasedHaskellClustering;
 
 public class CommonErrorAnalyzer {
 	//from Literatur
@@ -60,6 +64,12 @@ public class CommonErrorAnalyzer {
 			groupJavaIOTestResults((JavaAdvancedIOTest) test, testResult);
 		} else if (test instanceof JUnitTest) {
 			groupJUnitTestResults((JUnitTest) test, testResult);
+		} else if (test instanceof HaskellSyntaxTest) {
+			groupHaskellSyntaxTestResults((HaskellSyntaxTest) test, testResult);
+		} else if (test instanceof HaskellRuntimeTest haskellRuntimeTest) {
+			groupHaskellRuntimeTestResults(haskellRuntimeTest, testResult);
+		} else if (test instanceof DockerTest) {
+			groupDockerTestResults((DockerTest) test, testResult);
 		}
 	}
 
@@ -149,6 +159,22 @@ public class CommonErrorAnalyzer {
 			keyStr += "time-exceeded ";
 
 		return new String[] { stepsStr, keyStr };
+	}
+
+	private void groupHaskellRuntimeTestResults(final HaskellRuntimeTest test, final TestResult testResult) {
+		if (testResult.getPassedTest()) {
+			return;
+		}
+
+		// TODO@CHW implement correctly
+
+		final JsonObject testOutputJson = Json.createReader(new StringReader(testResult.getTestOutput())).readObject();
+
+		if (testOutputJson.containsKey("exitCode") && testOutputJson.getInt("exitCode") != 0) {
+			// TODO: maybe modify and use groupTestResultToCommonErrors()
+			// TODO: exitCode != 0 on compile error and on runtime error
+			bindCommonError(testResult, "Failed", "Failed", null);
+		}
 	}
 
 	private void groupJUnitTestResults(JUnitTest test, final TestResult testResult) {
@@ -273,5 +299,50 @@ public class CommonErrorAnalyzer {
 			}
 		}
 		return foundErrorGroup;
+	}
+
+	private void groupDockerTestResults(final DockerTest test, final TestResult testResult) {
+		if (testResult.getPassedTest()) {
+			return;
+		}
+
+		JsonObject testOutputJson = Json.createReader(new StringReader(testResult.getTestOutput())).readObject();
+		String stderr = testOutputJson.containsKey("stderr") ? testOutputJson.getString("stderr") : "";
+
+		String keyStr = "";
+
+		if (testOutputJson.containsKey("exitCode")) {
+			keyStr += "ExitCode: " + testOutputJson.getInt("exitCode") + " ";
+		}
+		if (testOutputJson.containsKey("time-exceeded") && testOutputJson.getBoolean("time-exceeded")) {
+			keyStr += "Timeout ";
+		}
+		if (testOutputJson.containsKey("missing-tests")) {
+			keyStr += "Missing tests ";
+		}
+
+		groupTestResultToCommonErrors(testResult, stderr, keyStr);
+	}
+
+	private void groupHaskellSyntaxTestResults(final HaskellSyntaxTest test, final TestResult testResult) {
+		if (testResult.getPassedTest()) {
+			return;
+		}
+
+		JsonObject testOutputJson = Json.createReader(new StringReader(testResult.getTestOutput())).readObject();
+		String stderr = testOutputJson.containsKey("stderr") ? testOutputJson.getString("stderr") : "";
+
+		String clusterResult = RegexBasedHaskellClustering.classify(stderr);
+
+		String keyStr = "Syntax: " + clusterResult;
+
+		CommonErrorDAOIf commonErrorDAO = DAOFactory.CommonErrorDAOIf(session);
+		CommonError commonError = commonErrorDAO.getCommonError(keyStr, testResult.getTest());
+		if (commonError != null) {
+			commonError.getTestResults().add(testResult);
+		} else {
+			commonErrorDAO.newCommonError(keyStr, clusterResult, testResult, CommonError.Type.CompileTimeError);
+		}
+
 	}
 }

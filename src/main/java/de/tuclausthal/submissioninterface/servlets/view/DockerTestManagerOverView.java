@@ -92,7 +92,7 @@ public class DockerTestManagerOverView extends HttpServlet {
 		out.println("<h2>Testschritte</h2>");
 
 		for (DockerTestStep step : test.getTestSteps()) {
-			out.println("<h3>" + Util.escapeHTML(step.getTitle()) + "</h2>");
+			out.println("<h3>" + Util.escapeHTML(step.getTitle()) + "</h3>");
 			out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 			out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");
 			out.println("<input type=hidden name=teststepid value=\"" + step.getTeststepid() + "\">");
@@ -125,7 +125,7 @@ public class DockerTestManagerOverView extends HttpServlet {
 
 		out.println("<hr>");
 
-		out.println("<h3>Neuer Test-Schritt <a href=\"#\" onclick=\"toggleVisibility('teststephelp'); return false;\">(?)</a></h2>");
+		out.println("<h3>Neuer Test-Schritt <a href=\"#\" onclick=\"toggleVisibility('teststephelp'); return false;\">(?)</a></h3>");
 
 		out.println("<div style=\"display:none;\" id=teststephelp><b>Hilfe:</b><br>");
 		out.println("<p>Diese Art von Test erlaubt es beliebige einfache Ausgabe-Tests zu definieren. Mit dem Preparation-Code können vorbereitende Schritte als Bash-Skript programmiert werden. Ist dieser Schritt erfolgreich, werden die einzelnen Testschritte nacheinander aufgerufen, wobei für jeden Testschritt die Ausgabe auf STDOUT mit einem erwartetem Wert überprüft werden.</p>");
