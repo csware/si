@@ -41,6 +41,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -153,6 +155,25 @@ public class TestManager extends HttpServlet {
 			test.setPreparationShellCode(preparationcode.replaceAll("\r\n", "\n"));
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
+		} else if ("saveNewTest".equals(request.getParameter("action")) && "haskellsyntax".equals(request.getParameter("type"))) {
+			session.beginTransaction();
+			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
+			HaskellSyntaxTest test = testDAO.createHaskellSyntaxTest(task);
+
+			int timesRunnableByStudents = Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0);
+			boolean tutortest = request.getParameter("tutortest") != null;
+			String title = request.getParameter("title");
+			String description = request.getParameter("description");
+
+			test.setTimesRunnableByStudents(timesRunnableByStudents);
+			test.setForTutors(tutortest);
+			test.setTestTitle(title);
+			test.setTestDescription(description);
+			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
+			test.setTimeout(15);
+			session.getTransaction().commit();
+
+			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
 		} else if ("saveNewTest".equals(request.getParameter("action")) && "checklist".equals(request.getParameter("type"))) {
 			session.beginTransaction();
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
@@ -272,6 +293,26 @@ public class TestManager extends HttpServlet {
 			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
 			session.getTransaction().commit();
 			response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?action=editTask&lecture=" + task.getTaskGroup().getLecture().getId() + "&taskid=" + task.getTaskid(), response));
+		} else if ("saveNewTest".equals(request.getParameter("action")) && "haskellruntime".equals(request.getParameter("type"))) {
+			// TODO@CHW: make sure all parameters accessed by request.getParameter() are defined in HaskellRuntimeTestManagerView
+
+			session.beginTransaction();
+			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
+
+			HaskellRuntimeTest test = testDAO.createHaskellRuntimeTest(task);
+			test.setTimesRunnableByStudents(Util.parseInteger(request.getParameter("timesRunnableByStudents"), 0));
+			test.setForTutors(request.getParameter("tutortest") != null);
+			test.setTestTitle(request.getParameter("title"));
+			test.setTestDescription(request.getParameter("description"));
+			test.setTimeout(Util.parseInteger(request.getParameter("timeout"), 15));
+			test.setGiveDetailsToStudents(request.getParameter("giveDetailsToStudents") != null);
+			String preparationCode = request.getParameter("preparationcode");
+			if (preparationCode == null)
+				preparationCode = "";
+			test.setPreparationShellCode(preparationCode.replaceAll("\r\n", "\n"));
+
+			session.getTransaction().commit();
+			response.sendRedirect(Util.generateRedirectURL(HaskellRuntimeTestManager.class.getSimpleName() + "?testid=" + test.getId(), response));
 		} else if ("deleteTest".equals(request.getParameter("action"))) {
 			TestDAOIf testDAO = DAOFactory.TestDAOIf(session);
 			session.beginTransaction();
