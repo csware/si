@@ -115,28 +115,28 @@ public class HaskellRuntimeTestManagerView extends HttpServlet {
 		out.println("<h2>Testschritte bearbeiten</h2>");
 		out.println("<table>");
 		out.println(/* @formatter:off */
-            "<thead>" +
-                "<tr>" +
-                    "<th>Titel</th>" +
-                    "<th>Testcode</th>" +
-                    "<th>Expected</th>" +
-                "</tr>" +
-            "</thead>"
+			"<thead>" +
+				"<tr>" +
+					"<th>Titel</th>" +
+					"<th>Testcode</th>" +
+					"<th>Expected</th>" +
+				"</tr>" +
+			"</thead>"
         /* @formatter:on */);
 
 		for (DockerTestStep step : test.getTestSteps()) {
 			String deleteTestStepLink = Util.generateHTMLLink(HaskellRuntimeTestManager.class.getSimpleName() + "?testid=" + test.getId() + "&action=deleteStep&teststepid=" + step.getTeststepid(), response);
 			out.println(/* @formatter:off */
-                "<tr>" +
-                    "<td>" +
-                        Util.escapeHTML(step.getTitle()) + " " +
-                        "<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + deleteTestStepLink + "\">" +
-                            "(Löschen)" +
-                        "</a>" +
-                    "</td>" +
-                    "<td>" + Util.escapeHTML(step.getTestcode()) + "</td>" +
-                    "<td>" + Util.escapeHTML(step.getExpect()) + "</td>" +
-                "</tr>"
+				"<tr>" +
+					"<td>" +
+						Util.escapeHTML(step.getTitle()) + " " +
+						"<a onclick=\"return sendAsPost(this, 'Wirklich löschen?')\" href=\"" + deleteTestStepLink + "\">" +
+						    "(Löschen)" +
+						"</a>" +
+					"</td>" +
+					"<td>" + Util.escapeHTML(step.getTestcode()) + "</td>" +
+					"<td>" + Util.escapeHTML(step.getExpect()) + "</td>" +
+				"</tr>"
             /* @formatter:on */);
 		}
 		out.println("</table>");
