@@ -122,7 +122,7 @@ public class HaskellRuntimeTestManagerView extends HttpServlet {
 					"<th>Expected</th>" +
 				"</tr>" +
 			"</thead>"
-        /* @formatter:on */);
+		/* @formatter:on */);
 
 		for (DockerTestStep step : test.getTestSteps()) {
 			String deleteTestStepLink = Util.generateHTMLLink(HaskellRuntimeTestManager.class.getSimpleName() + "?testid=" + test.getId() + "&action=deleteStep&teststepid=" + step.getTeststepid(), response);
@@ -137,7 +137,7 @@ public class HaskellRuntimeTestManagerView extends HttpServlet {
 					"<td>" + Util.escapeHTML(step.getTestcode()) + "</td>" +
 					"<td>" + Util.escapeHTML(step.getExpect()) + "</td>" +
 				"</tr>"
-            /* @formatter:on */);
+			/* @formatter:on */);
 		}
 		out.println("</table>");
 
