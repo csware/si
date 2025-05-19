@@ -84,8 +84,11 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 		out.println("</table>");
 		out.println("</form>");
 
+		out.println("<hr>");
+		out.println("<h2>Testschritte</h2>");
+
 		for (JavaAdvancedIOTestStep step : test.getTestSteps()) {
-			out.println("<h2>" + Util.escapeHTML(step.getTitle()) + "</h2>");
+			out.println("<h3>" + Util.escapeHTML(step.getTitle()) + "</h3>");
 			out.println("<form action=\"" + Util.generateHTMLLink("?", response) + "\" method=post>");
 			out.println("<input type=hidden name=testid value=\"" + test.getId() + "\">");
 			out.println("<input type=hidden name=teststepid value=\"" + step.getTeststepid() + "\">");
@@ -118,7 +121,7 @@ public class JavaAdvancedIOTestManagerOverView extends HttpServlet {
 
 		out.println("<hr>");
 
-		out.println("<h2>Neuer Test-Schritt <a href=\"#\" onclick=\"toggleVisibility('teststephelp'); return false;\">(?)</a></h2>");
+		out.println("<h3>Neuer Test-Schritt <a href=\"#\" onclick=\"toggleVisibility('teststephelp'); return false;\">(?)</a></h3>");
 
 		out.println("<div style=\"display:none;\" id=teststephelp><b>Hilfe:</b><br>");
 		out.println("<p>Diese Art von Test erlaubt es einfache Ausgabe-Tests zu definieren. Sollen Studierende z. B. in der Klasse MathFunctions die Methode leastCommonMultiple(a,b) programmieren, so kann die Methode relativ einfach mit verschiedenen Werten aufgerufen und die Ausgabe auf STDOUT mit einem erwartetem Wert überprüft werden. Der STDERR wird den Studierenden im Normalfall nicht gezeigt, ebensowenig mögliche Compiler-Fehler.</p>");
