@@ -1,5 +1,5 @@
 /*
- * Copyright 2020, 2024 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2020, 2024-2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -86,6 +86,7 @@ class PointCategoryDAOIfTest extends BasicTest {
 			sum += category.getPoints();
 		}
 		assertEquals(370, sum);
+		task.getPointCategories().remove(fixCategory);
 		DAOFactory.PointCategoryDAOIf(session).deletePointCategory(fixCategory);
 		assertEquals(150, DAOFactory.PointCategoryDAOIf(session).countPoints(task));
 		session.getTransaction().rollback();
