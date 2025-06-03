@@ -22,7 +22,7 @@
         <property name="hibernate.c3p0.max_size">5</property>
         <property name="hibernate.c3p0.timeout">1800</property>
         <property name="hibernate.c3p0.idle_test_period">900</property>
-        <!-- <property name="hibernate.c3p0.testConnectionOnCheckout">true</property> -->
+        <property name="hibernate.c3p0.testConnectionOnCheckout">true</property>
 
     <property name="hibernate.timezone.default_storage">NORMALIZE</property>
     <property name="hibernate.transaction.coordinator_class">jdbc</property>
