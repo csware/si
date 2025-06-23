@@ -23,11 +23,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.lang.invoke.MethodHandles;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -260,30 +256,6 @@ public class TaskManager extends HttpServlet {
 		response.sendRedirect(Util.generateRedirectURL(TaskManager.class.getSimpleName() + "?lecture=" + task.getTaskGroup().getLecture().getId() + "&action=editTask&taskid=" + task.getTaskid() + "#" + foldername, response));
 	}
 
-	/**
-	 * Parses a string to a date
-	 * @param dateString the string to parse as a date
-	 * @param def the default date to return if parsing fails
-	 * @return the parsed or default date
-	 */
-	static public ZonedDateTime parseDate(String dateString, ZonedDateTime def) {
-		ZonedDateTime date = null;
-		try {
-			date = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")).atZone(ZoneId.systemDefault());
-		} catch (DateTimeParseException e) {
-		}
-		if (date == null) {
-			try {
-				date = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy")).atZone(ZoneId.systemDefault());
-			} catch (DateTimeParseException e) {
-			}
-		}
-		if (date == null) {
-			date = def;
-		}
-		return date;
-	}
-
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		if ("regexptest".equals(request.getParameter("action"))) {
@@ -464,8 +436,8 @@ public class TaskManager extends HttpServlet {
 					task.setShowTextArea(request.getParameter("showtextarea"));
 					task.setTutorsCanUploadFiles(request.getParameter("tutorsCanUploadFiles") != null);
 				}
-				task.setStart(parseDate(request.getParameter("startdate"), ZonedDateTime.now()));
-				task.setDeadline(parseDate(request.getParameter("deadline"), ZonedDateTime.now()));
+				task.setStart(Util.parseDate(request.getParameter("startdate"), ZonedDateTime.now()));
+				task.setDeadline(Util.parseDate(request.getParameter("deadline"), ZonedDateTime.now()));
 				if (task.getDeadline().isBefore(task.getStart())) {
 					task.setDeadline(task.getStart());
 				}
@@ -473,7 +445,7 @@ public class TaskManager extends HttpServlet {
 				if (request.getParameter("pointsmanual") != null) {
 					task.setShowPoints(null);
 				} else {
-					task.setShowPoints(parseDate(request.getParameter("pointsdate"), ZonedDateTime.now()));
+					task.setShowPoints(Util.parseDate(request.getParameter("pointsdate"), ZonedDateTime.now()));
 					if (task.getShowPoints().isBefore(task.getDeadline())) {
 						task.setShowPoints(task.getDeadline());
 					}
@@ -486,9 +458,9 @@ public class TaskManager extends HttpServlet {
 					response.sendRedirect(Util.generateRedirectURL(ShowTask.class.getSimpleName() + "?taskid=" + task.getTaskid(), response));
 				}
 			} else {
-				ZonedDateTime startdate = parseDate(request.getParameter("startdate"), ZonedDateTime.now());
-				ZonedDateTime deadline = parseDate(request.getParameter("deadline"), ZonedDateTime.now());
-				ZonedDateTime pointsdate = parseDate(request.getParameter("pointsdate"), ZonedDateTime.now());
+				ZonedDateTime startdate = Util.parseDate(request.getParameter("startdate"), ZonedDateTime.now());
+				ZonedDateTime deadline = Util.parseDate(request.getParameter("deadline"), ZonedDateTime.now());
+				ZonedDateTime pointsdate = Util.parseDate(request.getParameter("pointsdate"), ZonedDateTime.now());
 				if (deadline.isBefore(startdate)) {
 					deadline = startdate;
 				}

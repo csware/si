@@ -37,7 +37,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.time.Clock;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -661,5 +666,26 @@ public final class Util {
 
 	public static Path constructPath(final Path basePath, final Task task, final TaskPath pathComponent) {
 		return basePath.resolve("lectures" + FILE_SEPARATOR + task.getTaskGroup().getLecture().getId() + FILE_SEPARATOR + task.getTaskid() + FILE_SEPARATOR + pathComponent.getPathComponent());
+	}
+
+	/**
+	 * Parses a string to a date
+	 * @param dateString the string to parse as a date
+	 * @param def the default date to return if parsing fails
+	 * @return the parsed or default date
+	 */
+	public static ZonedDateTime parseDate(final String dateString, final ZonedDateTime def) {
+		if (dateString == null) {
+			return def;
+		}
+		try {
+			return LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")).atZone(ZoneId.systemDefault());
+		} catch (DateTimeParseException e) {
+		}
+		try {
+			return LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd.MM.yyyy")).atStartOfDay(ZoneId.systemDefault());
+		} catch (DateTimeParseException e) {
+		}
+		return def;
 	}
 }

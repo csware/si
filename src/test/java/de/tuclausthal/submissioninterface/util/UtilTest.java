@@ -31,7 +31,9 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -681,5 +683,23 @@ public class UtilTest {
 		// not really important, but this is a special case in apache.org.commons.io:FileUtils
 		assertEquals(basePath.resolve("~/something"), Util.buildPath(basePath, "~" + separator + "something"));
 		assertEquals(basePath.resolve("something"), Util.buildPath(basePath, "~" + separator + ".." + separator + "something"));
+	}
+
+	@Test
+	public void testParseDate() {
+		assertNull(Util.parseDate(null, null));
+		assertNull(Util.parseDate("", null));
+		assertNull(Util.parseDate("something", null));
+
+		final ZonedDateTime date = ZonedDateTime.of(2025, 6, 26, 0, 0, 0, 0, ZoneId.systemDefault());
+		assertEquals(date, Util.parseDate(null, date));
+		assertEquals(date, Util.parseDate("", date));
+		assertEquals(date, Util.parseDate("something", date));
+
+		assertEquals(date, Util.parseDate("26.06.2025 00:00:00", null));
+		assertEquals(date, Util.parseDate("26.06.2025", null));
+
+		final ZonedDateTime datetime = ZonedDateTime.of(2025, 6, 26, 14, 15, 16, 0, ZoneId.systemDefault());
+		assertEquals(datetime, Util.parseDate("26.06.2025 14:15:16", null));
 	}
 }
