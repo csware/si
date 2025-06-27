@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2012, 2017, 2020-2024 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2010-2012, 2017, 2020-2025 Sven Strickroth <email@cs-ware.de>
  *
  * This file is part of the GATE.
  *
@@ -69,16 +69,16 @@ public abstract class JavaFunctionTest<T extends Test> extends JavaSyntaxTest<T>
 		try {
 			// prepare policy file
 			policyFile = Files.createTempFile("special", ".policy");
-			BufferedWriter policyFileWriter = Files.newBufferedWriter(policyFile);
-			populateJavaPolicyFile(basePath, cwd, policyFileWriter);
-			policyFileWriter.write("\n");
-			policyFileWriter.write("grant {\n");
-			policyFileWriter.write("	permission java.util.PropertyPermission \"*\", \"read\";\n");
-			policyFileWriter.write("	permission java.io.FilePermission \"-\", \"read, write, delete\";\n"); // erlaube Zugriff auf alle Dateien im CWD
-			policyFileWriter.write("	permission java.lang.RuntimePermission \"accessDeclaredMembers\";\n");
-			policyFileWriter.write("};\n");
-			policyFileWriter.close();
-
+			try (BufferedWriter policyFileWriter = Files.newBufferedWriter(policyFile)) {
+				populateJavaPolicyFile(basePath, cwd, policyFileWriter);
+				policyFileWriter.write("\n");
+				policyFileWriter.write("grant {\n");
+				policyFileWriter.write("	permission java.util.PropertyPermission \"*\", \"read\";\n");
+				policyFileWriter.write("	permission java.io.FilePermission \"-\", \"read, write, delete\";\n"); // erlaube Zugriff auf alle Dateien im CWD
+				policyFileWriter.write("	permission java.lang.RuntimePermission \"accessDeclaredMembers\";\n");
+				policyFileWriter.write("};\n");
+				policyFileWriter.close();
+			}
 			List<String> additionalParams = new ArrayList<>();
 			populateParameters(additionalParams);
 
