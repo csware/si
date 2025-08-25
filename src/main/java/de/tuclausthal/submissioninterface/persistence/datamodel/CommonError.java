@@ -75,7 +75,7 @@ public class CommonError implements Serializable {
 		this.errorID = errorID;
 	}
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = 65536)
 	public String getTitle() {
 		return title;
 	}
@@ -116,7 +116,7 @@ public class CommonError implements Serializable {
 		return Type.values()[this.type];
 	}
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = 65536)
 	public String getCommonErrorName() {
 		return commonErrorName;
 	}

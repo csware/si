@@ -33,6 +33,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommentsMetricTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
@@ -50,6 +52,7 @@ import de.tuclausthal.submissioninterface.servlets.controller.DockerTestManager;
 import de.tuclausthal.submissioninterface.servlets.controller.DownloadModelSolutionFile;
 import de.tuclausthal.submissioninterface.servlets.controller.DownloadTaskFile;
 import de.tuclausthal.submissioninterface.servlets.controller.DupeCheck;
+import de.tuclausthal.submissioninterface.servlets.controller.HaskellRuntimeTestManager;
 import de.tuclausthal.submissioninterface.servlets.controller.JavaAdvancedIOTestManager;
 import de.tuclausthal.submissioninterface.servlets.controller.PerformTest;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowLecture;
@@ -452,6 +455,10 @@ public class TaskManagerView extends HttpServlet {
 							out.println("Kommentar-Metrik-Test<br>");
 						} else if (test instanceof JavaAdvancedIOTest) {
 							out.println("Erweiterer Java-IO-Test<br>");
+						} else if (test instanceof HaskellSyntaxTest) {
+							out.println("Haskell Syntax Test<br>");
+						} else if (test instanceof HaskellRuntimeTest) {
+							out.println("Haskell Runtime Test<br>");
 						} else if (test instanceof DockerTest) {
 							out.println("Docker<br>");
 						} else if (test instanceof ChecklistTest) {
@@ -472,6 +479,9 @@ public class TaskManagerView extends HttpServlet {
 						if (test instanceof JavaAdvancedIOTest adiot) {
 							out.println("Bestehend aus " + adiot.getTestSteps().size() + " Schritten<br>");
 							out.println("<a href=\"" + Util.generateHTMLLink(JavaAdvancedIOTestManager.class.getSimpleName() + "?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
+						} else if (test instanceof HaskellRuntimeTest hrt) {
+							out.println("Bestehend aus " + hrt.getTestSteps().size() + " Schritten<br>");
+							out.println("<a href=\"" + Util.generateHTMLLink(HaskellRuntimeTestManager.class.getSimpleName() + "?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");
 						} else if (test instanceof DockerTest dt) {
 							out.println("Bestehend aus " + dt.getTestSteps().size() + " Schritten<br>");
 							out.println("<a href=\"" + Util.generateHTMLLink(DockerTestManager.class.getSimpleName() + "?testid=" + test.getId(), response) + "\">Test bearbeiten</a><br>");

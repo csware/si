@@ -205,3 +205,37 @@ a[href ^="mailto:"] {
 .abgenfailed, .abgenfailed a {
 	color: blue !important;
 }
+
+span.spinner {
+	width: 0.8em;
+	height: 0.8em;
+	border: 2px solid #ccc;
+	border-top: 2px solid #333;
+	border-radius: 50%;
+	animation: spinLoadingAnimation 0.6s linear infinite;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+@keyframes spinLoadingAnimation {
+	to { transform: rotate(360deg); }
+}
+
+.selected-table-row {
+	background-color: #d0e7ff;
+}
+
+.error-title {
+	background-color: red;
+	color: white;
+	padding: 4px;
+	font-weight: bold;
+	overflow: auto;
+}
+
+.error-message {
+	background-color: #ffe5e5;
+	color: red;
+	padding: 4px;
+	overflow: auto;
+}

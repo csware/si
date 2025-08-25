@@ -165,3 +165,28 @@ alter table commonerrors add constraint FK84b477b3adpufhy6yca79d79r foreign key 
 alter table testresults_commonerror add constraint FK787leerpp7s7yak6btbhtbh48 foreign key (testresultid) references testresults (id);
 alter table testresults_commonerror add constraint FKcfm4aoanp948updtgcn1pn07j foreign key (errorid) references commonerrors (errorid);
 ALTER TABLE `testresults_commonerror` DROP FOREIGN KEY `FK787leerpp7s7yak6btbhtbh48`; ALTER TABLE `testresults_commonerror` ADD CONSTRAINT `FK787leerpp7s7yak6btbhtbh48` FOREIGN KEY (`testresultid`) REFERENCES `testresults`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT; ALTER TABLE `testresults_commonerror` DROP FOREIGN KEY `FKcfm4aoanp948updtgcn1pn07j`; ALTER TABLE `testresults_commonerror` ADD CONSTRAINT `FKcfm4aoanp948updtgcn1pn07j` FOREIGN KEY (`errorid`) REFERENCES `commonerrors`(`errorid`) ON DELETE CASCADE ON UPDATE RESTRICT;
+
+-- haskell runtime test
+CREATE TABLE `haskellruntimetestidentifier`
+(
+  `identifierid`                   integer      NOT NULL AUTO_INCREMENT,
+  `classdefinition`                longtext,
+  `classname`                      varchar(255),
+  `functionconcretetype`           varchar(255),
+  `functiondefaulttype`            varchar(255),
+  `functionname`                   varchar(255),
+  `functiontype`                   varchar(255),
+  `identifierclass`                varchar(255) NOT NULL,
+  `newtypeordataarbitraryinstance` longtext,
+  `newtypeordatadefinition`        varchar(255),
+  `newtypeordatatypename`          varchar(255),
+  `testid`                         integer      NOT NULL,
+  PRIMARY KEY (`identifierid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+ALTER TABLE IF EXISTS `haskellruntimetestidentifier`
+    ADD CONSTRAINT FKimd1t2tucxm6cy4b7l1vxj7b2 FOREIGN KEY (`testid`) REFERENCES `tests` (`id`) ON DELETE CASCADE;
+
+ALTER TABLE IF EXISTS `commonerrors`
+    MODIFY COLUMN `title` longtext NOT NULL,
+    MODIFY COLUMN `commonerrorname` longtext NOT NULL;

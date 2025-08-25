@@ -31,6 +31,7 @@ import org.apache.commons.text.StringEscapeUtils;
 
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommonError;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Lecture;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -126,7 +127,8 @@ public abstract class Template {
 	}
 
 	public void printTemplateHeader(CommonError commonError, Submission submission, String title) throws IOException {
-		printTemplateHeader("Fehler \"" + Util.escapeHTML(commonError.getTitle()) + "\"", "<li><a href=\"" + Util.generateAbsoluteServletsHTMLLink(Overview.class.getSimpleName(), servletRequest, servletResponse) + "\">Meine Veranstaltungen</a></li><li><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + submission.getTask().getTaskGroup().getLecture().getId(), servletRequest, servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(submission.getTask().getTaskGroup().getLecture().getName()) + "\"</a></li><li><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid(), servletRequest, servletResponse) + "\">Aufgabe \"" + Util.escapeHTML(submission.getTask().getTitle()) + "\"</a></li><li><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid() + "&show=commonerroroverview", servletRequest, servletResponse) + "\">Testübersicht</a></li><li>Fehler \"" + Util.escapeHTML(commonError.getTitle()) + "\"</li>");
+		String templateHeaderTitle = commonError.getTest() instanceof HaskellRuntimeTest ? "Haskell Runtime Test Fehlergruppe" : "Fehler \"" + Util.escapeHTML(commonError.getTitle()) + "\"";
+		printTemplateHeader(templateHeaderTitle, "<li><a href=\"" + Util.generateAbsoluteServletsHTMLLink(Overview.class.getSimpleName(), servletRequest, servletResponse) + "\">Meine Veranstaltungen</a></li><li><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowLecture.class.getSimpleName() + "?lecture=" + submission.getTask().getTaskGroup().getLecture().getId(), servletRequest, servletResponse) + "\">Veranstaltung \"" + Util.escapeHTML(submission.getTask().getTaskGroup().getLecture().getName()) + "\"</a></li><li><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid(), servletRequest, servletResponse) + "\">Aufgabe \"" + Util.escapeHTML(submission.getTask().getTitle()) + "\"</a></li><li><a href=\"" + Util.generateAbsoluteServletsHTMLLink(ShowTask.class.getSimpleName() + "?taskid=" + submission.getTask().getTaskid() + "&show=commonerroroverview", servletRequest, servletResponse) + "\">Testübersicht</a></li><li>" + templateHeaderTitle + "</li>");
 	}
 
 	final public void addHead(String header) {

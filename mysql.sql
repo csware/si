@@ -78,6 +78,30 @@ CREATE TABLE IF NOT EXISTS `groups_tutors` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `haskellruntimetestidentifier`
+--
+
+DROP TABLE IF EXISTS `haskellruntimetestidentifier`;
+CREATE TABLE `haskellruntimetestidentifier`
+(
+  `identifierid`                   integer      NOT NULL AUTO_INCREMENT,
+  `classdefinition`                longtext,
+  `classname`                      varchar(255),
+  `functionconcretetype`           varchar(255),
+  `functiondefaulttype`            varchar(255),
+  `functionname`                   varchar(255),
+  `functiontype`                   varchar(255),
+  `identifierclass`                varchar(255) NOT NULL,
+  `newtypeordataarbitraryinstance` longtext,
+  `newtypeordatadefinition`        varchar(255),
+  `newtypeordatatypename`          varchar(255),
+  `testid`                         integer      NOT NULL,
+  PRIMARY KEY (`identifierid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `javaadvancedioteststep`
 --
 
@@ -473,7 +497,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
-create table commonerrors (errorid integer not null auto_increment, commonerrorname varchar(255) not null, title varchar(255) not null, type tinyint(4), testid integer not null, primary key (errorid)) engine=InnoDB;
+create table commonerrors (errorid integer not null auto_increment, commonerrorname longtext not null, title longtext not null, type tinyint(4), testid integer not null, primary key (errorid)) engine=InnoDB;
 create table testresults_commonerror (errorid integer not null, testresultid integer not null, primary key (errorid, testresultid)) engine=InnoDB;
 alter table commonerrors add constraint FK84b477b3adpufhy6yca79d79r foreign key (testid) references tests (id) on delete cascade;
 alter table testresults_commonerror add constraint FK787leerpp7s7yak6btbhtbh48 foreign key (testresultid) references testresults (id);
@@ -508,6 +532,12 @@ ALTER TABLE `groups`
 ALTER TABLE `groups_tutors`
   ADD CONSTRAINT `FK8EAE7CC842D82B98` FOREIGN KEY (`tutors_id`) REFERENCES `participations` (`id`),
   ADD CONSTRAINT `FK8EAE7CC8BB3EB910` FOREIGN KEY (`groups_gid`) REFERENCES `groups` (`gid`);
+
+--
+-- Constraints der Tabelle `haskellruntimetestidentifier`
+--
+ALTER TABLE `haskellruntimetestidentifier`
+  ADD CONSTRAINT FKimd1t2tucxm6cy4b7l1vxj7b2 FOREIGN KEY (`testid`) REFERENCES `tests` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `javaadvancedioteststep`

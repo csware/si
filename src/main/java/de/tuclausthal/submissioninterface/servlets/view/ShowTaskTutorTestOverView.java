@@ -42,6 +42,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.CommonErrorDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommonError;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Group;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Submission;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Task;
@@ -49,6 +50,7 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.servlets.GATEView;
 import de.tuclausthal.submissioninterface.servlets.RequestAdapter;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowSubmission;
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowHaskellRuntimeCommonErrorTitle;
 import de.tuclausthal.submissioninterface.template.Template;
 import de.tuclausthal.submissioninterface.template.TemplateFactory;
 import de.tuclausthal.submissioninterface.util.Util;
@@ -168,7 +170,13 @@ public class ShowTaskTutorTestOverView extends HttpServlet {
 				CommonError commonError = it.next();
 				out.println("<tr>");
 				//out.println("<td>" + Util.escapeHTML(commonError.getCommonErrorName()) + "</td>");
-				out.println("<td>" + Util.escapeHTML(commonError.getTitle()) + "</td>");
+				if (test instanceof HaskellRuntimeTest) {
+					out.println("<td>");
+					ShowHaskellRuntimeCommonErrorTitle.formatCommonErrorTitle(out, commonError.getTitle());
+					out.println("</td>");
+				} else {
+					out.println("<td>" + Util.escapeHTML(commonError.getTitle()) + "</td>");
+				}
 				out.println("<td>" + commonErrorFrequency.get(commonError) + "</td>");
 				//out.println("<th>Beispiel</th>");
 				out.println("</tr>");

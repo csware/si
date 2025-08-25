@@ -38,6 +38,7 @@ import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.ChecklistTestCheckItem;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Points.PointStatus;
@@ -56,6 +57,7 @@ import de.tuclausthal.submissioninterface.servlets.controller.ShowSubmission;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
 import de.tuclausthal.submissioninterface.servlets.controller.ShowTaskAllSubmissions;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowDockerTestResult;
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowHaskellRuntimeTestResult;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowJavaAdvancedIOTestResult;
 import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.template.Template;
@@ -121,6 +123,9 @@ public class ShowTaskTutorAllSubmissionsView extends HttpServlet {
 						if (testResult.getTest() instanceof JavaAdvancedIOTest jaiot) {
 							out.println("<br>");
 							ShowJavaAdvancedIOTestResult.printTestResults(out, jaiot, testResult.getTestOutput(), false, javaScript);
+						} else if (testResult.getTest() instanceof HaskellRuntimeTest hrt) {
+							out.println("<br>");
+							ShowHaskellRuntimeTestResult.printTestResults(out, hrt, testResult.getTestOutput(), false, javaScript);
 						} else if (testResult.getTest() instanceof DockerTest dt) {
 							out.println("<br>");
 							ShowDockerTestResult.printTestResults(out, dt, testResult.getTestOutput(), false, javaScript);

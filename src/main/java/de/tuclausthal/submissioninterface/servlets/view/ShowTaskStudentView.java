@@ -44,6 +44,8 @@ import de.tuclausthal.submissioninterface.persistence.dao.TestCountDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.impl.TestResultCommonErrorDAO;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommonError;
 import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.MCOption;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Participation;
@@ -67,6 +69,9 @@ import de.tuclausthal.submissioninterface.servlets.controller.ShowTask;
 import de.tuclausthal.submissioninterface.servlets.controller.SubmitSolution;
 import de.tuclausthal.submissioninterface.servlets.controller.WebStart;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowDockerTestResult;
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowHaskellRuntimeCommonErrorTitle;
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowHaskellRuntimeTestResult;
+import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowHaskellSyntaxTestResult;
 import de.tuclausthal.submissioninterface.servlets.view.fragments.ShowJavaAdvancedIOTestResult;
 import de.tuclausthal.submissioninterface.tasktypes.ClozeTaskType;
 import de.tuclausthal.submissioninterface.template.Template;
@@ -376,15 +381,35 @@ public class ShowTaskStudentView extends HttpServlet {
 					if (!testResult.getPassedTest()) {
 						TestResultCommonErrorDAO trce = new TestResultCommonErrorDAO(session);
 						List<CommonError> ces = trce.getCommonError(testResult);
-						String commonErrorString = "| ";
-						for (CommonError ce : ces) {
-							commonErrorString = commonErrorString + Util.escapeHTML(ce.getTitle()) + " | ";
+
+						if (testResult.getTest() instanceof HaskellRuntimeTest) {
+							out.println("<br>");
+							out.println("<b>Fehlermeldung:</b>");
+							out.println("<table>");
+
+							for (CommonError ce : ces) {
+								out.println("<tr><td>");
+								ShowHaskellRuntimeCommonErrorTitle.formatCommonErrorTitle(out, ce.getTitle());
+								out.println("</td></tr>");
+							}
+
+							out.println("</table>");
+							out.println("<br>");
+						} else {
+							String commonErrorString = "| ";
+							for (CommonError ce : ces) {
+								commonErrorString = commonErrorString + Util.escapeHTML(ce.getTitle()) + " | ";
+							}
+							out.println("<br><b>Fehlermeldung: </b>" + commonErrorString + "<br>");
 						}
-						out.println("<br><b>Fehlermeldung: </b>" + commonErrorString + "<br>");
 					}
 					if (!testResult.getTestOutput().isEmpty() && testResult.getTest().isGiveDetailsToStudents()) {
 						if (testResult.getTest() instanceof JavaAdvancedIOTest) {
 							ShowJavaAdvancedIOTestResult.printTestResults(out, (JavaAdvancedIOTest) testResult.getTest(), testResult.getTestOutput(), true, null);
+						} else if (testResult.getTest() instanceof HaskellSyntaxTest) {
+							ShowHaskellSyntaxTestResult.printTestResults(out, (HaskellSyntaxTest) testResult.getTest(), testResult.getTestOutput(), true, null);
+						} else if (testResult.getTest() instanceof HaskellRuntimeTest hrt) {
+							ShowHaskellRuntimeTestResult.printTestResults(out, hrt, testResult.getTestOutput(), true, null);
 						} else if (testResult.getTest() instanceof DockerTest) {
 							ShowDockerTestResult.printTestResults(out, (DockerTest) testResult.getTest(), testResult.getTestOutput(), true, null);
 						} else {

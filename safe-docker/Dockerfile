@@ -1,13 +1,13 @@
 # inspired by https://github.com/KITPraktomatTeam/Praktomat/tree/master/docker-image
 # version e0d53616b7a81f15d6717f76ba53d9415913f7b5
 
-FROM debian:buster
+FROM debian:bookworm
 
 # make sure we have a fully patched image
 RUN apt-get update -qq && apt-get dist-upgrade -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # set up Haskell
-RUN apt-get -qq update && apt-get install -qq --yes ghc libghc-test-framework-dev libghc-test-framework-hunit-dev libghc-test-framework-quickcheck2-dev && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get -qq update && apt-get install -qq --yes ghc libghc-test-framework-dev libghc-test-framework-hunit-dev libghc-test-framework-quickcheck2-dev libghc-hashable-dev && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # set default language, but with UTF-8; needed for Haskell
 ENV LC_ALL="C.UTF-8"

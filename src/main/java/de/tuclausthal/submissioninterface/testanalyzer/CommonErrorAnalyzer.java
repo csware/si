@@ -19,11 +19,17 @@
 
 package de.tuclausthal.submissioninterface.testanalyzer;
 
+import static de.tuclausthal.submissioninterface.servlets.controller.HaskellRuntimeTestManager.extractUnescapedGhciExpressionWrappedInCatchAndTimeout;
+
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
+import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 
 import org.hibernate.Session;
@@ -32,10 +38,14 @@ import de.tuclausthal.submissioninterface.persistence.dao.CommonErrorDAOIf;
 import de.tuclausthal.submissioninterface.persistence.dao.DAOFactory;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CommonError;
 import de.tuclausthal.submissioninterface.persistence.datamodel.CompileTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.DockerTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellRuntimeTest;
+import de.tuclausthal.submissioninterface.persistence.datamodel.HaskellSyntaxTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JUnitTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.JavaAdvancedIOTest;
 import de.tuclausthal.submissioninterface.persistence.datamodel.Test;
 import de.tuclausthal.submissioninterface.persistence.datamodel.TestResult;
+import de.tuclausthal.submissioninterface.testanalyzer.haskell.syntax.RegexBasedHaskellClustering;
 
 public class CommonErrorAnalyzer {
 	//from Literatur
@@ -60,6 +70,12 @@ public class CommonErrorAnalyzer {
 			groupJavaIOTestResults((JavaAdvancedIOTest) test, testResult);
 		} else if (test instanceof JUnitTest) {
 			groupJUnitTestResults((JUnitTest) test, testResult);
+		} else if (test instanceof HaskellSyntaxTest) {
+			groupHaskellSyntaxTestResults((HaskellSyntaxTest) test, testResult);
+		} else if (test instanceof HaskellRuntimeTest haskellRuntimeTest) {
+			groupHaskellRuntimeTestResults(haskellRuntimeTest, testResult);
+		} else if (test instanceof DockerTest) {
+			groupDockerTestResults((DockerTest) test, testResult);
 		}
 	}
 
@@ -149,6 +165,76 @@ public class CommonErrorAnalyzer {
 			keyStr += "time-exceeded ";
 
 		return new String[] { stepsStr, keyStr };
+	}
+
+	private void groupHaskellRuntimeTestResults(final HaskellRuntimeTest test, final TestResult testResult) {
+		if (testResult.getPassedTest()) {
+			return;
+		}
+
+		final JsonObject testOutputJson = Json.createReader(new StringReader(testResult.getTestOutput())).readObject();
+		Map<String, List<JsonObject>> failedTestcasesByFunction = new HashMap<>();
+
+		if (testOutputJson.containsKey("steps")) {
+			final JsonArray steps = testOutputJson.getJsonArray("steps");
+
+			for (int i = 0; i < steps.size(); i++) {
+				if (!steps.getJsonObject(i).getBoolean("ok")) {
+					String gotValue = steps.getJsonObject(i).getString("got").strip();
+
+					if (gotValue.contains("EXCEPTION")) {
+						// remove line numbers from exceptions, since differences in line numbers should not be considered for clustering
+						// gotValue = gotValue.replaceAll("\\b\\d+\\b", "-");
+						gotValue = gotValue.replaceAll("[^\\p{L} ]", "");
+					}
+
+					String testCodeWrappedInCatchAndTimeout = test.getTestSteps().get(i).getTestcode();
+					String testcaseIdentifier = extractUnescapedGhciExpressionWrappedInCatchAndTimeout(testCodeWrappedInCatchAndTimeout);
+					if (testcaseIdentifier == null) {
+						testcaseIdentifier = testCodeWrappedInCatchAndTimeout;
+					}
+
+					String functionTitle = test.getTestSteps().get(i).getTitle();
+					JsonObject failedTestcase = Json.createObjectBuilder().add("testcase", testcaseIdentifier).add("got", gotValue).build();
+					failedTestcasesByFunction.computeIfAbsent(functionTitle, k -> new ArrayList<>()).add(failedTestcase);
+				}
+			}
+		}
+
+		List<String> flags = new ArrayList<>();
+		if (testOutputJson.containsKey("stderr") && !testOutputJson.getString("stderr").isEmpty()) {
+			flags.add("stderr not empty");
+		}
+		if (testOutputJson.containsKey("stdout") && testOutputJson.getString("stdout").isEmpty()) {
+			flags.add("stdout empty");
+		}
+		if (testOutputJson.containsKey("exitedCleanly") && testOutputJson.getBoolean("exitedCleanly")) {
+			flags.add("exited cleanly");
+		}
+		if (testOutputJson.containsKey("missing-tests")) {
+			flags.add("missing tests");
+		}
+		if (testOutputJson.containsKey("time-exceeded")) {
+			flags.add("time exceeded");
+		}
+
+		StringBuilder keyStrStringBuilder = new StringBuilder();
+		for (String flag : flags) {
+			keyStrStringBuilder.append(flag).append("; ");
+		}
+
+		for (Map.Entry<String, List<JsonObject>> entry : failedTestcasesByFunction.entrySet()) {
+			String functionTitle = entry.getKey();
+			List<JsonObject> testcases = entry.getValue();
+
+			JsonArrayBuilder testcaseArrayBuilder = Json.createArrayBuilder();
+			for (JsonObject testcase : testcases) {
+				testcaseArrayBuilder.add(testcase);
+			}
+
+			JsonObject commonErrorTitleJsonObject = Json.createObjectBuilder().add("function", functionTitle).add("testcases", testcaseArrayBuilder).build();
+			bindCommonError(testResult, commonErrorTitleJsonObject.toString(), keyStrStringBuilder.toString(), CommonError.Type.RunTimeError);
+		}
 	}
 
 	private void groupJUnitTestResults(JUnitTest test, final TestResult testResult) {
@@ -273,5 +359,50 @@ public class CommonErrorAnalyzer {
 			}
 		}
 		return foundErrorGroup;
+	}
+
+	private void groupDockerTestResults(final DockerTest test, final TestResult testResult) {
+		if (testResult.getPassedTest()) {
+			return;
+		}
+
+		JsonObject testOutputJson = Json.createReader(new StringReader(testResult.getTestOutput())).readObject();
+		String stderr = testOutputJson.containsKey("stderr") ? testOutputJson.getString("stderr") : "";
+
+		String keyStr = "";
+
+		if (testOutputJson.containsKey("exitCode")) {
+			keyStr += "ExitCode: " + testOutputJson.getInt("exitCode") + " ";
+		}
+		if (testOutputJson.containsKey("time-exceeded") && testOutputJson.getBoolean("time-exceeded")) {
+			keyStr += "Timeout ";
+		}
+		if (testOutputJson.containsKey("missing-tests")) {
+			keyStr += "Missing tests ";
+		}
+
+		groupTestResultToCommonErrors(testResult, stderr, keyStr);
+	}
+
+	private void groupHaskellSyntaxTestResults(final HaskellSyntaxTest test, final TestResult testResult) {
+		if (testResult.getPassedTest()) {
+			return;
+		}
+
+		JsonObject testOutputJson = Json.createReader(new StringReader(testResult.getTestOutput())).readObject();
+		String stderr = testOutputJson.containsKey("stderr") ? testOutputJson.getString("stderr") : "";
+
+		String clusterResult = RegexBasedHaskellClustering.classify(stderr);
+
+		String keyStr = "Syntax: " + clusterResult;
+
+		CommonErrorDAOIf commonErrorDAO = DAOFactory.CommonErrorDAOIf(session);
+		CommonError commonError = commonErrorDAO.getCommonError(keyStr, testResult.getTest());
+		if (commonError != null) {
+			commonError.getTestResults().add(testResult);
+		} else {
+			commonErrorDAO.newCommonError(keyStr, clusterResult, testResult, CommonError.Type.CompileTimeError);
+		}
+
 	}
 }
