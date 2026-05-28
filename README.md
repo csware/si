@@ -124,3 +124,46 @@ Alternatively you can also use GitLab CI/CD functionality and download the built
 
 Now GATE can be access using e.g. <http://localhost:8080/GATE/> depending on your concrete local setup.
 It is recommended to run the self-test to check whether everything looks ok: <http://localhost:8080/GATE/servlets/SelfTest>
+
+### Troubleshooting & Local Development Hints
+
+**1. Tomcat deployment stuck / 404 Error (especially on macOS)**
+Cached files or hanging Java processes can prevent a clean `.war` extraction. To force a complete clean rebuild and redeploy, run the following commands:
+
+```bash
+# 1. Kill any hanging Java/Tomcat processes
+killall java
+
+# 2. Clear Tomcat caches (adjust paths to your local setup)
+cd path/to/apache-tomcat-10.x
+rm -rf webapps/gate
+rm -rf webapps/gate.war
+rm -rf work/Catalina/localhost/gate
+rm -rf temp/*
+
+# 3. Navigate to the project source and rebuild
+cd path/to/GATE/si
+mvn clean package -DskipTests
+
+# 4. Copy the fresh WAR file back to Tomcat
+cp target/GATE-1.0-SNAPSHOT.war ../apache-tomcat-10.x/webapps/gate.war
+```
+
+**2. Database connection fails (connects as 'root')**
+If Tomcat ignores your database user, ensure you edit the source file (`src/main/resources/hibernate.cfg.xml`) and rebuild. For Hibernate 7 / C3P0, you might need to pass credentials to C3P0 explicitly:
+
+```xml
+<property name="hibernate.c3p0.user">gate_user</property>
+<property name="hibernate.c3p0.password">gate123</property>
+```
+
+**3. Missing Jakarta Dependency (Tomcat 10)**
+If the application crashes on startup with a `NoClassDefFoundError: jakarta/activation/DataSource`, add the activation API to your `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>jakarta.activation</groupId>
+    <artifactId>jakarta.activation-api</artifactId>
+    <version>2.1.3</version>
+</dependency>
+```
